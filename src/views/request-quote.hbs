@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request a Quote - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .quote-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 16px;
+    }
+    .quote-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .quote-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--color-success);
+    }
+    .quote-header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .quote-header p {
+      color: var(--text-secondary);
+    }
+    .form-section {
+      margin-bottom: 24px;
+    }
+    .form-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .insurance-types {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .insurance-type-card {
+      position: relative;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .insurance-type-card:hover {
+      border-color: var(--color-primary);
+      background: rgba(59, 130, 246, 0.05);
+    }
+    .insurance-type-card.selected {
+      border-color: var(--color-primary);
+      background: rgba(59, 130, 246, 0.1);
+    }
+    .insurance-type-card input {
+      position: absolute;
+      opacity: 0;
+    }
+    .insurance-type-card .check-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .insurance-type-card.selected .check-icon {
+      display: flex;
+    }
+    .insurance-type-card .type-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .insurance-type-card .type-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    @media (max-width: 480px) {
+      .insurance-types {
+        grid-template-columns: 1fr;
+      }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container navbar-content">
+      <a href="/" class="navbar-brand">Cover<span>Score</span> AI</a>
+      <div class="navbar-menu">
+        <a href="/" class="navbar-item">Home</a>
+        <a href="/assessment/start" class="navbar-item">Assessment</a>
+        <a href="/auth/login" class="navbar-item">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="quote-container">
+    <div class="quote-header">
+      <div class="quote-icon">
+        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <h1>Request a Quote</h1>
+      <p>Get personalized insurance quotes based on your risk assessment. Our agents will contact you within 24 hours.</p>
+    </div>
+
+    <form id="quoteForm" class="card">
+      <div class="card-body">
+        <!-- Contact Information -->
+        <div class="form-section">
+          <div class="form-section-title">Contact Information</div>
+          <div class="input-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required placeholder="Adekunle Musa">
+          </div>
+          <div class="input-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required placeholder="adekunle@company.com">
+          </div>
+          <div class="input-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required placeholder="+234 801 234 5678">
+          </div>
+          <div class="input-group">
+            <label for="businessName">Business Name (Optional)</label>
+            <input type="text" id="businessName" name="businessName" placeholder="Musa Logistics Ltd">
+          </div>
+        </div>
+
+        <!-- Insurance Types -->
+        <div class="form-section">
+          <div class="form-section-title">Insurance Coverage Needed</div>
+          <div class="input-group">
+            <label for="insuranceTypes">Select coverage types</label>
+            <select id="insuranceTypes" name="insuranceTypes" multiple size="6">
+              <option value="property">Property Insurance</option>
+              <option value="liability">Liability Cover</option>
+              <option value="motor">Motor Fleet</option>
+              <option value="workers">Group Life / Workers Compensation</option>
+              <option value="health">Health Insurance</option>
+              <option value="cyber">Cyber Liability</option>
+              <option value="professional">Professional Indemnity</option>
+              <option value="marine">Marine / Goods in Transit</option>
+              <option value="energy">Energy / Oil & Gas</option>
+              <option value="aviation">Aviation Insurance</option>
+            </select>
+            <p class="helper-text">Hold Ctrl/Cmd to select multiple options</p>
+          </div>
+        </div>
+
+        <!-- Coverage Details -->
+        <div class="form-section">
+          <div class="form-section-title">Coverage Details</div>
+          <div class="input-group">
+            <label for="estimatedValue">Estimated Coverage Value</label>
+            <select id="estimatedValue" name="estimatedValue">
+              <option value="">Select range...</option>
+              <option value="under_10m">Under ₦10 Million</option>
+              <option value="10m_50m">₦10M - ₦50 Million</option>
+              <option value="50m_200m">₦50M - ₦200 Million</option>
+              <option value="200m_500m">₦200M - ₦500 Million</option>
+              <option value="over_500m">Over ₦500 Million</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="message">Additional Information</label>
+            <textarea id="message" name="message" rows="3" placeholder="Tell us about your specific insurance needs..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg" style="width: 100%;" id="submitBtn">
+          <span id="btnText">Request Quote</span>
+          <span id="btnSpinner" style="display: none; margin-left: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+              <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Success Message -->
+    <div id="successMessage" style="display: none; text-align: center; padding: 40px 20px;">
+      <div style="width: 80px; height: 80px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--color-success);">
+        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="font-size: 24px; margin-bottom: 12px;">Quote Request Submitted!</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+        Our insurance agents will review your request and contact you within 24 hours with personalized quotes.
+      </p>
+      <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="card" style="display: none; margin-top: 16px;">
+      <div class="card-body" style="color: var(--color-danger); text-align: center;">
+        <p id="errorText"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('quoteForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorDiv = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    const successDiv = document.getElementById('successMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.style.display = 'none';
+      submitBtn.disabled = true;
+      document.getElementById('btnText').textContent = 'Submitting...';
+      document.getElementById('btnSpinner').style.display = 'inline';
+
+      const insuranceSelect = document.getElementById('insuranceTypes');
+      const selectedTypes = Array.from(insuranceSelect.selectedOptions).map(opt => opt.value);
+
+      const data = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        businessName: document.getElementById('businessName').value || null,
+        insuranceTypes: selectedTypes,
+        estimatedValue: document.getElementById('estimatedValue').value,
+        message: document.getElementById('message').value,
+        type: 'quote'
+      };
+
+      if (!selectedTypes.length) {
+        errorText.textContent = 'Please select at least one insurance type.';
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request Quote';
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('accessToken');
+        const res = await fetch('/api/public/quote-request', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message || 'Failed to submit quote request');
+        }
+
+        form.style.display = 'none';
+        successDiv.style.display = 'block';
+
+      } catch (err) {
+        errorText.textContent = err.message;
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = false;
+        document.getElementById('btnText').textContent = 'Request Quote';
+        document.getElementById('btnSpinner').style.display = 'none';
+      }
+    });
+
+    // Pre-fill if logged in
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        document.getElementById('name').value = userData.name || '';
+        document.getElementById('email').value = userData.email || '';
+      } catch (e) {}
+    }
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

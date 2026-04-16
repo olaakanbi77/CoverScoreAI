@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .contact-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    .contact-nav {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 20px 0;
+    }
+
+    .contact-nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .contact-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      text-decoration: none;
+    }
+
+    .contact-logo span {
+      color: #3b82f6;
+    }
+
+    .contact-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    }
+
+    .contact-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .contact-hero p {
+      font-size: 1.25rem;
+      color: rgba(255,255,255,0.7);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-content {
+      max-width: 1200px;
+      margin: -60px auto 0;
+      padding: 0 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 32px;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .contact-card-header {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      padding: 24px 32px;
+    }
+
+    .contact-card-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .contact-card-header p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .contact-card-body {
+      padding: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: inherit;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #0f172a;
+      transition: all 150ms ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .form-group-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .contact-submit {
+      width: 100%;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 150ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .contact-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      padding: 24px;
+    }
+
+    .info-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b82f6;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-item svg {
+      width: 20px;
+      height: 20px;
+      color: #64748b;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .info-item-content {
+      flex: 1;
+    }
+
+    .info-item-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .info-item-value {
+      font-size: 14px;
+      color: #334155;
+    }
+
+    .info-item-value a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .info-item-value a:hover {
+      text-decoration: underline;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      transition: all 150ms ease;
+    }
+
+    .social-link:hover {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .office-hours {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      border-radius: 16px;
+      padding: 24px;
+      color: white;
+    }
+
+    .office-hours h3 {
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+    }
+
+    .hours-row:last-child {
+      border-bottom: none;
+    }
+
+    .hours-label {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .hours-value {
+      font-weight: 600;
+    }
+
+    .faq-section {
+      max-width: 800px;
+      margin: 80px auto;
+      padding: 0 24px;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .faq-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .faq-header p {
+      color: #64748b;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 20px 24px;
+      font-weight: 600;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .faq-question:hover {
+      background: #f8fafc;
+    }
+
+    .faq-question svg {
+      transition: transform 200ms ease;
+    }
+
+    .faq-item.open .faq-question svg {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      padding: 0 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 200ms ease;
+    }
+
+    .faq-item.open .faq-answer {
+      padding: 0 24px 20px;
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      color: #64748b;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    @media (max-width: 968px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .contact-hero h1 {
+        font-size: 2rem;
+      }
+
+      .contact-hero {
+        padding: 48px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contact-page">
+    <!-- NAV -->
+    <nav class="contact-nav">
+      <div class="container">
+        <div class="contact-nav-content">
+          <a href="/" class="contact-logo">Cover<span>Score</span> AI</a>
+          <div>
+            <a href="/assessment/start" class="btn btn-primary btn-sm">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="contact-hero">
+      <div class="container">
+        <div class="contact-hero-content">
+          <h1>Get in Touch</h1>
+          <p>Have questions about CoverScore AI? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT CONTENT -->
+    <div class="contact-content">
+      <div class="contact-grid">
+        <!-- CONTACT FORM -->
+        <div class="contact-card">
+          <div class="contact-card-header">
+            <h2>Send us a Message</h2>
+            <p>Fill out the form below and we'll get back to you within 24 hours.</p>
+          </div>
+          <div class="contact-card-body">
+            <form id="contactForm">
+              <div class="form-group-row">
+                <div class="form-group">
+                  <label for="firstName">First Name *</label>
+                  <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name *</label>
+                  <input type="text" id="lastName" name="lastName" placeholder="Smith" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="john@company.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                  <option value="">Select a topic...</option>
+                  <option value="sales">Sales Inquiry</option>
+                  <option value="support">Technical Support</option>
+                  <option value="billing">Billing Question</option>
+                  <option value="partnership">Partnership Opportunity</option>
+                  <option value="press">Press/Media</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" placeholder="How can we help you?" required></textarea>
+              </div>
+
+              <button type="submit" class="contact-submit" id="submitBtn">
+                <span>Send Message</span>
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              </button>
+            </form>
+
+            <div id="successMessage" style="display: none; text-align: center; padding: 48px 24px;">
+              <div style="width: 80px; height: 80px; background: rgba(34, 197, 94, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: #22c55e;">
+                <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Message Sent!</h3>
+              <p style="color: #64748b; margin-bottom: 24px;">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+              <a href="/" class="btn btn-secondary">Back to Home</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTACT INFO -->
+        <div class="contact-info">
+          <div class="info-card">
+            <h3>
+              <span class="info-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              Visit Us
+            </h3>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">Headquarters</div>
+                <div class="info-item-value">123 Insurance Lane<br>San Francisco, CA 94102</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">Support Office</div>
+                <div class="info-item-value">456 Tech Boulevard<br>New York, NY 10001</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3>
+              <span class="info-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              Email Us
+            </h3>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">General Inquiries</div>
+                <div class="info-item-value"><a href="mailto:hello@coverscore.ai">hello@coverscore.ai</a></div>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">Support</div>
+                <div class="info-item-value"><a href="mailto:support@coverscore.ai">support@coverscore.ai</a></div>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">Sales</div>
+                <div class="info-item-value"><a href="mailto:sales@coverscore.ai">sales@coverscore.ai</a></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3>
+              <span class="info-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              </span>
+              Call Us
+            </h3>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">Main Line</div>
+                <div class="info-item-value"><a href="tel:+18005551234">(800) 555-1234</a></div>
+              </div>
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              <div class="info-item-content">
+                <div class="info-item-label">Support (Business Hours)</div>
+                <div class="info-item-value"><a href="tel:+18005555678">(800) 555-5678</a></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="office-hours">
+            <h3 style="display: flex; align-items: center; gap: 10px;">
+              <span style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+              Office Hours
+            </h3>
+            <div class="hours-row">
+              <span class="hours-label">Monday - Friday</span>
+              <span class="hours-value">9:00 AM - 6:00 PM PST</span>
+            </div>
+            <div class="hours-row">
+              <span class="hours-label">Saturday</span>
+              <span class="hours-value">10:00 AM - 4:00 PM PST</span>
+            </div>
+            <div class="hours-row">
+              <span class="hours-label">Sunday</span>
+              <span class="hours-value">Closed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section">
+      <div class="faq-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Find quick answers to common questions</p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How long does it take to complete a risk assessment?</span>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            <p>Most users complete our risk assessment in 5-10 minutes. The questionnaire is designed to be quick and intuitive, with most questions having simple multiple-choice answers. You can also save your progress and return later if needed.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Is my business data secure?</span>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            <p>Absolutely. We take security seriously. All data is encrypted in transit and at rest. We never share your information with third parties, and you can request deletion of your data at any time. We're also SOC 2 Type II compliant.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How accurate is the AI risk analysis?</span>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            <p>Our AI analysis is based on industry-standard risk assessment models and is continuously trained on insurance industry data. While no automated system can replace a professional insurance broker, our reports provide highly accurate risk identification and personalized recommendations.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Can I use CoverScore AI for multiple businesses?</span>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            <p>Yes! Our Professional and Enterprise plans allow you to manage assessments for multiple businesses. You can add team members, track all your clients' risk profiles, and generate reports from a single dashboard.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Do you offer custom integrations?</span>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            <p>Enterprise customers can access our API for custom integrations with CRM systems, insurance carrier platforms, and internal tools. Contact our sales team to learn more about integration options.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="background: #0f172a; border-top: 1px solid #1e293b; padding: 32px 0; margin-top: 80px;">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div style="color: #64748b; font-size: 14px;">
+            2026 CoverScore AI. All rights reserved.
+          </div>
+          <div style="display: flex; gap: 24px;">
+            <a href="/privacy" style="color: #64748b; font-size: 14px; text-decoration: none;">Privacy Policy</a>
+            <a href="/terms" style="color: #64748b; font-size: 14px; text-decoration: none;">Terms of Service</a>
+            <a href="/contact" style="color: #64748b; font-size: 14px; text-decoration: none;">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function toggleFaq(element) {
+      const faqItem = element.closest('.faq-item');
+      const isOpen = faqItem.classList.contains('open');
+
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('open');
+      });
+
+      if (!isOpen) {
+        faqItem.classList.add('open');
+      }
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Sending...</span>';
+
+      setTimeout(() => {
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+      }, 1500);
+    });
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

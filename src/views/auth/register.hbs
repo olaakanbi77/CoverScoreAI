@@ -1,0 +1,111 @@
+<div class="container container-sm" style="padding: 40px 0;">
+  <div class="card glass-card">
+    <div class="card-header text-center">
+      <h2>Create Your Account</h2>
+      <p class="text-muted">Start your free risk assessment today</p>
+    </div>
+    <div class="card-body">
+      <form id="registerForm" class="flex flex-col gap-4">
+        <div class="input-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" name="name" placeholder="John Smith" required autocomplete="name">
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password *</label>
+          <input type="password" id="password" name="password" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <div class="grid grid-2">
+          <div class="input-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" autocomplete="tel">
+          </div>
+
+          <div class="input-group">
+            <label for="business_name">Business Name</label>
+            <input type="text" id="business_name" name="business_name" placeholder="Your Company Inc." autocomplete="organization">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="industry">Industry</label>
+          <select id="industry" name="industry">
+            <option value="">Select your industry</option>
+            <option value="retail">Retail</option>
+            <option value="construction">Construction</option>
+            <option value="technology">Technology</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="manufacturing">Manufacturing</option>
+            <option value="hospitality">Hospitality</option>
+            <option value="professional_services">Professional Services</option>
+            <option value="real_estate">Real Estate</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+          Create Account
+        </button>
+      </form>
+
+      <div id="errorMessage" class="text-center text-danger text-sm" style="margin-top: 16px; display: none;"></div>
+    </div>
+    <div class="card-footer text-center">
+      <span class="text-muted text-sm">Already have an account?</span>
+      <a href="/auth/login" class="text-sm font-semibold">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('registerForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorDiv = document.getElementById('errorMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorDiv.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating account...';
+
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      phone: formData.get('phone'),
+      business_name: formData.get('business_name'),
+      industry: formData.get('industry')
+    };
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || 'Registration failed');
+      }
+
+      localStorage.setItem('accessToken', result.accessToken);
+      localStorage.setItem('user', JSON.stringify(result.user));
+
+      window.location.href = '/assessment/start';
+    } catch (err) {
+      errorDiv.textContent = err.message;
+      errorDiv.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create Account';
+    }
+  });
+</script>

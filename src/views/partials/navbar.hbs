@@ -1,0 +1,44 @@
+<nav class="navbar">
+  <div class="container navbar-content">
+    <a href="/" class="navbar-brand">
+      Cover<span>Score</span> AI
+    </a>
+
+    <div class="navbar-menu">
+      <a href="/" class="navbar-item {{#if (eq activePage 'home')}}active{{/if}}">Home</a>
+      <a href="/assessment/start" class="navbar-item {{#if (eq activePage 'assessment')}}active{{/if}}">Start Assessment</a>
+      
+      {{#if user}}
+        {{#if (or (eq user.role 'admin') (eq user.role 'sales') (eq user.role 'analyst'))}}
+          <a href="/admin/dashboard" class="navbar-item {{#if (eq activePage 'admin')}}active{{/if}}">Admin Panel</a>
+        {{/if}}
+        
+        <div class="user-menu">
+          <button class="btn btn-ghost user-menu-trigger" id="userMenuBtn">
+            <span class="user-initials">{{userInitials user.name}}</span>
+          </button>
+          <div class="user-menu-dropdown" id="userMenu">
+            <div class="user-menu-header">
+              <p class="user-name">{{user.name}}</p>
+              <p class="user-email">{{user.email}}</p>
+            </div>
+            <div class="divider"></div>
+            {{#if (or (eq user.role 'admin') (eq user.role 'sales') (eq user.role 'analyst'))}}
+              <a href="/admin/dashboard" class="user-menu-item">Admin Dashboard</a>
+            {{/if}}
+            <div class="divider"></div>
+            <button onclick="logout()" class="user-menu-item text-danger">Logout</button>
+          </div>
+        </div>
+      {{else}}
+        <a href="/auth/login" class="navbar-item">Login</a>
+        <a href="/assessment/start" class="btn btn-primary">Free Assessment</a>
+      {{/if}}
+      
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon" style="display:none;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>

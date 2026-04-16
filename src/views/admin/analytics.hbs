@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .analytics-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 16px;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 4px 0 0;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 150ms;
+    }
+    .back-btn:hover { color: var(--text-primary); }
+
+    /* Stat Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+    }
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .stat-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .chart-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .chart-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chart-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .chart-body {
+      padding: 24px;
+    }
+
+    /* Donut Chart */
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .donut-chart {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+    }
+    .donut-chart svg {
+      transform: rotate(-90deg);
+    }
+    .donut-center {
+      position: absolute;
+      inset: 30px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .donut-center-value {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .donut-center-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Bar Chart */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .bar-label {
+      width: 80px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: capitalize;
+      flex-shrink: 0;
+    }
+    .bar-track {
+      flex: 1;
+      height: 28px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      min-width: 40px;
+      transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bar-fill.low { background: linear-gradient(90deg, #10b981, #059669); }
+    .bar-fill.moderate { background: linear-gradient(90deg, #f59e0b, #d97706); }
+    .bar-fill.high { background: linear-gradient(90deg, #f97316, #ea580c); }
+    .bar-fill.critical { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+    /* Conversion Chart */
+    .conversion-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .conv-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .conv-label {
+      width: 80px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .conv-bar-wrap {
+      flex: 1;
+      height: 24px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .conv-bar {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+    }
+    .conv-bar.new { background: rgba(59, 130, 246, 0.8); }
+    .conv-bar.contacted { background: rgba(168, 85, 247, 0.8); }
+    .conv-bar.converted { background: rgba(16, 185, 129, 0.8); }
+    .conv-bar.lost { background: rgba(239, 68, 68, 0.8); }
+
+    /* Trends */
+    .trend-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .trend-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+    }
+    .trend-date {
+      font-size: 13px;
+      color: var(--text-secondary);
+      width: 90px;
+      flex-shrink: 0;
+    }
+    .trend-bar-wrap {
+      flex: 1;
+      height: 20px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .trend-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), rgba(59, 130, 246, 0.5));
+      border-radius: 4px;
+      min-width: 2px;
+    }
+    .trend-count {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      width: 28px;
+      text-align: right;
+    }
+
+    /* Full Width */
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* Loading */
+    .loading-overlay {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 50vh;
+      gap: 16px;
+    }
+    .loading-spinner-lg {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--glass-border);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .empty-state svg { margin-bottom: 12px; opacity: 0.4; }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .donut-wrap { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container navbar-content">
+      <a href="/" class="navbar-brand">Cover<span>Score</span> AI</a>
+      <div class="navbar-menu">
+        <a href="/admin/dashboard" class="navbar-item">Dashboard</a>
+        <a href="/admin/analytics" class="navbar-item" style="color: var(--color-primary);">Analytics</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="analytics-page">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Analytics Overview</h1>
+        <p class="page-subtitle">Performance metrics and risk intelligence insights</p>
+      </div>
+      <a href="/admin/dashboard" class="back-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-label">Total Assessments</div>
+        <div class="stat-value" id="totalAssessments">--</div>
+        <div class="stat-sub" id="monthlyAssessments">-- this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Leads</div>
+        <div class="stat-value" id="totalLeads">--</div>
+        <div class="stat-sub" id="convertedLeads">-- converted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Average Score</div>
+        <div class="stat-value" id="avgScore">--</div>
+        <div class="stat-sub">across all assessments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Conversion Rate</div>
+        <div class="stat-value" id="conversionRate">--%</div>
+        <div class="stat-sub">leads to customers</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid" id="chartsGrid" style="display: none;">
+
+      <!-- Risk Distribution -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Risk Level Distribution</span>
+        </div>
+        <div class="chart-body">
+          <div class="donut-wrap" id="riskDonut">
+            <div class="donut-chart">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="16"/>
+                <circle id="donut1" cx="70" cy="70" r="54" fill="none" stroke="#10b981" stroke-width="16"
+                  stroke-dasharray="0 339.3" stroke-dashoffset="0"/>
+                <circle id="donut2" cx="70" cy="70" r="54" fill="none" stroke="#f59e0b" stroke-width="16"
+                  stroke-dasharray="0 339.3" stroke-dashoffset="0"/>
+                <circle id="donut3" cx="70" cy="70" r="54" fill="none" stroke="#f97316" stroke-width="16"
+                  stroke-dasharray="0 339.3" stroke-dashoffset="0"/>
+                <circle id="donut4" cx="70" cy="70" r="54" fill="none" stroke="#ef4444" stroke-width="16"
+                  stroke-dasharray="0 339.3" stroke-dashoffset="0"/>
+              </svg>
+              <div class="donut-center">
+                <span class="donut-center-value" id="donutTotal">0</span>
+                <span class="donut-center-label">Total</span>
+              </div>
+            </div>
+            <div class="donut-legend" id="riskLegend"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lead Status / Conversion -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Lead Conversion Status</span>
+        </div>
+        <div class="chart-body">
+          <div class="conversion-bars" id="conversionBars"></div>
+        </div>
+      </div>
+
+      <!-- Risk Distribution Bar -->
+      <div class="chart-card full-width">
+        <div class="chart-header">
+          <span class="chart-title">Risk Breakdown</span>
+        </div>
+        <div class="chart-body">
+          <div class="bar-chart" id="riskBars"></div>
+        </div>
+      </div>
+
+      <!-- Trends -->
+      <div class="chart-card full-width">
+        <div class="chart-header">
+          <span class="chart-title">Assessment Trends (Last 30 Days)</span>
+        </div>
+        <div class="chart-body">
+          <div class="trend-chart" id="trendChart">
+            <div class="empty-state" id="trendEmpty">
+              <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+              </svg>
+              <p>No trend data available yet</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner-lg"></div>
+      <p style="color: var(--text-muted); font-size: 14px;">Loading analytics...</p>
+    </div>
+  </main>
+
+  <script>
+    const COLORS = {
+      low: '#10b981',
+      moderate: '#f59e0b',
+      high: '#f97316',
+      critical: '#ef4444'
+    };
+
+    async function loadAnalytics() {
+      const token = localStorage.getItem('accessToken');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      try {
+        const [overviewRes, riskRes, convRes, trendsRes] = await Promise.all([
+          fetch('/api/analytics/overview', { headers }),
+          fetch('/api/analytics/risk-distribution', { headers }),
+          fetch('/api/analytics/conversion', { headers }),
+          fetch('/api/analytics/trends', { headers })
+        ]);
+
+        const overview = overviewRes.ok ? await overviewRes.json() : {};
+        const risk = riskRes.ok ? await riskRes.json() : {};
+        const conv = convRes.ok ? await convRes.json() : {};
+        const trends = trendsRes.ok ? await trendsRes.json() : [];
+
+        renderStats(overview);
+        renderRiskBars(risk);
+        renderDonut(risk);
+        renderConversion(conv);
+        renderTrends(trends);
+
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('chartsGrid').style.display = 'grid';
+
+      } catch (err) {
+        console.error('Failed to load analytics:', err);
+        document.getElementById('loadingOverlay').innerHTML = `
+          <svg width="48" height="48" fill="none" stroke="#ef4444" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <p style="color: var(--color-danger);">Failed to load analytics data</p>
+        `;
+      }
+    }
+
+    function renderStats(data) {
+      document.getElementById('totalAssessments').textContent = data.totalAssessments || 0;
+      document.getElementById('totalLeads').textContent = data.totalLeads || 0;
+      document.getElementById('avgScore').textContent = data.avgScore || 0;
+      document.getElementById('conversionRate').textContent = `${data.conversionRate || 0}%`;
+      document.getElementById('monthlyAssessments').textContent = `${data.monthlyAssessments || 0} this month`;
+      document.getElementById('convertedLeads').textContent = `${data.convertedLeads || 0} converted`;
+    }
+
+    function renderRiskBars(risk) {
+      const total = Object.values(risk).reduce((a, b) => a + b, 0);
+      if (total === 0) {
+        document.getElementById('riskBars').innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 16px;">No risk data available</p>';
+        return;
+      }
+      const max = Math.max(...Object.values(risk));
+      const levels = ['low', 'moderate', 'high', 'critical'];
+      const labels = { low: 'Low', moderate: 'Moderate', high: 'High', critical: 'Critical' };
+
+      document.getElementById('riskBars').innerHTML = levels.map(level => {
+        const val = risk[level] || 0;
+        const pct = max > 0 ? (val / max * 100) : 0;
+        return `
+          <div class="bar-row">
+            <span class="bar-label">${labels[level]}</span>
+            <div class="bar-track">
+              <div class="bar-fill ${level}" style="width: ${pct}%;">${val}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderDonut(risk) {
+      const total = Object.values(risk).reduce((a, b) => a + b, 0);
+      document.getElementById('donutTotal').textContent = total;
+
+      if (total === 0) {
+        document.getElementById('riskLegend').innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">No data</p>';
+        return;
+      }
+
+      const circumference = 2 * Math.PI * 54; // ~339.3
+      const levels = [
+        { key: 'low', color: '#10b981' },
+        { key: 'moderate', color: '#f59e0b' },
+        { key: 'high', color: '#f97316' },
+        { key: 'critical', color: '#ef4444' }
+      ];
+
+      let offset = 0;
+      const legendHtml = levels.map((level, i) => {
+        const val = risk[level.key] || 0;
+        const pct = val / total * 100;
+        const dashLen = circumference * pct / 100;
+        const el = document.getElementById(`donut${i + 1}`);
+        if (el) {
+          el.setAttribute('stroke-dasharray', `${dashLen} ${circumference}`);
+          el.setAttribute('stroke-dashoffset', -offset);
+          el.style.opacity = '1';
+        }
+        offset += dashLen;
+        return `
+          <div class="legend-item">
+            <div class="legend-dot" style="background: ${level.color};"></div>
+            <span style="color: var(--text-secondary);">${level.key.charAt(0).toUpperCase() + level.key.slice(1)}</span>
+            <span style="color: var(--text-primary); font-weight: 600; margin-left: auto;">${val}</span>
+          </div>`;
+      }).join('');
+
+      document.getElementById('riskLegend').innerHTML = legendHtml;
+    }
+
+    function renderConversion(conv) {
+      const total = conv.total || 0;
+      if (total === 0) {
+        document.getElementById('conversionBars').innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center;">No conversion data</p>';
+        return;
+      }
+      const max = Math.max(...[conv.new || 0, conv.contacted || 0, conv.converted || 0, conv.lost || 0]);
+      const rows = [
+        { key: 'new', label: 'New', color: 'new' },
+        { key: 'contacted', label: 'Contacted', color: 'contacted' },
+        { key: 'converted', label: 'Converted', color: 'converted' },
+        { key: 'lost', label: 'Lost', color: 'lost' }
+      ];
+
+      document.getElementById('conversionBars').innerHTML = rows.map(row => {
+        const val = conv[row.key] || 0;
+        const pct = max > 0 ? (val / max * 100) : 0;
+        return `
+          <div class="conv-row">
+            <span class="conv-label">${row.label}</span>
+            <div class="conv-bar-wrap">
+              <div class="conv-bar ${row.color}" style="width: ${pct}%;">${val}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderTrends(trends) {
+      if (!trends.length) return;
+
+      const max = Math.max(...trends.map(t => t.count));
+
+      document.getElementById('trendEmpty').style.display = 'none';
+      document.getElementById('trendChart').innerHTML = trends.map(t => {
+        const pct = max > 0 ? (t.count / max * 100) : 0;
+        const date = new Date(t.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return `
+          <div class="trend-row">
+            <span class="trend-date">${date}</span>
+            <div class="trend-bar-wrap">
+              <div class="trend-bar" style="width: ${pct}%;"></div>
+            </div>
+            <span class="trend-count">${t.count}</span>
+          </div>`;
+      }).join('');
+    }
+
+    loadAnalytics();
+  </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .about-page { background: #fff; }
+    .about-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      padding: 100px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+    }
+    .about-hero-content { position: relative; z-index: 1; }
+    .about-hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 20px; }
+    .about-hero p { font-size: 1.25rem; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto; }
+    .about-section { padding: 80px 0; }
+    .about-section:nth-child(even) { background: #f8fafc; }
+    .section-label { font-size: 12px; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .section-title { font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 24px; }
+    .section-text { font-size: 1.125rem; color: #64748b; line-height: 1.8; max-width: 700px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 3rem; font-weight: 800; color: #3b82f6; font-family: var(--font-mono); }
+    .stat-label { font-size: 14px; color: #64748b; margin-top: 8px; }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+    .value-card { background: #fff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .value-icon { width: 56px; height: 56px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #3b82f6; margin-bottom: 20px; }
+    .value-card h3 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+    .value-card p { font-size: 14px; color: #64748b; line-height: 1.7; }
+    .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
+    .team-card { text-align: center; }
+    .team-avatar { width: 120px; height: 120px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2.5rem; font-weight: 700; }
+    .team-card h3 { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .team-card p { font-size: 14px; color: #64748b; }
+    .timeline { position: relative; max-width: 600px; margin: 48px auto 0; padding-left: 40px; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
+    .timeline-item { position: relative; padding-bottom: 40px; }
+    .timeline-item::before { content: ''; position: absolute; left: -46px; top: 4px; width: 14px; height: 14px; background: #3b82f6; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 3px #3b82f6; }
+    .timeline-year { font-size: 14px; font-weight: 700; color: #3b82f6; margin-bottom: 8px; }
+    .timeline-item h3 { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .timeline-item p { font-size: 14px; color: #64748b; }
+    .cta-section { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 80px 0; text-align: center; }
+    .cta-section h2 { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .cta-section p { font-size: 1.125rem; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
+    @media (max-width: 968px) { .stats-grid, .values-grid, .team-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .about-hero h1 { font-size: 2rem; } .section-title { font-size: 1.75rem; } .stats-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="about-page">
+    <nav class="navbar">
+      <div class="container navbar-content">
+        <a href="/" class="navbar-brand">Cover<span>Score</span> AI</a>
+        <div class="navbar-menu">
+          <a href="/#features" class="navbar-item">Features</a>
+          <a href="/pricing" class="navbar-item">Pricing</a>
+          <a href="/about" class="navbar-item">About</a>
+          <a href="/contact" class="navbar-item">Contact</a>
+          <a href="/auth/login" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="/assessment/start" class="btn btn-primary btn-sm">Get Started</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="about-hero">
+      <div class="container">
+        <div class="about-hero-content">
+          <h1>About CoverScore AI</h1>
+          <p>We're on a mission to revolutionize how businesses understand and manage their insurance risk through the power of artificial intelligence.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">Built by Insurers, Powered by AI</h2>
+        <p class="section-text">CoverScore AI was founded in 2023 by a team of insurance veterans and AI engineers who saw a critical gap in the market. Traditional risk assessment was slow, expensive, and often inaccurate. We believed that by combining deep insurance industry expertise with cutting-edge AI technology, we could create something transformative.</p>
+        <p class="section-text" style="margin-top: 20px;">Today, we've helped over 10,000 businesses across the United States understand their risk profiles, save money on insurance, and make smarter decisions about coverage. Our AI-powered platform analyzes hundreds of data points to generate insights that used to require expensive consultants weeks to produce.</p>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Businesses Served</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">$2.1B</div>
+            <div class="stat-label">Coverage Analyzed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Customer Satisfaction</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Team Members</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="section-label">Our Values</div>
+        <h2 class="section-title">What Drives Us</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Security First</h3>
+            <p>Your business data is precious. We employ bank-level encryption, SOC 2 Type II compliance, and regular security audits to keep your information safe.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>Instant Value</h3>
+            <p>We respect your time. Our AI delivers comprehensive risk assessments in minutes, not weeks. Get insights immediately, act on them right away.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h3>Customer Obsessed</h3>
+            <p>Your success is our success. We provide dedicated support, regular check-ins, and continuously improve based on customer feedback.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="section-label">Our Journey</div>
+        <h2 class="section-title">The CoverScore Timeline</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">January 2023</div>
+            <h3>Company Founded</h3>
+            <p>CoverScore AI was founded in San Francisco with a vision to democratize AI-powered risk assessment.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">June 2023</div>
+            <h3>Platform Launch</h3>
+            <p>We launched our first version of the risk assessment platform with 500 beta users.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">March 2024</div>
+            <h3>Series A Funding</h3>
+            <p>Secured $12M in Series A funding to accelerate product development and expand our team.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">January 2025</div>
+            <h3>10,000 Businesses Milestone</h3>
+            <p>Reached 10,000 businesses using CoverScore AI to manage their insurance risk.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2026</div>
+            <h3>AI Assistant Launch</h3>
+            <p>Launched our AI-powered insurance assistant and expanded into new verticals.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <div class="container">
+        <div class="section-label">Our Team</div>
+        <h2 class="section-title">Meet the Leadership</h2>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">SR</div>
+            <h3>Sarah Rodriguez</h3>
+            <p>CEO & Co-Founder</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">MC</div>
+            <h3>Michael Chen</h3>
+            <p>CTO & Co-Founder</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">JM</div>
+            <h3>Jessica Martinez</h3>
+            <p>Chief Insurance Officer</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">DK</div>
+            <h3>David Kim</h3>
+            <p>VP of Engineering</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Understand Your Risk?</h2>
+        <p>Join thousands of businesses that trust CoverScore AI for their insurance intelligence.</p>
+        <a href="/assessment/start" class="btn btn-lg" style="background: white; color: #3b82f6;">Start Your Free Assessment</a>
+      </div>
+    </section>
+
+    <footer style="background: #0f172a; padding: 48px 0; margin-top: 0;">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+          <div>
+            <a href="/" class="navbar-brand" style="font-size: 20px;">Cover<span>Score</span> AI</a>
+            <p style="color: #64748b; font-size: 14px; margin-top: 8px;">AI-Powered Insurance Risk Intelligence</p>
+          </div>
+          <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: #64748b; font-size: 14px; text-decoration: none;">Privacy Policy</a>
+            <a href="/terms" style="color: #64748b; font-size: 14px; text-decoration: none;">Terms of Service</a>
+            <a href="/security" style="color: #64748b; font-size: 14px; text-decoration: none;">Security</a>
+            <a href="/contact" style="color: #64748b; font-size: 14px; text-decoration: none;">Contact</a>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #1e293b; margin-top: 32px; padding-top: 24px; color: #64748b; font-size: 14px;">
+          2026 CoverScore AI. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

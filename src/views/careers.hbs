@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careers - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .careers-page { background: #fff; }
+    .careers-hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); padding: 100px 0; text-align: center; }
+    .careers-hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 20px; }
+    .careers-hero p { font-size: 1.25rem; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto; }
+    .careers-section { padding: 80px 0; }
+    .careers-section:nth-child(even) { background: #f8fafc; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; }
+    .benefit-card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+    .benefit-icon { width: 56px; height: 56px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #3b82f6; margin: 0 auto 16px; }
+    .benefit-card h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    .benefit-card p { font-size: 13px; color: #64748b; }
+    .jobs-list { margin-top: 48px; }
+    .job-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; transition: all 150ms ease; }
+    .job-card:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1); }
+    .job-info h3 { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .job-meta { display: flex; gap: 16px; font-size: 13px; color: #64748b; }
+    .job-meta span { display: flex; align-items: center; gap: 4px; }
+    .job-tags { display: flex; gap: 8px; }
+    .job-tag { background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: #64748b; }
+    .culture-section { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: #fff; }
+    .culture-section .section-title { color: #fff; }
+    .culture-section .section-text { color: rgba(255,255,255,0.7); }
+    .perks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 40px; }
+    .perk-item { display: flex; gap: 16px; }
+    .perk-icon { width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #3b82f6; flex-shrink: 0; }
+    .perk-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .perk-item p { font-size: 13px; color: rgba(255,255,255,0.6); }
+    @media (max-width: 968px) { .benefits-grid, .perks-grid { grid-template-columns: repeat(2, 1fr); } .job-card { flex-direction: column; align-items: flex-start; gap: 16px; } }
+    @media (max-width: 640px) { .careers-hero h1 { font-size: 2rem; } .benefits-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="careers-page">
+    <nav class="navbar">
+      <div class="container navbar-content">
+        <a href="/" class="navbar-brand">Cover<span>Score</span> AI</a>
+        <div class="navbar-menu">
+          <a href="/about" class="navbar-item">About</a>
+          <a href="/careers" class="navbar-item">Careers</a>
+          <a href="/contact" class="navbar-item">Contact</a>
+          <a href="/auth/login" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="/assessment/start" class="btn btn-primary btn-sm">Get Started</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="careers-hero">
+      <div class="container">
+        <h1>Join Our Team</h1>
+        <p>Help us revolutionize the insurance industry with AI. We're building the future of risk intelligence and we want you to be part of it.</p>
+      </div>
+    </section>
+
+    <section class="careers-section">
+      <div class="container">
+        <div class="section-label">Why Join Us</div>
+        <h2 class="section-title">Benefits & Perks</h2>
+        <p class="section-text">We believe in taking care of our team members. Here's what we offer:</p>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>Health Insurance</h3>
+            <p>Comprehensive medical, dental, and vision coverage</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <h3>Unlimited PTO</h3>
+            <p>Take time off when you need it. We trust you.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h3>Remote-First</h3>
+            <p>Work from anywhere in the US. Quarterly team retreats.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <h3>Competitive Pay</h3>
+            <p>Top-of-market salaries with equity participation</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            </div>
+            <h3>Learning Budget</h3>
+            <p>$2,000/year for courses, conferences, and books</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <h3>Home Office</h3>
+            <p>$1,000 setup budget for your home office</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+            <h3>Mental Health</h3>
+            <p>Full mental health support and wellness programs</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h3>Parental Leave</h3>
+            <p>16 weeks paid leave for all new parents</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="careers-section">
+      <div class="container">
+        <div class="section-label">Open Positions</div>
+        <h2 class="section-title">Join Our Growing Team</h2>
+        <p class="section-text">We're always looking for talented individuals who are passionate about AI and insurance innovation.</p>
+        <div class="jobs-list">
+          <div class="job-card">
+            <div class="job-info">
+              <h3>Senior AI/ML Engineer</h3>
+              <div class="job-meta">
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> San Francisco / Remote</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Engineering</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Full-time</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="job-tags">
+                <span class="job-tag">Python</span>
+                <span class="job-tag">TensorFlow</span>
+                <span class="job-tag">AWS</span>
+              </div>
+              <a href="/careers/apply" class="btn btn-primary btn-sm">Apply</a>
+            </div>
+          </div>
+          <div class="job-card">
+            <div class="job-info">
+              <h3>Product Manager</h3>
+              <div class="job-meta">
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> San Francisco / Remote</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Product</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Full-time</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="job-tags">
+                <span class="job-tag">SaaS</span>
+                <span class="job-tag">B2B</span>
+                <span class="job-tag">AI</span>
+              </div>
+              <a href="/careers/apply" class="btn btn-primary btn-sm">Apply</a>
+            </div>
+          </div>
+          <div class="job-card">
+            <div class="job-info">
+              <h3>Insurance Data Analyst</h3>
+              <div class="job-meta">
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> New York / Remote</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Analytics</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Full-time</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="job-tags">
+                <span class="job-tag">SQL</span>
+                <span class="job-tag">Python</span>
+                <span class="job-tag">Insurance</span>
+              </div>
+              <a href="/careers/apply" class="btn btn-primary btn-sm">Apply</a>
+            </div>
+          </div>
+          <div class="job-card">
+            <div class="job-info">
+              <h3>Customer Success Manager</h3>
+              <div class="job-meta">
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> San Francisco / Remote</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Customer Success</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Full-time</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="job-tags">
+                <span class="job-tag">SaaS</span>
+                <span class="job-tag">Enterprise</span>
+                <span class="job-tag">B2B</span>
+              </div>
+              <a href="/careers/apply" class="btn btn-primary btn-sm">Apply</a>
+            </div>
+          </div>
+          <div class="job-card">
+            <div class="job-info">
+              <h3>Senior Frontend Engineer</h3>
+              <div class="job-meta">
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> Remote</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Engineering</span>
+                <span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Full-time</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="job-tags">
+                <span class="job-tag">React</span>
+                <span class="job-tag">Node.js</span>
+                <span class="job-tag">TypeScript</span>
+              </div>
+              <a href="/careers/apply" class="btn btn-primary btn-sm">Apply</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="careers-section culture-section">
+      <div class="container">
+        <div class="section-label" style="color: rgba(255,255,255,0.6);">Our Culture</div>
+        <h2 class="section-title">Work That Matters</h2>
+        <p class="section-text">At CoverScore AI, you'll tackle meaningful challenges that help businesses protect what they've built. We move fast, ship often, and always keep the customer at the center of everything we do.</p>
+        <div class="perks-grid">
+          <div class="perk-item">
+            <div class="perk-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Fast-Paced Environment</h4>
+              <p>We ship weekly. Your ideas go from concept to production fast.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Smart teammates</h4>
+              <p>Work alongside talented engineers, insurers, and product experts.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Real Impact</h4>
+              <p>Your work directly helps 10,000+ businesses manage their risk.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Growth Opportunities</h4>
+              <p>Clear career paths with mentorship and training programs.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Diverse & Inclusive</h4>
+              <p>We celebrate differences and create space for everyone to thrive.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Quarterly Retreats</h4>
+              <p>Meet your teammates in person at our all-company gatherings.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="careers-section" style="background: #f8fafc; text-align: center;">
+      <div class="container">
+        <h2 class="section-title">Don't See a Perfect Fit?</h2>
+        <p class="section-text" style="max-width: 500px; margin: 0 auto;">We're always interested in meeting talented people. Send us your resume and tell us how you could contribute to our mission.</p>
+        <a href="mailto:careers@coverscore.ai" class="btn btn-primary btn-lg" style="margin-top: 24px;">Send Us Your Resume</a>
+      </div>
+    </section>
+
+    <footer style="background: #0f172a; padding: 48px 0; margin-top: 0;">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+          <div>
+            <a href="/" class="navbar-brand" style="font-size: 20px;">Cover<span>Score</span> AI</a>
+            <p style="color: #64748b; font-size: 14px; margin-top: 8px;">Building the future of insurance risk intelligence</p>
+          </div>
+          <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: #64748b; font-size: 14px; text-decoration: none;">Privacy</a>
+            <a href="/terms" style="color: #64748b; font-size: 14px; text-decoration: none;">Terms</a>
+            <a href="/contact" style="color: #64748b; font-size: 14px; text-decoration: none;">Contact</a>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #1e293b; margin-top: 32px; padding-top: 24px; color: #64748b; font-size: 14px;">
+          2026 CoverScore AI. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

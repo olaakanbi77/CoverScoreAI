@@ -1,0 +1,385 @@
+  <div class="container py-8">
+  <div class="flex items-center justify-between gap-6 mb-8">
+    <div>
+      <h1 class="page-title">Admin Dashboard</h1>
+      <p class="page-subtitle">Manage and track assessment leads with priority-based risk intelligence</p>
+    </div>
+    <div class="actions">
+      <a href="/admin/analytics" class="btn btn-secondary btn-sm">Analytics</a>
+      <a href="/admin/settings" class="btn btn-ghost btn-sm">Settings</a>
+    </div>
+  </div>
+
+  <div class="grid grid-4 gap-6 mb-8">
+    <div class="stat-card glass-card">
+      <div class="stat-label">Total Leads</div>
+      <div class="stat-value" id="totalLeads">0</div>
+    </div>
+    <div class="stat-card glass-card">
+      <div class="stat-label">Average Score</div>
+      <div class="stat-value" id="avgScore">0</div>
+    </div>
+    <div class="stat-card glass-card">
+      <div class="stat-label">High Risk Cases</div>
+      <div class="stat-value" style="color: var(--color-danger);" id="highRiskCount">0</div>
+    </div>
+    <div class="stat-card glass-card">
+      <div class="stat-label">Conversion Rate</div>
+      <div class="stat-value" style="color: var(--color-success);" id="conversionRate">0%</div>
+    </div>
+  </div>
+
+  <div class="card glass-card mb-8">
+    <div class="card-header flex items-center justify-between">
+      <h3 class="text-lg font-semibold">Lead Management</h3>
+      <div class="flex items-center gap-4">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search leads..." onkeyup="debounceSearch()">
+      </div>
+    </div>
+    
+    <div class="filters p-6" style="border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02);">
+      <select class="filter-select" id="filterRisk" onchange="loadLeads(1)">
+        <option value="">All Risk Levels</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="moderate">Moderate</option>
+        <option value="low">Low</option>
+      </select>
+      <select class="filter-select" id="filterIndustry" onchange="loadLeads(1)">
+        <option value="">All Industries</option>
+        <option value="agribusiness">Agribusiness</option>
+        <option value="construction">Construction</option>
+        <option value="fintech">Fintech</option>
+        <option value="healthcare">Healthcare</option>
+        <option value="hospitality">Hospitality</option>
+        <option value="logistics">Logistics</option>
+        <option value="manufacturing">Manufacturing</option>
+        <option value="oil_gas">Oil & Gas</option>
+        <option value="professional_services">Professional Services</option>
+        <option value="real_estate">Real Estate</option>
+        <option value="retail">Retail</option>
+        <option value="technology">Technology</option>
+        <option value="other">Other</option>
+      </select>
+      <select class="filter-select" id="filterStatus" onchange="loadLeads(1)">
+        <option value="">All Statuses</option>
+        <option value="new">New</option>
+        <option value="contacted">Contacted</option>
+        <option value="converted">Converted</option>
+        <option value="lost">Lost</option>
+      </select>
+      <select class="filter-select" id="filterEntityType" onchange="loadLeads(1)">
+        <option value="">All Types</option>
+        <option value="business">Business</option>
+        <option value="individual">Individual</option>
+      </select>
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="leads-table">
+        <thead>
+          <tr class="leads-table-header" style="background: rgba(255,255,255,0.05);">
+            <th class="px-6 py-3">Lead Info</th>
+            <th class="px-6 py-3">Type</th>
+            <th class="px-6 py-3">Score</th>
+            <th class="px-6 py-3">Risk Level</th>
+            <th class="px-6 py-3">Industry</th>
+            <th class="px-6 py-3">Date</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="leadsList">
+          <tr><td colspan="8" class="text-center py-12 text-muted">Loading leads...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer flex items-center justify-between" id="paginationBar" style="display: none;">
+      <div class="text-sm text-muted" id="paginationInfo"></div>
+      <div class="pagination" id="paginationButtons"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Lead Detail Modal -->
+<div id="leadModal" class="modal-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+  <div class="glass-card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+    <div class="card-header flex items-center justify-between">
+      <h3 class="text-xl font-bold" id="modalTitle">Lead Details</h3>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()" style="min-width: unset; width: 36px; height: 36px; padding: 0;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="card-body overflow-y-auto" id="modalBody">
+      <!-- Content will be injected here -->
+    </div>
+    <div class="card-footer flex justify-end gap-3">
+      <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+      <button class="btn btn-primary" id="saveNotesBtn" onclick="saveNotes()">Save Notes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentPage = 1;
+  let currentLeadId = null;
+  let searchTimeout = null;
+
+  async function init() {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      window.location.href = '/auth/login';
+      return;
+    }
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      if (user.role === 'user') {
+        window.location.href = '/dashboard';
+        return;
+      }
+    }
+
+    await loadStats();
+    await loadLeads(1);
+  }
+
+  async function loadStats() {
+    const token = localStorage.getItem('accessToken');
+    try {
+      const [overviewRes, riskRes] = await Promise.all([
+        fetch('/api/analytics/overview', { headers: { Authorization: `Bearer ${token}` } }),
+        fetch('/api/analytics/risk-distribution', { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+
+      const overview = overviewRes.ok ? await overviewRes.json() : {};
+      const risk = riskRes.ok ? await riskRes.json() : {};
+
+      document.getElementById('totalLeads').textContent = overview.totalLeads || 0;
+      document.getElementById('avgScore').textContent = overview.avgScore || 0;
+      document.getElementById('highRiskCount').textContent = (risk.high || 0) + (risk.critical || 0);
+      document.getElementById('conversionRate').textContent = `${overview.conversionRate || 0}%`;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function loadLeads(page = 1) {
+    currentPage = page;
+    const token = localStorage.getItem('accessToken');
+    const risk = document.getElementById('filterRisk').value;
+    const industry = document.getElementById('filterIndustry').value;
+    const status = document.getElementById('filterStatus').value;
+    const entityType = document.getElementById('filterEntityType').value;
+    const search = document.getElementById('searchInput').value;
+
+    let url = `/api/leads?page=${page}&limit=15`;
+    if (risk) url += `&risk_level=${risk}`;
+    if (industry) url += `&industry=${industry}`;
+    if (status) url += `&status=${status}`;
+    if (entityType) url += `&entity_type=${entityType}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+
+    try {
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.status === 403) { window.location.href = '/dashboard'; return; }
+      if (!res.ok) throw new Error('Failed to load leads');
+      const data = await res.json();
+      renderLeads(data.leads);
+      renderPagination(data.pagination);
+    } catch (err) {
+      console.error(err);
+      document.getElementById('leadsList').innerHTML = `<tr><td colspan="7" class="text-center py-12 text-danger">Failed to load leads</td></tr>`;
+    }
+  }
+
+  function renderLeads(leads) {
+    if (!leads.length) {
+      document.getElementById('leadsList').innerHTML = `
+        <tr><td colspan="8">
+          <div class="flex flex-col items-center justify-center p-12 text-muted">
+            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" class="mb-4 opacity-20"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            <div>No leads found matching your criteria</div>
+          </div>
+        </td></tr>`;
+      document.getElementById('paginationBar').style.display = 'none';
+      return;
+    }
+
+    let html = '';
+    leads.forEach(lead => {
+      const date = new Date(lead.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const industryDisplay = lead.industry ? formatIndustry(lead.industry) : '-';
+      const riskLevel = (lead.riskLevel || 'low').toLowerCase();
+      const eType = lead.entity_type || 'business';
+      const typeBadge = eType === 'individual'
+        ? '<span class="badge" style="background: rgba(168,85,247,0.15); color: #c084fc; font-size: 10px;">👤 Individual</span>'
+        : '<span class="badge" style="background: rgba(59,130,246,0.15); color: #93c5fd; font-size: 10px;">🏢 Business</span>';
+
+      html += `
+        <tr class="leads-table-row">
+          <td class="px-6 py-4">
+            <div class="font-bold text-white">${escapeHtml(lead.name)}</div>
+            <div class="text-xs text-muted">${escapeHtml(lead.email)}</div>
+          </td>
+          <td class="px-6 py-4">${typeBadge}</td>
+          <td class="px-6 py-4">
+            <span class="font-mono font-bold" style="color: var(--color-primary);">${lead.score || '-'}</span>
+          </td>
+          <td class="px-6 py-4">
+            <span class="badge badge-${riskLevel}">${riskLevel.toUpperCase()}</span>
+          </td>
+          <td class="px-6 py-4 text-sm text-muted">${industryDisplay}</td>
+          <td class="px-6 py-4 text-sm text-muted">${date}</td>
+          <td class="px-6 py-4">
+            <select class="filter-select py-1 px-2 text-xs" onchange="updateStatus(${lead.id}, this.value)" style="width: auto; min-height: 32px;">
+              <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New</option>
+              <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="converted" ${lead.status === 'converted' ? 'selected' : ''}>Converted</option>
+              <option value="lost" ${lead.status === 'lost' ? 'selected' : ''}>Lost</option>
+            </select>
+          </td>
+          <td class="px-6 py-4 text-right">
+            <button class="btn btn-ghost btn-sm" onclick="viewLead(${lead.id})">Details</button>
+          </td>
+        </tr>`;
+    });
+
+    document.getElementById('leadsList').innerHTML = html;
+    document.getElementById('paginationBar').style.display = 'flex';
+  }
+
+  function renderPagination(pagination) {
+    document.getElementById('paginationInfo').textContent = `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total}`;
+    let html = '';
+    const totalPages = pagination.totalPages;
+    const current = pagination.page;
+    if (pagination.page > 1) html += `<button class="pagination-btn" onclick="loadLeads(${pagination.page - 1})">&laquo;</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= current - 2 && i <= current + 2)) {
+        html += `<button class="pagination-btn ${i === current ? 'active' : ''}" onclick="loadLeads(${i})">${i}</button>`;
+      } else if (i === current - 3 || i === current + 3) {
+        html += `<span style="padding: 0 6px;">...</span>`;
+      }
+    }
+    if (pagination.page < totalPages) html += `<button class="pagination-btn" onclick="loadLeads(${pagination.page + 1})">&raquo;</button>`;
+    document.getElementById('paginationButtons').innerHTML = html;
+  }
+
+  async function viewLead(id) {
+    const token = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch(`/api/leads/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error('Failed to load lead details');
+      const lead = await res.json();
+      currentLeadId = lead.id;
+      const assessment = lead.assessment || {};
+      const aiReport = assessment.aiReport || {};
+      const riskLevel = (lead.riskLevel || 'low').toLowerCase();
+
+      document.getElementById('modalTitle').textContent = `Lead: ${lead.name}`;
+      let reportHtml = '';
+      if (aiReport.executiveSummary) {
+        reportHtml += `<div class="mb-6"><h4 class="text-xs uppercase text-muted font-bold mb-2">Executive Summary</h4><div class="p-4 bg-white/5 rounded-lg text-sm text-muted">${escapeHtml(aiReport.executiveSummary)}</div></div>`;
+      }
+      if (aiReport.recommendations?.length) {
+        reportHtml += `<div class="mb-6"><h4 class="text-xs uppercase text-muted font-bold mb-2">Recommendations</h4><div class="flex flex-wrap gap-2">${aiReport.recommendations.map(r => `<span class="badge badge-low" style="background: rgba(59,130,246,0.1); color: var(--color-primary);">${escapeHtml(r)}</span>`).join('')}</div></div>`;
+      }
+
+      document.getElementById('modalBody').innerHTML = `
+        <div class="grid grid-4 gap-6 mb-8">
+          <div><div class="text-[10px] uppercase text-muted font-bold">Status</div><div class="text-white capitalize">${lead.status || 'New'}</div></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Risk</div><span class="badge badge-${riskLevel}">${riskLevel.toUpperCase()}</span></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Score</div><div class="font-bold text-white font-mono">${lead.score || '-'}</div></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Date</div><div class="text-white">${new Date(lead.createdAt).toLocaleDateString()}</div></div>
+        </div>
+        <div class="grid grid-2 gap-8 mb-8">
+          <div>
+            <h4 class="text-xs uppercase text-muted font-bold mb-3">Contact</h4>
+            <div class="space-y-4">
+              <div class="flex justify-between text-sm"><span class="text-muted">Email:</span><span>${escapeHtml(lead.email)}</span></div>
+              <div class="flex justify-between text-sm"><span class="text-muted">Phone:</span><span>${lead.phone || '-'}</span></div>
+              <div class="flex gap-2 mt-4">
+                <a href="mailto:${lead.email}" class="btn btn-primary btn-sm flex-1">Email</a>
+                ${lead.phone ? `<a href="https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn btn-success btn-sm flex-1">WhatsApp</a>` : ''}
+              </div>
+            </div>
+          </div>
+          <div><h4 class="text-xs uppercase text-muted font-bold mb-3">Internal Notes</h4><textarea class="search-input min-h-[100px] text-sm" id="leadNotes" placeholder="Add notes...">${escapeHtml(lead.notes || '')}</textarea></div>
+        </div>
+        ${reportHtml}`;
+      document.getElementById('leadModal').style.display = 'flex';
+      document.getElementById('leadModal').classList.add('flex');
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to load lead details', 'error');
+    }
+  }
+
+  function closeModal() { document.getElementById('leadModal').style.display = 'none'; currentLeadId = null; }
+  async function updateStatus(id, status) {
+    const token = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch(`/api/leads/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error('Failed to update status');
+      showToast('Status updated', 'success');
+      await loadStats();
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to update status', 'error');
+      loadLeads(currentPage);
+    }
+  }
+
+  async function saveNotes() {
+    if (!currentLeadId) return;
+    const token = localStorage.getItem('accessToken');
+    const notes = document.getElementById('leadNotes').value;
+    try {
+      const res = await fetch(`/api/leads/${currentLeadId}/notes`, { method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ notes }) });
+      if (!res.ok) throw new Error('Failed to save notes');
+      showToast('Notes saved', 'success');
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      showToast('Failed to save notes', 'error');
+    }
+  }
+
+  function debounceSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => loadLeads(1), 300); }
+  function formatIndustry(industry) {
+    const map = { 
+      'agribusiness': 'Agribusiness',
+      'construction': 'Construction',
+      'fintech': 'Fintech',
+      'healthcare': 'Healthcare', 
+      'hospitality': 'Hospitality',
+      'logistics': 'Logistics',
+      'manufacturing': 'Manufacturing',
+      'oil_gas': 'Oil & Gas',
+      'professional_services': 'Services', 
+      'real_estate': 'Real Estate', 
+      'retail': 'Retail', 
+      'technology': 'Technology', 
+      'other': 'Other' 
+    };
+    return map[industry] || industry.charAt(0).toUpperCase() + industry.slice(1);
+  }
+  function showToast(message, type = 'success') {
+    const container = document.querySelector('.toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `<div>${message}</div>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+  }
+  function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  init();
+</script>

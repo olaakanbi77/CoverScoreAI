@@ -1,0 +1,95 @@
+<div class="container container-sm" style="padding: 40px 0;">
+  <div class="card glass-card">
+    <div class="card-header">
+      <h2 class="text-center">Welcome Back</h2>
+      <p class="text-center text-muted">Sign in to your CoverScore account</p>
+    </div>
+    <div class="card-body">
+      <form id="loginForm" class="flex flex-col gap-4">
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+
+        <div class="flex justify-between items-center" style="margin-top: 8px;">
+          <label class="flex items-center gap-2 text-sm cursor-pointer">
+            <input type="checkbox" name="remember" style="width: 16px; height: 16px;">
+            Remember me
+          </label>
+          <a href="/auth/password-reset" class="text-sm">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+          Sign In
+        </button>
+      </form>
+
+      <div id="errorMessage" class="text-center text-danger text-sm" style="margin-top: 16px; display: none;"></div>
+    </div>
+    <div class="card-footer text-center">
+      <span class="text-muted text-sm">Don't have an account?</span>
+      <a href="/auth/register" class="text-sm font-semibold">Sign up</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorDiv = document.getElementById('errorMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorDiv.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in...';
+
+    const formData = new FormData(form);
+    const data = {
+      email: formData.get('email'),
+      password: formData.get('password')
+    };
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || 'Login failed');
+      }
+
+      localStorage.setItem('accessToken', result.accessToken);
+      localStorage.setItem('user', JSON.stringify(result.user));
+
+      // Handle redirection: use 'redirect' param if it exists, else default to role-based dashboard
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectPath = urlParams.get('redirect');
+
+      if (redirectPath) {
+        window.location.href = redirectPath;
+      } else {
+        const adminRoles = ['admin', 'sales', 'analyst'];
+        if (adminRoles.includes(result.user.role)) {
+          window.location.href = '/admin/dashboard';
+        } else {
+          window.location.href = '/dashboard';
+        }
+      }
+    } catch (err) {
+      errorDiv.textContent = err.message;
+      errorDiv.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+    }
+  });
+</script>

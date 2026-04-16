@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Documents-PROJECTS-CoverScore-AI/7749e55d-a15f-4ed1-9d06-b7acad4d44f5/tasks/**)"
+    ]
+  }
+}

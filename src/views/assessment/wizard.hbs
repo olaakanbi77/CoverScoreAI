@@ -1,0 +1,658 @@
+<style>
+  .assessment-section {
+    display: none;
+  }
+  .assessment-section.active {
+    display: block;
+  }
+  .radio-option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 0.75rem;
+  }
+  .radio-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .radio-option.selected {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+  .radio-option input {
+    display: none;
+  }
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .persona-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .persona-card {
+    position: relative;
+    padding: 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  .persona-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px);
+  }
+  .persona-card.selected {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary), 0 8px 24px rgba(59, 130, 246, 0.15);
+  }
+  .persona-card .persona-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .persona-card .persona-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .persona-card .persona-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.5;
+  }
+  @media (max-width: 600px) {
+    .persona-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+  <div class="container py-12">
+    <div class="glass-card max-w-3xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold" id="wizardTitle">Risk Assessment</h1>
+          <p class="text-muted text-sm" id="progressText">Step 1 of 6</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="saveAndExit()">Save &amp; Exit</button>
+      </div>
+
+      <div class="progress-bar mb-8">
+        <div class="progress-bar-fill" id="progressBar" style="width: 16.6%;"></div>
+      </div>
+
+      <div class="stepper mb-8" id="stepper"></div>
+
+      <form id="assessmentForm">
+        <div id="stepContent"></div>
+
+        <div class="btn-group mt-8" id="btnGroup">
+          <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">Previous</button>
+          <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <script>
+    // ── Section Definitions ──────────────────────────────────────────
+
+    const typeSection = {
+      id: 'type',
+      title: 'Who is this assessment for?',
+      subtitle: 'Select whether you are assessing risk for a business or for yourself as an individual.',
+      fields: [
+        {
+          name: 'entity_type',
+          label: '',
+          type: 'persona',
+          options: [
+            { value: 'business', icon: '🏢', title: 'Business', desc: 'Assess risks for your company, SME, or organisation.' },
+            { value: 'individual', icon: '👤', title: 'Individual', desc: 'Assess personal risks — health, assets, motor, life cover.' }
+          ]
+        }
+      ]
+    };
+
+    const businessSections = [
+      {
+        id: 'business',
+        title: 'Business Information',
+        subtitle: 'Tell us about your business',
+        fields: [
+          {
+            name: 'industry',
+            label: 'What industry is your business in?',
+            type: 'select',
+            options: [
+              { value: 'agribusiness', label: 'Agribusiness' },
+              { value: 'construction', label: 'Construction' },
+              { value: 'fintech', label: 'Fintech' },
+              { value: 'healthcare', label: 'Healthcare' },
+              { value: 'hospitality', label: 'Hospitality' },
+              { value: 'logistics', label: 'Logistics' },
+              { value: 'manufacturing', label: 'Manufacturing' },
+              { value: 'oil_gas', label: 'Oil & Gas' },
+              { value: 'professional_services', label: 'Professional Services' },
+              { value: 'real_estate', label: 'Real Estate/Property' },
+              { value: 'retail', label: 'Retail' },
+              { value: 'technology', label: 'Technology' },
+              { value: 'other', label: 'Other' }
+            ]
+          },
+          {
+            name: 'employees',
+            label: 'How many employees do you have?',
+            type: 'radio',
+            options: [
+              { value: 'small', title: '1-10', desc: 'Small team' },
+              { value: 'medium', title: '11-50', desc: 'Mid-size team' },
+              { value: 'large', title: '51+', desc: 'Large organization' }
+            ]
+          },
+          {
+            name: 'revenue',
+            label: 'What is your annual revenue range?',
+            type: 'radio',
+            options: [
+              { value: 'low', title: 'Under ₦50 Million', desc: 'Startup/Small enterprise' },
+              { value: 'medium', title: '₦50M – ₦500M', desc: 'Growing business' },
+              { value: 'high', title: 'Over ₦500 Million', desc: 'Established enterprise' }
+            ]
+          },
+          {
+            name: 'locationType',
+            label: 'What type of business location do you have?',
+            type: 'radio',
+            options: [
+              { value: 'home', title: 'Home-based', desc: 'Remote or home office' },
+              { value: 'single', title: 'Single Location', desc: 'One physical location' },
+              { value: 'shared', title: 'Shared Space', desc: 'Coworking or shared office' },
+              { value: 'multiple', title: 'Multiple Locations', desc: 'More than one location' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'assets',
+        title: 'Business Assets',
+        subtitle: 'Information about your business assets',
+        fields: [
+          { name: 'equipment', label: 'Do you own or lease business equipment?', type: 'radio', options: [
+            { value: 'none', title: 'No Equipment', desc: 'Minimal or no equipment' },
+            { value: 'leased', title: 'Leased', desc: 'Equipment is leased' },
+            { value: 'owned', title: 'Owned', desc: 'Own equipment outright' }
+          ]},
+          { name: 'assetValue', label: 'Approximate value of your business assets?', type: 'radio', options: [
+            { value: 'minimal', title: 'Under ₦10M', desc: 'Basic equipment and inventory' },
+            { value: 'medium', title: '₦10M – ₦100M', desc: 'Moderate asset value' },
+            { value: 'high', title: 'Over ₦100M', desc: 'High-value assets/infrastructure' }
+          ]},
+          { name: 'fireProtection', label: 'What fire protection does your business have?', type: 'radio', options: [
+            { value: 'full', title: 'Full System', desc: 'Sprinklers, alarms, and extinguishers' },
+            { value: 'partial', title: 'Partial', desc: 'Smoke detectors and extinguishers' },
+            { value: 'none', title: 'Minimal/None', desc: 'Basic or no fire protection' }
+          ]},
+          { name: 'lossHistory', label: 'Any business losses in the past 5 years?', type: 'radio', options: [
+            { value: 'none', title: 'No Losses', desc: 'No significant losses' },
+            { value: 'occasional', title: 'Occasional', desc: '1-2 minor incidents' },
+            { value: 'frequent', title: 'Frequent', desc: 'Multiple or major incidents' }
+          ]}
+        ]
+      },
+      {
+        id: 'liability',
+        title: 'Liability Exposure',
+        subtitle: 'Understanding your liability risks',
+        fields: [
+          { name: 'customerInteraction', label: 'How do customers interact with your business?', type: 'radio', options: [
+            { value: 'remote', title: 'Remote Only', desc: 'Online or phone only' },
+            { value: 'mixed', title: 'Mixed', desc: 'Some in-person interactions' },
+            { value: 'onsite', title: 'On-site', desc: 'Customers visit your location' }
+          ]},
+          { name: 'professionalServices', label: 'Do you provide professional services?', type: 'radio', options: [
+            { value: 'false', title: 'No', desc: 'No professional services' },
+            { value: 'true', title: 'Yes', desc: 'Consulting, medical, legal, etc.' }
+          ]},
+          { name: 'clientLoss', label: 'Could a client loss significantly impact your business?', type: 'radio', options: [
+            { value: 'low', title: 'Low Impact', desc: 'Diversified client base' },
+            { value: 'medium', title: 'Medium Impact', desc: 'Some key clients' },
+            { value: 'high', title: 'High Impact', desc: 'Heavy reliance on few clients' }
+          ]}
+        ]
+      },
+      {
+        id: 'staff',
+        title: 'Staff & Employees',
+        subtitle: 'Information about your workforce',
+        fields: [
+          { name: 'count', label: 'What best describes your workforce?', type: 'radio', options: [
+            { value: 'none', title: 'No Employees', desc: 'Solo operator or partners' },
+            { value: 'small', title: 'Small Team', desc: '1-10 employees' },
+            { value: 'medium', title: 'Medium Team', desc: '11-50 employees' },
+            { value: 'large', title: 'Large Team', desc: '51+ employees' }
+          ]},
+          { name: 'riskExposure', label: 'What is the risk exposure of your workforce?', type: 'radio', options: [
+            { value: 'low', title: 'Low Risk', desc: 'Office-based, minimal hazards' },
+            { value: 'medium', title: 'Medium Risk', desc: 'Some physical or hazardous work' },
+            { value: 'high', title: 'High Risk', desc: 'Physical labor, dangerous conditions' }
+          ]},
+          { name: 'benefits', label: 'What employee benefits do you provide?', type: 'radio', options: [
+            { value: 'full', title: 'Full Benefits', desc: 'Health, retirement, etc.' },
+            { value: 'basic', title: 'Basic Benefits', desc: 'Some benefits offered' },
+            { value: 'none', title: 'No Benefits', desc: 'No formal benefits program' }
+          ]}
+        ]
+      },
+      {
+        id: 'insurance',
+        title: 'Current Insurance',
+        subtitle: 'Your existing insurance coverage',
+        fields: [
+          { name: 'existing', label: 'Do you currently have business insurance?', type: 'radio', options: [
+            { value: 'full', title: 'Full Coverage', desc: 'Comprehensive business insurance' },
+            { value: 'partial', title: 'Partial Coverage', desc: 'Some policies in place' },
+            { value: 'none', title: 'No Coverage', desc: 'Currently uninsured' }
+          ]},
+          { name: 'lastReview', label: 'When was your last insurance policy review?', type: 'radio', options: [
+            { value: 'recently', title: 'Within 1 Year', desc: 'Recently reviewed' },
+            { value: '1to2years', title: '1-2 Years Ago', desc: 'Some time ago' },
+            { value: 'over2years', title: 'Over 2 Years Ago', desc: 'Needs review' },
+            { value: 'never', title: 'Never', desc: 'Never had a formal review' }
+          ]}
+        ]
+      }
+    ];
+
+    const individualSections = [
+      {
+        id: 'personal',
+        title: 'Personal Information',
+        subtitle: 'Tell us a bit about yourself',
+        fields: [
+          { name: 'ageRange', label: 'What is your age range?', type: 'radio', options: [
+            { value: '18_24', title: '18 – 24', desc: 'Young adult' },
+            { value: '25_39', title: '25 – 39', desc: 'Early to mid career' },
+            { value: '40_54', title: '40 – 54', desc: 'Established professional' },
+            { value: '55plus', title: '55+', desc: 'Pre-retirement or retired' }
+          ]},
+          { name: 'employment', label: 'What is your employment status?', type: 'radio', options: [
+            { value: 'employed', title: 'Employed', desc: 'Full-time or part-time employee' },
+            { value: 'self_employed', title: 'Self-Employed', desc: 'Freelancer, business owner, contractor' },
+            { value: 'unemployed', title: 'Unemployed / Student', desc: 'Not currently earning regular income' }
+          ]},
+          { name: 'dependents', label: 'How many dependents do you support?', type: 'radio', options: [
+            { value: 'none', title: 'None', desc: 'No financial dependents' },
+            { value: 'few', title: '1 – 3', desc: 'Small family or relatives' },
+            { value: 'many', title: '4+', desc: 'Extended family support' }
+          ]},
+          { name: 'locationType', label: 'Where do you live?', type: 'radio', options: [
+            { value: 'urban', title: 'Urban Area', desc: 'Lagos, Abuja, Port Harcourt, etc.' },
+            { value: 'suburban', title: 'Suburban', desc: 'Outskirts of a major city' },
+            { value: 'rural', title: 'Rural Area', desc: 'Village or rural community' }
+          ]}
+        ]
+      },
+      {
+        id: 'personal_assets',
+        title: 'Your Assets',
+        subtitle: 'What do you own or need to protect?',
+        fields: [
+          { name: 'housing', label: 'What is your housing situation?', type: 'radio', options: [
+            { value: 'owned', title: 'Own My Home', desc: 'Homeowner or property owner' },
+            { value: 'rented', title: 'Renting', desc: 'Tenant in a rented apartment/house' },
+            { value: 'family', title: 'Family Home', desc: 'Living with family' }
+          ]},
+          { name: 'vehicles', label: 'Do you own a vehicle?', type: 'radio', options: [
+            { value: 'none', title: 'No Vehicle', desc: 'I don\'t own a car' },
+            { value: 'one', title: 'One Vehicle', desc: 'One car or motorcycle' },
+            { value: 'multiple', title: 'Multiple Vehicles', desc: 'Two or more vehicles' }
+          ]},
+          { name: 'highValueItems', label: 'Do you own high-value personal items? (Jewellery, electronics, art)', type: 'radio', options: [
+            { value: 'no', title: 'No', desc: 'Standard personal belongings' },
+            { value: 'yes', title: 'Yes', desc: 'Valuable items worth ₦2M+' }
+          ]}
+        ]
+      },
+      {
+        id: 'personal_liability',
+        title: 'Lifestyle & Liability',
+        subtitle: 'Factors that affect your personal risk exposure',
+        fields: [
+          { name: 'domesticStaff', label: 'Do you employ domestic staff? (Drivers, cleaners, nannies)', type: 'radio', options: [
+            { value: 'no', title: 'No', desc: 'No domestic workers' },
+            { value: 'yes', title: 'Yes', desc: 'One or more domestic employees' }
+          ]},
+          { name: 'travel', label: 'How often do you travel?', type: 'radio', options: [
+            { value: 'rarely', title: 'Rarely', desc: 'Mostly within my city' },
+            { value: 'occasional', title: 'Occasionally', desc: 'A few trips per year' },
+            { value: 'frequent', title: 'Frequently', desc: 'Regular domestic/international travel' }
+          ]},
+          { name: 'pets', label: 'Do you own pets?', type: 'radio', options: [
+            { value: 'no', title: 'No', desc: 'No pets' },
+            { value: 'yes', title: 'Yes', desc: 'Dogs, cats, or other animals' }
+          ]}
+        ]
+      },
+      {
+        id: 'health',
+        title: 'Health Profile',
+        subtitle: 'Your general health information',
+        fields: [
+          { name: 'healthStatus', label: 'How would you rate your general health?', type: 'radio', options: [
+            { value: 'good', title: 'Good', desc: 'Generally healthy, active lifestyle' },
+            { value: 'fair', title: 'Fair', desc: 'Some health concerns' },
+            { value: 'poor', title: 'Poor', desc: 'Ongoing health issues or chronic conditions' }
+          ]},
+          { name: 'preExisting', label: 'Do you have any pre-existing medical conditions?', type: 'radio', options: [
+            { value: 'no', title: 'No', desc: 'No known conditions' },
+            { value: 'yes', title: 'Yes', desc: 'Diabetes, hypertension, asthma, etc.' }
+          ]}
+        ]
+      },
+      {
+        id: 'personal_insurance',
+        title: 'Current Insurance',
+        subtitle: 'What coverage do you already have?',
+        fields: [
+          { name: 'health', label: 'Do you have health insurance (HMO)?', type: 'radio', options: [
+            { value: 'comprehensive', title: 'Comprehensive', desc: 'Full HMO covering most needs' },
+            { value: 'basic', title: 'Basic', desc: 'Limited or employer plan only' },
+            { value: 'none', title: 'None', desc: 'No health insurance' }
+          ]},
+          { name: 'life', label: 'Do you have life insurance?', type: 'radio', options: [
+            { value: 'comprehensive', title: 'Yes – Comprehensive', desc: 'Term life or whole life policy' },
+            { value: 'basic', title: 'Yes – Basic', desc: 'Small policy through employer' },
+            { value: 'none', title: 'No', desc: 'No life insurance cover' }
+          ]}
+        ]
+      }
+    ];
+
+    // ── State ──────────────────────────────────────────────────────
+    let sections = [typeSection]; // Start with only the type selector
+    let currentStep = 0;
+    let answers = {};
+    let assessmentId = null;
+    let entityType = null;
+
+    function setEntityType(type) {
+      entityType = type;
+      answers.type = { entity_type: type };
+
+      if (type === 'business') {
+        sections = [typeSection, ...businessSections];
+        document.getElementById('wizardTitle').textContent = 'Business Risk Assessment';
+      } else {
+        sections = [typeSection, ...individualSections];
+        document.getElementById('wizardTitle').textContent = 'Personal Risk Assessment';
+      }
+
+      // Rebuild stepper
+      buildStepper();
+
+      // Save the type section immediately
+      saveField('type', 'entity_type', type);
+    }
+
+    function buildStepper() {
+      const stepperEl = document.getElementById('stepper');
+      let html = '';
+      for (let i = 0; i < sections.length; i++) {
+        if (i > 0) html += '<div class="stepper-line"></div>';
+        const cls = i < currentStep ? 'completed' : (i === currentStep ? 'active' : '');
+        html += `<div class="stepper-item ${cls}" data-step="${i}"><div class="stepper-circle">${i + 1}</div></div>`;
+      }
+      stepperEl.innerHTML = html;
+    }
+
+    // ── Init ──────────────────────────────────────────────────────
+    async function init() {
+      showLoading(true);
+
+      const token = localStorage.getItem('accessToken');
+      const storedId = localStorage.getItem('guestAssessmentId');
+      
+      try {
+        const url = new URL('/api/assessment/start', window.location.origin);
+        if (storedId && !token) url.searchParams.append('assessmentId', storedId);
+
+        const headers = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+
+        const res = await fetch(url, { headers });
+
+        if (!res.ok) {
+          throw new Error('Failed to load assessment');
+        }
+
+        const data = await res.json();
+        assessmentId = data.assessmentId;
+        
+        if (assessmentId && !token) {
+          localStorage.setItem('guestAssessmentId', assessmentId);
+        }
+
+        if (data.progress && data.progress.completedSections) {
+          const completedCount = data.progress.completedSections.length;
+          currentStep = Math.min(completedCount, sections.length - 1);
+        }
+
+        buildStepper();
+        renderStep(currentStep);
+      } catch (err) {
+        console.error(err);
+        buildStepper();
+        renderStep(0);
+      }
+
+      showLoading(false);
+    }
+
+    // ── Render ─────────────────────────────────────────────────────
+    function renderStep(step) {
+      const section = sections[step];
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      // Update stepper
+      const stepperItems = document.querySelectorAll('.stepper-item');
+      stepperItems.forEach((item, idx) => {
+        item.classList.remove('active', 'completed');
+        if (idx < step) item.classList.add('completed');
+        if (idx === step) item.classList.add('active');
+      });
+
+      progressBar.style.width = `${((step + 1) / sections.length) * 100}%`;
+      progressText.textContent = `Step ${step + 1} of ${sections.length}`;
+      prevBtn.style.display = step > 0 ? '' : 'none';
+      nextBtn.textContent = step === sections.length - 1 ? 'Submit Assessment' : 'Next';
+
+      // Hide next button on type step until a persona is selected
+      if (section.id === 'type' && !entityType) {
+        nextBtn.style.display = 'none';
+      } else {
+        nextBtn.style.display = '';
+      }
+
+      let html = `<h2 style="font-size: 20px; margin-bottom: 4px;">${section.title}</h2>
+        <p class="text-muted text-sm" style="margin-bottom: 24px;">${section.subtitle}</p>`;
+
+      section.fields.forEach(field => {
+        const savedValue = answers[section.id]?.[field.name];
+
+        html += `<div class="input-group" style="margin-bottom: 24px;">`;
+
+        if (field.type === 'persona') {
+          html += `<div class="persona-cards">`;
+          field.options.forEach(opt => {
+            const isSelected = savedValue === opt.value || entityType === opt.value;
+            html += `<div class="persona-card ${isSelected ? 'selected' : ''}" onclick="selectPersona('${opt.value}')">
+              <div class="persona-icon">${opt.icon}</div>
+              <div class="persona-title">${opt.title}</div>
+              <div class="persona-desc">${opt.desc}</div>
+            </div>`;
+          });
+          html += `</div>`;
+        } else if (field.type === 'select') {
+          html += `<label for="${field.name}" style="display: block; margin-bottom: 8px; font-weight: 500;">${field.label}</label>`;
+          html += `<select id="${field.name}" name="${field.name}" onchange="saveField('${section.id}', '${field.name}', this.value)" style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white;">`;
+          html += `<option value="">Select...</option>`;
+          field.options.forEach(opt => {
+            html += `<option value="${opt.value}" ${savedValue === opt.value ? 'selected' : ''}>${opt.label}</option>`;
+          });
+          html += `</select>`;
+        } else if (field.type === 'radio') {
+          html += `<label style="display: block; margin-bottom: 12px; font-weight: 500;">${field.label}</label>`;
+          html += `<div class="radio-group">`;
+          field.options.forEach(opt => {
+            const isSelected = savedValue === opt.value;
+            html += `<label class="radio-option ${isSelected ? 'selected' : ''}" onclick="selectRadio(this, '${section.id}', '${field.name}', '${opt.value}')">
+              <input type="radio" name="${field.name}" value="${opt.value}" ${isSelected ? 'checked' : ''}>
+              <div class="radio-option-content">
+                <div class="radio-option-title" style="font-weight: 600; font-size: 15px;">${opt.title}</div>
+                <div class="radio-option-desc" style="font-size: 13px; color: rgba(255,255,255,0.5);">${opt.desc}</div>
+              </div>
+            </label>`;
+          });
+          html += `</div>`;
+        }
+        html += `</div>`;
+      });
+
+      document.getElementById('stepContent').innerHTML = html;
+    }
+
+    // ── Interactions ───────────────────────────────────────────────
+    function selectPersona(type) {
+      setEntityType(type);
+      document.getElementById('nextBtn').style.display = '';
+      // Re-render to show selection
+      renderStep(currentStep);
+    }
+
+    function selectRadio(el, sectionId, fieldName, value) {
+      const parent = el.closest('.radio-group');
+      parent.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      el.querySelector('input').checked = true;
+      saveField(sectionId, fieldName, value);
+    }
+
+    async function saveField(sectionId, fieldName, value) {
+      if (!answers[sectionId]) answers[sectionId] = {};
+      answers[sectionId][fieldName] = value;
+
+      const token = localStorage.getItem('accessToken');
+      
+      try {
+        const res = await fetch('/api/assessment/section', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({
+            section: sectionId,
+            data: answers[sectionId],
+            assessmentId: assessmentId
+          })
+        });
+        
+        if (res.ok) {
+           const data = await res.json();
+           assessmentId = data.assessmentId;
+           if (!token) localStorage.setItem('guestAssessmentId', assessmentId);
+        }
+      } catch (err) {
+        console.error('Failed to save:', err);
+      }
+    }
+
+    async function nextStep() {
+      if (currentStep === 0 && !entityType) return; // guard
+      if (currentStep < sections.length - 1) {
+        currentStep++;
+        renderStep(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        await submitAssessment();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderStep(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    async function submitAssessment() {
+      showLoading(true);
+
+      const token = localStorage.getItem('accessToken');
+
+      try {
+        const res = await fetch('/api/assessment/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({
+            assessmentId: assessmentId
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || 'Submission failed');
+        }
+
+        // Always store the assessment ID for the email capture flow
+        localStorage.setItem('lastAssessmentId', data.assessmentId);
+
+        window.location.href = data.redirectTo || '/assessment/email-capture';
+      } catch (err) {
+        alert(err.message);
+        showLoading(false);
+      }
+    }
+
+    async function saveAndExit() {
+      showLoading(true);
+      window.location.href = localStorage.getItem('accessToken') ? '/dashboard' : '/';
+    }
+
+    function showLoading(show) {
+      document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+    }
+
+    init();
+  </script>
+  <script src="/js/main.js"></script>

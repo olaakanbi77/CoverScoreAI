@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Your Report - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .capture-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 48px 16px;
+    }
+    .capture-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: var(--color-primary);
+    }
+    .capture-icon svg {
+      width: 40px;
+      height: 40px;
+    }
+    .risk-preview {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+    .risk-low { background: rgba(34, 197, 94, 0.15); color: var(--color-success); }
+    .risk-moderate { background: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
+    .risk-high { background: rgba(249, 115, 22, 0.15); color: #f97316; }
+    .risk-critical { background: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
+    .benefits-list {
+      text-align: left;
+      margin: 24px 0;
+    }
+    .benefits-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .benefits-list li svg {
+      color: var(--color-success);
+      flex-shrink: 0;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container navbar-content">
+      <a href="/" class="navbar-brand">Cover<span>Score</span> AI</a>
+    </div>
+  </nav>
+
+  <div class="capture-container">
+    <div class="text-center">
+      <div class="capture-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <h1 style="font-size: 24px; margin-bottom: 8px;">Claim Your Detailed Risk Report</h1>
+      <p class="text-muted" style="margin-bottom: 16px;">
+        We've analyzed your risk profile. Enter your email below to receive your personalized report and NAICOM-compliant recommendations.
+      </p>
+
+      <div id="previewCard" style="display: none; background: var(--bg-surface); border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+        <div class="text-sm text-muted" style="margin-bottom: 8px;">Your Risk Score</div>
+        <div style="font-size: 36px; font-weight: 700; font-family: var(--font-mono);" id="scorePreview">--</div>
+        <span class="risk-preview risk-moderate" id="riskPreview">Moderate Risk</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-body">
+        <form id="emailForm">
+          <div class="input-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+            <p class="helper-text">We'll send your full report to this email</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submitBtn">
+            <span id="btnText">Send My Report</span>
+            <span id="btnSpinner" style="display: none; margin-left: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <div id="successMessage" style="display: none; text-align: center; padding: 24px;">
+          <div style="width: 64px; height: 64px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--color-success);">
+            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 style="margin-bottom: 8px;">Report Sent!</h3>
+          <p class="text-muted" style="font-size: 14px; margin-bottom: 24px;">Check your inbox for your detailed risk assessment report.</p>
+          <a href="#" class="btn btn-primary" id="viewReportBtn" style="display: none;">View Report Now</a>
+        </div>
+
+        <div id="errorMessage" class="text-center" style="color: var(--color-danger); font-size: 14px; margin-top: 16px; display: none;"></div>
+      </div>
+    </div>
+
+    <ul class="benefits-list" style="list-style: none; padding: 0; margin-top: 24px;">
+      <li>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Full Risk Breakdown with Score
+      </li>
+      <li>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Personalized Nigerian Market Recommendations
+      </li>
+      <li>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Compulsory Insurance Compliance Check
+      </li>
+      <li>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Instant PDF for Stakeholders
+      </li>
+    </ul>
+
+    <div class="text-center" style="margin-top: 24px;">
+      <a href="/assessment/start" class="btn btn-ghost btn-sm">Start New Assessment</a>
+    </div>
+  </div>
+
+  <script>
+    let assessmentId = null;
+
+    async function init() {
+      const token = localStorage.getItem('accessToken');
+      const storedId = localStorage.getItem('lastAssessmentId') || localStorage.getItem('guestAssessmentId');
+
+      assessmentId = storedId;
+
+      if (assessmentId) {
+        try {
+          const headers = {};
+          if (token) headers.Authorization = `Bearer ${token}`;
+
+          const res = await fetch(`/api/assessment/${assessmentId}`, { headers });
+
+          if (res.ok) {
+            const data = await res.json();
+            showPreview(data);
+          }
+        } catch (err) {
+          console.error('Failed to load assessment:', err);
+        }
+      }
+
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser);
+          document.getElementById('email').value = user.email || '';
+        } catch (e) {}
+      }
+    }
+
+    function showPreview(assessment) {
+      const preview = document.getElementById('previewCard');
+      preview.style.display = 'block';
+
+      document.getElementById('scorePreview').textContent = assessment.score;
+
+      const riskBadge = document.getElementById('riskPreview');
+      const riskLevel = assessment.riskLevel || assessment.risk_level;
+      riskBadge.className = `risk-preview risk-${riskLevel}`;
+      riskBadge.textContent = `${riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)} Risk`;
+
+      document.getElementById('viewReportBtn').href = `/assessment/result/${assessment.id}`;
+      document.getElementById('viewReportBtn').style.display = 'inline-block';
+    }
+
+    const form = document.getElementById('emailForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorDiv = document.getElementById('errorMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.style.display = 'none';
+      submitBtn.disabled = true;
+      document.getElementById('btnText').textContent = 'Sending...';
+      document.getElementById('btnSpinner').style.display = 'inline';
+
+      const email = document.getElementById('email').value;
+
+      if (!assessmentId) {
+        errorDiv.textContent = 'No assessment found. Please complete an assessment first.';
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send My Report';
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('accessToken');
+
+        const res = await fetch('/api/assessment/send-report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({
+            assessmentId: assessmentId,
+            email: email
+          })
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message || 'Failed to send report');
+        }
+
+        document.getElementById('emailForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+
+      } catch (err) {
+        errorDiv.textContent = err.message;
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = false;
+        document.getElementById('btnText').textContent = 'Send My Report';
+        document.getElementById('btnSpinner').style.display = 'none';
+      }
+    });
+
+    init();
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
