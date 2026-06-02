@@ -11,7 +11,7 @@ const { getIndustryRisks } = require('../services/industryIntelligence');
 const router = express.Router();
 
 const businessSections = ['type', 'profile', 'property', 'business_interruption', 'employee_risk', 'liability', 'vehicle', 'cyber', 'claims'];
-const individualSections = ['type', 'personal', 'personal_assets', 'personal_liability', 'health', 'personal_insurance'];
+const individualSections = ['type', 'personal_profile', 'family_protection', 'health_protection', 'home_risk', 'motor_risk', 'financial_resilience'];
 const allValidSections = [...new Set([...businessSections, ...individualSections])];
 
 const getRequiredSections = (answers) => {

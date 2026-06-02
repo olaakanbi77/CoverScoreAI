@@ -161,74 +161,92 @@ const calculateBusinessScore = (answers) => {
 };
 
 const calculateIndividualScore = (answers) => {
-  let score = 0;
-  const { personal, personal_assets, personal_liability, health, personal_insurance } = answers;
+  const { personal_profile, family_protection, health_protection, home_risk, motor_risk, financial_resilience } = answers;
 
-  if (personal) {
-    if (personal.ageRange === '55plus') score += 4;
-    else if (personal.ageRange === '40_54') score += 3;
-    else if (personal.ageRange === '25_39') score += 2;
-    else score += 1;
+  let familyScore = 0;
+  if (personal_profile && family_protection) {
+    if (personal_profile.dependents === 'more_than_5') familyScore += 10;
+    else if (personal_profile.dependents === '3_5') familyScore += 6;
+    else if (personal_profile.dependents === '1_2') familyScore += 3;
 
-    if (personal.dependents === 'many') score += 5;
-    else if (personal.dependents === 'few') score += 3;
-    else score += 1;
+    if (family_protection.lifestyle_maintenance === 'less_than_3m') familyScore += 10;
+    else if (family_protection.lifestyle_maintenance === '3_6m') familyScore += 5;
 
-    if (personal.employment === 'self_employed') score += 4;
-    else if (personal.employment === 'unemployed') score += 5;
-    else score += 2;
+    if (family_protection.life_insurance === 'no') familyScore += 15;
   }
 
-  if (personal_assets) {
-    if (personal_assets.housing === 'owned') score += 4;
-    else if (personal_assets.housing === 'rented') score += 2;
-    else score += 1;
+  let healthScore = 0;
+  if (health_protection) {
+    if (health_protection.health_insurance === 'no') healthScore += 15;
 
-    if (personal_assets.vehicles === 'multiple') score += 5;
-    else if (personal_assets.vehicles === 'one') score += 3;
-    else score += 1;
-
-    if (personal_assets.highValueItems === 'yes') score += 4;
-    else score += 1;
+    if (['borrowing', 'not_sure'].includes(health_protection.medical_emergency)) healthScore += 10;
+    else if (health_protection.medical_emergency === 'family') healthScore += 5;
   }
 
-  if (personal_liability) {
-    if (personal_liability.domesticStaff === 'yes') score += 5;
-    else score += 1;
+  let homeScore = 0;
+  if (home_risk) {
+    if (home_risk.household_contents_value === 'above_20m') homeScore += 15;
+    else if (home_risk.household_contents_value === '5m_20m') homeScore += 10;
+    else if (home_risk.household_contents_value === '1m_5m') homeScore += 5;
+    else homeScore += 2;
 
-    if (personal_liability.travel === 'frequent') score += 4;
-    else if (personal_liability.travel === 'occasional') score += 2;
-    else score += 1;
-
-    if (personal_liability.pets === 'yes') score += 2;
-    else score += 1;
+    if (home_risk.burglary_fire_experience === 'yes') homeScore += 5;
   }
 
-  if (health) {
-    if (health.healthStatus === 'poor') score += 5;
-    else if (health.healthStatus === 'fair') score += 3;
-    else score += 1;
+  let motorScore = 0;
+  if (motor_risk && motor_risk.own_vehicle === 'yes') {
+    if (motor_risk.motor_insurance_status === 'uninsured') motorScore += 15;
+    else if (motor_risk.motor_insurance_status === 'third_party') motorScore += 5;
 
-    if (health.preExisting === 'yes') score += 5;
-    else score += 1;
+    if (motor_risk.accident_history === 'yes') motorScore += 5;
   }
 
-  if (personal_insurance) {
-    if (personal_insurance.health === 'none') score += 5;
-    else if (personal_insurance.health === 'basic') score += 3;
-    else score += 1;
-
-    if (personal_insurance.life === 'none') score += 4;
-    else if (personal_insurance.life === 'basic') score += 2;
-    else score += 1;
+  let financialScore = 0;
+  if (financial_resilience) {
+    if (financial_resilience.survival_months === 'less_than_1m') financialScore += 20;
+    else if (financial_resilience.survival_months === '1_3m') financialScore += 15;
+    else if (financial_resilience.survival_months === '3_6m') financialScore += 5;
   }
 
-  const baseAmount = 50000 + (score * 10000);
+  let finalScore = familyScore + healthScore + homeScore + motorScore + financialScore;
+
+  const recommendations = [];
+
+  if (family_protection?.life_insurance === 'no' && personal_profile?.dependents && personal_profile.dependents !== 'none') {
+    recommendations.push('Term Life Insurance');
+  }
+
+  if (health_protection?.health_insurance === 'no') {
+    recommendations.push('HMO / Health Insurance');
+  }
+
+  if (home_risk && (home_risk.residence_status === 'own' || ['1m_5m', '5m_20m', 'above_20m'].includes(home_risk.household_contents_value))) {
+    recommendations.push('Home/Property Contents Insurance');
+  }
+
+  if (motor_risk && motor_risk.own_vehicle === 'yes' && motor_risk.motor_insurance_status !== 'comprehensive') {
+    recommendations.push('Comprehensive Motor Insurance');
+  }
+
+  if (financial_resilience && ['less_than_1m', '1_3m'].includes(financial_resilience.survival_months)) {
+    recommendations.push('Personal Accident & Disability Insurance');
+  }
+
+  let minLoss = 500000;
+  let maxLoss = 2000000;
+
+  if (personal_profile && personal_profile.monthly_income) {
+    if (personal_profile.monthly_income === 'above_1m') { minLoss = 15000000; maxLoss = 50000000; }
+    else if (personal_profile.monthly_income === '500k_1m') { minLoss = 5000000; maxLoss = 15000000; }
+    else if (personal_profile.monthly_income === '100k_500k') { minLoss = 2000000; maxLoss = 5000000; }
+    else { minLoss = 500000; maxLoss = 2000000; }
+  }
+
   return { 
-    score: Math.min(score, 100), 
-    recommendations: [], 
-    min_loss: baseAmount, 
-    max_loss: baseAmount * 4 
+    score: Math.min(Math.round(finalScore), 100), 
+    recommendations, 
+    min_loss: minLoss, 
+    max_loss: maxLoss 
   };
 };
 

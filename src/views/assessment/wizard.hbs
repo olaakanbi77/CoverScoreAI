@@ -476,105 +476,199 @@
 
     const individualSections = [
       {
-        id: 'personal',
-        title: 'Personal Information',
-        subtitle: 'Tell us a bit about yourself',
+        id: 'personal_profile',
+        title: 'Personal Profile',
+        subtitle: 'Basic demographic and financial details',
         fields: [
-          { name: 'ageRange', label: 'What is your age range?', type: 'radio', options: [
-            { value: '18_24', title: '18 – 24', desc: 'Young adult' },
-            { value: '25_39', title: '25 – 39', desc: 'Early to mid career' },
-            { value: '40_54', title: '40 – 54', desc: 'Established professional' },
-            { value: '55plus', title: '55+', desc: 'Pre-retirement or retired' }
-          ]},
-          { name: 'employment', label: 'What is your employment status?', type: 'radio', options: [
-            { value: 'employed', title: 'Employed', desc: 'Full-time or part-time employee' },
-            { value: 'self_employed', title: 'Self-Employed', desc: 'Freelancer, business owner, contractor' },
-            { value: 'unemployed', title: 'Unemployed / Student', desc: 'Not currently earning regular income' }
-          ]},
-          { name: 'dependents', label: 'How many dependents do you support?', type: 'radio', options: [
-            { value: 'none', title: 'None', desc: 'No financial dependents' },
-            { value: 'few', title: '1 – 3', desc: 'Small family or relatives' },
-            { value: 'many', title: '4+', desc: 'Extended family support' }
-          ]},
-          { name: 'locationType', label: 'Where do you live?', type: 'radio', options: [
-            { value: 'urban', title: 'Urban Area', desc: 'Lagos, Abuja, Port Harcourt, etc.' },
-            { value: 'suburban', title: 'Suburban', desc: 'Outskirts of a major city' },
-            { value: 'rural', title: 'Rural Area', desc: 'Village or rural community' }
-          ]}
+          {
+            name: 'age_group',
+            label: '1. Age Group',
+            type: 'radio',
+            options: [
+              { value: 'under_25', title: 'Under 25', desc: '' },
+              { value: '25_35', title: '25–35', desc: '' },
+              { value: '36_50', title: '36–50', desc: '' },
+              { value: '51_60', title: '51–60', desc: '' },
+              { value: 'above_60', title: '60+', desc: '' }
+            ]
+          },
+          {
+            name: 'employment_status',
+            label: '2. Employment Status',
+            type: 'radio',
+            options: [
+              { value: 'employed', title: 'Employed', desc: '' },
+              { value: 'self_employed', title: 'Self-employed', desc: '' },
+              { value: 'business_owner', title: 'Business owner', desc: '' },
+              { value: 'retired', title: 'Retired', desc: '' }
+            ]
+          },
+          {
+            name: 'monthly_income',
+            label: '3. Monthly Income',
+            type: 'radio',
+            options: [
+              { value: 'under_100k', title: 'Under ₦100,000', desc: '' },
+              { value: '100k_500k', title: '₦100,000–₦500,000', desc: '' },
+              { value: '500k_1m', title: '₦500,000–₦1M', desc: '' },
+              { value: 'above_1m', title: 'Above ₦1M', desc: '' }
+            ]
+          },
+          {
+            name: 'dependents',
+            label: '4. Number of Dependents',
+            type: 'radio',
+            options: [
+              { value: 'none', title: 'None', desc: '' },
+              { value: '1_2', title: '1–2', desc: '' },
+              { value: '3_5', title: '3–5', desc: '' },
+              { value: 'more_than_5', title: 'More than 5', desc: '' }
+            ]
+          }
         ]
       },
       {
-        id: 'personal_assets',
-        title: 'Your Assets',
-        subtitle: 'What do you own or need to protect?',
+        id: 'family_protection',
+        title: 'Family Protection',
+        subtitle: 'Life and dependent coverage',
         fields: [
-          { name: 'housing', label: 'What is your housing situation?', type: 'radio', options: [
-            { value: 'owned', title: 'Own My Home', desc: 'Homeowner or property owner' },
-            { value: 'rented', title: 'Renting', desc: 'Tenant in a rented apartment/house' },
-            { value: 'family', title: 'Family Home', desc: 'Living with family' }
-          ]},
-          { name: 'vehicles', label: 'Do you own a vehicle?', type: 'radio', options: [
-            { value: 'none', title: 'No Vehicle', desc: 'I don\'t own a car' },
-            { value: 'one', title: 'One Vehicle', desc: 'One car or motorcycle' },
-            { value: 'multiple', title: 'Multiple Vehicles', desc: 'Two or more vehicles' }
-          ]},
-          { name: 'highValueItems', label: 'Do you own high-value personal items? (Jewellery, electronics, art)', type: 'radio', options: [
-            { value: 'no', title: 'No', desc: 'Standard personal belongings' },
-            { value: 'yes', title: 'Yes', desc: 'Valuable items worth ₦2M+' }
-          ]}
+          {
+            name: 'lifestyle_maintenance',
+            label: '5. If you died today, how long could your family maintain their lifestyle?',
+            type: 'radio',
+            options: [
+              { value: 'less_than_3m', title: 'Less than 3 months', desc: '' },
+              { value: '3_6m', title: '3–6 months', desc: '' },
+              { value: '6_12m', title: '6–12 months', desc: '' },
+              { value: 'more_than_12m', title: 'More than 12 months', desc: '' }
+            ]
+          },
+          {
+            name: 'life_insurance',
+            label: '6. Do you currently have life insurance?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          }
         ]
       },
       {
-        id: 'personal_liability',
-        title: 'Lifestyle & Liability',
-        subtitle: 'Factors that affect your personal risk exposure',
+        id: 'health_protection',
+        title: 'Health Protection',
+        subtitle: 'Medical emergencies and coverage',
         fields: [
-          { name: 'domesticStaff', label: 'Do you employ domestic staff? (Drivers, cleaners, nannies)', type: 'radio', options: [
-            { value: 'no', title: 'No', desc: 'No domestic workers' },
-            { value: 'yes', title: 'Yes', desc: 'One or more domestic employees' }
-          ]},
-          { name: 'travel', label: 'How often do you travel?', type: 'radio', options: [
-            { value: 'rarely', title: 'Rarely', desc: 'Mostly within my city' },
-            { value: 'occasional', title: 'Occasionally', desc: 'A few trips per year' },
-            { value: 'frequent', title: 'Frequently', desc: 'Regular domestic/international travel' }
-          ]},
-          { name: 'pets', label: 'Do you own pets?', type: 'radio', options: [
-            { value: 'no', title: 'No', desc: 'No pets' },
-            { value: 'yes', title: 'Yes', desc: 'Dogs, cats, or other animals' }
-          ]}
+          {
+            name: 'health_insurance',
+            label: '7. Do you have health insurance?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'medical_emergency',
+            label: '8. How would you pay for a ₦2 million medical emergency?',
+            type: 'radio',
+            options: [
+              { value: 'savings', title: 'Savings', desc: '' },
+              { value: 'borrowing', title: 'Borrowing', desc: '' },
+              { value: 'family', title: 'Family support', desc: '' },
+              { value: 'insurance', title: 'Insurance', desc: '' },
+              { value: 'not_sure', title: 'Not sure', desc: '' }
+            ]
+          }
         ]
       },
       {
-        id: 'health',
-        title: 'Health Profile',
-        subtitle: 'Your general health information',
+        id: 'home_risk',
+        title: 'Home Risk',
+        subtitle: 'Property and belongings',
         fields: [
-          { name: 'healthStatus', label: 'How would you rate your general health?', type: 'radio', options: [
-            { value: 'good', title: 'Good', desc: 'Generally healthy, active lifestyle' },
-            { value: 'fair', title: 'Fair', desc: 'Some health concerns' },
-            { value: 'poor', title: 'Poor', desc: 'Ongoing health issues or chronic conditions' }
-          ]},
-          { name: 'preExisting', label: 'Do you have any pre-existing medical conditions?', type: 'radio', options: [
-            { value: 'no', title: 'No', desc: 'No known conditions' },
-            { value: 'yes', title: 'Yes', desc: 'Diabetes, hypertension, asthma, etc.' }
-          ]}
+          {
+            name: 'residence_status',
+            label: '9. Do you own or rent your residence?',
+            type: 'radio',
+            options: [
+              { value: 'own', title: 'Own', desc: '' },
+              { value: 'rent', title: 'Rent', desc: '' }
+            ]
+          },
+          {
+            name: 'household_contents_value',
+            label: '10. Estimated value of household contents',
+            type: 'radio',
+            options: [
+              { value: 'under_1m', title: 'Under ₦1M', desc: '' },
+              { value: '1m_5m', title: '₦1M–₦5M', desc: '' },
+              { value: '5m_20m', title: '₦5M–₦20M', desc: '' },
+              { value: 'above_20m', title: 'Above ₦20M', desc: '' }
+            ]
+          },
+          {
+            name: 'burglary_fire_experience',
+            label: '11. Have you experienced burglary or fire before?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          }
         ]
       },
       {
-        id: 'personal_insurance',
-        title: 'Current Insurance',
-        subtitle: 'What coverage do you already have?',
+        id: 'motor_risk',
+        title: 'Motor Risk',
+        subtitle: 'Vehicle ownership and history',
         fields: [
-          { name: 'health', label: 'Do you have health insurance (HMO)?', type: 'radio', options: [
-            { value: 'comprehensive', title: 'Comprehensive', desc: 'Full HMO covering most needs' },
-            { value: 'basic', title: 'Basic', desc: 'Limited or employer plan only' },
-            { value: 'none', title: 'None', desc: 'No health insurance' }
-          ]},
-          { name: 'life', label: 'Do you have life insurance?', type: 'radio', options: [
-            { value: 'comprehensive', title: 'Yes – Comprehensive', desc: 'Term life or whole life policy' },
-            { value: 'basic', title: 'Yes – Basic', desc: 'Small policy through employer' },
-            { value: 'none', title: 'No', desc: 'No life insurance cover' }
-          ]}
+          {
+            name: 'own_vehicle',
+            label: '12. Do you own a vehicle?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'motor_insurance_status',
+            label: '13. Current insurance status',
+            type: 'radio',
+            options: [
+              { value: 'comprehensive', title: 'Comprehensive', desc: '' },
+              { value: 'third_party', title: 'Third Party', desc: '' },
+              { value: 'uninsured', title: 'Uninsured', desc: '' }
+            ]
+          },
+          {
+            name: 'accident_history',
+            label: '14. Have you had an accident in the last 3 years?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'financial_resilience',
+        title: 'Financial Resilience',
+        subtitle: 'Income protection',
+        fields: [
+          {
+            name: 'survival_months',
+            label: '15. If your income stopped today, how many months could you survive?',
+            type: 'radio',
+            options: [
+              { value: 'less_than_1m', title: 'Less than 1 month', desc: '' },
+              { value: '1_3m', title: '1–3 months', desc: '' },
+              { value: '3_6m', title: '3–6 months', desc: '' },
+              { value: 'more_than_6m', title: 'More than 6 months', desc: '' }
+            ]
+          }
         ]
       }
     ];
