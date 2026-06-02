@@ -5,23 +5,31 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch-path=src src/server.js"
   },
-  "keywords": ["insurance", "risk-assessment", "ai", "express", "handlebars"],
+  "keywords": [
+    "insurance",
+    "risk-assessment",
+    "ai",
+    "express",
+    "handlebars"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "basic-ftp": "^6.0.1",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
-    "sqlite3": "^5.1.7",
-    "bcrypt": "^5.1.1",
+    "express-rate-limit": "^7.2.0",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
-    "dotenv": "^16.4.5",
     "nodemailer": "^6.9.12",
     "openai": "^4.47.1",
-    "express-validator": "^7.0.1",
-    "cookie-parser": "^1.4.6",
-    "helmet": "^7.1.0",
-    "express-rate-limit": "^7.2.0"
+    "sqlite3": "^5.1.7",
+    "ssh2": "^1.17.0"
   }
 }

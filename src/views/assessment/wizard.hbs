@@ -137,153 +137,342 @@
 
     const businessSections = [
       {
-        id: 'business',
-        title: 'Business Information',
+        id: 'profile',
+        title: 'Business Profile',
         subtitle: 'Tell us about your business',
         fields: [
           {
             name: 'industry',
-            label: 'What industry is your business in?',
+            label: '1. What industry best describes your business?',
             type: 'select',
             options: [
-              { value: 'agribusiness', label: 'Agribusiness' },
+              { value: 'manufacturing', label: 'Manufacturing' },
+              { value: 'logistics', label: 'Logistics/Transportation' },
+              { value: 'retail', label: 'Retail' },
+              { value: 'wholesale', label: 'Wholesale' },
               { value: 'construction', label: 'Construction' },
-              { value: 'fintech', label: 'Fintech' },
+              { value: 'agriculture', label: 'Agriculture' },
+              { value: 'education', label: 'Education' },
               { value: 'healthcare', label: 'Healthcare' },
               { value: 'hospitality', label: 'Hospitality' },
-              { value: 'logistics', label: 'Logistics' },
-              { value: 'manufacturing', label: 'Manufacturing' },
-              { value: 'oil_gas', label: 'Oil & Gas' },
+              { value: 'religious', label: 'Religious Organization' },
               { value: 'professional_services', label: 'Professional Services' },
-              { value: 'real_estate', label: 'Real Estate/Property' },
-              { value: 'retail', label: 'Retail' },
               { value: 'technology', label: 'Technology' },
               { value: 'other', label: 'Other' }
             ]
           },
           {
             name: 'employees',
-            label: 'How many employees do you have?',
+            label: '2. How many employees do you have?',
             type: 'radio',
             options: [
-              { value: 'small', title: '1-10', desc: 'Small team' },
-              { value: 'medium', title: '11-50', desc: 'Mid-size team' },
-              { value: 'large', title: '51+', desc: 'Large organization' }
+              { value: '1_5', title: '1–5', desc: '' },
+              { value: '6_20', title: '6–20', desc: '' },
+              { value: '21_50', title: '21–50', desc: '' },
+              { value: '51_100', title: '51–100', desc: '' },
+              { value: '101_500', title: '101–500', desc: '' },
+              { value: '500plus', title: '500+', desc: '' }
             ]
           },
           {
-            name: 'revenue',
-            label: 'What is your annual revenue range?',
+            name: 'turnover',
+            label: '3. Annual turnover',
             type: 'radio',
             options: [
-              { value: 'low', title: 'Under ₦50 Million', desc: 'Startup/Small enterprise' },
-              { value: 'medium', title: '₦50M – ₦500M', desc: 'Growing business' },
-              { value: 'high', title: 'Over ₦500 Million', desc: 'Established enterprise' }
+              { value: 'under_10m', title: 'Under ₦10M', desc: '' },
+              { value: '10m_50m', title: '₦10M–₦50M', desc: '' },
+              { value: '50m_250m', title: '₦50M–₦250M', desc: '' },
+              { value: '250m_1b', title: '₦250M–₦1B', desc: '' },
+              { value: 'above_1b', title: 'Above ₦1B', desc: '' }
             ]
           },
           {
-            name: 'locationType',
-            label: 'What type of business location do you have?',
+            name: 'location',
+            label: '4. Business location',
             type: 'radio',
             options: [
-              { value: 'home', title: 'Home-based', desc: 'Remote or home office' },
-              { value: 'single', title: 'Single Location', desc: 'One physical location' },
-              { value: 'shared', title: 'Shared Space', desc: 'Coworking or shared office' },
-              { value: 'multiple', title: 'Multiple Locations', desc: 'More than one location' }
+              { value: 'owned', title: 'Owned property', desc: '' },
+              { value: 'leased', title: 'Leased property', desc: '' }
             ]
           }
         ]
       },
       {
-        id: 'assets',
-        title: 'Business Assets',
-        subtitle: 'Information about your business assets',
+        id: 'property',
+        title: 'Property & Fire Risk',
+        subtitle: 'Assessing your physical assets and vulnerabilities',
         fields: [
-          { name: 'equipment', label: 'Do you own or lease business equipment?', type: 'radio', options: [
-            { value: 'none', title: 'No Equipment', desc: 'Minimal or no equipment' },
-            { value: 'leased', title: 'Leased', desc: 'Equipment is leased' },
-            { value: 'owned', title: 'Owned', desc: 'Own equipment outright' }
-          ]},
-          { name: 'assetValue', label: 'Approximate value of your business assets?', type: 'radio', options: [
-            { value: 'minimal', title: 'Under ₦10M', desc: 'Basic equipment and inventory' },
-            { value: 'medium', title: '₦10M – ₦100M', desc: 'Moderate asset value' },
-            { value: 'high', title: 'Over ₦100M', desc: 'High-value assets/infrastructure' }
-          ]},
-          { name: 'fireProtection', label: 'What fire protection does your business have?', type: 'radio', options: [
-            { value: 'full', title: 'Full System', desc: 'Sprinklers, alarms, and extinguishers' },
-            { value: 'partial', title: 'Partial', desc: 'Smoke detectors and extinguishers' },
-            { value: 'none', title: 'Minimal/None', desc: 'Basic or no fire protection' }
-          ]},
-          { name: 'lossHistory', label: 'Any business losses in the past 5 years?', type: 'radio', options: [
-            { value: 'none', title: 'No Losses', desc: 'No significant losses' },
-            { value: 'occasional', title: 'Occasional', desc: '1-2 minor incidents' },
-            { value: 'frequent', title: 'Frequent', desc: 'Multiple or major incidents' }
-          ]}
+          {
+            name: 'own_building',
+            label: '5. Does your business own or occupy a building?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'building_value',
+            label: '6. Estimated value of building',
+            type: 'radio',
+            options: [
+              { value: 'under_10m', title: 'Under ₦10M', desc: '' },
+              { value: '10m_50m', title: '₦10M–₦50M', desc: '' },
+              { value: '50m_250m', title: '₦50M–₦250M', desc: '' },
+              { value: 'above_250m', title: 'Above ₦250M', desc: '' }
+            ]
+          },
+          {
+            name: 'equipment_value',
+            label: '7. Estimated value of equipment and contents',
+            type: 'radio',
+            options: [
+              { value: 'under_5m', title: 'Under ₦5M', desc: '' },
+              { value: '5m_20m', title: '₦5M–₦20M', desc: '' },
+              { value: '20m_100m', title: '₦20M–₦100M', desc: '' },
+              { value: 'above_100m', title: 'Above ₦100M', desc: '' }
+            ]
+          },
+          {
+            name: 'fire_extinguishers',
+            label: '8. Do you have fire extinguishers?',
+            type: 'radio',
+            options: [
+              { value: 'all', title: 'All areas', desc: '' },
+              { value: 'some', title: 'Some areas', desc: '' },
+              { value: 'none', title: 'None', desc: '' }
+            ]
+          },
+          {
+            name: 'fire_incident',
+            label: '9. Have you experienced a fire incident in the last 5 years?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'business_interruption',
+        title: 'Business Interruption',
+        subtitle: 'Can your business survive a temporary shutdown?',
+        fields: [
+          {
+            name: 'revenue_impact',
+            label: '10. If your business stopped operating for 3 months, would revenue be affected?',
+            type: 'radio',
+            options: [
+              { value: 'slightly', title: 'Slightly', desc: '' },
+              { value: 'moderately', title: 'Moderately', desc: '' },
+              { value: 'significantly', title: 'Significantly', desc: '' },
+              { value: 'catastrophically', title: 'Catastrophically', desc: '' }
+            ]
+          },
+          {
+            name: 'alt_location',
+            label: '11. Do you have alternative operating locations?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'employee_risk',
+        title: 'Employee Risk',
+        subtitle: 'Risks related to your workforce',
+        fields: [
+          {
+            name: 'employ_staff',
+            label: '12. Do you employ staff?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'death_benefits',
+            label: '13. Do staff receive death benefits?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'accidents',
+            label: '14. Have workplace accidents occurred in the last 3 years?',
+            type: 'radio',
+            options: [
+              { value: 'none', title: 'None', desc: '' },
+              { value: '1_2', title: '1–2', desc: '' },
+              { value: '3_5', title: '3–5', desc: '' },
+              { value: 'above_5', title: 'More than 5', desc: '' }
+            ]
+          }
         ]
       },
       {
         id: 'liability',
-        title: 'Liability Exposure',
-        subtitle: 'Understanding your liability risks',
+        title: 'Liability Risk',
+        subtitle: 'Your exposure to third-party claims',
         fields: [
-          { name: 'customerInteraction', label: 'How do customers interact with your business?', type: 'radio', options: [
-            { value: 'remote', title: 'Remote Only', desc: 'Online or phone only' },
-            { value: 'mixed', title: 'Mixed', desc: 'Some in-person interactions' },
-            { value: 'onsite', title: 'On-site', desc: 'Customers visit your location' }
-          ]},
-          { name: 'professionalServices', label: 'Do you provide professional services?', type: 'radio', options: [
-            { value: 'false', title: 'No', desc: 'No professional services' },
-            { value: 'true', title: 'Yes', desc: 'Consulting, medical, legal, etc.' }
-          ]},
-          { name: 'clientLoss', label: 'Could a client loss significantly impact your business?', type: 'radio', options: [
-            { value: 'low', title: 'Low Impact', desc: 'Diversified client base' },
-            { value: 'medium', title: 'Medium Impact', desc: 'Some key clients' },
-            { value: 'high', title: 'High Impact', desc: 'Heavy reliance on few clients' }
-          ]}
+          {
+            name: 'customer_interaction',
+            label: '15. Does your business interact directly with customers?',
+            type: 'radio',
+            options: [
+              { value: 'frequently', title: 'Frequently', desc: '' },
+              { value: 'occasionally', title: 'Occasionally', desc: '' },
+              { value: 'rarely', title: 'Rarely', desc: '' }
+            ]
+          },
+          {
+            name: 'premises_injury',
+            label: '16. Could a customer be injured on your premises?',
+            type: 'radio',
+            options: [
+              { value: 'high', title: 'High possibility', desc: '' },
+              { value: 'moderate', title: 'Moderate possibility', desc: '' },
+              { value: 'low', title: 'Low possibility', desc: '' }
+            ]
+          },
+          {
+            name: 'product_liability',
+            label: '17. Could your products/services cause financial loss or injury?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          }
         ]
       },
       {
-        id: 'staff',
-        title: 'Staff & Employees',
-        subtitle: 'Information about your workforce',
+        id: 'vehicle',
+        title: 'Vehicle & Transit Risk',
+        subtitle: 'Risks related to transportation',
         fields: [
-          { name: 'count', label: 'What best describes your workforce?', type: 'radio', options: [
-            { value: 'none', title: 'No Employees', desc: 'Solo operator or partners' },
-            { value: 'small', title: 'Small Team', desc: '1-10 employees' },
-            { value: 'medium', title: 'Medium Team', desc: '11-50 employees' },
-            { value: 'large', title: 'Large Team', desc: '51+ employees' }
-          ]},
-          { name: 'riskExposure', label: 'What is the risk exposure of your workforce?', type: 'radio', options: [
-            { value: 'low', title: 'Low Risk', desc: 'Office-based, minimal hazards' },
-            { value: 'medium', title: 'Medium Risk', desc: 'Some physical or hazardous work' },
-            { value: 'high', title: 'High Risk', desc: 'Physical labor, dangerous conditions' }
-          ]},
-          { name: 'benefits', label: 'What employee benefits do you provide?', type: 'radio', options: [
-            { value: 'full', title: 'Full Benefits', desc: 'Health, retirement, etc.' },
-            { value: 'basic', title: 'Basic Benefits', desc: 'Some benefits offered' },
-            { value: 'none', title: 'No Benefits', desc: 'No formal benefits program' }
-          ]}
+          {
+            name: 'own_vehicles',
+            label: '18. Does the business own vehicles?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'num_vehicles',
+            label: '19. Number of vehicles',
+            type: 'radio',
+            options: [
+              { value: '1_3', title: '1–3', desc: '' },
+              { value: '4_10', title: '4–10', desc: '' },
+              { value: '11_50', title: '11–50', desc: '' },
+              { value: 'above_50', title: '50+', desc: '' }
+            ]
+          },
+          {
+            name: 'transport_goods',
+            label: '20. Are goods transported regularly?',
+            type: 'radio',
+            options: [
+              { value: 'daily', title: 'Daily', desc: '' },
+              { value: 'weekly', title: 'Weekly', desc: '' },
+              { value: 'occasionally', title: 'Occasionally', desc: '' },
+              { value: 'never', title: 'Never', desc: '' }
+            ]
+          },
+          {
+            name: 'transit_value',
+            label: '21. Value of goods in transit per month',
+            type: 'radio',
+            options: [
+              { value: 'under_1m', title: 'Under ₦1M', desc: '' },
+              { value: '1m_10m', title: '₦1M–₦10M', desc: '' },
+              { value: '10m_100m', title: '₦10M–₦100M', desc: '' },
+              { value: 'above_100m', title: 'Above ₦100M', desc: '' }
+            ]
+          }
         ]
       },
       {
-        id: 'insurance',
-        title: 'Current Insurance',
-        subtitle: 'Your existing insurance coverage',
+        id: 'cyber',
+        title: 'Cyber Risk',
+        subtitle: 'Digital and data protection',
         fields: [
-          { name: 'existing', label: 'Do you currently have business insurance?', type: 'radio', options: [
-            { value: 'full', title: 'Full Coverage', desc: 'Comprehensive business insurance' },
-            { value: 'partial', title: 'Partial Coverage', desc: 'Some policies in place' },
-            { value: 'none', title: 'No Coverage', desc: 'Currently uninsured' }
-          ]},
-          { name: 'lastReview', label: 'When was your last insurance policy review?', type: 'radio', options: [
-            { value: 'recently', title: 'Within 1 Year', desc: 'Recently reviewed' },
-            { value: '1to2years', title: '1-2 Years Ago', desc: 'Some time ago' },
-            { value: 'over2years', title: 'Over 2 Years Ago', desc: 'Needs review' },
-            { value: 'never', title: 'Never', desc: 'Never had a formal review' }
-          ]}
+          {
+            name: 'store_data',
+            label: '22. Does your business store customer information electronically?',
+            type: 'radio',
+            options: [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ]
+          },
+          {
+            name: 'incidents',
+            label: '23. Have you experienced:',
+            type: 'radio',
+            options: [
+              { value: 'hacking', title: 'Hacking', desc: '' },
+              { value: 'ransomware', title: 'Ransomware', desc: '' },
+              { value: 'data_loss', title: 'Data loss', desc: '' },
+              { value: 'none', title: 'None', desc: '' }
+            ]
+          },
+          {
+            name: 'backups',
+            label: '24. Do you back up data regularly?',
+            type: 'radio',
+            options: [
+              { value: 'daily', title: 'Daily', desc: '' },
+              { value: 'weekly', title: 'Weekly', desc: '' },
+              { value: 'occasionally', title: 'Occasionally', desc: '' },
+              { value: 'never', title: 'Never', desc: '' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'claims',
+        title: 'Claims History',
+        subtitle: 'Past losses and incidents',
+        fields: [
+          {
+            name: 'past_losses',
+            label: '25. Have you suffered any major losses in the last 5 years?',
+            type: 'select',
+            options: [
+              { value: 'fire', label: 'Fire' },
+              { value: 'theft', label: 'Theft' },
+              { value: 'accident', label: 'Accident' },
+              { value: 'flood', label: 'Flood' },
+              { value: 'liability', label: 'Liability claim' },
+              { value: 'none', label: 'None' }
+            ]
+          },
+          {
+            name: 'loss_value',
+            label: '26. Estimated value of losses',
+            type: 'radio',
+            options: [
+              { value: 'under_1m', title: 'Under ₦1M', desc: '' },
+              { value: '1m_10m', title: '₦1M–₦10M', desc: '' },
+              { value: '10m_50m', title: '₦10M–₦50M', desc: '' },
+              { value: 'above_50m', title: 'Above ₦50M', desc: '' }
+            ]
+          }
         ]
       }
     ];
+
 
     const individualSections = [
       {

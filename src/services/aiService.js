@@ -1,7 +1,7 @@
 require('dotenv').config();
 
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'mistral7b';
+const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
+const MISTRAL_MODEL = process.env.MISTRAL_MODEL || 'mistral-large-latest';
 
 const generateRiskReport = async (assessmentData) => {
   const { answers, score, riskLevel, user, entityType = 'business' } = assessmentData;
@@ -118,6 +118,10 @@ Generate an exhaustive business risk assessment report in this exact JSON format
   }
 
   try {
+    if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
+      throw new Error('MISTRAL_API_KEY is not configured or is the default placeholder.');
+    }
+
     const systemPrompt = `You are a senior insurance risk analyst with deep expertise in Nigerian and African insurance markets. You produce extremely comprehensive, detailed risk assessment reports that leave no area underexplored.
 
 For each report you MUST include:
@@ -132,25 +136,40 @@ For each report you MUST include:
 
 Always respond with valid, complete JSON matching the schema exactly.`;
 
-    const fullPrompt = `${systemPrompt}\n\n${prompt}`;
-
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${MISTRAL_API_KEY}`
+      },
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        prompt: fullPrompt,
-        stream: false,
-        options: { temperature: 0.7, num_predict: 4000 }
+        model: MISTRAL_MODEL,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.7,
+        response_format: { type: 'json_object' }
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.status}`);
+      const errText = await response.text();
+      throw new Error(`Mistral AI API error: ${response.status} - ${errText}`);
     }
 
     const data = await response.json();
-    const reportContent = data.response;
+    let reportContent = data.choices?.[0]?.message?.content;
+    if (!reportContent) {
+      throw new Error('Mistral AI returned an empty response.');
+    }
+
+    // Clean up potential markdown formatting block
+    reportContent = reportContent.trim();
+    if (reportContent.startsWith('```')) {
+      reportContent = reportContent.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
     return JSON.parse(reportContent);
   } catch (error) {
     console.error('AI Service Error:', error.message);

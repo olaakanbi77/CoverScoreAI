@@ -28,7 +28,7 @@
 | Database | SQLite3 (sqlite3 driver) |
 | Authentication | JWT (Access + Refresh tokens), BCrypt |
 | Email | Nodemailer with SMTP |
-| AI | OpenAI API |
+| AI | Mistral AI API |
 | Containerization | Docker & Docker Compose |
 
 ### 2.2 Database Configuration
@@ -57,7 +57,7 @@ CoverScore AI/
 │   │   └── analytics.js         # Analytics routes
 │   ├── services/
 │   │   ├── scoringEngine.js     # Weighted risk scoring
-│   │   ├── aiService.js         # OpenAI integration
+│   │   ├── aiService.js         # Mistral AI integration
 │   │   ├── emailService.js      # Nodemailer email sending
 │   │   └── industryIntelligence.js # Industry-to-risk mapping
 │   ├── models/
@@ -214,9 +214,9 @@ CoverScore AI/
 
 ## 7. AI Integration
 
-### 7.1 OpenAI Report Generation
+### 7.1 Mistral AI Report Generation
 
-Each assessment submission triggers an OpenAI API call to generate:
+Each assessment submission triggers a Mistral AI API call to generate:
 - Executive summary
 - Top 3 risks
 - Financial impact assessment
@@ -227,11 +227,12 @@ Each assessment submission triggers an OpenAI API call to generate:
 
 ```javascript
 {
-  model: "gpt-4",
+  model: "mistral-large-latest",
   messages: [
     { role: "system", content: "You are an insurance risk analyst..." },
     { role: "user", content: "Generate a risk report for: {assessment_data}" }
-  ]
+  ],
+  response_format: { type: "json_object" }
 }
 ```
 
@@ -334,7 +335,8 @@ PORT=3016
 DB_PATH=./data/coverscore.db
 JWT_SECRET=<secret>
 JWT_REFRESH_SECRET=<refresh_secret>
-OPENAI_API_KEY=<key>
+MISTRAL_API_KEY=<key>
+MISTRAL_MODEL=<model>
 SMTP_HOST=<host>
 SMTP_PORT=<port>
 SMTP_USER=<user>

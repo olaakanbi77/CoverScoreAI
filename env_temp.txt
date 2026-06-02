@@ -1,0 +1,30 @@
+PORT=3016
+NODE_ENV=production
+DB_PATH=./data/coverscore.db
+
+# Generate new secrets for production
+JWT_SECRET=cs_prod_jwt_secret_a7x9k2m5p8q3w6z1
+JWT_REFRESH_SECRET=cs_prod_refresh_secret_b8y2n5p8r1t4u7v0
+
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Mistral AI Configuration
+MISTRAL_API_KEY=your-mistral-api-key-here
+MISTRAL_MODEL=mistral-large-latest
+
+# Gmail SMTP Configuration
+SMTP_SERVICE=gmail
+SMTP_USER=olaakanbi77@gmail.com
+SMTP_PASS=fixl pqab wewe olrv
+
+SMTP_FROM=noreply@coverscore.site
+
+ADMIN_EMAIL=admin@coverscore.site
+ADMIN_PASSWORD=admin123
+
+APP_URL=https://coverscore.site
+
+# Africastalking WhatsApp Configuration
+AFRICASTALKING_USERNAME=Sandbox
+AFRICASTALKING_API_KEY=atsk_02a2a84423d1cde28d4361734b876d73051dfd07161b1996cb039af0da13e255a4c8e796
+AFRICASTALKING_SENDER_ID=CoverScore

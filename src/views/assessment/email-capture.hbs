@@ -99,6 +99,17 @@
             <p class="helper-text">We'll send your full report to this email</p>
           </div>
 
+          <div class="input-group" style="margin-top: 20px; margin-bottom: 24px;">
+            <label for="phone" style="display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #25D366;">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.458L0 24zm6.59-4.846c1.6.95 3.18 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.388 2.016 13.912.793 12.007.793c-5.434 0-9.858 4.37-9.862 9.8-.001 1.776.47 3.514 1.361 5.022L2.51 21.071l5.637-1.463c-.496.347-.503.435.5 1.546zm10.155-7.305c-.273-.137-1.616-.798-1.867-.89-.252-.093-.435-.137-.617.137-.182.274-.706.89-.865 1.072-.16.182-.32.205-.593.069-.273-.137-1.15-.424-2.19-1.353-.809-.722-1.355-1.614-1.514-1.888-.16-.273-.017-.42.12-.557.123-.122.273-.32.409-.48.136-.16.182-.273.273-.456.09-.182.046-.341-.023-.48-.069-.137-.617-1.484-.845-2.031-.22-.53-.443-.458-.617-.466-.16-.007-.342-.008-.525-.008-.182 0-.48.069-.731.342-.252.274-.96.938-.96 2.29 0 1.351.986 2.656 1.123 2.839.137.182 1.94 2.96 4.7 4.147.657.283 1.169.452 1.569.579.66.21 1.261.18 1.736.109.529-.079 1.616-.662 1.844-1.3.228-.638.228-1.186.16-1.302-.07-.113-.252-.182-.525-.32z"/>
+              </svg>
+              WhatsApp Number <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">(Optional)</span>
+            </label>
+            <input type="tel" id="phone" name="phone" placeholder="+234 803 123 4567" autocomplete="tel">
+            <p class="helper-text">Get an instant copy of your risk report directly on WhatsApp</p>
+          </div>
+
           <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submitBtn">
             <span id="btnText">Send My Report</span>
             <span id="btnSpinner" style="display: none; margin-left: 8px;">
@@ -114,7 +125,7 @@
             <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3 style="margin-bottom: 8px;">Report Sent!</h3>
-          <p class="text-muted" style="font-size: 14px; margin-bottom: 24px;">Check your inbox for your detailed risk assessment report.</p>
+          <p class="text-muted" id="successText" style="font-size: 14px; margin-bottom: 24px;">Check your inbox for your detailed risk assessment report.</p>
           <a href="#" class="btn btn-primary" id="viewReportBtn" style="display: none;">View Report Now</a>
         </div>
 
@@ -176,6 +187,9 @@
         try {
           const user = JSON.parse(storedUser);
           document.getElementById('email').value = user.email || '';
+          if (user.phone) {
+            document.getElementById('phone').value = user.phone;
+          }
         } catch (e) {}
       }
     }
@@ -207,6 +221,7 @@
       document.getElementById('btnSpinner').style.display = 'inline';
 
       const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
 
       if (!assessmentId) {
         errorDiv.textContent = 'No assessment found. Please complete an assessment first.';
@@ -227,7 +242,8 @@
           },
           body: JSON.stringify({
             assessmentId: assessmentId,
-            email: email
+            email: email,
+            phone: phone
           })
         });
 
@@ -237,6 +253,11 @@
           throw new Error(result.message || 'Failed to send report');
         }
 
+        if (phone) {
+          document.getElementById('successText').textContent = 'Check your inbox and WhatsApp for your detailed risk assessment report.';
+        } else {
+          document.getElementById('successText').textContent = 'Check your inbox for your detailed risk assessment report.';
+        }
         document.getElementById('emailForm').style.display = 'none';
         document.getElementById('successMessage').style.display = 'block';
 

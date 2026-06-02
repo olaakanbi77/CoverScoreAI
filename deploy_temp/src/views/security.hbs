@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security - CoverScore AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .security-page { background: #fff; }
+    .security-hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); padding: 100px 0; text-align: center; position: relative; overflow: hidden; }
+    .security-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.2) 0%, transparent 50%); }
+    .security-hero-content { position: relative; z-index: 1; }
+    .security-hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 20px; }
+    .security-hero p { font-size: 1.25rem; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto; }
+    .security-section { padding: 80px 0; }
+    .security-section:nth-child(even) { background: #f8fafc; }
+    .section-label { font-size: 12px; font-weight: 700; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .section-title { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 24px; }
+    .section-text { font-size: 1.0625rem; color: #475569; line-height: 1.8; max-width: 700px; }
+    .security-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 40px; }
+    .security-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; transition: all 150ms ease; }
+    .security-card:hover { border-color: #3b82f6; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1); }
+    .security-icon { width: 56px; height: 56px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #3b82f6; margin-bottom: 20px; }
+    .security-card h3 { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+    .security-card p { font-size: 14px; color: #475569; line-height: 1.7; }
+    .compliance-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
+    .compliance-item { background: #f8fafc; border-radius: 12px; padding: 24px; text-align: center; }
+    .compliance-badge { width: 64px; height: 64px; background: #fff; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #3b82f6; font-weight: 800; font-size: 11px; }
+    .compliance-item h4 { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .compliance-item p { font-size: 13px; color: #64748b; }
+    .infrastructure-diagram { background: #0f172a; border-radius: 16px; padding: 40px; margin-top: 40px; color: #fff; }
+    .infra-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; flex-wrap: wrap; }
+    .infra-item { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 16px 24px; text-align: center; min-width: 140px; }
+    .infra-item.highlight { background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.3); }
+    .infra-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .infra-item p { font-size: 12px; color: rgba(255,255,255,0.6); margin: 0; }
+    .threat-list { margin-top: 32px; }
+    .threat-item { display: flex; gap: 16px; padding: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 12px; }
+    .threat-icon { width: 40px; height: 40px; background: #fef2f2; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #dc2626; flex-shrink: 0; }
+    .threat-content h4 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+    .threat-content p { font-size: 14px; color: #475569; margin: 0; }
+    .cta-section { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); padding: 80px 0; text-align: center; }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .cta-section p { font-size: 1.125rem; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+    @media (max-width: 968px) { .security-grid, .compliance-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .security-hero h1 { font-size: 2rem; } .section-title { font-size: 1.5rem; } .security-grid, .compliance-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="security-page">
+    <nav class="navbar">
+      <div class="container navbar-content">
+        <a href="/" class="navbar-brand">Cover<span>Score</span> AI</a>
+        <div class="navbar-menu">
+          <a href="/#features" class="navbar-item">Features</a>
+          <a href="/pricing" class="navbar-item">Pricing</a>
+          <a href="/about" class="navbar-item">About</a>
+          <a href="/contact" class="navbar-item">Contact</a>
+          <a href="/auth/login" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="/assessment/start" class="btn btn-primary btn-sm">Get Started</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="security-hero">
+      <div class="container">
+        <div class="security-hero-content">
+          <h1>Security at CoverScore AI</h1>
+          <p>We take security seriously. Learn how we protect your business data with enterprise-grade security measures.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <div class="container">
+        <div class="section-label">Our Commitment</div>
+        <h2 class="section-title">Enterprise-Grade Security</h2>
+        <p class="section-text">At CoverScore AI, we understand that your business data is precious. That's why we've built our platform with security at its core—not as an afterthought. From encryption to access controls, every layer of our infrastructure is designed to keep your information safe.</p>
+        <div class="security-grid">
+          <div class="security-card">
+            <div class="security-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <h3>AES-256 Encryption</h3>
+            <p>All data is encrypted at rest using AES-256 encryption, the same standard used by governments and financial institutions worldwide.</p>
+          </div>
+          <div class="security-card">
+            <div class="security-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>TLS 1.3 in Transit</h3>
+            <p>Data moving between your browser and our servers is protected with TLS 1.3, the latest and most secure transport encryption.</p>
+          </div>
+          <div class="security-card">
+            <div class="security-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h3>Role-Based Access</h3>
+            <p>Strict access controls ensure that team members only see what they need. Admins can manage permissions at granular levels.</p>
+          </div>
+          <div class="security-card">
+            <div class="security-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <h3>SOC 2 Type II</h3>
+            <p>Our security controls, availability, and confidentiality practices are audited annually by independent third parties.</p>
+          </div>
+          <div class="security-card">
+            <div class="security-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>24/7 Monitoring</h3>
+            <p>Our security team monitors systems around the clock for suspicious activity and potential threats.</p>
+          </div>
+          <div class="security-card">
+            <div class="security-icon">
+              <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <h3>GDPR Compliant</h3>
+            <p>We fully comply with EU General Data Protection Regulation requirements for data protection and privacy.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <div class="container">
+        <div class="section-label">Compliance</div>
+        <h2 class="section-title">Certifications & Standards</h2>
+        <p class="section-text">We maintain rigorous compliance with industry standards and undergo regular audits to verify our security practices.</p>
+        <div class="compliance-grid">
+          <div class="compliance-item">
+            <div class="compliance-badge">SOC 2</div>
+            <h4>SOC 2 Type II</h4>
+            <p>Annual audit</p>
+          </div>
+          <div class="compliance-item">
+            <div class="compliance-badge">GDPR</div>
+            <h4>GDPR</h4>
+            <p>EU compliance</p>
+          </div>
+          <div class="compliance-item">
+            <div class="compliance-badge">CCPA</div>
+            <h4>CCPA</h4>
+            <p>California privacy</p>
+          </div>
+          <div class="compliance-item">
+            <div class="compliance-badge">ISO</div>
+            <h4>ISO 27001</h4>
+            <p>Information security</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <div class="container">
+        <div class="section-label">Infrastructure</div>
+        <h2 class="section-title">Secure by Design</h2>
+        <p class="section-text">Our infrastructure is built on industry-leading cloud services with security-first architecture, ensuring your data is protected at every layer.</p>
+        <div class="infrastructure-diagram">
+          <div class="infra-row">
+            <div class="infra-item highlight">
+              <h4>Your Browser</h4>
+              <p>TLS 1.3</p>
+            </div>
+            <div class="infra-item">
+              <h4>CDN Edge</h4>
+              <p>CloudFlare</p>
+            </div>
+            <div class="infra-item">
+              <h4>WAF</h4>
+              <p>AWS Shield</p>
+            </div>
+          </div>
+          <div class="infra-row">
+            <div class="infra-item">
+              <h4>Load Balancer</h4>
+              <p>AWS ALB</p>
+            </div>
+            <div class="infra-item">
+              <h4>API Servers</h4>
+              <p>Auto-scaling</p>
+            </div>
+            <div class="infra-item highlight">
+              <h4>Database</h4>
+              <p>Encrypted</p>
+            </div>
+            <div class="infra-item">
+              <h4>File Storage</h4>
+              <p>S3 + KMS</p>
+            </div>
+          </div>
+          <div class="infra-row">
+            <div class="infra-item">
+              <h4>AI Processing</h4>
+              <p>Isolated VPC</p>
+            </div>
+            <div class="infra-item">
+              <h4>Backups</h4>
+              <p>Encrypted daily</p>
+            </div>
+            <div class="infra-item highlight">
+              <h4>Monitoring</h4>
+              <p>GuardDuty</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <div class="container">
+        <div class="section-label">Protection</div>
+        <h2 class="section-title">How We Protect Against Threats</h2>
+        <p class="section-text">We employ multiple layers of defense to protect against both common and sophisticated security threats.</p>
+        <div class="threat-list">
+          <div class="threat-item">
+            <div class="threat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="threat-content">
+              <h4>Data Breaches</h4>
+              <p>End-to-end encryption, intrusion detection systems, and regular penetration testing prevent unauthorized access to your data.</p>
+            </div>
+          </div>
+          <div class="threat-item">
+            <div class="threat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="threat-content">
+              <h4>Phishing & Social Engineering</h4>
+              <p>Multi-factor authentication, security awareness training, and email verification protect against credential theft.</p>
+            </div>
+          </div>
+          <div class="threat-item">
+            <div class="threat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="threat-content">
+              <h4>DDoS Attacks</h4>
+              <p>AWS Shield and CloudFlare protection absorb and mitigate distributed denial-of-service attacks automatically.</p>
+            </div>
+          </div>
+          <div class="threat-item">
+            <div class="threat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <div class="threat-content">
+              <h4>Credential Stuffing</h4>
+              <p>Rate limiting, bot detection, and mandatory MFA prevent automated attacks on user accounts.</p>
+            </div>
+          </div>
+          <div class="threat-item">
+            <div class="threat-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            </div>
+            <div class="threat-content">
+              <h4>SQL Injection & XSS</h4>
+              <p>Input validation, parameterized queries, and content security policies protect against injection attacks.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <div class="container">
+        <div class="section-label">Best Practices</div>
+        <h2 class="section-title">Security Tips for Your Account</h2>
+        <p class="section-text">While we work hard to keep your account secure, you also play a vital role. Here are recommendations to maximize your security:</p>
+        <ul style="font-size: 1.0625rem; color: #475569; line-height: 2; max-width: 700px; margin-top: 24px;">
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Use a strong, unique password (minimum 12 characters with mixed case, numbers, symbols)</li>
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Enable multi-factor authentication (MFA) - we support authenticator apps and SMS</li>
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Never share your password or API keys with anyone, including CoverScore employees</li>
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Regularly review your account activity for unauthorized access</li>
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Keep your email address and recovery options up to date</li>
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Log out when using shared devices and clear browser sessions</li>
+          <li style="display: flex; align-items: center; gap: 12px;"><svg width="20" height="20" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Report suspicious emails or communications to our security team immediately</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="security-section">
+      <div class="container">
+        <div class="section-label">Vulnerability Reporting</div>
+        <h2 class="section-title">Responsible Disclosure</h2>
+        <p class="section-text">We welcome security researchers to help improve our security. If you discover a vulnerability, please report it to us responsibly:</p>
+        <ul style="font-size: 1.0625rem; color: #475569; line-height: 2; max-width: 700px; margin-top: 24px;">
+          <li>Email: <a href="mailto:security@coverscore.ai" style="color: #3b82f6;">security@coverscore.ai</a></li>
+          <li>Response time: Within 24 hours</li>
+          <li>We commit to not taking legal action against good-faith researchers</li>
+          <li>We recognize and credit valid bug reports (with your permission)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>Have Questions About Security?</h2>
+        <p>Our security team is here to help. Contact us anytime.</p>
+        <a href="mailto:security@coverscore.ai" class="btn btn-lg" style="background: white; color: #3b82f6;">Contact Security Team</a>
+      </div>
+    </section>
+
+    <footer style="background: #0f172a; padding: 48px 0;">
+      <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+          <div>
+            <a href="/" class="navbar-brand" style="font-size: 20px;">Cover<span>Score</span> AI</a>
+            <p style="color: #64748b; font-size: 14px; margin-top: 8px;">Your data security is our priority</p>
+          </div>
+          <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: #64748b; font-size: 14px; text-decoration: none;">Privacy</a>
+            <a href="/terms" style="color: #64748b; font-size: 14px; text-decoration: none;">Terms</a>
+            <a href="/cookie-policy" style="color: #64748b; font-size: 14px; text-decoration: none;">Cookies</a>
+            <a href="/security" style="color: #64748b; font-size: 14px; text-decoration: none;">Security</a>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #1e293b; margin-top: 32px; padding-top: 24px; color: #64748b; font-size: 14px;">
+          2026 CoverScore AI. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

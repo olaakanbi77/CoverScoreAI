@@ -10,7 +10,7 @@ const { getIndustryRisks } = require('../services/industryIntelligence');
 
 const router = express.Router();
 
-const businessSections = ['type', 'business', 'assets', 'liability', 'staff', 'insurance'];
+const businessSections = ['type', 'profile', 'property', 'business_interruption', 'employee_risk', 'liability', 'vehicle', 'cyber', 'claims'];
 const individualSections = ['type', 'personal', 'personal_assets', 'personal_liability', 'health', 'personal_insurance'];
 const allValidSections = [...new Set([...businessSections, ...individualSections])];
 
@@ -135,7 +135,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       return res.status(400).json({ error: 'Bad Request', message: 'Please complete all sections' });
     }
 
-    const { score, riskLevel } = calculateScore(answers);
+    const { score, riskLevel, recommendations, min_loss, max_loss } = calculateScore(answers);
 
     let aiReport = null;
     let explanations = null;
@@ -209,7 +209,9 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         const assessmentData = {
           id: assessment.id,
           score,
-          risk_level: riskLevel
+          risk_level: riskLevel,
+          min_loss,
+          max_loss
         };
         await sendAssessmentComplete(lead, assessmentData);
       } catch (waError) {
@@ -223,6 +225,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       assessmentId: assessment.id,
       score,
       riskLevel,
+      min_loss,
+      max_loss,
       redirectTo: '/assessment/email-capture'
     });
   } catch (error) {
@@ -261,6 +265,25 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
       WHERE assessment_id = ?
     `, [email, name, phone, businessName, assessmentId]);
 
+    // Send WhatsApp notification if phone is provided
+    if (phone) {
+      try {
+        const lead = await get('SELECT id, phone, name FROM leads WHERE assessment_id = ?', [assessmentId]);
+        if (lead && lead.phone) {
+          const assessmentData = {
+            id: assessment.id,
+            score: assessment.score,
+            risk_level: assessment.risk_level,
+            min_loss: aiReport?.min_loss || 500000,
+            max_loss: aiReport?.max_loss || 2000000
+          };
+          await sendAssessmentComplete(lead, assessmentData);
+        }
+      } catch (waError) {
+        console.error('WhatsApp notification failed:', waError.message);
+      }
+    }
+
     res.json({
       message: 'Report sent successfully',
       assessmentId: assessment.id
@@ -287,6 +310,9 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
 
     const answers = assessment.answers ? JSON.parse(assessment.answers) : {};
     const aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
+    
+    // Recompute to get the dynamic min_loss, max_loss, recommendations
+    const { min_loss, max_loss, recommendations } = calculateScore(answers);
 
     const industry = answers.business?.industry || 'General Business';
     const industryRisks = getIndustryRisks(industry);
@@ -295,6 +321,9 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
       id: assessment.id,
       score: assessment.score,
       riskLevel: assessment.risk_level,
+      min_loss,
+      max_loss,
+      recommendations,
       aiReport,
       answers,
       industryRisks,

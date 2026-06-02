@@ -6,35 +6,46 @@
 require('dotenv').config();
 const fetch = require('node-fetch');
 
-const AFRICASTALKING_USERNAME = process.env.AFRICASTALKING_USERNAME || 'sandbox';
-const AFRICASTALKING_API_KEY = process.env.AFRICASTALKING_API_KEY;
-const AFRICASTALKING_SENDER_ID = process.env.AFRICASTALKING_SENDER_ID || 'CoverScore';
+const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL;
+const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY;
+const EVOLUTION_API_INSTANCE = process.env.EVOLUTION_API_INSTANCE || 'CoverScore';
 const APP_URL = process.env.APP_URL || 'http://localhost:3016';
-
-const WHATSAPP_API_URL = 'https://api.africastalking.com/waids/1/messages';
 
 // WhatsApp message templates
 const templates = {
   assessmentComplete: {
     title: 'Assessment Complete',
-    template: `🧾 *CoverScore AI - Risk Assessment Complete!*
+    template: `🧾 *Your CoverScore Risk Report is Ready*
 
 Hi {{name}},
 
-Your risk assessment has been processed successfully.
+We've completed your risk assessment and identified areas that could expose you to significant financial loss if left unaddressed.
 
-📊 *Your Score:* {{score}}/100
-⚠️ *Risk Level:* {{riskLevel}}
+📊 *CoverScore:* {{score}}/100
+⚠️ *Risk Level:* {{risk_level}}
 
-📋 *Summary:*
-{{summary}}
+💰 *Potential Financial Exposure:*
+Based on your responses, a major uninsured incident could expose you to estimated losses between ₦{{min_loss}} and ₦{{max_loss}}.
 
-🔗 View your full report: {{reportUrl}}
+While this does not guarantee a loss will occur, it highlights the level of financial impact your business or personal finances could face if the unexpected happens.
 
-💡 *Next Steps:*
-{{nextSteps}}
+📋 Your report has identified key areas that may require attention and protection.
 
-Need help understanding your results? Book a free consultation: {{consultationUrl}}
+🔗 View your full report:
+{{report_link}}
+
+Before you move on, here's one important question:
+
+❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦{{max_loss}} without causing serious financial disruption?
+
+Reply with:
+1️⃣   YES – I believe I'm adequately protected
+2️⃣   NO – I think there may be gaps in my protection
+3️⃣   NOT SURE – I'd like a free review of my report
+
+Simply reply with 1, 2, or 3.
+
+Anyone who replies will receive a complimentary review of their report and practical recommendations based on their risk profile.
 
 —
 CoverScore AI
@@ -195,88 +206,98 @@ const buildMessage = (templateKey, data) => {
   return message;
 };
 
-// Send WhatsApp message via Africastalking
+// Send WhatsApp message via Evolution API
 const sendWhatsApp = async (to, templateKey, data = {}) => {
-  if (!AFRICASTALKING_API_KEY) {
-    console.warn('⚠️ WhatsApp not sent: Africastalking API key not configured');
-    return { success: false, error: 'API key not configured' };
+  if (!EVOLUTION_API_URL || !EVOLUTION_API_KEY) {
+    console.warn('⚠️ WhatsApp not sent: Evolution API URL or Key not configured');
+    return { success: false, error: 'Evolution API not configured' };
   }
 
-  const phone = normalizePhoneNumber(to);
+  let phone = normalizePhoneNumber(to);
   if (!phone) {
     return { success: false, error: 'Invalid phone number' };
   }
 
-  const message = buildMessage(templateKey, {
-    name: data.name || 'Customer',
-    score: data.score || '--',
-    riskLevel: (data.riskLevel || 'unknown').toUpperCase(),
-    summary: data.summary || 'See your full report for details.',
-    nextSteps: data.nextSteps || 'Review your report and book a consultation.',
-    reportUrl: data.reportUrl || `${APP_URL}/assessment/result/${data.assessmentId || ''}`,
-    consultationUrl: data.consultationUrl || `${APP_URL}/consultation`,
-    coverageUrl: data.coverageUrl || `${APP_URL}/quote`,
-    assessmentUrl: data.assessmentUrl || `${APP_URL}/assessment/start`,
-    coverageDetails: data.coverageDetails || 'See your policy documents.',
-    keyRisks: data.keyRisks || 'Review your report for details.',
-    ...data
-  });
+  // Evolution API typically expects phone numbers without the '+' sign
+  phone = phone.replace('+', '');
+
+  let message = data._message;
+
+  if (!message && templateKey) {
+    message = buildMessage(templateKey, {
+      name: data.name || 'Customer',
+      score: data.score || '--',
+      riskLevel: (data.riskLevel || 'unknown').toUpperCase(),
+      summary: data.summary || 'See your full report for details.',
+      nextSteps: data.nextSteps || 'Review your report and book a consultation.',
+      reportUrl: data.reportUrl || `${APP_URL}/assessment/result/${data.assessmentId || ''}`,
+      consultationUrl: data.consultationUrl || `${APP_URL}/consultation`,
+      coverageUrl: data.coverageUrl || `${APP_URL}/quote`,
+      assessmentUrl: data.assessmentUrl || `${APP_URL}/assessment/start`,
+      coverageDetails: data.coverageDetails || 'See your policy documents.',
+      keyRisks: data.keyRisks || 'Review your report for details.',
+      ...data
+    });
+  }
 
   if (!message) {
     return { success: false, error: 'Failed to build message template' };
   }
 
   try {
-    const response = await fetch(WHATSAPP_API_URL, {
+    const sendUrl = `${EVOLUTION_API_URL}/message/sendText/${EVOLUTION_API_INSTANCE}`;
+
+    const response = await fetch(sendUrl, {
       method: 'POST',
       headers: {
-        'apiKey': AFRICASTALKING_API_KEY,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'apikey': EVOLUTION_API_KEY,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: AFRICASTALKING_USERNAME,
-        to: [phone],
-        from: AFRICASTALKING_SENDER_ID,
-        message: message
+        number: phone,
+        text: message,
+        delay: 1200,
+        presence: 'composing',
+        linkPreview: true
       })
     });
 
     const result = await response.json();
 
-    if (result.status === 'success' || result.statusCode === '0' || result.entries?.length > 0) {
-      console.log(`✅ WhatsApp sent to ${phone}`);
-      return { success: true, messageId: result.entries?.[0]?.messageId || result.messageId || 'sent' };
+    if (response.ok && (result.key || result.status === 'SUCCESS' || result.message?.key)) {
+      console.log(`✅ WhatsApp sent to ${phone} via Evolution API`);
+      return { success: true, messageId: result.key?.id || result.message?.key?.id || 'sent' };
     } else {
-      console.error(`❌ WhatsApp failed: ${JSON.stringify(result)}`);
-      return { success: false, error: result.errorMessage || result.description || 'Send failed' };
+      console.error(`❌ Evolution API failed: ${JSON.stringify(result)}`);
+      return { success: false, error: result.message || 'Send failed' };
     }
   } catch (error) {
-    console.error(`❌ WhatsApp error: ${error.message}`);
+    console.error(`❌ WhatsApp error via Evolution API: ${error.message}`);
     return { success: false, error: error.message };
   }
 };
 
+// Format currency
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-NG').format(amount);
+};
+
 // Send assessment completion notification
 const sendAssessmentComplete = async (lead, assessment) => {
-  const riskEmojis = {
-    low: '✅',
-    moderate: '⚠️',
-    high: '🚨',
-    critical: '🚨'
-  };
-
   const riskLevel = assessment.risk_level || 'moderate';
-  const emoji = riskEmojis[riskLevel] || '📊';
-
+  
+  // Use min/max loss from assessment if available, otherwise fallback to score-based formula
+  const baseAmount = 500000 + (assessment.score || 50) * 100000;
+  const minLoss = assessment.min_loss || baseAmount;
+  const maxLoss = assessment.max_loss || (baseAmount * 3.5);
+  
   return sendWhatsApp(lead.phone || lead.email, 'assessmentComplete', {
     name: lead.name || 'Customer',
     score: assessment.score || '--',
-    riskLevel: riskLevel,
-    summary: `Your ${riskLevel} risk profile requires ${riskLevel === 'critical' || riskLevel === 'high' ? 'prompt' : 'timely'} attention.`,
-    nextSteps: riskLevel === 'critical' || riskLevel === 'high'
-      ? 'Book a consultation with an advisor immediately to discuss urgent coverage needs.'
-      : 'Review your report at your convenience and consider speaking with an advisor.',
+    risk_level: riskLevel.toUpperCase(),
+    min_loss: formatCurrency(minLoss),
+    max_loss: formatCurrency(maxLoss),
+    report_link: `${APP_URL}/assessment/result/${assessment.id}`,
     assessmentId: assessment.id
   });
 };

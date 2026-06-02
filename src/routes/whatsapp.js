@@ -215,6 +215,19 @@ Our team will respond shortly!`;
   }
 });
 
+// Proxy to get QR code from Evolution API
+router.get('/qr', async (req, res, next) => {
+  try {
+    const response = await fetch(`${process.env.EVOLUTION_API_URL}/instance/connect/${process.env.EVOLUTION_API_INSTANCE}`, {
+      headers: { 'apikey': process.env.EVOLUTION_API_KEY }
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get available message templates
 router.get('/templates', authenticate, (req, res) => {
   const { templates } = require('../services/whatsappService');
