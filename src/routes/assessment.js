@@ -214,19 +214,18 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
 
     // Send WhatsApp notification for completed assessment (if lead has phone)
     if (lead?.phone) {
-      try {
-        const assessmentData = {
-          id: assessment.id,
-          score,
-          risk_level: riskLevel,
-          min_loss,
-          max_loss
-        };
-        await sendAssessmentComplete(lead, assessmentData);
-      } catch (waError) {
+      const assessmentData = {
+        id: assessment.id,
+        score,
+        risk_level: riskLevel,
+        min_loss,
+        max_loss
+      };
+      
+      // Fire and forget - don't block the HTTP response
+      sendAssessmentComplete(lead, assessmentData).catch(waError => {
         console.error('WhatsApp notification failed:', waError.message);
-        // Don't fail the request if WhatsApp fails
-      }
+      });
     }
 
     res.json({
