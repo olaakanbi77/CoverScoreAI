@@ -171,9 +171,18 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       generatedAt: new Date().toISOString()
     };
 
+    const dbRiskLevelMap = {
+      'Very Low Risk': 'low',
+      'Low Risk': 'low',
+      'Moderate Risk': 'moderate',
+      'High Risk': 'high',
+      'Critical Risk': 'critical'
+    };
+    const dbRiskLevel = dbRiskLevelMap[riskLevel] || 'low';
+
     await run('UPDATE assessments SET score = ?, risk_level = ?, ai_report = ? WHERE id = ?', [
       score,
-      riskLevel,
+      dbRiskLevel,
       JSON.stringify(fullReport),
       assessment.id
     ]);
@@ -196,7 +205,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         businessName,
         assessment.id,
         score,
-        riskLevel,
+        dbRiskLevel,
         entityType
       ]);
 
