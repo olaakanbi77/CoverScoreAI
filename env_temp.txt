@@ -24,7 +24,7 @@ ADMIN_PASSWORD=admin123
 
 APP_URL=https://coverscore.site
 
-# Africastalking WhatsApp Configuration
-AFRICASTALKING_USERNAME=Sandbox
-AFRICASTALKING_API_KEY=atsk_02a2a84423d1cde28d4361734b876d73051dfd07161b1996cb039af0da13e255a4c8e796
-AFRICASTALKING_SENDER_ID=CoverScore
+# Evolution API WhatsApp Configuration
+EVOLUTION_API_URL=http://163.245.210.111:8081
+EVOLUTION_API_KEY=CoverScoreEvolution2024SecureKey
+EVOLUTION_API_INSTANCE=CoverScore
