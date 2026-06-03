@@ -140,21 +140,24 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     let aiReport = null;
     let explanations = null;
     try {
-      // Generate both the detailed AI report and humanized explanations
+      const guestName = answers.business?.contact_name || answers.personal?.name || 'Guest User';
+      const guestBusinessName = answers.business?.name || 'Prospect';
+      const aiUserObj = req.user || { name: guestName, business_name: guestBusinessName };
+
       const [report, explanationLayer] = await Promise.all([
         generateRiskReport({
           answers,
           score,
           riskLevel,
           entityType,
-          user: req.user || { name: 'Guest User', business_name: answers.business?.name || 'Prospect' }
+          user: aiUserObj
         }),
         generateExplanations({
           answers,
           score,
           riskLevel,
           entityType,
-          user: req.user || { name: 'Guest User', business_name: answers.business?.name || 'Prospect' }
+          user: aiUserObj
         })
       ]);
 

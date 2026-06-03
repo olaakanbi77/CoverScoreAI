@@ -94,6 +94,11 @@
       <div class="card-body">
         <form id="emailForm">
           <div class="input-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
+          </div>
+
+          <div class="input-group" style="margin-top: 20px;">
             <label for="email">Email Address *</label>
             <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
             <p class="helper-text">We'll send your full report to this email</p>
@@ -222,6 +227,7 @@
 
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
+      const name = document.getElementById('name').value;
 
       if (!assessmentId) {
         errorDiv.textContent = 'No assessment found. Please complete an assessment first.';
@@ -243,7 +249,8 @@
           body: JSON.stringify({
             assessmentId: assessmentId,
             email: email,
-            phone: phone
+            phone: phone,
+            name: name
           })
         });
 

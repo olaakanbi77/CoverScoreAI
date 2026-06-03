@@ -141,13 +141,23 @@
 
     const businessSections = [
       {
-        id: 'profile',
+        id: 'business',
         title: 'Business Profile',
         subtitle: 'Tell us about your business',
         fields: [
           {
+            name: 'contact_name',
+            label: '1. What is your Full Name?',
+            type: 'text'
+          },
+          {
+            name: 'name',
+            label: '2. What is your Business Name?',
+            type: 'text'
+          },
+          {
             name: 'industry',
-            label: '1. What industry best describes your business?',
+            label: '3. What industry best describes your business?',
             type: 'select',
             options: [
               { value: 'manufacturing', label: 'Manufacturing' },
@@ -480,13 +490,18 @@
 
     const individualSections = [
       {
-        id: 'personal_profile',
+        id: 'personal',
         title: 'Personal Profile',
         subtitle: 'Basic demographic and financial details',
         fields: [
           {
+            name: 'name',
+            label: '1. What is your Full Name?',
+            type: 'text'
+          },
+          {
             name: 'age_group',
-            label: '1. Age Group',
+            label: '2. Age Group',
             type: 'radio',
             options: [
               { value: 'under_25', title: 'Under 25', desc: '' },
@@ -826,6 +841,9 @@
             </label>`;
           });
           html += `</div>`;
+        } else if (field.type === 'text') {
+          html += `<label for="${field.name}" style="display: block; margin-bottom: 8px; font-weight: 500;">${field.label}</label>`;
+          html += `<input type="text" id="${field.name}" name="${field.name}" value="${savedValue || ''}" onchange="saveField('${section.id}', '${field.name}', this.value)" style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white;" placeholder="Type your answer here..." />`;
         }
         html += `</div>`;
       });
