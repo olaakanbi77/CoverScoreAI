@@ -45,8 +45,6 @@ Reply with:
 
 Simply reply with 1, 2, or 3.
 
-Anyone who replies will receive a complimentary review of their report and practical recommendations based on their risk profile.
-
 —
 CoverScore AI
 Insurance Risk Intelligence Platform`
