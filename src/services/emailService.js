@@ -327,4 +327,28 @@ const sendPasswordResetEmail = async (to, resetToken) => {
   }
 };
 
-module.exports = { sendAssessmentReport, sendPasswordResetEmail };
+const sendEmail = async (options) => {
+  if (!transporter) {
+    console.warn('⚠️ Email not sent: SMTP not configured');
+    return { success: false, error: 'SMTP not configured' };
+  }
+
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.SMTP_FROM || '"CoverScore AI" <noreply@coverscore.ai>',
+      to: options.to,
+      subject: options.subject,
+      html: options.html
+    });
+
+    if (etherealAccount) {
+      console.log(`📧 Email preview (Ethereal): ${nodemailer.getTestMessageUrl(info)}`);
+    }
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Email send error:', error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+module.exports = { sendAssessmentReport, sendPasswordResetEmail, sendEmail };
