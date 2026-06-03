@@ -58,6 +58,11 @@ const initDatabase = () => {
       risk_level TEXT,
       entity_type TEXT DEFAULT 'business',
       status TEXT DEFAULT 'new' CHECK(status IN ('new', 'contacted', 'converted', 'lost')),
+      wa_state TEXT DEFAULT 'initial',
+      primary_concern TEXT,
+      consultation_preference TEXT,
+      engagement_points INTEGER DEFAULT 0,
+      is_qualified BOOLEAN DEFAULT 0,
       notes TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME,
@@ -78,6 +83,24 @@ const initDatabase = () => {
     CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
   `);
+
+  // Simple schema migration for existing databases
+  const columnsToAdd = [
+    "ALTER TABLE leads ADD COLUMN wa_state TEXT DEFAULT 'initial'",
+    "ALTER TABLE leads ADD COLUMN primary_concern TEXT",
+    "ALTER TABLE leads ADD COLUMN consultation_preference TEXT",
+    "ALTER TABLE leads ADD COLUMN engagement_points INTEGER DEFAULT 0",
+    "ALTER TABLE leads ADD COLUMN is_qualified BOOLEAN DEFAULT 0"
+  ];
+
+  columnsToAdd.forEach(sql => {
+    db.run(sql, (err) => {
+      // Ignore errors related to duplicate columns
+      if (err && !err.message.includes('duplicate column name')) {
+        console.error('Migration error:', err.message);
+      }
+    });
+  });
 
   db.get('SELECT id FROM users WHERE role = ?', ['admin'], (err, row) => {
     if (!row) {

@@ -199,8 +199,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       const businessName = entityType === 'business' ? (req.user ? req.user.business_name : (answers.business?.name || '')) : null;
 
       const result = await run(`
-        INSERT INTO leads (name, email, phone, business_name, assessment_id, score, risk_level, status, entity_type)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?)
+        INSERT INTO leads (name, email, phone, business_name, assessment_id, score, risk_level, status, entity_type, engagement_points)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?, 20)
       `, [
         name,
         email,
@@ -318,6 +318,10 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
        // For "Not a SaaS", we can be more lenient or use a public token.
        // Let's allow public viewing for now as requested "Not a SaaS yet".
     }
+
+    // Add 10 points for opening the report, but only if they currently have exactly 20 points (Assessment Completed)
+    // This prevents adding 10 points on every page load
+    await run('UPDATE leads SET engagement_points = engagement_points + 10 WHERE assessment_id = ? AND engagement_points = 20', [assessment.id]);
 
     const answers = assessment.answers ? JSON.parse(assessment.answers) : {};
     const aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
