@@ -225,7 +225,7 @@ router.post('/evolution', async (req, res) => {
           try {
             await emailService.sendEmail({
               to: adminEmail,
-              subject: \`🚨 QUALIFIED LEAD: \${lead.name || phoneNumber} (Points: \${lead.engagement_points + pointsToAdd})\`,
+              subject: `🚨 QUALIFIED LEAD: ${lead.name || phoneNumber} (Points: ${lead.engagement_points + pointsToAdd})`,
               html: emailContent
             });
             console.log('Notified advisor about newly qualified lead.');
