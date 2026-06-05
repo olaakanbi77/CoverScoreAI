@@ -193,7 +193,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       const name = req.user ? req.user.name : (answers.business?.contact_name || answers.personal?.name || 'Anonymous');
       const email = req.user ? req.user.email : (answers.business?.contact_email || answers.personal?.email || '');
       let rawPhone = req.user ? req.user.phone : (answers.business?.contact_phone || answers.personal?.phone || '');
-      const cleanPhone = rawPhone ? rawPhone.replace(/\D/g, '') : '';
+      const cleanPhone = rawPhone ? String(rawPhone).replace(/\D/g, '') : '';
       const businessName = entityType === 'business' ? (req.user ? req.user.business_name : (answers.business?.name || '')) : null;
 
       const result = await run(`
@@ -268,7 +268,7 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
     });
 
     // Clean phone number (remove spaces, hyphens, parentheses, etc)
-    const cleanPhone = phone ? phone.replace(/\D/g, '') : null;
+    const cleanPhone = phone ? String(phone).replace(/\D/g, '') : null;
 
     // Update lead info with captured details
     await run(`
