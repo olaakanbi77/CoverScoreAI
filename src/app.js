@@ -18,6 +18,7 @@ const whatsappRoutes = require('./routes/whatsapp');
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(helmet({
   contentSecurityPolicy: false,
