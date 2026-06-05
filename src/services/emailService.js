@@ -280,9 +280,10 @@ const sendAssessmentReport = async (to, assessmentResult) => {
         <div style="margin-bottom: 24px;">
           <h2 style="font-size: 16px; font-weight: 600; color: #1e293b; margin: 0 0 12px;">Recommended Coverage</h2>
           <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-            ${aiReport.recommendations.map(rec => `
-              <span style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">${rec}</span>
-            `).join('')}
+            ${aiReport.recommendations.map(rec => {
+              const recText = typeof rec === 'object' ? (rec.product || rec.name || rec.title || rec.recommendation || Object.values(rec)[0] || JSON.stringify(rec)) : rec;
+              return `<span style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">${recText}</span>`;
+            }).join('')}
           </div>
         </div>
         ` : ''}
