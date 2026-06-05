@@ -192,7 +192,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     if (!lead) {
       const name = req.user ? req.user.name : (answers.business?.contact_name || answers.personal?.name || 'Anonymous');
       const email = req.user ? req.user.email : (answers.business?.contact_email || answers.personal?.email || '');
-      const phone = req.user ? req.user.phone : (answers.business?.contact_phone || answers.personal?.phone || '');
+      let rawPhone = req.user ? req.user.phone : (answers.business?.contact_phone || answers.personal?.phone || '');
+      const cleanPhone = rawPhone ? rawPhone.replace(/\D/g, '') : '';
       const businessName = entityType === 'business' ? (req.user ? req.user.business_name : (answers.business?.name || '')) : null;
 
       const result = await run(`
@@ -201,7 +202,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       `, [
         name,
         email,
-        phone,
+        cleanPhone,
         businessName,
         assessment.id,
         score,
@@ -209,7 +210,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         entityType
       ]);
 
-      lead = { id: result.lastInsertRowid, phone, name };
+      lead = { id: result.lastInsertRowid, phone: cleanPhone, name };
     }
 
     // Send WhatsApp notification for completed assessment (if lead has phone)
@@ -266,12 +267,15 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
       assessmentId: assessment.id
     });
 
+    // Clean phone number (remove spaces, hyphens, parentheses, etc)
+    const cleanPhone = phone ? phone.replace(/\D/g, '') : null;
+
     // Update lead info with captured details
     await run(`
       UPDATE leads 
       SET email = ?, name = COALESCE(?, name), phone = COALESCE(?, phone), business_name = COALESCE(?, business_name)
       WHERE assessment_id = ?
-    `, [email, name, phone, businessName, assessmentId]);
+    `, [email, name, cleanPhone, businessName, assessmentId]);
 
     // Send WhatsApp notification if phone is provided
     if (phone) {
