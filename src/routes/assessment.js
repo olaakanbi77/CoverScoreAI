@@ -246,25 +246,35 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
 
     const aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
 
-    await sendAssessmentReport(email, {
-      score: assessment.score,
-      riskLevel: assessment.risk_level,
-      aiReport,
-      businessName: businessName || 'Your Business',
-      assessmentId: assessment.id
-    });
+    // Track email result separately so we can still process lead + WhatsApp
+    let emailSent = false;
+    let emailError = null;
+
+    try {
+      await sendAssessmentReport(email, {
+        score: assessment.score,
+        riskLevel: assessment.risk_level,
+        aiReport,
+        businessName: businessName || 'Your Business',
+        assessmentId: assessment.id
+      });
+      emailSent = true;
+    } catch (emailErr) {
+      console.error('Email send failed in send-report:', emailErr.message);
+      emailError = emailErr.message;
+    }
 
     // Clean phone number (remove spaces, hyphens, parentheses, etc)
     const cleanPhone = phone ? String(phone).replace(/\D/g, '') : null;
 
-    // Update lead info with captured details
+    // Update lead info with captured details (always do this regardless of email)
     await run(`
       UPDATE leads 
       SET email = ?, name = COALESCE(?, name), phone = COALESCE(?, phone), business_name = COALESCE(?, business_name)
       WHERE assessment_id = ?
     `, [email, name, cleanPhone, businessName, assessmentId]);
 
-    // Send WhatsApp notification if phone is provided
+    // Send WhatsApp notification if phone is provided (always try regardless of email)
     if (phone) {
       try {
         const lead = await get('SELECT id, phone, name FROM leads WHERE assessment_id = ?', [assessmentId]);
@@ -283,10 +293,22 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
       }
     }
 
-    res.json({
-      message: 'Report sent successfully',
-      assessmentId: assessment.id
-    });
+    // Return appropriate response based on email result
+    if (emailSent) {
+      res.json({
+        message: 'Report sent successfully',
+        assessmentId: assessment.id
+      });
+    } else {
+      // Still return 200 since lead was saved and WhatsApp may have sent,
+      // but flag the email failure so the frontend can show a nuanced message
+      res.json({
+        message: 'Your information has been saved. Email delivery failed but you can view your report directly.',
+        assessmentId: assessment.id,
+        emailFailed: true,
+        emailError: emailError
+      });
+    }
   } catch (error) {
     next(error);
   }

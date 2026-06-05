@@ -1,31 +1,48 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+let transporter = null;
+let etherealAccount = null;
+let transporterReady = null; // Promise that resolves when transporter is initialized
+
+// Sanitize App Password — Google App Passwords are 16 chars, often displayed with spaces
+const sanitizeAppPassword = (pass) => {
+  if (!pass) return pass;
+  // Remove all spaces (Google App Passwords work with or without spaces)
+  return pass.replace(/\s+/g, '');
+};
+
 // Create transporter based on environment configuration
 const createTransporter = () => {
-  const config = {
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  };
+  const smtpService = (process.env.SMTP_SERVICE || '').trim().toLowerCase();
+  const smtpUser = (process.env.SMTP_USER || '').trim();
+  const smtpPass = (process.env.SMTP_PASS || '').trim();
+
+  console.log('📧 SMTP Config Debug:');
+  console.log(`   SMTP_SERVICE: "${smtpService}"`);
+  console.log(`   SMTP_USER: "${smtpUser}"`);
+  console.log(`   SMTP_PASS: "${smtpPass ? smtpPass.substring(0, 4) + '****' : '(empty)'}"`);
+  console.log(`   SMTP_PASS length: ${smtpPass.length}`);
+  console.log(`   SMTP_HOST: "${process.env.SMTP_HOST || '(not set)'}"`);
+  console.log(`   SMTP_PORT: "${process.env.SMTP_PORT || '(not set)'}"`);
+  console.log(`   SMTP_FROM: "${process.env.SMTP_FROM || '(not set)'}"`);
 
   // If using Gmail with App Passwords
-  if (process.env.SMTP_SERVICE === 'gmail' && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  if (smtpService === 'gmail' && smtpUser && smtpPass) {
+    const cleanPass = sanitizeAppPassword(smtpPass);
+    console.log(`   Using Gmail service transport (password cleaned: ${smtpPass.length} -> ${cleanPass.length} chars)`);
     return nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
+        user: smtpUser,
+        pass: cleanPass
       }
     });
   }
 
   // If using SendGrid
-  if (process.env.SMTP_SERVICE === 'sendgrid' && process.env.SMTP_API_KEY) {
+  if (smtpService === 'sendgrid' && process.env.SMTP_API_KEY) {
+    console.log('   Using SendGrid transport');
     return nodemailer.createTransport({
       service: 'sendgrid',
       auth: {
@@ -34,16 +51,39 @@ const createTransporter = () => {
     });
   }
 
-  // Default to custom SMTP server
-  return nodemailer.createTransport(config);
+  // Default to custom SMTP server with explicit Gmail fallback
+  // If user set SMTP_USER to a gmail address but forgot SMTP_SERVICE, auto-detect
+  if (smtpUser.endsWith('@gmail.com') && smtpPass) {
+    const cleanPass = sanitizeAppPassword(smtpPass);
+    console.log('   Auto-detected Gmail from SMTP_USER, using Gmail service transport');
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: smtpUser,
+        pass: cleanPass
+      }
+    });
+  }
+
+  // Generic SMTP
+  console.log('   Using generic SMTP transport');
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: smtpUser,
+      pass: smtpPass
+    }
+  });
 };
 
-let transporter = null;
-let etherealAccount = null;
-
-// Initialize transporter
+// Initialize transporter (returns a promise)
 const initTransporter = async () => {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  const smtpUser = (process.env.SMTP_USER || '').trim();
+  const smtpPass = (process.env.SMTP_PASS || '').trim();
+
+  if (!smtpUser || !smtpPass) {
     // Create Ethereal test account for development
     if (process.env.NODE_ENV === 'development' || process.env.SMTP_HOST === 'smtp.ethereal.email') {
       try {
@@ -68,19 +108,44 @@ const initTransporter = async () => {
       }
     }
     console.warn('⚠️ SMTP not configured. Emails will not be sent.');
+    console.warn(`   SMTP_USER is: "${smtpUser || '(empty)'}"`);
+    console.warn(`   SMTP_PASS is: "${smtpPass ? '(set)' : '(empty)'}"`);
     return;
   }
 
   transporter = createTransporter();
+
+  // Verify the connection works
+  try {
+    await transporter.verify();
+    console.log('✅ SMTP connection verified successfully — emails will be sent');
+  } catch (err) {
+    console.error('❌ SMTP verification FAILED:', err.message);
+    console.error('   Emails will likely fail until this is resolved.');
+    console.error('   Common fixes:');
+    console.error('   1. Regenerate your Google App Password');
+    console.error('   2. Ensure SMTP_PASS has no extra spaces or quotes');
+    console.error('   3. Check that 2-Step Verification is enabled on your Google account');
+    // Don't null out transporter — let it try and fail with proper error messages
+  }
 };
 
-// Initialize on module load
-initTransporter();
+// Initialize on module load and store the promise
+transporterReady = initTransporter();
+
+// Ensure transporter is ready before sending
+const ensureReady = async () => {
+  if (transporterReady) {
+    await transporterReady;
+  }
+};
 
 const sendAssessmentReport = async (to, assessmentResult) => {
+  await ensureReady();
+
   if (!transporter) {
     console.warn('⚠️ Email not sent: SMTP not configured');
-    return { success: false, error: 'SMTP not configured' };
+    throw new Error('Email service not configured. Please check SMTP settings.');
   }
 
   const { score, riskLevel, aiReport, businessName } = assessmentResult;
@@ -251,6 +316,7 @@ const sendAssessmentReport = async (to, assessmentResult) => {
   `;
 
   try {
+    console.log(`📧 Attempting to send assessment report email to: ${to}`);
     const info = await transporter.sendMail({
       from: process.env.SMTP_FROM || '"CoverScore AI" <noreply@coverscore.ai>',
       to: to,
@@ -264,17 +330,20 @@ const sendAssessmentReport = async (to, assessmentResult) => {
       console.log(`📧 Email preview (Ethereal): ${previewUrl}`);
     }
 
+    console.log(`✅ Assessment report email sent successfully to ${to} (messageId: ${info.messageId})`);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Email send error:', error.message);
-    return { success: false, error: error.message };
+    console.error(`❌ Email send FAILED to ${to}:`, error.message);
+    throw error; // Propagate so caller knows it failed
   }
 };
 
 const sendPasswordResetEmail = async (to, resetToken) => {
+  await ensureReady();
+
   if (!transporter) {
     console.warn('⚠️ Email not sent: SMTP not configured');
-    return { success: false, error: 'SMTP not configured' };
+    throw new Error('Email service not configured. Please check SMTP settings.');
   }
 
   const resetUrl = `${process.env.APP_URL || 'http://localhost:3016'}/auth/reset-password?token=${resetToken}`;
@@ -307,6 +376,7 @@ const sendPasswordResetEmail = async (to, resetToken) => {
   `;
 
   try {
+    console.log(`📧 Attempting to send password reset email to: ${to}`);
     const info = await transporter.sendMail({
       from: process.env.SMTP_FROM || '"CoverScore AI" <noreply@coverscore.ai>',
       to: to,
@@ -320,20 +390,24 @@ const sendPasswordResetEmail = async (to, resetToken) => {
       console.log(`📧 Password reset email preview (Ethereal): ${previewUrl}`);
     }
 
+    console.log(`✅ Password reset email sent successfully to ${to}`);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Email send error:', error.message);
-    return { success: false, error: error.message };
+    console.error(`❌ Password reset email FAILED to ${to}:`, error.message);
+    throw error;
   }
 };
 
 const sendEmail = async (options) => {
+  await ensureReady();
+
   if (!transporter) {
     console.warn('⚠️ Email not sent: SMTP not configured');
     return { success: false, error: 'SMTP not configured' };
   }
 
   try {
+    console.log(`📧 Attempting to send email to: ${options.to} (subject: ${options.subject})`);
     const info = await transporter.sendMail({
       from: process.env.SMTP_FROM || '"CoverScore AI" <noreply@coverscore.ai>',
       to: options.to,
@@ -344,11 +418,25 @@ const sendEmail = async (options) => {
     if (etherealAccount) {
       console.log(`📧 Email preview (Ethereal): ${nodemailer.getTestMessageUrl(info)}`);
     }
+    console.log(`✅ Email sent successfully to ${options.to}`);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Email send error:', error.message);
+    console.error(`❌ Email send FAILED to ${options.to}:`, error.message);
     return { success: false, error: error.message };
   }
 };
 
-module.exports = { sendAssessmentReport, sendPasswordResetEmail, sendEmail };
+// Diagnostic function for health check / debugging
+const getDiagnostics = async () => {
+  await ensureReady();
+  return {
+    configured: !!transporter,
+    service: (process.env.SMTP_SERVICE || '').trim().toLowerCase() || 'auto',
+    user: process.env.SMTP_USER ? `${process.env.SMTP_USER.substring(0, 3)}***` : '(not set)',
+    passLength: (process.env.SMTP_PASS || '').trim().length,
+    from: process.env.SMTP_FROM || '(not set)',
+    ethereal: !!etherealAccount
+  };
+};
+
+module.exports = { sendAssessmentReport, sendPasswordResetEmail, sendEmail, getDiagnostics };

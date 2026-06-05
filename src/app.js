@@ -183,6 +183,17 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Email diagnostics endpoint — helps debug SMTP issues without exposing secrets
+app.get('/health/email', async (req, res) => {
+  try {
+    const { getDiagnostics } = require('./services/emailService');
+    const diag = await getDiagnostics();
+    res.json({ status: 'ok', email: diag });
+  } catch (err) {
+    res.json({ status: 'error', error: err.message });
+  }
+});
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 
