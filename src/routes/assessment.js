@@ -132,7 +132,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
 
     // Validation removed: some sections might be empty if the user answered conditionally (e.g., no car)
 
-    const { score, riskLevel, recommendations, min_loss, max_loss } = calculateScore(answers);
+    const riskData = calculateScore(answers);
+    const { score, riskLevel, recommendations, min_loss, max_loss, identified_gaps, risk_categories } = riskData;
 
     let aiReport = null;
     let explanations = null;
@@ -146,6 +147,11 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
           answers,
           score,
           riskLevel,
+          min_loss,
+          max_loss,
+          recommendations,
+          identified_gaps,
+          risk_categories,
           entityType,
           user: aiUserObj
         }),

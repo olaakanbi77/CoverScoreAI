@@ -779,109 +779,70 @@
 
         // Build AI Explanation Layer
         let aiExplanationHtml = '';
-        const explanations = data.aiReport?.explanations;
+        const report = data.aiReport;
 
-        if (explanations) {
-          // Personalized Narrative
-          if (explanations.narrative) {
+        if (report) {
+          // Executive Summary & Overall Risk Score
+          if (report.executiveSummary) {
             aiExplanationHtml += `
               <div class="ai-narrative fade-in stagger-2">
                 <div class="ai-narrative-label">
                   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                   </svg>
-                  Your Personalized Risk Analysis
+                  Executive Summary
                 </div>
-                <p class="ai-narrative-text">${explanations.narrative}</p>
+                <p class="ai-narrative-text" style="margin-bottom:15px;">${report.executiveSummary}</p>
+                ${report.overallRiskScoreExplanation ? `<p class="ai-narrative-text"><strong>Risk Assessment:</strong> ${report.overallRiskScoreExplanation}</p>` : ''}
+                ${report.estimatedFinancialExposure ? `<p class="ai-narrative-text" style="margin-top:15px; color:var(--danger);"><strong>Financial Exposure:</strong> ${report.estimatedFinancialExposure}</p>` : ''}
               </div>`;
           }
 
-          // Risk Contexts with "Why This Matters"
-          if (explanations.riskContexts?.length) {
-            explanations.riskContexts.forEach((ctx, idx) => {
-              const impactClass = (ctx.impact || 'Medium').toLowerCase();
-              aiExplanationHtml += `
-                <div class="risk-context-card fade-in" style="animation-delay: ${0.1 + idx * 0.05}s;">
-                  <div class="risk-context-header">
-                    <div class="risk-context-icon ${impactClass}">
-                      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 class="risk-context-title">${ctx.factor}</h3>
-                      <span class="risk-context-impact ${impactClass}">${ctx.impact} Priority</span>
-                    </div>
-                  </div>
-                  <div class="risk-context-body">
-                    <p class="risk-context-explanation">${ctx.explanation}</p>
-                    <p class="risk-context-why"><strong>Why this matters:</strong> ${ctx.why}</p>
-                  </div>
-                </div>`;
-            });
-          }
-
-          // Urgency Section
-          if (explanations.urgency) {
-            const urgencyClass = riskLevel === 'critical' ? 'critical' : '';
-            aiExplanationHtml += `
-              <div class="urgency-card ${urgencyClass} fade-in">
-                <div class="urgency-header">
-                  <div class="urgency-icon">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                  </div>
-                  <span class="urgency-title">Time Sensitivity</span>
-                </div>
-                <p class="urgency-message">${explanations.urgency.message}</p>
-                <ul class="urgency-reasons">
-                  ${explanations.urgency.reasons?.map(reason => `<li>${reason}</li>`).join('') || ''}
-                </ul>
-              </div>`;
-          }
-
-          // Education Section
-          if (explanations.education?.length) {
+          // Risk Insights
+          if (report.riskInsights && report.riskInsights.length) {
             aiExplanationHtml += `
               <div class="section-card fade-in">
                 <div class="section-header">
-                  <div class="section-icon success">
+                  <div class="section-icon info">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                   </div>
-                  <span class="section-title">Understanding Your Options</span>
+                  <span class="section-title">Professional Risk Insights</span>
                 </div>
                 <div class="section-body" style="padding: 16px 24px;">
-                  <p style="color: var(--text-secondary); font-size: 14px; margin: 0 0 20px;">Knowledge helps you make confident decisions. Here's what these coverages mean for your situation:</p>`;
-
-            explanations.education.forEach(edu => {
-              aiExplanationHtml += `
-                    <div class="education-item">
-                      <div class="education-item-title">${edu.recommendation}</div>
-                      <p class="education-item-text">${edu.explanation}</p>
-                      <div class="education-item-benefit">✓ ${edu.benefit}</div>
-                    </div>`;
-            });
-
-            aiExplanationHtml += `
+                  <ul class="urgency-reasons" style="margin: 0; padding-left: 20px;">
+                    ${report.riskInsights.map(insight => `<li style="margin-bottom: 10px; color: var(--text-secondary);">${insight}</li>`).join('')}
+                  </ul>
                 </div>
               </div>`;
           }
 
-          // Conversion Guidance
-          if (explanations.conversion) {
+          // Key Protection Gaps
+          if (report.keyProtectionGaps && report.keyProtectionGaps.length) {
+             aiExplanationHtml += `
+              <div class="section-card fade-in">
+                <div class="section-header">
+                  <div class="section-icon warning">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                  </div>
+                  <span class="section-title">Identified Protection Gaps</span>
+                </div>
+                <div class="section-body" style="padding: 16px 24px;">`;
+            
+            report.keyProtectionGaps.forEach(gap => {
+              aiExplanationHtml += `
+                    <div class="education-item">
+                      <div class="education-item-title" style="color: #d97706;">Gap: ${gap.gap}</div>
+                      <p class="education-item-text" style="margin-bottom: 8px;"><strong>Impact:</strong> ${gap.impact}</p>
+                      <div class="education-item-benefit" style="color: var(--primary);">Recommended Action: ${gap.action}</div>
+                    </div>`;
+            });
+            
             aiExplanationHtml += `
-              <div class="conversion-card fade-in">
-                <h3 class="conversion-headline">${explanations.conversion.headline}</h3>
-                <p class="conversion-subtext">${explanations.conversion.subtext}</p>
-                <a href="/consultation" class="conversion-cta">
-                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                  </svg>
-                  ${explanations.conversion.cta}
-                </a>
+                </div>
               </div>`;
           }
         }
@@ -891,41 +852,9 @@
         // Build report sections
         let reportHtml = '';
 
-        if (data.aiReport) {
-          if (data.aiReport.executiveSummary) {
-            reportHtml += `
-              <div class="section-card fade-in stagger-2">
-                <div class="section-header">
-                  <div class="section-icon primary">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                  </div>
-                  <span class="section-title">Executive Summary</span>
-                </div>
-                <div class="section-body">${data.aiReport.executiveSummary}</div>
-              </div>`;
-          }
-
-          if (data.aiReport.topRisks?.length) {
-            const riskItemsHtml = data.aiReport.topRisks.map(risk => {
-              const impact = (risk.impact || 'Medium').toLowerCase();
-              const iconClass = impact === 'high' ? 'high' : impact === 'low' ? 'low' : 'medium';
-              return `
-                <div class="risk-item">
-                  <div class="risk-item-icon ${iconClass}">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                  </div>
-                  <div class="risk-item-content">
-                    <h4>${risk.risk || risk.title || 'Identified Risk'}</h4>
-                    <p>${risk.description || risk.details || ''}</p>
-                    <span class="risk-impact-tag ${impact}">${impact} impact</span>
-                  </div>
-                </div>`;
-            }).join('');
-
+        if (report) {
+          // Risk Breakdown By Category
+          if (report.riskBreakdownByCategory && report.riskBreakdownByCategory.length) {
             reportHtml += `
               <div class="section-card fade-in stagger-3">
                 <div class="section-header">
@@ -934,26 +863,67 @@
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                     </svg>
                   </div>
-                  <span class="section-title">Top Risks</span>
+                  <span class="section-title">Risk Breakdown by Category</span>
                 </div>
                 <div class="section-body" style="padding: 16px 24px;">
-                  <div class="risk-list">${riskItemsHtml}</div>
+                  <div class="risk-list">`;
+
+            report.riskBreakdownByCategory.forEach(ctx => {
+              const impact = (ctx.status || 'Moderate').toLowerCase();
+              const iconClass = impact.includes('high') || impact.includes('elevated') ? 'high' : impact.includes('low') ? 'low' : 'medium';
+              reportHtml += `
+                <div class="risk-item">
+                  <div class="risk-item-icon ${iconClass}">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                  </div>
+                  <div class="risk-item-content">
+                    <h4>${ctx.category}</h4>
+                    <p>${ctx.explanation}</p>
+                    <span class="risk-impact-tag ${iconClass}">${ctx.status}</span>
+                  </div>
+                </div>`;
+            });
+
+            reportHtml += `
+                  </div>
                 </div>
               </div>`;
           }
 
-          if (data.aiReport.financialImpact) {
+          // Recommended Priorities
+          if (report.recommendedProtectionPriorities && report.recommendedProtectionPriorities.length) {
             reportHtml += `
               <div class="section-card fade-in stagger-4">
                 <div class="section-header">
-                  <div class="section-icon warning">
+                  <div class="section-icon success">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                   </div>
-                  <span class="section-title">Financial Impact</span>
+                  <span class="section-title">Recommended Protection Priorities</span>
                 </div>
-                <div class="section-body">${data.aiReport.financialImpact}</div>
+                <div class="section-body" style="padding: 16px 24px;">
+                  <ol style="margin: 0; padding-left: 20px; color: var(--text-secondary);">
+                    ${report.recommendedProtectionPriorities.map(rec => `<li style="margin-bottom: 10px; font-weight: 500;">${rec}</li>`).join('')}
+                  </ol>
+                </div>
+              </div>`;
+          }
+
+          // Professional Recommendation & Conversion
+          if (report.professionalRecommendation) {
+            reportHtml += `
+              <div class="conversion-card fade-in stagger-5">
+                <h3 class="conversion-headline">Next Steps</h3>
+                <p class="conversion-subtext">${report.professionalRecommendation}</p>
+                <a href="/consultation" class="conversion-cta">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  Request Complimentary Review
+                </a>
               </div>`;
           }
         }

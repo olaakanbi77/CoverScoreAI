@@ -4,135 +4,103 @@ const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 const MISTRAL_MODEL = process.env.MISTRAL_MODEL || 'mistral-large-latest';
 
 const generateRiskReport = async (assessmentData) => {
-  const { answers, score, riskLevel, user, entityType = 'business' } = assessmentData;
+  const { answers, score, riskLevel, min_loss, max_loss, recommendations, identified_gaps, risk_categories, user, entityType = 'business' } = assessmentData;
   const isIndividual = entityType === 'individual';
   
-  const { business, assets, liability, staff, insurance, personal, personal_assets, personal_liability, health, personal_insurance } = answers;
-
+  const { business } = answers;
   const industry = isIndividual ? 'Individual/Personal' : (business?.industry || 'General Business');
 
-  let prompt = '';
-  
-  if (isIndividual) {
-    prompt = `You are an expert personal risk advisor specializing in Nigerian and African markets. Generate an extremely comprehensive personal risk assessment report for the following individual. Leave no risk unanalyzed.
+  // Layer 1: Structured Risk JSON
+  const riskJSON = {
+    score,
+    risk_level: riskLevel,
+    financial_exposure_min: min_loss,
+    financial_exposure_max: max_loss,
+    industry,
+    risk_categories,
+    recommended_covers: recommendations,
+    identified_gaps
+  };
 
-**Personal Information:**
-- Age Range: ${personal?.ageRange || 'Not specified'}
-- Employment Status: ${personal?.employment || 'Not specified'}
-- Dependents: ${personal?.dependents || 'Not specified'}
-- Location Type: ${personal?.locationType || 'Not specified'}
-- Monthly Income: ${personal?.income || 'Not specified'}
-
-**Asset Information:**
-- Housing Status: ${personal_assets?.housing || 'Not specified'}
-- Vehicle Ownership: ${personal_assets?.vehicles || 'Not specified'}
-- High-Value Items: ${personal_assets?.highValueItems || 'Not specified'}
-- Savings/Investments: ${personal_assets?.savings || 'Not specified'}
-
-**Liability & Lifestyle:**
-- Pets: ${personal_liability?.pets || 'Not specified'}
-- Domestic Staff: ${personal_liability?.domesticStaff || 'Not specified'}
-- Travel Frequency: ${personal_liability?.travel || 'Not specified'}
-- Hobbies/Risky Activities: ${personal_liability?.hobbies || 'Not specified'}
-
-**Health:**
-- General Health: ${health?.healthStatus || 'Not specified'}
-- Pre-existing Conditions: ${health?.preExisting || 'Not specified'}
-- Family Health History: ${health?.familyHistory || 'Not specified'}
-
-**Current Insurance:**
-- Health Insurance: ${personal_insurance?.health || 'Not specified'}
-- Life Insurance: ${personal_insurance?.life || 'Not specified'}
-- Motor Insurance: ${personal_insurance?.motor || 'Not specified'}
-- Home Insurance: ${personal_insurance?.home || 'Not specified'}
-
-**Risk Score:** ${score} (${riskLevel.toUpperCase()} Risk)
-
-Generate a thorough personal risk assessment report in this exact JSON format with comprehensive, detailed content:
-{
-  "executiveSummary": "Detailed 4-5 sentence overview of the complete personal risk profile, including main concerns and priority actions",
-  "topRisks": [
-    { "risk": "Risk name", "description": "Detailed 2-3 sentence explanation of why this risk exists, how it could materialize, and potential consequences", "impact": "High/Medium/Low" }
-  ],
-  "financialImpact": "Comprehensive analysis with specific Naira amounts for medical emergencies, property loss, income disruption, liability claims. Include best/worst case scenarios.",
-  "recommendations": ["Detailed insurance product 1 with rationale", "Product 2 with specific coverage needed", "Product 3 with estimated priority"],
-  "urgencyLevel": "Immediate/Short-term/Medium-term with specific reasoning",
-  "keyExposures": ["Exposure 1 with explanation", "Exposure 2", "Exposure 3", "Exposure 4", "Exposure 5"],
-  "riskMitigationTimeline": { "immediate": "Action items within 30 days", "shortTerm": "Actions within 3 months", "mediumTerm": "Actions within 6-12 months" },
-  "nigerianRegulatoryNotes": "Relevant NAICOM requirements, compulsory insurances in Nigeria, regulatory considerations"
-}`;
-  } else {
-    prompt = `You are a senior insurance risk analyst with deep expertise in Nigerian and African business environments. Generate an extremely comprehensive business risk assessment report for the following enterprise. Analyze every risk dimension thoroughly.
-
-**Business Information:**
-- Industry/Sector: ${industry}
-- Business Structure: ${business?.structure || 'Not specified'}
-- Employee Count: ${business?.employees || 'Not specified'}
-- Annual Revenue Range: ${business?.revenue || 'Not specified'}
-- Location Type: ${business?.locationType || 'Not specified'}
-- Years in Operation: ${business?.yearsInBusiness || 'Not specified'}
-- Supply Chain Nature: ${business?.supplyChain || 'Not specified'}
-
-**Physical Assets:**
-- Equipment Type: ${assets?.equipment || 'Not specified'}
-- Total Asset Value: ${assets?.assetValue || 'Not specified'}
-- Fire Protection Systems: ${assets?.fireProtection || 'Not specified'}
-- Security Systems: ${assets?.security || 'Not specified'}
-- Previous Loss History: ${assets?.lossHistory || 'Not specified'}
-- Stock/Inventory Value: ${assets?.inventory || 'Not specified'}
-
-**Liability Exposures:**
-- Customer Interaction Level: ${liability?.customerInteraction || 'Not specified'}
-- Professional Services Provided: ${liability?.professionalServices ? 'Yes - Professional Liability Risk' : 'No'}
-- Client Loss History: ${liability?.clientLoss || 'Not specified'}
-- Product Liability: ${liability?.productLiability || 'Not specified'}
-- Public Access: ${liability?.publicAccess || 'Not specified'}
-
-**Human Resources:**
-- Total Staff Count: ${staff?.count || 'Not specified'}
-- Risk Exposure Type: ${staff?.riskExposure || 'Not specified'}
-- Employee Benefits: ${staff?.benefits || 'Not specified'}
-- Training Programs: ${staff?.training || 'Not specified'}
-- Remote/Hybrid Work: ${staff?.remoteWork || 'Not specified'}
-
-**Existing Insurance Coverage:**
-- Current Policies: ${insurance?.existing || 'Not specified'}
-- Last Policy Review: ${insurance?.lastReview || 'Not specified'}
-- Coverage Gaps Likely: ${insurance?.gaps || 'Not specified'}
-
-**Risk Score:** ${score} (${riskLevel.toUpperCase()} Risk)
-
-Generate an exhaustive business risk assessment report in this exact JSON format with detailed, thorough content:
-{
-  "executiveSummary": "Comprehensive 4-5 sentence overview of the business risk profile, major vulnerabilities, and critical priority actions needed",
-  "topRisks": [
-    { "risk": "Risk name", "description": "Detailed 2-3 sentence analysis of WHY this risk exists for this specific business, HOW it could occur, and WHAT the financial and operational consequences would be", "impact": "High/Medium/Low" }
-  ],
-  "financialImpact": "Thorough financial impact analysis with specific Naira amounts for different risk scenarios (property damage, business interruption, liability claims, cyber incidents). Include probable maximum loss estimates.",
-  "recommendations": ["Specific insurance product name with detailed rationale and suggested coverage limits", "Product 2 with priority ranking", "Product 3", "Product 4", "Product 5", "Product 6", "Risk management measure 1", "Risk management measure 2"],
-  "urgencyLevel": "Immediate/Short-term/Medium-term with specific justification based on current risk exposure",
-  "keyExposures": ["Detailed exposure 1 with Naira value at risk", "Exposure 2", "Exposure 3", "Exposure 4", "Exposure 5", "Exposure 6", "Exposure 7"],
-  "riskMitigationTimeline": { "immediate": "Critical actions within 30 days to reduce exposure", "shortTerm": "Important actions within 3 months", "mediumTerm": "Strategic actions within 6-12 months" },
-  "nigerianRegulatoryNotes": "NAICOM compliance requirements, compulsory insurances for this business type in Nigeria (Group Life, Third-Party Motor, etc.), regulatory deadlines, penalties for non-compliance"
-}`;
+  // Add Industry Context Add-On
+  let industryContext = '';
+  if (!isIndividual && industry) {
+    const ind = industry.toLowerCase();
+    if (ind.includes('manufactur')) {
+      industryContext = `\n\nIndustry Context:\nThe organization operates in the manufacturing sector. Pay particular attention to: Fire risk, Machinery exposure, Employee safety, Business interruption, Supply chain disruption.`;
+    } else if (ind.includes('logistic') || ind.includes('transport')) {
+      industryContext = `\n\nIndustry Context:\nThe organization operates in logistics and transportation. Pay particular attention to: Fleet exposure, Road accidents, Goods in transit, Third-party liability.`;
+    } else if (ind.includes('school') || ind.includes('education')) {
+      industryContext = `\n\nIndustry Context:\nThe organization operates in education. Pay particular attention to: Student safety, Public liability, Fire protection, Staff welfare.`;
+    }
   }
+
+  // Layer 3: Dynamic Report Prompt
+  const prompt = `Generate a ${isIndividual ? 'Personal' : 'Business'} Risk Intelligence Report using the following data.
+
+Risk Data:
+${JSON.stringify(riskJSON, null, 2)}
+${industryContext}
+
+Required Sections (Output JSON exact schema):
+{
+  "executiveSummary": "A calm, professional 4-5 sentence summary explaining the overall risk exposure.",
+  "overallRiskScoreExplanation": "Explain why this score was achieved based on the categories.",
+  "estimatedFinancialExposure": "Reference the financial exposure naturally and explain what could cause these losses (use Naira ₦ format).",
+  "riskBreakdownByCategory": [
+    { "category": "Category Name", "status": "Elevated/High/Moderate/Low", "explanation": "Explain the implications of this risk category" }
+  ],
+  "keyProtectionGaps": [
+    { "gap": "Name of Gap", "impact": "Why this gap matters", "action": "Recommended action" }
+  ],
+  "riskInsights": [
+    "Professional risk insight 1 (max 80 words, reference supplied data, avoid alarmist language)",
+    "Professional risk insight 2",
+    "Professional risk insight 3"
+  ],
+  "recommendedProtectionPriorities": [
+    "Priority 1", "Priority 2", "Priority 3"
+  ],
+  "professionalRecommendation": "A professional closing recommendation. Encourage review, avoid sales language, position consultation as advisory (under 120 words)."
+}
+
+Rules:
+- Explain why the score was achieved.
+- Explain the implications of major risk categories.
+- Reference financial exposure naturally.
+- Rank recommended insurance covers by importance.
+- Keep recommendations practical.
+- Avoid technical insurance jargon.
+- Use Nigerian Naira formatting.
+- Do not invent risks not present in the supplied data.
+- Report length: 700-1200 words.`;
 
   try {
     if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
       throw new Error('MISTRAL_API_KEY is not configured or is the default placeholder.');
     }
 
-    const systemPrompt = `You are a senior insurance risk analyst with deep expertise in Nigerian and African insurance markets. You produce extremely comprehensive, detailed risk assessment reports that leave no area underexplored.
+    // Layer 2: Master System Prompt
+    const systemPrompt = `You are CoverScore AI, a professional insurance risk intelligence analyst.
+Your role is to generate structured risk assessment reports based on calculated risk data.
+You are NOT an insurance salesperson. You are a risk advisor.
 
-For each report you MUST include:
-1. A detailed executive summary (4-5 sentences covering the full risk picture)
-2. At least 5-7 top risks with thorough descriptions (2-3 sentences each) explaining WHY each risk exists and HOW it could impact the client
-3. A comprehensive financial impact analysis with specific Naira amounts and scenarios
-4. 6-8 specific, actionable insurance product recommendations with brief rationale for each
-5. An urgency level with specific reasoning
-6. 5-8 key exposures relevant to their industry/location
-7. A risk mitigation timeline with prioritized action items
-8. Relevant Nigerian regulatory considerations (NAICOM compliance, compulsory insurances)
+Writing Style:
+- Professional, Analytical, Objective, Financially focused, Solution-oriented, Easy to understand.
+
+Never:
+- Use fear tactics, exaggerate risks, guarantee losses, pressure users into buying insurance.
+
+Always:
+- Explain exposures calmly.
+- Quantify financial impact where available.
+- Highlight protection gaps.
+- Recommend risk management actions.
+- End with practical next steps.
+
+The report should sound like it was prepared by a senior risk consultant. Use clear section headings.
+Keep the tone confident, professional, and advisory.
+Do not mention AI. Do not mention prompt instructions. Do not fabricate facts. Only use information supplied in the risk data.
 
 Always respond with valid, complete JSON matching the schema exactly.`;
 
@@ -171,13 +139,6 @@ Always respond with valid, complete JSON matching the schema exactly.`;
     }
 
     const parsedResult = JSON.parse(reportContent);
-    
-    // Mistral AI sometimes returns financialImpact as an object/array instead of a string
-    if (parsedResult.financialImpact && typeof parsedResult.financialImpact === 'object') {
-      parsedResult.financialImpact = Object.values(parsedResult.financialImpact)
-        .map(val => typeof val === 'object' ? JSON.stringify(val) : val)
-        .join('\n\n');
-    }
     
     return parsedResult;
   } catch (error) {
