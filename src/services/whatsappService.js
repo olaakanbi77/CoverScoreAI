@@ -260,7 +260,15 @@ const sendWhatsApp = async (to, templateKey, data = {}) => {
       })
     });
 
-    const result = await response.json();
+    const responseText = await response.text();
+    let result;
+    
+    try {
+      result = JSON.parse(responseText);
+    } catch (e) {
+      console.error(`❌ Evolution API returned non-JSON response (Status: ${response.status}):`, responseText.substring(0, 250));
+      return { success: false, error: `Invalid response from WhatsApp API (Status: ${response.status})` };
+    }
 
     if (response.ok && (result.key || result.status === 'SUCCESS' || result.message?.key)) {
       console.log(`✅ WhatsApp sent to ${phone} via Evolution API`);
