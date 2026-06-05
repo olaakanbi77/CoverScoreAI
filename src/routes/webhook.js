@@ -41,9 +41,12 @@ router.post('/evolution', async (req, res) => {
       console.log(`Received WhatsApp reply from ${phoneNumber}: "${incomingText}"`);
 
       // 1. Load lead state from DB
-      let lead = await get('SELECT * FROM leads WHERE phone = ? ORDER BY id DESC LIMIT 1', [phoneNumber]);
+      // Use LIKE to match the last 10 digits, as web forms might save +234 or 080
+      let searchPhone = phoneNumber.length > 10 ? phoneNumber.slice(-10) : phoneNumber;
+      let lead = await get('SELECT * FROM leads WHERE phone LIKE ? ORDER BY id DESC LIMIT 1', ['%' + searchPhone]);
+      
       if (!lead) {
-        // Not a recognized lead, just ignore
+        console.log(`Lead not found for phone ending in ${searchPhone}`);
         return;
       }
 
