@@ -130,10 +130,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     const required = getRequiredSections(answers);
     const entityType = answers?.type?.entity_type || 'business';
 
-    const allSectionsComplete = required.every(s => answers[s] && Object.keys(answers[s]).length > 0);
-    if (!allSectionsComplete) {
-      return res.status(400).json({ error: 'Bad Request', message: 'Please complete all sections' });
-    }
+    // Validation removed: some sections might be empty if the user answered conditionally (e.g., no car)
 
     const { score, riskLevel, recommendations, min_loss, max_loss } = calculateScore(answers);
 
