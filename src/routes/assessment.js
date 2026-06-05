@@ -213,21 +213,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       lead = { id: result.lastInsertRowid, phone: cleanPhone, name };
     }
 
-    // Send WhatsApp notification for completed assessment (if lead has phone)
-    if (lead?.phone) {
-      const assessmentData = {
-        id: assessment.id,
-        score,
-        risk_level: riskLevel,
-        min_loss,
-        max_loss
-      };
-      
-      // Fire and forget - don't block the HTTP response
-      sendAssessmentComplete(lead, assessmentData).catch(waError => {
-        console.error('WhatsApp notification failed:', waError.message);
-      });
-    }
+    // WhatsApp notification will be sent during the email capture step (/send-report)
+    // rather than immediately upon assessment submission.
 
     res.json({
       message: 'Assessment completed',
