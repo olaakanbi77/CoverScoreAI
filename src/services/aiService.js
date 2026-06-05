@@ -170,7 +170,16 @@ Always respond with valid, complete JSON matching the schema exactly.`;
       reportContent = reportContent.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
     }
 
-    return JSON.parse(reportContent);
+    const parsedResult = JSON.parse(reportContent);
+    
+    // Mistral AI sometimes returns financialImpact as an object/array instead of a string
+    if (parsedResult.financialImpact && typeof parsedResult.financialImpact === 'object') {
+      parsedResult.financialImpact = Object.values(parsedResult.financialImpact)
+        .map(val => typeof val === 'object' ? JSON.stringify(val) : val)
+        .join('\n\n');
+    }
+    
+    return parsedResult;
   } catch (error) {
     console.error('AI Service Error:', error.message);
 
@@ -250,7 +259,7 @@ const generateExplanations = async (assessmentData) => {
   const health = answers?.health;
   const personalInsurance = answers?.personal_insurance;
 
-  const industry = isIndividual ? 'your situation' : (business?.industry || 'your business');
+  const industry = isIndividual ? 'personal' : (business?.industry || 'general commercial');
   const name = user?.name || (isIndividual ? 'your family' : 'your business');
 
   // Generate personalized narrative based on score and risk level
