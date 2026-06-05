@@ -7,7 +7,7 @@ const getRiskLevel = (score) => {
 };
 
 const calculateBusinessScore = (answers) => {
-  const { profile, property, business_interruption, employee_risk, liability, vehicle, cyber, claims } = answers;
+  const { business, property, business_interruption, employee_risk, liability, vehicle, cyber, claims } = answers;
 
   let propertyScore = 0;
   if (property) {
@@ -121,9 +121,9 @@ const calculateBusinessScore = (answers) => {
     identified_gaps.push('No evidence of fire and property protection');
   }
 
-  if (employee_risk && employee_risk.employ_staff === 'yes') {
-    if (profile && ['6_20', '21_50', '51_100', '101_500', '500plus'].includes(profile.employees)) {
-      recommendations.push('Group Life Assurance');
+  if (employee_risk?.employ_staff === 'yes' && employee_risk.workers_comp === 'no') {
+    if (business && ['6_20', '21_50', '51_100', '101_500', '500plus'].includes(business.employees)) {
+      recommendations.push('Group Life Insurance');
       recommendations.push('Employers Liability / Workmen Compensation');
       identified_gaps.push('No employee death benefit or compensation arrangement');
     }
@@ -152,11 +152,11 @@ const calculateBusinessScore = (answers) => {
   let minLoss = 500000;
   let maxLoss = 2000000;
 
-  if (profile && profile.turnover) {
-    if (profile.turnover === 'above_1b') { minLoss = 100000000; maxLoss = 500000000; }
-    else if (profile.turnover === '250m_1b') { minLoss = 25000000; maxLoss = 100000000; }
-    else if (profile.turnover === '50m_250m') { minLoss = 5000000; maxLoss = 25000000; }
-    else if (profile.turnover === '10m_50m') { minLoss = 1000000; maxLoss = 5000000; }
+  if (business && business.revenue) {
+    if (business.revenue === 'above_1b') { minLoss = 100000000; maxLoss = 500000000; }
+    else if (business.revenue === '250m_1b') { minLoss = 25000000; maxLoss = 100000000; }
+    else if (business.revenue === '50m_250m') { minLoss = 5000000; maxLoss = 25000000; }
+    else if (business.revenue === '10m_50m') { minLoss = 1000000; maxLoss = 5000000; }
   }
 
   return {
@@ -178,13 +178,13 @@ const calculateBusinessScore = (answers) => {
 };
 
 const calculateIndividualScore = (answers) => {
-  const { personal_profile, family_protection, health_protection, home_risk, motor_risk, financial_resilience } = answers;
+  const { personal, family_protection, health_protection, home_risk, motor_risk, financial_resilience } = answers;
 
   let familyScore = 0;
-  if (personal_profile && family_protection) {
-    if (personal_profile.dependents === 'more_than_5') familyScore += 10;
-    else if (personal_profile.dependents === '3_5') familyScore += 6;
-    else if (personal_profile.dependents === '1_2') familyScore += 3;
+  if (personal && family_protection) {
+    if (personal.dependents === 'more_than_5') familyScore += 10;
+    else if (personal.dependents === '3_5') familyScore += 6;
+    else if (personal.dependents === '1_2') familyScore += 3;
 
     if (family_protection.lifestyle_maintenance === 'less_than_3m') familyScore += 10;
     else if (family_protection.lifestyle_maintenance === '3_6m') familyScore += 5;
@@ -230,7 +230,7 @@ const calculateIndividualScore = (answers) => {
   const recommendations = [];
   const identified_gaps = [];
 
-  if (family_protection?.life_insurance === 'no' && personal_profile?.dependents && personal_profile.dependents !== 'none') {
+  if (family_protection?.life_insurance === 'no' && personal?.dependents && personal.dependents !== 'none') {
     recommendations.push('Term Life Insurance');
     identified_gaps.push('Lack of structured life cover increases family vulnerability');
   }
@@ -258,10 +258,10 @@ const calculateIndividualScore = (answers) => {
   let minLoss = 500000;
   let maxLoss = 2000000;
 
-  if (personal_profile && personal_profile.monthly_income) {
-    if (personal_profile.monthly_income === 'above_1m') { minLoss = 15000000; maxLoss = 50000000; }
-    else if (personal_profile.monthly_income === '500k_1m') { minLoss = 5000000; maxLoss = 15000000; }
-    else if (personal_profile.monthly_income === '100k_500k') { minLoss = 2000000; maxLoss = 5000000; }
+  if (personal && personal.monthly_income) {
+    if (personal.monthly_income === 'above_1m') { minLoss = 15000000; maxLoss = 50000000; }
+    else if (personal.monthly_income === '500k_1m') { minLoss = 5000000; maxLoss = 15000000; }
+    else if (personal.monthly_income === '100k_500k') { minLoss = 2000000; maxLoss = 5000000; }
     else { minLoss = 500000; maxLoss = 2000000; }
   }
 
