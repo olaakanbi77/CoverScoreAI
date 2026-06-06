@@ -149,15 +149,23 @@ const calculateBusinessScore = (answers) => {
     identified_gaps.push('Data breach and cyber security vulnerabilities');
   }
 
-  let minLoss = 500000;
-  let maxLoss = 2000000;
+  let baseValue = 5000000; // default to 5M
 
   if (business && business.turnover) {
-    if (business.turnover === 'above_1b') { minLoss = 100000000; maxLoss = 500000000; }
-    else if (business.turnover === '250m_1b') { minLoss = 25000000; maxLoss = 100000000; }
-    else if (business.turnover === '50m_250m') { minLoss = 5000000; maxLoss = 25000000; }
-    else if (business.turnover === '10m_50m') { minLoss = 1000000; maxLoss = 5000000; }
+    if (business.turnover === 'above_1b') { baseValue = 1000000000; }
+    else if (business.turnover === '250m_1b') { baseValue = 500000000; }
+    else if (business.turnover === '50m_250m') { baseValue = 150000000; }
+    else if (business.turnover === '10m_50m') { baseValue = 30000000; }
+    else if (business.turnover === 'under_10m') { baseValue = 8000000; }
   }
+
+  // Calculate dynamic financial exposure scaled by the risk score
+  const riskPercentage = Math.min(Math.round(finalScore), 100) / 100;
+  // If score is 0, give at least a 5% baseline exposure so it's not 0
+  const effectiveRisk = Math.max(riskPercentage, 0.05);
+
+  const maxLoss = Math.round(baseValue * effectiveRisk);
+  const minLoss = Math.round(maxLoss * 0.4);
 
   return {
     score: Math.min(Math.round(finalScore), 100),
@@ -255,15 +263,22 @@ const calculateIndividualScore = (answers) => {
     identified_gaps.push('Emergency savings may not fully cover long-term income disruption');
   }
 
-  let minLoss = 500000;
-  let maxLoss = 2000000;
+  let baseIncome = 1200000; // default 1.2M annual
 
   if (personal && personal.monthly_income) {
-    if (personal.monthly_income === 'above_1m') { minLoss = 15000000; maxLoss = 50000000; }
-    else if (personal.monthly_income === '500k_1m') { minLoss = 5000000; maxLoss = 15000000; }
-    else if (personal.monthly_income === '100k_500k') { minLoss = 2000000; maxLoss = 5000000; }
-    else { minLoss = 500000; maxLoss = 2000000; }
+    if (personal.monthly_income === 'above_1m') { baseIncome = 18000000; } // 1.5M * 12
+    else if (personal.monthly_income === '500k_1m') { baseIncome = 9000000; } // 750k * 12
+    else if (personal.monthly_income === '100k_500k') { baseIncome = 3600000; } // 300k * 12
+    else if (personal.monthly_income === 'under_100k') { baseIncome = 1200000; } // 100k * 12
   }
+
+  // Calculate dynamic financial exposure scaled by the risk score
+  const riskPercentage = Math.min(Math.round(finalScore), 100) / 100;
+  // If score is 0, give at least a 5% baseline exposure so it's not 0
+  const effectiveRisk = Math.max(riskPercentage, 0.05);
+
+  const maxLoss = Math.round(baseIncome * effectiveRisk);
+  const minLoss = Math.round(maxLoss * 0.4);
 
   return { 
     score: Math.min(Math.round(finalScore), 100), 
