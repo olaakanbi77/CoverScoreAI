@@ -3,8 +3,9 @@ const router = express.Router();
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { get, run } = require('../config/database');
-const { handleConversationalAssessment, generateRiskReport } = require('../services/aiService');
+const { generateRiskReport } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
+const { getNextStateAndReply } = require('../services/whatsappFlow');
 
 // Evolution API webhook endpoint
 router.post('/evolution', async (req, res) => {
@@ -49,11 +50,10 @@ router.post('/evolution', async (req, res) => {
       const isStartTrigger = incomingText.includes('START') || incomingText.includes('ASSESSMENT') || incomingText.includes('HELLO') || incomingText.includes('HI');
 
       if (!lead) {
-        // If no lead exists, but they send "START", create a new lead to begin Conversational Assessment
         if (isStartTrigger) {
           const insertResult = await run(`
             INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
-            VALUES (?, ?, ?, 'new', 'assessment_in_progress', '[]', 'unknown')
+            VALUES (?, ?, ?, 'new', 'welcome_name', '{}', 'unknown')
           `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber]);
           
           lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
@@ -62,78 +62,109 @@ router.post('/evolution', async (req, res) => {
           return;
         }
       } else if (isStartTrigger) {
-        // If lead exists but sends a START trigger, override their state to restart the conversational assessment
-        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['assessment_in_progress', '[]', lead.id]);
-        lead.wa_state = 'assessment_in_progress';
-        lead.chat_history = '[]';
+        // If lead exists but sends a START trigger, override their state to restart the flow
+        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
+        lead.wa_state = 'welcome_name';
+        lead.chat_history = '{}';
       }
 
-      const currentState = lead.wa_state || 'initial';
-      let nextState = currentState;
-      let replyText = '';
-      let pointsToAdd = 0;
-      let markQualified = false;
-      let primaryConcern = lead.primary_concern;
-      let consultationPref = lead.consultation_preference;
-      let newChatHistory = lead.chat_history || '[]';
-
-      // Award 20 points for the VERY first reply to the assessment message
-      if (currentState === 'initial' || currentState === 'none') {
-        pointsToAdd += 20; 
+      const currentState = lead.wa_state || 'welcome_name';
+      
+      if (currentState === 'finished') {
+        // Conversation fully complete
+        return;
       }
 
-      // ── CONVERSATIONAL ASSESSMENT LOGIC ──
-      if (currentState === 'assessment_in_progress') {
-        try {
-          const aiResponse = await handleConversationalAssessment(newChatHistory, incomingTextRaw);
-          
-          // Append to chat history
-          let historyArray = [];
-          try { historyArray = JSON.parse(newChatHistory); } catch(e) {}
-          historyArray.push({ role: 'user', content: incomingTextRaw });
+      let currentData = {};
+      try {
+        currentData = JSON.parse(lead.chat_history || '{}');
+      } catch(e) {}
 
-          if (aiResponse.status === 'asking') {
-            replyText = aiResponse.reply;
-            historyArray.push({ role: 'assistant', content: aiResponse.reply });
-            newChatHistory = JSON.stringify(historyArray);
-          } 
-          else if (aiResponse.status === 'complete') {
-            replyText = aiResponse.reply || "Thank you! I have everything I need. Generating your CoverScore Risk Report now...";
-            historyArray.push({ role: 'assistant', content: replyText });
-            newChatHistory = JSON.stringify(historyArray);
-            nextState = 'none'; // Move out of assessment state
+      // ── NEW STRUCTURED FLOW STATE MACHINE ──
+      
+      // If we are just starting, fake the first transition
+      let processText = incomingTextRaw;
+      let evalState = currentState;
 
-            // Map extracted data to scoring engine format
-            const extracted = aiResponse.extracted_data || {};
-            const entityType = extracted.entity_type === 'business' ? 'business' : 'individual';
-            
+      if (currentState === 'welcome_name' && isStartTrigger) {
+        // Send initial welcome message instantly without advancing state
+        const initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
+        await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
+        return; // wait for them to answer name
+      }
+
+      const { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, currentData);
+
+      let finalReplyText = replyText;
+
+      // 2. Update Database & Send Next Message
+      if (finalReplyText) {
+        // Send WhatsApp immediately
+        await sendWhatsApp(phoneNumber, null, { _message: finalReplyText });
+        
+        // Update lead state
+        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), lead.id]);
+        
+        // If the flow is complete, trigger report generation
+        if (isComplete) {
+          try {
+            // Map the collected data to the scoring engine format
+            const entityType = updatedData.entity_type === 'business' ? 'business' : 'individual';
             let mockAnswers = { type: { entity_type: entityType } };
-            
+
             if (entityType === 'business') {
               mockAnswers.business = {
-                business_name: extracted.name || 'Your Business',
-                industry: extracted.industry || 'General Business',
-                turnover: extracted.turnover_bracket || '10m_50m'
+                business_name: updatedData.name || 'Your Business',
+                industry: updatedData.industry || 'General Business',
+                turnover: updatedData.turnover_bracket || '10m_50m'
               };
               mockAnswers.employee_risk = {
-                employ_staff: extracted.employee_bracket ? 'yes' : 'no',
-                employees: extracted.employee_bracket || '1_5'
+                employ_staff: 'yes',
+                employees: updatedData.employee_bracket || '1_5'
               };
-              if (extracted.owns_property === 'yes') {
-                mockAnswers.property = { own_building: 'yes', building_value: '10m_50m', equipment_value: 'under_5m' };
+              if (updatedData.has_location === 'yes') {
+                mockAnswers.property = { 
+                  own_building: updatedData.location_ownership === 'own' ? 'yes' : 'no', 
+                  building_value: updatedData.asset_value || 'under_5m', 
+                  equipment_value: updatedData.asset_value || 'under_5m' 
+                };
               }
             } else {
-              mockAnswers.individual = {
-                name: extracted.name || 'User',
-                age_bracket: extracted.ageBracket || '31_45',
-                annual_income: extracted.income || '10m_50m',
-                dependents: extracted.dependents || '1_2'
+              mockAnswers.personal = {
+                name: updatedData.name || 'User',
+                dependents: updatedData.dependents === '1_2' ? '1_2' : 
+                            updatedData.dependents === '3_5' ? '3_5' : 
+                            updatedData.dependents === 'over_5' ? 'more_than_5' : 'none'
+              };
+              mockAnswers.family_protection = {
+                life_insurance: updatedData.has_life_insurance || 'no',
+                lifestyle_maintenance: 'less_than_3m'
+              };
+              mockAnswers.health_protection = {
+                health_insurance: updatedData.has_health_insurance || 'no',
+                medical_emergency: 'borrowing'
+              };
+              mockAnswers.home_risk = {
+                household_contents_value: updatedData.home_value === 'under_5m' ? '1m_5m' :
+                                          updatedData.home_value === '5m_20m' ? '5m_20m' : 'above_20m',
+                burglary_fire_experience: 'no'
+              };
+              mockAnswers.motor_risk = {
+                own_vehicle: updatedData.owns_vehicle || 'no',
+                motor_insurance_status: updatedData.vehicle_insurance === 'none' ? 'uninsured' :
+                                        updatedData.vehicle_insurance === 'third_party' ? 'third_party' : 'comprehensive',
+                accident_history: 'no'
+              };
+              mockAnswers.financial_resilience = {
+                survival_months: updatedData.savings_buffer === 'less_1m' ? 'less_than_1m' :
+                                 updatedData.savings_buffer === '1_3m' ? '1_3m' :
+                                 updatedData.savings_buffer === '3_6m' ? '3_6m' : 'more_than_6m'
               };
             }
 
             // Calculate score
             const scoreResult = calculateScore(mockAnswers);
-            
+
             // Generate AI Report
             const aiReportData = await generateRiskReport({
               answers: mockAnswers,
@@ -158,197 +189,41 @@ router.post('/evolution', async (req, res) => {
             // Send final link
             const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
             
-            // We append the URL to the reply text so it gets sent in the same WhatsApp message below
-            replyText += `\n\n✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n${reportUrl}\n\nReply '1' if you'd like to book a consultation to discuss your results.`;
+            // Send completion message
+            const completionMsg = `✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n${reportUrl}`;
+            await sendWhatsApp(phoneNumber, null, { _message: completionMsg });
             
-            // We will also update the lead with the new assessment ID below
-            await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, name = ? WHERE id = ?', [
-              assessmentId, scoreResult.score, scoreResult.riskLevel, entityType, (extracted.name || 'WhatsApp User'), lead.id
+            // Send Qualification message
+            const maxLossStr = scoreResult.max_loss.toLocaleString();
+            const qualMsg = `Based on your assessment, there may be opportunities to strengthen your financial protection and reduce potential exposure.\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\n1️⃣ YES – I believe I'm adequately protected\n2️⃣ NO – I think there may be gaps in my protection\n3️⃣ NOT SURE – I'd like a free review\n\nReply with 1, 2 or 3.`;
+            await sendWhatsApp(phoneNumber, null, { _message: qualMsg });
+
+            // Update lead state to qualification
+            await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, name = ?, email = ?, wa_state = ? WHERE id = ?', [
+              assessmentId, scoreResult.score, scoreResult.riskLevel, entityType, (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 'qualification', lead.id
             ]);
-          }
-        } catch (error) {
-          console.error("AI Conversational Error:", error);
-          replyText = "I'm sorry, I encountered an error processing your request. Please try again.";
-        }
-      } else {
-      // ── OLD STATE MACHINE LOGIC ──
-      switch (currentState) {
-        case 'none':
-        case 'initial':
-          if (incomingText === '1') {
-            pointsToAdd += 10; // Selected 1, 2, or 3
-            replyText = "Thank you.\n\nIt's encouraging to hear that you believe you're adequately protected.\n\nWhich best describes your situation?\nA = I have comprehensive insurance cover\nB = I have some insurance cover but I'm not sure it's enough\nC = My insurance policies have not been reviewed in over 12 months\n\nReply A, B or C.";
-            nextState = 'awaiting_1_followup';
-          } else if (incomingText === '2') {
-            pointsToAdd += 10; // Selected 1, 2, or 3
-            replyText = "Thank you.\n\nWhich area concerns you most?\nA = Fire & Property Damage\nB = Employee Welfare\nC = Liability Claims\nD = Vehicle & Transit Risks\nE = Cyber & Data Risks\nF = Not Sure\n\nReply A, B, C, D, E or F.";
-            nextState = 'awaiting_2_concern';
-          } else if (incomingText === '3') {
-            pointsToAdd += 10; // Selected 1, 2, or 3
-            replyText = "Thank you.\n\nWould you prefer:\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
-            nextState = 'awaiting_3_preference';
-          } else {
-            replyText = "Please reply with 1, 2, or 3.";
-          }
-          break;
 
-        case 'awaiting_1_followup':
-          if (incomingText === 'A') {
-            replyText = "Excellent.\n\nWhen was the last time your insurance programme was professionally reviewed?\n\n1 = Within the last 12 months\n2 = 1–3 years ago\n3 = More than 3 years ago\n4 = Never\n\nReply 1, 2, 3 or 4.";
-            nextState = 'awaiting_1a_review';
-          } else if (incomingText === 'B') {
-            replyText = "Thank you.\n\nWhich area concerns you most?\nA = Property or Fire Loss\nB = Medical Expenses\nC = Loss of Income\nD = Liability Claims\nE = Employee Protection\nF = Not Sure\n\nReply A, B, C, D, E or F.";
-            nextState = 'awaiting_1b_concern';
-          } else if (incomingText === 'C') {
-            replyText = "Thank you.\n\nInsurance needs often change as businesses grow, assets increase, employees are hired, or responsibilities evolve.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
-            nextState = 'awaiting_gap_review';
-          } else {
-            replyText = "Please reply with A, B or C.";
-          }
-          break;
-
-        case 'awaiting_1a_review':
-          if (incomingText === '1') {
-            replyText = "Great.\n\nMany businesses still benefit from periodic benchmarking against current risks.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
-            nextState = 'awaiting_gap_review';
-          } else if (['2', '3', '4'].includes(incomingText)) {
-            replyText = "Thank you.\n\nYour response suggests there may be value in reviewing whether your current insurance arrangements still align with your present risks.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
-            nextState = 'awaiting_gap_review';
-          } else {
-            replyText = "Please reply with 1, 2, 3 or 4.";
-          }
-          break;
-
-        case 'awaiting_1b_concern':
-        case 'awaiting_2_concern':
-          const concernMap1B = { A: 'Property/Fire', B: 'Medical', C: 'Income', D: 'Liability', E: 'Employee', F: 'Not Sure' };
-          const concernMap2 = { A: 'Fire/Property', B: 'Employee', C: 'Liability', D: 'Vehicle/Transit', E: 'Cyber', F: 'Not Sure' };
-          
-          if (['A', 'B', 'C', 'D', 'E', 'F'].includes(incomingText)) {
-            primaryConcern = currentState === 'awaiting_1b_concern' ? concernMap1B[incomingText] : concernMap2[incomingText];
-            if (currentState === 'awaiting_1b_concern') {
-              replyText = "Thank you.\n\nBased on your assessment and concerns, a personalized Insurance Gap Review may help identify areas that require attention.\n\nWould you like a complimentary review?\n\nYES / NO";
-              nextState = 'awaiting_gap_review';
-            } else {
-              replyText = "Thank you.\n\nBased on your assessment, there may be opportunities to strengthen your protection in this area.\n\nWould you like a customized insurance recommendation based on your risk profile?\n\nPLAN / NO";
-              nextState = 'awaiting_plan';
-            }
-          } else {
-            replyText = "Please reply with A, B, C, D, E or F.";
-          }
-          break;
-
-        case 'awaiting_gap_review':
-          if (incomingText === 'YES') {
-            pointsToAdd += 30; // Requested Review
-            replyText = "Thank you.\n\nWould you prefer:\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
-            nextState = 'awaiting_3_preference';
-          } else if (incomingText === 'NO') {
-            replyText = "Noted. We are always here if you change your mind. Have a great day!";
-            nextState = 'finished';
-          } else {
-            replyText = "Please reply with YES or NO.";
-          }
-          break;
-
-        case 'awaiting_plan':
-          if (incomingText === 'PLAN') {
-            pointsToAdd += 30; // Requested PLAN
-            replyText = "Thank you.\n\nWould you prefer:\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
-            nextState = 'awaiting_3_preference';
-          } else if (incomingText === 'NO') {
-            replyText = "Noted. We are always here if you need us. Have a great day!";
-            nextState = 'finished';
-          } else {
-            replyText = "Please reply with PLAN or NO.";
-          }
-          break;
-
-        case 'awaiting_3_preference':
-          const prefMap = { A: 'WhatsApp', B: 'Phone Call', C: 'Virtual Meeting' };
-          if (['A', 'B', 'C'].includes(incomingText)) {
-            pointsToAdd += 40; // Chose Consultation Type
-            consultationPref = prefMap[incomingText];
-            replyText = "Thank you.\n\nTo help us prepare for your review, which best describes you?\n\n1 = Business Owner\n2 = Employee\n3 = Self-Employed Professional\n4 = Family Provider\n\nReply 1, 2, 3 or 4.";
-            nextState = 'awaiting_qualification';
-          } else {
-            replyText = "Please reply with A, B or C.";
-          }
-          break;
-
-        case 'awaiting_qualification':
-          const demoMap = { '1': 'Business Owner', '2': 'Employee', '3': 'Self-Employed Professional', '4': 'Family Provider' };
-          if (['1', '2', '3', '4'].includes(incomingText)) {
-            replyText = "Thank you. Your request has been received. Our advisor will reach out to you shortly via your preferred channel.";
-            nextState = 'finished';
-            markQualified = true;
-          } else {
-            replyText = "Please reply with 1, 2, 3 or 4.";
-          }
-          break;
-
-        case 'finished':
-          // Conversation is fully complete, do nothing.
-          return;
-      }
-      } // End of OLD STATE MACHINE else block
-
-      // 2. Update Database & Send Next Message
-      if (replyText) {
-        // Send WhatsApp immediately
-        await sendWhatsApp(phoneNumber, null, { _message: replyText });
-
-        // Build updates
-        let updateQuery = 'UPDATE leads SET wa_state = ?, chat_history = ?, engagement_points = engagement_points + ?';
-        let queryParams = [nextState, newChatHistory, pointsToAdd];
-        
-        if (primaryConcern && primaryConcern !== lead.primary_concern) {
-          updateQuery += ', primary_concern = ?';
-          queryParams.push(primaryConcern);
-        }
-        if (consultationPref && consultationPref !== lead.consultation_preference) {
-          updateQuery += ', consultation_preference = ?';
-          queryParams.push(consultationPref);
-        }
-        if (markQualified) {
-          updateQuery += ", is_qualified = 1, status = 'contacted'";
-        }
-
-        updateQuery += ' WHERE id = ?';
-        queryParams.push(lead.id);
-
-        await run(updateQuery, queryParams);
-
-        // 3. Notify Advisor if freshly qualified
-        if (markQualified) {
-          const adminEmail = process.env.ADMIN_EMAIL || 'admin@coverscore.site';
-          const emailContent = `
-            <h2>New Qualified Lead via WhatsApp! 🚀</h2>
-            <p><strong>Name:</strong> ${lead.name || 'Unknown'}</p>
-            <p><strong>Phone:</strong> ${phoneNumber}</p>
-            <p><strong>Primary Concern:</strong> ${primaryConcern || 'Not specified'}</p>
-            <p><strong>Consultation Preference:</strong> ${consultationPref || 'Not specified'}</p>
-            <p><strong>Demographic:</strong> ${incomingText === '1' ? 'Business Owner' : incomingText === '2' ? 'Employee' : incomingText === '3' ? 'Self-Employed Professional' : 'Family Provider'}</p>
-            <p><strong>Total Engagement Points:</strong> ${lead.engagement_points + pointsToAdd}</p>
-            <hr />
-            <p><a href="https://coverscore.site/admin">Login to CRM to view full details</a></p>
-          `;
-          
-          try {
-            await emailService.sendEmail({
-              to: adminEmail,
-              subject: `🚨 QUALIFIED LEAD: ${lead.name || phoneNumber} (Points: ${lead.engagement_points + pointsToAdd})`,
-              html: emailContent
-            });
-            console.log('Notified advisor about newly qualified lead.');
-          } catch (emailErr) {
-            console.error('Failed to notify advisor via email:', emailErr.message);
+          } catch(err) {
+            console.error("Error generating report after completion:", err);
+            await sendWhatsApp(phoneNumber, null, { _message: "I'm sorry, I encountered an error generating your report. Please contact support." });
           }
         }
       }
-    }
+
+      // Check if we need to send Admin Notification for qualification
+      if (currentState === 'qualification' && ['1','2','3'].includes(incomingText)) {
+        if (process.env.ADMIN_PHONE) {
+          const qualMapText = {'1': 'Adequately Protected', '2': 'Has Gaps', '3': 'Not Sure / Needs Review'};
+          const userResponseText = qualMapText[incomingText];
+          
+          const notifMsg = `🚨 *NEW QUALIFIED LEAD* 🚨\n\nName: ${currentData.name || lead.name}\nPhone: ${phoneNumber}\nScore: ${lead.score || 'N/A'}\nQualification: ${userResponseText}\n\nPlease reach out to them via CRM.`;
+          await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
+        }
+      }
+
+    } // end messages.upsert
   } catch (error) {
-    console.error('Webhook error:', error);
+    console.error('Webhook processing error:', error);
   }
 });
 
