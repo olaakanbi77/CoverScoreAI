@@ -77,8 +77,14 @@ app.get('/auth/register', (req, res) => {
   res.render('auth/register', { title: 'Sign Up', layout: false });
 });
 
+app.get('/start-whatsapp', (req, res) => {
+  const botNumber = process.env.WHATSAPP_BOT_NUMBER || '2349165304629';
+  const text = encodeURIComponent('START ASSESSMENT');
+  res.redirect(`https://wa.me/${botNumber}?text=${text}`);
+});
+
 app.get('/assessment/start', optionalAuth, (req, res) => {
-  res.render('assessment/wizard', { title: 'Risk Assessment', activePage: 'assessment', layout: 'main' });
+  res.redirect('/start-whatsapp');
 });
 
 app.get('/assessment/result/:id', optionalAuth, (req, res) => {
