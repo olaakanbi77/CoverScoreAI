@@ -158,6 +158,48 @@ It only takes 5-10 minutes!
 CoverScore AI
 Insurance Risk Intelligence
 *Powered by AI*`
+  },
+
+  adminQuoteAlert: {
+    title: 'Admin Quote Request Alert',
+    template: `🚨 *NEW QUOTE REQUEST* 🚨
+
+A new prospect has requested a quote via CoverScore AI.
+
+👤 *Name:* {{name}}
+📧 *Email:* {{email}}
+📱 *Phone:* {{phone}}
+🏢 *Business:* {{businessName}}
+
+📋 *Details:*
+• Type: {{insuranceTypes}}
+• Est. Value: {{estimatedValue}}
+
+💬 *Message:* 
+{{message}}
+
+🔗 View CRM: {{adminUrl}}`
+  },
+
+  adminConsultationAlert: {
+    title: 'Admin Consultation Alert',
+    template: `📅 *NEW CONSULTATION BOOKED* 📅
+
+A new prospect has booked a consultation.
+
+👤 *Name:* {{name}}
+📧 *Email:* {{email}}
+📱 *Phone:* {{phone}}
+
+📋 *Booking Details:*
+• Type: {{consultationType}}
+• Date: {{consultationDate}}
+• Time: {{consultationTime}}
+
+💬 *Message:*
+{{message}}
+
+🔗 View CRM: {{adminUrl}}`
   }
 };
 
@@ -350,6 +392,45 @@ const sendHighRiskAlert = async (lead, assessment) => {
   return { success: false, error: 'No phone number available' };
 };
 
+// Admin Notifications
+const sendAdminWhatsAppQuoteAlert = async (leadData) => {
+  const adminPhone = process.env.ADMIN_PHONE;
+  if (!adminPhone) {
+    console.log('⚠️ No ADMIN_PHONE configured for WhatsApp notifications.');
+    return { success: false, error: 'No ADMIN_PHONE configured' };
+  }
+  
+  return sendWhatsApp(adminPhone, 'adminQuoteAlert', {
+    name: leadData.name || 'N/A',
+    email: leadData.email || 'N/A',
+    phone: leadData.phone || 'N/A',
+    businessName: leadData.businessName || 'N/A',
+    insuranceTypes: leadData.insuranceTypes || 'N/A',
+    estimatedValue: leadData.estimatedValue || 'N/A',
+    message: leadData.message || 'No message provided',
+    adminUrl: `${APP_URL}/admin`
+  });
+};
+
+const sendAdminWhatsAppConsultationAlert = async (leadData) => {
+  const adminPhone = process.env.ADMIN_PHONE;
+  if (!adminPhone) {
+    console.log('⚠️ No ADMIN_PHONE configured for WhatsApp notifications.');
+    return { success: false, error: 'No ADMIN_PHONE configured' };
+  }
+  
+  return sendWhatsApp(adminPhone, 'adminConsultationAlert', {
+    name: leadData.name || 'N/A',
+    email: leadData.email || 'N/A',
+    phone: leadData.phone || 'N/A',
+    consultationType: leadData.consultationType || 'N/A',
+    consultationDate: leadData.consultationDate || 'N/A',
+    consultationTime: leadData.consultationTime || 'N/A',
+    message: leadData.message || 'No message provided',
+    adminUrl: `${APP_URL}/admin`
+  });
+};
+
 module.exports = {
   sendWhatsApp,
   sendAssessmentComplete,
@@ -357,6 +438,8 @@ module.exports = {
   sendLeadConverted,
   sendFollowUpReminder,
   sendHighRiskAlert,
+  sendAdminWhatsAppQuoteAlert,
+  sendAdminWhatsAppConsultationAlert,
   normalizePhoneNumber,
   buildMessage,
   templates

@@ -1,5 +1,7 @@
 const express = require('express');
 const { run } = require('../config/database');
+const { sendAdminQuoteNotification, sendAdminConsultationNotification } = require('../services/emailService');
+const { sendAdminWhatsAppQuoteAlert, sendAdminWhatsAppConsultationAlert } = require('../services/whatsappService');
 
 const router = express.Router();
 
@@ -23,6 +25,11 @@ router.post('/quote-request', async (req, res, next) => {
       JSON.stringify({ insuranceTypes, estimatedValue, message, source: 'quote_request' }),
       'quote'
     ]);
+
+    // Send notifications to Admin
+    const leadData = { name, email, phone, businessName, insuranceTypes, estimatedValue, message };
+    sendAdminQuoteNotification(leadData).catch(err => console.error('Admin email failed:', err));
+    sendAdminWhatsAppQuoteAlert(leadData).catch(err => console.error('Admin WhatsApp failed:', err));
 
     res.status(201).json({
       message: 'Quote request submitted successfully',
@@ -59,6 +66,11 @@ router.post('/consultation-request', async (req, res, next) => {
       }),
       'consultation'
     ]);
+
+    // Send notifications to Admin
+    const leadData = { name, email, phone, consultationType, consultationDate, consultationTime, message };
+    sendAdminConsultationNotification(leadData).catch(err => console.error('Admin email failed:', err));
+    sendAdminWhatsAppConsultationAlert(leadData).catch(err => console.error('Admin WhatsApp failed:', err));
 
     res.status(201).json({
       message: 'Consultation booked successfully',

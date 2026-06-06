@@ -440,4 +440,78 @@ const getDiagnostics = async () => {
   };
 };
 
-module.exports = { sendAssessmentReport, sendPasswordResetEmail, sendEmail, getDiagnostics };
+// Admin Notifications
+const sendAdminQuoteNotification = async (leadData) => {
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@coverscore.site';
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">New Quote Request</h2>
+      <p>A new quote request has been submitted on CoverScore AI.</p>
+      
+      <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 20px;">
+        <h3 style="margin-top: 0; color: #1e293b;">Contact Details</h3>
+        <p><strong>Name:</strong> ${leadData.name}</p>
+        <p><strong>Email:</strong> ${leadData.email}</p>
+        <p><strong>Phone:</strong> ${leadData.phone}</p>
+        ${leadData.businessName ? `<p><strong>Business Name:</strong> ${leadData.businessName}</p>` : ''}
+        
+        <h3 style="color: #1e293b;">Quote Details</h3>
+        <p><strong>Insurance Types:</strong> ${leadData.insuranceTypes || 'Not specified'}</p>
+        <p><strong>Estimated Value:</strong> ${leadData.estimatedValue || 'Not specified'}</p>
+        ${leadData.message ? `<p><strong>Message:</strong><br>${leadData.message}</p>` : ''}
+      </div>
+      
+      <p style="margin-top: 20px;">
+        <a href="${process.env.APP_URL || 'http://localhost:3016'}/admin" style="background-color: #2563eb; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">View in CRM</a>
+      </p>
+    </div>
+  `;
+
+  return sendEmail({
+    to: adminEmail,
+    subject: `New Quote Request: ${leadData.name}`,
+    html
+  });
+};
+
+const sendAdminConsultationNotification = async (leadData) => {
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@coverscore.site';
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #0f172a;">New Consultation Request</h2>
+      <p>A new consultation has been booked on CoverScore AI.</p>
+      
+      <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 20px;">
+        <h3 style="margin-top: 0; color: #1e293b;">Contact Details</h3>
+        <p><strong>Name:</strong> ${leadData.name}</p>
+        <p><strong>Email:</strong> ${leadData.email}</p>
+        <p><strong>Phone:</strong> ${leadData.phone}</p>
+        
+        <h3 style="color: #1e293b;">Booking Details</h3>
+        <p><strong>Type:</strong> ${leadData.consultationType || 'Not specified'}</p>
+        <p><strong>Date:</strong> ${leadData.consultationDate || 'Not specified'}</p>
+        <p><strong>Time:</strong> ${leadData.consultationTime || 'Not specified'}</p>
+        ${leadData.message ? `<p><strong>Message:</strong><br>${leadData.message}</p>` : ''}
+      </div>
+      
+      <p style="margin-top: 20px;">
+        <a href="${process.env.APP_URL || 'http://localhost:3016'}/admin" style="background-color: #2563eb; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">View in CRM</a>
+      </p>
+    </div>
+  `;
+
+  return sendEmail({
+    to: adminEmail,
+    subject: `New Consultation Booking: ${leadData.name}`,
+    html
+  });
+};
+
+module.exports = { 
+  sendAssessmentReport, 
+  sendPasswordResetEmail, 
+  sendEmail, 
+  getDiagnostics,
+  sendAdminQuoteNotification,
+  sendAdminConsultationNotification
+};

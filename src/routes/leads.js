@@ -3,7 +3,8 @@ const { body, validationResult } = require('express-validator');
 const { db, run, get, all } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const { requireAgent } = require('../middleware/rbac');
-const { sendLeadContacted, sendLeadConverted } = require('../services/whatsappService');
+const { sendLeadContacted, sendLeadConverted, sendAdminWhatsAppQuoteAlert, sendAdminWhatsAppConsultationAlert } = require('../services/whatsappService');
+const { sendAdminQuoteNotification, sendAdminConsultationNotification } = require('../services/emailService');
 
 const router = express.Router();
 
@@ -240,6 +241,11 @@ router.post('/quote-request', async (req, res, next) => {
       'quote'
     ]);
 
+    // Send notifications to Admin
+    const leadData = { name, email, phone, businessName, insuranceTypes, estimatedValue, message };
+    sendAdminQuoteNotification(leadData).catch(err => console.error('Admin email failed:', err));
+    sendAdminWhatsAppQuoteAlert(leadData).catch(err => console.error('Admin WhatsApp failed:', err));
+
     res.status(201).json({
       message: 'Quote request submitted successfully',
       leadId: result.lastInsertRowid
@@ -275,6 +281,11 @@ router.post('/consultation-request', async (req, res, next) => {
       }),
       'consultation'
     ]);
+
+    // Send notifications to Admin
+    const leadData = { name, email, phone, consultationType, consultationDate, consultationTime, message };
+    sendAdminConsultationNotification(leadData).catch(err => console.error('Admin email failed:', err));
+    sendAdminWhatsAppConsultationAlert(leadData).catch(err => console.error('Admin WhatsApp failed:', err));
 
     res.status(201).json({
       message: 'Consultation booked successfully',
