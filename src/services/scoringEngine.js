@@ -152,11 +152,11 @@ const calculateBusinessScore = (answers) => {
   let minLoss = 500000;
   let maxLoss = 2000000;
 
-  if (business && business.revenue) {
-    if (business.revenue === 'above_1b') { minLoss = 100000000; maxLoss = 500000000; }
-    else if (business.revenue === '250m_1b') { minLoss = 25000000; maxLoss = 100000000; }
-    else if (business.revenue === '50m_250m') { minLoss = 5000000; maxLoss = 25000000; }
-    else if (business.revenue === '10m_50m') { minLoss = 1000000; maxLoss = 5000000; }
+  if (business && business.turnover) {
+    if (business.turnover === 'above_1b') { minLoss = 100000000; maxLoss = 500000000; }
+    else if (business.turnover === '250m_1b') { minLoss = 25000000; maxLoss = 100000000; }
+    else if (business.turnover === '50m_250m') { minLoss = 5000000; maxLoss = 25000000; }
+    else if (business.turnover === '10m_50m') { minLoss = 1000000; maxLoss = 5000000; }
   }
 
   return {
