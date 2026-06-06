@@ -141,18 +141,18 @@ router.post('/evolution', async (req, res) => {
             });
 
             // Save to DB
-            const assessRes = await run(\`
+            const assessRes = await run(`
               INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
               VALUES (NULL, ?, ?, ?, ?)
-            \`, [JSON.stringify(mockAnswers), scoreResult.score, scoreResult.riskLevel, JSON.stringify(aiReportData)]);
+            `, [JSON.stringify(mockAnswers), scoreResult.score, scoreResult.riskLevel, JSON.stringify(aiReportData)]);
 
             const assessmentId = assessRes.lastInsertRowid;
             
             // Send final link
-            const reportUrl = \`\${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/\${assessmentId}\`;
+            const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
             
             // We append the URL to the reply text so it gets sent in the same WhatsApp message below
-            replyText += \`\n\n✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n\${reportUrl}\n\nReply '1' if you'd like to book a consultation to discuss your results.\`;
+            replyText += `\n\n✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n${reportUrl}\n\nReply '1' if you'd like to book a consultation to discuss your results.`;
             
             // We will also update the lead with the new assessment ID below
             await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, name = ? WHERE id = ?', [

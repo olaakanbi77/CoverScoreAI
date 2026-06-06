@@ -552,7 +552,7 @@ If you can't perfectly map it, just do your best estimation.`;
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': \`Bearer \${MISTRAL_API_KEY}\`
+      'Authorization': `Bearer ${MISTRAL_API_KEY}`
     },
     body: JSON.stringify({
       model: MISTRAL_MODEL,
@@ -564,7 +564,7 @@ If you can't perfectly map it, just do your best estimation.`;
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(\`Mistral AI API error: \${response.status} - \${errText}\`);
+    throw new Error(`Mistral AI API error: ${response.status} - ${errText}`);
   }
 
   const data = await response.json();
@@ -572,8 +572,8 @@ If you can't perfectly map it, just do your best estimation.`;
   if (!aiContent) throw new Error('Empty response from AI');
 
   aiContent = aiContent.trim();
-  if (aiContent.startsWith('\`\`\`')) {
-    aiContent = aiContent.replace(/^\`\`\`json\s*/i, '').replace(/^\`\`\`\s*/, '').replace(/\s*\`\`\`$/, '');
+  if (aiContent.startsWith('```')) {
+    aiContent = aiContent.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
   }
 
   return JSON.parse(aiContent);
