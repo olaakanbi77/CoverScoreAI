@@ -46,9 +46,11 @@ router.post('/evolution', async (req, res) => {
       let searchPhone = phoneNumber.length > 10 ? phoneNumber.slice(-10) : phoneNumber;
       let lead = await get('SELECT * FROM leads WHERE phone LIKE ? ORDER BY id DESC LIMIT 1', ['%' + searchPhone]);
       
+      const isStartTrigger = incomingText.includes('START') || incomingText.includes('ASSESSMENT') || incomingText.includes('HELLO') || incomingText.includes('HI');
+
       if (!lead) {
         // If no lead exists, but they send "START", create a new lead to begin Conversational Assessment
-        if (incomingText.includes('START') || incomingText.includes('ASSESSMENT') || incomingText.includes('HELLO') || incomingText.includes('HI')) {
+        if (isStartTrigger) {
           const insertResult = await run(`
             INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
             VALUES (?, ?, ?, 'new', 'assessment_in_progress', '[]', 'unknown')
@@ -59,6 +61,11 @@ router.post('/evolution', async (req, res) => {
           console.log(`Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
           return;
         }
+      } else if (isStartTrigger) {
+        // If lead exists but sends a START trigger, override their state to restart the conversational assessment
+        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['assessment_in_progress', '[]', lead.id]);
+        lead.wa_state = 'assessment_in_progress';
+        lead.chat_history = '[]';
       }
 
       const currentState = lead.wa_state || 'initial';
