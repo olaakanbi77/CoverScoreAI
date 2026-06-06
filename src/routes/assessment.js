@@ -173,6 +173,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     // Store both report and explanations
     const fullReport = {
       ...(aiReport || {}),
+      min_loss,
+      max_loss,
       explanations: explanations,
       generatedAt: new Date().toISOString()
     };
