@@ -3,6 +3,8 @@ const router = express.Router();
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { get, run } = require('../config/database');
+const { handleConversationalAssessment, generateRiskReport } = require('../services/aiService');
+const { calculateScore } = require('../services/scoringEngine');
 
 // Evolution API webhook endpoint
 router.post('/evolution', async (req, res) => {
@@ -22,15 +24,15 @@ router.post('/evolution', async (req, res) => {
       }
 
       // Extract text content
-      let incomingText = '';
+      let incomingTextRaw = '';
       if (messageData.message) {
-        incomingText = 
+        incomingTextRaw = 
           messageData.message.conversation || 
           (messageData.message.extendedTextMessage && messageData.message.extendedTextMessage.text) ||
           '';
       }
 
-      incomingText = incomingText.trim().toUpperCase();
+      const incomingText = incomingTextRaw.trim().toUpperCase();
       if (!incomingText) return;
 
       // Extract sender's phone number
@@ -41,13 +43,22 @@ router.post('/evolution', async (req, res) => {
       console.log(`Received WhatsApp reply from ${phoneNumber}: "${incomingText}"`);
 
       // 1. Load lead state from DB
-      // Use LIKE to match the last 10 digits, as web forms might save +234 or 080
       let searchPhone = phoneNumber.length > 10 ? phoneNumber.slice(-10) : phoneNumber;
       let lead = await get('SELECT * FROM leads WHERE phone LIKE ? ORDER BY id DESC LIMIT 1', ['%' + searchPhone]);
       
       if (!lead) {
-        console.log(`Lead not found for phone ending in ${searchPhone}`);
-        return;
+        // If no lead exists, but they send "START", create a new lead to begin Conversational Assessment
+        if (incomingText.includes('START') || incomingText.includes('ASSESSMENT') || incomingText.includes('HELLO') || incomingText.includes('HI')) {
+          const insertResult = await run(`
+            INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
+            VALUES (?, ?, ?, 'new', 'assessment_in_progress', '[]', 'unknown')
+          `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber]);
+          
+          lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
+        } else {
+          console.log(`Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
+          return;
+        }
       }
 
       const currentState = lead.wa_state || 'initial';
@@ -57,13 +68,103 @@ router.post('/evolution', async (req, res) => {
       let markQualified = false;
       let primaryConcern = lead.primary_concern;
       let consultationPref = lead.consultation_preference;
+      let newChatHistory = lead.chat_history || '[]';
 
       // Award 20 points for the VERY first reply to the assessment message
       if (currentState === 'initial' || currentState === 'none') {
         pointsToAdd += 20; 
       }
 
-      // ── STATE MACHINE LOGIC ──
+      // ── CONVERSATIONAL ASSESSMENT LOGIC ──
+      if (currentState === 'assessment_in_progress') {
+        try {
+          const aiResponse = await handleConversationalAssessment(newChatHistory, incomingTextRaw);
+          
+          // Append to chat history
+          let historyArray = [];
+          try { historyArray = JSON.parse(newChatHistory); } catch(e) {}
+          historyArray.push({ role: 'user', content: incomingTextRaw });
+
+          if (aiResponse.status === 'asking') {
+            replyText = aiResponse.reply;
+            historyArray.push({ role: 'assistant', content: aiResponse.reply });
+            newChatHistory = JSON.stringify(historyArray);
+          } 
+          else if (aiResponse.status === 'complete') {
+            replyText = aiResponse.reply || "Thank you! I have everything I need. Generating your CoverScore Risk Report now...";
+            historyArray.push({ role: 'assistant', content: replyText });
+            newChatHistory = JSON.stringify(historyArray);
+            nextState = 'none'; // Move out of assessment state
+
+            // Map extracted data to scoring engine format
+            const extracted = aiResponse.extracted_data || {};
+            const entityType = extracted.entity_type === 'business' ? 'business' : 'individual';
+            
+            let mockAnswers = { type: { entity_type: entityType } };
+            
+            if (entityType === 'business') {
+              mockAnswers.business = {
+                business_name: extracted.name || 'Your Business',
+                industry: extracted.industry || 'General Business',
+                turnover: extracted.turnover_bracket || '10m_50m'
+              };
+              mockAnswers.employee_risk = {
+                employ_staff: extracted.employee_bracket ? 'yes' : 'no',
+                employees: extracted.employee_bracket || '1_5'
+              };
+              if (extracted.owns_property === 'yes') {
+                mockAnswers.property = { own_building: 'yes', building_value: '10m_50m', equipment_value: 'under_5m' };
+              }
+            } else {
+              mockAnswers.individual = {
+                name: extracted.name || 'User',
+                age_bracket: extracted.ageBracket || '31_45',
+                annual_income: extracted.income || '10m_50m',
+                dependents: extracted.dependents || '1_2'
+              };
+            }
+
+            // Calculate score
+            const scoreResult = calculateScore(mockAnswers);
+            
+            // Generate AI Report
+            const aiReportData = await generateRiskReport({
+              answers: mockAnswers,
+              score: scoreResult.score,
+              riskLevel: scoreResult.riskLevel,
+              min_loss: scoreResult.min_loss,
+              max_loss: scoreResult.max_loss,
+              recommendations: scoreResult.recommendations,
+              identified_gaps: scoreResult.identified_gaps,
+              risk_categories: scoreResult.risk_categories,
+              entityType
+            });
+
+            // Save to DB
+            const assessRes = await run(\`
+              INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
+              VALUES (NULL, ?, ?, ?, ?)
+            \`, [JSON.stringify(mockAnswers), scoreResult.score, scoreResult.riskLevel, JSON.stringify(aiReportData)]);
+
+            const assessmentId = assessRes.lastInsertRowid;
+            
+            // Send final link
+            const reportUrl = \`\${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/\${assessmentId}\`;
+            
+            // We append the URL to the reply text so it gets sent in the same WhatsApp message below
+            replyText += \`\n\n✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n\${reportUrl}\n\nReply '1' if you'd like to book a consultation to discuss your results.\`;
+            
+            // We will also update the lead with the new assessment ID below
+            await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, name = ? WHERE id = ?', [
+              assessmentId, scoreResult.score, scoreResult.riskLevel, entityType, (extracted.name || 'WhatsApp User'), lead.id
+            ]);
+          }
+        } catch (error) {
+          console.error("AI Conversational Error:", error);
+          replyText = "I'm sorry, I encountered an error processing your request. Please try again.";
+        }
+      } else {
+      // ── OLD STATE MACHINE LOGIC ──
       switch (currentState) {
         case 'none':
         case 'initial':
@@ -183,6 +284,7 @@ router.post('/evolution', async (req, res) => {
           // Conversation is fully complete, do nothing.
           return;
       }
+      } // End of OLD STATE MACHINE else block
 
       // 2. Update Database & Send Next Message
       if (replyText) {
@@ -190,8 +292,8 @@ router.post('/evolution', async (req, res) => {
         await sendWhatsApp(phoneNumber, null, { _message: replyText });
 
         // Build updates
-        let updateQuery = 'UPDATE leads SET wa_state = ?, engagement_points = engagement_points + ?';
-        let queryParams = [nextState, pointsToAdd];
+        let updateQuery = 'UPDATE leads SET wa_state = ?, chat_history = ?, engagement_points = engagement_points + ?';
+        let queryParams = [nextState, newChatHistory, pointsToAdd];
         
         if (primaryConcern && primaryConcern !== lead.primary_concern) {
           updateQuery += ', primary_concern = ?';

@@ -5,6 +5,13 @@ const { sendAdminWhatsAppQuoteAlert, sendAdminWhatsAppConsultationAlert } = requ
 
 const router = express.Router();
 
+router.get('/start-whatsapp', (req, res) => {
+  // Use the bot number (or fallback if not set)
+  const botNumber = process.env.WHATSAPP_BOT_NUMBER || '2349165304629';
+  const text = encodeURIComponent('START ASSESSMENT');
+  res.redirect(`https://wa.me/${botNumber}?text=${text}`);
+});
+
 // Submit quote request
 router.post('/quote-request', async (req, res, next) => {
   try {

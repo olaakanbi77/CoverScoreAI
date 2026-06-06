@@ -64,6 +64,7 @@ const initDatabase = () => {
       engagement_points INTEGER DEFAULT 0,
       is_qualified BOOLEAN DEFAULT 0,
       notes TEXT,
+      chat_history TEXT DEFAULT '[]',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME,
       FOREIGN KEY (assessment_id) REFERENCES assessments(id)
@@ -90,7 +91,8 @@ const initDatabase = () => {
     "ALTER TABLE leads ADD COLUMN primary_concern TEXT",
     "ALTER TABLE leads ADD COLUMN consultation_preference TEXT",
     "ALTER TABLE leads ADD COLUMN engagement_points INTEGER DEFAULT 0",
-    "ALTER TABLE leads ADD COLUMN is_qualified BOOLEAN DEFAULT 0"
+    "ALTER TABLE leads ADD COLUMN is_qualified BOOLEAN DEFAULT 0",
+    "ALTER TABLE leads ADD COLUMN chat_history TEXT DEFAULT '[]'"
   ];
 
   columnsToAdd.forEach(sql => {

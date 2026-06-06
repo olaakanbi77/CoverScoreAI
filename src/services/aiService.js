@@ -499,4 +499,84 @@ const generateExplanations = async (assessmentData) => {
   };
 };
 
-module.exports = { generateRiskReport, generateExplanations };
+const handleConversationalAssessment = async (chatHistory, userMessage) => {
+  const systemPrompt = `You are CoverScore AI, a friendly and professional insurance risk advisor.
+Your goal is to conduct a conversational risk assessment via WhatsApp.
+You must gather the following information by asking questions ONE AT A TIME. Do not ask for everything at once.
+Keep your questions natural, friendly, and very brief.
+
+You need to figure out:
+1. Are they assessing a Business or Individual/Personal risk?
+If Business: Business Name, Industry, Estimated Annual Turnover, Number of Employees, Do they own physical property/equipment?
+If Individual: Name, Age Bracket, Estimated Annual Income, Number of Dependents, Do they own a home/car?
+
+Once you have gathered ALL the required information, you must stop asking questions and output a JSON object with status "complete" and the extracted data.
+If you still need more information, output a JSON object with status "asking" and your next conversational reply.
+
+IMPORTANT: You MUST respond in strict JSON format.
+Example of asking:
+{"status": "asking", "reply": "Hi! Are you looking to assess risk for a business or your personal life?"}
+Example of completing:
+{
+  "status": "complete",
+  "reply": "Thank you! I have everything I need. Generating your CoverScore Risk Report now...",
+  "extracted_data": {
+    "entity_type": "business",
+    "name": "Acme Corp",
+    "industry": "Tech",
+    "turnover_bracket": "10m_50m",
+    "employee_bracket": "6_20",
+    "owns_property": "yes"
+  }
+}
+Note for extracted_data brackets: 
+Turnover/Income should ideally map to: 'under_10m', '10m_50m', '50m_250m', '250m_1b', 'over_1b'.
+Employees map to: '1_5', '6_20', '21_50', '51_200', 'over_200'.
+If you can't perfectly map it, just do your best estimation.`;
+
+  const messages = [
+    { role: 'system', content: systemPrompt }
+  ];
+  
+  // Append parsed history
+  try {
+    const history = typeof chatHistory === 'string' ? JSON.parse(chatHistory) : chatHistory;
+    if (Array.isArray(history)) {
+      history.forEach(msg => messages.push(msg));
+    }
+  } catch(e) {}
+
+  messages.push({ role: 'user', content: userMessage });
+
+  const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': \`Bearer \${MISTRAL_API_KEY}\`
+    },
+    body: JSON.stringify({
+      model: MISTRAL_MODEL,
+      messages: messages,
+      temperature: 0.7,
+      response_format: { type: 'json_object' }
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(\`Mistral AI API error: \${response.status} - \${errText}\`);
+  }
+
+  const data = await response.json();
+  let aiContent = data.choices?.[0]?.message?.content;
+  if (!aiContent) throw new Error('Empty response from AI');
+
+  aiContent = aiContent.trim();
+  if (aiContent.startsWith('\`\`\`')) {
+    aiContent = aiContent.replace(/^\`\`\`json\s*/i, '').replace(/^\`\`\`\s*/, '').replace(/\s*\`\`\`$/, '');
+  }
+
+  return JSON.parse(aiContent);
+};
+
+module.exports = { generateRiskReport, generateExplanations, handleConversationalAssessment };
