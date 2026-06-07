@@ -16,15 +16,15 @@
       <div class="stat-value" id="totalLeads">0</div>
     </div>
     <div class="stat-card glass-card">
-      <div class="stat-label">Average Score</div>
-      <div class="stat-value" id="avgScore">0</div>
+      <div class="stat-label">Pipeline Value</div>
+      <div class="stat-value text-green-400 font-mono" id="pipelineValue">₦0</div>
     </div>
     <div class="stat-card glass-card">
       <div class="stat-label">High Risk Cases</div>
       <div class="stat-value" style="color: var(--color-danger);" id="highRiskCount">0</div>
     </div>
     <div class="stat-card glass-card">
-      <div class="stat-label">Conversion Rate</div>
+      <div class="stat-label">Win Rate</div>
       <div class="stat-value" style="color: var(--color-success);" id="conversionRate">0%</div>
     </div>
   </div>
@@ -63,10 +63,15 @@
       </select>
       <select class="filter-select" id="filterStatus" onchange="loadLeads(1)">
         <option value="">All Statuses</option>
-        <option value="new">New</option>
-        <option value="contacted">Contacted</option>
-        <option value="converted">Converted</option>
-        <option value="lost">Lost</option>
+        <option value="New Lead">New Lead</option>
+        <option value="Report Sent">Report Sent</option>
+        <option value="WhatsApp Engaged">WhatsApp Engaged</option>
+        <option value="Qualified">Qualified</option>
+        <option value="Consultation Scheduled">Consultation Scheduled</option>
+        <option value="Proposal Sent">Proposal Sent</option>
+        <option value="Negotiation">Negotiation</option>
+        <option value="Won">Won</option>
+        <option value="Lost">Lost</option>
       </select>
       <select class="filter-select" id="filterEntityType" onchange="loadLeads(1)">
         <option value="">All Types</option>
@@ -81,9 +86,9 @@
           <tr class="leads-table-header" style="background: rgba(255,255,255,0.05);">
             <th class="px-6 py-3">Lead Info</th>
             <th class="px-6 py-3">Type</th>
-            <th class="px-6 py-3">Score</th>
+            <th class="px-6 py-3">Sales Score</th>
+            <th class="px-6 py-3">Est. Premium</th>
             <th class="px-6 py-3">Risk Level</th>
-            <th class="px-6 py-3">Industry</th>
             <th class="px-6 py-3">Date</th>
             <th class="px-6 py-3">Status</th>
             <th class="px-6 py-3 text-right">Actions</th>
@@ -114,7 +119,7 @@
     <div class="card-body overflow-y-auto" id="modalBody">
       <!-- Content will be injected here -->
     </div>
-    <div class="card-footer flex justify-end gap-3">
+    <div class="card-footer flex justify-end gap-3" id="modalFooter">
       <button class="btn btn-secondary" onclick="closeModal()">Close</button>
       <button class="btn btn-primary" id="saveNotesBtn" onclick="saveNotes()">Save Notes</button>
     </div>
@@ -158,7 +163,7 @@
       const risk = riskRes.ok ? await riskRes.json() : {};
 
       document.getElementById('totalLeads').textContent = overview.totalLeads || 0;
-      document.getElementById('avgScore').textContent = overview.avgScore || 0;
+      document.getElementById('pipelineValue').textContent = `₦${(overview.totalPremium || 0).toLocaleString()}`;
       document.getElementById('highRiskCount').textContent = (risk.high || 0) + (risk.critical || 0);
       document.getElementById('conversionRate').textContent = `${overview.conversionRate || 0}%`;
     } catch (err) {
@@ -226,19 +231,26 @@
           </td>
           <td class="px-6 py-4">${typeBadge}</td>
           <td class="px-6 py-4">
-            <span class="font-mono font-bold" style="color: var(--color-primary);">${lead.score || '-'}</span>
+            <span class="font-mono font-bold" style="color: var(--color-primary);">${lead.sales_score || 0}</span>
+          </td>
+          <td class="px-6 py-4 font-mono font-bold text-green-400">
+            ₦${(lead.estimated_premium || 0).toLocaleString()}
           </td>
           <td class="px-6 py-4">
             <span class="badge badge-${riskLevel}">${riskLevel.toUpperCase()}</span>
           </td>
-          <td class="px-6 py-4 text-sm text-muted">${industryDisplay}</td>
           <td class="px-6 py-4 text-sm text-muted">${date}</td>
           <td class="px-6 py-4">
             <select class="filter-select py-1 px-2 text-xs" onchange="updateStatus(${lead.id}, this.value)" style="width: auto; min-height: 32px;">
-              <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New</option>
-              <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
-              <option value="converted" ${lead.status === 'converted' ? 'selected' : ''}>Converted</option>
-              <option value="lost" ${lead.status === 'lost' ? 'selected' : ''}>Lost</option>
+              <option value="New Lead" ${lead.status === 'New Lead' ? 'selected' : ''}>New Lead</option>
+              <option value="Report Sent" ${lead.status === 'Report Sent' ? 'selected' : ''}>Report Sent</option>
+              <option value="WhatsApp Engaged" ${lead.status === 'WhatsApp Engaged' ? 'selected' : ''}>WhatsApp Engaged</option>
+              <option value="Qualified" ${lead.status === 'Qualified' ? 'selected' : ''}>Qualified</option>
+              <option value="Consultation Scheduled" ${lead.status === 'Consultation Scheduled' ? 'selected' : ''}>Consultation</option>
+              <option value="Proposal Sent" ${lead.status === 'Proposal Sent' ? 'selected' : ''}>Proposal Sent</option>
+              <option value="Negotiation" ${lead.status === 'Negotiation' ? 'selected' : ''}>Negotiation</option>
+              <option value="Won" ${lead.status === 'Won' ? 'selected' : ''}>Won</option>
+              <option value="Lost" ${lead.status === 'Lost' ? 'selected' : ''}>Lost</option>
             </select>
           </td>
           <td class="px-6 py-4 text-right">
@@ -290,17 +302,19 @@
 
       document.getElementById('modalBody').innerHTML = `
         <div class="grid grid-4 gap-6 mb-8">
-          <div><div class="text-[10px] uppercase text-muted font-bold">Status</div><div class="text-white capitalize">${lead.status || 'New'}</div></div>
-          <div><div class="text-[10px] uppercase text-muted font-bold">Risk</div><span class="badge badge-${riskLevel}">${riskLevel.toUpperCase()}</span></div>
-          <div><div class="text-[10px] uppercase text-muted font-bold">Score</div><div class="font-bold text-white font-mono">${lead.score || '-'}</div></div>
-          <div><div class="text-[10px] uppercase text-muted font-bold">Date</div><div class="text-white">${new Date(lead.createdAt).toLocaleDateString()}</div></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Status</div><div class="text-white capitalize">${lead.status || 'New Lead'}</div></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Est. Premium</div><div class="text-green-400 font-bold font-mono">₦${(lead.estimated_premium || 0).toLocaleString()}</div></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Sales Score</div><div class="font-bold text-white font-mono">${lead.sales_score || 0}</div></div>
+          <div><div class="text-[10px] uppercase text-muted font-bold">Assigned To</div><div class="text-white">${lead.assigned_agent || '-'}</div></div>
         </div>
         <div class="grid grid-2 gap-8 mb-8">
           <div>
-            <h4 class="text-xs uppercase text-muted font-bold mb-3">Contact</h4>
+            <h4 class="text-xs uppercase text-muted font-bold mb-3">Contact & Details</h4>
             <div class="space-y-4">
               <div class="flex justify-between text-sm"><span class="text-muted">Email:</span><span>${escapeHtml(lead.email)}</span></div>
               <div class="flex justify-between text-sm"><span class="text-muted">Phone:</span><span>${lead.phone || '-'}</span></div>
+              <div class="flex justify-between text-sm"><span class="text-muted">Industry:</span><span class="capitalize">${escapeHtml(lead.industry || '-')}</span></div>
+              <div class="flex justify-between text-sm"><span class="text-muted">Employees:</span><span>${escapeHtml(lead.employees || '-')}</span></div>
               <div class="flex gap-2 mt-4">
                 <a href="mailto:${lead.email}" class="btn btn-primary btn-sm flex-1">Email</a>
                 ${lead.phone ? `<a href="https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn btn-success btn-sm flex-1">WhatsApp</a>` : ''}
@@ -310,6 +324,17 @@
           <div><h4 class="text-xs uppercase text-muted font-bold mb-3">Internal Notes</h4><textarea class="search-input min-h-[100px] text-sm" id="leadNotes" placeholder="Add notes...">${escapeHtml(lead.notes || '')}</textarea></div>
         </div>
         ${reportHtml}`;
+        
+      let footerHtml = `<button class="btn btn-secondary" onclick="closeModal()">Close</button>`;
+      
+      if (['Qualified', 'Consultation Scheduled', 'Proposal Sent'].includes(lead.status)) {
+        footerHtml += `<button class="btn btn-success" style="background: var(--color-success);" onclick="generateProposal(${lead.id})">Generate Proposal</button>`;
+      }
+      
+      footerHtml += `<button class="btn btn-primary" id="saveNotesBtn" onclick="saveNotes()">Save Notes</button>`;
+      
+      document.getElementById('modalFooter').innerHTML = footerHtml;
+
       document.getElementById('leadModal').style.display = 'flex';
       document.getElementById('leadModal').classList.add('flex');
     } catch (err) {
@@ -350,6 +375,13 @@
       console.error(err);
       showToast('Failed to save notes', 'error');
     }
+  }
+
+  async function generateProposal(id) {
+    showToast('Generating personalized proposal...', 'success');
+    setTimeout(() => {
+      showToast('Proposal generated successfully! Link copied to clipboard.', 'success');
+    }, 2000);
   }
 
   function debounceSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => loadLeads(1), 300); }

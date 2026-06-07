@@ -204,9 +204,33 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       const cleanPhone = rawPhone ? String(rawPhone).replace(/\D/g, '') : '';
       const businessName = entityType === 'business' ? (req.user ? req.user.business_name : (answers.business?.name || '')) : null;
 
+      // --- NEW CRM LOGIC ---
+      const industry = answers.business?.industry || 'other';
+      const employees = answers.business?.employee_count || '';
+      const recommendedCoversStr = JSON.stringify(aiReport?.recommendations || []);
+      
+      let estimatedPremium = 0;
+      if (min_loss) {
+        // Calculate ~1.3% of potential exposure minimum
+        estimatedPremium = Math.round(min_loss * 0.013);
+      }
+      
+      const agentMap = {
+        'manufacturing': 'Manufacturing Specialist',
+        'logistics': 'Marine/GIT Specialist',
+        'education': 'Group Life Specialist',
+        'non_profit': 'Liability Specialist',
+        'retail': 'SME Specialist'
+      };
+      const assignedAgent = agentMap[industry] || 'General Agent';
+
       const result = await run(`
-        INSERT INTO leads (name, email, phone, business_name, assessment_id, score, risk_level, status, entity_type, engagement_points)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?, 20)
+        INSERT INTO leads (
+          name, email, phone, business_name, assessment_id, score, risk_level, 
+          status, entity_type, engagement_points, sales_score, pipeline_stage, 
+          estimated_premium, industry, employees, recommended_covers, assigned_agent
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'New Lead', ?, 20, 20, 1, ?, ?, ?, ?, ?)
       `, [
         name,
         email,
@@ -215,7 +239,12 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         assessment.id,
         score,
         dbRiskLevel,
-        entityType
+        entityType,
+        estimatedPremium,
+        industry,
+        employees,
+        recommendedCoversStr,
+        assignedAgent
       ]);
 
       lead = { id: result.lastInsertRowid, phone: cleanPhone, name };

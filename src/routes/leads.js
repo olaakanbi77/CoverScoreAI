@@ -144,7 +144,7 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
 router.put('/:id/status',
   authenticate,
   requireAgent,
-  body('status').isIn(['new', 'contacted', 'converted', 'lost']),
+  body('status').isIn(['New Lead', 'Report Sent', 'WhatsApp Engaged', 'Qualified', 'Consultation Scheduled', 'Proposal Sent', 'Negotiation', 'Won', 'Lost']),
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
@@ -231,7 +231,7 @@ router.post('/quote-request', async (req, res, next) => {
 
     const result = await run(`
       INSERT INTO leads (name, email, phone, business_name, status, notes, entity_type)
-      VALUES (?, ?, ?, ?, 'new', ?, 'quote')
+      VALUES (?, ?, ?, ?, 'New Lead', ?, 'quote')
     `, [
       name,
       email,
@@ -267,7 +267,7 @@ router.post('/consultation-request', async (req, res, next) => {
 
     const result = await run(`
       INSERT INTO leads (name, email, phone, status, notes, entity_type)
-      VALUES (?, ?, ?, 'new', ?, 'consultation')
+      VALUES (?, ?, ?, 'New Lead', ?, 'consultation')
     `, [
       name,
       email,

@@ -57,7 +57,7 @@ const initDatabase = () => {
       score INTEGER,
       risk_level TEXT,
       entity_type TEXT DEFAULT 'business',
-      status TEXT DEFAULT 'new' CHECK(status IN ('new', 'contacted', 'converted', 'lost')),
+      status TEXT DEFAULT 'New Lead',
       wa_state TEXT DEFAULT 'initial',
       primary_concern TEXT,
       consultation_preference TEXT,
@@ -65,6 +65,14 @@ const initDatabase = () => {
       is_qualified BOOLEAN DEFAULT 0,
       notes TEXT,
       chat_history TEXT DEFAULT '[]',
+      sales_score INTEGER DEFAULT 0,
+      pipeline_stage INTEGER DEFAULT 1,
+      estimated_premium INTEGER DEFAULT 0,
+      lead_source TEXT DEFAULT 'CoverScore AI',
+      industry TEXT,
+      employees TEXT,
+      recommended_covers TEXT,
+      assigned_agent TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME,
       FOREIGN KEY (assessment_id) REFERENCES assessments(id)
@@ -85,23 +93,80 @@ const initDatabase = () => {
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
   `);
 
-  // Simple schema migration for existing databases
-  const columnsToAdd = [
-    "ALTER TABLE leads ADD COLUMN wa_state TEXT DEFAULT 'initial'",
-    "ALTER TABLE leads ADD COLUMN primary_concern TEXT",
-    "ALTER TABLE leads ADD COLUMN consultation_preference TEXT",
-    "ALTER TABLE leads ADD COLUMN engagement_points INTEGER DEFAULT 0",
-    "ALTER TABLE leads ADD COLUMN is_qualified BOOLEAN DEFAULT 0",
-    "ALTER TABLE leads ADD COLUMN chat_history TEXT DEFAULT '[]'"
-  ];
-
-  columnsToAdd.forEach(sql => {
-    db.run(sql, (err) => {
-      // Ignore errors related to duplicate columns
-      if (err && !err.message.includes('duplicate column name')) {
-        console.error('Migration error:', err.message);
-      }
-    });
+  // CRM Schema Migration (Option B)
+  // Drop the old leads table constraint by recreating the table if the old constraint exists,
+  // or simply adding the new columns if the table already exists.
+  db.get("SELECT sql FROM sqlite_master WHERE type='table' AND name='leads'", (err, row) => {
+    if (row && row.sql.includes('CHECK(status IN')) {
+      console.log('Migrating leads table to new CRM schema (removing CHECK constraint)...');
+      db.exec(`
+        PRAGMA foreign_keys=off;
+        BEGIN TRANSACTION;
+        CREATE TABLE leads_new (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          phone TEXT,
+          business_name TEXT,
+          assessment_id INTEGER,
+          score INTEGER,
+          risk_level TEXT,
+          entity_type TEXT DEFAULT 'business',
+          status TEXT DEFAULT 'New Lead',
+          wa_state TEXT DEFAULT 'initial',
+          primary_concern TEXT,
+          consultation_preference TEXT,
+          engagement_points INTEGER DEFAULT 0,
+          is_qualified BOOLEAN DEFAULT 0,
+          notes TEXT,
+          chat_history TEXT DEFAULT '[]',
+          sales_score INTEGER DEFAULT 0,
+          pipeline_stage INTEGER DEFAULT 1,
+          estimated_premium INTEGER DEFAULT 0,
+          lead_source TEXT DEFAULT 'CoverScore AI',
+          industry TEXT,
+          employees TEXT,
+          recommended_covers TEXT,
+          assigned_agent TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME,
+          FOREIGN KEY (assessment_id) REFERENCES assessments(id)
+        );
+        INSERT INTO leads_new (id, name, email, phone, business_name, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at)
+        SELECT id, name, email, phone, business_name, assessment_id, score, risk_level, entity_type, 
+               CASE WHEN status = 'new' THEN 'New Lead' WHEN status = 'contacted' THEN 'WhatsApp Engaged' WHEN status = 'converted' THEN 'Won' WHEN status = 'lost' THEN 'Lost' ELSE 'New Lead' END,
+               wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at 
+        FROM leads;
+        DROP TABLE leads;
+        ALTER TABLE leads_new RENAME TO leads;
+        CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id);
+        CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
+        COMMIT;
+        PRAGMA foreign_keys=on;
+      `, (err) => {
+        if (err) console.error('Migration failed:', err);
+        else console.log('CRM Migration complete.');
+      });
+    } else {
+      // If table exists but doesn't have the old constraint, just ensure the new columns exist
+      const columnsToAdd = [
+        "ALTER TABLE leads ADD COLUMN sales_score INTEGER DEFAULT 0",
+        "ALTER TABLE leads ADD COLUMN pipeline_stage INTEGER DEFAULT 1",
+        "ALTER TABLE leads ADD COLUMN estimated_premium INTEGER DEFAULT 0",
+        "ALTER TABLE leads ADD COLUMN lead_source TEXT DEFAULT 'CoverScore AI'",
+        "ALTER TABLE leads ADD COLUMN industry TEXT",
+        "ALTER TABLE leads ADD COLUMN employees TEXT",
+        "ALTER TABLE leads ADD COLUMN recommended_covers TEXT",
+        "ALTER TABLE leads ADD COLUMN assigned_agent TEXT"
+      ];
+      columnsToAdd.forEach(sql => {
+        db.run(sql, (err) => {
+          if (err && !err.message.includes('duplicate column name')) {
+            console.error('Migration error:', err.message);
+          }
+        });
+      });
+    }
   });
 
   db.get('SELECT id FROM users WHERE role = ?', ['admin'], (err, row) => {

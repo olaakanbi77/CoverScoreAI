@@ -70,11 +70,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/auth/login', (req, res) => {
-  res.render('auth/login', { title: 'Sign In', layout: false });
+  res.render('auth/login', { title: 'Sign In', layout: 'auth' });
 });
 
 app.get('/auth/register', (req, res) => {
-  res.render('auth/register', { title: 'Sign Up', layout: false });
+  res.render('auth/register', { title: 'Sign Up', layout: 'auth' });
 });
 
 app.get('/start-whatsapp', (req, res) => {
@@ -127,11 +127,11 @@ app.get(['/consultation', '/book-consultation'], (req, res) => {
 });
 
 app.get('/auth/password-reset', (req, res) => {
-  res.render('auth/forgot-password', { title: 'Reset Password', layout: false });
+  res.render('auth/forgot-password', { title: 'Reset Password', layout: 'auth' });
 });
 
 app.get('/auth/reset-password', (req, res) => {
-  res.render('auth/reset-password', { title: 'Set New Password', layout: false });
+  res.render('auth/reset-password', { title: 'Set New Password', layout: 'auth' });
 });
 
 app.get('/features', (req, res) => {

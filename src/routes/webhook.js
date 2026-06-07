@@ -53,7 +53,7 @@ router.post('/evolution', async (req, res) => {
         if (isStartTrigger) {
           const insertResult = await run(`
             INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
-            VALUES (?, ?, ?, 'new', 'welcome_name', '{}', 'unknown')
+            VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown')
           `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber]);
           
           lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
@@ -178,11 +178,20 @@ router.post('/evolution', async (req, res) => {
               entityType
             });
 
+            const dbRiskLevelMap = {
+              'Very Low Risk': 'low',
+              'Low Risk': 'low',
+              'Moderate Risk': 'moderate',
+              'High Risk': 'high',
+              'Critical Risk': 'critical'
+            };
+            const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
+
             // Save to DB
             const assessRes = await run(`
               INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
               VALUES (NULL, ?, ?, ?, ?)
-            `, [JSON.stringify(mockAnswers), scoreResult.score, scoreResult.riskLevel, JSON.stringify(aiReportData)]);
+            `, [JSON.stringify(mockAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
 
             const assessmentId = assessRes.lastInsertRowid;
             
@@ -200,12 +209,12 @@ router.post('/evolution', async (req, res) => {
 
             // Update lead state to qualification
             await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, name = ?, email = ?, wa_state = ? WHERE id = ?', [
-              assessmentId, scoreResult.score, scoreResult.riskLevel, entityType, (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 'qualification', lead.id
+              assessmentId, scoreResult.score, dbRiskLevel, entityType, (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 'qualification', lead.id
             ]);
 
           } catch(err) {
             console.error("Error generating report after completion:", err);
-            await sendWhatsApp(phoneNumber, null, { _message: "I'm sorry, I encountered an error generating your report. Please contact support." });
+            await sendWhatsApp(phoneNumber, null, { _message: "I'm sorry, I encountered an error generating your report. Error details: " + err.message + ". Please contact support." });
           }
         }
       }

@@ -10,11 +10,14 @@ router.get('/overview', authenticate, requireAgent, async (req, res, next) => {
     const totalAssessments = await get('SELECT COUNT(*) as count FROM assessments');
 
     const totalLeads = await get('SELECT COUNT(*) as count FROM leads');
-    const convertedLeads = await get('SELECT COUNT(*) as count FROM leads WHERE status = "converted"');
+    const convertedLeads = await get('SELECT COUNT(*) as count FROM leads WHERE status = "Won" OR status = "converted"');
     const conversionRate = totalLeads.count > 0 ? Math.round((convertedLeads.count / totalLeads.count) * 100) : 0;
 
     const avgScoreResult = await get('SELECT AVG(score) as avg FROM assessments');
     const avgScore = Math.round(avgScoreResult?.avg || 0);
+
+    const totalPremiumResult = await get('SELECT SUM(estimated_premium) as total FROM leads');
+    const totalPremium = totalPremiumResult?.total || 0;
 
     const thisMonth = new Date();
     thisMonth.setDate(1);
@@ -27,6 +30,7 @@ router.get('/overview', authenticate, requireAgent, async (req, res, next) => {
       convertedLeads: convertedLeads.count,
       conversionRate,
       avgScore,
+      totalPremium,
       monthlyAssessments: monthlyAssessments.count
     });
   } catch (error) {

@@ -16,7 +16,7 @@ router.post('/quote-request', async (req, res, next) => {
 
     const result = await run(`
       INSERT INTO leads (name, email, phone, business_name, status, notes, entity_type)
-      VALUES (?, ?, ?, ?, 'new', ?, ?)
+      VALUES (?, ?, ?, ?, 'New Lead', ?, ?)
     `, [
       name,
       email,
@@ -52,7 +52,7 @@ router.post('/consultation-request', async (req, res, next) => {
 
     const result = await run(`
       INSERT INTO leads (name, email, phone, status, notes, entity_type)
-      VALUES (?, ?, ?, 'new', ?, ?)
+      VALUES (?, ?, ?, 'New Lead', ?, ?)
     `, [
       name,
       email,
