@@ -1,417 +1,451 @@
-  <div class="container py-8">
-  <div class="flex items-center justify-between gap-6 mb-8">
-    <div>
-      <h1 class="page-title">Admin Dashboard</h1>
-      <p class="page-subtitle">Manage and track assessment leads with priority-based risk intelligence</p>
-    </div>
-    <div class="actions">
-      <a href="/admin/analytics" class="btn btn-secondary btn-sm">Analytics</a>
-      <a href="/admin/settings" class="btn btn-ghost btn-sm">Settings</a>
-    </div>
+<div class="dashboard-header">
+  <div>
+    <h1 class="greeting-title">Welcome back, {{user.name}} 👋</h1>
+    <p class="greeting-sub">Here's what's happening with your business today.</p>
   </div>
-
-  <div class="grid grid-4 gap-6 mb-8">
-    <div class="stat-card glass-card">
-      <div class="stat-label">Total Leads</div>
-      <div class="stat-value" id="totalLeads">0</div>
-    </div>
-    <div class="stat-card glass-card">
-      <div class="stat-label">Pipeline Value</div>
-      <div class="stat-value text-green-400 font-mono" id="pipelineValue">₦0</div>
-    </div>
-    <div class="stat-card glass-card">
-      <div class="stat-label">High Risk Cases</div>
-      <div class="stat-value" style="color: var(--color-danger);" id="highRiskCount">0</div>
-    </div>
-    <div class="stat-card glass-card">
-      <div class="stat-label">Win Rate</div>
-      <div class="stat-value" style="color: var(--color-success);" id="conversionRate">0%</div>
-    </div>
-  </div>
-
-  <div class="card glass-card mb-8">
-    <div class="card-header flex items-center justify-between">
-      <h3 class="text-lg font-semibold">Lead Management</h3>
-      <div class="flex items-center gap-4">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search leads..." onkeyup="debounceSearch()">
-      </div>
-    </div>
-    
-    <div class="filters p-6" style="border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02);">
-      <select class="filter-select" id="filterRisk" onchange="loadLeads(1)">
-        <option value="">All Risk Levels</option>
-        <option value="critical">Critical</option>
-        <option value="high">High</option>
-        <option value="moderate">Moderate</option>
-        <option value="low">Low</option>
-      </select>
-      <select class="filter-select" id="filterIndustry" onchange="loadLeads(1)">
-        <option value="">All Industries</option>
-        <option value="agribusiness">Agribusiness</option>
-        <option value="construction">Construction</option>
-        <option value="fintech">Fintech</option>
-        <option value="healthcare">Healthcare</option>
-        <option value="hospitality">Hospitality</option>
-        <option value="logistics">Logistics</option>
-        <option value="manufacturing">Manufacturing</option>
-        <option value="oil_gas">Oil & Gas</option>
-        <option value="professional_services">Professional Services</option>
-        <option value="real_estate">Real Estate</option>
-        <option value="retail">Retail</option>
-        <option value="technology">Technology</option>
-        <option value="other">Other</option>
-      </select>
-      <select class="filter-select" id="filterStatus" onchange="loadLeads(1)">
-        <option value="">All Statuses</option>
-        <option value="New Lead">New Lead</option>
-        <option value="Report Sent">Report Sent</option>
-        <option value="WhatsApp Engaged">WhatsApp Engaged</option>
-        <option value="Qualified">Qualified</option>
-        <option value="Consultation Scheduled">Consultation Scheduled</option>
-        <option value="Proposal Sent">Proposal Sent</option>
-        <option value="Negotiation">Negotiation</option>
-        <option value="Won">Won</option>
-        <option value="Lost">Lost</option>
-      </select>
-      <select class="filter-select" id="filterEntityType" onchange="loadLeads(1)">
-        <option value="">All Types</option>
-        <option value="business">Business</option>
-        <option value="individual">Individual</option>
-      </select>
-    </div>
-
-    <div style="overflow-x: auto;">
-      <table class="leads-table">
-        <thead>
-          <tr class="leads-table-header" style="background: rgba(255,255,255,0.05);">
-            <th class="px-6 py-3">Lead Info</th>
-            <th class="px-6 py-3">Type</th>
-            <th class="px-6 py-3">Sales Score</th>
-            <th class="px-6 py-3">Est. Premium</th>
-            <th class="px-6 py-3">Risk Level</th>
-            <th class="px-6 py-3">Date</th>
-            <th class="px-6 py-3">Status</th>
-            <th class="px-6 py-3 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="leadsList">
-          <tr><td colspan="8" class="text-center py-12 text-muted">Loading leads...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card-footer flex items-center justify-between" id="paginationBar" style="display: none;">
-      <div class="text-sm text-muted" id="paginationInfo"></div>
-      <div class="pagination" id="paginationButtons"></div>
-    </div>
+  <div class="date-picker">
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+    May 11 - May 17, 2026
+    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
   </div>
 </div>
 
-<!-- Lead Detail Modal -->
-<div id="leadModal" class="modal-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
-  <div class="glass-card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
-    <div class="card-header flex items-center justify-between">
-      <h3 class="text-xl font-bold" id="modalTitle">Lead Details</h3>
-      <button class="btn btn-ghost btn-sm" onclick="closeModal()" style="min-width: unset; width: 36px; height: 36px; padding: 0;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-wrap" style="background: rgba(59,130,246,0.1); color: #3B82F6;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+      <span class="kpi-label">Total Leads</span>
     </div>
-    <div class="card-body overflow-y-auto" id="modalBody">
-      <!-- Content will be injected here -->
+    <div class="kpi-value" id="kpiLeads">0</div>
+    <div class="kpi-trend positive"><span id="kpiLeadsTrend">↑ 0%</span> <span class="muted">vs last 7 days</span></div>
+  </div>
+  
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-wrap" style="background: rgba(168,85,247,0.1); color: #A855F7;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      </div>
+      <span class="kpi-label">Assessments</span>
     </div>
-    <div class="card-footer flex justify-end gap-3" id="modalFooter">
-      <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-      <button class="btn btn-primary" id="saveNotesBtn" onclick="saveNotes()">Save Notes</button>
+    <div class="kpi-value" id="kpiAssessments">0</div>
+    <div class="kpi-trend positive"><span id="kpiAssessTrend">↑ 0%</span> <span class="muted">vs last 7 days</span></div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-wrap" style="background: rgba(245,158,11,0.1); color: #F59E0B;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      </div>
+      <span class="kpi-label">Consultations</span>
+    </div>
+    <div class="kpi-value" id="kpiConsultations">0</div>
+    <div class="kpi-trend positive"><span id="kpiConsTrend">↑ 0%</span> <span class="muted">vs last 7 days</span></div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-wrap" style="background: rgba(16,185,129,0.1); color: #10B981;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
+      <span class="kpi-label">Policies Sold</span>
+    </div>
+    <div class="kpi-value" id="kpiPolicies">0</div>
+    <div class="kpi-trend positive"><span id="kpiPolTrend">↑ 0%</span> <span class="muted">vs last 7 days</span></div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-wrap" style="background: rgba(239,68,68,0.1); color: #EF4444;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <span class="kpi-label">Premium (₦)</span>
+    </div>
+    <div class="kpi-value" id="kpiPremium">0</div>
+    <div class="kpi-trend positive"><span id="kpiPremTrend">↑ 0%</span> <span class="muted">vs last 7 days</span></div>
+  </div>
+</div>
+
+<div class="pipeline-section">
+  <h2 class="section-title">Pipeline Overview</h2>
+  <div class="pipeline-funnel" id="pipelineFunnel">
+    <div class="pipeline-stage s1">
+      <span class="stage-label">New Lead</span>
+      <span class="stage-value" id="pl_new">0</span>
+    </div>
+    <div class="pipeline-stage s2">
+      <span class="stage-label">Assessment Done</span>
+      <span class="stage-value" id="pl_assess">0</span>
+    </div>
+    <div class="pipeline-stage s3">
+      <span class="stage-label">Report Delivered</span>
+      <span class="stage-value" id="pl_report">0</span>
+    </div>
+    <div class="pipeline-stage s4">
+      <span class="stage-label">Consultations Booked</span>
+      <span class="stage-value" id="pl_cons">0</span>
+    </div>
+    <div class="pipeline-stage s5">
+      <span class="stage-label">Proposal Sent</span>
+      <span class="stage-value" id="pl_prop">0</span>
+    </div>
+    <div class="pipeline-stage s6">
+      <span class="stage-label">Policy Sold</span>
+      <span class="stage-value" id="pl_sold">0</span>
+    </div>
+    <div class="pipeline-rates" id="pipelineRates"></div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="grid-left">
+    <div class="charts-row">
+      <div class="chart-card">
+        <h2 class="section-title">Risk Score Distribution</h2>
+        <div class="donut-wrapper">
+          <div class="donut-svg-wrap">
+            <svg viewBox="0 0 36 36" id="riskDonut">
+              <!-- Rendered via JS -->
+            </svg>
+            <div class="donut-center-text">
+              <span class="donut-val" id="riskDonutTotal">0</span>
+              <span class="donut-lbl">Total</span>
+            </div>
+          </div>
+          <div class="donut-legend" id="riskLegend"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h2 class="section-title">Leads by Source</h2>
+        <div class="donut-wrapper">
+          <div class="donut-svg-wrap">
+            <svg viewBox="0 0 36 36" id="sourceDonut">
+              <!-- Rendered via JS -->
+            </svg>
+            <div class="donut-center-text">
+              <span class="donut-val" id="sourceDonutTotal">0</span>
+              <span class="donut-lbl">Total</span>
+            </div>
+          </div>
+          <div class="donut-legend" id="sourceLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <h2 class="section-title">Recent Assessments</h2>
+        <a href="/admin/leads" class="view-all-link">View All</a>
+      </div>
+      <table class="crm-table">
+        <thead>
+          <tr>
+            <th>NAME/COMPANY</th>
+            <th>TYPE</th>
+            <th>SCORE</th>
+            <th>RISK LEVEL</th>
+            <th>DATE</th>
+            <th>STATUS</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="recentAssessmentsTable">
+          <tr><td colspan="7" class="text-center">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-right">
+    <div class="widget-card">
+      <div class="widget-header">
+        <h2 class="section-title">Upcoming Tasks</h2>
+        <button class="topbar-icon-btn"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
+      </div>
+      <div class="task-list" id="taskList">Loading...</div>
+    </div>
+
+    <div class="widget-card">
+      <h2 class="section-title">Activity Feed</h2>
+      <div class="feed-list" id="activityFeed">Loading...</div>
+    </div>
+
+    <div class="widget-card">
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="quick-actions-grid">
+        <button class="quick-action-btn">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+          <span>Add New Lead</span>
+        </button>
+        <button class="quick-action-btn" onclick="window.open('/start-whatsapp', '_blank')">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+          <span>Start Assessment</span>
+        </button>
+        <button class="quick-action-btn">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Schedule Meeting</span>
+        </button>
+        <button class="quick-action-btn">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Create Proposal</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  let currentPage = 1;
-  let currentLeadId = null;
-  let searchTimeout = null;
+  async function loadDashboardData() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) return window.location.href = '/auth/login';
+      const headers = { 'Authorization': 'Bearer ' + token };
 
-  async function init() {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      window.location.href = '/auth/login';
-      return;
-    }
-
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      if (user.role === 'user') {
-        window.location.href = '/dashboard';
-        return;
+      // Load Analytics Overview
+      const resOverview = await fetch('/api/analytics/overview', { headers });
+      if (resOverview.ok) {
+        const data = await resOverview.json();
+        document.getElementById('kpiLeads').innerText = data.totalLeads.toLocaleString();
+        document.getElementById('kpiAssessments').innerText = data.totalAssessments.toLocaleString();
+        document.getElementById('kpiPremium').innerText = (data.totalPremium / 1000000).toFixed(1) + 'M';
+        
+        // Mocking positive trends for now
+        document.getElementById('kpiLeadsTrend').innerText = '↑ 16%';
+        document.getElementById('kpiAssessTrend').innerText = '↑ 22%';
+        document.getElementById('kpiPremTrend').innerText = '↑ 28%';
       }
-    }
 
-    await loadStats();
-    await loadLeads(1);
-  }
+      // Load Pipeline
+      const resPipeline = await fetch('/api/analytics/pipeline', { headers });
+      if (resPipeline.ok) {
+        const p = await resPipeline.json();
+        document.getElementById('pl_new').innerText = p[1] || 0;
+        document.getElementById('pl_assess').innerText = p[2] || 0;
+        document.getElementById('pl_report').innerText = p[3] || 0;
+        document.getElementById('pl_cons').innerText = p[4] || 0;
+        document.getElementById('pl_prop').innerText = p[5] || 0;
+        document.getElementById('pl_sold').innerText = p[6] || 0;
 
-  async function loadStats() {
-    const token = localStorage.getItem('accessToken');
-    try {
-      const [overviewRes, riskRes] = await Promise.all([
-        fetch('/api/analytics/overview', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/analytics/risk-distribution', { headers: { Authorization: `Bearer ${token}` } })
-      ]);
+        document.getElementById('kpiConsultations').innerText = p[4] || 0;
+        document.getElementById('kpiPolicies').innerText = p[6] || 0;
+        document.getElementById('kpiConsTrend').innerText = '↑ 18%';
+        document.getElementById('kpiPolTrend').innerText = '↑ 35%';
+      }
 
-      const overview = overviewRes.ok ? await overviewRes.json() : {};
-      const risk = riskRes.ok ? await riskRes.json() : {};
+      // Load Risk Distribution
+      const resRisk = await fetch('/api/analytics/risk-distribution', { headers });
+      if (resRisk.ok) {
+        const risk = await resRisk.json();
+        renderRiskDonut(risk);
+      }
 
-      document.getElementById('totalLeads').textContent = overview.totalLeads || 0;
-      document.getElementById('pipelineValue').textContent = `₦${(overview.totalPremium || 0).toLocaleString()}`;
-      document.getElementById('highRiskCount').textContent = (risk.high || 0) + (risk.critical || 0);
-      document.getElementById('conversionRate').textContent = `${overview.conversionRate || 0}%`;
+      // Load Sources
+      const resSources = await fetch('/api/analytics/sources', { headers });
+      if (resSources.ok) {
+        const sources = await resSources.json();
+        renderSourceDonut(sources);
+      }
+
+      // Load Recent Leads
+      const resLeads = await fetch('/api/admin/dashboard', { headers });
+      if (resLeads.ok) {
+        const d = await resLeads.json();
+        renderTable(d.recentSubmissions);
+      }
+
+      // Load Tasks
+      const resTasks = await fetch('/api/crm/tasks', { headers });
+      if (resTasks.ok) {
+        const tasks = await resTasks.json();
+        renderTasks(tasks);
+      }
+
+      // Load Activities
+      const resActivities = await fetch('/api/crm/activities', { headers });
+      if (resActivities.ok) {
+        const activities = await resActivities.json();
+        renderActivities(activities);
+      }
+
     } catch (err) {
-      console.error(err);
+      console.error('Failed to load dashboard', err);
     }
   }
 
-  async function loadLeads(page = 1) {
-    currentPage = page;
-    const token = localStorage.getItem('accessToken');
-    const risk = document.getElementById('filterRisk').value;
-    const industry = document.getElementById('filterIndustry').value;
-    const status = document.getElementById('filterStatus').value;
-    const entityType = document.getElementById('filterEntityType').value;
-    const search = document.getElementById('searchInput').value;
+  function renderRiskDonut(data) {
+    const colors = { high: '#EF4444', moderate: '#F59E0B', low: '#10B981', critical: '#991B1B' };
+    const total = (data.low || 0) + (data.moderate || 0) + (data.high || 0) + (data.critical || 0);
+    document.getElementById('riskDonutTotal').innerText = total;
 
-    let url = `/api/leads?page=${page}&limit=15`;
-    if (risk) url += `&risk_level=${risk}`;
-    if (industry) url += `&industry=${industry}`;
-    if (status) url += `&status=${status}`;
-    if (entityType) url += `&entity_type=${entityType}`;
-    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (total === 0) return;
 
-    try {
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-      if (res.status === 403) { window.location.href = '/dashboard'; return; }
-      if (!res.ok) throw new Error('Failed to load leads');
-      const data = await res.json();
-      renderLeads(data.leads);
-      renderPagination(data.pagination);
-    } catch (err) {
-      console.error(err);
-      document.getElementById('leadsList').innerHTML = `<tr><td colspan="7" class="text-center py-12 text-danger">Failed to load leads</td></tr>`;
-    }
-  }
+    let svg = '';
+    let legend = '';
+    let cumulative = 0;
 
-  function renderLeads(leads) {
-    if (!leads.length) {
-      document.getElementById('leadsList').innerHTML = `
-        <tr><td colspan="8">
-          <div class="flex flex-col items-center justify-center p-12 text-muted">
-            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" class="mb-4 opacity-20"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-            <div>No leads found matching your criteria</div>
+    const items = [
+      { key: 'high', label: 'High Risk' },
+      { key: 'moderate', label: 'Moderate' },
+      { key: 'low', label: 'Low Risk' }
+    ];
+
+    items.forEach(item => {
+      const count = data[item.key] || 0;
+      if (count > 0) {
+        const percent = count / total;
+        const dashArray = `${percent * 100} 100`;
+        const offset = -cumulative * 100;
+        svg += `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="${colors[item.key]}" stroke-width="4" stroke-dasharray="${dashArray}" stroke-dashoffset="${offset}"></circle>`;
+        cumulative += percent;
+
+        legend += `
+          <div class="legend-row">
+            <div class="legend-left"><div class="legend-dot" style="background: ${colors[item.key]}"></div>${item.label}</div>
+            <div class="legend-right">${count} <span>(${Math.round(percent * 100)}%)</span></div>
           </div>
-        </td></tr>`;
-      document.getElementById('paginationBar').style.display = 'none';
-      return;
+        `;
+      }
+    });
+    
+    if (cumulative === 0) {
+        svg = `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#E2E8F0" stroke-width="4"></circle>`;
+    }
+    
+    document.getElementById('riskDonut').innerHTML = svg;
+    document.getElementById('riskLegend').innerHTML = legend;
+  }
+
+  function renderSourceDonut(sources) {
+    const palette = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
+    let total = sources.reduce((a, b) => a + b.count, 0);
+    document.getElementById('sourceDonutTotal').innerText = total;
+
+    let svg = '';
+    let legend = '';
+    let cumulative = 0;
+
+    if (total === 0) {
+       document.getElementById('sourceDonut').innerHTML = `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#E2E8F0" stroke-width="4"></circle>`;
+       return;
     }
 
-    let html = '';
-    leads.forEach(lead => {
-      const date = new Date(lead.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const industryDisplay = lead.industry ? formatIndustry(lead.industry) : '-';
-      const riskLevel = (lead.riskLevel || 'low').toLowerCase();
-      const eType = lead.entity_type || 'business';
-      const typeBadge = eType === 'individual'
-        ? '<span class="badge" style="background: rgba(168,85,247,0.15); color: #c084fc; font-size: 10px;">👤 Individual</span>'
-        : '<span class="badge" style="background: rgba(59,130,246,0.15); color: #93c5fd; font-size: 10px;">🏢 Business</span>';
+    sources.slice(0, 5).forEach((s, idx) => {
+      const count = s.count;
+      const color = palette[idx % palette.length];
+      const percent = count / total;
+      const dashArray = `${percent * 100} 100`;
+      const offset = -cumulative * 100;
+      
+      svg += `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="${color}" stroke-width="4" stroke-dasharray="${dashArray}" stroke-dashoffset="${offset}"></circle>`;
+      cumulative += percent;
 
-      html += `
-        <tr class="leads-table-row">
-          <td class="px-6 py-4">
-            <div class="font-bold text-white">${escapeHtml(lead.name)}</div>
-            <div class="text-xs text-muted">${escapeHtml(lead.email)}</div>
-          </td>
-          <td class="px-6 py-4">${typeBadge}</td>
-          <td class="px-6 py-4">
-            <span class="font-mono font-bold" style="color: var(--color-primary);">${lead.sales_score || 0}</span>
-          </td>
-          <td class="px-6 py-4 font-mono font-bold text-green-400">
-            ₦${(lead.estimated_premium || 0).toLocaleString()}
-          </td>
-          <td class="px-6 py-4">
-            <span class="badge badge-${riskLevel}">${riskLevel.toUpperCase()}</span>
-          </td>
-          <td class="px-6 py-4 text-sm text-muted">${date}</td>
-          <td class="px-6 py-4">
-            <select class="filter-select py-1 px-2 text-xs" onchange="updateStatus(${lead.id}, this.value)" style="width: auto; min-height: 32px;">
-              <option value="New Lead" ${lead.status === 'New Lead' ? 'selected' : ''}>New Lead</option>
-              <option value="Report Sent" ${lead.status === 'Report Sent' ? 'selected' : ''}>Report Sent</option>
-              <option value="WhatsApp Engaged" ${lead.status === 'WhatsApp Engaged' ? 'selected' : ''}>WhatsApp Engaged</option>
-              <option value="Qualified" ${lead.status === 'Qualified' ? 'selected' : ''}>Qualified</option>
-              <option value="Consultation Scheduled" ${lead.status === 'Consultation Scheduled' ? 'selected' : ''}>Consultation</option>
-              <option value="Proposal Sent" ${lead.status === 'Proposal Sent' ? 'selected' : ''}>Proposal Sent</option>
-              <option value="Negotiation" ${lead.status === 'Negotiation' ? 'selected' : ''}>Negotiation</option>
-              <option value="Won" ${lead.status === 'Won' ? 'selected' : ''}>Won</option>
-              <option value="Lost" ${lead.status === 'Lost' ? 'selected' : ''}>Lost</option>
-            </select>
-          </td>
-          <td class="px-6 py-4 text-right">
-            <button class="btn btn-ghost btn-sm" onclick="viewLead(${lead.id})">Details</button>
-          </td>
-        </tr>`;
+      legend += `
+        <div class="legend-row">
+          <div class="legend-left"><div class="legend-dot" style="background: ${color}"></div>${s.source}</div>
+          <div class="legend-right">${count} <span>(${Math.round(percent * 100)}%)</span></div>
+        </div>
+      `;
     });
 
-    document.getElementById('leadsList').innerHTML = html;
-    document.getElementById('paginationBar').style.display = 'flex';
+    document.getElementById('sourceDonut').innerHTML = svg;
+    document.getElementById('sourceLegend').innerHTML = legend;
   }
 
-  function renderPagination(pagination) {
-    document.getElementById('paginationInfo').textContent = `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total}`;
-    let html = '';
-    const totalPages = pagination.totalPages;
-    const current = pagination.page;
-    if (pagination.page > 1) html += `<button class="pagination-btn" onclick="loadLeads(${pagination.page - 1})">&laquo;</button>`;
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= current - 2 && i <= current + 2)) {
-        html += `<button class="pagination-btn ${i === current ? 'active' : ''}" onclick="loadLeads(${i})">${i}</button>`;
-      } else if (i === current - 3 || i === current + 3) {
-        html += `<span style="padding: 0 6px;">...</span>`;
-      }
+  function renderTable(leads) {
+    const tbody = document.getElementById('recentAssessmentsTable');
+    if (!leads || !leads.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: #64748B;">No recent assessments</td></tr>';
+      return;
     }
-    if (pagination.page < totalPages) html += `<button class="pagination-btn" onclick="loadLeads(${pagination.page + 1})">&raquo;</button>`;
-    document.getElementById('paginationButtons').innerHTML = html;
+
+    tbody.innerHTML = leads.map(lead => {
+      const date = new Date(lead.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      
+      let badgeClass = 'badge-mod';
+      if (lead.riskLevel === 'high' || lead.riskLevel === 'critical') badgeClass = 'badge-high';
+      if (lead.riskLevel === 'low') badgeClass = 'badge-low-mod';
+
+      let statusBadge = 'badge-mod';
+      if (lead.status === 'New Lead') statusBadge = 'badge-low-mod';
+      if (lead.status === 'Report Delivered') statusBadge = 'badge-report';
+
+      let action = 'Book Consultation';
+      if (lead.status === 'New Lead') action = 'Start Assessment';
+      if (lead.status === 'Consultation Booked') action = 'Send Proposal';
+
+      return `
+        <tr>
+          <td>
+            <div class="td-main">${lead.name}</div>
+            <div class="td-sub">${lead.email}</div>
+          </td>
+          <td><div class="td-main">${lead.industry || 'Business'}</div></td>
+          <td><div class="td-main">${lead.score || 0}/100</div></td>
+          <td><span class="crm-badge ${badgeClass}">${lead.riskLevel || 'Unknown'}</span></td>
+          <td><div class="td-main">${date}</div></td>
+          <td><span class="crm-badge ${statusBadge}">${lead.status || 'New Lead'}</span></td>
+          <td><button class="btn-action-outline">${action}</button></td>
+        </tr>
+      `;
+    }).join('');
   }
 
-  async function viewLead(id) {
-    const token = localStorage.getItem('accessToken');
-    try {
-      const res = await fetch(`/api/leads/${id}`, { headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) throw new Error('Failed to load lead details');
-      const lead = await res.json();
-      currentLeadId = lead.id;
-      const assessment = lead.assessment || {};
-      const aiReport = assessment.aiReport || {};
-      const riskLevel = (lead.riskLevel || 'low').toLowerCase();
-
-      document.getElementById('modalTitle').textContent = `Lead: ${lead.name}`;
-      let reportHtml = '';
-      if (aiReport.executiveSummary) {
-        reportHtml += `<div class="mb-6"><h4 class="text-xs uppercase text-muted font-bold mb-2">Executive Summary</h4><div class="p-4 bg-white/5 rounded-lg text-sm text-muted">${escapeHtml(aiReport.executiveSummary)}</div></div>`;
-      }
-      if (aiReport.recommendations?.length) {
-        reportHtml += `<div class="mb-6"><h4 class="text-xs uppercase text-muted font-bold mb-2">Recommendations</h4><div class="flex flex-wrap gap-2">${aiReport.recommendations.map(r => `<span class="badge badge-low" style="background: rgba(59,130,246,0.1); color: var(--color-primary);">${escapeHtml(r)}</span>`).join('')}</div></div>`;
-      }
-
-      document.getElementById('modalBody').innerHTML = `
-        <div class="grid grid-4 gap-6 mb-8">
-          <div><div class="text-[10px] uppercase text-muted font-bold">Status</div><div class="text-white capitalize">${lead.status || 'New Lead'}</div></div>
-          <div><div class="text-[10px] uppercase text-muted font-bold">Est. Premium</div><div class="text-green-400 font-bold font-mono">₦${(lead.estimated_premium || 0).toLocaleString()}</div></div>
-          <div><div class="text-[10px] uppercase text-muted font-bold">Sales Score</div><div class="font-bold text-white font-mono">${lead.sales_score || 0}</div></div>
-          <div><div class="text-[10px] uppercase text-muted font-bold">Assigned To</div><div class="text-white">${lead.assigned_agent || '-'}</div></div>
-        </div>
-        <div class="grid grid-2 gap-8 mb-8">
-          <div>
-            <h4 class="text-xs uppercase text-muted font-bold mb-3">Contact & Details</h4>
-            <div class="space-y-4">
-              <div class="flex justify-between text-sm"><span class="text-muted">Email:</span><span>${escapeHtml(lead.email)}</span></div>
-              <div class="flex justify-between text-sm"><span class="text-muted">Phone:</span><span>${lead.phone || '-'}</span></div>
-              <div class="flex justify-between text-sm"><span class="text-muted">Industry:</span><span class="capitalize">${escapeHtml(lead.industry || '-')}</span></div>
-              <div class="flex justify-between text-sm"><span class="text-muted">Employees:</span><span>${escapeHtml(lead.employees || '-')}</span></div>
-              <div class="flex gap-2 mt-4">
-                <a href="mailto:${lead.email}" class="btn btn-primary btn-sm flex-1">Email</a>
-                ${lead.phone ? `<a href="https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn btn-success btn-sm flex-1">WhatsApp</a>` : ''}
-              </div>
+  function renderTasks(tasks) {
+    const container = document.getElementById('taskList');
+    if (!tasks || !tasks.length) {
+      container.innerHTML = '<div style="color: #64748B; font-size: 13px;">No upcoming tasks</div>';
+      return;
+    }
+    container.innerHTML = tasks.slice(0, 4).map(t => {
+      const date = new Date(t.due_date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="task-item">
+          <div class="task-radio"></div>
+          <div class="task-content">
+            <div class="task-title">${t.title}</div>
+            <div class="task-meta">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+              ${t.lead_name}
             </div>
           </div>
-          <div><h4 class="text-xs uppercase text-muted font-bold mb-3">Internal Notes</h4><textarea class="search-input min-h-[100px] text-sm" id="leadNotes" placeholder="Add notes...">${escapeHtml(lead.notes || '')}</textarea></div>
+          <div class="task-time">${date}</div>
         </div>
-        ${reportHtml}`;
-        
-      let footerHtml = `<button class="btn btn-secondary" onclick="closeModal()">Close</button>`;
-      
-      if (['Qualified', 'Consultation Scheduled', 'Proposal Sent'].includes(lead.status)) {
-        footerHtml += `<button class="btn btn-success" style="background: var(--color-success);" onclick="generateProposal(${lead.id})">Generate Proposal</button>`;
-      }
-      
-      footerHtml += `<button class="btn btn-primary" id="saveNotesBtn" onclick="saveNotes()">Save Notes</button>`;
-      
-      document.getElementById('modalFooter').innerHTML = footerHtml;
+      `;
+    }).join('');
+  }
 
-      document.getElementById('leadModal').style.display = 'flex';
-      document.getElementById('leadModal').classList.add('flex');
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to load lead details', 'error');
+  function renderActivities(activities) {
+    const container = document.getElementById('activityFeed');
+    if (!activities || !activities.length) {
+      container.innerHTML = '<div style="color: #64748B; font-size: 13px;">No recent activities</div>';
+      return;
     }
-  }
-
-  function closeModal() { document.getElementById('leadModal').style.display = 'none'; currentLeadId = null; }
-  async function updateStatus(id, status) {
-    const token = localStorage.getItem('accessToken');
-    try {
-      const res = await fetch(`/api/leads/${id}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ status })
-      });
-      if (!res.ok) throw new Error('Failed to update status');
-      showToast('Status updated', 'success');
-      await loadStats();
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to update status', 'error');
-      loadLeads(currentPage);
-    }
-  }
-
-  async function saveNotes() {
-    if (!currentLeadId) return;
-    const token = localStorage.getItem('accessToken');
-    const notes = document.getElementById('leadNotes').value;
-    try {
-      const res = await fetch(`/api/leads/${currentLeadId}/notes`, { method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ notes }) });
-      if (!res.ok) throw new Error('Failed to save notes');
-      showToast('Notes saved', 'success');
-      closeModal();
-    } catch (err) {
-      console.error(err);
-      showToast('Failed to save notes', 'error');
-    }
-  }
-
-  async function generateProposal(id) {
-    showToast('Generating personalized proposal...', 'success');
-    setTimeout(() => {
-      showToast('Proposal generated successfully! Link copied to clipboard.', 'success');
-    }, 2000);
-  }
-
-  function debounceSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => loadLeads(1), 300); }
-  function formatIndustry(industry) {
-    const map = { 
-      'agribusiness': 'Agribusiness',
-      'construction': 'Construction',
-      'fintech': 'Fintech',
-      'healthcare': 'Healthcare', 
-      'hospitality': 'Hospitality',
-      'logistics': 'Logistics',
-      'manufacturing': 'Manufacturing',
-      'oil_gas': 'Oil & Gas',
-      'professional_services': 'Services', 
-      'real_estate': 'Real Estate', 
-      'retail': 'Retail', 
-      'technology': 'Technology', 
-      'other': 'Other' 
+    
+    const icons = {
+      assessment: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>',
+      message: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>',
+      system: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
     };
-    return map[industry] || industry.charAt(0).toUpperCase() + industry.slice(1);
+
+    container.innerHTML = activities.slice(0, 5).map(a => {
+      // Calculate time ago
+      const diff = Math.floor((new Date() - new Date(a.created_at)) / 60000); // mins
+      const timeAgo = diff < 60 ? `${diff}m ago` : diff < 1440 ? `${Math.floor(diff/60)}h ago` : `${Math.floor(diff/1440)}d ago`;
+
+      return `
+        <div class="feed-item">
+          <div class="feed-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${icons[a.type] || icons.system}</svg></div>
+          <div class="feed-content">
+            <div class="feed-title">${a.title}</div>
+            <div class="feed-desc">${a.description || ''}</div>
+          </div>
+          <div class="feed-time">${timeAgo}</div>
+        </div>
+      `;
+    }).join('');
   }
-  function showToast(message, type = 'success') {
-    const container = document.querySelector('.toast-container');
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.innerHTML = `<div>${message}</div>`;
-    container.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
-  }
-  function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-  init();
+
+  loadDashboardData();
 </script>

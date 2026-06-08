@@ -91,6 +91,30 @@ const initDatabase = () => {
     CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id);
     CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
+
+    CREATE TABLE IF NOT EXISTS tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      type TEXT DEFAULT 'call',
+      status TEXT DEFAULT 'pending',
+      due_date DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS activities (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      type TEXT DEFAULT 'system',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_tasks_lead_id ON tasks(lead_id);
+    CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id);
   `);
 
   // CRM Schema Migration (Option B)

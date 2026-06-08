@@ -14,6 +14,7 @@ const adminRoutes = require('./routes/admin');
 const analyticsRoutes = require('./routes/analytics');
 const publicRoutes = require('./routes/public');
 const whatsappRoutes = require('./routes/whatsapp');
+const crmRoutes = require('./routes/crm');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
 
@@ -111,11 +112,11 @@ app.get('/admin', authenticatePage, (req, res) => {
 });
 
 app.get('/admin/dashboard', authenticatePage, (req, res) => {
-  res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'admin', layout: 'main' });
+  res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'admin', layout: 'admin' });
 });
 
 app.get('/admin/leads', authenticatePage, (req, res) => {
-  res.render('admin/dashboard', { title: 'Lead Management', activePage: 'admin', layout: 'main' });
+  res.render('admin/dashboard', { title: 'Lead Management', activePage: 'admin', layout: 'admin' });
 });
 
 app.get('/admin/analytics', authenticatePage, (req, res) => {
@@ -183,6 +184,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/webhook', webhookRoutes);
+app.use('/api/crm', crmRoutes);
 
 // Serve QR code page for WhatsApp linking
 app.get('/whatsapp-link', (req, res) => {

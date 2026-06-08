@@ -136,4 +136,36 @@ router.get('/trends', authenticate, requireAgent, async (req, res, next) => {
   }
 });
 
+router.get('/pipeline', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const pipelineCounts = await all(`
+      SELECT pipeline_stage, COUNT(*) as count
+      FROM leads
+      GROUP BY pipeline_stage
+    `);
+    
+    // 1=New, 2=Assessment, 3=Report, 4=Consultation, 5=Proposal, 6=Sold
+    const result = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    pipelineCounts.forEach(s => { 
+      if (s.pipeline_stage) result[s.pipeline_stage] = s.count; 
+    });
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/sources', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const sources = await all(`
+      SELECT lead_source, COUNT(*) as count 
+      FROM leads 
+      GROUP BY lead_source
+    `);
+    res.json(sources.map(s => ({ source: s.lead_source || 'Unknown', count: s.count })));
+  } catch(error) {
+    next(error);
+  }
+});
+
 module.exports = router;
