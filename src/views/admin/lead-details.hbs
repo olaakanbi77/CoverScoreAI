@@ -485,13 +485,18 @@
     }
 
     // Chat History
-    if (lead.chatHistory && typeof lead.chatHistory === 'object') {
-      const isArray = Array.isArray(lead.chatHistory);
-      const keys = isArray ? lead.chatHistory : Object.keys(lead.chatHistory);
+    let chatData = lead.chatHistory;
+    if (typeof chatData === 'string') {
+      try { chatData = JSON.parse(chatData); } catch(e) {}
+    }
+    
+    if (chatData && typeof chatData === 'object') {
+      const isArray = Array.isArray(chatData);
+      const keys = isArray ? chatData : Object.keys(chatData);
       if (keys.length > 0) {
         let html = '';
         if (isArray) {
-          html = lead.chatHistory.map(msg => {
+          html = chatData.map(msg => {
             const text = msg.message || msg.text || '';
             const senderClass = msg.sender === 'bot' ? 'bot' : 'user';
             const senderLabel = msg.sender === 'bot' ? 'Bot' : 'Lead';
@@ -505,7 +510,7 @@
             `;
           }).join('');
         } else {
-          html = Object.entries(lead.chatHistory).map(([key, val]) => `
+          html = Object.entries(chatData).map(([key, val]) => `
             <div class="chat-msg user">
               <div style="font-size: 11px; opacity: 0.7; margin-bottom: 4px;">${key}</div>
               <div>${val}</div>
@@ -515,6 +520,8 @@
         document.getElementById('chatBox').innerHTML = html;
         const cb = document.getElementById('chatBox');
         cb.scrollTop = cb.scrollHeight;
+      } else {
+        document.getElementById('chatBox').innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 50px;">No messages yet.</p>';
       }
     }
 
