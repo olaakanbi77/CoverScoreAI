@@ -154,7 +154,7 @@ p { margin: 0; }
 .mo-hero {
   padding: 80px 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.9fr 1.1fr;
   gap: 64px;
   align-items: center;
 }
@@ -363,6 +363,7 @@ p { margin: 0; }
 }
 
 @media (max-width: 640px) {
+  .mo-nav-links { display: none; }
   .mo-hero-title { font-size: 2rem; }
   .mo-steps { grid-template-columns: 1fr; }
   .mo-learn-grid { grid-template-columns: 1fr; }
