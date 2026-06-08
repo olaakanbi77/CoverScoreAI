@@ -421,8 +421,16 @@
       const data = await res.json();
       renderLead(data);
     } catch (err) {
-      console.error(err);
-      alert('Could not load lead details.');
+      console.error("DEBUG ERR:", err);
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      document.getElementById('loadingOverlay').innerHTML = `
+        <div style="color: #ef4444; text-align: center; padding: 20px;">
+          <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <h3 style="margin-top:0;">Error Loading Lead</h3>
+          <p style="font-size: 14px; opacity: 0.8; font-family: monospace; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 4px;">${err.message}</p>
+          <button onclick="loadLead()" class="btn btn-outline" style="margin-top: 16px;">Try Again</button>
+        </div>
+      `;
     }
   }
 
