@@ -251,6 +251,36 @@ p { margin: 0; }
   padding: 16px;
 }
 
+.mo-card-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-grow: 1;
+}
+
+.mo-sample-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.mo-sample-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--mo-border);
+  padding-bottom: 24px;
+}
+
+.mo-sample-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
 /* How It Works */
 .mo-steps {
   display: grid;
@@ -371,4 +401,9 @@ p { margin: 0; }
   .mo-footer { grid-template-columns: 1fr; gap: 32px; }
   .mo-hero-actions { flex-direction: column; width: 100%; }
   .mo-hero-actions .mo-btn { width: 100%; }
+  .mo-card-content { flex-direction: column; align-items: center; text-align: center; }
+  .mo-sample-grid { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+  .mo-sample-stats { grid-template-columns: 1fr; text-align: center; gap: 24px; }
+  .mo-sample-details { grid-template-columns: 1fr; text-align: center; gap: 32px; }
+  .mo-sample-details h5 { text-align: center !important; }
 }
