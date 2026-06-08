@@ -497,7 +497,10 @@
         let html = '';
         if (isArray) {
           html = chatData.map(msg => {
-            const text = msg.message || msg.text || '';
+            let text = msg.message || msg.text || msg.body || '';
+            if (!text && typeof msg === 'object') text = JSON.stringify(msg);
+            else if (!text) text = String(msg);
+            
             const senderClass = msg.sender === 'bot' ? 'bot' : 'user';
             const senderLabel = msg.sender === 'bot' ? 'Bot' : 'Lead';
             const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
