@@ -106,6 +106,10 @@ app.get('/dashboard', authenticatePage, (req, res) => {
   res.render('dashboard/index', { title: 'Dashboard', activePage: 'dashboard', layout: 'main' });
 });
 
+app.get('/admin', authenticatePage, (req, res) => {
+  res.redirect('/admin/dashboard');
+});
+
 app.get('/admin/dashboard', authenticatePage, (req, res) => {
   res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'admin', layout: 'main' });
 });
