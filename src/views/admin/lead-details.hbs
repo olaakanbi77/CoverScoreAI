@@ -414,8 +414,8 @@
   async function loadLead() {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch(\`/api/leads/\${leadId}\`, {
-        headers: { Authorization: \`Bearer \${token}\` }
+      const res = await fetch(`/api/leads/${leadId}`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch lead');
       const data = await res.json();
@@ -440,15 +440,15 @@
 
     document.getElementById('leadName').textContent = lead.name;
     document.getElementById('leadStatus').textContent = lead.status;
-    document.getElementById('leadStatus').className = \`status-badge \${getBadgeClass(lead.status)}\`;
-    document.getElementById('leadDate').textContent = \`Added on \${new Date(lead.createdAt).toLocaleDateString()}\`;
+    document.getElementById('leadStatus').className = `status-badge ${getBadgeClass(lead.status)}`;
+    document.getElementById('leadDate').textContent = `Added on ${new Date(lead.createdAt).toLocaleDateString()}`;
     document.getElementById('statusSelect').value = lead.status;
 
     document.getElementById('infoEmail').textContent = lead.email;
     document.getElementById('infoPhone').textContent = lead.phone || 'N/A';
     document.getElementById('infoBusiness').textContent = lead.businessName || 'N/A';
     document.getElementById('infoIndustry').textContent = lead.industry || 'Unknown';
-    document.getElementById('infoPremium').textContent = lead.estimatedPremium ? \`$\${lead.estimatedPremium}\` : 'Pending';
+    document.getElementById('infoPremium').textContent = lead.estimatedPremium ? `$${lead.estimatedPremium}` : 'Pending';
 
     // Assessment
     if (lead.assessment) {
@@ -464,7 +464,7 @@
 
       const badge = document.getElementById('riskBadge');
       badge.textContent = risk + ' Risk';
-      badge.className = \`risk-badge \${risk}\`;
+      badge.className = `risk-badge ${risk}`;
 
       if (lead.assessment.aiReport && lead.assessment.aiReport.executive_summary) {
         document.getElementById('aiSummary').textContent = lead.assessment.aiReport.executive_summary;
@@ -523,8 +523,8 @@
     if (lead.tasks) {
       lead.tasks.forEach(t => timeline.push({
         icon: '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>',
-        title: \`Task: \${t.title}\`,
-        desc: \`Status: \${t.status}\`,
+        title: `Task: ${t.title}`,
+        desc: `Status: ${t.status}`,
         time: t.created_at
       }));
     }
@@ -540,16 +540,16 @@
     timeline.sort((a,b) => new Date(b.time) - new Date(a.time));
 
     if (timeline.length > 0) {
-      document.getElementById('timeline').innerHTML = timeline.map(item => \`
+      document.getElementById('timeline').innerHTML = timeline.map(item => `
         <div class="timeline-item">
-          <div class="tl-icon">\${item.icon}</div>
+          <div class="tl-icon">${item.icon}</div>
           <div class="tl-content">
-            <div class="tl-title">\${item.title}</div>
-            \${item.desc ? \`<div class="tl-desc">\${item.desc}</div>\` : ''}
-            <div class="tl-time">\${new Date(item.time).toLocaleString()}</div>
+            <div class="tl-title">${item.title}</div>
+            ${item.desc ? `<div class="tl-desc">${item.desc}</div>` : ''}
+            <div class="tl-time">${new Date(item.time).toLocaleString()}</div>
           </div>
         </div>
-      \`).join('');
+      `).join('');
     }
   }
 
@@ -566,17 +566,17 @@
   async function updateStatus(newStatus) {
     const token = localStorage.getItem('accessToken');
     try {
-      const res = await fetch(\`/api/leads/\${leadId}/status\`, {
+      const res = await fetch(`/api/leads/${leadId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': \`Bearer \${token}\`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ status: newStatus })
       });
       if (res.ok) {
         document.getElementById('leadStatus').textContent = newStatus;
-        document.getElementById('leadStatus').className = \`status-badge \${getBadgeClass(newStatus)}\`;
+        document.getElementById('leadStatus').className = `status-badge ${getBadgeClass(newStatus)}`;
       } else {
         throw new Error('Failed to update status');
       }
