@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=10">
+  <link rel="stylesheet" href="/css/landing.css?v=11">
 </head>
 <body>
 
@@ -15,14 +15,18 @@
   <nav class="mo-nav">
     <div class="mo-container" style="display: flex; justify-content: space-between; width: 100%; align-items: center; gap: 16px;">
       <a href="/" class="mo-logo">COVERSCORE <span class="mo-logo-ai">AI</span></a>
-      <div class="mo-nav-links">
+      <button class="mo-hamburger" onclick="document.getElementById('mo-mobile-menu').classList.toggle('active')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      <div id="mo-mobile-menu" class="mo-nav-links">
         <a href="/">Home</a>
         <a href="#assessments">Assessments</a>
         <a href="#sample">Sample Report</a>
         <a href="#how-it-works">How It Works</a>
         <a href="/auth/login">Login</a>
+        <a href="/start-whatsapp" class="mo-btn mo-btn-navy mo-mobile-only-btn">Start Free Assessment</a>
       </div>
-      <a href="/start-whatsapp" class="mo-btn mo-btn-navy">Start Free Assessment</a>
+      <a href="/start-whatsapp" class="mo-btn mo-btn-navy mo-desktop-only-btn">Start Free Assessment</a>
     </div>
   </nav>
 
