@@ -120,7 +120,15 @@ app.get('/admin/leads', authenticatePage, (req, res) => {
 });
 
 app.get('/admin/analytics', authenticatePage, (req, res) => {
-  res.render('admin/analytics', { title: 'Analytics', activePage: 'analytics', layout: false });
+  res.render('admin/analytics', { title: 'Analytics', activePage: 'analytics', layout: 'admin' });
+});
+
+app.get('/admin/leads/:id', authenticatePage, (req, res) => {
+  res.render('admin/lead-details', { title: 'Lead Details', activePage: 'leads', layout: 'admin', leadId: req.params.id });
+});
+
+app.get('/admin/settings', authenticatePage, (req, res) => {
+  res.render('admin/settings', { title: 'Settings', activePage: 'settings', layout: 'admin' });
 });
 
 app.get(['/quote', '/request-quote'], (req, res) => {

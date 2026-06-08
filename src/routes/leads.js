@@ -134,12 +134,15 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       industry: lead.industry || 'other',
       createdAt: lead.created_at,
       updatedAt: lead.updated_at,
+      chatHistory: lead.chat_history ? JSON.parse(lead.chat_history) : [],
       assessment: answers ? {
         score: lead.assessment_score,
         riskLevel: lead.assessment_risk,
         answers,
         aiReport
-      } : null
+      } : null,
+      tasks: await all('SELECT * FROM tasks WHERE lead_id = ? ORDER BY due_date ASC', [lead.id]),
+      activities: await all('SELECT * FROM activities WHERE lead_id = ? ORDER BY created_at DESC', [lead.id])
     });
   } catch (error) {
     next(error);

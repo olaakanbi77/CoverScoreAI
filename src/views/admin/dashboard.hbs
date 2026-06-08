@@ -828,7 +828,7 @@
       if (lead.status === 'Consultation Booked' || lead.status === 'Consultation Scheduled') action = 'Send Proposal';
 
       return `
-        <tr onclick="openLeadModal(${lead.id})" style="cursor: pointer;">
+        <tr onclick="window.location.href='/admin/leads/${lead.id}'" style="cursor: pointer;">
           <td>
             <div class="td-main">${lead.name}</div>
             <div class="td-sub">${lead.email}</div>
