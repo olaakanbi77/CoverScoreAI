@@ -477,16 +477,37 @@
     }
 
     // Chat History
-    if (lead.chatHistory && lead.chatHistory.length > 0) {
-      document.getElementById('chatBox').innerHTML = lead.chatHistory.map(msg => \`
-        <div class="chat-msg \${msg.sender}">
-          <div>\${msg.text}</div>
-          <div class="chat-time">\${new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-        </div>
-      \`).join('');
-      // scroll to bottom
-      const cb = document.getElementById('chatBox');
-      cb.scrollTop = cb.scrollHeight;
+    if (lead.chatHistory && typeof lead.chatHistory === 'object') {
+      const isArray = Array.isArray(lead.chatHistory);
+      const keys = isArray ? lead.chatHistory : Object.keys(lead.chatHistory);
+      if (keys.length > 0) {
+        let html = '';
+        if (isArray) {
+          html = lead.chatHistory.map(msg => {
+            const text = msg.message || msg.text || '';
+            const senderClass = msg.sender === 'bot' ? 'bot' : 'user';
+            const senderLabel = msg.sender === 'bot' ? 'Bot' : 'Lead';
+            const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+            return `
+              <div class="chat-msg ${senderClass}">
+                <div style="font-size: 11px; opacity: 0.7; margin-bottom: 4px;">${senderLabel}</div>
+                <div>${text}</div>
+                <div class="chat-time">${time}</div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          html = Object.entries(lead.chatHistory).map(([key, val]) => `
+            <div class="chat-msg user">
+              <div style="font-size: 11px; opacity: 0.7; margin-bottom: 4px;">${key}</div>
+              <div>${val}</div>
+            </div>
+          `).join('');
+        }
+        document.getElementById('chatBox').innerHTML = html;
+        const cb = document.getElementById('chatBox');
+        cb.scrollTop = cb.scrollHeight;
+      }
     }
 
     // Timeline (merge tasks and activities)
