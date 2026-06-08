@@ -117,6 +117,15 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
         console.error(`Error parsing AI report for lead ${lead.id}:`, e.message);
       }
     }
+    
+    let chatHistory = [];
+    if (lead.chat_history) {
+      try {
+        chatHistory = JSON.parse(lead.chat_history);
+      } catch(e) {
+        console.error(`Error parsing chat history for lead ${lead.id}:`, e.message);
+      }
+    }
 
     res.json({
       id: lead.id,
@@ -134,7 +143,7 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       industry: lead.industry || 'other',
       createdAt: lead.created_at,
       updatedAt: lead.updated_at,
-      chatHistory: lead.chat_history ? JSON.parse(lead.chat_history) : [],
+      chatHistory: chatHistory,
       assessment: answers ? {
         score: lead.assessment_score,
         riskLevel: lead.assessment_risk,
