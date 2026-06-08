@@ -359,11 +359,7 @@ p { margin: 0; }
   .mo-steps { grid-template-columns: 1fr 1fr; gap: 48px; }
   .mo-assessment-grid { grid-template-columns: 1fr; }
   .mo-learn-grid { grid-template-columns: 1fr 1fr 1fr; }
-  .mo-mockup-card { 
-    grid-template-columns: 1fr; 
-    margin-top: 32px;
-  }
-  .mo-mockup-sidebar { display: none; }
+  .mo-mockup-card { display: none !important; }
 }
 
 @media (max-width: 640px) {
@@ -371,8 +367,7 @@ p { margin: 0; }
   .mo-steps { grid-template-columns: 1fr; }
   .mo-learn-grid { grid-template-columns: 1fr; }
   .mo-test-grid { grid-template-columns: 1fr; }
-  .mo-footer { grid-template-columns: 1fr 1fr; }
-  .mo-hero-actions { flex-direction: column; }
-  .mo-mockup-row { grid-template-columns: 1fr; }
-  .mo-mockup-card { padding: 16px; }
+  .mo-footer { grid-template-columns: 1fr; gap: 32px; }
+  .mo-hero-actions { flex-direction: column; width: 100%; }
+  .mo-hero-actions .mo-btn { width: 100%; }
 }
