@@ -202,6 +202,22 @@ router.post('/evolution', async (req, res) => {
             const completionMsg = `✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n${reportUrl}`;
             await sendWhatsApp(phoneNumber, null, { _message: completionMsg });
             
+            // Send email
+            if (updatedData.email) {
+              try {
+                await emailService.sendAssessmentReport(updatedData.email, {
+                  score: scoreResult.score,
+                  riskLevel: dbRiskLevel,
+                  aiReport: aiReportData,
+                  businessName: updatedData.business_name || updatedData.name,
+                  assessmentId: assessmentId
+                });
+                console.log(`✅ Assessment report emailed successfully to ${updatedData.email}`);
+              } catch (emailErr) {
+                console.error(`❌ Failed to email assessment report to ${updatedData.email}:`, emailErr);
+              }
+            }
+            
             // Send Qualification message
             const maxLossStr = scoreResult.max_loss.toLocaleString();
             const qualMsg = `Based on your assessment, there may be opportunities to strengthen your financial protection and reduce potential exposure.\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\n1️⃣ YES – I believe I'm adequately protected\n2️⃣ NO – I think there may be gaps in my protection\n3️⃣ NOT SURE – I'd like a free review\n\nReply with 1, 2 or 3.`;
