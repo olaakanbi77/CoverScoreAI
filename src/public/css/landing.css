@@ -405,5 +405,5 @@ p { margin: 0; }
   .mo-sample-grid { grid-template-columns: 1fr; gap: 32px; text-align: center; }
   .mo-sample-stats { grid-template-columns: 1fr; text-align: center; gap: 24px; }
   .mo-sample-details { grid-template-columns: 1fr; text-align: center; gap: 32px; }
-  .mo-sample-details h5 { text-align: center !important; }
+  .mo-sample-card { display: none !important; }
 }
