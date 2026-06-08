@@ -464,13 +464,13 @@
 
       if (lead.assessment.answers) {
         const answersHtml = Object.entries(lead.assessment.answers).map(([cat, fields]) => {
-          if(typeof fields !== 'object') return '';
-          return Object.entries(fields).map(([k, v]) => \`
+          if(!fields || typeof fields !== 'object') return '';
+          return Object.entries(fields).map(([k, v]) => `
             <div class="qa-item">
-              <div class="qa-q">\${k.replace(/_/g, ' ').replace(/\\b\\w/g, l => l.toUpperCase())}</div>
-              <div class="qa-a">\${v || 'N/A'}</div>
+              <div class="qa-q">${k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+              <div class="qa-a">${v || 'N/A'}</div>
             </div>
-          \`).join('');
+          `).join('');
         }).join('');
         document.getElementById('qaList').innerHTML = answersHtml;
       }
