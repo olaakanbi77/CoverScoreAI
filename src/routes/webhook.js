@@ -41,13 +41,19 @@ router.post('/evolution', async (req, res) => {
       if (!remoteJid) return;
       const phoneNumber = remoteJid.split('@')[0];
 
-      console.log(`Received WhatsApp reply from ${phoneNumber}: "${incomingText}"`);
+      console.log(`📩 Received WhatsApp reply from ${phoneNumber}: "${incomingText}"`);
 
       // 1. Load lead state from DB
       let searchPhone = phoneNumber.length > 10 ? phoneNumber.slice(-10) : phoneNumber;
       let lead = await get('SELECT * FROM leads WHERE phone LIKE ? ORDER BY id DESC LIMIT 1', ['%' + searchPhone]);
       
-      const isStartTrigger = incomingText.includes('START') || incomingText.includes('ASSESSMENT') || incomingText.includes('HELLO') || incomingText.includes('HI');
+      // Use word-boundary matching to avoid false positives on names like "Chidinma", "Ibrahim", etc.
+      const words = incomingText.split(/\s+/);
+      const isStartTrigger = words.some(w => w === 'START' || w === 'ASSESSMENT' || w === 'HELLO' || w === 'HI' || w === 'BEGIN');
+      // Explicit restart requires specific phrases
+      const isRestartTrigger = incomingText.includes('START ASSESSMENT') || incomingText.includes('RESTART') || incomingText.includes('START OVER');
+
+      console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}`);
 
       if (!lead) {
         if (isStartTrigger) {
@@ -57,12 +63,22 @@ router.post('/evolution', async (req, res) => {
           `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber]);
           
           lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
+          console.log(`   Created new lead ID: ${lead.id}`);
         } else {
-          console.log(`Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
+          console.log(`   Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
           return;
         }
-      } else if (isStartTrigger) {
-        // If lead exists but sends a START trigger, override their state to restart the flow
+      } else if (isRestartTrigger) {
+        // Only restart the flow for explicit restart triggers, not for any message containing "HI"
+        console.log(`   Restarting flow for lead ID: ${lead.id} (explicit restart trigger)`);
+        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
+        lead.wa_state = 'welcome_name';
+        lead.chat_history = '{}';
+      }
+
+      // Handle leads in 'initial' state (from web form) or 'finished' state receiving a start trigger
+      if ((lead.wa_state === 'initial' || lead.wa_state === null) && isStartTrigger) {
+        console.log(`   Lead ${lead.id} in '${lead.wa_state}' state, transitioning to welcome_name`);
         await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
         lead.wa_state = 'welcome_name';
         lead.chat_history = '{}';
@@ -71,8 +87,15 @@ router.post('/evolution', async (req, res) => {
       const currentState = lead.wa_state || 'welcome_name';
       
       if (currentState === 'finished') {
-        // Conversation fully complete
-        return;
+        if (isRestartTrigger) {
+          // Allow finished leads to restart with explicit trigger
+          console.log(`   Lead ${lead.id} finished but requesting restart`);
+          await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
+          lead.wa_state = 'welcome_name';
+        } else {
+          console.log(`   Lead ${lead.id} already finished, ignoring message`);
+          return;
+        }
       }
 
       let currentData = {};
@@ -89,22 +112,109 @@ router.post('/evolution', async (req, res) => {
       if (currentState === 'welcome_name' && isStartTrigger) {
         // Send initial welcome message instantly without advancing state
         const initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
-        await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
+        console.log(`   Sending welcome message to ${phoneNumber}...`);
+        const welcomeResult = await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
+        console.log(`   Welcome message result: ${JSON.stringify(welcomeResult)}`);
         return; // wait for them to answer name
       }
 
+      console.log(`   Processing state: ${evalState} with input: "${processText}"`);
       const { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, currentData);
+      console.log(`   State transition: ${evalState} → ${nextState}, isComplete: ${isComplete}`);
 
       let finalReplyText = replyText;
 
       // 2. Update Database & Send Next Message
       if (finalReplyText) {
-        // Send WhatsApp immediately
-        await sendWhatsApp(phoneNumber, null, { _message: finalReplyText });
+        // Send WhatsApp reply
+        console.log(`   Sending reply to ${phoneNumber}: "${finalReplyText.substring(0, 80)}..."`);
+        const sendResult = await sendWhatsApp(phoneNumber, null, { _message: finalReplyText });
         
-        // Update lead state
+        if (!sendResult.success) {
+          console.error(`   ❌ Failed to send reply: ${sendResult.error}. State NOT advanced.`);
+          return; // Don't advance state if message failed to send
+        }
+        console.log(`   ✅ Reply sent successfully. Advancing state to: ${nextState}`);
+        
+        // ── ENGAGEMENT SCORING ──
+        let engagementBonus = 0;
+        
+        // +20 for first WhatsApp reply (assessment completed already gives +20)
+        if (evalState === 'welcome_name' && nextState === 'welcome_email') {
+          engagementBonus = 20; // Replied to WhatsApp
+        }
+        // +10 for selecting 1, 2, or 3 in qualification
+        if (evalState === 'qualification' && ['qual_path1_situation','qual_path2_concern','qual_path3_preference'].includes(nextState)) {
+          engagementBonus = 10;
+        }
+        // +30 for requesting review (YES) or plan (PLAN)
+        if (updatedData.requested_review === true && !currentData.requested_review) {
+          engagementBonus = 30;
+        }
+        if (updatedData.requested_plan === true && !currentData.requested_plan) {
+          engagementBonus = 30;
+        }
+        // +40 for choosing consultation type
+        if (updatedData.consultation_preference && !currentData.consultation_preference) {
+          engagementBonus = 40;
+        }
+        
+        // Apply engagement scoring
+        if (engagementBonus > 0) {
+          await run('UPDATE leads SET engagement_points = engagement_points + ?, sales_score = sales_score + ? WHERE id = ?', [engagementBonus, engagementBonus, lead.id]);
+          console.log(`   📊 Engagement +${engagementBonus} points for lead ${lead.id}`);
+        }
+
+        // Update lead state (only if message was sent successfully)
         await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), lead.id]);
         
+        // ── CHECK IF LEAD IS NOW QUALIFIED ──
+        if (nextState === 'finished' && updatedData.is_qualified) {
+          console.log(`   🎯 Lead ${lead.id} is now QUALIFIED!`);
+          
+          // Update CRM status
+          await run(`
+            UPDATE leads 
+            SET status = 'Qualified', 
+                pipeline_stage = 4, 
+                is_qualified = 1, 
+                consultation_preference = ?,
+                primary_concern = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+          `, [
+            updatedData.consultation_preference || null,
+            updatedData.primary_concern || null,
+            lead.id
+          ]);
+          
+          // Send Admin Notification
+          if (process.env.ADMIN_PHONE) {
+            const qualDetails = [];
+            if (updatedData.qualification_path) qualDetails.push(`Path: ${updatedData.qualification_path === 'path1' ? 'Adequately Protected' : updatedData.qualification_path === 'path2' ? 'Has Gaps' : 'Not Sure'}`);
+            if (updatedData.primary_concern) qualDetails.push(`Primary Concern: ${updatedData.primary_concern}`);
+            if (updatedData.consultation_preference) qualDetails.push(`Preferred Contact: ${updatedData.consultation_preference}`);
+            if (updatedData.insurance_situation) qualDetails.push(`Insurance Situation: ${updatedData.insurance_situation}`);
+            if (updatedData.describe_role) qualDetails.push(`Role: ${updatedData.describe_role}`);
+            
+            const notifMsg = `🚨 *NEW QUALIFIED LEAD* 🚨\n\n👤 *Name:* ${updatedData.name || lead.name}\n📱 *Phone:* ${phoneNumber}\n📊 *CoverScore:* ${lead.score || 'N/A'}\n⚠️ *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📋 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
+            await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
+            console.log(`   📱 Admin notification sent for qualified lead ${lead.id}`);
+          }
+        }
+        
+        // ── HANDLE DECLINED USERS (finished but not qualified) ──
+        if (nextState === 'finished' && !updatedData.is_qualified) {
+          console.log(`   Lead ${lead.id} declined qualification, updating status`);
+          await run(`
+            UPDATE leads 
+            SET status = 'WhatsApp Engaged', 
+                pipeline_stage = 3, 
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+          `, [lead.id]);
+        }
+
         // If the flow is complete, trigger report generation
         if (isComplete) {
           try {
@@ -195,14 +305,20 @@ router.post('/evolution', async (req, res) => {
 
             const assessmentId = assessRes.lastInsertRowid;
             
-            // Send final link
+            // Build report URL
             const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
             
-            // Send completion message
-            const completionMsg = `✅ *Your assessment is complete!*\n\nView your full Risk Report here:\n${reportUrl}`;
-            await sendWhatsApp(phoneNumber, null, { _message: completionMsg });
+            // Format currency values
+            const formatNaira = (val) => new Intl.NumberFormat('en-NG').format(val);
+            const minLossStr = formatNaira(scoreResult.min_loss);
+            const maxLossStr = formatNaira(scoreResult.max_loss);
             
-            // Send email
+            // Send combined Report Summary + Qualification Question (single message per user's spec)
+            const reportAndQualMsg = `🧾 *Your CoverScore Risk Report is Ready*\n\nHi ${updatedData.name || 'there'},\n\nWe've completed your risk assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n📊 *CoverScore:* ${scoreResult.score}/100\n⚠️ *Risk Level:* ${scoreResult.riskLevel}\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View your full report:\n${reportUrl}\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\nReply:\n1 = YES, I believe I'm adequately protected\n2 = NO, I think there may be gaps in my protection\n3 = NOT SURE, I'd like a free review`;
+            
+            await sendWhatsApp(phoneNumber, null, { _message: reportAndQualMsg });
+            
+            // Send email report
             if (updatedData.email) {
               try {
                 await emailService.sendAssessmentReport(updatedData.email, {
@@ -217,32 +333,26 @@ router.post('/evolution', async (req, res) => {
                 console.error(`❌ Failed to email assessment report to ${updatedData.email}:`, emailErr);
               }
             }
-            
-            // Send Qualification message
-            const maxLossStr = scoreResult.max_loss.toLocaleString();
-            const qualMsg = `Based on your assessment, there may be opportunities to strengthen your financial protection and reduce potential exposure.\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\n1️⃣ YES – I believe I'm adequately protected\n2️⃣ NO – I think there may be gaps in my protection\n3️⃣ NOT SURE – I'd like a free review\n\nReply with 1, 2 or 3.`;
-            await sendWhatsApp(phoneNumber, null, { _message: qualMsg });
 
-            // Update lead state to qualification
-            await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, name = ?, email = ?, wa_state = ? WHERE id = ?', [
-              assessmentId, scoreResult.score, dbRiskLevel, entityType, (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 'qualification', lead.id
+            // Update lead with assessment data, set state to qualification, +20 engagement for completing assessment
+            await run(`
+              UPDATE leads 
+              SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, 
+                  name = ?, email = ?, wa_state = 'qualification', 
+                  status = 'Report Sent', pipeline_stage = 2,
+                  engagement_points = engagement_points + 20, sales_score = sales_score + 20
+              WHERE id = ?
+            `, [
+              assessmentId, scoreResult.score, dbRiskLevel, entityType, 
+              (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 
+              lead.id
             ]);
+            console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
 
           } catch(err) {
             console.error("Error generating report after completion:", err);
             await sendWhatsApp(phoneNumber, null, { _message: "I'm sorry, I encountered an error generating your report. Error details: " + err.message + ". Please contact support." });
           }
-        }
-      }
-
-      // Check if we need to send Admin Notification for qualification
-      if (currentState === 'qualification' && ['1','2','3'].includes(incomingText)) {
-        if (process.env.ADMIN_PHONE) {
-          const qualMapText = {'1': 'Adequately Protected', '2': 'Has Gaps', '3': 'Not Sure / Needs Review'};
-          const userResponseText = qualMapText[incomingText];
-          
-          const notifMsg = `🚨 *NEW QUALIFIED LEAD* 🚨\n\nName: ${currentData.name || lead.name}\nPhone: ${phoneNumber}\nScore: ${lead.score || 'N/A'}\nQualification: ${userResponseText}\n\nPlease reach out to them via CRM.`;
-          await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
         }
       }
 

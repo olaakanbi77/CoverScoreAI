@@ -69,6 +69,8 @@ router.get('/', authenticate, requireAgent, async (req, res, next) => {
         status: lead.status,
         entity_type: lead.entity_type || 'business',
         notes: lead.notes,
+        estimatedPremium: lead.estimated_premium || 0,
+        assignedAgent: lead.assigned_agent || '',
         createdAt: lead.created_at,
         updatedAt: lead.updated_at
       })),
@@ -127,6 +129,9 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       entity_type: lead.entity_type || 'business',
       status: lead.status,
       notes: lead.notes,
+      estimatedPremium: lead.estimated_premium || 0,
+      assignedAgent: lead.assigned_agent || '',
+      industry: lead.industry || 'other',
       createdAt: lead.created_at,
       updatedAt: lead.updated_at,
       assessment: answers ? {
@@ -159,7 +164,20 @@ router.put('/:id/status',
         return res.status(404).json({ error: 'Not Found', message: 'Lead not found' });
       }
 
-      await run('UPDATE leads SET status = ?, updated_at = datetime("now") WHERE id = ?', [status, req.params.id]);
+      const statusStageMap = {
+        'New Lead': 1,
+        'WhatsApp Engaged': 2,
+        'Report Sent': 3,
+        'Qualified': 3,
+        'Consultation Scheduled': 4,
+        'Proposal Sent': 5,
+        'Negotiation': 5,
+        'Won': 6,
+        'Lost': 6
+      };
+      const pipelineStage = statusStageMap[status] || 1;
+
+      await run('UPDATE leads SET status = ?, pipeline_stage = ?, updated_at = datetime("now") WHERE id = ?', [status, pipelineStage, req.params.id]);
 
       // Send WhatsApp notification on status change (if enabled)
       if (shouldNotify !== false && lead.phone) {
@@ -266,8 +284,8 @@ router.post('/consultation-request', async (req, res, next) => {
     }
 
     const result = await run(`
-      INSERT INTO leads (name, email, phone, status, notes, entity_type)
-      VALUES (?, ?, ?, 'New Lead', ?, 'consultation')
+      INSERT INTO leads (name, email, phone, status, notes, entity_type, pipeline_stage)
+      VALUES (?, ?, ?, 'Consultation Scheduled', ?, 'consultation', 4)
     `, [
       name,
       email,
@@ -293,6 +311,110 @@ router.post('/consultation-request', async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+});
+
+// POST /api/leads - Manually create a new lead
+router.post('/', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry } = req.body;
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Name and email are required' });
+    }
+
+    const statusStageMap = {
+      'New Lead': 1,
+      'WhatsApp Engaged': 2,
+      'Report Sent': 3,
+      'Qualified': 3,
+      'Consultation Scheduled': 4,
+      'Proposal Sent': 5,
+      'Negotiation': 5,
+      'Won': 6,
+      'Lost': 6
+    };
+    const pipelineStage = statusStageMap[status || 'New Lead'] || 1;
+
+    const result = await run(`
+      INSERT INTO leads (
+        name, email, phone, business_name, status, notes, 
+        estimated_premium, assigned_agent, industry, pipeline_stage, entity_type
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'manual')
+    `, [
+      name, 
+      email, 
+      phone || null, 
+      businessName || null, 
+      status || 'New Lead', 
+      notes || null, 
+      estimatedPremium || 0, 
+      assignedAgent || 'General Agent', 
+      industry || 'other', 
+      pipelineStage
+    ]);
+
+    res.status(201).json({ message: 'Lead created successfully', leadId: result.lastInsertRowid });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PUT /api/leads/:id - Update lead details
+router.put('/:id', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry } = req.body;
+
+    const lead = await get('SELECT id FROM leads WHERE id = ?', [req.params.id]);
+    if (!lead) {
+      return res.status(404).json({ error: 'Not Found', message: 'Lead not found' });
+    }
+
+    let queryParts = [];
+    let params = [];
+
+    if (name !== undefined) { queryParts.push('name = ?'); params.push(name); }
+    if (email !== undefined) { queryParts.push('email = ?'); params.push(email); }
+    if (phone !== undefined) { queryParts.push('phone = ?'); params.push(phone); }
+    if (businessName !== undefined) { queryParts.push('business_name = ?'); params.push(businessName); }
+    if (notes !== undefined) { queryParts.push('notes = ?'); params.push(notes); }
+    if (estimatedPremium !== undefined) { queryParts.push('estimated_premium = ?'); params.push(estimatedPremium); }
+    if (assignedAgent !== undefined) { queryParts.push('assigned_agent = ?'); params.push(assignedAgent); }
+    if (industry !== undefined) { queryParts.push('industry = ?'); params.push(industry); }
+    
+    if (status !== undefined) {
+      queryParts.push('status = ?');
+      params.push(status);
+      
+      const statusStageMap = {
+        'New Lead': 1,
+        'WhatsApp Engaged': 2,
+        'Report Sent': 3,
+        'Qualified': 3,
+        'Consultation Scheduled': 4,
+        'Proposal Sent': 5,
+        'Negotiation': 5,
+        'Won': 6,
+        'Lost': 6
+      };
+      const pipelineStage = statusStageMap[status] || 1;
+      queryParts.push('pipeline_stage = ?');
+      params.push(pipelineStage);
+    }
+
+    queryParts.push('updated_at = datetime("now")');
+
+    if (queryParts.length > 1) { // more than just updated_at
+      await run(`
+        UPDATE leads 
+        SET ${queryParts.join(', ')}
+        WHERE id = ?
+      `, [...params, req.params.id]);
+    }
+
+    res.json({ message: 'Lead updated successfully' });
+  } catch (err) {
+    next(err);
   }
 });
 

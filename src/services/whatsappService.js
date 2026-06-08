@@ -287,6 +287,8 @@ const sendWhatsApp = async (to, templateKey, data = {}) => {
   try {
     const sendUrl = `${EVOLUTION_API_URL}/message/sendText/${EVOLUTION_API_INSTANCE}`;
 
+    console.log(`📤 sendWhatsApp: Sending to ${phone} via ${sendUrl}`);
+
     const response = await fetch(sendUrl, {
       method: 'POST',
       headers: {
@@ -316,11 +318,11 @@ const sendWhatsApp = async (to, templateKey, data = {}) => {
       console.log(`✅ WhatsApp sent to ${phone} via Evolution API`);
       return { success: true, messageId: result.key?.id || result.message?.key?.id || 'sent' };
     } else {
-      console.error(`❌ Evolution API failed: ${JSON.stringify(result)}`);
-      return { success: false, error: result.message || 'Send failed' };
+      console.error(`❌ Evolution API failed (Status: ${response.status}): ${JSON.stringify(result)}`);
+      return { success: false, error: result.message || result.response?.message || JSON.stringify(result) };
     }
   } catch (error) {
-    console.error(`❌ WhatsApp error via Evolution API: ${error.message}`);
+    console.error(`❌ WhatsApp network error: ${error.message}`);
     return { success: false, error: error.message };
   }
 };

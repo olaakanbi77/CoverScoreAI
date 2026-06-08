@@ -4,13 +4,18 @@ const { get } = require('../config/database');
 const JWT_SECRET = process.env.JWT_SECRET || 'coverscore-jwt-secret-change-in-production';
 
 const authenticate = async (req, res, next) => {
+  let token = null;
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Unauthorized', message: 'No token provided' });
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  } else if (req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
   }
 
-  const token = authHeader.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized', message: 'No token provided' });
+  }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);

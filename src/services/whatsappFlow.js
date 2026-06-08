@@ -307,13 +307,197 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
     // ==========================================
     // QUALIFICATION FLOW (AFTER REPORT)
     // ==========================================
+
+    // --- ENTRY: User replies 1, 2, or 3 ---
     case 'qualification':
-      if (['1','2','3'].includes(input)) {
-        const qualMap = {'1': 'adequate', '2': 'has_gaps', '3': 'not_sure_review'};
-        updatedData.qualification_response = qualMap[input];
-        replyText = "Thank you. Your request has been received. Our advisor will reach out to you shortly to discuss your results.";
+      if (input === '1') {
+        updatedData.qualification_response = 'adequate';
+        updatedData.qualification_path = 'path1';
+        replyText = "Thank you.\n\nIt's encouraging to hear that you believe you're adequately protected.\n\nWhich best describes your situation?\n\nA = I have comprehensive insurance cover\nB = I have some insurance cover but I'm not sure it's enough\nC = My insurance policies have not been reviewed in over 12 months\n\nReply A, B or C.";
+        nextState = 'qual_path1_situation';
+      } else if (input === '2') {
+        updatedData.qualification_response = 'has_gaps';
+        updatedData.qualification_path = 'path2';
+        replyText = "Thank you.\n\nWhich area concerns you most?\n\nA = Fire & Property Damage\nB = Employee Welfare\nC = Liability Claims\nD = Vehicle & Transit Risks\nE = Cyber & Data Risks\nF = Not Sure\n\nReply A, B, C, D, E or F.";
+        nextState = 'qual_path2_concern';
+      } else if (input === '3') {
+        updatedData.qualification_response = 'not_sure_review';
+        updatedData.qualification_path = 'path3';
+        replyText = "Thank you.\n\nWould you prefer:\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
+        nextState = 'qual_path3_preference';
+      } else {
+        replyText = "Please reply with 1, 2, or 3.";
+      }
+      break;
+
+    // ==========================================
+    // PATH 1: YES – I believe I'm adequately protected
+    // ==========================================
+
+    case 'qual_path1_situation':
+      if (input === 'A') {
+        updatedData.insurance_situation = 'comprehensive';
+        replyText = "Excellent.\n\nWhen was the last time your insurance programme was professionally reviewed?\n\n1 = Within the last 12 months\n2 = 1–3 years ago\n3 = More than 3 years ago\n4 = Never\n\nReply 1, 2, 3 or 4.";
+        nextState = 'qual_p1a_review';
+      } else if (input === 'B') {
+        updatedData.insurance_situation = 'partial';
+        replyText = "Thank you.\n\nWhich area concerns you most?\n\nA = Property or Fire Loss\nB = Medical Expenses\nC = Loss of Income\nD = Liability Claims\nE = Employee Protection\nF = Not Sure\n\nReply A, B, C, D, E or F.";
+        nextState = 'qual_p1b_concern';
+      } else if (input === 'C') {
+        updatedData.insurance_situation = 'not_reviewed';
+        replyText = "Thank you.\n\nInsurance needs often change as businesses grow, assets increase, employees are hired, or responsibilities evolve.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
+        nextState = 'qual_p1c_review';
+      } else {
+        replyText = "Please reply with A, B or C.";
+      }
+      break;
+
+    // --- Path 1A: Comprehensive cover → when last reviewed ---
+    case 'qual_p1a_review':
+      if (input === '1') {
+        updatedData.review_recency = 'within_12_months';
+        replyText = "Great.\n\nMany businesses still benefit from periodic benchmarking against current risks.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
+        nextState = 'qual_p1a_gap_review';
+      } else if (['2','3','4'].includes(input)) {
+        const recMap = {'2': '1_3_years', '3': 'over_3_years', '4': 'never'};
+        updatedData.review_recency = recMap[input];
+        replyText = "Thank you.\n\nYour response suggests there may be value in reviewing whether your current insurance arrangements still align with your present risks.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
+        nextState = 'qual_p1a_gap_review';
+      } else {
+        replyText = "Please reply with 1, 2, 3 or 4.";
+      }
+      break;
+
+    // --- Path 1A: Gap review YES/NO ---
+    case 'qual_p1a_gap_review':
+      if (input === 'YES') {
+        updatedData.requested_review = true;
+        replyText = "Excellent.\n\nHow would you prefer your complimentary review?\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
+        nextState = 'consultation_preference';
+      } else if (input === 'NO') {
+        updatedData.requested_review = false;
+        replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🙏";
         nextState = 'finished';
-      } else { replyText = "Please reply with 1, 2, or 3."; }
+      } else {
+        replyText = "Please reply with YES or NO.";
+      }
+      break;
+
+    // --- Path 1B: Partial cover → concern area ---
+    case 'qual_p1b_concern':
+      if (['A','B','C','D','E','F'].includes(input)) {
+        const conMap = {'A': 'Property or Fire Loss', 'B': 'Medical Expenses', 'C': 'Loss of Income', 'D': 'Liability Claims', 'E': 'Employee Protection', 'F': 'Not Sure'};
+        updatedData.primary_concern = conMap[input];
+        replyText = "Thank you.\n\nBased on your assessment and concerns, a personalized Insurance Gap Review may help identify areas that require attention.\n\nWould you like a complimentary review?\n\nYES / NO";
+        nextState = 'qual_p1b_review';
+      } else {
+        replyText = "Please reply with A, B, C, D, E or F.";
+      }
+      break;
+
+    // --- Path 1B: Review YES/NO ---
+    case 'qual_p1b_review':
+      if (input === 'YES') {
+        updatedData.requested_review = true;
+        replyText = "Excellent.\n\nHow would you prefer your complimentary review?\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
+        nextState = 'consultation_preference';
+      } else if (input === 'NO') {
+        updatedData.requested_review = false;
+        replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🙏";
+        nextState = 'finished';
+      } else {
+        replyText = "Please reply with YES or NO.";
+      }
+      break;
+
+    // --- Path 1C: Not reviewed → gap review ---
+    case 'qual_p1c_review':
+      if (input === 'YES') {
+        updatedData.requested_review = true;
+        replyText = "Excellent.\n\nHow would you prefer your complimentary review?\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
+        nextState = 'consultation_preference';
+      } else if (input === 'NO') {
+        updatedData.requested_review = false;
+        replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🙏";
+        nextState = 'finished';
+      } else {
+        replyText = "Please reply with YES or NO.";
+      }
+      break;
+
+    // ==========================================
+    // PATH 2: NO – I think there may be gaps
+    // ==========================================
+
+    case 'qual_path2_concern':
+      if (['A','B','C','D','E','F'].includes(input)) {
+        const conMap = {'A': 'Fire & Property Damage', 'B': 'Employee Welfare', 'C': 'Liability Claims', 'D': 'Vehicle & Transit Risks', 'E': 'Cyber & Data Risks', 'F': 'Not Sure'};
+        updatedData.primary_concern = conMap[input];
+        replyText = "Thank you.\n\nBased on your assessment, there may be opportunities to strengthen your protection in this area.\n\nWould you like a customized insurance recommendation based on your risk profile?\n\nPLAN / NO";
+        nextState = 'qual_p2_plan';
+      } else {
+        replyText = "Please reply with A, B, C, D, E or F.";
+      }
+      break;
+
+    // --- Path 2: PLAN / NO ---
+    case 'qual_p2_plan':
+      if (input === 'PLAN') {
+        updatedData.requested_plan = true;
+        replyText = "Excellent.\n\nHow would you prefer to receive your customized recommendation?\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
+        nextState = 'consultation_preference';
+      } else if (input === 'NO') {
+        updatedData.requested_plan = false;
+        replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🙏";
+        nextState = 'finished';
+      } else {
+        replyText = "Please reply with PLAN or NO.";
+      }
+      break;
+
+    // ==========================================
+    // PATH 3: NOT SURE – I'd like a free review
+    // ==========================================
+
+    case 'qual_path3_preference':
+      if (['A','B','C'].includes(input)) {
+        const prefMap = {'A': 'WhatsApp Review', 'B': 'Phone Call', 'C': 'Virtual Meeting'};
+        updatedData.consultation_preference = prefMap[input];
+        replyText = "Thank you.\n\nTo help us prepare for your review, which best describes you?\n\n1 = Business Owner\n2 = Employee\n3 = Self-Employed Professional\n4 = Family Provider\n\nReply 1, 2, 3 or 4.";
+        nextState = 'qual_p3_describe';
+      } else {
+        replyText = "Please reply with A, B or C.";
+      }
+      break;
+
+    // --- Path 3: Describe yourself ---
+    case 'qual_p3_describe':
+      if (['1','2','3','4'].includes(input)) {
+        const descMap = {'1': 'Business Owner', '2': 'Employee', '3': 'Self-Employed Professional', '4': 'Family Provider'};
+        updatedData.describe_role = descMap[input];
+        updatedData.is_qualified = true;
+        updatedData.requested_review = true;
+        replyText = `Thank you, ${updatedData.name || 'there'}.\n\nYour review has been scheduled. An advisor will reach out to you shortly via ${updatedData.consultation_preference || 'your preferred channel'}.\n\nIn the meantime, you can review your full report anytime.\n\nThank you for using CoverScore AI. 🙏\n\n— CoverScore AI`;
+        nextState = 'finished';
+      } else {
+        replyText = "Please reply with 1, 2, 3 or 4.";
+      }
+      break;
+
+    // ==========================================
+    // SHARED: Consultation Preference (Paths 1 & 2)
+    // ==========================================
+
+    case 'consultation_preference':
+      if (['A','B','C'].includes(input)) {
+        const prefMap = {'A': 'WhatsApp Review', 'B': 'Phone Call', 'C': 'Virtual Meeting'};
+        updatedData.consultation_preference = prefMap[input];
+        updatedData.is_qualified = true;
+        replyText = `Thank you, ${updatedData.name || 'there'}.\n\nYour ${updatedData.requested_plan ? 'customized recommendation' : 'complimentary review'} has been scheduled. An advisor will reach out to you shortly via ${prefMap[input]}.\n\nIn the meantime, you can review your full report anytime.\n\nThank you for using CoverScore AI. 🙏\n\n— CoverScore AI`;
+        nextState = 'finished';
+      } else {
+        replyText = "Please reply with A, B or C.";
+      }
       break;
 
     default:

@@ -24,6 +24,54 @@ router.get('/overview', authenticate, requireAgent, async (req, res, next) => {
     thisMonth.setHours(0, 0, 0, 0);
     const monthlyAssessments = await get('SELECT COUNT(*) as count FROM assessments WHERE created_at >= ?', [thisMonth.toISOString()]);
 
+    // Trend helper
+    const calculateTrend = (current, prior) => {
+      if (!prior || prior === 0) {
+        return current > 0 ? 100 : 0;
+      }
+      return Math.round(((current - prior) / prior) * 100);
+    };
+
+    // 7-day trends (vs last 7 days)
+    const leadsCurrent = await get("SELECT COUNT(*) as count FROM leads WHERE created_at >= datetime('now', '-7 days')");
+    const leadsPrior = await get("SELECT COUNT(*) as count FROM leads WHERE created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+    const leadsTrend = calculateTrend(leadsCurrent.count, leadsPrior.count);
+
+    const assessmentsCurrent = await get("SELECT COUNT(*) as count FROM assessments WHERE created_at >= datetime('now', '-7 days')");
+    const assessmentsPrior = await get("SELECT COUNT(*) as count FROM assessments WHERE created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+    const assessmentsTrend = calculateTrend(assessmentsCurrent.count, assessmentsPrior.count);
+
+    const consultationsCurrent = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 4 AND created_at >= datetime('now', '-7 days')");
+    const consultationsPrior = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 4 AND created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+    const consultationsTrend = calculateTrend(consultationsCurrent.count, consultationsPrior.count);
+
+    const policiesCurrent = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 6 AND created_at >= datetime('now', '-7 days')");
+    const policiesPrior = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 6 AND created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+    const policiesTrend = calculateTrend(policiesCurrent.count, policiesPrior.count);
+
+    const premiumCurrent = await get("SELECT SUM(estimated_premium) as sum FROM leads WHERE created_at >= datetime('now', '-7 days')");
+    const premiumPrior = await get("SELECT SUM(estimated_premium) as sum FROM leads WHERE created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+    const premiumTrend = calculateTrend(premiumCurrent.sum || 0, premiumPrior.sum || 0);
+
+    // Monthly overview (this month vs previous month)
+    const thisMonthLeads = await get("SELECT COUNT(*) as count FROM leads WHERE created_at >= date('now', 'start of month')");
+    const prevMonthLeads = await get("SELECT COUNT(*) as count FROM leads WHERE created_at >= date('now', 'start of month', '-1 month') AND created_at < date('now', 'start of month')");
+    const thisMonthLeadsTrend = calculateTrend(thisMonthLeads.count, prevMonthLeads.count);
+
+    const thisMonthAssessments = await get("SELECT COUNT(*) as count FROM assessments WHERE created_at >= date('now', 'start of month')");
+    const prevMonthAssessments = await get("SELECT COUNT(*) as count FROM assessments WHERE created_at >= date('now', 'start of month', '-1 month') AND created_at < date('now', 'start of month')");
+    const thisMonthAssessmentsTrend = calculateTrend(thisMonthAssessments.count, prevMonthAssessments.count);
+
+    const thisMonthConsultations = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 4 AND created_at >= date('now', 'start of month')");
+    const prevMonthConsultations = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 4 AND created_at >= date('now', 'start of month', '-1 month') AND created_at < date('now', 'start of month')");
+    const thisMonthConsultationsTrend = calculateTrend(thisMonthConsultations.count, prevMonthConsultations.count);
+
+    const thisMonthPolicies = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 6 AND created_at >= date('now', 'start of month')");
+    const prevMonthPolicies = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 6 AND created_at >= date('now', 'start of month', '-1 month') AND created_at < date('now', 'start of month')");
+    const thisMonthPoliciesTrend = calculateTrend(thisMonthPolicies.count, prevMonthPolicies.count);
+
+    const activeWhatsAppChats = await get("SELECT COUNT(*) as count FROM leads WHERE wa_state IS NOT NULL AND wa_state NOT IN ('initial', 'finished')");
+
     res.json({
       totalAssessments: totalAssessments.count,
       totalLeads: totalLeads.count,
@@ -31,7 +79,25 @@ router.get('/overview', authenticate, requireAgent, async (req, res, next) => {
       conversionRate,
       avgScore,
       totalPremium,
-      monthlyAssessments: monthlyAssessments.count
+      monthlyAssessments: monthlyAssessments.count,
+      sidebar: {
+        newLeads: thisMonthLeads.count,
+        newLeadsTrend: thisMonthLeadsTrend,
+        assessments: thisMonthAssessments.count,
+        assessmentsTrend: thisMonthAssessmentsTrend,
+        consultations: thisMonthConsultations.count,
+        consultationsTrend: thisMonthConsultationsTrend,
+        policies: thisMonthPolicies.count,
+        policiesTrend: thisMonthPoliciesTrend,
+        activeWhatsAppChats: activeWhatsAppChats.count
+      },
+      trends: {
+        leads: leadsTrend,
+        assessments: assessmentsTrend,
+        consultations: consultationsTrend,
+        policies: policiesTrend,
+        premium: premiumTrend
+      }
     });
   } catch (error) {
     next(error);
@@ -149,6 +215,25 @@ router.get('/pipeline', authenticate, requireAgent, async (req, res, next) => {
     pipelineCounts.forEach(s => { 
       if (s.pipeline_stage) result[s.pipeline_stage] = s.count; 
     });
+
+    const calculateTrend = (current, prior) => {
+      if (!prior || prior === 0) {
+        return current > 0 ? 100 : 0;
+      }
+      return Math.round(((current - prior) / prior) * 100);
+    };
+
+    const consultationsCurrent = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 4 AND created_at >= datetime('now', '-7 days')");
+    const consultationsPrior = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 4 AND created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+    
+    const policiesCurrent = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 6 AND created_at >= datetime('now', '-7 days')");
+    const policiesPrior = await get("SELECT COUNT(*) as count FROM leads WHERE pipeline_stage = 6 AND created_at >= datetime('now', '-14 days') AND created_at < datetime('now', '-7 days')");
+
+    result.trends = {
+      4: calculateTrend(consultationsCurrent.count, consultationsPrior.count),
+      6: calculateTrend(policiesCurrent.count, policiesPrior.count)
+    };
+
     res.json(result);
   } catch (error) {
     next(error);

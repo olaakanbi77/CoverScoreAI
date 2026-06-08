@@ -112,15 +112,15 @@ app.get('/admin', authenticatePage, (req, res) => {
 });
 
 app.get('/admin/dashboard', authenticatePage, (req, res) => {
-  res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'admin', layout: 'admin' });
+  res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'dashboard', layout: 'admin' });
 });
 
 app.get('/admin/leads', authenticatePage, (req, res) => {
-  res.render('admin/dashboard', { title: 'Lead Management', activePage: 'admin', layout: 'admin' });
+  res.render('admin/dashboard', { title: 'Lead Management', activePage: 'leads', layout: 'admin' });
 });
 
 app.get('/admin/analytics', authenticatePage, (req, res) => {
-  res.render('admin/analytics', { title: 'Analytics', activePage: 'admin', layout: false });
+  res.render('admin/analytics', { title: 'Analytics', activePage: 'analytics', layout: false });
 });
 
 app.get(['/quote', '/request-quote'], (req, res) => {

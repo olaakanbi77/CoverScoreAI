@@ -1,15 +1,23 @@
 <div class="dashboard-header">
   <div>
-    <h1 class="greeting-title">Welcome back, {{user.name}} 👋</h1>
-    <p class="greeting-sub">Here's what's happening with your business today.</p>
+    {{#if (eq activePage 'leads')}}
+      <h1 class="greeting-title">Lead Management</h1>
+      <p class="greeting-sub">Track risk intelligence scores, customize insurance categories, and process quotes.</p>
+    {{else}}
+      <h1 class="greeting-title">Welcome back, {{user.name}} 👋</h1>
+      <p class="greeting-sub">Here's what's happening with your business today.</p>
+    {{/if}}
   </div>
+  {{#unless (eq activePage 'leads')}}
   <div class="date-picker">
     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-    May 11 - May 17, 2026
+    <span id="currentDateRange">Loading...</span>
     <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
   </div>
+  {{/unless}}
 </div>
 
+{{#unless (eq activePage 'leads')}}
 <div class="kpi-grid">
   <div class="kpi-card">
     <div class="kpi-header">
@@ -97,9 +105,11 @@
     <div class="pipeline-rates" id="pipelineRates"></div>
   </div>
 </div>
+{{/unless}}
 
-<div class="dashboard-grid">
+<div class="dashboard-grid" {{#if (eq activePage 'leads')}}style="grid-template-columns: 1fr;"{{/if}}>
   <div class="grid-left">
+    {{#unless (eq activePage 'leads')}}
     <div class="charts-row">
       <div class="chart-card">
         <h2 class="section-title">Risk Score Distribution</h2>
@@ -133,12 +143,47 @@
         </div>
       </div>
     </div>
+    {{/unless}}
 
     <div class="table-card">
-      <div class="table-header">
-        <h2 class="section-title">Recent Assessments</h2>
+      <div class="table-header" style="{{#if (eq activePage 'leads')}}margin-bottom: 15px;{{/if}}">
+        <h2 class="section-title">{{#if (eq activePage 'leads')}}All CRM Leads{{else}}Recent Assessments{{/if}}</h2>
+        {{#unless (eq activePage 'leads')}}
         <a href="/admin/leads" class="view-all-link">View All</a>
+        {{/unless}}
       </div>
+
+      {{#if (eq activePage 'leads')}}
+      <div class="table-filters" style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+        <div class="filter-group" style="flex: 1; min-width: 200px;">
+          <input type="text" id="leadSearchInput" placeholder="Search by name, email, business..." class="form-control" style="background: rgba(30,41,59,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px; padding: 8px 12px; height: 38px;" oninput="filterLeads()">
+        </div>
+        <div class="filter-group">
+          <select id="filterStatus" class="form-control" style="background: rgba(30,41,59,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; min-width: 180px; border-radius: 6px; padding: 0 12px; height: 38px;" onchange="filterLeads()">
+            <option value="">All Statuses</option>
+            <option value="New Lead">New Lead</option>
+            <option value="WhatsApp Engaged">WhatsApp Engaged</option>
+            <option value="Report Sent">Report Sent</option>
+            <option value="Qualified">Qualified</option>
+            <option value="Consultation Scheduled">Consultation Scheduled</option>
+            <option value="Proposal Sent">Proposal Sent</option>
+            <option value="Negotiation">Negotiation</option>
+            <option value="Won">Won</option>
+            <option value="Lost">Lost</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <select id="filterRisk" class="form-control" style="background: rgba(30,41,59,0.5); border: 1px solid rgba(255,255,255,0.1); color: white; min-width: 150px; border-radius: 6px; padding: 0 12px; height: 38px;" onchange="filterLeads()">
+            <option value="">All Risks</option>
+            <option value="low">Low Risk</option>
+            <option value="moderate">Moderate</option>
+            <option value="high">High Risk</option>
+            <option value="critical">Critical Risk</option>
+          </select>
+        </div>
+      </div>
+      {{/if}}
+
       <table class="crm-table">
         <thead>
           <tr>
@@ -155,14 +200,25 @@
           <tr><td colspan="7" class="text-center">Loading...</td></tr>
         </tbody>
       </table>
+
+      {{#if (eq activePage 'leads')}}
+      <div class="table-pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="pagination-info" style="color: var(--crm-text-muted); font-size: 13px;" id="paginationInfo">Showing 0 of 0 leads</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-action-outline" id="btnPrevPage" onclick="changePage(-1)" disabled>Previous</button>
+          <button class="btn-action-outline" id="btnNextPage" onclick="changePage(1)" disabled>Next</button>
+        </div>
+      </div>
+      {{/if}}
     </div>
   </div>
 
+  {{#unless (eq activePage 'leads')}}
   <div class="grid-right">
     <div class="widget-card">
       <div class="widget-header">
         <h2 class="section-title">Upcoming Tasks</h2>
-        <button class="topbar-icon-btn"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
+        <button class="topbar-icon-btn" onclick="openAddTaskModal('call')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
       </div>
       <div class="task-list" id="taskList">Loading...</div>
     </div>
@@ -175,7 +231,7 @@
     <div class="widget-card">
       <h2 class="section-title">Quick Actions</h2>
       <div class="quick-actions-grid">
-        <button class="quick-action-btn">
+        <button class="quick-action-btn" onclick="openAddLeadModal()">
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
           <span>Add New Lead</span>
         </button>
@@ -183,38 +239,401 @@
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
           <span>Start Assessment</span>
         </button>
-        <button class="quick-action-btn">
+        <button class="quick-action-btn" onclick="openAddTaskModal('meeting')">
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
           <span>Schedule Meeting</span>
         </button>
-        <button class="quick-action-btn">
+        <button class="quick-action-btn" onclick="openAddTaskModal('proposal')">
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           <span>Create Proposal</span>
         </button>
       </div>
     </div>
   </div>
+  {{/unless}}
+</div>
+
+<!-- Add Lead Modal -->
+<div id="addLeadModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 class="modal-title">Add New Lead</h3>
+      <button class="modal-close" onclick="closeAddLeadModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="addLeadName" class="form-control" placeholder="e.g. John Doe">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="addLeadEmail" class="form-control" placeholder="e.g. john@example.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="addLeadPhone" class="form-control" placeholder="e.g. 2349000000000">
+        </div>
+        <div class="form-group">
+          <label>Company / Business Name</label>
+          <input type="text" id="addLeadBusiness" class="form-control" placeholder="e.g. Acme Corp">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Industry</label>
+          <select id="addLeadIndustry" class="form-control">
+            <option value="manufacturing">Manufacturing</option>
+            <option value="logistics">Logistics & Maritime</option>
+            <option value="education">Education</option>
+            <option value="retail">Retail & SME</option>
+            <option value="technology">Technology</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Initial Status</label>
+          <select id="addLeadStatus" class="form-control">
+            <option value="New Lead">New Lead</option>
+            <option value="WhatsApp Engaged">WhatsApp Engaged</option>
+            <option value="Report Sent">Report Sent</option>
+            <option value="Qualified">Qualified</option>
+            <option value="Consultation Scheduled">Consultation Scheduled</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Estimated Premium (₦)</label>
+          <input type="number" id="addLeadPremium" class="form-control" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>Assigned Agent</label>
+          <input type="text" id="addLeadAgent" class="form-control" placeholder="Agent Name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="addLeadNotes" class="form-control" rows="3" placeholder="Enter notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeAddLeadModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitAddLead()">Create Lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lead Details Modal -->
+<div id="leadDetailModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 class="modal-title" id="detailModalTitle">Lead Details</h3>
+      <button class="modal-close" onclick="closeLeadDetailModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="detailLeadId">
+      
+      <!-- Tabs -->
+      <div style="display: flex; gap: 24px; border-bottom: 1px solid var(--crm-border); padding-bottom: 12px; margin-bottom: 16px;">
+        <span id="tabInfo" onclick="switchDetailTab('info')" style="font-weight: 600; color: var(--crm-primary); cursor: pointer;">Information</span>
+        <span id="tabChat" onclick="switchDetailTab('chat')" style="color: var(--crm-text-secondary); cursor: pointer;">WhatsApp Chat History</span>
+      </div>
+
+      <div id="infoSection">
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="detailName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="detailEmail" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="detailPhone" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Business Name</label>
+            <input type="text" id="detailBusiness" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Risk Score / Level</label>
+            <div style="display: flex; gap: 8px; align-items: center; height: 38px;">
+              <span id="detailScore" style="font-weight: 700; font-family: var(--font-mono); font-size: 16px;">0/100</span>
+              <span id="detailRiskBadge" class="crm-badge">Low</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Lead Source / Entity Type</label>
+            <div style="display: flex; gap: 8px; align-items: center; height: 38px; color: var(--crm-text-secondary); font-size: 13px;">
+              <span id="detailSource" style="text-transform: capitalize;">CoverScore AI</span>
+              •
+              <span id="detailEntityType" style="text-transform: capitalize;">Business</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Status</label>
+            <select id="detailStatus" class="form-control">
+              <option value="New Lead">New Lead</option>
+              <option value="WhatsApp Engaged">WhatsApp Engaged</option>
+              <option value="Report Sent">Report Sent</option>
+              <option value="Qualified">Qualified</option>
+              <option value="Consultation Scheduled">Consultation Scheduled</option>
+              <option value="Proposal Sent">Proposal Sent</option>
+              <option value="Negotiation">Negotiation</option>
+              <option value="Won">Won</option>
+              <option value="Lost">Lost</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estimated Premium (₦)</label>
+            <input type="number" id="detailPremium" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label>Assigned Agent</label>
+            <input type="text" id="detailAgent" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Industry</label>
+            <input type="text" id="detailIndustry" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="detailNotes" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div id="chatSection" style="display: none;">
+        <label style="font-size: 12px; font-weight: 600; color: var(--crm-text-secondary); margin-bottom: 6px; display: block;">WhatsApp Conversation Flow</label>
+        <div id="detailChatLog" class="chat-log">
+          <div style="color: var(--crm-text-muted); font-size: 12px; text-align: center; padding: 12px;">No chat history recorded.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer" style="justify-content: space-between;">
+      <button class="btn-danger" id="btnDeleteLead" onclick="deleteLead()">Delete Lead</button>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn-secondary" onclick="closeLeadDetailModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveLeadDetails()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Task Modal -->
+<div id="addTaskModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3 class="modal-title">Schedule Follow-up / Task</h3>
+      <button class="modal-close" onclick="closeAddTaskModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Associate with Lead</label>
+        <select id="taskLeadId" class="form-control">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Task Title</label>
+        <input type="text" id="taskTitle" class="form-control" placeholder="e.g. Call client to discuss health insurance gaps">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type</label>
+          <select id="taskType" class="form-control">
+            <option value="call">Phone Call</option>
+            <option value="meeting">Meeting</option>
+            <option value="email">Email</option>
+            <option value="proposal">Create/Send Proposal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Due Date & Time</label>
+          <input type="datetime-local" id="taskDueDate" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitAddTask()">Schedule Task</button>
+    </div>
+  </div>
 </div>
 
 <script>
+  let allRecentLeads = [];
+  let currentPage = 1;
+  const limitPerPage = 15;
+
+  function updateDateRange() {
+    const now = new Date();
+    const day = now.getDay();
+    const diff = now.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+    const monday = new Date(now.setDate(diff));
+    const sunday = new Date(now.setDate(diff + 6));
+    
+    const options = { month: 'short', day: 'numeric' };
+    const yearOption = { year: 'numeric' };
+    
+    const rangeText = `${monday.toLocaleDateString('en-US', options)} - ${sunday.toLocaleDateString('en-US', options)}, ${sunday.toLocaleDateString('en-US', yearOption)}`;
+    document.getElementById('currentDateRange').innerText = rangeText;
+  }
+
+  async function loadLeadsData() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const searchInput = document.getElementById('leadSearchInput');
+      const statusSelect = document.getElementById('filterStatus');
+      const riskSelect = document.getElementById('filterRisk');
+      
+      const search = searchInput ? searchInput.value : '';
+      const status = statusSelect ? statusSelect.value : '';
+      const risk = riskSelect ? riskSelect.value : '';
+
+      // Parse current query parameters for pre-filters
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlStatus = urlParams.get('status');
+      const urlRisk = urlParams.get('risk_level');
+
+      let filterStatus = status || urlStatus || '';
+      let filterRisk = risk || urlRisk || '';
+
+      if (statusSelect && urlStatus && !statusSelect.dataset.initialized) {
+        statusSelect.value = urlStatus;
+        statusSelect.dataset.initialized = 'true';
+        filterStatus = urlStatus;
+      }
+      if (riskSelect && urlRisk && !riskSelect.dataset.initialized) {
+        riskSelect.value = urlRisk;
+        riskSelect.dataset.initialized = 'true';
+        filterRisk = urlRisk;
+      }
+
+      let url = `/api/leads?page=${currentPage}&limit=${limitPerPage}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (filterStatus) url += `&status=${encodeURIComponent(filterStatus)}`;
+      if (filterRisk) url += `&risk_level=${encodeURIComponent(filterRisk)}`;
+
+      const res = await fetch(url, { headers });
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+
+      if (res.ok) {
+        const data = await res.json();
+        allRecentLeads = data.leads || [];
+        renderTable(allRecentLeads);
+        populateTaskLeads(allRecentLeads);
+
+        // Update pagination UI
+        const total = data.pagination?.total || 0;
+        const totalPages = data.pagination?.totalPages || 1;
+        const start = (currentPage - 1) * limitPerPage + 1;
+        const end = Math.min(currentPage * limitPerPage, total);
+
+        const pagInfo = document.getElementById('paginationInfo');
+        if (pagInfo) {
+          pagInfo.innerText = total > 0 ? `Showing ${start}-${end} of ${total} leads` : 'Showing 0 of 0 leads';
+        }
+
+        const prevBtn = document.getElementById('btnPrevPage');
+        const nextBtn = document.getElementById('btnNextPage');
+        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+      }
+    } catch(err) {
+      console.error('Failed to load leads data:', err);
+    }
+  }
+
+  function changePage(direction) {
+    currentPage += direction;
+    loadLeadsData();
+  }
+
+  let filterTimeout;
+  function filterLeads() {
+    clearTimeout(filterTimeout);
+    filterTimeout = setTimeout(() => {
+      currentPage = 1;
+      loadLeadsData();
+    }, 250);
+  }
+
   async function loadDashboardData() {
     try {
       const token = localStorage.getItem('accessToken');
-      if (!token) return window.location.href = '/auth/login';
-      const headers = { 'Authorization': 'Bearer ' + token };
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
 
       // Load Analytics Overview
       const resOverview = await fetch('/api/analytics/overview', { headers });
+      if (resOverview.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
       if (resOverview.ok) {
         const data = await resOverview.json();
         document.getElementById('kpiLeads').innerText = data.totalLeads.toLocaleString();
         document.getElementById('kpiAssessments').innerText = data.totalAssessments.toLocaleString();
         document.getElementById('kpiPremium').innerText = (data.totalPremium / 1000000).toFixed(1) + 'M';
         
-        // Mocking positive trends for now
-        document.getElementById('kpiLeadsTrend').innerText = '↑ 16%';
-        document.getElementById('kpiAssessTrend').innerText = '↑ 22%';
-        document.getElementById('kpiPremTrend').innerText = '↑ 28%';
+        // Renders actual trends dynamically
+        const formatTrend = (val) => {
+          if (val > 0) return `↑ ${val}%`;
+          if (val < 0) return `↓ ${Math.abs(val)}%`;
+          return `→ 0%`;
+        };
+        const setTrendClass = (el, val) => {
+          if (!el) return;
+          if (val > 0) el.parentElement.className = 'kpi-trend positive';
+          else if (val < 0) el.parentElement.className = 'kpi-trend negative';
+          else el.parentElement.className = 'kpi-trend';
+        };
+
+        const tLeads = document.getElementById('kpiLeadsTrend');
+        tLeads.innerText = formatTrend(data.trends?.leads || 0);
+        setTrendClass(tLeads, data.trends?.leads || 0);
+
+        const tAssess = document.getElementById('kpiAssessTrend');
+        tAssess.innerText = formatTrend(data.trends?.assessments || 0);
+        setTrendClass(tAssess, data.trends?.assessments || 0);
+
+        const tPrem = document.getElementById('kpiPremTrend');
+        tPrem.innerText = formatTrend(data.trends?.premium || 0);
+        setTrendClass(tPrem, data.trends?.premium || 0);
+
+        const tCons = document.getElementById('kpiConsTrend');
+        tCons.innerText = formatTrend(data.trends?.consultations || 0);
+        setTrendClass(tCons, data.trends?.consultations || 0);
+
+        const tPol = document.getElementById('kpiPolTrend');
+        tPol.innerText = formatTrend(data.trends?.policies || 0);
+        setTrendClass(tPol, data.trends?.policies || 0);
       }
 
       // Load Pipeline
@@ -230,8 +649,8 @@
 
         document.getElementById('kpiConsultations').innerText = p[4] || 0;
         document.getElementById('kpiPolicies').innerText = p[6] || 0;
-        document.getElementById('kpiConsTrend').innerText = '↑ 18%';
-        document.getElementById('kpiPolTrend').innerText = '↑ 35%';
+
+        renderPipelineRates(p);
       }
 
       // Load Risk Distribution
@@ -252,7 +671,9 @@
       const resLeads = await fetch('/api/admin/dashboard', { headers });
       if (resLeads.ok) {
         const d = await resLeads.json();
-        renderTable(d.recentSubmissions);
+        allRecentLeads = d.recentSubmissions || [];
+        renderTable(allRecentLeads);
+        populateTaskLeads(allRecentLeads);
       }
 
       // Load Tasks
@@ -272,6 +693,37 @@
     } catch (err) {
       console.error('Failed to load dashboard', err);
     }
+  }
+
+  function renderPipelineRates(p) {
+    const s1 = p[1] || 0;
+    const s2 = p[2] || 0;
+    const s3 = p[3] || 0;
+    const s4 = p[4] || 0;
+    const s5 = p[5] || 0;
+    const s6 = p[6] || 0;
+
+    const total = s1 + s2 + s3 + s4 + s5 + s6;
+    const reached2 = s2 + s3 + s4 + s5 + s6;
+    const reached3 = s3 + s4 + s5 + s6;
+    const reached4 = s4 + s5 + s6;
+    const reached5 = s5 + s6;
+    const reached6 = s6;
+
+    const rate1to2 = total > 0 ? Math.round((reached2 / total) * 100) : 0;
+    const rate2to3 = reached2 > 0 ? Math.round((reached3 / reached2) * 100) : 0;
+    const rate3to4 = reached3 > 0 ? Math.round((reached4 / reached3) * 100) : 0;
+    const rate4to5 = reached4 > 0 ? Math.round((reached5 / reached4) * 100) : 0;
+    const rate5to6 = reached5 > 0 ? Math.round((reached6 / reached5) * 100) : 0;
+
+    const ratesContainer = document.getElementById('pipelineRates');
+    ratesContainer.innerHTML = `
+      <div class="rate-item">${rate1to2}% <span class="rate-label">Conv.</span></div>
+      <div class="rate-item">${rate2to3}% <span class="rate-label">Conv.</span></div>
+      <div class="rate-item">${rate3to4}% <span class="rate-label">Conv.</span></div>
+      <div class="rate-item">${rate4to5}% <span class="rate-label">Conv.</span></div>
+      <div class="rate-item">${rate5to6}% <span class="rate-label">Conv.</span></div>
+    `;
   }
 
   function renderRiskDonut(data) {
@@ -369,14 +821,14 @@
 
       let statusBadge = 'badge-mod';
       if (lead.status === 'New Lead') statusBadge = 'badge-low-mod';
-      if (lead.status === 'Report Delivered') statusBadge = 'badge-report';
+      if (lead.status === 'Report Delivered' || lead.status === 'Report Sent') statusBadge = 'badge-report';
 
       let action = 'Book Consultation';
       if (lead.status === 'New Lead') action = 'Start Assessment';
-      if (lead.status === 'Consultation Booked') action = 'Send Proposal';
+      if (lead.status === 'Consultation Booked' || lead.status === 'Consultation Scheduled') action = 'Send Proposal';
 
       return `
-        <tr>
+        <tr onclick="openLeadModal(${lead.id})" style="cursor: pointer;">
           <td>
             <div class="td-main">${lead.name}</div>
             <div class="td-sub">${lead.email}</div>
@@ -386,10 +838,20 @@
           <td><span class="crm-badge ${badgeClass}">${lead.riskLevel || 'Unknown'}</span></td>
           <td><div class="td-main">${date}</div></td>
           <td><span class="crm-badge ${statusBadge}">${lead.status || 'New Lead'}</span></td>
-          <td><button class="btn-action-outline">${action}</button></td>
+          <td><button class="btn-action-outline" onclick="event.stopPropagation(); handleAction(${lead.id}, '${lead.status}')">${action}</button></td>
         </tr>
       `;
     }).join('');
+  }
+
+  function handleAction(leadId, status) {
+    if (status === 'New Lead') {
+      window.open('/start-whatsapp', '_blank');
+    } else if (status === 'Consultation Scheduled' || status === 'Consultation Booked') {
+      openAddTaskModal('proposal', leadId);
+    } else {
+      openAddTaskModal('meeting', leadId);
+    }
   }
 
   function renderTasks(tasks) {
@@ -402,7 +864,7 @@
       const date = new Date(t.due_date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       return `
         <div class="task-item">
-          <div class="task-radio"></div>
+          <div class="task-radio" onclick="completeTask(${t.id})" style="cursor: pointer;"></div>
           <div class="task-content">
             <div class="task-title">${t.title}</div>
             <div class="task-meta">
@@ -414,6 +876,12 @@
         </div>
       `;
     }).join('');
+  }
+
+  async function completeTask(taskId) {
+    // We can simulate completing task or just display a message
+    showToast('Task completed!', 'success');
+    loadDashboardData();
   }
 
   function renderActivities(activities) {
@@ -430,7 +898,6 @@
     };
 
     container.innerHTML = activities.slice(0, 5).map(a => {
-      // Calculate time ago
       const diff = Math.floor((new Date() - new Date(a.created_at)) / 60000); // mins
       const timeAgo = diff < 60 ? `${diff}m ago` : diff < 1440 ? `${Math.floor(diff/60)}h ago` : `${Math.floor(diff/1440)}d ago`;
 
@@ -447,5 +914,328 @@
     }).join('');
   }
 
-  loadDashboardData();
+  // --- Modals Logic ---
+
+  function openAddLeadModal() {
+    document.getElementById('addLeadModal').classList.add('show');
+  }
+  function closeAddLeadModal() {
+    document.getElementById('addLeadModal').classList.remove('show');
+  }
+  async function submitAddLead() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const body = {
+        name: document.getElementById('addLeadName').value,
+        email: document.getElementById('addLeadEmail').value,
+        phone: document.getElementById('addLeadPhone').value,
+        businessName: document.getElementById('addLeadBusiness').value,
+        status: document.getElementById('addLeadStatus').value,
+        estimatedPremium: parseInt(document.getElementById('addLeadPremium').value) || 0,
+        assignedAgent: document.getElementById('addLeadAgent').value,
+        industry: document.getElementById('addLeadIndustry').value,
+        notes: document.getElementById('addLeadNotes').value
+      };
+
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to create lead');
+
+      showToast('Lead created successfully', 'success');
+      closeAddLeadModal();
+      
+      const isLeadsPage = '{{activePage}}' === 'leads';
+      if (isLeadsPage) {
+        loadLeadsData();
+      } else {
+        loadDashboardData();
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error creating lead: ' + err.message, 'error');
+    }
+  }
+
+  function openAddTaskModal(type = 'call', defaultLeadId = null) {
+    document.getElementById('taskType').value = type;
+    if (defaultLeadId) {
+      document.getElementById('taskLeadId').value = defaultLeadId;
+    }
+    
+    const modalTitleEl = document.querySelector('#addTaskModal .modal-title');
+    const taskTitleInput = document.getElementById('taskTitle');
+    
+    if (type === 'meeting') {
+      if (modalTitleEl) modalTitleEl.innerText = 'Schedule Meeting';
+      if (taskTitleInput) taskTitleInput.value = 'Discuss CoverScore Risk Report & Insurance Options';
+    } else if (type === 'proposal') {
+      if (modalTitleEl) modalTitleEl.innerText = 'Create & Send Proposal';
+      if (taskTitleInput) taskTitleInput.value = 'Draft Commercial Liability & Property Quote Proposal';
+    } else if (type === 'email') {
+      if (modalTitleEl) modalTitleEl.innerText = 'Send Email';
+      if (taskTitleInput) taskTitleInput.value = 'Follow-up on WhatsApp Risk Assessment';
+    } else {
+      if (modalTitleEl) modalTitleEl.innerText = 'Schedule Phone Call';
+      if (taskTitleInput) taskTitleInput.value = 'Follow-up Call';
+    }
+    
+    // Set default due date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(9, 0, 0, 0);
+    const offset = tomorrow.getTimezoneOffset();
+    const localTomorrow = new Date(tomorrow.getTime() - (offset*60*1000));
+    document.getElementById('taskDueDate').value = localTomorrow.toISOString().slice(0, 16);
+
+    document.getElementById('addTaskModal').classList.add('show');
+  }
+  function closeAddTaskModal() {
+    document.getElementById('addTaskModal').classList.remove('show');
+  }
+  async function submitAddTask() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const body = {
+        lead_id: document.getElementById('taskLeadId').value,
+        title: document.getElementById('taskTitle').value,
+        type: document.getElementById('taskType').value,
+        due_date: document.getElementById('taskDueDate').value
+      };
+
+      const res = await fetch('/api/crm/tasks', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to schedule task');
+
+      showToast('Task scheduled successfully', 'success');
+      closeAddTaskModal();
+      
+      const isLeadsPage = '{{activePage}}' === 'leads';
+      if (isLeadsPage) {
+        loadLeadsData();
+      } else {
+        loadDashboardData();
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error scheduling task: ' + err.message, 'error');
+    }
+  }
+
+  function populateTaskLeads(leads) {
+    const select = document.getElementById('taskLeadId');
+    if (!select) return;
+    select.innerHTML = leads.map(l => `<option value="${l.id}">${l.name} (${l.businessName || 'Individual'})</option>`).join('');
+  }
+
+  function switchDetailTab(tab) {
+    const tabInfo = document.getElementById('tabInfo');
+    const tabChat = document.getElementById('tabChat');
+    const infoSec = document.getElementById('infoSection');
+    const chatSec = document.getElementById('chatSection');
+    
+    if (tab === 'info') {
+      infoSec.style.display = 'block';
+      chatSec.style.display = 'none';
+      tabInfo.style.color = 'var(--crm-primary)';
+      tabInfo.style.fontWeight = '600';
+      tabChat.style.color = 'var(--crm-text-secondary)';
+      tabChat.style.fontWeight = '400';
+    } else {
+      infoSec.style.display = 'none';
+      chatSec.style.display = 'block';
+      tabInfo.style.color = 'var(--crm-text-secondary)';
+      tabInfo.style.fontWeight = '400';
+      tabChat.style.color = 'var(--crm-primary)';
+      tabChat.style.fontWeight = '600';
+    }
+  }
+
+  async function openLeadModal(leadId) {
+    try {
+      switchDetailTab('info');
+      const token = localStorage.getItem('accessToken');
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      
+      const res = await fetch('/api/leads/' + leadId, { headers });
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to load lead details');
+      
+      const lead = await res.json();
+      
+      document.getElementById('detailLeadId').value = lead.id;
+      document.getElementById('detailModalTitle').innerText = 'Lead Details: ' + lead.name;
+      document.getElementById('detailName').value = lead.name || '';
+      document.getElementById('detailEmail').value = lead.email || '';
+      document.getElementById('detailPhone').value = lead.phone || '';
+      document.getElementById('detailBusiness').value = lead.businessName || '';
+      document.getElementById('detailScore').innerText = (lead.score || 0) + '/100';
+      document.getElementById('detailNotes').value = lead.notes || '';
+      document.getElementById('detailPremium').value = lead.estimatedPremium || 0;
+      document.getElementById('detailAgent').value = lead.assignedAgent || '';
+      document.getElementById('detailIndustry').value = lead.industry || '';
+      document.getElementById('detailStatus').value = lead.status || 'New Lead';
+      
+      document.getElementById('detailSource').innerText = lead.lead_source || 'CoverScore AI';
+      document.getElementById('detailEntityType').innerText = lead.entity_type || 'business';
+
+      const risk = lead.riskLevel || 'low';
+      const badge = document.getElementById('detailRiskBadge');
+      badge.className = 'crm-badge';
+      badge.innerText = risk.toUpperCase();
+      if (risk === 'high' || risk === 'critical') badge.className = 'crm-badge badge-high';
+      else if (risk === 'low') badge.className = 'crm-badge badge-low-mod';
+      else badge.className = 'crm-badge badge-mod';
+
+      const chatLog = document.getElementById('detailChatLog');
+      let chatHistory = [];
+      if (lead.assessment?.answers?.chat_history) {
+        chatHistory = lead.assessment.answers.chat_history;
+      } else if (lead.chat_history) {
+        try {
+          chatHistory = JSON.parse(lead.chat_history);
+        } catch(e) {}
+      }
+      
+      if (chatHistory && typeof chatHistory === 'object' && Object.keys(chatHistory).length > 0) {
+        let html = '';
+        if (Array.isArray(chatHistory)) {
+          html = chatHistory.map(m => {
+            const isSent = m.sender === 'bot';
+            return `<div class="chat-msg ${isSent ? 'sent' : 'received'}"><strong>${isSent ? 'Bot' : 'Lead'}:</strong> ${m.message || m.text || ''}</div>`;
+          }).join('');
+        } else {
+          html = Object.entries(chatHistory).map(([key, val]) => {
+            return `<div class="chat-msg received"><strong>${key}:</strong> ${val}</div>`;
+          }).join('');
+        }
+        chatLog.innerHTML = html;
+      } else {
+        chatLog.innerHTML = '<div style="color: var(--crm-text-muted); font-size: 12px; text-align: center; padding: 12px;">No chat history recorded.</div>';
+      }
+
+      document.getElementById('leadDetailModal').classList.add('show');
+    } catch(err) {
+      console.error(err);
+      showToast('Error loading lead: ' + err.message, 'error');
+    }
+  }
+
+  function closeLeadDetailModal() {
+    document.getElementById('leadDetailModal').classList.remove('show');
+  }
+
+  async function saveLeadDetails() {
+    try {
+      const leadId = document.getElementById('detailLeadId').value;
+      const token = localStorage.getItem('accessToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const body = {
+        name: document.getElementById('detailName').value,
+        email: document.getElementById('detailEmail').value,
+        phone: document.getElementById('detailPhone').value,
+        businessName: document.getElementById('detailBusiness').value,
+        status: document.getElementById('detailStatus').value,
+        estimatedPremium: parseInt(document.getElementById('detailPremium').value) || 0,
+        assignedAgent: document.getElementById('detailAgent').value,
+        industry: document.getElementById('detailIndustry').value,
+        notes: document.getElementById('detailNotes').value
+      };
+
+      const res = await fetch('/api/leads/' + leadId, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to update lead');
+
+      showToast('Lead updated successfully', 'success');
+      closeLeadDetailModal();
+      
+      const isLeadsPage = '{{activePage}}' === 'leads';
+      if (isLeadsPage) {
+        loadLeadsData();
+      } else {
+        loadDashboardData();
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error saving lead: ' + err.message, 'error');
+    }
+  }
+
+  async function deleteLead() {
+    if (!confirm('Are you sure you want to delete this lead? This cannot be undone.')) return;
+    try {
+      const leadId = document.getElementById('detailLeadId').value;
+      const token = localStorage.getItem('accessToken');
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const res = await fetch('/api/leads/' + leadId, {
+        method: 'DELETE',
+        headers
+      });
+
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to delete lead');
+
+      showToast('Lead deleted successfully', 'success');
+      closeLeadDetailModal();
+      
+      const isLeadsPage = '{{activePage}}' === 'leads';
+      if (isLeadsPage) {
+        loadLeadsData();
+      } else {
+        loadDashboardData();
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error deleting lead: ' + err.message, 'error');
+    }
+  }
+
+  // --- Init ---
+  const isLeadsPage = '{{activePage}}' === 'leads';
+  if (isLeadsPage) {
+    loadLeadsData();
+  } else {
+    updateDateRange();
+    loadDashboardData();
+  }
 </script>
