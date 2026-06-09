@@ -57,7 +57,7 @@
             width: 280px;
             height: 280px;
             display: block;
-            image-rendering: pixelated;
+            object-fit: contain;
         }
         .placeholder {
             width: 280px;
@@ -71,6 +71,8 @@
             font-size: 14px;
             flex-direction: column;
             gap: 12px;
+            text-align: center;
+            padding: 20px;
         }
         .placeholder svg { opacity: 0.3; }
         #status {
@@ -78,18 +80,57 @@
             padding: 8px 16px;
             border-radius: 8px;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            max-width: 100%;
+            word-break: break-word;
         }
         .status-loading { background: #1e293b; color: #60a5fa; }
         .status-connected { background: #052e16; color: #4ade80; }
         .status-disconnected { background: #3b1119; color: #f87171; }
         .status-error { background: #3b1119; color: #fbbf24; }
+        #errorDetail {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 16px;
+            display: none;
+            background: #12121c;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: left;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 4px;
+        }
+        .btn-primary {
+            background: #22c55e;
+            color: #000;
+        }
+        .btn-primary:hover { background: #16a34a; }
+        .btn-secondary {
+            background: #2a2a3a;
+            color: #e1e1e6;
+        }
+        .btn-secondary:hover { background: #3a3a4a; }
         .steps {
             text-align: left;
             background: #12121c;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
+            margin-top: 20px;
         }
         .steps h3 {
             font-size: 13px;
@@ -134,7 +175,7 @@
         .countdown {
             font-size: 12px;
             color: #555;
-            margin-top: 8px;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -145,25 +186,48 @@
             <h2>WhatsApp Inbox</h2>
             <p class="subtitle">Link your WhatsApp to send and receive messages directly from CoverScore AI</p>
 
-            <div class="qr-wrapper">
-                <div id="qrContainer">
-                    <div class="placeholder" id="qrPlaceholder">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/><rect x="14" y="14" width="3" height="3"/></svg>
-                        Loading QR code...
+            <div id="qrSection" style="display:block;">
+                <div class="qr-wrapper">
+                    <div id="qrContainer">
+                        <div class="placeholder" id="qrPlaceholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/><rect x="14" y="14" width="3" height="3"/></svg>
+                            <span id="placeholderText">Loading QR code...</span>
+                        </div>
+                        <img id="qrImage" style="display:none;" alt="WhatsApp QR Code" />
                     </div>
-                    <img id="qrImage" style="display:none;" alt="WhatsApp QR Code" />
+                </div>
+            </div>
+
+            <div id="connectedSection" style="display:none;">
+                <div class="qr-wrapper">
+                    <div style="padding:20px;text-align:center;">
+                        <div style="width:80px;height:80px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <div id="profileName" style="font-size:18px;font-weight:600;color:#111;margin-bottom:4px;"></div>
+                        <div id="profilePhone" style="font-size:13px;color:#666;margin-bottom:4px;"></div>
+                        <div style="font-size:12px;color:#22c55e;font-weight:500;">Active</div>
+                    </div>
                 </div>
             </div>
 
             <div id="status" class="status-loading">Connecting...</div>
             <div class="countdown" id="countdown"></div>
+            <div id="errorDetail"></div>
 
-            <div class="steps">
-                <h3>How to connect</h3>
-                <div class="step"><span class="step-num">1</span> Open WhatsApp on your phone</div>
-                <div class="step"><span class="step-num">2</span> Tap <strong>Menu</strong> (⋮) → <strong>Linked Devices</strong></div>
-                <div class="step"><span class="step-num">3</span> Tap <strong>Link a Device</strong></div>
-                <div class="step"><span class="step-num">4</span> Scan the QR code above</div>
+            <div id="actions">
+                <button class="btn btn-primary" onclick="retryFetch()">Retry</button>
+                <button class="btn btn-secondary" id="fallbackBtn" style="display:none;" onclick="showFallback()">Show Static QR</button>
+            </div>
+
+            <div id="stepsSection">
+                <div class="steps">
+                    <h3>How to connect</h3>
+                    <div class="step"><span class="step-num">1</span> Open WhatsApp on your phone</div>
+                    <div class="step"><span class="step-num">2</span> Tap <strong>Menu</strong> (⋮) → <strong>Linked Devices</strong></div>
+                    <div class="step"><span class="step-num">3</span> Tap <strong>Link a Device</strong></div>
+                    <div class="step"><span class="step-num">4</span> Scan the QR code above</div>
+                </div>
             </div>
 
             <a href="/admin/dashboard" class="back-link">← Back to Dashboard</a>
@@ -174,11 +238,20 @@
         let refreshInterval = null;
         let countdownInterval = null;
         let secondsUntilRefresh = 30;
+        let lastError = '';
 
+        const qrSection = document.getElementById('qrSection');
+        const connectedSection = document.getElementById('connectedSection');
+        const stepsSection = document.getElementById('stepsSection');
         const qrImage = document.getElementById('qrImage');
         const qrPlaceholder = document.getElementById('qrPlaceholder');
+        const placeholderText = document.getElementById('placeholderText');
+        const profileName = document.getElementById('profileName');
+        const profilePhone = document.getElementById('profilePhone');
         const statusEl = document.getElementById('status');
         const countdownEl = document.getElementById('countdown');
+        const errorDetailEl = document.getElementById('errorDetail');
+        const fallbackBtn = document.getElementById('fallbackBtn');
 
         function setStatus(text, className) {
             statusEl.textContent = text;
@@ -189,40 +262,85 @@
             countdownEl.textContent = `Refreshing in ${secondsUntilRefresh}s`;
         }
 
+        function showError(msg, detail) {
+            lastError = msg;
+            placeholderText.textContent = 'QR code unavailable';
+            if (detail) {
+                errorDetailEl.textContent = detail;
+                errorDetailEl.style.display = 'block';
+            } else {
+                errorDetailEl.style.display = 'none';
+            }
+            fallbackBtn.style.display = 'inline-flex';
+        }
+
+        function showFallback() {
+            qrImage.src = '/qrcode.png';
+            qrImage.style.display = 'block';
+            qrPlaceholder.style.display = 'none';
+            errorDetailEl.style.display = 'none';
+            setStatus('Using static QR (may be expired)', 'status-error');
+        }
+
+        function showConnected(data) {
+            qrSection.style.display = 'none';
+            connectedSection.style.display = 'block';
+            stepsSection.style.display = 'none';
+            fallbackBtn.style.display = 'none';
+            errorDetailEl.style.display = 'none';
+            countdownEl.textContent = '';
+            profileName.textContent = data.profileName || 'WhatsApp Business';
+            profilePhone.textContent = data.ownerJid ? data.ownerJid.split('@')[0] : '';
+            setStatus('WhatsApp is connected', 'status-connected');
+        }
+
+        function showQRCode(data) {
+            qrSection.style.display = 'block';
+            connectedSection.style.display = 'none';
+            stepsSection.style.display = 'block';
+            qrImage.src = data.qr;
+            qrImage.style.display = 'block';
+            qrPlaceholder.style.display = 'none';
+            fallbackBtn.style.display = 'none';
+            errorDetailEl.style.display = 'none';
+            setStatus('Scan QR code with WhatsApp', 'status-disconnected');
+        }
+
         async function fetchQR() {
             try {
                 setStatus('Connecting...', 'status-loading');
+                placeholderText.textContent = 'Connecting to WhatsApp API...';
+                errorDetailEl.style.display = 'none';
                 secondsUntilRefresh = 30;
                 updateCountdown();
 
                 const res = await fetch('/api/whatsapp/qr');
                 const data = await res.json();
 
-                if (data.success && data.qr) {
-                    qrImage.src = data.qr;
-                    qrImage.style.display = 'block';
-                    qrPlaceholder.style.display = 'none';
-                    setStatus(data.connected ? 'WhatsApp Connected' : 'Scan QR to connect', data.connected ? 'status-connected' : 'status-disconnected');
-                } else if (data.base64) {
-                    qrImage.src = data.base64.startsWith('data:') ? data.base64 : 'data:image/png;base64,' + data.base64;
-                    qrImage.style.display = 'block';
-                    qrPlaceholder.style.display = 'none';
-                    setStatus('Scan QR to connect', 'status-disconnected');
-                } else if (data.qrcode) {
-                    qrImage.src = data.qrcode.startsWith('data:') ? data.qrcode : 'data:image/png;base64,' + data.qrcode;
-                    qrImage.style.display = 'block';
-                    qrPlaceholder.style.display = 'none';
-                    setStatus('Scan QR to connect', 'status-disconnected');
+                if (data.success && data.connected) {
+                    showConnected(data);
+                } else if (data.success && data.qr) {
+                    showQRCode(data);
                 } else {
+                    qrSection.style.display = 'block';
+                    connectedSection.style.display = 'none';
                     qrImage.style.display = 'none';
                     qrPlaceholder.style.display = 'flex';
+                    showError(data.message || 'Failed to get QR code', data.detail || '');
                     setStatus(data.message || 'No QR code available', 'status-error');
                 }
             } catch (err) {
+                qrSection.style.display = 'block';
+                connectedSection.style.display = 'none';
                 qrImage.style.display = 'none';
                 qrPlaceholder.style.display = 'flex';
-                setStatus('Failed to connect. Retrying...', 'status-error');
+                showError('Network error', err.message);
+                setStatus('Failed to reach server', 'status-error');
             }
+        }
+
+        function retryFetch() {
+            fetchQR();
         }
 
         function startRefresh() {

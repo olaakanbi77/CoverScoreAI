@@ -8,6 +8,7 @@ const { body, validationResult } = require('express-validator');
 const { authenticate } = require('../middleware/auth');
 const { requireAgent } = require('../middleware/rbac');
 const { run, get } = require('../config/database');
+const fetch = require('node-fetch');
 const {
   sendWhatsApp,
   sendAssessmentComplete,
@@ -215,40 +216,102 @@ Our team will respond shortly!`;
   }
 });
 
-// Proxy to get QR code from Evolution API
+// Check WhatsApp connection status and get QR code
 router.get('/qr', async (req, res, next) => {
   try {
     const apiUrl = process.env.EVOLUTION_API_URL;
-    const instance = process.env.EVOLUTION_API_INSTANCE;
+    const instanceName = process.env.EVOLUTION_API_INSTANCE;
     const apiKey = process.env.EVOLUTION_API_KEY;
 
-    if (!apiUrl || !instance || !apiKey) {
-      return res.json({ success: false, message: 'WhatsApp API not configured' });
+    if (!apiUrl || !instanceName || !apiKey) {
+      return res.json({ success: false, qr: null, connected: false, message: 'WhatsApp API not configured on server' });
     }
 
-    const response = await fetch(`${apiUrl}/instance/connect/${instance}`, {
-      headers: { 'apikey': apiKey }
+    // Step 1: Check connection state
+    const stateRes = await fetch(`${apiUrl}/instance/connectionState/${instanceName}`, {
+      headers: { 'apikey': apiKey }, timeout: 10000
     });
-    const data = await response.json();
+    const stateData = await stateRes.json();
+    const instanceState = stateData?.instance?.state || stateData?.state || '';
 
-    // Evolution API can return QR in various formats
-    const qr = data.base64 || data.qrcode || null;
-    const connected = data.status === 'connected' || (!qr && data.status);
+    // In Evolution API v2: "open" = connected, "connecting" = in progress, "closed" = disconnected
+    if (instanceState === 'open') {
+      // Fetch instance details for profile info
+      const infoRes = await fetch(`${apiUrl}/instance/fetchInstances`, {
+        headers: { 'apikey': apiKey }, timeout: 10000
+      });
+      const infoData = await infoRes.json();
+      const inst = Array.isArray(infoData) ? infoData.find(i => i.name === instanceName) : null;
 
-    res.json({
-      success: true,
-      qr: qr ? (qr.startsWith('data:') ? qr : `data:image/png;base64,${qr}`) : null,
-      connected,
-      message: connected ? 'WhatsApp is connected' : qr ? 'QR code ready' : 'No QR code available',
-      raw: process.env.NODE_ENV === 'development' ? data : undefined
-    });
+      return res.json({
+        success: true,
+        qr: null,
+        connected: true,
+        profileName: inst?.profileName || null,
+        ownerJid: inst?.ownerJid || null,
+        message: 'WhatsApp is connected'
+      });
+    }
+
+    // Step 2: Not connected — try to get QR code
+    if (instanceState === 'closed' || instanceState === '') {
+      const connectRes = await fetch(`${apiUrl}/instance/connect/${instanceName}`, {
+        headers: { 'apikey': apiKey }, timeout: 15000
+      });
+
+      const contentType = connectRes.headers.get('content-type') || '';
+
+      // Some versions return the QR directly as an image
+      if (contentType.startsWith('image/')) {
+        const buffer = await connectRes.buffer();
+        const base64 = buffer.toString('base64');
+        return res.json({
+          success: true,
+          qr: `data:${contentType};base64,${base64}`,
+          connected: false,
+          message: 'Scan QR code with WhatsApp'
+        });
+      }
+
+      const text = await connectRes.text();
+      let data;
+      try { data = JSON.parse(text); } catch (e) {
+        return res.json({ success: false, qr: null, connected: false, message: `Unexpected API response (${connectRes.status})` });
+      }
+
+      // Extract QR from various possible response formats
+      const qr = data.base64 || data.qrcode || data.qr || data.image || null;
+      if (qr) {
+        return res.json({
+          success: true,
+          qr: qr.startsWith('data:') ? qr : `data:image/png;base64,${qr}`,
+          connected: false,
+          message: 'Scan QR code with WhatsApp'
+        });
+      }
+
+      // Connect returned state info (no QR available yet) — check if "open" now
+      if (data?.instance?.state === 'open') {
+        return res.json({ success: true, qr: null, connected: true, message: 'WhatsApp is connected' });
+      }
+
+      return res.json({
+        success: false, qr: null, connected: false,
+        message: instanceState === 'connecting'
+          ? 'WhatsApp is still connecting. Try again shortly.'
+          : 'No QR code available. Ensure the instance is properly configured.'
+      });
+    }
+
+    // State is "connecting" — still in progress
+    res.json({ success: false, qr: null, connected: false, message: 'WhatsApp is connecting. Please wait...' });
   } catch (error) {
-    res.json({
-      success: false,
-      qr: null,
-      connected: false,
-      message: `Connection error: ${error.message}`
-    });
+    const message = error.code === 'ECONNREFUSED'
+      ? 'WhatsApp API server is not running'
+      : error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED'
+        ? 'WhatsApp API connection timed out'
+        : `Error: ${error.message}`;
+    res.json({ success: false, qr: null, connected: false, message });
   }
 });
 
