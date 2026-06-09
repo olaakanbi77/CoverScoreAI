@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { db, all, get } = require('../config/database');
-const { requireAuth, requireSalesOrAdmin } = require('../middleware/auth');
+const { authenticatePage } = require('../middleware/auth');
+
+const requireSalesOrAdmin = (req, res, next) => {
+  if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
+  return res.status(403).send('Forbidden: Sales or Admin role required');
+};
 
 // Advisor Dashboard
-router.get('/dashboard', requireAuth, requireSalesOrAdmin, async (req, res) => {
+router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     // Advisors see their assigned leads, OR leads that are qualified and unassigned
     let leadsQuery = `
@@ -33,7 +38,7 @@ router.get('/dashboard', requireAuth, requireSalesOrAdmin, async (req, res) => {
 });
 
 // Proposal Writer View
-router.get('/proposal-writer/:leadId', requireAuth, requireSalesOrAdmin, async (req, res) => {
+router.get('/proposal-writer/:leadId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
     if (!lead) return res.status(404).send('Lead not found');

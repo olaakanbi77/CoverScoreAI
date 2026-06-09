@@ -2,11 +2,16 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const { db, run, get, all } = require('../config/database');
-const { requireAuth, requireSalesOrAdmin } = require('../middleware/auth');
+const { authenticate } = require('../middleware/auth');
 const aiService = require('../services/aiService');
 
+const requireSalesOrAdminApi = (req, res, next) => {
+  if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
+  return res.status(403).json({ error: 'Forbidden' });
+};
+
 // Generate a proposal using AI
-router.post('/generate', requireAuth, requireSalesOrAdmin, async (req, res) => {
+router.post('/generate', authenticate, requireSalesOrAdminApi, async (req, res) => {
   const { leadId } = req.body;
   if (!leadId) return res.status(400).json({ error: 'leadId is required' });
 
@@ -30,7 +35,7 @@ router.post('/generate', requireAuth, requireSalesOrAdmin, async (req, res) => {
 });
 
 // Save or Update Proposal
-router.post('/save', requireAuth, requireSalesOrAdmin, async (req, res) => {
+router.post('/save', authenticate, requireSalesOrAdminApi, async (req, res) => {
   const { id, leadId, title, content, amount, status } = req.body;
   
   try {
