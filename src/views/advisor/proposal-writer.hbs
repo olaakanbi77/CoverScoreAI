@@ -1,0 +1,247 @@
+<!-- Include Quill stylesheet -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<style>
+.writer-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+.editor-panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+.editor-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+.editor-body {
+  flex-grow: 1;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+}
+#editor {
+  height: 500px;
+  border: none;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+.sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: center;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary { background: #eee; color: #333; }
+.btn-ai { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; }
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+.info-row:last-child { border: none; }
+</style>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h1 style="margin:0;">Proposal Writer</h1>
+    <p style="color: var(--text-muted); margin-top:0.5rem;">Drafting for: <strong>{{lead.name}}</strong> ({{or lead.business_name 'Individual'}})</p>
+  </div>
+  <a href="/advisor/dashboard" style="color: var(--text-muted); text-decoration: none;">&larr; Back to Dashboard</a>
+</div>
+
+<div class="writer-container">
+  <!-- Editor -->
+  <div class="editor-panel">
+    <div class="editor-header">
+      <input type="text" id="propTitle" class="form-control" style="font-size: 1.2rem; font-weight: bold; border: none; padding: 0;" placeholder="Proposal Title..." value="{{or proposal.title 'Comprehensive Insurance Proposal'}}">
+    </div>
+    <div class="editor-body">
+      <div id="editor"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar Controls -->
+  <div class="sidebar-panel">
+    <div class="card">
+      <h3 style="margin-top:0;">AI Assistant</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted);">Generate a smart proposal draft based on this lead's CoverScore assessment.</p>
+      <button id="btnGenerateAI" class="btn btn-ai">✨ Generate Draft with AI</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Proposal Settings</h3>
+      <div class="form-group">
+        <label>Estimated Premium (₦)</label>
+        <input type="number" id="propAmount" class="form-control" value="{{or proposal.amount lead.estimated_premium}}">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="propStatus" class="form-control">
+          <option value="Draft" {{#if (eq proposal.status 'Draft')}}selected{{/if}}>Draft</option>
+          <option value="Sent" {{#if (eq proposal.status 'Sent')}}selected{{/if}}>Sent</option>
+        </select>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+        <button id="btnSave" class="btn btn-primary">Save Proposal</button>
+      </div>
+      
+      {{#if proposal}}
+      <div style="margin-top: 1rem;">
+        <button id="btnSend" class="btn btn-secondary">Copy Public Link</button>
+      </div>
+      {{/if}}
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Lead Context</h3>
+      <div class="info-row">
+        <span style="color:var(--text-muted)">Score</span>
+        <strong><span style="color: {{#if (eq lead.risk_level 'critical')}}#ef4444{{else}}#10b981{{/if}}">{{lead.score}}/100</span></strong>
+      </div>
+      <div class="info-row">
+        <span style="color:var(--text-muted)">Risk Level</span>
+        <strong>{{lead.risk_level}}</strong>
+      </div>
+      <div class="info-row">
+        <span style="color:var(--text-muted)">Primary Concern</span>
+        <strong>{{lead.primary_concern}}</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize Quill editor
+  var quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'Start writing the proposal, or use AI to generate a draft...',
+    modules: {
+      toolbar: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
+  // Pre-load content if exists
+  const existingContent = `{{{proposal.content}}}`;
+  if (existingContent && existingContent.trim() !== '') {
+    quill.root.innerHTML = existingContent;
+  }
+
+  const leadId = {{lead.id}};
+  const proposalId = {{or proposal.id 'null'}};
+  const token = localStorage.getItem('accessToken');
+
+  document.getElementById('btnGenerateAI').addEventListener('click', async () => {
+    const btn = document.getElementById('btnGenerateAI');
+    btn.innerHTML = 'Generating... Please wait';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/proposals/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ leadId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        quill.root.innerHTML = data.draft;
+      } else {
+        alert(data.error || 'Failed to generate proposal');
+      }
+    } catch(err) {
+      alert('Network error');
+    } finally {
+      btn.innerHTML = '✨ Generate Draft with AI';
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('btnSave').addEventListener('click', async () => {
+    const btn = document.getElementById('btnSave');
+    btn.innerHTML = 'Saving...';
+    
+    const payload = {
+      id: proposalId,
+      leadId: leadId,
+      title: document.getElementById('propTitle').value,
+      content: quill.root.innerHTML,
+      amount: parseInt(document.getElementById('propAmount').value) || 0,
+      status: document.getElementById('propStatus').value
+    };
+
+    try {
+      const res = await fetch('/api/proposals/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Proposal saved successfully!');
+        window.location.reload();
+      } else {
+        alert(data.error || 'Save failed');
+      }
+    } catch(err) {
+      alert('Network error');
+    } finally {
+      btn.innerHTML = 'Save Proposal';
+    }
+  });
+
+  {{#if proposal}}
+  document.getElementById('btnSend').addEventListener('click', () => {
+    const link = `${window.location.origin}/api/proposals/view/{{proposal.token}}`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('Public proposal link copied to clipboard!\nYou can paste this into WhatsApp or Email to send to the lead.');
+    });
+  });
+  {{/if}}
+</script>

@@ -1,0 +1,126 @@
+<style>
+body {
+  background: #f8fafc;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+.proposal-container {
+  max-width: 800px;
+  margin: 3rem auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.proposal-header {
+  background: linear-gradient(135deg, #0f172a, #334155);
+  color: white;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.proposal-body {
+  padding: 3rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #334155;
+}
+.proposal-amount {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  margin: 2rem 0;
+  border: 1px solid #e2e8f0;
+}
+.amount-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+.action-footer {
+  padding: 2rem 3rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.btn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.btn-accept { background: #10b981; color: white; }
+.btn-accept:hover { background: #059669; }
+.btn-decline { background: white; color: #ef4444; border: 1px solid #ef4444; }
+.btn-decline:hover { background: #fef2f2; }
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+.status-Accepted { background: #d1fae5; color: #065f46; }
+.status-Declined { background: #fee2e2; color: #991b1b; }
+</style>
+
+<div class="proposal-container">
+  <div class="proposal-header">
+    <h1 style="margin:0 0 10px 0;">{{proposal.title}}</h1>
+    <p style="margin:0; opacity:0.8;">Prepared for <strong>{{proposal.lead_name}}</strong> ({{proposal.business_name}})</p>
+    
+    {{#if (or (eq proposal.status 'Accepted') (eq proposal.status 'Declined'))}}
+      <div class="status-badge status-{{proposal.status}}">This proposal has been {{proposal.status}}</div>
+    {{/if}}
+  </div>
+
+  <div class="proposal-body">
+    {{{proposal.content}}}
+
+    {{#if proposal.amount}}
+    <div class="proposal-amount">
+      <div style="text-transform: uppercase; font-size: 0.85rem; font-weight: 700; color: #64748b; letter-spacing: 1px;">Estimated Annual Investment</div>
+      <div class="amount-value">₦{{proposal.amount}}</div>
+    </div>
+    {{/if}}
+  </div>
+
+  {{#if (eq proposal.status 'Sent')}}
+  <div class="action-footer" id="actionFooter">
+    <button class="btn btn-decline" onclick="handleAction('Declined')">Decline Proposal</button>
+    <button class="btn btn-accept" onclick="handleAction('Accepted')">Accept & Proceed</button>
+  </div>
+  {{/if}}
+</div>
+
+<script>
+async function handleAction(action) {
+  if (action === 'Declined' && !confirm('Are you sure you want to decline this proposal?')) return;
+  
+  const footer = document.getElementById('actionFooter');
+  footer.innerHTML = '<p>Processing...</p>';
+
+  try {
+    const res = await fetch('/api/proposals/{{proposal.token}}/action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action })
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.reload();
+    } else {
+      alert('Action failed');
+      window.location.reload();
+    }
+  } catch(err) {
+    alert('Network error');
+  }
+}
+</script>

@@ -579,4 +579,78 @@ If you can't perfectly map it, just do your best estimation.`;
   return JSON.parse(aiContent);
 };
 
-module.exports = { generateRiskReport, generateExplanations, handleConversationalAssessment };
+const generateProposal = async (lead, assessment) => {
+  const isIndividual = lead.entity_type === 'individual';
+  const name = lead.business_name || lead.name;
+  const industry = lead.industry || (isIndividual ? 'Personal/Family' : 'Business');
+  
+  // Extract report data if assessment exists
+  let reportData = '';
+  if (assessment && assessment.ai_report) {
+    try {
+      const parsedReport = JSON.parse(assessment.ai_report);
+      reportData = `
+        Executive Summary: ${parsedReport.executiveSummary || ''}
+        Top Priorities: ${Array.isArray(parsedReport.recommendedProtectionPriorities) ? parsedReport.recommendedProtectionPriorities.join(', ') : ''}
+        Financial Exposure: ${parsedReport.estimatedFinancialExposure || ''}
+      `;
+    } catch(e) {}
+  }
+
+  const prompt = `Draft a professional Insurance Proposal for ${name} (${industry}).
+  
+Context:
+Risk Level: ${lead.risk_level || 'Pending'}
+Score: ${lead.score || 0}/100
+Primary Concern: ${lead.primary_concern || 'Comprehensive Protection'}
+Assessment Insights: ${reportData}
+
+Requirements:
+- Format the output strictly as professional, well-spaced HTML without a <body> or <html> tag (just the content like <h2>, <p>, <ul>, <strong>).
+- Tone: Consultative, authoritative, reassuring, persuasive.
+- Include a warm greeting.
+- Include an "Executive Summary" section.
+- Include a "Recommended Coverage Portfolio" section (list 3-4 highly relevant insurance types).
+- Include a placeholder for "Estimated Annual Investment" formatted nicely.
+- Conclude with "Next Steps".
+- Do not use markdown backticks in the response. Just return raw HTML.`;
+
+  try {
+    if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
+      return `<h2>Proposal for ${name}</h2><p>Please configure the AI API key to generate automatic proposals.</p>`;
+    }
+
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': \`Bearer \${MISTRAL_API_KEY}\`
+      },
+      body: JSON.stringify({
+        model: MISTRAL_MODEL,
+        messages: [
+          { role: 'system', content: 'You are an expert Insurance Risk Advisor creating personalized HTML proposals.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.6
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Mistral AI API error');
+    }
+
+    const data = await response.json();
+    let draftHtml = data.choices?.[0]?.message?.content || '';
+    
+    // Clean up if the AI wraps in markdown html code block
+    draftHtml = draftHtml.replace(/^\\s*\`\`\`html\\s*/i, '').replace(/\\s*\`\`\`\\s*$/, '');
+    
+    return draftHtml.trim();
+  } catch (error) {
+    console.error('Error drafting proposal:', error);
+    return \`<h2>Proposal for \${name}</h2><p>Our team has analyzed your CoverScore profile. Based on our review, we recommend a comprehensive coverage package tailored to your needs.</p><p>Please review the estimated pricing and coverage details below.</p>\`;
+  }
+};
+
+module.exports = { generateRiskReport, generateExplanations, handleConversationalAssessment, generateProposal };

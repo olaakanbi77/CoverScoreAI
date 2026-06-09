@@ -1,0 +1,140 @@
+<style>
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  margin-top: 1.5rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+.badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.badge-qualified { background: #e0f2f1; color: #00796b; }
+.badge-sent { background: #e3f2fd; color: #1976d2; }
+.badge-draft { background: #fff3e0; color: #f57c00; }
+.btn-action {
+  background: var(--primary);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+</style>
+
+<div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h1 style="margin:0;">Advisor Workspace</h1>
+    <p style="color: var(--text-muted); margin-top:0.5rem;">Welcome back, {{user.name}}.</p>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <div class="stat-card">
+    <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;">ASSIGNED LEADS</div>
+    <div class="stat-value">{{leads.length}}</div>
+  </div>
+  <div class="stat-card">
+    <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;">ACTIVE PROPOSALS</div>
+    <div class="stat-value">{{proposals.length}}</div>
+  </div>
+</div>
+
+<div class="table-container">
+  <h3>Your Qualified Leads</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Business</th>
+        <th>Risk Level</th>
+        <th>Est. Premium</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each leads}}
+      <tr>
+        <td><strong>{{name}}</strong></td>
+        <td>{{or business_name 'N/A'}}</td>
+        <td>{{risk_level}}</td>
+        <td>₦{{estimated_premium}}</td>
+        <td>
+          <a href="/advisor/proposal-writer/{{id}}" class="btn-action">Draft Proposal</a>
+          <a href="/admin/leads/{{id}}" class="btn-action" style="background:#eee; color:#333; margin-left:8px;">View Details</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr><td colspan="5" style="text-align:center; padding: 2rem; color: #888;">No leads assigned yet.</td></tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<div class="table-container">
+  <h3>Recent Proposals</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Last Updated</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each proposals}}
+      <tr>
+        <td><strong>{{title}}</strong></td>
+        <td>₦{{amount}}</td>
+        <td><span class="badge {{#if (eq status 'Sent')}}badge-sent{{else}}badge-draft{{/if}}">{{status}}</span></td>
+        <td>{{formatDate updated_at}}</td>
+        <td>
+          <a href="/advisor/proposal-writer/{{lead_id}}" class="btn-action">Edit</a>
+          {{#if (eq status 'Sent')}}
+          <a href="/api/proposals/view/{{token}}" target="_blank" class="btn-action" style="background:#eee; color:#333; margin-left:8px;">View Live</a>
+          {{/if}}
+        </td>
+      </tr>
+      {{else}}
+      <tr><td colspan="5" style="text-align:center; padding: 2rem; color: #888;">No proposals drafted yet.</td></tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

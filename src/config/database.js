@@ -113,8 +113,25 @@ const initDatabase = () => {
       FOREIGN KEY (lead_id) REFERENCES leads(id)
     );
 
+    CREATE TABLE IF NOT EXISTS proposals (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      advisor_id INTEGER,
+      title TEXT NOT NULL,
+      content TEXT,
+      amount INTEGER DEFAULT 0,
+      status TEXT DEFAULT 'Draft',
+      token TEXT UNIQUE NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME,
+      FOREIGN KEY (lead_id) REFERENCES leads(id),
+      FOREIGN KEY (advisor_id) REFERENCES users(id)
+    );
+
     CREATE INDEX IF NOT EXISTS idx_tasks_lead_id ON tasks(lead_id);
     CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id);
+    CREATE INDEX IF NOT EXISTS idx_proposals_lead_id ON proposals(lead_id);
+    CREATE INDEX IF NOT EXISTS idx_proposals_token ON proposals(token);
   `);
 
   // CRM Schema Migration (Option B)

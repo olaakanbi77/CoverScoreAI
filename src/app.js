@@ -15,6 +15,8 @@ const analyticsRoutes = require('./routes/analytics');
 const publicRoutes = require('./routes/public');
 const whatsappRoutes = require('./routes/whatsapp');
 const crmRoutes = require('./routes/crm');
+const advisorRoutes = require('./routes/advisor');
+const proposalsRoutes = require('./routes/proposals');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
 
@@ -193,6 +195,8 @@ app.use('/api/public', publicRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/webhook', webhookRoutes);
 app.use('/api/crm', crmRoutes);
+app.use('/api/proposals', proposalsRoutes);
+app.use('/advisor', advisorRoutes);
 
 // Serve QR code page for WhatsApp linking
 app.get('/whatsapp-link', (req, res) => {
