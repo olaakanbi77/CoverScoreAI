@@ -218,13 +218,37 @@ Our team will respond shortly!`;
 // Proxy to get QR code from Evolution API
 router.get('/qr', async (req, res, next) => {
   try {
-    const response = await fetch(`${process.env.EVOLUTION_API_URL}/instance/connect/${process.env.EVOLUTION_API_INSTANCE}`, {
-      headers: { 'apikey': process.env.EVOLUTION_API_KEY }
+    const apiUrl = process.env.EVOLUTION_API_URL;
+    const instance = process.env.EVOLUTION_API_INSTANCE;
+    const apiKey = process.env.EVOLUTION_API_KEY;
+
+    if (!apiUrl || !instance || !apiKey) {
+      return res.json({ success: false, message: 'WhatsApp API not configured' });
+    }
+
+    const response = await fetch(`${apiUrl}/instance/connect/${instance}`, {
+      headers: { 'apikey': apiKey }
     });
     const data = await response.json();
-    res.json(data);
+
+    // Evolution API can return QR in various formats
+    const qr = data.base64 || data.qrcode || null;
+    const connected = data.status === 'connected' || (!qr && data.status);
+
+    res.json({
+      success: true,
+      qr: qr ? (qr.startsWith('data:') ? qr : `data:image/png;base64,${qr}`) : null,
+      connected,
+      message: connected ? 'WhatsApp is connected' : qr ? 'QR code ready' : 'No QR code available',
+      raw: process.env.NODE_ENV === 'development' ? data : undefined
+    });
   } catch (error) {
-    next(error);
+    res.json({
+      success: false,
+      qr: null,
+      connected: false,
+      message: `Connection error: ${error.message}`
+    });
   }
 });
 
