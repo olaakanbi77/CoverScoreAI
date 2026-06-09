@@ -624,7 +624,7 @@ Requirements:
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer \${MISTRAL_API_KEY}\`
+        'Authorization': `Bearer ${MISTRAL_API_KEY}`
       },
       body: JSON.stringify({
         model: MISTRAL_MODEL,
@@ -644,12 +644,12 @@ Requirements:
     let draftHtml = data.choices?.[0]?.message?.content || '';
     
     // Clean up if the AI wraps in markdown html code block
-    draftHtml = draftHtml.replace(/^\\s*\`\`\`html\\s*/i, '').replace(/\\s*\`\`\`\\s*$/, '');
+    draftHtml = draftHtml.replace(/^\s*```html\s*/i, '').replace(/\s*```\s*$/, '');
     
     return draftHtml.trim();
   } catch (error) {
     console.error('Error drafting proposal:', error);
-    return \`<h2>Proposal for \${name}</h2><p>Our team has analyzed your CoverScore profile. Based on our review, we recommend a comprehensive coverage package tailored to your needs.</p><p>Please review the estimated pricing and coverage details below.</p>\`;
+    return `<h2>Proposal for ${name}</h2><p>Our team has analyzed your CoverScore profile. Based on our review, we recommend a comprehensive coverage package tailored to your needs.</p><p>Please review the estimated pricing and coverage details below.</p>`;
   }
 };
 
