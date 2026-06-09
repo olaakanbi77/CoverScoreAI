@@ -133,6 +133,10 @@ app.get('/admin/settings', authenticatePage, (req, res) => {
   res.render('admin/settings', { title: 'Settings', activePage: 'settings', layout: 'admin' });
 });
 
+app.get('/admin/team', authenticatePage, (req, res) => {
+  res.render('admin/team', { title: 'Team & Advisors', activePage: 'team', layout: 'admin' });
+});
+
 app.get(['/quote', '/request-quote'], (req, res) => {
   res.render('request-quote', { title: 'Request a Quote', layout: false });
 });

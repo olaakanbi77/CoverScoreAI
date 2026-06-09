@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const { run, get, all } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/rbac');
+const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
@@ -118,6 +119,41 @@ router.put('/users/:id/role',
       await run('UPDATE users SET role = ?, updated_at = datetime("now") WHERE id = ?', [role, req.params.id]);
 
       res.json({ message: 'Role updated', role });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post('/users/create',
+  authenticate,
+  requireAdmin,
+  body('email').isEmail().normalizeEmail(),
+  body('password').isLength({ min: 6 }),
+  body('name').trim().notEmpty(),
+  body('role').isIn(['admin', 'sales', 'analyst', 'user']),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ error: 'Validation Error', message: errors.array()[0].msg });
+      }
+
+      const { email, password, name, role } = req.body;
+
+      const existingUser = await get('SELECT id FROM users WHERE email = ?', [email]);
+      if (existingUser) {
+        return res.status(400).json({ error: 'Bad Request', message: 'Email already registered' });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      await run(`
+        INSERT INTO users (email, password_hash, name, role)
+        VALUES (?, ?, ?, ?)
+      `, [email, passwordHash, name, role]);
+
+      res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
       next(error);
     }

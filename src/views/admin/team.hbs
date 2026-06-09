@@ -1,0 +1,363 @@
+<style>
+  .team-page {
+    padding: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+  }
+  .page-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .table-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+  }
+
+  .crm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .crm-table th {
+    text-align: left;
+    padding: 12px 16px;
+    color: var(--crm-text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--crm-border);
+  }
+  .crm-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    vertical-align: middle;
+  }
+  .crm-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: 14px;
+  }
+  .user-info-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .user-name {
+    font-weight: 500;
+  }
+  .user-email {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .role-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .role-admin { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+  .role-sales { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+  .role-analyst { background: rgba(168, 85, 247, 0.1); color: #A855F7; }
+  .role-user { background: rgba(156, 163, 175, 0.1); color: #9CA3AF; }
+
+  .role-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .role-select option {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: white;
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+  }
+
+  /* Modal */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .form-control {
+    width: 100%;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+</style>
+
+<div class="team-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Team & Advisors</h1>
+      <p class="page-desc">Manage your team members, their roles, and system access.</p>
+    </div>
+    <button class="btn btn-primary" onclick="openCreateUserModal()">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+      Add Advisor
+    </button>
+  </div>
+
+  <div class="table-card">
+    <table class="crm-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Role</th>
+          <th>Joined Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="usersTableBody">
+        <tr><td colspan="4" style="text-align: center;">Loading users...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create User Modal -->
+<div id="createUserModal" class="modal-overlay">
+  <div class="modal-container" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3 class="modal-title">Create New Advisor</h3>
+      <button class="modal-close" onclick="closeCreateUserModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="newUserName" class="form-control" placeholder="e.g. Jane Smith">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="newUserEmail" class="form-control" placeholder="jane@coverscore.ai">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select id="newUserRole" class="form-control">
+          <option value="sales">Advisor (Sales)</option>
+          <option value="admin">Administrator</option>
+          <option value="analyst">Risk Analyst</option>
+          <option value="user">Standard User</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Temporary Password</label>
+        <div style="display:flex; gap:12px;">
+          <input type="text" id="newUserPassword" class="form-control" placeholder="Minimum 6 characters">
+          <button class="btn btn-outline" style="border: 1px solid var(--glass-border); background: transparent; color: white;" onclick="generatePassword()">Generate</button>
+        </div>
+      </div>
+      <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
+        Please securely share this temporary password with the new user. They can log in immediately.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" style="padding: 10px 20px; background: transparent; border: 1px solid var(--glass-border); color: white; border-radius: var(--radius-md); cursor: pointer;" onclick="closeCreateUserModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitCreateUser()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openCreateUserModal() {
+    document.getElementById('createUserModal').classList.add('show');
+    generatePassword(); // Auto generate a secure password on open
+  }
+
+  function closeCreateUserModal() {
+    document.getElementById('createUserModal').classList.remove('show');
+    document.getElementById('newUserName').value = '';
+    document.getElementById('newUserEmail').value = '';
+  }
+
+  function generatePassword() {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+    let pwd = '';
+    for(let i=0; i<12; i++) {
+      pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById('newUserPassword').value = pwd;
+  }
+
+  async function loadUsers() {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch('/api/admin/users?limit=50', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        renderUsers(data.users || []);
+      }
+    } catch(err) {
+      console.error('Failed to load users', err);
+    }
+  }
+
+  function renderUsers(users) {
+    const tbody = document.getElementById('usersTableBody');
+    if (users.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = users.map(user => {
+      const initials = user.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2);
+      const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      
+      return `
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar">${initials}</div>
+              <div class="user-info-text">
+                <span class="user-name">${user.name}</span>
+                <span class="user-email">${user.email}</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+          <td>${joinedDate}</td>
+          <td>
+            <select class="role-select" onchange="updateUserRole(${user.id}, this.value)">
+              <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+              <option value="sales" ${user.role === 'sales' ? 'selected' : ''}>Advisor</option>
+              <option value="analyst" ${user.role === 'analyst' ? 'selected' : ''}>Analyst</option>
+              <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+            </select>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  async function updateUserRole(userId, newRole) {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch(\`/api/admin/users/\${userId}/role\`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ role: newRole })
+      });
+      if (res.ok) {
+        showToast('Success', 'User role updated successfully');
+        loadUsers();
+      } else {
+        const data = await res.json();
+        showToast('Error', data.message || 'Failed to update role', 'error');
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error', 'Network error', 'error');
+    }
+  }
+
+  async function submitCreateUser() {
+    const name = document.getElementById('newUserName').value.trim();
+    const email = document.getElementById('newUserEmail').value.trim();
+    const role = document.getElementById('newUserRole').value;
+    const password = document.getElementById('newUserPassword').value;
+
+    if (!name || !email || !password) {
+      showToast('Error', 'Please fill in all fields', 'error');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('accessToken');
+      const res = await fetch('/api/admin/users/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ name, email, role, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        showToast('Success', 'User account created successfully');
+        closeCreateUserModal();
+        loadUsers();
+      } else {
+        showToast('Error', data.message || 'Failed to create user', 'error');
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error', 'Network error', 'error');
+    }
+  }
+
+  // Load initially
+  document.addEventListener('DOMContentLoaded', loadUsers);
+</script>
