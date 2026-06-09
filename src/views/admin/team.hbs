@@ -249,15 +249,26 @@
   async function loadUsers() {
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await fetch('/api/admin/users?limit=50', {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const res = await fetch('/api/admin/users?limit=50', { headers });
+      if (res.status === 401) {
+        window.location.href = '/auth/login';
+        return;
+      }
+      
       if (res.ok) {
         const data = await res.json();
         renderUsers(data.users || []);
+      } else {
+        const tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Error loading users. Please refresh.</td></tr>';
       }
     } catch(err) {
       console.error('Failed to load users', err);
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Network error. Please refresh.</td></tr>';
     }
   }
 
@@ -303,24 +314,26 @@
   async function updateUserRole(userId, newRole) {
     try {
       const token = localStorage.getItem('accessToken');
-      const res = await fetch(\`/api/admin/users/\${userId}/role\`, {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const res = await fetch(`/api/admin/users/${userId}/role`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
+        headers,
         body: JSON.stringify({ role: newRole })
       });
       if (res.ok) {
-        showToast('Success', 'User role updated successfully');
+        if (typeof showToast === 'function') showToast('Success', 'User role updated successfully');
         loadUsers();
       } else {
         const data = await res.json();
-        showToast('Error', data.message || 'Failed to update role', 'error');
+        if (typeof showToast === 'function') showToast('Error', data.message || 'Failed to update role', 'error');
+        else alert('Error: ' + (data.message || 'Failed to update role'));
       }
     } catch(err) {
       console.error(err);
-      showToast('Error', 'Network error', 'error');
+      if (typeof showToast === 'function') showToast('Error', 'Network error', 'error');
+      else alert('Network error');
     }
   }
 
@@ -331,32 +344,36 @@
     const password = document.getElementById('newUserPassword').value;
 
     if (!name || !email || !password) {
-      showToast('Error', 'Please fill in all fields', 'error');
+      if (typeof showToast === 'function') showToast('Error', 'Please fill in all fields', 'error');
+      else alert('Please fill in all fields');
       return;
     }
 
     try {
       const token = localStorage.getItem('accessToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
       const res = await fetch('/api/admin/users/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
+        headers,
         body: JSON.stringify({ name, email, role, password })
       });
 
       const data = await res.json();
       if (res.ok) {
-        showToast('Success', 'User account created successfully');
+        if (typeof showToast === 'function') showToast('Success', 'User account created successfully');
+        else alert('User account created successfully');
         closeCreateUserModal();
         loadUsers();
       } else {
-        showToast('Error', data.message || 'Failed to create user', 'error');
+        if (typeof showToast === 'function') showToast('Error', data.message || 'Failed to create user', 'error');
+        else alert('Error: ' + (data.message || 'Failed to create user'));
       }
     } catch(err) {
       console.error(err);
-      showToast('Error', 'Network error', 'error');
+      if (typeof showToast === 'function') showToast('Error', 'Network error', 'error');
+      else alert('Network error');
     }
   }
 
