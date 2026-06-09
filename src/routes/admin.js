@@ -160,4 +160,60 @@ router.post('/users/create',
   }
 );
 
+router.put('/users/:id',
+  authenticate,
+  requireAdmin,
+  body('email').isEmail().normalizeEmail(),
+  body('name').trim().notEmpty(),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ error: 'Validation Error', message: errors.array()[0].msg });
+      }
+
+      const { email, name } = req.body;
+
+      const user = await get('SELECT id FROM users WHERE id = ?', [req.params.id]);
+      if (!user) {
+        return res.status(404).json({ error: 'Not Found', message: 'User not found' });
+      }
+
+      const existingUser = await get('SELECT id FROM users WHERE email = ? AND id != ?', [email, req.params.id]);
+      if (existingUser) {
+        return res.status(400).json({ error: 'Bad Request', message: 'Email already registered to another user' });
+      }
+
+      await run('UPDATE users SET email = ?, name = ?, updated_at = datetime("now") WHERE id = ?', [email, name, req.params.id]);
+
+      res.json({ message: 'User updated successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete('/users/:id',
+  authenticate,
+  requireAdmin,
+  async (req, res, next) => {
+    try {
+      const user = await get('SELECT id FROM users WHERE id = ?', [req.params.id]);
+      if (!user) {
+        return res.status(404).json({ error: 'Not Found', message: 'User not found' });
+      }
+      
+      // Prevent deleting self
+      if (req.user.id === parseInt(req.params.id)) {
+        return res.status(400).json({ error: 'Bad Request', message: 'You cannot delete your own account' });
+      }
+
+      await run('DELETE FROM users WHERE id = ?', [req.params.id]);
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 module.exports = router;
