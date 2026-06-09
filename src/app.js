@@ -49,6 +49,12 @@ app.engine('hbs', exphbs.engine({
       return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
     },
     formatDate: (date) => new Date(date).toLocaleDateString(),
+    formatNumber: (num) => {
+      if (num == null) return '0';
+      return Number(num).toLocaleString('en-US');
+    },
+    gte: (a, b) => Number(a) >= Number(b),
+    lte: (a, b) => Number(a) <= Number(b),
     json: (obj) => JSON.stringify(obj)
   }
 }));
