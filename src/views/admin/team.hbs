@@ -154,14 +154,14 @@
 </style>
 
 <div class="team-page">
-  <div class="page-header">
+  <div class="page-header" style="flex-wrap: wrap; gap: 16px;">
     <div>
-      <h1 class="page-title">Team & Advisors</h1>
+      <h1 class="page-title">Team Management</h1>
       <p class="page-desc">Manage your team members, their roles, and system access.</p>
     </div>
     <button class="btn btn-primary" onclick="openCreateUserModal()">
       <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-      Add Advisor
+      Add User
     </button>
   </div>
 
@@ -187,7 +187,7 @@
 <div id="editUserModal" class="modal-overlay">
   <div class="modal-container" style="max-width: 500px;">
     <div class="modal-header">
-      <h3 class="modal-title">Edit Advisor</h3>
+      <h3 class="modal-title">Edit User</h3>
       <button class="modal-close" onclick="closeEditUserModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
@@ -212,7 +212,7 @@
 <div id="createUserModal" class="modal-overlay">
   <div class="modal-container" style="max-width: 500px;">
     <div class="modal-header">
-      <h3 class="modal-title">Create New Advisor</h3>
+      <h3 class="modal-title">Create New User</h3>
       <button class="modal-close" onclick="closeCreateUserModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
