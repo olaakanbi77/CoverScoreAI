@@ -229,4 +229,18 @@ router.get('/me', authenticate, (req, res) => {
   res.json({ user: req.user });
 });
 
+router.post('/claim-admin', authenticate, async (req, res, next) => {
+  try {
+    const adminExists = await get('SELECT id FROM users WHERE role = ? LIMIT 1', ['admin']);
+    if (adminExists) {
+      return res.status(403).json({ error: 'Forbidden', message: 'An admin already exists. Contact an existing admin to change your role.' });
+    }
+    await run('UPDATE users SET role = ? WHERE id = ?', ['admin', req.user.id]);
+    const updatedUser = await get('SELECT id, email, name, role FROM users WHERE id = ?', [req.user.id]);
+    res.json({ message: 'You are now an admin', user: updatedUser });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
