@@ -193,6 +193,34 @@ router.put('/users/:id',
   }
 );
 
+router.put('/users/:id/reset-password',
+  authenticate,
+  requireAdmin,
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ error: 'Validation Error', message: errors.array()[0].msg });
+      }
+
+      const { password } = req.body;
+
+      const user = await get('SELECT id FROM users WHERE id = ?', [req.params.id]);
+      if (!user) {
+        return res.status(404).json({ error: 'Not Found', message: 'User not found' });
+      }
+
+      const password_hash = await bcrypt.hash(password, 12);
+      await run('UPDATE users SET password_hash = ?, updated_at = datetime("now") WHERE id = ?', [password_hash, req.params.id]);
+
+      res.json({ message: 'Password reset successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.delete('/users/:id',
   authenticate,
   requireAdmin,

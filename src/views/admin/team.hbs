@@ -200,6 +200,22 @@
         <label class="form-label">Email Address</label>
         <input type="email" id="editUserEmail" class="form-control" placeholder="jane@coverscore.ai">
       </div>
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--crm-border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <label class="form-label" style="margin-bottom:0;font-weight:600;">Reset Password</label>
+          <button class="btn btn-outline" style="border:1px solid var(--crm-border);background:var(--crm-bg);color:var(--crm-text-primary);padding:6px 14px;border-radius:var(--crm-radius-sm,8px);cursor:pointer;font-size:13px;" onclick="toggleResetPassword()" id="toggleResetBtn">Change Password</button>
+        </div>
+        <div id="resetPasswordFields" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <div style="display:flex; gap:12px;">
+              <input type="text" id="editUserPassword" class="form-control" placeholder="Minimum 8 characters">
+              <button class="btn btn-outline" style="border: 1px solid var(--crm-border); background: var(--crm-bg); color: var(--crm-text-primary); padding: 10px 16px; border-radius: var(--crm-radius-sm, 8px); cursor: pointer; white-space: nowrap;" onclick="generateEditPassword()">Generate</button>
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top:8px;padding:8px 16px;font-size:13px;" onclick="submitResetPassword()">Reset Password</button>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" style="padding: 10px 20px; background: transparent; border: 1px solid var(--crm-border); color: var(--crm-text-primary); border-radius: var(--crm-radius-sm, 8px); cursor: pointer;" onclick="closeEditUserModal()">Cancel</button>
@@ -316,6 +332,11 @@
     document.getElementById('editUserId').value = '';
     document.getElementById('editUserName').value = '';
     document.getElementById('editUserEmail').value = '';
+    document.getElementById('editUserPassword').value = '';
+    const fields = document.getElementById('resetPasswordFields');
+    if (fields) fields.style.display = 'none';
+    const btn = document.getElementById('toggleResetBtn');
+    if (btn) btn.textContent = 'Change Password';
   }
 
   async function submitEditUser() {
@@ -348,6 +369,56 @@
         else alert('Error: ' + (data.message || 'Failed to update user'));
       }
     } catch(err) {
+      console.error(err);
+      if (typeof showToast === 'function') showToast('Error', 'Network error', 'error');
+      else alert('Network error');
+    }
+  }
+
+  function toggleResetPassword() {
+    const fields = document.getElementById('resetPasswordFields');
+    const btn = document.getElementById('toggleResetBtn');
+    const isHidden = fields.style.display === 'none';
+    fields.style.display = isHidden ? 'block' : 'none';
+    btn.textContent = isHidden ? 'Cancel' : 'Change Password';
+    if (!isHidden) document.getElementById('editUserPassword').value = '';
+  }
+
+  function generateEditPassword() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%';
+    let pwd = '';
+    for (let i = 0; i < 14; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+    document.getElementById('editUserPassword').value = pwd;
+  }
+
+  async function submitResetPassword() {
+    const id = document.getElementById('editUserId').value;
+    const password = document.getElementById('editUserPassword').value.trim();
+
+    if (!password || password.length < 8) {
+      if (typeof showToast === 'function') showToast('Error', 'Password must be at least 8 characters', 'error');
+      else alert('Password must be at least 8 characters');
+      return;
+    }
+
+    try {
+      const headers = { 'Content-Type': 'application/json', ...getApiHeaders() };
+      const res = await fetch(`/api/admin/users/${id}/reset-password`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ password })
+      });
+
+      if (res.ok) {
+        if (typeof showToast === 'function') showToast('Success', 'Password reset successfully');
+        toggleResetPassword();
+        document.getElementById('editUserPassword').value = '';
+      } else {
+        const data = await res.json();
+        if (typeof showToast === 'function') showToast('Error', data.message || 'Failed to reset password', 'error');
+        else alert('Error: ' + (data.message || 'Failed to reset password'));
+      }
+    } catch (err) {
       console.error(err);
       if (typeof showToast === 'function') showToast('Error', 'Network error', 'error');
       else alert('Network error');
