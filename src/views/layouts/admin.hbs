@@ -152,19 +152,15 @@
   <script src="/js/main.js"></script>
 
   <script>
+    window.currentUser = {{{json user}}};
+
     function toggleSidebar() {
       document.querySelector('.admin-sidebar').classList.toggle('show');
     }
 
     async function loadSidebarOverview() {
       try {
-        const token = localStorage.getItem('accessToken');
-        const headers = {};
-        if (token) {
-          headers['Authorization'] = 'Bearer ' + token;
-        }
-        
-        const res = await fetch('/api/analytics/overview', { headers });
+        const res = await fetch('/api/analytics/overview');
         if (res.ok) {
           const data = await res.json();
           const sb = data.sidebar || {};

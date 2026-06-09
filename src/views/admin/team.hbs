@@ -272,15 +272,21 @@
     document.getElementById('newUserPassword').value = pwd;
   }
 
+  function getApiHeaders() {
+    return {};
+  }
+
   async function loadUsers() {
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers = {};
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const res = await fetch('/api/admin/users?limit=50', { headers });
+      const res = await fetch('/api/admin/users?limit=50', { headers: getApiHeaders() });
       if (res.status === 401) {
         window.location.href = '/auth/login';
+        return;
+      }
+      
+      if (res.status === 403) {
+        const tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">You need Administrator access to manage users.</td></tr>';
         return;
       }
       
@@ -324,9 +330,7 @@
     }
 
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const headers = { 'Content-Type': 'application/json', ...getApiHeaders() };
 
       const res = await fetch(`/api/admin/users/${id}`, {
         method: 'PUT',
@@ -356,13 +360,9 @@
     }
 
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers = {};
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
       const res = await fetch(`/api/admin/users/${id}`, {
         method: 'DELETE',
-        headers
+        headers: getApiHeaders()
       });
 
       if (res.ok) {
@@ -446,9 +446,7 @@
 
   async function updateUserRole(userId, newRole) {
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const headers = { 'Content-Type': 'application/json', ...getApiHeaders() };
 
       const res = await fetch(`/api/admin/users/${userId}/role`, {
         method: 'PUT',
@@ -483,9 +481,7 @@
     }
 
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
+      const headers = { 'Content-Type': 'application/json', ...getApiHeaders() };
 
       const res = await fetch('/api/admin/users/create', {
         method: 'POST',
