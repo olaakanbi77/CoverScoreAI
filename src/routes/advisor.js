@@ -58,7 +58,9 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
             risks = Object.entries(report.risk_categories).map(([name, score]) => ({ name: name.replace('_', ' '), score }));
           }
           
-          if (report.identified_gaps) {
+          if (report.recommendations) {
+            protection_gaps = report.recommendations.map(r => 'No ' + r);
+          } else if (report.identified_gaps) {
             protection_gaps = report.identified_gaps;
           }
           
@@ -79,10 +81,22 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     }
 
     if (selectedLead) {
-      selectedLead.risks = risks.length > 0 ? risks : [{name: 'General Risk', score: selectedLead.score || 50}];
+      selectedLead.risks = risks.length > 0 ? risks.map(r => {
+        let formatted = r.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        if (!formatted.toLowerCase().includes('risk')) formatted += ' Risk';
+        return { ...r, name: formatted };
+      }) : [{name: 'General Risk', score: selectedLead.score || 50}];
       selectedLead.protection_gaps = protection_gaps.length > 0 ? protection_gaps : ['Pending full analysis'];
       selectedLead.financial_exposure_min = financial_exposure_min;
       selectedLead.financial_exposure_max = financial_exposure_max;
+      
+      if (financial_exposure_min > 0) {
+        const premium_min = Math.round(financial_exposure_min * 0.01).toLocaleString();
+        const premium_max = Math.round(financial_exposure_max * 0.015).toLocaleString();
+        selectedLead.premium_range = `₦${premium_min} - ₦${premium_max}`;
+      } else if (selectedLead.premium_range === 'N/A' || !selectedLead.premium_range) {
+        selectedLead.premium_range = 'Pending';
+      }
       
       // Dynamic calculations for Lead Intelligence
       selectedLead.primary_concern = user_primary_concern || 'Not specified';
