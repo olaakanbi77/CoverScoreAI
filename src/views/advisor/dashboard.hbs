@@ -631,107 +631,46 @@
           </div>
         </div>
         <div class="lead-queue">
-          <!-- Lead Card 1 (Selected/Hot) -->
-          <div class="lead-card selected" style="border-color:#fca5a5;">
-            <div class="lead-card-header">
-              <div class="lead-card-company">
-                <div class="lead-avatar blue">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/><path d="M9 7h6"/><path d="M9 11h6"/></svg>
-                </div>
-                <div>
-                  <div class="lead-card-name">Greenfield Manufacturing Ltd</div>
-                  <div class="lead-card-score-item">
-                    <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">82</span> <span class="val-high">High</span></span>
+          {{#each leads}}
+          <a href="?lead={{this.id}}" style="text-decoration: none; color: inherit; display: block;">
+            <div class="lead-card">
+              <div class="lead-card-header">
+                <div class="lead-card-company">
+                  <div class="lead-avatar blue">
+                    <span style="font-size:16px;">{{#if this.name}}{{this.name}}{{else}}?{{/if}}</span>
+                  </div>
+                  <div>
+                    <div class="lead-card-name">{{this.business_name}}</div>
+                    <div class="lead-card-score-item">
+                      <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">{{this.score}}</span> <span class="val-high">{{this.risk_level}}</span></span>
+                    </div>
                   </div>
                 </div>
+                <span class="lead-badge {{this.badgeClass}}">{{this.status}}</span>
               </div>
-              <span class="lead-badge hot">Hot</span>
-            </div>
-            <div class="lead-card-score" style="margin-bottom:8px;">
-              <div class="lead-card-score-item" style="width:100%;">
-                <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
-                <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">₦850,000 - ₦1,100,000</span>
-              </div>
-            </div>
-            <div class="lead-card-footer">
-              <div>
-                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
-                <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call Now</span>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
-                <span class="lead-card-time">Today, 10:15 AM</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lead Card 2 -->
-          <div class="lead-card">
-            <div class="lead-card-header">
-              <div class="lead-card-company">
-                <div class="lead-avatar orange">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <div class="lead-card-score" style="margin-bottom:8px;">
+                <div class="lead-card-score-item" style="width:100%;">
+                  <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
+                  <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">{{this.premium_range}}</span>
                 </div>
+              </div>
+              <div class="lead-card-footer">
                 <div>
-                  <div class="lead-card-name">Sunshine Schools</div>
-                  <div class="lead-card-score-item">
-                    <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">77</span> <span class="val-high">High</span></span>
-                  </div>
+                  <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
+                  <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Open</span>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
+                  <span class="lead-card-time">{{this.last_activity}}</span>
                 </div>
               </div>
-              <span class="lead-badge hot">Hot</span>
             </div>
-            <div class="lead-card-score" style="margin-bottom:8px;">
-              <div class="lead-card-score-item" style="width:100%;">
-                <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
-                <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">₦1,200,000 - ₦1,800,000</span>
-              </div>
+          </a>
+          {{else}}
+            <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
+              No leads found in database.
             </div>
-            <div class="lead-card-footer">
-              <div>
-                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
-                <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Proposal</span>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
-                <span class="lead-card-time">Yesterday, 4:30 PM</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lead Card 3 -->
-          <div class="lead-card">
-            <div class="lead-card-header">
-              <div class="lead-card-company">
-                <div class="lead-avatar purple">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </div>
-                <div>
-                  <div class="lead-card-name">Adekunle Johnson</div>
-                  <div class="lead-card-score-item">
-                    <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">75</span> <span class="val-high">High</span></span>
-                  </div>
-                </div>
-              </div>
-              <span class="lead-badge warm">Warm</span>
-            </div>
-            <div class="lead-card-score" style="margin-bottom:8px;">
-              <div class="lead-card-score-item" style="width:100%;">
-                <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
-                <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">₦120,000 - ₦200,000</span>
-              </div>
-            </div>
-            <div class="lead-card-footer">
-              <div>
-                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
-                <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Follow-up</span>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
-                <span class="lead-card-time">Today, 9:20 AM</span>
-              </div>
-            </div>
-          </div>
+          {{/each}}
           
           <!-- View All link -->
           <div style="text-align:center; padding:16px 0;">
@@ -764,7 +703,7 @@
                     <circle class="score-gauge-fill" cx="50" cy="50" r="40"></circle>
                   </svg>
                   <div class="score-gauge-text">
-                    <span class="score-gauge-num">92</span>
+                    <span class="score-gauge-num">{{selectedLead.score}}</span>
                     <span class="score-gauge-sub">/100</span>
                   </div>
                 </div>
@@ -776,30 +715,30 @@
                 <span class="intel-label">Status</span>
                 <div class="flex items-center gap-2">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:#ef4444;"><path d="M17.5 19c2.5-3.5 2.5-7.5 0-11.5a8.5 8.5 0 0 0-11 0c-2.5 4-2.5 8 0 11.5"/><path d="M12 18V9"/><path d="M12 9a3 3 0 0 0-3-3v0a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v0a3 3 0 0 0-3 3z"/></svg>
-                  <span style="font-weight:700;color:#ef4444;font-size:14px;">HOT</span>
+                  <span style="font-weight:700;color:#ef4444;font-size:14px;text-transform:uppercase;">{{selectedLead.status}}</span>
                 </div>
               </div>
               <div class="intel-item">
                 <span class="intel-label">Likelihood to Buy</span>
-                <span style="font-weight:700;color:var(--green);font-size:14px;">HIGH</span>
+                <span style="font-weight:700;color:var(--green);font-size:14px;">{{selectedLead.likelihood_to_buy}}</span>
               </div>
               <div class="intel-item" style="grid-column: 2 / 4; border-left:1px solid var(--border); padding-left:16px;">
                 <span class="intel-label">Potential Premium</span>
-                <span style="font-weight:700;color:var(--green);font-size:18px;">₦600,000 - ₦1,100,000</span>
+                <span style="font-weight:700;color:var(--green);font-size:18px;">{{selectedLead.premium_range}}</span>
               </div>
             </div>
             <div style="display:flex;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid #E5E7EB;">
               <div class="intel-item" style="flex:1;">
-                <span class="intel-label">Primary Concern</span>
-                <span class="intel-value" style="display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Business Interruption</span>
+                <span class="intel-label">Entity Type</span>
+                <span class="intel-value" style="display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> {{selectedLead.entity_type}}</span>
               </div>
               <div class="intel-item" style="flex:1.5;">
                 <span class="intel-label">Recommended First Product</span>
-                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Business Interruption Insurance</span>
+                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> {{selectedLead.recommended_product}}</span>
               </div>
               <div class="intel-item" style="flex:1;">
                 <span class="intel-label">Next Best Action</span>
-                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Schedule Call</span>
+                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Contact</span>
               </div>
             </div>
           </div>
@@ -808,22 +747,24 @@
         <!-- CLIENT PROFILE HEADER -->
         <div style="background:white; border-radius:var(--radius); border:1px solid var(--border); padding:24px; box-shadow:var(--shadow); margin-bottom:24px;">
           <div class="client-header">
-            <div class="client-avatar blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/><path d="M9 7h6"/><path d="M9 11h6"/></svg></div>
+            <div class="client-avatar blue">
+              <span style="font-size:20px;">{{#if selectedLead.name}}{{selectedLead.name.[0]}}{{else}}?{{/if}}</span>
+            </div>
             <div>
-              <div class="client-name">Greenfield Manufacturing Ltd <span class="lead-badge hot" style="font-size:10px;padding:2px 6px;">Hot Lead</span></div>
+              <div class="client-name">{{selectedLead.business_name}} <span class="lead-badge {{selectedLead.badgeClass}}" style="font-size:10px;padding:2px 6px;">{{selectedLead.status}}</span></div>
             </div>
           </div>
           <div class="client-grid">
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> John Okafor</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0803 123 4567</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> john@greenfield.com</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Manufacturing</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 45 Employees</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> N250M Turnover</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Lagos, Nigeria</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {{selectedLead.name}}</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{selectedLead.phone}}</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> {{selectedLead.email}}</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> {{selectedLead.industry}}</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> {{selectedLead.employees}} Employees</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> {{selectedLead.turnover}}</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{selectedLead.location}}</div>
             <div class="client-info-item" style="width:100%;">
-              <span style="font-weight:600;color:var(--text);margin-right:16px;">Source: <span style="font-weight:400;color:var(--text-secondary);">WhatsApp</span></span>
-              <span style="font-weight:600;color:var(--text);">Assessment Date: <span style="font-weight:400;color:var(--text-secondary);">May 15, 2024</span></span>
+              <span style="font-weight:600;color:var(--text);margin-right:16px;">Source: <span style="font-weight:400;color:var(--text-secondary);">{{selectedLead.lead_source}}</span></span>
+              <span style="font-weight:600;color:var(--text);">Assessment Date: <span style="font-weight:400;color:var(--text-secondary);">{{selectedLead.created_at}}</span></span>
             </div>
           </div>
           
@@ -838,51 +779,36 @@
                 <div class="score-gauge-container" style="width:100px;height:100px;">
                   <svg class="score-gauge-svg" viewBox="0 0 100 100">
                     <circle class="score-gauge-bg" cx="50" cy="50" r="40"></circle>
-                    <circle class="score-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: calc(251.2 - (251.2 * 82) / 100);"></circle>
+                    <circle class="score-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: calc(251.2 - (251.2 * {{selectedLead.score}}) / 100);"></circle>
                   </svg>
                   <div class="score-gauge-text">
-                    <span class="score-gauge-num" style="font-size:32px;">82</span>
+                    <span class="score-gauge-num" style="font-size:32px;">{{selectedLead.score}}</span>
                     <span class="score-gauge-sub" style="font-size:12px;">/100</span>
                   </div>
                 </div>
                 <div style="text-align:center;margin-top:24px;">
                   <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;font-weight:600;">Financial Exposure</div>
-                  <div style="font-size:18px;font-weight:700;color:var(--green);">₦45M - ₦120M</div>
+                  <div style="font-size:18px;font-weight:700;color:var(--green);">₦{{selectedLead.financial_exposure_min}} - ₦{{selectedLead.financial_exposure_max}}</div>
                 </div>
-                <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View Full Report &rarr;</a>
+                <a href="/public/proposal/{{selectedLead.id}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View Full Report &rarr;</a>
               </div>
             </div>
             <!-- TOP RISKS -->
             <div>
               <div class="risk-col-title">Top Risks</div>
+              {{#each selectedLead.risks}}
               <div class="risk-bar-item">
-                <div class="risk-bar-header"><span class="risk-bar-name">Property Risk</span><span class="risk-bar-score">90/100</span></div>
-                <div class="risk-bar-track"><div class="risk-bar-fill critical" style="width:90%;"></div></div>
+                <div class="risk-bar-header"><span class="risk-bar-name">{{this.type}} Risk</span><span class="risk-bar-score">{{this.score}}/100</span></div>
+                <div class="risk-bar-track"><div class="risk-bar-fill {{#if (eq this.level 'high')}}critical{{else if (eq this.level 'medium')}}high{{else}}medium{{/if}}" style="width:{{this.score}}%;"></div></div>
               </div>
-              <div class="risk-bar-item">
-                <div class="risk-bar-header"><span class="risk-bar-name">Business Interruption</span><span class="risk-bar-score">88/100</span></div>
-                <div class="risk-bar-track"><div class="risk-bar-fill critical" style="width:88%;"></div></div>
-              </div>
-              <div class="risk-bar-item">
-                <div class="risk-bar-header"><span class="risk-bar-name">Employee Risk</span><span class="risk-bar-score">75/100</span></div>
-                <div class="risk-bar-track"><div class="risk-bar-fill high" style="width:75%;"></div></div>
-              </div>
-              <div class="risk-bar-item">
-                <div class="risk-bar-header"><span class="risk-bar-name">Liability Risk</span><span class="risk-bar-score">62/100</span></div>
-                <div class="risk-bar-track"><div class="risk-bar-fill medium" style="width:62%;"></div></div>
-              </div>
-              <div class="risk-bar-item">
-                <div class="risk-bar-header"><span class="risk-bar-name">Cyber Risk</span><span class="risk-bar-score">40/100</span></div>
-                <div class="risk-bar-track"><div class="risk-bar-fill low" style="width:40%;"></div></div>
-              </div>
+              {{/each}}
             </div>
             <!-- PROTECTION GAPS -->
             <div>
               <div class="risk-col-title">Protection Gaps</div>
-              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No Group Life Insurance</div>
-              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No Public Liability Insurance</div>
-              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No Business Interruption Cover</div>
-              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Cyber Insurance Not in Place</div>
+              {{#each selectedLead.protection_gaps}}
+              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> {{this}}</div>
+              {{/each}}
               <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View All Gaps &rarr;</a>
             </div>
           </div>
@@ -909,11 +835,11 @@ Already has fire insurance with AIICO.</textarea>
         </div>
         <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:white;">
           <div class="flex items-center gap-3">
-            <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.5" width="24" height="24" style="margin-top:6px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:700;color:#6B7280;font-size:14px;">
+              {{#if selectedLead.name}}{{selectedLead.name.[0]}}{{else}}?{{/if}}
             </div>
             <div>
-              <div style="font-size:14px;font-weight:600;">John Okafor</div>
+              <div style="font-size:14px;font-weight:600;">{{selectedLead.name}}</div>
               <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--success);font-weight:500;">
                 <span style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span> Online
               </div>
@@ -925,31 +851,19 @@ Already has fire insurance with AIICO.</textarea>
           </div>
         </div>
         <div class="chat-area">
-          <div class="chat-date"><span>May 17, 2024</span></div>
-          <div class="chat-msg client">
-            Hello, I have just completed my CoverScore assessment.
-            <div class="chat-msg-time">10:10 AM</div>
-          </div>
-          <div class="chat-msg advisor">
-            Thank you, Mr. Okafor. I've reviewed your report.
-            <div class="chat-msg-time">10:11 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
-          </div>
-          <div class="chat-msg client">
-            I would like a review of the risks and recommendations.
-            <div class="chat-msg-time">10:12 AM</div>
-          </div>
-          <div class="chat-msg advisor">
-            Absolutely. I can see a few key areas we should discuss.
-            <div class="chat-msg-time">10:13 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
-          </div>
-          <div class="chat-msg client">
-            What do you recommend we start with?
-            <div class="chat-msg-time">10:14 AM</div>
-          </div>
-          <div class="chat-msg advisor">
-            Let's start with business interruption and employee protection.
-            <div class="chat-msg-time">10:15 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
-          </div>
+          <div class="chat-date"><span>Recent Conversation</span></div>
+          {{#if selectedLead.conversations.length}}
+            {{#each selectedLead.conversations}}
+              <div class="chat-msg {{#if (eq this.role 'user')}}client{{else}}advisor{{/if}}">
+                {{this.content}}
+                <div class="chat-msg-time">{{this.timestamp}} {{#if (eq this.role 'assistant')}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg>{{/if}}</div>
+              </div>
+            {{/each}}
+          {{else}}
+            <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">
+              No recent WhatsApp messages.
+            </div>
+          {{/if}}
         </div>
         <div class="chat-input-area">
           <button class="chat-btn" title="Emoji">
@@ -973,50 +887,30 @@ Already has fire insurance with AIICO.</textarea>
 
         <div style="margin-bottom:24px;">
           <div class="risk-col-title">Recommended Products</div>
+          {{#each aiRecommendations}}
           <div class="rec-card">
             <div class="rec-icon" style="background:#EFF6FF;color:#3B82F6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
             <div class="rec-info">
-              <div class="rec-title">Business Interruption Insurance</div>
-              <div class="rec-priority high">High Priority</div>
+              <div class="rec-title">{{this}}</div>
+              <div class="rec-priority high">Suggested</div>
             </div>
           </div>
-          <div class="rec-card">
-            <div class="rec-icon" style="background:#EFF6FF;color:#3B82F6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <div class="rec-info">
-              <div class="rec-title">Group Life Insurance</div>
-              <div class="rec-priority high">High Priority</div>
-            </div>
-          </div>
-          <div class="rec-card">
-            <div class="rec-icon" style="background:#F3E8FF;color:#9333EA;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <div class="rec-info">
-              <div class="rec-title">Public Liability Insurance</div>
-              <div class="rec-priority high">High Priority</div>
-            </div>
-          </div>
-          <div class="rec-card">
-            <div class="rec-icon" style="background:#FEF3C7;color:#D97706;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
-            <div class="rec-info">
-              <div class="rec-title">Fire Insurance</div>
-              <div class="rec-priority medium">Medium Priority</div>
-            </div>
-          </div>
-          <div class="rec-card">
-            <div class="rec-icon" style="background:#DCFCE7;color:#16A34A;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div class="rec-info">
-              <div class="rec-title">Cyber Insurance</div>
-              <div class="rec-priority medium">Medium Priority</div>
-            </div>
-          </div>
+          {{else}}
+          <div style="font-size:13px; color:var(--text-muted);">No product recommendations generated.</div>
+          {{/each}}
         </div>
 
         <div style="margin-bottom:24px;">
           <div class="risk-col-title">Suggested Talking Points</div>
+          {{#if talkingPoints.length}}
           <ul class="tp-list">
-            <li class="tp-item">Highlight financial loss during downtime and its impact on cash flow.</li>
-            <li class="tp-item">Discuss employee welfare and the importance of group life cover.</li>
-            <li class="tp-item">Review liability exposure from visitors, vendors and third parties.</li>
+            {{#each talkingPoints}}
+            <li class="tp-item">{{this}}</li>
+            {{/each}}
           </ul>
+          {{else}}
+          <div style="font-size:13px; color:var(--text-muted);">No talking points available.</div>
+          {{/if}}
           <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;">View More Talking Points &rarr;</a>
         </div>
 
