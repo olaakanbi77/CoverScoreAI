@@ -94,7 +94,7 @@ const main = async () => {
         
         if (portCheck.stdout.includes('PORT IS FREE')) {
           console.log('\n✅ Port 3016 is free. Starting PM2...');
-          await runCommand(conn, 'cd /root/coverscore-ai && pm2 start src/server.js --name coverscore --update-env');
+          await runCommand(conn, 'cd /root/coverscore-ai && git pull origin main && pm2 start src/server.js --name coverscore --update-env');
           await runCommand(conn, 'sleep 3');
           await runCommand(conn, 'pm2 logs coverscore --lines 15 --nostream');
         } else {
