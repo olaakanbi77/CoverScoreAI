@@ -81,6 +81,19 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       selectedLead.protection_gaps = protection_gaps.length > 0 ? protection_gaps : ['Pending full analysis'];
       selectedLead.financial_exposure_min = financial_exposure_min;
       selectedLead.financial_exposure_max = financial_exposure_max;
+      
+      // Dynamic calculations for Lead Intelligence
+      selectedLead.primary_concern = selectedLead.protection_gaps[0];
+      
+      let next_action = 'Contact Lead';
+      if (selectedLead.status === 'New Lead' || selectedLead.status === 'hot') next_action = 'Initial Outreach';
+      else if (selectedLead.status === 'WhatsApp Engaged' || selectedLead.status === 'warm') next_action = 'Follow up on WhatsApp';
+      else if (selectedLead.status === 'Proposal Sent') next_action = 'Review Proposal';
+      selectedLead.next_best_action = next_action;
+
+      if (aiRecommendations.length > 0) {
+        selectedLead.recommended_product = aiRecommendations[0].product;
+      }
     }
 
     // Default recommendations if none found
