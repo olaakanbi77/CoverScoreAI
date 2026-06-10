@@ -112,6 +112,7 @@
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 10px 20px;
     border-radius: var(--crm-radius-sm, 8px);
@@ -120,13 +121,18 @@
     cursor: pointer;
     transition: all 0.2s;
     border: none;
+    white-space: nowrap;
+    text-align: center;
   }
   .btn-primary {
     background: var(--crm-primary);
     color: white;
+    white-space: nowrap;
+    text-align: center;
+    justify-content: center;
   }
   .btn-primary:hover {
-    background: #059669; /* var(--crm-primary) hover darker green */
+    background: #059669;
   }
 
   /* Modal */
