@@ -85,7 +85,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       selectedLead.financial_exposure_max = financial_exposure_max;
       
       // Dynamic calculations for Lead Intelligence
-      selectedLead.primary_concern = user_primary_concern || selectedLead.protection_gaps[0] || 'General Protection';
+      selectedLead.primary_concern = user_primary_concern || 'Not specified';
       
       let next_action = 'Contact Lead';
       if (selectedLead.status === 'New Lead' || selectedLead.status === 'hot') next_action = 'Initial Outreach';
