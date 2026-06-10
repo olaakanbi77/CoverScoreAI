@@ -39,8 +39,8 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
         nextState = 'personal_q1';
       } else if (input === '2') {
         updatedData.entity_type = 'business';
-        replyText = "What industry best describes your business?\n\n1️⃣ Retail\n2️⃣ Manufacturing\n3️⃣ Logistics\n4️⃣ Education\n5️⃣ Healthcare\n6️⃣ Professional Services\n7️⃣ Technology\n8️⃣ Other";
-        nextState = 'business_q1';
+        replyText = "What is the name of your business?";
+        nextState = 'business_name';
       } else {
         replyText = "Please reply with 1 or 2.";
       }
@@ -181,6 +181,12 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
     // ==========================================
     // BUSINESS FLOW
     // ==========================================
+    case 'business_name':
+      updatedData.business_name = incomingText; // save original casing
+      replyText = "What industry best describes your business?\n\n1️⃣ Retail\n2️⃣ Manufacturing\n3️⃣ Logistics\n4️⃣ Education\n5️⃣ Healthcare\n6️⃣ Professional Services\n7️⃣ Technology\n8️⃣ Other";
+      nextState = 'business_q1';
+      break;
+
     case 'business_q1':
       if (['1','2','3','4','5','6','7','8'].includes(input)) {
         const indMap = {'1': 'Retail', '2': 'Manufacturing', '3': 'Logistics', '4': 'Education', '5': 'Healthcare', '6': 'Professional Services', '7': 'Technology', '8': 'Other'};
