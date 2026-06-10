@@ -375,9 +375,9 @@
     .client-avatar { width: 44px; height: 44px; border-radius: 8px; background: #DBEAFE; color: #2563EB; display: flex; align-items: center; justify-content: center; }
     .client-name { font-size: 16px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px;}
     
-    .client-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
-    .client-info-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); width: calc(33.333% - 12px); }
-    .client-info-item svg { width: 14px; height: 14px; color: var(--text-muted); }
+    .client-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-bottom: 12px; }
+    .client-info-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .client-info-item svg { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
 
     .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .risk-col-title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--navy); margin-bottom: 12px; }
@@ -743,16 +743,18 @@
             </div>
           </div>
           <div class="client-grid">
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {{selectedLead.name}}</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{selectedLead.phone}}</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> {{selectedLead.email}}</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> {{selectedLead.industry}}</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> {{selectedLead.employees}} Employees</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> {{selectedLead.turnover}}</div>
-            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{selectedLead.location}}</div>
-            <div class="client-info-item" style="width:100%;">
-              <span style="font-weight:600;color:var(--text);margin-right:16px;">Source: <span style="font-weight:400;color:var(--text-secondary);">{{selectedLead.lead_source}}</span></span>
-              <span style="font-weight:600;color:var(--text);">Assessment Date: <span style="font-weight:400;color:var(--text-secondary);">{{selectedLead.created_at}}</span></span>
+            <div class="client-info-item" style="grid-column: span 4;" title="{{selectedLead.name}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {{selectedLead.name}}</div>
+            <div class="client-info-item" style="grid-column: span 4;" title="{{selectedLead.phone}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{selectedLead.phone}}</div>
+            <div class="client-info-item" style="grid-column: span 4;" title="{{selectedLead.email}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> {{selectedLead.email}}</div>
+            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.industry}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> {{selectedLead.industry}}</div>
+            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.employees}} Employees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> {{selectedLead.employees}} Employees</div>
+            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.turnover}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> {{selectedLead.turnover}}</div>
+            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.location}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{selectedLead.location}}</div>
+            <div class="client-info-item" style="grid-column: span 6;">
+              <span style="font-weight:600;color:var(--text);margin-right:6px;">Source:</span> <span style="font-weight:400;color:var(--text-secondary);" title="{{selectedLead.lead_source}}">{{selectedLead.lead_source}}</span>
+            </div>
+            <div class="client-info-item" style="grid-column: span 6;">
+              <span style="font-weight:600;color:var(--text);margin-right:6px;">Assessment Date:</span> <span style="font-weight:400;color:var(--text-secondary);" title="{{selectedLead.created_at}}">{{selectedLead.created_at}}</span>
             </div>
           </div>
           
