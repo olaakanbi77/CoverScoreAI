@@ -24,12 +24,10 @@
       --text-secondary: #6B7280;
       --text-muted: #9CA3AF;
       --sidebar-width: 260px;
-      --col1-width: 380px;
-      --col3-width: 380px;
       --radius: 12px;
       --radius-sm: 8px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       --font: 'Inter', system-ui, -apple-system, sans-serif;
     }
     body {
@@ -136,38 +134,125 @@
     .profile-info { min-width: 0; }
     .profile-name { font-size: 13px; font-weight: 600; color: white; }
     .profile-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+    
     .main-wrapper {
       margin-left: var(--sidebar-width);
       display: flex;
+      flex-direction: column;
       flex: 1;
       height: 100vh;
       overflow: hidden;
     }
+    
+    /* TOP BAR */
+    .top-bar {
+      height: 64px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    .search-container {
+      position: relative;
+      width: 400px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 10px 10px 40px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text);
+    }
+    .search-input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .action-icon-btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-icon-btn:hover { color: var(--text); }
+    .action-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--green);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid var(--card);
+    }
+    .action-badge.red { background: var(--red); }
+    .top-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 20px; border-left: 1px solid var(--border); }
+    
+    /* CONTENT COLUMNS */
+    .content-columns {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
     .col-leads {
-      width: var(--col1-width);
+      width: 320px;
       flex-shrink: 0;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       background: var(--card);
     }
-    .col-center {
+    .col-profile {
       flex: 1;
-      min-width: 0;
+      min-width: 450px;
       overflow-y: auto;
-      padding: 24px;
+      padding: 20px;
       background: var(--bg);
     }
-    .col-center::-webkit-scrollbar { width: 6px; }
-    .col-center::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
     .col-whatsapp {
-      width: var(--col3-width);
+      width: 340px;
       flex-shrink: 0;
       border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       background: var(--card);
     }
+    .col-recommendations {
+      width: 300px;
+      flex-shrink: 0;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    /* SHARED HEADER */
     .col-header {
       padding: 16px 20px;
       border-bottom: 1px solid var(--border);
@@ -175,22 +260,34 @@
       align-items: center;
       justify-content: space-between;
     }
-    .col-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
-    .col-tabs { display: flex; gap: 4px; }
-    .col-tab {
-      padding: 4px 12px;
+    .col-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--navy); display: flex; align-items: center; gap: 8px;}
+    .col-title-number { color: var(--text-muted); font-size: 12px; }
+
+    /* COLUMN 1: LEADS */
+    .filter-tabs { display: flex; gap: 8px; margin-top: 12px; }
+    .filter-tab {
+      padding: 4px 10px;
       border-radius: 20px;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       color: var(--text-secondary);
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .col-tab:hover { background: var(--bg); }
-    .col-tab.active { background: var(--green); color: white; }
-    .lead-queue { flex: 1; overflow-y: auto; padding: 12px; }
+    .filter-tab:hover { background: var(--bg); }
+    .filter-tab.active { color: var(--navy); border-color: var(--border); box-shadow: var(--shadow); }
+    .filter-badge {
+      background: var(--bg); padding: 2px 6px; border-radius: 10px; font-size: 11px; color: var(--text-secondary);
+    }
+    .filter-tab.active .filter-badge { background: #e0e7ff; color: #4338ca; }
+    .filter-tab.hot .filter-badge { background: #fee2e2; color: #b91c1c; }
+
+    .lead-queue { flex: 1; overflow-y: auto; padding: 16px; background: var(--bg); }
     .lead-queue::-webkit-scrollbar { width: 4px; }
     .lead-queue::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
     .lead-card {
@@ -198,257 +295,219 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       cursor: pointer;
       transition: all 0.15s;
-      position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
-    .lead-card:hover { box-shadow: var(--shadow-md); border-color: #d1d5db; }
-    .lead-card.selected { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
-    .lead-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .lead-card:hover { box-shadow: var(--shadow); border-color: #d1d5db; transform: translateY(-1px); }
+    .lead-card.selected { border-color: #fca5a5; box-shadow: 0 0 0 1px #fca5a5; }
+    .lead-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
     .lead-card-company { display: flex; align-items: center; gap: 10px; }
     .lead-avatar {
-      width: 36px; height: 36px; border-radius: 8px;
+      width: 40px; height: 40px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 14px; color: white;
-      flex-shrink: 0;
+      flex-shrink: 0; font-weight: 700; font-size: 14px;
     }
-    .lead-card-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .lead-avatar.blue { color: #2563EB; background: #DBEAFE; }
+    .lead-avatar.orange { color: #D97706; background: #FEF3C7; }
+    .lead-avatar.purple { color: #9333EA; background: #F3E8FF; }
+    .lead-avatar.green { color: #16A34A; background: #DCFCE7; }
+    
+    .lead-card-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
     .lead-badge {
       display: inline-block;
-      font-size: 9px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 10px; font-weight: 600;
       padding: 2px 8px; border-radius: 4px;
+      border: 1px solid;
     }
-    .lead-badge.hot { background: rgba(239,68,68,0.1); color: var(--red); }
-    .lead-badge.warm { background: rgba(245,158,11,0.1); color: var(--orange); }
-    .lead-badge.follow-up { background: rgba(107,114,128,0.1); color: var(--text-secondary); }
-    .lead-card-score {
-      display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
-    }
-    .score-ring {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-      flex-shrink: 0;
-    }
-    .score-ring.high { background: rgba(239,68,68,0.1); color: var(--red); }
-    .score-ring.medium { background: rgba(245,158,11,0.1); color: var(--orange); }
-    .score-ring.low { background: rgba(34,197,94,0.1); color: var(--success); }
-    .risk-label { font-size: 11px; font-weight: 600; text-transform: uppercase; }
-    .risk-label.high { color: var(--red); }
-    .risk-label.medium { color: var(--orange); }
-    .risk-label.low { color: var(--success); }
-    .lead-card-premium { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
-    .lead-card-footer { display: flex; justify-content: space-between; align-items: center; }
-    .lead-card-action {
-      font-size: 11px; font-weight: 600; color: var(--green);
-      background: rgba(22,163,74,0.08);
-      padding: 4px 10px; border-radius: 6px;
-    }
+    .lead-badge.hot { background: #FEF2F2; color: #DC2626; border-color: #FECACA; }
+    .lead-badge.warm { background: #FFFBEB; color: #D97706; border-color: #FDE68A; }
+    .lead-badge.follow-up { background: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
+    
+    .lead-card-score { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px;}
+    .lead-card-score-item { display: flex; flex-direction: column; gap: 2px; }
+    .lead-card-score-label { color: var(--text-muted); font-size: 11px; }
+    .lead-card-score-val { font-weight: 600; color: var(--text); }
+    .val-high { color: #DC2626; }
+    
+    .lead-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px dashed var(--border); }
+    .lead-card-action { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--green); }
     .lead-card-time { font-size: 11px; color: var(--text-muted); }
 
+    /* COLUMN 2: PROFILE */
     .section-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       overflow: hidden;
+      box-shadow: var(--shadow);
     }
     .section-header {
-      padding: 14px 18px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
-    .section-body { padding: 18px; }
+    .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--navy); display: flex; align-items: center; gap: 8px;}
+    .section-body { padding: 20px; }
 
-    .intel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .intel-item { }
-    .intel-label { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
-    .intel-value { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+    /* Lead Intel Grid */
+    .intel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .intel-score {
-      display: flex; align-items: center; gap: 10px;
-      grid-column: 1 / -1;
-      background: rgba(22,163,74,0.05);
-      border: 1px solid rgba(22,163,74,0.2);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
+      display: flex; align-items: center; gap: 16px;
+      grid-column: 1 / 2; grid-row: 1 / 3;
     }
-    .score-gauge {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: var(--green);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 800; color: white;
-      flex-shrink: 0;
-    }
-    .score-gauge-info { }
-    .score-gauge-label { font-size: 11px; color: var(--text-secondary); }
-    .score-gauge-value { font-size: 22px; font-weight: 800; color: var(--text); }
+    .score-gauge-container { position: relative; width: 80px; height: 80px; }
+    .score-gauge-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .score-gauge-bg { fill: none; stroke: #E5E7EB; stroke-width: 8; }
+    .score-gauge-fill { fill: none; stroke: var(--green); stroke-width: 8; stroke-dasharray: 251.2; stroke-dashoffset: calc(251.2 - (251.2 * 92) / 100); stroke-linecap: round; }
+    .score-gauge-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .score-gauge-num { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1; }
+    .score-gauge-sub { font-size: 10px; color: var(--text-muted); }
+    
+    .intel-item { display: flex; flex-direction: column; gap: 4px; }
+    .intel-label { font-size: 11px; color: var(--text-muted); }
+    .intel-value { font-size: 14px; font-weight: 600; color: var(--text); }
+    
+    .client-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .client-avatar { width: 48px; height: 48px; border-radius: 8px; background: #DBEAFE; color: #2563EB; display: flex; align-items: center; justify-content: center; }
+    .client-name { font-size: 18px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px;}
+    
+    .client-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+    .client-info-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); width: calc(33.333% - 16px); }
+    .client-info-item svg { width: 16px; height: 16px; color: var(--text-muted); }
 
-    .profile-row { display: flex; gap: 8px; margin-bottom: 10px; }
-    .profile-row:last-child { margin-bottom: 0; }
-    .profile-row-label { width: 100px; font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
-    .profile-row-value { font-size: 13px; color: var(--text); }
-
-    .risk-bar-item { margin-bottom: 12px; }
+    .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .risk-col-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--navy); margin-bottom: 16px; }
+    
+    .risk-bar-item { margin-bottom: 16px; }
     .risk-bar-item:last-child { margin-bottom: 0; }
-    .risk-bar-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .risk-bar-name { font-size: 12px; color: var(--text-secondary); }
+    .risk-bar-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .risk-bar-name { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
     .risk-bar-score { font-size: 12px; font-weight: 600; color: var(--text); }
-    .risk-bar-track {
-      height: 6px; background: #F3F4F6; border-radius: 10px; overflow: hidden;
-    }
-    .risk-bar-fill { height: 100%; border-radius: 10px; transition: width 0.3s; }
-    .risk-bar-fill.critical { background: var(--red); }
-    .risk-bar-fill.high { background: var(--orange); }
-    .risk-bar-fill.medium { background: #F59E0B; }
+    .risk-bar-track { height: 6px; background: #E5E7EB; border-radius: 10px; overflow: hidden; }
+    .risk-bar-fill { height: 100%; border-radius: 10px; }
+    .risk-bar-fill.critical { background: #DC2626; }
+    .risk-bar-fill.high { background: #F59E0B; }
+    .risk-bar-fill.medium { background: #FBBF24; }
     .risk-bar-fill.low { background: var(--success); }
 
-    .gap-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 0; border-bottom: 1px solid #F3F4F6;
-      font-size: 13px; color: var(--red); font-weight: 500;
-    }
-    .gap-item:last-child { border-bottom: none; }
-    .gap-icon { width: 20px; height: 20px; flex-shrink: 0; color: var(--red); }
+    .gap-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 12px; }
+    .gap-icon { width: 16px; height: 16px; flex-shrink: 0; color: #DC2626; margin-top: 1px; }
 
     .notes-textarea {
       width: 100%; min-height: 80px;
       border: 1px solid var(--border); border-radius: var(--radius-sm);
       padding: 12px; font-family: var(--font); font-size: 13px;
       color: var(--text); resize: vertical;
-      background: var(--card);
+      background: var(--bg);
     }
-    .notes-textarea:focus { outline: none; border-color: var(--green); }
+    .notes-textarea:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
 
-    .chat-area { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    /* COLUMN 3: WHATSAPP */
+    .chat-area { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #F9FAFB; }
     .chat-area::-webkit-scrollbar { width: 4px; }
     .chat-area::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-    .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+    .chat-date { text-align: center; font-size: 11px; color: var(--text-muted); margin: 8px 0; }
+    .chat-date span { background: white; padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); }
+    .chat-msg { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 13px; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .chat-msg.client {
       align-self: flex-start;
-      background: #F3F4F6;
+      background: white;
       color: var(--text);
       border-bottom-left-radius: 4px;
+      border: 1px solid var(--border);
     }
     .chat-msg.advisor {
       align-self: flex-end;
-      background: var(--green);
-      color: white;
+      background: #DCF8C6; /* WhatsApp light green */
+      color: #111827;
       border-bottom-right-radius: 4px;
     }
-    .chat-msg-time { font-size: 10px; color: rgba(0,0,0,0.35); margin-top: 4px; text-align: right; }
-    .chat-msg.advisor .chat-msg-time { color: rgba(255,255,255,0.6); }
+    .chat-msg-time { font-size: 10px; color: rgba(0,0,0,0.4); margin-top: 4px; text-align: right; }
+    
     .chat-input-area {
-      padding: 12px 16px;
+      padding: 16px;
       border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      background: white;
     }
     .chat-input {
       flex: 1;
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 10px 16px;
+      border-radius: 24px;
+      padding: 12px 16px;
       font-family: var(--font);
       font-size: 13px;
-      background: var(--bg);
+      background: #F3F4F6;
     }
-    .chat-input:focus { outline: none; border-color: var(--green); }
+    .chat-input:focus { outline: none; background: white; border-color: var(--green); }
     .chat-btn {
-      width: 36px; height: 36px;
+      width: 40px; height: 40px;
       border-radius: 50%;
       border: none;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
-      background: var(--bg);
+      background: transparent;
       color: var(--text-secondary);
       transition: all 0.15s;
       flex-shrink: 0;
     }
-    .chat-btn:hover { background: var(--green); color: white; }
+    .chat-btn:hover { background: #F3F4F6; color: var(--text); }
     .chat-btn.send { background: var(--green); color: white; }
     .chat-btn.send:hover { background: var(--green-hover); }
 
-    .ai-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 0; border-bottom: 1px solid #F3F4F6;
+    /* COLUMN 4: RECOMMENDATIONS & ACTIONS */
+    .rec-card {
+      background: white; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 16px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
-    .ai-item:last-child { border-bottom: none; }
-    .ai-item-name { font-size: 13px; font-weight: 500; }
-    .ai-item-priority {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      padding: 2px 8px; border-radius: 4px;
-    }
-    .ai-item-priority.high { background: rgba(239,68,68,0.1); color: var(--red); }
-    .ai-item-priority.medium { background: rgba(245,158,11,0.1); color: var(--orange); }
-    .ai-item-priority.low { background: rgba(34,197,94,0.1); color: var(--success); }
+    .rec-icon { width: 32px; height: 32px; border-radius: 8px; background: #F3F4F6; display: flex; align-items: center; justify-content: center; color: #4B5563; flex-shrink: 0; }
+    .rec-info { flex: 1; }
+    .rec-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .rec-priority { font-size: 11px; font-weight: 600; }
+    .rec-priority.high { color: #DC2626; }
+    .rec-priority.medium { color: #D97706; }
 
+    .tp-list { list-style: none; padding: 0; margin: 0 0 24px 0; }
     .tp-item {
-      display: flex; align-items: flex-start; gap: 8px;
-      padding: 8px 0; border-bottom: 1px solid #F3F4F6;
-      font-size: 13px; color: var(--text-secondary);
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;
     }
-    .tp-item:last-child { border-bottom: none; }
-    .tp-item svg { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; color: var(--green); }
-    .tp-view-more {
-      display: block; width: 100%;
-      padding: 10px; margin-top: 8px;
-      text-align: center; font-size: 12px; font-weight: 600;
-      color: var(--green); background: rgba(22,163,74,0.06);
-      border: 1px dashed rgba(22,163,74,0.3);
-      border-radius: var(--radius-sm);
-      cursor: pointer; transition: all 0.15s;
+    .tp-item::before {
+      content: "•"; color: var(--text-muted); font-size: 16px; margin-top: -2px;
     }
-    .tp-view-more:hover { background: rgba(22,163,74,0.1); }
 
-    .action-panel { display: flex; flex-direction: column; gap: 8px; }
+    .action-panel { display: flex; flex-direction: column; gap: 10px; }
     .action-btn {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; padding: 12px;
+      display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+      width: 100%; padding: 14px 16px;
       border: none; border-radius: var(--radius-sm);
       font-size: 14px; font-weight: 600;
       cursor: pointer; transition: all 0.15s;
-      font-family: var(--font);
+      font-family: var(--font); color: white;
     }
-    .action-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-    .action-btn.green { background: var(--green); color: white; }
-    .action-btn.blue { background: #2563EB; color: white; }
-    .action-btn.orange { background: var(--orange); color: white; }
-    .action-btn.red { background: var(--red); color: white; }
+    .action-btn:hover { filter: brightness(0.95); }
+    .action-btn.green { background: #16A34A; }
+    .action-btn.blue { background: #2563EB; }
+    .action-btn.orange { background: #F59E0B; }
+    .action-btn.red { background: #EF4444; }
 
-    .wa-status { display: flex; align-items: center; gap: 6px; }
-    .wa-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; }
-
-    .svg-icon { width: 20px; height: 20px; flex-shrink: 0; }
-    .svg-icon-sm { width: 16px; height: 16px; }
-
-    .lead-intel-card {
-      border: 1px solid rgba(22,163,74,0.3);
-      background: linear-gradient(135deg, rgba(22,163,74,0.03), rgba(22,163,74,0.06));
-    }
-
+    /* UTILS */
     .flex { display: flex; }
     .items-center { align-items: center; }
-    .gap-2 { gap: 8px; }
-    .gap-3 { gap: 12px; }
-    .gap-4 { gap: 16px; }
     .justify-between { justify-content: space-between; }
-    .text-muted { color: var(--text-muted); }
-    .text-secondary { color: var(--text-secondary); }
-    .text-sm { font-size: 12px; }
-    .text-xs { font-size: 11px; }
-    .font-semibold { font-weight: 600; }
-    .font-bold { font-weight: 700; }
-    .mt-2 { margin-top: 8px; }
+    .gap-2 { gap: 8px; }
     .mt-4 { margin-top: 16px; }
-    .mb-2 { margin-bottom: 8px; }
-    .mb-4 { margin-bottom: 16px; }
-    .w-full { width: 100%; }
+    .text-sm { font-size: 12px; }
+    .text-muted { color: var(--text-muted); }
+    .font-semibold { font-weight: 600; }
   </style>
 </head>
 <body>
@@ -467,6 +526,7 @@
       <a href="#" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Leads
+        <span style="margin-left:auto;background:rgba(22,163,74,0.2);color:#4ade80;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">14</span>
       </a>
       <a href="#" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -504,322 +564,490 @@
     <div class="sidebar-summary">
       <div class="summary-title">Today's Summary</div>
       <div class="summary-grid">
-        <div class="summary-item"><div class="summary-label">Hot Leads</div><div class="summary-value">5</div></div>
-        <div class="summary-item"><div class="summary-label">Consultations</div><div class="summary-value">3</div></div>
-        <div class="summary-item"><div class="summary-label">Proposals Sent</div><div class="summary-value">4</div></div>
-        <div class="summary-item"><div class="summary-label">Policies Sold</div><div class="summary-value">2</div></div>
+        <div class="summary-item"><div class="summary-label">Hot Leads</div><div class="summary-value" style="color:#ef4444;">5</div></div>
+        <div class="summary-item"><div class="summary-label">Consultations</div><div class="summary-value" style="color:#22c55e;">3</div></div>
+        <div class="summary-item"><div class="summary-label">Proposals Sent</div><div class="summary-value" style="color:#f59e0b;">4</div></div>
+        <div class="summary-item"><div class="summary-label">Policies Sold</div><div class="summary-value" style="color:#22c55e;">2</div></div>
       </div>
       <div class="summary-premium">
-        <div class="summary-label">Estimated Premium</div>
+        <div class="summary-label">Est. Premium</div>
         <div class="summary-value">₦3.8M</div>
       </div>
     </div>
     <div class="sidebar-profile">
-      <div class="profile-avatar">{{userInitials user.name}}</div>
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;">TA</div>
       <div class="profile-info">
-        <div class="profile-name">{{user.name}}</div>
+        <div class="profile-name">Tunde Adeola</div>
         <div class="profile-role">Senior Advisor</div>
       </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:rgba(255,255,255,0.4);margin-left:auto;"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
   </aside>
 
   <!-- MAIN CONTENT -->
   <div class="main-wrapper">
-
-    <!-- COLUMN 1: LEAD QUEUE -->
-    <div class="col-leads">
-      <div class="col-header">
-        <span class="col-title">Lead Queue</span>
-        <div class="col-tabs">
-          <button class="col-tab active">All Leads</button>
-          <button class="col-tab">Hot</button>
-          <button class="col-tab">Follow-up</button>
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="search-container">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" placeholder="Search leads by name, company, phone...">
+      </div>
+      <div class="top-bar-actions">
+        <button class="action-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color:#22c55e;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          <span class="action-badge">23</span>
+        </button>
+        <button class="action-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="action-badge red">8</span>
+        </button>
+        <button class="action-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </button>
+        <div class="top-profile">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:12px;">TA</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--navy);">Tunde Adeola</div>
+            <div style="font-size:11px;color:var(--text-muted);">Senior Advisor</div>
+          </div>
         </div>
       </div>
-      <div class="lead-queue">
-        {{#each leads}}
-        <div class="lead-card {{#if (eq id ../selectedLead.id)}}selected{{/if}}" onclick="selectLead({{id}})">
-          <div class="lead-card-header">
-            <div class="lead-card-company">
-              <div class="lead-avatar" style="background: {{#if (eq risk_level 'high')}}#EF4444{{else if (eq risk_level 'medium')}}#F59E0B{{else}}#22C55E{{/if}};">
-                {{#if business_name}}{{userInitials business_name}}{{else}}{{userInitials name}}{{/if}}
-              </div>
-              <div>
-                <div class="lead-card-name">{{business_name}}</div>
-                <div style="font-size:11px;color:var(--text-muted);">{{contact}}</div>
-              </div>
-            </div>
-            <span class="lead-badge {{status}}">{{#if (eq status 'follow-up')}}Follow-up{{else}}{{status}}{{/if}}</span>
-          </div>
-          <div class="lead-card-score">
-            <div class="score-ring {{risk_level}}">{{score}}</div>
-            <span class="risk-label {{risk_level}}">{{risk_level}}</span>
-            <span style="margin-left:auto;font-size:12px;color:var(--text-secondary);">{{premium_range}}</span>
-          </div>
-          <div class="lead-card-footer">
-            <span class="lead-card-action">{{next_action}}</span>
-            <span class="lead-card-time">{{last_activity}}</span>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-    </div>
+    </header>
 
-    <!-- COLUMN 2: LEAD PROFILE -->
-    <div class="col-center">
-      <!-- LEAD INTELLIGENCE -->
-      <div class="section-card lead-intel-card">
-        <div class="section-header">
-          <span class="section-title" style="color:var(--green);">Lead Intelligence</span>
+    <!-- CONTENT COLUMNS -->
+    <div class="content-columns">
+      
+      <!-- COLUMN 1: LEAD QUEUE -->
+      <div class="col-leads">
+        <div class="col-header" style="flex-direction: column; align-items: flex-start; padding-bottom: 12px;">
+          <div class="flex items-center justify-between w-full">
+            <span class="col-title"><span class="col-title-number">1.</span> LEAD QUEUE</span>
+            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="16" y2="18"/></svg></button>
+          </div>
+          <div class="filter-tabs w-full justify-between">
+            <button class="filter-tab active">All Leads <span class="filter-badge">14</span></button>
+            <button class="filter-tab hot">🔥 Hot <span class="filter-badge">5</span></button>
+            <button class="filter-tab">Follow-up <span class="filter-badge">9</span></button>
+          </div>
         </div>
-        <div class="section-body">
-          <div class="intel-grid">
-            <div class="intel-score">
-              <div class="score-gauge">{{selectedLead.score}}</div>
-              <div class="score-gauge-info">
-                <div class="score-gauge-label">CoverScore / Likelihood to Buy</div>
-                <div class="flex items-center gap-3">
-                  <span class="score-gauge-value">{{selectedLead.score}}/100</span>
-                  <span style="font-size:13px;font-weight:600;color:var(--green);">{{selectedLead.likelihood_to_buy}}</span>
+        <div class="lead-queue">
+          <!-- Lead Card 1 (Selected/Hot) -->
+          <div class="lead-card selected" style="border-color:#fca5a5;">
+            <div class="lead-card-header">
+              <div class="lead-card-company">
+                <div class="lead-avatar blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/><path d="M9 7h6"/><path d="M9 11h6"/></svg>
+                </div>
+                <div>
+                  <div class="lead-card-name">Greenfield Manufacturing Ltd</div>
+                  <div class="lead-card-score-item">
+                    <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">82</span> <span class="val-high">High</span></span>
+                  </div>
                 </div>
               </div>
+              <span class="lead-badge hot">Hot</span>
             </div>
-            <div class="intel-item">
-              <div class="intel-label">Status</div>
-              <div class="intel-value">
-                <span class="lead-badge {{selectedLead.status}}" style="font-size:11px;">{{selectedLead.status}}</span>
+            <div class="lead-card-score" style="margin-bottom:8px;">
+              <div class="lead-card-score-item" style="width:100%;">
+                <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
+                <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">₦850,000 - ₦1,100,000</span>
               </div>
             </div>
-            <div class="intel-item">
-              <div class="intel-label">Potential Premium</div>
-              <div class="intel-value">{{selectedLead.premium_range}}</div>
-            </div>
-            <div class="intel-item">
-              <div class="intel-label">Primary Concern</div>
-              <div class="intel-value">{{selectedLead.primary_concern}}</div>
-            </div>
-            <div class="intel-item">
-              <div class="intel-label">Recommended First Product</div>
-              <div class="intel-value">{{selectedLead.recommended_product}}</div>
-            </div>
-            <div class="intel-item">
-              <div class="intel-label">Next Best Action</div>
-              <div class="intel-value" style="color:var(--green);">{{selectedLead.next_action}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CLIENT PROFILE -->
-      <div class="section-card">
-        <div class="section-header">
-          <span class="section-title">Client Profile</span>
-        </div>
-        <div class="section-body">
-          <div class="profile-row">
-            <span class="profile-row-label">Company</span>
-            <span class="profile-row-value font-semibold">{{selectedLead.business_name}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Contact</span>
-            <span class="profile-row-value">{{selectedLead.contact}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Phone</span>
-            <span class="profile-row-value">{{selectedLead.phone}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Email</span>
-            <span class="profile-row-value">{{selectedLead.email}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Industry</span>
-            <span class="profile-row-value">{{selectedLead.industry}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Employees</span>
-            <span class="profile-row-value">{{selectedLead.employees}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Turnover</span>
-            <span class="profile-row-value">{{selectedLead.annual_turnover}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Location</span>
-            <span class="profile-row-value">{{selectedLead.location}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Assessment</span>
-            <span class="profile-row-value">{{selectedLead.assessment_date}}</span>
-          </div>
-          <div class="profile-row">
-            <span class="profile-row-label">Source</span>
-            <span class="profile-row-value">{{selectedLead.source}}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- RISK SNAPSHOT -->
-      <div class="section-card">
-        <div class="section-header">
-          <span class="section-title">Risk Snapshot</span>
-        </div>
-        <div class="section-body">
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-3">
-              <div class="score-gauge" style="width:48px;height:48px;font-size:15px;">{{selectedLead.score}}</div>
+            <div class="lead-card-footer">
               <div>
-                <div style="font-size:12px;color:var(--text-muted);">CoverScore</div>
-                <div style="font-size:16px;font-weight:700;">{{selectedLead.score}}/100</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
+                <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call Now</span>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
+                <span class="lead-card-time">Today, 10:15 AM</span>
               </div>
             </div>
-            <div style="text-align:right;">
-              <div style="font-size:12px;color:var(--text-muted);">Financial Exposure</div>
-              <div style="font-size:14px;font-weight:700;">₦{{formatNumber selectedLead.financial_exposure_min}} - ₦{{formatNumber selectedLead.financial_exposure_max}}</div>
+          </div>
+
+          <!-- Lead Card 2 -->
+          <div class="lead-card">
+            <div class="lead-card-header">
+              <div class="lead-card-company">
+                <div class="lead-avatar orange">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div>
+                  <div class="lead-card-name">Sunshine Schools</div>
+                  <div class="lead-card-score-item">
+                    <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">77</span> <span class="val-high">High</span></span>
+                  </div>
+                </div>
+              </div>
+              <span class="lead-badge hot">Hot</span>
+            </div>
+            <div class="lead-card-score" style="margin-bottom:8px;">
+              <div class="lead-card-score-item" style="width:100%;">
+                <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
+                <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">₦1,200,000 - ₦1,800,000</span>
+              </div>
+            </div>
+            <div class="lead-card-footer">
+              <div>
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
+                <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Proposal</span>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
+                <span class="lead-card-time">Yesterday, 4:30 PM</span>
+              </div>
             </div>
           </div>
-          {{#if selectedLead.risks}}
-          {{#each selectedLead.risks}}
-          <div class="risk-bar-item">
-            <div class="risk-bar-header">
-              <span class="risk-bar-name">{{name}}</span>
-              <span class="risk-bar-score">{{score}}</span>
+
+          <!-- Lead Card 3 -->
+          <div class="lead-card">
+            <div class="lead-card-header">
+              <div class="lead-card-company">
+                <div class="lead-avatar purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div>
+                  <div class="lead-card-name">Adekunle Johnson</div>
+                  <div class="lead-card-score-item">
+                    <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">75</span> <span class="val-high">High</span></span>
+                  </div>
+                </div>
+              </div>
+              <span class="lead-badge warm">Warm</span>
             </div>
-            <div class="risk-bar-track">
-              <div class="risk-bar-fill {{#if (gte score 80)}}critical{{else if (gte score 60)}}high{{else if (gte score 40)}}medium{{else}}low{{/if}}" style="width:{{score}}%;"></div>
+            <div class="lead-card-score" style="margin-bottom:8px;">
+              <div class="lead-card-score-item" style="width:100%;">
+                <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
+                <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">₦120,000 - ₦200,000</span>
+              </div>
+            </div>
+            <div class="lead-card-footer">
+              <div>
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
+                <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Follow-up</span>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
+                <span class="lead-card-time">Today, 9:20 AM</span>
+              </div>
             </div>
           </div>
-          {{/each}}
-          {{/if}}
+          
+          <!-- View All link -->
+          <div style="text-align:center; padding:16px 0;">
+            <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;">View All Leads &rarr;</a>
+          </div>
         </div>
       </div>
 
-      <!-- PROTECTION GAPS -->
-      {{#if selectedLead.protection_gaps}}
-      <div class="section-card">
-        <div class="section-header">
-          <span class="section-title" style="color:var(--red);">Protection Gaps</span>
-        </div>
-        <div class="section-body">
-          {{#each selectedLead.protection_gaps}}
-          <div class="gap-item">
-            <svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            {{this}}
+      <!-- COLUMN 2: LEAD PROFILE -->
+      <div class="col-profile">
+        <div class="flex items-center justify-between mb-4">
+          <span class="col-title" style="margin:0;"><span class="col-title-number">2.</span> LEAD PROFILE</span>
+          <div class="flex items-center gap-2">
+            <button class="action-btn" style="background:white;color:var(--text);border:1px solid var(--border);padding:6px 12px;font-size:12px;width:auto;">Edit Client</button>
+            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
           </div>
-          {{/each}}
+        </div>
+
+        <!-- LEAD INTELLIGENCE -->
+        <div class="section-card" style="border:1px solid #bbf7d0; box-shadow:0 4px 6px -1px rgba(22,163,74,0.05);">
+          <div class="section-header" style="border-bottom:1px solid #dcfce7; padding: 12px 20px;">
+            <span class="section-title" style="color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> LEAD INTELLIGENCE</span>
+          </div>
+          <div class="section-body" style="padding:16px 20px;">
+            <div class="intel-grid">
+              <div class="intel-score">
+                <div class="score-gauge-container">
+                  <svg class="score-gauge-svg" viewBox="0 0 100 100">
+                    <circle class="score-gauge-bg" cx="50" cy="50" r="40"></circle>
+                    <circle class="score-gauge-fill" cx="50" cy="50" r="40"></circle>
+                  </svg>
+                  <div class="score-gauge-text">
+                    <span class="score-gauge-num">92</span>
+                    <span class="score-gauge-sub">/100</span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;">Lead Score</div>
+                </div>
+              </div>
+              <div class="intel-item">
+                <span class="intel-label">Status</span>
+                <div class="flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:#ef4444;"><path d="M17.5 19c2.5-3.5 2.5-7.5 0-11.5a8.5 8.5 0 0 0-11 0c-2.5 4-2.5 8 0 11.5"/><path d="M12 18V9"/><path d="M12 9a3 3 0 0 0-3-3v0a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v0a3 3 0 0 0-3 3z"/></svg>
+                  <span style="font-weight:700;color:#ef4444;font-size:14px;">HOT</span>
+                </div>
+              </div>
+              <div class="intel-item">
+                <span class="intel-label">Likelihood to Buy</span>
+                <span style="font-weight:700;color:var(--green);font-size:14px;">HIGH</span>
+              </div>
+              <div class="intel-item" style="grid-column: 2 / 4; border-left:1px solid var(--border); padding-left:16px;">
+                <span class="intel-label">Potential Premium</span>
+                <span style="font-weight:700;color:var(--green);font-size:18px;">₦600,000 - ₦1,100,000</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid #E5E7EB;">
+              <div class="intel-item" style="flex:1;">
+                <span class="intel-label">Primary Concern</span>
+                <span class="intel-value" style="display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Business Interruption</span>
+              </div>
+              <div class="intel-item" style="flex:1.5;">
+                <span class="intel-label">Recommended First Product</span>
+                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Business Interruption Insurance</span>
+              </div>
+              <div class="intel-item" style="flex:1;">
+                <span class="intel-label">Next Best Action</span>
+                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Schedule Call</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLIENT PROFILE HEADER -->
+        <div style="background:white; border-radius:var(--radius); border:1px solid var(--border); padding:24px; box-shadow:var(--shadow); margin-bottom:24px;">
+          <div class="client-header">
+            <div class="client-avatar blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/><path d="M9 7h6"/><path d="M9 11h6"/></svg></div>
+            <div>
+              <div class="client-name">Greenfield Manufacturing Ltd <span class="lead-badge hot" style="font-size:10px;padding:2px 6px;">Hot Lead</span></div>
+            </div>
+          </div>
+          <div class="client-grid">
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> John Okafor</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0803 123 4567</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> john@greenfield.com</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Manufacturing</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> 45 Employees</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> N250M Turnover</div>
+            <div class="client-info-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Lagos, Nigeria</div>
+            <div class="client-info-item" style="width:100%;">
+              <span style="font-weight:600;color:var(--text);margin-right:16px;">Source: <span style="font-weight:400;color:var(--text-secondary);">WhatsApp</span></span>
+              <span style="font-weight:600;color:var(--text);">Assessment Date: <span style="font-weight:400;color:var(--text-secondary);">May 15, 2024</span></span>
+            </div>
+          </div>
+          
+          <hr style="border:0;border-top:1px solid var(--border);margin:24px 0;">
+
+          <!-- 3-COL RISK GRID -->
+          <div class="risk-grid">
+            <!-- COVERSCORE SNAPSHOT -->
+            <div>
+              <div class="risk-col-title">CoverScore Snapshot</div>
+              <div style="display:flex;flex-direction:column;align-items:center;margin-top:20px;">
+                <div class="score-gauge-container" style="width:100px;height:100px;">
+                  <svg class="score-gauge-svg" viewBox="0 0 100 100">
+                    <circle class="score-gauge-bg" cx="50" cy="50" r="40"></circle>
+                    <circle class="score-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: calc(251.2 - (251.2 * 82) / 100);"></circle>
+                  </svg>
+                  <div class="score-gauge-text">
+                    <span class="score-gauge-num" style="font-size:32px;">82</span>
+                    <span class="score-gauge-sub" style="font-size:12px;">/100</span>
+                  </div>
+                </div>
+                <div style="text-align:center;margin-top:24px;">
+                  <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;font-weight:600;">Financial Exposure</div>
+                  <div style="font-size:18px;font-weight:700;color:var(--green);">₦45M - ₦120M</div>
+                </div>
+                <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View Full Report &rarr;</a>
+              </div>
+            </div>
+            <!-- TOP RISKS -->
+            <div>
+              <div class="risk-col-title">Top Risks</div>
+              <div class="risk-bar-item">
+                <div class="risk-bar-header"><span class="risk-bar-name">Property Risk</span><span class="risk-bar-score">90/100</span></div>
+                <div class="risk-bar-track"><div class="risk-bar-fill critical" style="width:90%;"></div></div>
+              </div>
+              <div class="risk-bar-item">
+                <div class="risk-bar-header"><span class="risk-bar-name">Business Interruption</span><span class="risk-bar-score">88/100</span></div>
+                <div class="risk-bar-track"><div class="risk-bar-fill critical" style="width:88%;"></div></div>
+              </div>
+              <div class="risk-bar-item">
+                <div class="risk-bar-header"><span class="risk-bar-name">Employee Risk</span><span class="risk-bar-score">75/100</span></div>
+                <div class="risk-bar-track"><div class="risk-bar-fill high" style="width:75%;"></div></div>
+              </div>
+              <div class="risk-bar-item">
+                <div class="risk-bar-header"><span class="risk-bar-name">Liability Risk</span><span class="risk-bar-score">62/100</span></div>
+                <div class="risk-bar-track"><div class="risk-bar-fill medium" style="width:62%;"></div></div>
+              </div>
+              <div class="risk-bar-item">
+                <div class="risk-bar-header"><span class="risk-bar-name">Cyber Risk</span><span class="risk-bar-score">40/100</span></div>
+                <div class="risk-bar-track"><div class="risk-bar-fill low" style="width:40%;"></div></div>
+              </div>
+            </div>
+            <!-- PROTECTION GAPS -->
+            <div>
+              <div class="risk-col-title">Protection Gaps</div>
+              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No Group Life Insurance</div>
+              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No Public Liability Insurance</div>
+              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> No Business Interruption Cover</div>
+              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Cyber Insurance Not in Place</div>
+              <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View All Gaps &rarr;</a>
+            </div>
+          </div>
+          
+          <hr style="border:0;border-top:1px solid var(--border);margin:24px 0;">
+
+          <!-- NOTES -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="risk-col-title" style="margin:0;display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> NOTES</span>
+              <span style="font-size:11px;color:var(--text-muted);">Last Updated: <a href="#" style="color:#2563EB;text-decoration:underline;">May 15, 2024 by You</a> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" style="vertical-align:middle;margin-left:2px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+            </div>
+            <textarea class="notes-textarea">Client expressed concern about downtime during production halt.
+Budget indication: around ₦600k annually.
+Already has fire insurance with AIICO.</textarea>
+          </div>
         </div>
       </div>
-      {{/if}}
 
-      <!-- NOTES -->
-      <div class="section-card">
-        <div class="section-header">
-          <span class="section-title">Advisor Notes</span>
+      <!-- COLUMN 3: WHATSAPP CONVERSATION -->
+      <div class="col-whatsapp">
+        <div class="col-header" style="padding-bottom:12px;">
+          <span class="col-title" style="color:var(--green);"><span class="col-title-number" style="color:var(--green);">3.</span> WHATSAPP CONVERSATION</span>
         </div>
-        <div class="section-body">
-          <textarea class="notes-textarea" placeholder="Add notes about this lead...">{{selectedLead.notes}}</textarea>
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:white;">
+          <div class="flex items-center gap-3">
+            <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.5" width="24" height="24" style="margin-top:6px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600;">John Okafor</div>
+              <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--success);font-weight:500;">
+                <span style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span> Online
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+          </div>
+        </div>
+        <div class="chat-area">
+          <div class="chat-date"><span>May 17, 2024</span></div>
+          <div class="chat-msg client">
+            Hello, I have just completed my CoverScore assessment.
+            <div class="chat-msg-time">10:10 AM</div>
+          </div>
+          <div class="chat-msg advisor">
+            Thank you, Mr. Okafor. I've reviewed your report.
+            <div class="chat-msg-time">10:11 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="chat-msg client">
+            I would like a review of the risks and recommendations.
+            <div class="chat-msg-time">10:12 AM</div>
+          </div>
+          <div class="chat-msg advisor">
+            Absolutely. I can see a few key areas we should discuss.
+            <div class="chat-msg-time">10:13 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="chat-msg client">
+            What do you recommend we start with?
+            <div class="chat-msg-time">10:14 AM</div>
+          </div>
+          <div class="chat-msg advisor">
+            Let's start with business interruption and employee protection.
+            <div class="chat-msg-time">10:15 AM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <button class="chat-btn" title="Emoji">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </button>
+          <input type="text" class="chat-input" placeholder="Type a message...">
+          <button class="chat-btn" title="Attach file">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <button class="chat-btn send" title="Voice note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- COLUMN 4: AI RECOMMENDATIONS -->
+      <div class="col-recommendations">
+        <div class="col-header" style="padding:0 0 16px 0;border-bottom:none;">
+          <span class="col-title" style="color:#4338ca;"><span class="col-title-number" style="color:#4338ca;">4.</span> AI RECOMMENDATIONS</span>
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <div class="risk-col-title">Recommended Products</div>
+          <div class="rec-card">
+            <div class="rec-icon" style="background:#EFF6FF;color:#3B82F6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <div class="rec-info">
+              <div class="rec-title">Business Interruption Insurance</div>
+              <div class="rec-priority high">High Priority</div>
+            </div>
+          </div>
+          <div class="rec-card">
+            <div class="rec-icon" style="background:#EFF6FF;color:#3B82F6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <div class="rec-info">
+              <div class="rec-title">Group Life Insurance</div>
+              <div class="rec-priority high">High Priority</div>
+            </div>
+          </div>
+          <div class="rec-card">
+            <div class="rec-icon" style="background:#F3E8FF;color:#9333EA;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <div class="rec-info">
+              <div class="rec-title">Public Liability Insurance</div>
+              <div class="rec-priority high">High Priority</div>
+            </div>
+          </div>
+          <div class="rec-card">
+            <div class="rec-icon" style="background:#FEF3C7;color:#D97706;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+            <div class="rec-info">
+              <div class="rec-title">Fire Insurance</div>
+              <div class="rec-priority medium">Medium Priority</div>
+            </div>
+          </div>
+          <div class="rec-card">
+            <div class="rec-icon" style="background:#DCFCE7;color:#16A34A;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="rec-info">
+              <div class="rec-title">Cyber Insurance</div>
+              <div class="rec-priority medium">Medium Priority</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <div class="risk-col-title">Suggested Talking Points</div>
+          <ul class="tp-list">
+            <li class="tp-item">Highlight financial loss during downtime and its impact on cash flow.</li>
+            <li class="tp-item">Discuss employee welfare and the importance of group life cover.</li>
+            <li class="tp-item">Review liability exposure from visitors, vendors and third parties.</li>
+          </ul>
+          <a href="#" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;">View More Talking Points &rarr;</a>
+        </div>
+
+        <div>
+          <div class="col-title" style="margin-bottom:12px;"><span class="col-title-number">5.</span> ACTIONS</div>
+          <div class="action-panel">
+            <button class="action-btn green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Schedule Call
+            </button>
+            <button class="action-btn blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Proposal
+            </button>
+            <button class="action-btn green">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Send WhatsApp
+            </button>
+            <button class="action-btn orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M8 21h8M12 17v4M7 4h10M5 4h14v5a7 7 0 0 1-14 0V4z"/></svg> Mark as Won
+            </button>
+            <button class="action-btn red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Mark as Lost
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- COLUMN 3: WHATSAPP + AI -->
-    <div class="col-whatsapp">
-      <!-- WHATSAPP CONVERSATION -->
-      <div class="col-header">
-        <div>
-          <span class="col-title">WhatsApp</span>
-          <div class="wa-status" style="margin-top:4px;">
-            <span class="wa-dot"></span>
-            <span style="font-size:12px;color:var(--success);font-weight:500;">Online</span>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:13px;font-weight:600;">{{selectedLead.contact}}</div>
-          <div style="font-size:11px;color:var(--text-muted);">{{selectedLead.business_name}}</div>
-        </div>
-      </div>
-      <div class="chat-area">
-        {{#each selectedLead.conversations}}
-        <div class="chat-msg {{sender}}">
-          {{text}}
-          <div class="chat-msg-time">{{time}}</div>
-        </div>
-        {{/each}}
-      </div>
-      <div class="chat-input-area">
-        <button class="chat-btn" title="Attach file">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-        </button>
-        <button class="chat-btn" title="Voice note">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-        </button>
-        <input type="text" class="chat-input" placeholder="Type a message...">
-        <button class="chat-btn send">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-
-      <!-- AI RECOMMENDATIONS -->
-      <div style="border-top:1px solid var(--border);padding:16px;">
-        <div class="section-title mb-4">AI Recommendations</div>
-        {{#each aiRecommendations}}
-        <div class="ai-item">
-          <span class="ai-item-name">{{product}}</span>
-          <span class="ai-item-priority {{priority}}">{{priority}}</span>
-        </div>
-        {{/each}}
-      </div>
-
-      <!-- TALKING POINTS -->
-      <div style="border-top:1px solid var(--border);padding:16px;">
-        <div class="section-title mb-4">Suggested Talking Points</div>
-        {{#each talkingPoints}}
-        <div class="tp-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          {{this}}
-        </div>
-        {{/each}}
-        <button class="tp-view-more">View More Talking Points</button>
-      </div>
-
-      <!-- ACTION PANEL -->
-      <div style="border-top:1px solid var(--border);padding:16px;">
-        <div class="section-title mb-4">Actions</div>
-        <div class="action-panel">
-          <button class="action-btn green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Schedule Call
-          </button>
-          <button class="action-btn blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            Send Proposal
-          </button>
-          <button class="action-btn green">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-            Send WhatsApp
-          </button>
-          <button class="action-btn orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"/></svg>
-            Mark as Won
-          </button>
-          <button class="action-btn red">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            Mark as Lost
-          </button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <script>
-    function selectLead(id) {
-      window.location.href = '/advisor/dashboard?lead=' + id;
-    }
-
-    document.querySelectorAll('.col-tab').forEach(tab => {
+    document.querySelectorAll('.filter-tab').forEach(tab => {
       tab.addEventListener('click', function() {
-        document.querySelectorAll('.col-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
       });
     });
