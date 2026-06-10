@@ -444,11 +444,15 @@
 
   async function loadAnalytics() {
     try {
+      const token = localStorage.getItem('accessToken');
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
       const [overviewRes, riskRes, convRes, trendsRes] = await Promise.all([
-        fetch('/api/analytics/overview'),
-        fetch('/api/analytics/risk-distribution'),
-        fetch('/api/analytics/conversion'),
-        fetch('/api/analytics/trends')
+        fetch('/api/analytics/overview', { headers }),
+        fetch('/api/analytics/risk-distribution', { headers }),
+        fetch('/api/analytics/conversion', { headers }),
+        fetch('/api/analytics/trends', { headers })
       ]);
 
       const overview = overviewRes.ok ? await overviewRes.json() : {};

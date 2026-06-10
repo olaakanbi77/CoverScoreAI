@@ -911,19 +911,19 @@ Already has fire insurance with AIICO.</textarea>
         <div>
           <div class="col-title" style="margin-bottom:12px;"><span class="col-title-number">5.</span> ACTIONS</div>
           <div class="action-panel">
-            <button class="action-btn green">
+            <button class="action-btn green" onclick="window.location.href='mailto:{{selectedLead.email}}?subject=Consultation Call'">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Schedule Call
             </button>
-            <button class="action-btn blue">
+            <button class="action-btn blue" onclick="window.location.href='/advisor/proposal-writer/{{selectedLead.id}}'">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Proposal
             </button>
-            <button class="action-btn green">
+            <button class="action-btn green" onclick="window.open('https://wa.me/{{selectedLead.phone}}?text=Hello%20{{selectedLead.name}}', '_blank')">
               <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Send WhatsApp
             </button>
-            <button class="action-btn orange">
+            <button class="action-btn orange" onclick="updateLeadStatus('{{selectedLead.id}}', 'Won')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M8 21h8M12 17v4M7 4h10M5 4h14v5a7 7 0 0 1-14 0V4z"/></svg> Mark as Won
             </button>
-            <button class="action-btn red">
+            <button class="action-btn red" onclick="updateLeadStatus('{{selectedLead.id}}', 'Lost')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Mark as Lost
             </button>
           </div>
@@ -933,6 +933,30 @@ Already has fire insurance with AIICO.</textarea>
   </div>
 
   <script>
+    async function updateLeadStatus(leadId, status) {
+      if (!leadId) return alert("No lead selected");
+      try {
+        const token = localStorage.getItem('accessToken');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        const res = await fetch(`/api/leads/${leadId}/status`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({ status })
+        });
+        if (res.ok) {
+          alert(`Lead marked as ${status}`);
+          window.location.reload();
+        } else {
+          alert('Failed to update status');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error updating status');
+      }
+    }
+
     document.querySelectorAll('.filter-tab').forEach(tab => {
       tab.addEventListener('click', function() {
         document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
