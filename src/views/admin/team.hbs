@@ -203,22 +203,22 @@
       <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--crm-border);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <label class="form-label" style="margin-bottom:0;font-weight:600;">Reset Password</label>
-          <button class="btn btn-outline" style="border:1px solid var(--crm-border);background:var(--crm-bg);color:var(--crm-text-primary);padding:6px 14px;border-radius:var(--crm-radius-sm,8px);cursor:pointer;font-size:13px;" onclick="toggleResetPassword()" id="toggleResetBtn">Change Password</button>
+          <button class="btn btn-outline" style="border:1px solid var(--crm-border);background:var(--crm-bg);color:var(--crm-text-primary);padding:6px 14px;border-radius:var(--crm-radius-sm,8px);cursor:pointer;font-size:13px;white-space:nowrap;text-align:center;" onclick="toggleResetPassword()" id="toggleResetBtn">Change Password</button>
         </div>
         <div id="resetPasswordFields" style="display:none;">
           <div class="form-group">
             <label class="form-label">New Password</label>
             <div style="display:flex; gap:12px;">
               <input type="text" id="editUserPassword" class="form-control" placeholder="Minimum 8 characters">
-              <button class="btn btn-outline" style="border: 1px solid var(--crm-border); background: var(--crm-bg); color: var(--crm-text-primary); padding: 10px 16px; border-radius: var(--crm-radius-sm, 8px); cursor: pointer; white-space: nowrap;" onclick="generateEditPassword()">Generate</button>
+              <button class="btn btn-outline" style="border: 1px solid var(--crm-border); background: var(--crm-bg); color: var(--crm-text-primary); padding: 10px 16px; border-radius: var(--crm-radius-sm, 8px); cursor: pointer; white-space: nowrap; text-align: center;" onclick="generateEditPassword()">Generate</button>
             </div>
           </div>
-          <button class="btn-primary" style="margin-top:8px;padding:8px 16px;font-size:13px;" onclick="submitResetPassword()">Reset Password</button>
+          <button class="btn-primary" style="margin-top:8px;padding:8px 16px;font-size:13px;white-space:nowrap;text-align:center;" onclick="submitResetPassword()">Reset Password</button>
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" style="padding: 10px 20px; background: transparent; border: 1px solid var(--crm-border); color: var(--crm-text-primary); border-radius: var(--crm-radius-sm, 8px); cursor: pointer;" onclick="closeEditUserModal()">Cancel</button>
+      <div class="modal-footer">
+      <button class="btn-secondary" style="padding: 10px 20px; background: transparent; border: 1px solid var(--crm-border); color: var(--crm-text-primary); border-radius: var(--crm-radius-sm, 8px); cursor: pointer; white-space: nowrap; text-align: center;" onclick="closeEditUserModal()">Cancel</button>
       <button class="btn-primary" onclick="submitEditUser()">Save Changes</button>
     </div>
   </div>
@@ -253,7 +253,7 @@
         <label class="form-label">Temporary Password</label>
         <div style="display:flex; gap:12px;">
           <input type="text" id="newUserPassword" class="form-control" placeholder="Minimum 6 characters">
-          <button class="btn btn-outline" style="border: 1px solid var(--crm-border); background: var(--crm-bg); color: var(--crm-text-primary);" onclick="generatePassword()">Generate</button>
+          <button class="btn btn-outline" style="border: 1px solid var(--crm-border); background: var(--crm-bg); color: var(--crm-text-primary); white-space: nowrap; text-align: center;" onclick="generatePassword()">Generate</button>
         </div>
       </div>
       <p style="font-size: 12px; color: var(--crm-text-secondary); margin-top: 8px;">
@@ -261,7 +261,7 @@
       </p>
     </div>
     <div class="modal-footer">
-      <button class="btn-secondary" style="padding: 10px 20px; background: transparent; border: 1px solid var(--crm-border); color: var(--crm-text-primary); border-radius: var(--crm-radius-sm, 8px); cursor: pointer;" onclick="closeCreateUserModal()">Cancel</button>
+      <button class="btn-secondary" style="padding: 10px 20px; background: transparent; border: 1px solid var(--crm-border); color: var(--crm-text-primary); border-radius: var(--crm-radius-sm, 8px); cursor: pointer; white-space: nowrap; text-align: center;" onclick="closeCreateUserModal()">Cancel</button>
       <button class="btn-primary" onclick="submitCreateUser()">Create Account</button>
     </div>
   </div>
