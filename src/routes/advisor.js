@@ -44,12 +44,14 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     let protection_gaps = [];
     let financial_exposure_min = 0;
     let financial_exposure_max = 0;
+    let user_primary_concern = null;
 
     if (selectedLead && selectedLead.assessment_id) {
       const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [selectedLead.assessment_id]);
       if (assessment && assessment.answers) {
         try {
           const answers = JSON.parse(assessment.answers);
+          user_primary_concern = answers.primary_concern;
           const report = calculateScore(answers);
           
           if (report.risk_categories) {
@@ -83,7 +85,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       selectedLead.financial_exposure_max = financial_exposure_max;
       
       // Dynamic calculations for Lead Intelligence
-      selectedLead.primary_concern = selectedLead.protection_gaps[0];
+      selectedLead.primary_concern = user_primary_concern || selectedLead.protection_gaps[0] || 'General Protection';
       
       let next_action = 'Contact Lead';
       if (selectedLead.status === 'New Lead' || selectedLead.status === 'hot') next_action = 'Initial Outreach';
