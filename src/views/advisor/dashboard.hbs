@@ -927,7 +927,7 @@ Already has fire insurance with AIICO.</textarea>
             <button class="action-btn green" onclick="document.getElementById('whatsappChatInput').focus()">
               <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Send WhatsApp
             </button>
-            <button class="action-btn orange" onclick="updateLeadStatus('{{selectedLead.id}}', 'Won')">
+            <button class="action-btn orange" onclick="updateLeadStatus('{{selectedLead.id}}', 'Won', '{{selectedLead.name}}')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M8 21h8M12 17v4M7 4h10M5 4h14v5a7 7 0 0 1-14 0V4z"/></svg> Mark as Won
             </button>
             <button class="action-btn red" onclick="updateLeadStatus('{{selectedLead.id}}', 'Lost')">
@@ -937,11 +937,62 @@ Already has fire insurance with AIICO.</textarea>
         </div>
       </div>
     </div>
+    </div>
+  </div>
+
+  <!-- Policy Modal -->
+  <div class="modal-overlay" id="policyModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title">Record Policy for Won Lead</h2>
+        <button class="modal-close" onclick="closePolicyModal()">&times;</button>
+      </div>
+      <form id="policyForm" onsubmit="submitPolicy(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <input type="hidden" name="lead_id" id="policyLeadId">
+        <div class="form-group">
+          <label>Client Name</label>
+          <input type="text" id="policyClientName" class="form-control" readonly style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
+        </div>
+        <div class="form-group">
+          <label>Policy Number</label>
+          <input type="text" name="policy_number" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Product</label>
+          <select name="product" class="form-control" required>
+            <option value="Motor Comprehensive">Motor Comprehensive</option>
+            <option value="Fire & Special Perils">Fire & Special Perils</option>
+            <option value="Health Insurance">Health Insurance</option>
+            <option value="All Risks Insurance">All Risks Insurance</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Premium (₦)</label>
+          <input type="number" name="premium" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" name="expiry_date" class="form-control" required>
+        </div>
+        <div class="modal-footer" style="margin-top: 8px; padding: 0;">
+          <button type="button" class="btn-secondary" onclick="closePolicyModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Policy</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
-    async function updateLeadStatus(leadId, status) {
+    async function updateLeadStatus(leadId, status, leadName) {
       if (!leadId) return alert("No lead selected");
+
+      if (status === 'Won') {
+        document.getElementById('policyLeadId').value = leadId;
+        document.getElementById('policyClientName').value = leadName || 'Selected Lead';
+        document.getElementById('policyModal').style.display = 'flex';
+        return;
+      }
+
       try {
         const token = localStorage.getItem('accessToken');
         const headers = { 'Content-Type': 'application/json' };
@@ -961,6 +1012,48 @@ Already has fire insurance with AIICO.</textarea>
       } catch (err) {
         console.error(err);
         alert('Error updating status');
+      }
+    }
+
+    function closePolicyModal() {
+      document.getElementById('policyModal').style.display = 'none';
+    }
+
+    async function submitPolicy(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      
+      try {
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        
+        const res = await fetch('/api/crm/policies', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+          },
+          body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+          closePolicyModal();
+          alert('Policy recorded and lead marked as Won');
+          window.location.reload();
+        } else {
+          const err = await res.json();
+          alert(err.error || 'Failed to record policy');
+          btn.disabled = false;
+          btn.textContent = 'Save Policy';
+        }
+      } catch (error) {
+        alert('Error connecting to server');
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = false;
+        btn.textContent = 'Save Policy';
       }
     }
 
