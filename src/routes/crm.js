@@ -63,8 +63,8 @@ router.post('/policies', authenticate, requireAgent, async (req, res, next) => {
       VALUES (?, ?, ?, ?, ?, 'Active')
     `, [lead_id, policy_number, product, premium, expiry_date]);
     
-    // Auto-update lead's pipeline stage if needed
-    await run(`UPDATE leads SET pipeline_stage = 6 WHERE id = ?`, [lead_id]);
+    // Auto-update lead's pipeline stage and status
+    await run(`UPDATE leads SET pipeline_stage = 6, status = 'Won' WHERE id = ?`, [lead_id]);
     
     res.json({ success: true });
   } catch (err) { next(err); }
