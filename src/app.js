@@ -147,6 +147,22 @@ app.get('/admin/team', authenticatePage, (req, res) => {
   res.render('admin/team', { title: 'Team & Advisors', activePage: 'team', layout: 'admin' });
 });
 
+// Placeholder routes for sidebar modules under development
+const placeholderRoutes = [
+  { path: '/admin/calendar', title: 'Calendar', id: 'calendar' },
+  { path: '/admin/templates', title: 'Templates', id: 'templates' },
+  { path: '/admin/policies', title: 'Policies', id: 'policies' },
+  { path: '/admin/consultations', title: 'Consultations', id: 'consultations' },
+  { path: '/admin/proposals', title: 'Proposals', id: 'proposals' },
+  { path: '/admin/assessments', title: 'Assessments', id: 'assessments' }
+];
+
+placeholderRoutes.forEach(route => {
+  app.get(route.path, authenticatePage, (req, res) => {
+    res.render('admin/placeholder', { title: route.title, activePage: route.id, layout: 'admin' });
+  });
+});
+
 app.get(['/quote', '/request-quote'], (req, res) => {
   res.render('request-quote', { title: 'Request a Quote', layout: false });
 });
