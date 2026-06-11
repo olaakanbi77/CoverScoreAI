@@ -512,6 +512,38 @@
     .text-sm { font-size: 12px; }
     .text-muted { color: var(--text-muted); }
     .font-semibold { font-weight: 600; }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-container {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
+      box-shadow: var(--shadow-md); animation: modalEnter 0.3s ease-out;
+    }
+    @keyframes modalEnter {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 18px; font-weight: 600; color: var(--text); margin: 0; }
+    .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .modal-close:hover { color: var(--text); }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+    .form-control {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px;
+    }
+    .form-control:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .btn-secondary { padding: 8px 16px; border: 1px solid var(--border); background: white; color: var(--text); border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+    .btn-secondary:hover { background: var(--bg); }
+    .btn-primary { padding: 8px 16px; border: none; background: var(--green); color: white; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+    .btn-primary:hover { background: var(--green-hover); }
   </style>
 </head>
 <body>
