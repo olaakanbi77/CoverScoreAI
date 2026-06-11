@@ -132,6 +132,31 @@ const initDatabase = () => {
     CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id);
     CREATE INDEX IF NOT EXISTS idx_proposals_lead_id ON proposals(lead_id);
     CREATE INDEX IF NOT EXISTS idx_proposals_token ON proposals(token);
+
+    CREATE TABLE IF NOT EXISTS policies (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      policy_number TEXT UNIQUE NOT NULL,
+      product TEXT NOT NULL,
+      premium INTEGER NOT NULL,
+      status TEXT DEFAULT 'Active',
+      expiry_date DATETIME NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS templates (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      type TEXT NOT NULL,
+      content TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
+      (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
+      (2, 'Proposal Sent', 'email', 'Dear {{name}},\n\nPlease find attached the insurance proposal based on our recent consultation for {{business_name}}.\n\nLet me know if you have any questions.\n\nBest regards,\nCoverScore AI Advisor');
+
   `);
 
   // CRM Schema Migration (Option B)

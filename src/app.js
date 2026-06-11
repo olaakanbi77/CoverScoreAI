@@ -169,8 +169,10 @@ app.get('/admin/assessments', authenticatePage, async (req, res) => {
 
 app.get('/admin/consultations', authenticatePage, async (req, res) => {
   try {
-    const consultations = await all("SELECT * FROM leads WHERE consultation_preference IS NOT NULL AND status != 'Won' ORDER BY created_at DESC");
-    res.render('admin/consultations', { title: 'Consultations', activePage: 'consultations', layout: 'admin', consultations });
+    const requested = await all("SELECT * FROM leads WHERE consultation_preference IS NOT NULL AND status != 'Won' ORDER BY created_at DESC");
+    const scheduled = await all("SELECT t.*, l.name, l.business_name FROM tasks t JOIN leads l ON t.lead_id = l.id WHERE t.type = 'consultation' AND t.status != 'completed' ORDER BY t.due_date ASC");
+    const completed = await all("SELECT t.*, l.name, l.business_name FROM tasks t JOIN leads l ON t.lead_id = l.id WHERE t.type = 'consultation' AND t.status = 'completed' ORDER BY t.due_date DESC");
+    res.render('admin/consultations', { title: 'Consultations', activePage: 'consultations', layout: 'admin', requested, scheduled, completed });
   } catch (error) {
     res.status(500).send('Error loading consultations');
   }
@@ -180,12 +182,22 @@ app.get('/admin/calendar', authenticatePage, (req, res) => {
   res.render('admin/calendar', { title: 'Calendar', activePage: 'calendar', layout: 'admin' });
 });
 
-app.get('/admin/templates', authenticatePage, (req, res) => {
-  res.render('admin/templates', { title: 'Templates', activePage: 'templates', layout: 'admin' });
+app.get('/admin/templates', authenticatePage, async (req, res) => {
+  try {
+    const templates = await all("SELECT * FROM templates ORDER BY id ASC");
+    res.render('admin/templates', { title: 'Templates', activePage: 'templates', layout: 'admin', templates });
+  } catch (error) {
+    res.status(500).send('Error loading templates');
+  }
 });
 
-app.get('/admin/policies', authenticatePage, (req, res) => {
-  res.render('admin/policies', { title: 'Policies', activePage: 'policies', layout: 'admin' });
+app.get('/admin/policies', authenticatePage, async (req, res) => {
+  try {
+    const policies = await all("SELECT p.*, l.name as client_name FROM policies p JOIN leads l ON p.lead_id = l.id ORDER BY p.created_at DESC");
+    res.render('admin/policies', { title: 'Policies', activePage: 'policies', layout: 'admin', policies });
+  } catch (error) {
+    res.status(500).send('Error loading policies');
+  }
 });
 
 app.get('/admin/proposals', authenticatePage, async (req, res) => {
@@ -282,7 +294,23 @@ app.get('/health/email', async (req, res) => {
   }
 });
 
+app.get('/api/admin/tasks', authenticatePage, async (req, res) => {
+  try {
+    const tasks = await all("SELECT t.*, l.name as lead_name FROM tasks t JOIN leads l ON t.lead_id = l.id");
+    const events = tasks.filter(t => t.due_date).map(t => ({
+      id: t.id,
+      title: `${t.type === 'consultation' ? 'Consultation' : 'Call'}: ${t.lead_name}`,
+      start: t.due_date,
+      className: t.type === 'consultation' ? 'event-consult' : 'event-call'
+    }));
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load tasks' });
+  }
+});
+
 app.use(notFoundHandler);
+
 app.use(errorHandler);
 
 app.use((err, req, res, next) => {

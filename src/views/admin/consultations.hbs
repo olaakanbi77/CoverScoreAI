@@ -27,10 +27,10 @@
     <div class="kanban-column">
       <div class="kanban-header">
         <span>Requested</span>
-        <span class="badge" style="background: rgba(255,255,255,0.1);">{{consultations.length}}</span>
+        <span class="badge" style="background: rgba(255,255,255,0.1);">{{requested.length}}</span>
       </div>
       
-      {{#each consultations}}
+      {{#each requested}}
       <div class="consult-card" onclick="window.location.href='/admin/leads/{{id}}'">
         <div style="display: flex; justify-content: space-between;">
           <h3 class="card-title">{{name}}</h3>
@@ -56,18 +56,56 @@
     <div class="kanban-column">
       <div class="kanban-header">
         <span>Scheduled</span>
-        <span class="badge" style="background: rgba(255,255,255,0.1);">0</span>
+        <span class="badge" style="background: rgba(255,255,255,0.1);">{{scheduled.length}}</span>
       </div>
-      <p style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">Drag requests here to schedule</p>
+      {{#each scheduled}}
+      <div class="consult-card" onclick="window.location.href='/admin/leads/{{lead_id}}'">
+        <div style="display: flex; justify-content: space-between;">
+          <h3 class="card-title">{{name}}</h3>
+          <span class="badge" style="background: rgba(245,158,11,0.15); color: #fbbf24;">Scheduled</span>
+        </div>
+        <p class="card-subtitle">{{business_name}}</p>
+        
+        <div style="font-size: 13px; color: #e2e8f0; margin-bottom: 8px;">
+          <strong>Title:</strong> {{title}}
+        </div>
+        
+        <div class="card-meta">
+          <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Due: {{formatDate due_date}}
+        </div>
+      </div>
+      {{else}}
+      <p style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">No scheduled consultations</p>
+      {{/each}}
     </div>
 
     <!-- Completed -->
     <div class="kanban-column">
       <div class="kanban-header">
         <span>Completed</span>
-        <span class="badge" style="background: rgba(255,255,255,0.1);">0</span>
+        <span class="badge" style="background: rgba(255,255,255,0.1);">{{completed.length}}</span>
       </div>
+      {{#each completed}}
+      <div class="consult-card" onclick="window.location.href='/admin/leads/{{lead_id}}'">
+        <div style="display: flex; justify-content: space-between;">
+          <h3 class="card-title">{{name}}</h3>
+          <span class="badge" style="background: rgba(16,185,129,0.15); color: #34d399;">Completed</span>
+        </div>
+        <p class="card-subtitle">{{business_name}}</p>
+        
+        <div style="font-size: 13px; color: #e2e8f0; margin-bottom: 8px;">
+          <strong>Title:</strong> {{title}}
+        </div>
+        
+        <div class="card-meta">
+          <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Completed
+        </div>
+      </div>
+      {{else}}
       <p style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">No completed consultations yet</p>
+      {{/each}}
     </div>
   </div>
 </div>

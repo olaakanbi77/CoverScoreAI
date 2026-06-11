@@ -53,34 +53,26 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Mock Data -->
+      {{#each policies}}
       <tr>
-        <td style="font-family: monospace; color: #60a5fa;">POL-2026-8921</td>
-        <td style="font-weight: 500; color: white;">Tech Innovators Ltd</td>
-        <td>Fire & Special Perils</td>
-        <td>₦450,000</td>
-        <td><span class="badge badge-active">Active</span></td>
-        <td>Oct 12, 2026</td>
+        <td style="font-family: monospace; color: #60a5fa;">{{policy_number}}</td>
+        <td style="font-weight: 500; color: white;">{{client_name}}</td>
+        <td>{{product}}</td>
+        <td>₦{{formatNumber premium}}</td>
+        <td><span class="badge badge-{{toLowerCase status}}">{{status}}</span></td>
+        <td>{{formatDate expiry_date}}</td>
         <td><button class="btn btn-outline btn-sm">View Details</button></td>
       </tr>
+      {{else}}
       <tr>
-        <td style="font-family: monospace; color: #60a5fa;">POL-2025-4432</td>
-        <td style="font-weight: 500; color: white;">Global Logistics Inc.</td>
-        <td>Goods in Transit</td>
-        <td>₦1,200,000</td>
-        <td><span class="badge badge-expiring">Expiring Soon</span></td>
-        <td>Jun 30, 2026</td>
-        <td><button class="btn btn-outline btn-sm">Renew</button></td>
+        <td colspan="7">
+          <div class="empty-state">
+            <h3 style="margin-bottom: 8px; color: white;">No Active Policies</h3>
+            <p style="color: var(--text-secondary);">Policies bound to clients will appear here.</p>
+          </div>
+        </td>
       </tr>
-      <tr>
-        <td style="font-family: monospace; color: #60a5fa;">POL-2026-1102</td>
-        <td style="font-weight: 500; color: white;">Adeola & Sons</td>
-        <td>Motor Comprehensive</td>
-        <td>₦85,000</td>
-        <td><span class="badge badge-active">Active</span></td>
-        <td>Jan 15, 2027</td>
-        <td><button class="btn btn-outline btn-sm">View Details</button></td>
-      </tr>
+      {{/each}}
     </tbody>
   </table>
 </div>
