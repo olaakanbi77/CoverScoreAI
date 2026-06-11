@@ -613,6 +613,7 @@ Requirements:
 - Include a "Recommended Coverage Portfolio" section (list 3-4 highly relevant insurance types).
 - Include a placeholder for "Estimated Annual Investment" formatted nicely.
 - Conclude with "Next Steps".
+- The signature MUST be branded as "CoverScore AI", with email "advisor@coverscore.site" and phone "+2349165304629".
 - Do not use markdown backticks in the response. Just return raw HTML.`;
 
   try {

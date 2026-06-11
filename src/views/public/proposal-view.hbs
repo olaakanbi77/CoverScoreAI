@@ -17,6 +17,34 @@ body {
   color: white;
   padding: 3rem 2rem;
   text-align: center;
+  position: relative;
+}
+.brand-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: white;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.brand-logo span {
+  color: #3b82f6;
+}
+.brand-footer {
+  text-align: center;
+  padding: 2rem;
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+.brand-footer a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
 }
 .proposal-body {
   padding: 3rem;
@@ -72,6 +100,10 @@ body {
 
 <div class="proposal-container">
   <div class="proposal-header">
+    <div class="brand-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      COVER<span>SCORE</span> AI
+    </div>
     <h1 style="margin:0 0 10px 0;">{{proposal.title}}</h1>
     <p style="margin:0; opacity:0.8;">Prepared for <strong>{{proposal.lead_name}}</strong> ({{proposal.business_name}})</p>
     
@@ -97,6 +129,11 @@ body {
     <button class="btn btn-accept" onclick="handleAction('Accepted')">Accept & Proceed</button>
   </div>
   {{/if}}
+
+  <div class="brand-footer">
+    <p style="margin: 0 0 10px 0;"><strong>CoverScore Risk Intelligence</strong></p>
+    <p style="margin: 0;">Email: <a href="mailto:advisor@coverscore.site">advisor@coverscore.site</a> | Phone: <a href="tel:+2349165304629">+2349165304629</a></p>
+  </div>
 </div>
 
 <script>

@@ -49,7 +49,7 @@
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: #6b7280;
   margin-bottom: 0.5rem;
 }
 .form-control {
@@ -70,7 +70,7 @@
   text-align: center;
   transition: all 0.2s;
 }
-.btn-primary { background: var(--primary); color: white; }
+.btn-primary { background: #2563eb; color: white; }
 .btn-primary:hover { opacity: 0.9; }
 .btn-secondary { background: #eee; color: #333; }
 .btn-ai { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; }
@@ -86,9 +86,9 @@
 <div style="display: flex; justify-content: space-between; align-items: center;">
   <div>
     <h1 style="margin:0;">Proposal Writer</h1>
-    <p style="color: var(--text-muted); margin-top:0.5rem;">Drafting for: <strong>{{lead.name}}</strong> ({{or lead.business_name 'Individual'}})</p>
+    <p style="color: #6b7280; margin-top:0.5rem;">Drafting for: <strong>{{lead.name}}</strong> ({{or lead.business_name 'Individual'}})</p>
   </div>
-  <a href="/advisor/dashboard" style="color: var(--text-muted); text-decoration: none;">&larr; Back to Dashboard</a>
+  <a href="/advisor/dashboard" style="color: #6b7280; text-decoration: none;">&larr; Back to Dashboard</a>
 </div>
 
 <div class="writer-container">
@@ -106,7 +106,7 @@
   <div class="sidebar-panel">
     <div class="card">
       <h3 style="margin-top:0;">AI Assistant</h3>
-      <p style="font-size:0.9rem; color:var(--text-muted);">Generate a smart proposal draft based on this lead's CoverScore assessment.</p>
+      <p style="font-size:0.9rem; color:#6b7280;">Generate a smart proposal draft based on this lead's CoverScore assessment.</p>
       <button id="btnGenerateAI" class="btn btn-ai">✨ Generate Draft with AI</button>
     </div>
 
