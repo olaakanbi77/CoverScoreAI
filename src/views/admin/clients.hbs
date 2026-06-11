@@ -1,0 +1,70 @@
+<style>
+  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .data-table th, .data-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+  .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
+  .data-table td { font-size: 14px; color: var(--text-primary); }
+  .data-table tr:last-child td { border-bottom: none; }
+  
+  .client-name { font-weight: 600; display: flex; align-items: center; gap: 12px; }
+  .client-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
+  
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-won { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  
+  .empty-state { text-align: center; padding: 64px 24px; }
+  .empty-icon { width: 64px; height: 64px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; color: var(--color-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Active Clients</h1>
+    <a href="/admin/leads" class="btn btn-primary">Add New Lead</a>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Client</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Est. Premium</th>
+        <th>Date Converted</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each clients}}
+      <tr>
+        <td>
+          <div class="client-name">
+            <div class="client-avatar">{{userInitials name}}</div>
+            <div>
+              <div style="color: white;">{{name}}</div>
+              <div style="font-size: 12px; color: var(--text-secondary);">{{email}} • {{phone}}</div>
+            </div>
+          </div>
+        </td>
+        <td style="text-transform: capitalize;">{{entity_type}}</td>
+        <td><span class="badge badge-won">{{status}}</span></td>
+        <td>₦{{formatNumber estimated_premium}}</td>
+        <td>{{formatDate updated_at}}</td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="5">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <h3 style="margin-bottom: 8px; color: white;">No Active Clients Yet</h3>
+            <p style="color: var(--text-secondary);">Converted leads will appear here automatically.</p>
+          </div>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

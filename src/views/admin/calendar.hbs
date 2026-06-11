@@ -1,0 +1,81 @@
+<style>
+  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  
+  .calendar-wrapper { background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 24px; }
+  
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .cal-month { font-size: 18px; font-weight: 600; color: white; }
+  
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--glass-border); border: 1px solid var(--glass-border); border-radius: var(--radius-md); overflow: hidden; }
+  .cal-day-header { background: rgba(0,0,0,0.2); padding: 12px; text-align: center; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); }
+  .cal-cell { background: var(--bg-surface); min-height: 100px; padding: 8px; transition: background 0.2s; }
+  .cal-cell:hover { background: rgba(255,255,255,0.02); }
+  .cal-cell.empty { background: rgba(0,0,0,0.1); }
+  .cal-date { font-size: 14px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; display: inline-block; width: 24px; height: 24px; text-align: center; line-height: 24px; border-radius: 50%; }
+  .cal-cell.today .cal-date { background: var(--color-primary); color: white; }
+  
+  .event { background: rgba(59, 130, 246, 0.15); border-left: 3px solid #3b82f6; padding: 4px 8px; border-radius: 0 4px 4px 0; font-size: 11px; color: #60a5fa; margin-bottom: 4px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .event.consult { background: rgba(16, 185, 129, 0.15); border-left-color: #10b981; color: #34d399; }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Calendar</h1>
+    <button class="btn btn-primary">+ Add Event</button>
+  </div>
+
+  <div class="calendar-wrapper">
+    <div class="cal-header">
+      <div class="cal-month">June 2026</div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-outline" style="padding: 6px 12px;">&lt;</button>
+        <button class="btn btn-outline" style="padding: 6px 12px;">Today</button>
+        <button class="btn btn-outline" style="padding: 6px 12px;">&gt;</button>
+      </div>
+    </div>
+    
+    <div class="cal-grid">
+      <div class="cal-day-header">Sun</div>
+      <div class="cal-day-header">Mon</div>
+      <div class="cal-day-header">Tue</div>
+      <div class="cal-day-header">Wed</div>
+      <div class="cal-day-header">Thu</div>
+      <div class="cal-day-header">Fri</div>
+      <div class="cal-day-header">Sat</div>
+      
+      <!-- Week 1 -->
+      <div class="cal-cell empty"></div>
+      <div class="cal-cell"><span class="cal-date">1</span></div>
+      <div class="cal-cell"><span class="cal-date">2</span></div>
+      <div class="cal-cell"><span class="cal-date">3</span></div>
+      <div class="cal-cell"><span class="cal-date">4</span>
+        <div class="event consult">10:00 AM - Consult</div>
+      </div>
+      <div class="cal-cell"><span class="cal-date">5</span></div>
+      <div class="cal-cell"><span class="cal-date">6</span></div>
+      
+      <!-- Week 2 -->
+      <div class="cal-cell"><span class="cal-date">7</span></div>
+      <div class="cal-cell"><span class="cal-date">8</span></div>
+      <div class="cal-cell"><span class="cal-date">9</span></div>
+      <div class="cal-cell"><span class="cal-date">10</span></div>
+      <div class="cal-cell today"><span class="cal-date">11</span>
+        <div class="event">2:00 PM - Follow-up</div>
+        <div class="event consult">4:30 PM - Consult</div>
+      </div>
+      <div class="cal-cell"><span class="cal-date">12</span></div>
+      <div class="cal-cell"><span class="cal-date">13</span></div>
+      
+      <!-- Rest of month empty for demo -->
+      <div class="cal-cell"><span class="cal-date">14</span></div>
+      <div class="cal-cell"><span class="cal-date">15</span></div>
+      <div class="cal-cell"><span class="cal-date">16</span></div>
+      <div class="cal-cell"><span class="cal-date">17</span></div>
+      <div class="cal-cell"><span class="cal-date">18</span></div>
+      <div class="cal-cell"><span class="cal-date">19</span></div>
+      <div class="cal-cell"><span class="cal-date">20</span></div>
+    </div>
+  </div>
+</div>

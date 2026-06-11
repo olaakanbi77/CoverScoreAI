@@ -1,4 +1,5 @@
 const express = require('express');
+const { all, get, db } = require('./config/database');
 const exphbs = require('express-handlebars');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -147,14 +148,45 @@ app.get('/admin/team', authenticatePage, (req, res) => {
   res.render('admin/team', { title: 'Team & Advisors', activePage: 'team', layout: 'admin' });
 });
 
-// Placeholder routes for sidebar modules under development
+app.get('/admin/clients', authenticatePage, async (req, res) => {
+  try {
+    const clients = await all("SELECT * FROM leads WHERE status = 'Won' ORDER BY updated_at DESC");
+    res.render('admin/clients', { title: 'Clients', activePage: 'clients', layout: 'admin', clients });
+  } catch (error) {
+    res.status(500).send('Error loading clients');
+  }
+});
+
+app.get('/admin/assessments', authenticatePage, async (req, res) => {
+  try {
+    const assessments = await all("SELECT a.*, u.name as user_name FROM assessments a LEFT JOIN users u ON a.user_id = u.id ORDER BY a.created_at DESC");
+    res.render('admin/assessments', { title: 'Assessments', activePage: 'assessments', layout: 'admin', assessments });
+  } catch (error) {
+    res.status(500).send('Error loading assessments');
+  }
+});
+
+app.get('/admin/consultations', authenticatePage, async (req, res) => {
+  try {
+    const consultations = await all("SELECT * FROM leads WHERE consultation_preference IS NOT NULL AND status != 'Won' ORDER BY created_at DESC");
+    res.render('admin/consultations', { title: 'Consultations', activePage: 'consultations', layout: 'admin', consultations });
+  } catch (error) {
+    res.status(500).send('Error loading consultations');
+  }
+});
+
+app.get('/admin/calendar', authenticatePage, (req, res) => {
+  res.render('admin/calendar', { title: 'Calendar', activePage: 'calendar', layout: 'admin' });
+});
+
+app.get('/admin/templates', authenticatePage, (req, res) => {
+  res.render('admin/templates', { title: 'Templates', activePage: 'templates', layout: 'admin' });
+});
+
+// For Policies and Proposals which are still pending
 const placeholderRoutes = [
-  { path: '/admin/calendar', title: 'Calendar', id: 'calendar' },
-  { path: '/admin/templates', title: 'Templates', id: 'templates' },
   { path: '/admin/policies', title: 'Policies', id: 'policies' },
-  { path: '/admin/consultations', title: 'Consultations', id: 'consultations' },
-  { path: '/admin/proposals', title: 'Proposals', id: 'proposals' },
-  { path: '/admin/assessments', title: 'Assessments', id: 'assessments' }
+  { path: '/admin/proposals', title: 'Proposals', id: 'proposals' }
 ];
 
 placeholderRoutes.forEach(route => {
