@@ -449,10 +449,10 @@
       if (token) headers['Authorization'] = 'Bearer ' + token;
 
       const [overviewRes, riskRes, convRes, trendsRes] = await Promise.all([
-        fetch('/api/analytics/overview', { headers }),
-        fetch('/api/analytics/risk-distribution', { headers }),
-        fetch('/api/analytics/conversion', { headers }),
-        fetch('/api/analytics/trends', { headers })
+        fetch('/api/analytics/overview', { headers, credentials: 'same-origin' }),
+        fetch('/api/analytics/risk-distribution', { headers, credentials: 'same-origin' }),
+        fetch('/api/analytics/conversion', { headers, credentials: 'same-origin' }),
+        fetch('/api/analytics/trends', { headers, credentials: 'same-origin' })
       ]);
 
       const overview = overviewRes.ok ? await overviewRes.json() : {};

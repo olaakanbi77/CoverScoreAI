@@ -27,7 +27,7 @@
 <div class="page-container">
   <div class="page-header">
     <h1 class="page-title">Calendar</h1>
-    <button class="btn btn-primary">+ Add Event</button>
+    <button class="btn btn-primary" onclick="openModal('eventModal')">+ Add Event</button>
   </div>
 
   <div class="calendar-wrapper">
@@ -59,4 +59,90 @@
     });
     calendar.render();
   });
+  
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  
+  async function submitEvent(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Add seconds to match datetime format if needed, or backend can handle it
+    
+    try {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      
+      const res = await fetch('/api/crm/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Failed to add event');
+        btn.disabled = false;
+        btn.textContent = 'Save Event';
+      }
+    } catch (error) {
+      alert('Error connecting to server');
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = false;
+      btn.textContent = 'Save Event';
+    }
+  }
 </script>
+
+<!-- Event Modal -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Add New Event</h2>
+      <button class="modal-close" onclick="closeModal('eventModal')">&times;</button>
+    </div>
+    <form id="eventForm" onsubmit="submitEvent(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Client (Lead)</label>
+        <select name="lead_id" class="form-control" required>
+          <option value="">Select a client...</option>
+          {{#each leads}}
+          <option value="{{this.id}}">{{this.name}} {{#if this.business_name}}({{this.business_name}}){{/if}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select name="type" class="form-control" required>
+          <option value="call">Call</option>
+          <option value="consultation">Consultation</option>
+          <option value="meeting">Meeting</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date & Time</label>
+        <input type="datetime-local" name="due_date" class="form-control" required>
+      </div>
+      <div class="modal-footer" style="margin-top: 8px; padding: 0;">
+        <button type="button" class="btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Event</button>
+      </div>
+    </form>
+  </div>
+</div>

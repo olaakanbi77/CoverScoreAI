@@ -50,4 +50,41 @@ router.get('/activities', authenticate, requireAgent, async (req, res, next) => 
   } catch (err) { next(err); }
 });
 
+// POST /api/crm/policies
+router.post('/policies', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const { lead_id, policy_number, product, premium, expiry_date } = req.body;
+    if (!lead_id || !policy_number || !product || !premium || !expiry_date) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    await run(`
+      INSERT INTO policies (lead_id, policy_number, product, premium, expiry_date, status)
+      VALUES (?, ?, ?, ?, ?, 'Active')
+    `, [lead_id, policy_number, product, premium, expiry_date]);
+    
+    // Auto-update lead's pipeline stage if needed
+    await run(`UPDATE leads SET pipeline_stage = 6 WHERE id = ?`, [lead_id]);
+    
+    res.json({ success: true });
+  } catch (err) { next(err); }
+});
+
+// POST /api/crm/templates
+router.post('/templates', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const { title, type, content } = req.body;
+    if (!title || !type || !content) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    await run(`
+      INSERT INTO templates (title, type, content)
+      VALUES (?, ?, ?)
+    `, [title, type, content]);
+    
+    res.json({ success: true });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;

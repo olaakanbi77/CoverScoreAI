@@ -22,7 +22,7 @@
 <div class="page-container">
   <div class="page-header">
     <h1 class="page-title">Message Templates</h1>
-    <button class="btn btn-primary">+ New Template</button>
+    <button class="btn btn-primary" onclick="openModal('templateModal')">+ New Template</button>
   </div>
 
   <div class="templates-grid">
@@ -52,3 +52,79 @@
     {{/each}}
   </div>
 </div>
+
+<!-- Template Modal -->
+<div class="modal-overlay" id="templateModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Create New Template</h2>
+      <button class="modal-close" onclick="closeModal('templateModal')">&times;</button>
+    </div>
+    <form id="templateForm" onsubmit="submitTemplate(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" required placeholder="e.g. Follow-up Email">
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select name="type" class="form-control" required>
+          <option value="email">Email</option>
+          <option value="whatsapp">WhatsApp</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message Content</label>
+        <textarea name="content" class="form-control" rows="6" required placeholder="Use {{name}} for client name..."></textarea>
+      </div>
+      <div class="modal-footer" style="margin-top: 8px; padding: 0;">
+        <button type="button" class="btn-secondary" onclick="closeModal('templateModal')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Template</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  
+  async function submitTemplate(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      
+      const res = await fetch('/api/crm/templates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Failed to create template');
+        btn.disabled = false;
+        btn.textContent = 'Save Template';
+      }
+    } catch (error) {
+      alert('Error connecting to server');
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = false;
+      btn.textContent = 'Save Template';
+    }
+  }
+</script>

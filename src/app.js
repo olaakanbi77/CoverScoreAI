@@ -178,8 +178,13 @@ app.get('/admin/consultations', authenticatePage, async (req, res) => {
   }
 });
 
-app.get('/admin/calendar', authenticatePage, (req, res) => {
-  res.render('admin/calendar', { title: 'Calendar', activePage: 'calendar', layout: 'admin' });
+app.get('/admin/calendar', authenticatePage, async (req, res) => {
+  try {
+    const leads = await all("SELECT id, name, business_name FROM leads ORDER BY name ASC");
+    res.render('admin/calendar', { title: 'Calendar', activePage: 'calendar', layout: 'admin', leads });
+  } catch (error) {
+    res.status(500).send('Error loading calendar');
+  }
 });
 
 app.get('/admin/templates', authenticatePage, async (req, res) => {
@@ -194,7 +199,8 @@ app.get('/admin/templates', authenticatePage, async (req, res) => {
 app.get('/admin/policies', authenticatePage, async (req, res) => {
   try {
     const policies = await all("SELECT p.*, l.name as client_name FROM policies p JOIN leads l ON p.lead_id = l.id ORDER BY p.created_at DESC");
-    res.render('admin/policies', { title: 'Policies', activePage: 'policies', layout: 'admin', policies });
+    const leads = await all("SELECT id, name, business_name FROM leads ORDER BY name ASC");
+    res.render('admin/policies', { title: 'Policies', activePage: 'policies', layout: 'admin', policies, leads });
   } catch (error) {
     res.status(500).send('Error loading policies');
   }

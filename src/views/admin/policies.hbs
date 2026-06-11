@@ -23,7 +23,7 @@
 <div class="page-container">
   <div class="page-header">
     <h1 class="page-title">Active Policies</h1>
-    <button class="btn btn-primary">+ Record Policy</button>
+    <button class="btn btn-primary" onclick="openModal('policyModal')">+ Record Policy</button>
   </div>
 
   <div class="filters">
@@ -76,3 +76,94 @@
     </tbody>
   </table>
 </div>
+
+<!-- Policy Modal -->
+<div class="modal-overlay" id="policyModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Record New Policy</h2>
+      <button class="modal-close" onclick="closeModal('policyModal')">&times;</button>
+    </div>
+    <form id="policyForm" onsubmit="submitPolicy(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-group">
+        <label>Client</label>
+        <select name="lead_id" class="form-control" required>
+          <option value="">Select a client...</option>
+          {{#each leads}}
+          <option value="{{this.id}}">{{this.name}} {{#if this.business_name}}({{this.business_name}}){{/if}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Policy Number</label>
+        <input type="text" name="policy_number" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Product</label>
+        <select name="product" class="form-control" required>
+          <option value="Motor Comprehensive">Motor Comprehensive</option>
+          <option value="Fire & Special Perils">Fire & Special Perils</option>
+          <option value="Health Insurance">Health Insurance</option>
+          <option value="All Risks Insurance">All Risks Insurance</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Premium (₦)</label>
+        <input type="number" name="premium" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Expiry Date</label>
+        <input type="date" name="expiry_date" class="form-control" required>
+      </div>
+      <div class="modal-footer" style="margin-top: 8px; padding: 0;">
+        <button type="button" class="btn-secondary" onclick="closeModal('policyModal')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Policy</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  
+  async function submitPolicy(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      
+      const res = await fetch('/api/crm/policies', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Failed to record policy');
+        btn.disabled = false;
+        btn.textContent = 'Save Policy';
+      }
+    } catch (error) {
+      alert('Error connecting to server');
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = false;
+      btn.textContent = 'Save Policy';
+    }
+  }
+</script>
