@@ -14,6 +14,40 @@ const businessSections = ['type', 'profile', 'property', 'business_interruption'
 const individualSections = ['type', 'personal_profile', 'family_protection', 'health_protection', 'home_risk', 'motor_risk', 'financial_resilience'];
 const allValidSections = [...new Set([...businessSections, ...individualSections])];
 
+const PREMIUM_RATES = {
+  'All Risks Insurance': 0.01,
+  'Aviation Insurance': 0.01,
+  'Bond Insurance': 0.01,
+  'Builders Liability Insurance': 0.0075,
+  'Burglary Insurance': 0.0025,
+  'Business Interruption Insurance': 0.01,
+  'Contractors All Risks (CAR)': 0.005,
+  'Employers Liability Insurance': 0.0065,
+  'Employers Liability / Workmen Compensation': 0.0065,
+  'Goods in Transit Insurance': 0.005,
+  'Group Life Insurance': 0.007,
+  'Home Insurance': 0.0045,
+  'Home/Property Contents Insurance': 0.0045,
+  'Machinery Breakdown Insurance': 0.01,
+  'Marine cargo Insurance': 0.003,
+  'Marine Hull Insurance': 0.0085,
+  'Money Insurance': 0.01,
+  'Motor Insurance (Comprehensive)': 0.05,
+  'Comprehensive Motor Insurance': 0.05,
+  'Occupiers Liability Insurance': 0.0075,
+  'Oil & Gas Insurance': 0.0035,
+  'Personal Accident Insurance': 0.005,
+  'Personal Accident & Disability Insurance': 0.005,
+  'Plant All Risk Insurance': 0.0075,
+  'Professional Indemnity Insurance': 0.01,
+  'Public Liability Insurance': 0.0045,
+  'Fidelity Guarantee Insurance': 0.005,
+  'Fire & Special Perils Insurance': 0.0025,
+  'Term Life Insurance': 0.007,
+  'HMO / Health Insurance': 0.05,
+  'Cyber Liability Insurance': 0.01
+};
+
 const getRequiredSections = (answers) => {
   if (answers && answers.type && answers.type.entity_type === 'individual') {
     return individualSections;
@@ -207,12 +241,21 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       // --- NEW CRM LOGIC ---
       const industry = answers.business?.industry || 'other';
       const employees = answers.business?.employee_count || '';
-      const recommendedCoversStr = JSON.stringify(aiReport?.recommendations || []);
+      const recommendedCoversStr = JSON.stringify(recommendations || []);
       
       let estimatedPremium = 0;
       if (min_loss) {
-        // Calculate ~1.3% of potential exposure minimum
-        estimatedPremium = Math.round(min_loss * 0.013);
+        let totalRate = 0;
+        const recs = recommendations || [];
+        if (recs.length > 0) {
+          recs.forEach(rec => {
+            // Find rate or default to 1%
+            totalRate += PREMIUM_RATES[rec] || 0.01;
+          });
+        } else {
+          totalRate = 0.013; // default fallback
+        }
+        estimatedPremium = Math.round(min_loss * totalRate);
       }
       
       const agentMap = {
