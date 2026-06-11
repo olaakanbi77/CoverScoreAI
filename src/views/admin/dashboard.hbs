@@ -490,6 +490,10 @@
     <form id="policyForm" onsubmit="submitPolicy(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
       <input type="hidden" name="lead_id" id="policyLeadId">
       <div class="form-group">
+        <label>Client Name</label>
+        <input type="text" id="policyClientName" class="form-control" readonly style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
+      </div>
+      <div class="form-group">
         <label>Policy Number</label>
         <input type="text" name="policy_number" class="form-control" required>
       </div>
@@ -1209,6 +1213,7 @@
 
       if (body.status === 'Won') {
         document.getElementById('policyLeadId').value = leadId;
+        document.getElementById('policyClientName').value = document.getElementById('detailName').value;
         closeLeadDetailModal();
         document.getElementById('policyModal').classList.add('show');
         return;
