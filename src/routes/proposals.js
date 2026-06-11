@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const { db, run, get, all } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const aiService = require('../services/aiService');
+const { sendWhatsApp } = require('../services/whatsappService');
+const emailService = require('../services/emailService');
 
 const requireSalesOrAdminApi = (req, res, next) => {
   if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
@@ -99,6 +101,93 @@ router.post('/:token/action', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update proposal' });
+  }
+});
+
+// Send Proposal via Email or WhatsApp
+router.post('/send', authenticate, requireSalesOrAdminApi, async (req, res) => {
+  const { proposalId, method } = req.body;
+  
+  try {
+    const proposal = await get('SELECT p.*, l.name as lead_name, l.email as lead_email, l.phone as lead_phone FROM proposals p JOIN leads l ON p.lead_id = l.id WHERE p.id = ?', [proposalId]);
+    
+    if (!proposal) {
+      return res.status(404).json({ error: 'Proposal not found' });
+    }
+
+    const proposalUrl = `${process.env.APP_URL || 'http://localhost:3016'}/api/proposals/view/${proposal.token}`;
+    
+    if (method === 'whatsapp') {
+      if (!proposal.lead_phone) {
+        return res.status(400).json({ error: 'Lead has no phone number' });
+      }
+      const message = `Hi ${proposal.lead_name},\n\nYour personalized insurance proposal is ready for review. You can view, accept or decline it using the secure link below:\n\n${proposalUrl}\n\nPlease let us know if you have any questions.\n\n— CoverScore AI`;
+      const result = await sendWhatsApp(proposal.lead_phone, null, { _message: message });
+      
+      if (!result.success) {
+        return res.status(500).json({ error: 'Failed to send WhatsApp message: ' + result.error });
+      }
+      
+      // Save sent message to chat_history
+      let chatData = {};
+      try {
+        const leadRow = await get('SELECT chat_history FROM leads WHERE id = ?', [proposal.lead_id]);
+        if (leadRow && leadRow.chat_history) chatData = JSON.parse(leadRow.chat_history);
+      } catch(e) {}
+      
+      chatData.__messages = chatData.__messages || [];
+      chatData.__messages.push({
+        role: 'assistant',
+        content: message,
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      });
+
+      await run('UPDATE leads SET chat_history = ?, status = "Proposal Sent", pipeline_stage = 3 WHERE id = ?', [JSON.stringify(chatData), proposal.lead_id]);
+      await run('UPDATE proposals SET status = "Sent" WHERE id = ?', [proposal.id]);
+
+      return res.json({ success: true, message: 'Proposal sent via WhatsApp' });
+      
+    } else if (method === 'email') {
+      if (!proposal.lead_email) {
+        return res.status(400).json({ error: 'Lead has no email address' });
+      }
+      
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2>Your Insurance Proposal is Ready</h2>
+          <p>Hi ${proposal.lead_name},</p>
+          <p>Your personalized insurance proposal is ready for review.</p>
+          <p>You can view, accept or decline it using the secure link below:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${proposalUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">View Proposal</a>
+          </div>
+          <p>Or copy this link to your browser: <br><a href="${proposalUrl}">${proposalUrl}</a></p>
+          <p>Please let us know if you have any questions.</p>
+          <p>Best regards,<br>CoverScore AI Advisor</p>
+        </div>
+      `;
+      
+      const result = await emailService.sendEmail({
+        to: proposal.lead_email,
+        subject: `Your Insurance Proposal - CoverScore AI`,
+        html: html
+      });
+      
+      if (!result.success) {
+        return res.status(500).json({ error: 'Failed to send Email: ' + result.error });
+      }
+      
+      await run('UPDATE leads SET status = "Proposal Sent", pipeline_stage = 3 WHERE id = ?', [proposal.lead_id]);
+      await run('UPDATE proposals SET status = "Sent" WHERE id = ?', [proposal.id]);
+
+      return res.json({ success: true, message: 'Proposal sent via Email' });
+    } else {
+      return res.status(400).json({ error: 'Invalid method' });
+    }
+
+  } catch (err) {
+    console.error('Error sending proposal:', err);
+    res.status(500).json({ error: 'Failed to send proposal' });
   }
 });
 
