@@ -1,0 +1,65 @@
+<style>
+  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .data-table th, .data-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+  .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
+  .data-table td { font-size: 14px; color: var(--text-primary); }
+  .data-table tr:last-child td { border-bottom: none; }
+  
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
+  .badge-draft { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
+  .badge-sent { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+  .badge-accepted { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  .badge-rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+  .empty-state { text-align: center; padding: 64px 24px; }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Proposals</h1>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Proposal Title</th>
+        <th>Client / Business</th>
+        <th>Premium Amount</th>
+        <th>Status</th>
+        <th>Date Created</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each proposals}}
+      <tr>
+        <td style="font-weight: 500; color: white;">{{title}}</td>
+        <td>
+          <div style="color: white;">{{lead_name}}</div>
+          <div style="font-size: 12px; color: var(--text-secondary);">{{business_name}}</div>
+        </td>
+        <td>₦{{formatNumber amount}}</td>
+        <td><span class="badge badge-{{toLowerCase status}}">{{status}}</span></td>
+        <td>{{formatDate created_at}}</td>
+        <td>
+          <a href="/p/{{token}}" class="btn btn-outline btn-sm" target="_blank">View Proposal</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            <h3 style="margin-bottom: 8px; color: white;">No Proposals Generated</h3>
+            <p style="color: var(--text-secondary);">Proposals created by advisors will appear here.</p>
+          </div>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

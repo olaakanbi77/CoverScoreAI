@@ -1,0 +1,86 @@
+<style>
+  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  
+  .filters { display: flex; gap: 12px; margin-bottom: 24px; }
+  .filter-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px 16px; border-radius: var(--radius-md); font-size: 14px; outline: none; }
+  
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .data-table th, .data-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+  .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
+  .data-table td { font-size: 14px; color: var(--text-primary); }
+  .data-table tr:last-child td { border-bottom: none; }
+  
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .badge-active { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  .badge-expiring { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+  
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+  .empty-state { text-align: center; padding: 64px 24px; }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Active Policies</h1>
+    <button class="btn btn-primary">+ Record Policy</button>
+  </div>
+
+  <div class="filters">
+    <select class="filter-select">
+      <option value="all">All Policies</option>
+      <option value="active">Active</option>
+      <option value="expiring">Expiring Soon</option>
+    </select>
+    <select class="filter-select">
+      <option value="all">All Products</option>
+      <option value="motor">Motor Comprehensive</option>
+      <option value="fire">Fire & Special Perils</option>
+      <option value="health">Health Insurance</option>
+    </select>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Policy No.</th>
+        <th>Client Name</th>
+        <th>Product</th>
+        <th>Premium</th>
+        <th>Status</th>
+        <th>Expiry Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Mock Data -->
+      <tr>
+        <td style="font-family: monospace; color: #60a5fa;">POL-2026-8921</td>
+        <td style="font-weight: 500; color: white;">Tech Innovators Ltd</td>
+        <td>Fire & Special Perils</td>
+        <td>₦450,000</td>
+        <td><span class="badge badge-active">Active</span></td>
+        <td>Oct 12, 2026</td>
+        <td><button class="btn btn-outline btn-sm">View Details</button></td>
+      </tr>
+      <tr>
+        <td style="font-family: monospace; color: #60a5fa;">POL-2025-4432</td>
+        <td style="font-weight: 500; color: white;">Global Logistics Inc.</td>
+        <td>Goods in Transit</td>
+        <td>₦1,200,000</td>
+        <td><span class="badge badge-expiring">Expiring Soon</span></td>
+        <td>Jun 30, 2026</td>
+        <td><button class="btn btn-outline btn-sm">Renew</button></td>
+      </tr>
+      <tr>
+        <td style="font-family: monospace; color: #60a5fa;">POL-2026-1102</td>
+        <td style="font-weight: 500; color: white;">Adeola & Sons</td>
+        <td>Motor Comprehensive</td>
+        <td>₦85,000</td>
+        <td><span class="badge badge-active">Active</span></td>
+        <td>Jan 15, 2027</td>
+        <td><button class="btn btn-outline btn-sm">View Details</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

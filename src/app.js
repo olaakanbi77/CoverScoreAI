@@ -56,7 +56,8 @@ app.engine('hbs', exphbs.engine({
     },
     gte: (a, b) => Number(a) >= Number(b),
     lte: (a, b) => Number(a) <= Number(b),
-    json: (obj) => JSON.stringify(obj)
+    json: (obj) => JSON.stringify(obj),
+    toLowerCase: (str) => String(str).toLowerCase()
   }
 }));
 
@@ -183,16 +184,17 @@ app.get('/admin/templates', authenticatePage, (req, res) => {
   res.render('admin/templates', { title: 'Templates', activePage: 'templates', layout: 'admin' });
 });
 
-// For Policies and Proposals which are still pending
-const placeholderRoutes = [
-  { path: '/admin/policies', title: 'Policies', id: 'policies' },
-  { path: '/admin/proposals', title: 'Proposals', id: 'proposals' }
-];
+app.get('/admin/policies', authenticatePage, (req, res) => {
+  res.render('admin/policies', { title: 'Policies', activePage: 'policies', layout: 'admin' });
+});
 
-placeholderRoutes.forEach(route => {
-  app.get(route.path, authenticatePage, (req, res) => {
-    res.render('admin/placeholder', { title: route.title, activePage: route.id, layout: 'admin' });
-  });
+app.get('/admin/proposals', authenticatePage, async (req, res) => {
+  try {
+    const proposals = await all("SELECT p.*, l.name as lead_name, l.business_name FROM proposals p JOIN leads l ON p.lead_id = l.id ORDER BY p.created_at DESC");
+    res.render('admin/proposals', { title: 'Proposals', activePage: 'proposals', layout: 'admin', proposals });
+  } catch (error) {
+    res.status(500).send('Error loading proposals');
+  }
 });
 
 app.get(['/quote', '/request-quote'], (req, res) => {
