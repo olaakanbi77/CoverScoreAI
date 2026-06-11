@@ -109,18 +109,22 @@ app.get('/assessment/email-capture', optionalAuth, (req, res) => {
 });
 
 app.get('/dashboard', authenticatePage, (req, res) => {
-  if (req.user && ['admin', 'sales', 'analyst'].includes(req.user.role)) {
+  if (req.user && req.user.role === 'admin') {
+    return res.redirect('/admin/dashboard');
+  } else if (req.user && ['sales', 'analyst'].includes(req.user.role)) {
     return res.redirect('/advisor/dashboard');
   }
   res.render('dashboard/index', { title: 'Dashboard', activePage: 'dashboard', layout: 'main' });
 });
 
 app.get('/admin', authenticatePage, (req, res) => {
-  res.redirect('/advisor/dashboard');
+  if (req.user.role !== 'admin') return res.redirect('/dashboard');
+  res.redirect('/admin/dashboard');
 });
 
 app.get('/admin/dashboard', authenticatePage, (req, res) => {
-  res.redirect('/advisor/dashboard');
+  if (req.user.role !== 'admin') return res.redirect('/dashboard');
+  res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'dashboard', layout: 'admin' });
 });
 
 app.get('/admin/leads', authenticatePage, (req, res) => {
