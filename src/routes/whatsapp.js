@@ -53,9 +53,20 @@ router.post('/send',
 
       // Log the message
       if (result.success) {
+        let chatHistory = [];
+        try {
+          if (lead.chat_history) chatHistory = JSON.parse(lead.chat_history);
+        } catch(e) {}
+        
+        chatHistory.push({
+          role: 'assistant',
+          content: result.messageBody || customData._message || `[Template: ${template}]`,
+          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+
         await run(`
-          UPDATE leads SET notes = COALESCE(notes, '') || ? WHERE id = ?
-        `, [`\n[${new Date().toISOString()}] WhatsApp (${template}): Sent to ${lead.phone}`, leadId]);
+          UPDATE leads SET notes = COALESCE(notes, '') || ?, chat_history = ? WHERE id = ?
+        `, [`\n[${new Date().toISOString()}] WhatsApp (${template}): Sent to ${lead.phone}`, JSON.stringify(chatHistory), leadId]);
       }
 
       res.json({

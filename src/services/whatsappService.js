@@ -316,7 +316,7 @@ const sendWhatsApp = async (to, templateKey, data = {}) => {
 
     if (response.ok && (result.key || result.status === 'SUCCESS' || result.message?.key)) {
       console.log(`✅ WhatsApp sent to ${phone} via Evolution API`);
-      return { success: true, messageId: result.key?.id || result.message?.key?.id || 'sent' };
+      return { success: true, messageId: result.key?.id || result.message?.key?.id || 'sent', messageBody: message };
     } else {
       console.error(`❌ Evolution API failed (Status: ${response.status}): ${JSON.stringify(result)}`);
       return { success: false, error: result.message || result.response?.message || JSON.stringify(result) };

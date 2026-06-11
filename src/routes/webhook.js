@@ -115,6 +115,20 @@ router.post('/evolution', async (req, res) => {
         console.log(`   Sending welcome message to ${phoneNumber}...`);
         const welcomeResult = await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
         console.log(`   Welcome message result: ${JSON.stringify(welcomeResult)}`);
+        
+        currentData.__messages = currentData.__messages || [];
+        currentData.__messages.push({
+          role: 'user',
+          content: processText,
+          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+        currentData.__messages.push({
+          role: 'assistant',
+          content: initialWelcome,
+          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+        await run('UPDATE leads SET chat_history = ? WHERE id = ?', [JSON.stringify(currentData), lead.id]);
+        
         return; // wait for them to answer name
       }
 
@@ -135,6 +149,18 @@ router.post('/evolution', async (req, res) => {
           return; // Don't advance state if message failed to send
         }
         console.log(`   ✅ Reply sent successfully. Advancing state to: ${nextState}`);
+        
+        updatedData.__messages = updatedData.__messages || [];
+        updatedData.__messages.push({
+          role: 'user',
+          content: processText,
+          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+        updatedData.__messages.push({
+          role: 'assistant',
+          content: finalReplyText,
+          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
         
         // ── ENGAGEMENT SCORING ──
         let engagementBonus = 0;
@@ -318,6 +344,13 @@ router.post('/evolution', async (req, res) => {
             
             await sendWhatsApp(phoneNumber, null, { _message: reportAndQualMsg });
             
+            updatedData.__messages = updatedData.__messages || [];
+            updatedData.__messages.push({
+              role: 'assistant',
+              content: reportAndQualMsg,
+              timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+            
             // Send email report
             if (updatedData.email) {
               try {
@@ -340,12 +373,13 @@ router.post('/evolution', async (req, res) => {
               SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, 
                   name = ?, email = ?, wa_state = 'qualification', 
                   status = 'Report Sent', pipeline_stage = 2,
-                  engagement_points = engagement_points + 20, sales_score = sales_score + 20
+                  engagement_points = engagement_points + 20, sales_score = sales_score + 20,
+                  chat_history = ?
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType, 
               (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 
-              lead.id
+              JSON.stringify(updatedData), lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
 

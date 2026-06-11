@@ -16,7 +16,8 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     const leads = rawLeads.map(l => {
       let conversations = [];
       try {
-        conversations = JSON.parse(l.chat_history || '[]');
+        const parsed = JSON.parse(l.chat_history || '{}');
+        conversations = Array.isArray(parsed.__messages) ? parsed.__messages : [];
       } catch(e) {}
       
       let badgeClass = 'follow-up';
