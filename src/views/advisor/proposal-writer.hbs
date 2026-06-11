@@ -128,13 +128,11 @@
         <button id="btnSave" class="btn btn-primary">Save Proposal</button>
       </div>
       
-      {{#if proposal}}
       <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
         <button id="btnSend" class="btn btn-secondary" style="background-color: #f1f5f9; color: #475569;">Copy Public Link</button>
         <button id="btnSendWhatsApp" class="btn" style="background-color: #25D366; color: white;">Send via WhatsApp</button>
         <button id="btnSendEmail" class="btn" style="background-color: #f59e0b; color: white;">Send via Email</button>
       </div>
-      {{/if}}
     </div>
 
     <div class="card">
@@ -244,8 +242,8 @@
     }
   });
 
-  {{#if proposal}}
   document.getElementById('btnSend').addEventListener('click', () => {
+    if (!proposalId) return alert('Please save the proposal first before copying the link.');
     const link = `${window.location.origin}/api/proposals/view/{{proposal.token}}`;
     navigator.clipboard.writeText(link).then(() => {
       alert('Public proposal link copied to clipboard!\nYou can paste this into WhatsApp or Email to send to the lead.');
@@ -253,6 +251,8 @@
   });
 
   async function sendProposal(method) {
+    if (!proposalId) return alert('Please save the proposal first before sending.');
+    
     const btn = document.getElementById(method === 'whatsapp' ? 'btnSendWhatsApp' : 'btnSendEmail');
     const originalText = btn.innerHTML;
     btn.innerHTML = 'Sending...';
@@ -284,5 +284,4 @@
 
   document.getElementById('btnSendWhatsApp').addEventListener('click', () => sendProposal('whatsapp'));
   document.getElementById('btnSendEmail').addEventListener('click', () => sendProposal('email'));
-  {{/if}}
 </script>
