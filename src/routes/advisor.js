@@ -30,6 +30,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
         conversations,
         contact: l.name,
         last_activity: l.updated_at || l.created_at,
+        sales_score: l.sales_score > 100 ? 100 : l.sales_score,
         likelihood_to_buy: l.sales_score >= 70 ? 'HIGH' : (l.sales_score >= 40 ? 'MEDIUM' : 'LOW'),
         premium_range: l.estimated_premium ? `₦${l.estimated_premium.toLocaleString()}` : 'N/A',
         recommended_product: l.recommended_covers || 'Review Assessment'

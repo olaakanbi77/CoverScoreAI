@@ -742,9 +742,20 @@
           </div>
           <div class="section-body" style="padding:16px 20px;">
             <div class="intel-grid">
-              <div class="intel-item">
-                <span class="intel-label">Lead Score</span>
-                <span style="font-weight:700;color:var(--text);font-size:18px;">{{selectedLead.sales_score}}</span>
+              <div class="intel-item" style="flex-direction:row; align-items:center; gap:12px;">
+                <div class="score-gauge-container" style="width:40px;height:40px;">
+                  <svg class="score-gauge-svg" viewBox="0 0 100 100">
+                    <circle class="score-gauge-bg" cx="50" cy="50" r="40" stroke-width="12"></circle>
+                    <circle class="score-gauge-fill" cx="50" cy="50" r="40" stroke-width="12" style="stroke-dashoffset: calc(251.2 - (251.2 * {{selectedLead.sales_score}}) / 100);"></circle>
+                  </svg>
+                  <div class="score-gauge-text">
+                    <span class="score-gauge-num" style="font-size:14px;">{{selectedLead.sales_score}}</span>
+                  </div>
+                </div>
+                <div style="display:flex; flex-direction:column;">
+                  <span class="intel-label">Lead Score</span>
+                  <span style="font-size:10px;color:var(--text-muted);">out of 100</span>
+                </div>
               </div>
               <div class="intel-item">
                 <span class="intel-label">Status</span>
