@@ -30,7 +30,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
         conversations,
         contact: l.name,
         last_activity: l.updated_at || l.created_at,
-        likelihood_to_buy: l.sales_score >= 70 ? 'Priority A' : (l.sales_score >= 50 ? 'Priority B' : (l.sales_score >= 30 ? 'Priority C' : 'Priority D')),
+        likelihood_to_buy: l.sales_score >= 70 ? 'HIGH' : (l.sales_score >= 40 ? 'MEDIUM' : 'LOW'),
         premium_range: l.estimated_premium ? `₦${l.estimated_premium.toLocaleString()}` : 'N/A',
         recommended_product: l.recommended_covers || 'Review Assessment'
       };
@@ -46,6 +46,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     let financial_exposure_min = 0;
     let financial_exposure_max = 0;
     let user_primary_concern = null;
+    let copilot_data = null;
 
     if (selectedLead && selectedLead.assessment_id) {
       const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [selectedLead.assessment_id]);
@@ -54,6 +55,17 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
           const answers = JSON.parse(assessment.answers);
           user_primary_concern = answers.primary_concern;
           const report = calculateScore(answers);
+          
+          if (assessment.ai_report) {
+            const aiData = JSON.parse(assessment.ai_report);
+            copilot_data = aiData.copilot || null;
+            if (aiData.cre_data && aiData.cre_data.recommendations) {
+              aiRecommendations = aiData.cre_data.recommendations.map(r => ({
+                product: r.action,
+                priority: r.severity
+              }));
+            }
+          }
           
           if (report.risk_categories) {
             risks = Object.entries(report.risk_categories).map(([name, score]) => ({ name: name.replace('_', ' '), score }));
@@ -103,38 +115,47 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       
       // Dynamic calculations for Lead Intelligence
         
-        let next_action = 'Contact Lead';
-      if (selectedLead.status === 'New Lead' || selectedLead.status === 'hot') next_action = 'Initial Outreach';
-      else if (selectedLead.status === 'WhatsApp Engaged' || selectedLead.status === 'warm') next_action = 'Follow up on WhatsApp';
-      else if (selectedLead.status === 'Proposal Sent') next_action = 'Review Proposal';
+      let next_action = copilot_data?.next_actions?.[0] || 'Contact Lead';
+      if (!copilot_data) {
+        if (selectedLead.status === 'New Lead' || selectedLead.status === 'hot') next_action = 'Initial Outreach';
+        else if (selectedLead.status === 'WhatsApp Engaged' || selectedLead.status === 'warm') next_action = 'Follow up on WhatsApp';
+        else if (selectedLead.status === 'Proposal Sent') next_action = 'Review Proposal';
+      }
       selectedLead.next_best_action = next_action;
+      
+      if (copilot_data) {
+        talkingPoints = copilot_data.recommended_questions || [];
+        selectedLead.objections = copilot_data.likely_objections || [];
+      }
 
       if (aiRecommendations.length > 0) {
         selectedLead.recommended_product = aiRecommendations[0].product;
       }
     }
 
-    // Default recommendations if none found
-    if (aiRecommendations.length === 0) {
-      aiRecommendations = [
-        { product: selectedLead?.recommended_product || 'General Business Protection', priority: 'High' }
-      ];
-    }
-    if (talkingPoints.length === 0) {
-      talkingPoints = [
-        'Discuss identified protection gaps.',
-        'Highlight the importance of immediate coverage.',
-        'Review the recommended products and their benefits.'
-      ];
-    }
-
     const proposals = await all('SELECT * FROM proposals ORDER BY created_at DESC');
+
+    const hotLeadsCount = leads.filter(l => l.badgeClass === 'hot').length;
+    const proposalsCount = proposals.length;
+    const totalPremium = leads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
+    const premiumFormatted = totalPremium > 1000000 
+      ? `₦${(totalPremium/1000000).toFixed(1)}M` 
+      : `₦${totalPremium.toLocaleString()}`;
+
+    const summary = {
+      hotLeads: hotLeadsCount,
+      consultations: 0,
+      proposalsSent: proposalsCount,
+      policiesSold: 0,
+      estPremium: premiumFormatted
+    };
 
     res.render('advisor/dashboard', {
       layout: false,
       user: req.user,
       leads,
       proposals,
+      summary,
       aiRecommendations,
       talkingPoints,
       selectedLead,
