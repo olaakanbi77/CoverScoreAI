@@ -636,6 +636,25 @@
       border-top-left-radius: 4px;
       align-self: flex-start;
       color: var(--text);
+      position: relative;
+    }
+    .copilot-msg-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--green);
+      background: rgba(22, 163, 74, 0.1);
+      padding: 4px 8px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .copilot-msg-download:hover {
+      background: rgba(22, 163, 74, 0.2);
     }
     .copilot-msg.human {
       background: var(--navy);
@@ -1288,12 +1307,71 @@ Already has fire insurance with AIICO.</textarea>
       if(fab) fab.addEventListener('click', togglePanel);
       if(closeBtn) closeBtn.addEventListener('click', togglePanel);
 
+      window.downloadDocx = async function(btnElement) {
+        const msgDiv = btnElement.closest('.copilot-msg');
+        // Clone the message div so we can remove the button before exporting
+        const clone = msgDiv.cloneNode(true);
+        const btnToRemove = clone.querySelector('.copilot-msg-download');
+        if (btnToRemove) btnToRemove.remove();
+        
+        const htmlContent = \`
+          <html>
+            <body style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
+              \${clone.innerHTML}
+            </body>
+          </html>
+        \`;
+
+        try {
+          btnElement.textContent = "Downloading...";
+          const token = localStorage.getItem('accessToken');
+          const headers = { 'Content-Type': 'application/json' };
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+
+          const res = await fetch('/advisor/api/export-docx', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ htmlContent, filename: 'CoverScore_AI_Proposal' })
+          });
+
+          if (!res.ok) throw new Error('Export failed');
+          
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'CoverScore_AI_Proposal.docx';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+          
+          btnElement.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Downloaded';
+        } catch (err) {
+          alert('Failed to download document');
+          btnElement.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Word';
+        }
+      };
+
       function addMessage(text, sender) {
         // Simple markdown parsing for bold and line breaks
-        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        const formattedText = text.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>').replace(/\\n/g, '<br>');
         const msgDiv = document.createElement('div');
-        msgDiv.className = `copilot-msg ${sender}`;
-        msgDiv.innerHTML = formattedText;
+        msgDiv.className = \`copilot-msg \${sender}\`;
+        
+        let innerHtml = formattedText;
+        if (sender === 'ai') {
+           // Add download button for AI responses
+           innerHtml += \`
+             <div style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px;">
+               <button class="copilot-msg-download" onclick="downloadDocx(this)">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                 Download Word
+               </button>
+             </div>
+           \`;
+        }
+        msgDiv.innerHTML = innerHtml;
         
         body.insertBefore(msgDiv, presetsContainer);
         body.scrollTop = body.scrollHeight;

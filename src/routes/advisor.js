@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { all, get } = require('../config/database');
 const { authenticatePage } = require('../middleware/auth');
+const HTMLtoDOCX = require('html-to-docx');
 const { calculateScore } = require('../services/scoringEngine');
 const { handleAdvisorCopilotChat } = require('../services/aiService');
 
@@ -238,6 +239,26 @@ router.post('/api/copilot-chat', authenticatePage, requireSalesOrAdmin, async (r
   } catch (err) {
     console.error('Copilot Chat API Error:', err);
     res.status(500).json({ error: 'Failed to process copilot request' });
+  }
+});
+
+router.post('/api/export-docx', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { htmlContent, filename } = req.body;
+    if (!htmlContent) return res.status(400).json({ error: 'No htmlContent provided' });
+
+    const docxBuffer = await HTMLtoDOCX(htmlContent, null, {
+      table: { row: { cantSplit: true } },
+      footer: true,
+      pageNumber: true
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename || 'proposal'}.docx"`);
+    res.send(docxBuffer);
+  } catch (err) {
+    console.error('DOCX Export Error:', err);
+    res.status(500).json({ error: 'Failed to generate document' });
   }
 });
 
