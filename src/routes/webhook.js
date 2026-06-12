@@ -69,11 +69,14 @@ router.post('/evolution', async (req, res) => {
           return;
         }
       } else if (isRestartTrigger) {
-        // Only restart the flow for explicit restart triggers, not for any message containing "HI"
-        console.log(`   Restarting flow for lead ID: ${lead.id} (explicit restart trigger)`);
-        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
-        lead.wa_state = 'welcome_name';
-        lead.chat_history = '{}';
+        // Create a completely new lead for explicit restart triggers to preserve previous assessments
+        console.log(`   Creating NEW lead for phone ${phoneNumber} (explicit restart trigger)`);
+        const insertResult = await run(`
+          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
+          VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown')
+        `, [lead.name, lead.email, phoneNumber]);
+        
+        lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
       }
 
       // Handle leads in 'initial' state (from web form) or 'finished' state receiving a start trigger
