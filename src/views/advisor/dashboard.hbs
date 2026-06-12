@@ -1314,13 +1314,13 @@ Already has fire insurance with AIICO.</textarea>
         const btnToRemove = clone.querySelector('.copilot-msg-download');
         if (btnToRemove) btnToRemove.remove();
         
-        const htmlContent = \`
+        const htmlContent = `
           <html>
             <body style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
-              \${clone.innerHTML}
+              ${clone.innerHTML}
             </body>
           </html>
-        \`;
+        `;
 
         try {
           btnElement.textContent = "Downloading...";
@@ -1355,21 +1355,21 @@ Already has fire insurance with AIICO.</textarea>
 
       function addMessage(text, sender) {
         // Simple markdown parsing for bold and line breaks
-        const formattedText = text.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>').replace(/\\n/g, '<br>');
+        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         const msgDiv = document.createElement('div');
-        msgDiv.className = \`copilot-msg \${sender}\`;
+        msgDiv.className = `copilot-msg ${sender}`;
         
         let innerHtml = formattedText;
         if (sender === 'ai') {
            // Add download button for AI responses
-           innerHtml += \`
+           innerHtml += `
              <div style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px;">
                <button class="copilot-msg-download" onclick="downloadDocx(this)">
                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                  Download Word
                </button>
              </div>
-           \`;
+           `;
         }
         msgDiv.innerHTML = innerHtml;
         
