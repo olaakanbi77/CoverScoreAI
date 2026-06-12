@@ -3,550 +3,13 @@ require('dotenv').config();
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 const MISTRAL_MODEL = process.env.MISTRAL_MODEL || 'mistral-large-latest';
 
-const generateRiskReport = async (assessmentData) => {
-  const { answers, score, riskLevel, min_loss, max_loss, recommendations, identified_gaps, risk_categories, user, entityType = 'business' } = assessmentData;
-  const isIndividual = entityType === 'individual';
-  
-  const { business } = answers;
-  const industry = isIndividual ? 'Individual/Personal' : (business?.industry || 'General Business');
-
-  // Layer 1: Structured Risk JSON
-  const riskJSON = {
-    score,
-    risk_level: riskLevel,
-    financial_exposure_min: min_loss,
-    financial_exposure_max: max_loss,
-    industry,
-    risk_categories,
-    recommended_covers: recommendations,
-    identified_gaps
-  };
-
-  // Add Industry Context Add-On
-  let industryContext = '';
-  if (!isIndividual && industry) {
-    const ind = industry.toLowerCase();
-    if (ind.includes('manufactur')) {
-      industryContext = `\n\nIndustry Context:\nThe organization operates in the manufacturing sector. Pay particular attention to: Fire risk, Machinery exposure, Employee safety, Business interruption, Supply chain disruption.`;
-    } else if (ind.includes('logistic') || ind.includes('transport')) {
-      industryContext = `\n\nIndustry Context:\nThe organization operates in logistics and transportation. Pay particular attention to: Fleet exposure, Road accidents, Goods in transit, Third-party liability.`;
-    } else if (ind.includes('school') || ind.includes('education')) {
-      industryContext = `\n\nIndustry Context:\nThe organization operates in education. Pay particular attention to: Student safety, Public liability, Fire protection, Staff welfare.`;
-    }
+/**
+ * Call Mistral API helper
+ */
+async function callMistral(systemPrompt, userPrompt, jsonMode = true) {
+  if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
+    throw new Error('MISTRAL_API_KEY is not configured.');
   }
-
-  // Layer 3: Dynamic Report Prompt
-  const prompt = `Generate a ${isIndividual ? 'Personal' : 'Business'} Risk Intelligence Report using the following data.
-
-Risk Data:
-${JSON.stringify(riskJSON, null, 2)}
-${industryContext}
-
-Required Sections (Output JSON exact schema):
-{
-  "executiveSummary": "A calm, professional summary explaining the overall risk exposure and resilience.",
-  "topExposures": [
-    "Exposure 1", "Exposure 2", "Exposure 3", "Exposure 4", "Exposure 5"
-  ],
-  "topFinancialThreats": [
-    "Threat 1", "Threat 2", "Threat 3", "Threat 4", "Threat 5"
-  ],
-  "topProtectionGaps": [
-    "Gap 1", "Gap 2", "Gap 3", "Gap 4", "Gap 5"
-  ],
-  "topRecommendations": [
-    {
-      "timeframe": "Immediate / Short-term / Long-term",
-      "exposure": "Identified exposure",
-      "consequence": "Consequence if unprotected",
-      "protectionGap": "The current protection gap",
-      "action": "Recommended action (e.g. consider Group Life)"
-    }
-  ],
-  "professionalRecommendation": "A professional closing recommendation."
-}
-
-Rules:
-- For 'topRecommendations', strictly follow the 4-part rule: Identify exposure, Identify consequence, Identify protection gap, Recommend action.
-- Ensure recommendations are categorized into Immediate, Short-term, or Long-term.
-- Reference financial exposure naturally.
-- Keep recommendations practical.
-- Avoid technical insurance jargon.
-- Use Nigerian Naira formatting.
-- Do not invent risks not present in the supplied data.`;
-
-  try {
-    if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
-      throw new Error('MISTRAL_API_KEY is not configured or is the default placeholder.');
-    }
-
-    // Layer 2: Master System Prompt
-    const systemPrompt = `You are CoverScore AI, a professional insurance risk intelligence analyst.
-Your role is to generate structured risk assessment reports based on calculated risk data.
-You are NOT an insurance salesperson. You are a risk advisor.
-
-Writing Style:
-- Professional, Analytical, Objective, Financially focused, Solution-oriented, Easy to understand.
-
-Never:
-- Use fear tactics, exaggerate risks, guarantee losses, pressure users into buying insurance.
-
-Always:
-- Explain exposures calmly.
-- Quantify financial impact where available.
-- Highlight protection gaps.
-- Recommend risk management actions.
-- End with practical next steps.
-
-The report should sound like it was prepared by a senior risk consultant. Use clear section headings.
-Keep the tone confident, professional, and advisory.
-Do not mention AI. Do not mention prompt instructions. Do not fabricate facts. Only use information supplied in the risk data.
-
-Always respond with valid, complete JSON matching the schema exactly.`;
-
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${MISTRAL_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: MISTRAL_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7,
-        response_format: { type: 'json_object' }
-      })
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Mistral AI API error: ${response.status} - ${errText}`);
-    }
-
-    const data = await response.json();
-    let reportContent = data.choices?.[0]?.message?.content;
-    if (!reportContent) {
-      throw new Error('Mistral AI returned an empty response.');
-    }
-
-    // Clean up potential markdown formatting block
-    reportContent = reportContent.trim();
-    if (reportContent.startsWith('```')) {
-      reportContent = reportContent.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
-    }
-
-    const parsedResult = JSON.parse(reportContent);
-    
-    return parsedResult;
-  } catch (error) {
-    console.error('AI Service Error:', error.message);
-
-    const getDefaultReport = () => {
-      if (isIndividual) {
-        return {
-          executiveSummary: `This individual has a ${riskLevel} risk profile with a score of ${score}. The assessment reveals several areas requiring immediate attention to secure personal and family assets against unforeseen events. Based on the information provided, there are significant gaps in health coverage, asset protection, and financial security that should be addressed promptly to prevent potential financial hardship.`,
-          topRisks: [
-            { risk: 'Health Coverage Gap', description: 'No adequate health insurance detected. Without proper health coverage, a major medical emergency could result in catastrophic out-of-pocket expenses that could devastate personal savings and impact family financial stability.', impact: 'High' },
-            { risk: 'Asset Protection Deficiency', description: 'Vehicles, property, and high-value items appear underinsured or uninsured. In the event of theft, accident, or natural disaster, replacing these assets could require significant personal expenditure.', impact: 'High' },
-            { risk: 'Life Insurance Gap', description: 'No life insurance detected. In the event of death, dependents could face severe financial hardship including loss of income, debt burden, and inability to meet basic living expenses.', impact: 'High' },
-            { risk: 'Income Protection Gap', description: 'No income protection or disability coverage in place. An illness or accident resulting in inability to work could deplete savings within months.', impact: 'Medium' },
-            { risk: 'Liability Exposure', description: 'Domestic staff, pets, or property visitors create potential third-party liability exposure that could result in significant legal and compensation costs.', impact: 'Medium' }
-          ],
-          financialImpact: `Estimated total financial exposure of ₦${Math.max(score * 75000, 750000).toLocaleString()} including potential medical expenses (₦${Math.max(score * 30000, 300000).toLocaleString()}), asset replacement costs (₦${Math.max(score * 25000, 250000).toLocaleString()}), and liability claims (₦${Math.max(score * 20000, 200000).toLocaleString()}). Best case scenario represents minimum exposure while worst case could exceed ₦${Math.max(score * 200000, 2000000).toLocaleString()}.`,
-          recommendations: [
-            'Comprehensive Health Insurance covering hospitalization, outpatient care, and maternity with minimum ₦5M sum assured',
-            'Motor Insurance (Comprehensive) for all registered vehicles with third-party liability minimum ₦1M',
-            'Term Life Insurance with coverage equal to 5-10 years of income for dependent protection',
-            'Home Contents Insurance covering fire, theft, and natural disasters',
-            'Personal Accident Insurance providing income replacement during disability',
-            'Domestic Staff Insurance covering employer liability for any staff injuries'
-          ],
-          urgencyLevel: riskLevel === 'critical' ? 'Immediate' : riskLevel === 'high' ? 'Short-term' : 'Medium-term',
-          keyExposures: ['Medical emergencies requiring hospitalization', 'Road traffic accidents', 'Home火灾/ theft', 'Death or disability of primary earner', 'Third-party liability claims'],
-          riskMitigationTimeline: { immediate: 'Obtain health insurance within 30 days', shortTerm: 'Secure life and motor insurance within 3 months', mediumTerm: 'Complete full coverage portfolio within 6 months' },
-          nigerianRegulatoryNotes: 'While personal insurance is largely voluntary in Nigeria, health insurance is becoming mandatory under NHIA Act. Third-party motor insurance is compulsory. Consider NAICOM-regulated insurers for compliance.'
-        };
-      } else {
-        return {
-          executiveSummary: `This ${industry} business has a ${riskLevel} risk profile with a score of ${score}. The assessment reveals significant insurance coverage gaps that expose the business to potential financial losses from property damage, liability claims, and operational disruptions. Immediate attention is required to mitigate these risks and ensure business continuity.`,
-          topRisks: [
-            { risk: 'Property Insurance Gap', description: 'Business assets including equipment, inventory, and facilities appear underinsured against fire, theft, and natural disaster risks. A major property loss could threaten business continuity.', impact: 'High' },
-            { risk: 'Liability Coverage Deficiency', description: 'Insufficient liability coverage for customer interactions, product/service delivery, and public access. A single liability claim could result in legal costs and compensation that significantly impact business finances.', impact: 'High' },
-            { risk: 'Business Interruption Exposure', description: 'No business interruption coverage identified. If operations are disrupted by fire, equipment failure, or other insured events, the business could lose revenue while fixed costs continue.', impact: 'High' },
-            { risk: 'Employee Risk Gap', description: 'Staff lack adequate protection through group life, workmen\'s compensation, or employee benefits insurance. Employee injury or death could result in significant compensation claims.', impact: 'Medium' },
-            { risk: 'Professional Liability Risk', description: 'Business provides professional services creating exposure to professional indemnity claims for advice or services that fail to meet client expectations.', impact: 'Medium' },
-            { risk: 'Cyber/Digital Asset Exposure', description: 'Modern businesses face cyber risks including data breach, ransomware, and digital disruption that may not be covered under traditional policies.', impact: 'Medium' },
-            { risk: 'Supply Chain Vulnerability', description: 'Business operations depend on supply chain which may not be adequately covered for disruption scenarios.', impact: 'Low' }
-          ],
-          financialImpact: `Estimated total financial exposure of ₦${Math.max(score * 150000, 1500000).toLocaleString()} including property loss (₦${Math.max(score * 50000, 500000).toLocaleString()}), business interruption losses (₦${Math.max(score * 40000, 400000).toLocaleString()}), liability claims (₦${Math.max(score * 35000, 350000).toLocaleString()}), and employee-related costs (₦${Math.max(score * 25000, 250000).toLocaleString()}). Probable maximum loss could exceed ₦${Math.max(score * 500000, 5000000).toLocaleString()} for catastrophic scenarios.`,
-          recommendations: [
-            'Property Insurance (Fire, Burglary, Natural Disasters) with sum assured equal to full replacement cost of assets',
-            'Business Owners Policy combining property, liability, and business interruption coverage',
-            'General Liability Insurance with minimum ₦5M coverage for third-party bodily injury and property damage',
-            'Group Life Insurance (Group Life Credit) as required under Nigerian Law (Insurance Act 2003)',
-            'Workmen\'s Compensation Insurance covering employee injuries and occupational diseases',
-            'Professional Indemnity Insurance if business provides professional consulting or advisory services',
-            'Cyber Liability Insurance covering data breach response, business interruption, and regulatory penalties',
-            'Directors & Officers Liability Insurance if business has formal board structure'
-          ],
-          urgencyLevel: riskLevel === 'critical' ? 'Immediate' : riskLevel === 'high' ? 'Short-term' : 'Medium-term',
-          keyExposures: ['Fire and property damage', 'Theft and burglary', 'Business interruption from covered events', 'Third-party liability claims', 'Employee injury or death', 'Professional negligence claims', 'Data breach and cyber incidents'],
-          riskMitigationTimeline: { immediate: 'Obtain mandatory covers (Group Life, Third-Party Motor) within 30 days', shortTerm: 'Secure property and liability coverage within 3 months', mediumTerm: 'Review and enhance coverage portfolio within 6-12 months' },
-          nigerianRegulatoryNotes: 'Nigeria requires Group Life Insurance for employees with minimum 3 lives (Insurance Act 2003). Third-party motor insurance is compulsory for all vehicles. Consider NAICOM compliance for all insurance placements through licensed insurers.'
-        };
-      }
-    };
-
-    return getDefaultReport();
-  }
-};
-
-// AI Explanation Layer - Transforms technical risk data into humanized, contextualized insights
-const generateExplanations = async (assessmentData) => {
-  const { answers, score, riskLevel, user, entityType = 'business' } = assessmentData;
-  const isIndividual = entityType === 'individual';
-
-  const business = answers?.business;
-  const assets = answers?.assets;
-  const liability = answers?.liability;
-  const staff = answers?.staff;
-  const insurance = answers?.insurance;
-  const personal = answers?.personal;
-  const personalAssets = answers?.personal_assets;
-  const personalLiability = answers?.personal_liability;
-  const health = answers?.health;
-  const personalInsurance = answers?.personal_insurance;
-
-  const industry = isIndividual ? 'personal' : (business?.industry || 'general commercial');
-  const name = user?.name || (isIndividual ? 'your family' : 'your business');
-
-  // Generate personalized narrative based on score and risk level
-  const generateNarrative = () => {
-    const narratives = {
-      critical: {
-        business: `Your business in the ${industry} sector faces significant risk exposure that requires immediate attention. With a score of ${score}, your operations are vulnerable to multiple potential disruptions that could impact your revenue, assets, and long-term sustainability.`,
-        individual: `Your current financial situation shows substantial vulnerability that could affect your family's security. With a score of ${score}, unexpected events could quickly create financial pressure that may be difficult to recover from without proper protection in place.`
-      },
-      high: {
-        business: `Your ${industry} business has notable risk gaps that merit serious consideration. While your operations are functioning, the current risk exposure leaves room for improvement in protecting your assets, employees, and bottom line against potential disruptions.`,
-        individual: `Your family's financial foundation shows areas that could be more resilient. While you're managing day-to-day, there are key vulnerabilities that a sudden change in circumstances could expose.`
-      },
-      moderate: {
-        business: `Your ${industry} business has a reasonable risk profile with some areas for enhancement. You're managing core risks, but there's opportunity to strengthen your protection and potentially reduce costs through optimized coverage.`,
-        individual: `Your financial situation is relatively stable with some opportunities to improve. You're on the right track, but a few targeted actions could significantly enhance your financial security.`
-      },
-      low: {
-        business: `Your ${industry} business demonstrates solid risk management practices. You're well-positioned to handle unexpected events, though periodic reviews ensure your coverage stays aligned with growth and changing circumstances.`,
-        individual: `You've built a strong financial foundation for yourself and your family. Maintaining this requires ongoing attention and ensuring your protection keeps pace with life changes.`
-      }
-    };
-
-    return riskLevel in narratives ? narratives[riskLevel][isIndividual ? 'individual' : 'business'] : narratives.moderate[isIndividual ? 'individual' : 'business'];
-  };
-
-  // Generate contextualized risk explanations
-  const generateRiskContexts = () => {
-    const contexts = [];
-
-    if (!isIndividual) {
-      // Business-specific contextual explanations
-      if (insurance?.existing === 'none') {
-        contexts.push({
-          factor: 'Insurance Coverage Gap',
-          explanation: `Without insurance protection, a single unexpected event—such as fire, theft, or a liability claim—could force you to cover costs from savings or borrowing. This could derail your business plans and personal finances simultaneously.`,
-          why: 'Every business faces unpredictable risks. Insurance exists specifically because these events, while unlikely, can be devastating when they occur.',
-          impact: 'High'
-        });
-      }
-
-      if (assets?.fireProtection === 'none') {
-        contexts.push({
-          factor: 'Fire Safety Vulnerability',
-          explanation: `Without fire protection systems, your equipment, inventory, and property face significant exposure. Fire can destroy years of hard work in minutes, and recovery may not be possible for many small businesses.`,
-          why: 'Property fires remain one of the leading causes of business losses. Even if you believe the risk is low, the potential consequences far outweigh the cost of protection.',
-          impact: 'High'
-        });
-      }
-
-      if (liability?.customerInteraction === 'onsite') {
-        contexts.push({
-          factor: 'Customer-Facing Operations',
-          explanation: `When customers visit your premises, any accident or injury they experience could result in liability claims. Even with good safety practices, the reality of customer traffic creates exposure.`,
-          why: 'Slips, falls, and other incidents can happen anywhere. Without liability coverage, a single claim could result in legal costs and compensation that significantly impacts your business.',
-          impact: 'Medium'
-        });
-      }
-
-      if (staff?.benefits === 'none') {
-        contexts.push({
-          factor: 'Employee Protection Gap',
-          explanation: `Your employees face workplace risks daily. Without proper benefits and workers' compensation coverage, both they and your business are vulnerable to the financial impact of workplace injuries.`,
-          why: 'Workplace injuries can happen in any industry. Without proper coverage, you could face both humanitarian costs and legal liability.',
-          impact: 'Medium'
-        });
-      }
-
-      if (assets?.lossHistory === 'frequent') {
-        contexts.push({
-          factor: 'Loss History Pattern',
-          explanation: `Previous claims suggest your operations face elevated risk factors that insurance providers will consider. This isn't just about past events—it's about understanding what patterns may continue.`,
-          why: 'Insurers assess past losses to predict future risk. Addressing underlying issues now can improve your coverage options and potentially lower costs.',
-          impact: 'Medium'
-        });
-      }
-
-      if (business?.employees === 'large') {
-        contexts.push({
-          factor: 'Employee Count Risk',
-          explanation: `With many employees, your responsibilities and potential exposures increase proportionally. Each person represents both a business asset and a potential liability scenario.`,
-          why: 'More employees means more workplace interactions, greater benefits administration complexity, and higher stakes for compliance and protection.',
-          impact: 'Medium'
-        });
-      }
-    } else {
-      // Individual-specific contextual explanations
-      if (personalInsurance?.health === 'none') {
-        contexts.push({
-          factor: 'Health Protection Gap',
-          explanation: `Without health coverage, a medical emergency could mean thousands of naira in out-of-pocket expenses. This could deplete your savings or force you into debt during an already difficult time.`,
-          why: 'Healthcare costs continue to rise. A hospital stay or unexpected illness can quickly become a financial crisis without proper protection.',
-          impact: 'High'
-        });
-      }
-
-      if (personalInsurance?.life === 'none') {
-        contexts.push({
-          factor: 'Life Insurance Gap',
-          explanation: `If something happened to you, your family would lose your income and potentially face serious financial hardship. Life insurance provides security that your loved ones can count on.`,
-          why: 'Nobody expects tragedy, but those left behind bear the financial consequences. Life insurance ensures your family maintains their standard of living.',
-          impact: 'High'
-        });
-      }
-
-      if (personalAssets?.housing === 'owned') {
-        contexts.push({
-          factor: 'Property Exposure',
-          explanation: `Your home is likely your biggest asset—and your biggest exposure. Fire, natural disasters, or accidents could threaten not just your shelter but your entire financial foundation.`,
-          why: 'Property ownership means responsibility for everything that happens on your premises. Without proper coverage, repair or rebuild costs come from your pocket.',
-          impact: 'High'
-        });
-      }
-
-      if (personal?.dependents === 'many' || personal?.dependents === 'few') {
-        contexts.push({
-          factor: 'Family Dependents',
-          explanation: `With people depending on your income, any disruption to your ability to work creates direct financial consequences for your family's wellbeing and future plans.`,
-          why: 'Dependents rely on your continued income. Disability, illness, or death would shift financial burdens to already-vulnerable family members.',
-          impact: 'High'
-        });
-      }
-
-      if (personalAssets?.vehicles === 'multiple' || personalAssets?.vehicles === 'one') {
-        contexts.push({
-          factor: 'Motor Vehicle Exposure',
-          explanation: `Vehicles represent both valuable assets and significant liability exposure. An accident can result in repair costs, medical bills, and potential legal claims.`,
-          why: "Nigeria's roads see thousands of accidents annually. Without proper motor insurance, you're personally responsible for all costs from any accident you're involved in.",
-          impact: 'Medium'
-        });
-      }
-
-      if (health?.healthStatus === 'poor' || health?.healthStatus === 'fair') {
-        contexts.push({
-          factor: 'Health Vulnerability',
-          explanation: `Your current health status means you may face higher medical needs. Without comprehensive health coverage, routine care and unexpected illnesses can create significant financial strain.`,
-          why: 'Health issues often compound—managing existing conditions while facing new health challenges without coverage can deplete resources quickly.',
-          impact: 'High'
-        });
-      }
-    }
-
-    return contexts;
-  };
-
-  // Generate urgency messaging
-  const generateUrgency = () => {
-    const urgencies = {
-      critical: {
-        message: `Your risk level requires prompt attention. The gaps identified could have serious consequences if unexpected events occur. We recommend taking action within the next 30 days.`,
-        reasons: [
-          `Unforeseen events don't wait for convenient timing—they simply happen`,
-          `The longer coverage gaps persist, the longer your vulnerability continues`,
-          `Acting now ensures protection when you need it most`
-        ]
-      },
-      high: {
-        message: `While your situation isn't critical, addressing these gaps soon will provide important peace of mind and financial protection.`,
-        reasons: [
-          `Risk积累—waiting increases both exposure and potential costs`,
-          `Insurance premiums often increase with age and health changes`,
-          `Coverage obtained today protects against tomorrow's unexpected events`
-        ]
-      },
-      moderate: {
-        message: `Your risk profile is manageable, but improvement is possible. A thoughtful approach to closing gaps can enhance your overall protection.`,
-        reasons: [
-          `Regular reviews keep your coverage aligned with life changes`,
-          `Small investments now can prevent larger costs later`,
-          `Peace of mind has real value for you and your family`
-        ]
-      },
-      low: {
-        message: `You're in a good position. Periodic reviews ensure your protection stays current as your circumstances evolve.`,
-        reasons: [
-          `Life changes—new assets, new responsibilities, new risks`,
-          `Annual reviews help identify emerging gaps early`,
-          `Maintaining good habits supports long-term financial health`
-        ]
-      }
-    };
-
-    return riskLevel in urgencies ? urgencies[riskLevel] : urgencies.moderate;
-  };
-
-  // Generate educational content for recommendations
-  const generateEducation = () => {
-    const topics = [];
-
-    if (!isIndividual) {
-      topics.push({
-        recommendation: 'Business Owners Insurance',
-        explanation: 'This combines multiple coverages—property, liability, and business interruption—into one package. It\'s designed specifically for businesses like yours to simplify protection while ensuring comprehensive coverage.',
-        benefit: 'One policy, multiple protections, streamlined administration'
-      });
-
-      topics.push({
-        recommendation: 'Group Life Insurance',
-        explanation: 'Nigerian law requires employers to provide group life coverage for employees. This protects your staff while ensuring your business complies with Insurance Act requirements.',
-        benefit: 'Legal compliance plus employee loyalty and trust'
-      });
-
-      topics.push({
-        recommendation: 'Professional Liability Coverage',
-        explanation: 'If your business provides advice, services, or professional expertise, this protects you against claims of negligence or errors. It\'s about protecting your reputation and financial stability.',
-        benefit: 'Covers legal defense costs and compensation claims'
-      });
-
-      if (liability?.customerInteraction === 'onsite') {
-        topics.push({
-          recommendation: 'Public Liability Insurance',
-          explanation: 'This covers injuries or property damage that visitors experience on your premises. It\'s essential for any business that welcomes customers or clients.',
-          benefit: 'Protects both your visitors and your business from unexpected incidents'
-        });
-      }
-    } else {
-      topics.push({
-        recommendation: 'Health Insurance',
-        explanation: 'This covers hospitalization, medical treatments, and sometimes outpatient care. With healthcare costs rising, it prevents a medical emergency from becoming a financial crisis.',
-        benefit: 'Access to quality healthcare without depleting savings'
-      });
-
-      topics.push({
-        recommendation: 'Term Life Insurance',
-        explanation: 'This provides financial protection for your family if something happens to you. It\'s affordable coverage that ensures your loved ones can maintain their lifestyle.',
-        benefit: 'Income replacement and financial security for dependents'
-      });
-
-      topics.push({
-        recommendation: 'Motor Insurance',
-        explanation: 'Third-party motor insurance is legally required in Nigeria, but comprehensive coverage goes further—it covers damage to your vehicle, theft, and more.',
-        benefit: 'Legal compliance plus protection for your vehicle investment'
-      });
-    }
-
-    return topics;
-  };
-
-  // Generate conversion guidance
-  const generateConversionGuidance = () => {
-    const conversions = {
-      critical: {
-        headline: 'Take the next step toward complete protection',
-        cta: 'Speak with an advisor today',
-        subtext: 'Given your situation, a personalized consultation can help you prioritize the most critical coverage first.'
-      },
-      high: {
-        headline: 'Strengthen your protection with expert guidance',
-        cta: 'Request a quote',
-        subtext: 'An advisor can help you build a comprehensive plan that addresses your specific gaps efficiently.'
-      },
-      moderate: {
-        headline: 'Optimize your coverage for better protection',
-        cta: 'Explore your options',
-        subtext: 'With the right guidance, you can enhance your protection while potentially finding cost savings.'
-      },
-      low: {
-        headline: 'Keep your protection current',
-        cta: 'Review your coverage',
-        subtext: 'Regular reviews ensure your coverage keeps pace with your evolving needs and circumstances.'
-      }
-    };
-
-    return riskLevel in conversions ? conversions[riskLevel] : conversions.moderate;
-  };
-
-  return {
-    narrative: generateNarrative(),
-    riskContexts: generateRiskContexts(),
-    urgency: generateUrgency(),
-    education: generateEducation(),
-    conversion: generateConversionGuidance(),
-    personalizedFor: name,
-    entityType,
-    generatedAt: new Date().toISOString()
-  };
-};
-
-const handleConversationalAssessment = async (chatHistory, userMessage) => {
-  const systemPrompt = `You are CoverScore AI, a friendly and professional insurance risk advisor.
-Your goal is to conduct a conversational risk assessment via WhatsApp.
-You must gather the following information by asking questions ONE AT A TIME. Do not ask for everything at once.
-Keep your questions natural, friendly, and very brief.
-
-You need to figure out:
-1. Are they assessing a Business or Individual/Personal risk?
-If Business: Business Name, Industry, Estimated Annual Turnover, Number of Employees, Do they own physical property/equipment?
-If Individual: Name, Age Bracket, Estimated Annual Income, Number of Dependents, Do they own a home/car?
-
-Once you have gathered ALL the required information, you must stop asking questions and output a JSON object with status "complete" and the extracted data.
-If you still need more information, output a JSON object with status "asking" and your next conversational reply.
-
-IMPORTANT: You MUST respond in strict JSON format.
-Example of asking:
-{"status": "asking", "reply": "Hi! Are you looking to assess risk for a business or your personal life?"}
-Example of completing:
-{
-  "status": "complete",
-  "reply": "Thank you! I have everything I need. Generating your CoverScore Risk Report now...",
-  "extracted_data": {
-    "entity_type": "business",
-    "name": "Acme Corp",
-    "industry": "Tech",
-    "turnover_bracket": "10m_50m",
-    "employee_bracket": "6_20",
-    "owns_property": "yes"
-  }
-}
-Note for extracted_data brackets: 
-Turnover/Income should ideally map to: 'under_10m', '10m_50m', '50m_250m', '250m_1b', 'over_1b'.
-Employees map to: '1_5', '6_20', '21_50', '51_200', 'over_200'.
-If you can't perfectly map it, just do your best estimation.`;
-
-  const messages = [
-    { role: 'system', content: systemPrompt }
-  ];
-  
-  // Append parsed history
-  try {
-    const history = typeof chatHistory === 'string' ? JSON.parse(chatHistory) : chatHistory;
-    if (Array.isArray(history)) {
-      history.forEach(msg => messages.push(msg));
-    }
-  } catch(e) {}
-
-  messages.push({ role: 'user', content: userMessage });
 
   const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
     method: 'POST',
@@ -556,103 +19,273 @@ If you can't perfectly map it, just do your best estimation.`;
     },
     body: JSON.stringify({
       model: MISTRAL_MODEL,
-      messages: messages,
-      temperature: 0.7,
-      response_format: { type: 'json_object' }
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      response_format: jsonMode ? { type: "json_object" } : { type: "text" },
+      temperature: 0.3
     })
   });
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`Mistral AI API error: ${response.status} - ${errText}`);
+    throw new Error(`Mistral API Error: ${response.status} ${errText}`);
   }
 
   const data = await response.json();
-  let aiContent = data.choices?.[0]?.message?.content;
-  if (!aiContent) throw new Error('Empty response from AI');
+  const content = data.choices[0].message.content;
+  return jsonMode ? JSON.parse(content) : content;
+}
 
-  aiContent = aiContent.trim();
-  if (aiContent.startsWith('```')) {
-    aiContent = aiContent.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+// ----------------------------------------------------------------------------
+// PROMPT 5: INDUSTRY RISK CONSULTANT™ (System Prompt Generator)
+// ----------------------------------------------------------------------------
+function getIndustryConsultantPrompt(industryData) {
+  if (!industryData) {
+    return `You are CoverScore AI, a professional Risk Consultant. Your goal is to help individuals and businesses become more resilient by identifying risks, explaining consequences, and prioritizing actions.`;
   }
+  return `You are CoverScore AI, an expert ${industryData.industry} Risk Consultant. 
+Your goal is to help businesses in the ${industryData.industry} sector become more resilient.
+You understand that their top risks typically include: ${industryData.top_risks.join(', ')}.
+You never sound like a salesperson. You focus strictly on resilience, explaining consequences, and prioritizing actions.`;
+}
 
-  return JSON.parse(aiContent);
-};
-
-const generateProposal = async (lead, assessment) => {
-  const isIndividual = lead.entity_type === 'individual';
-  const name = lead.business_name || lead.name;
-  const industry = lead.industry || (isIndividual ? 'Personal/Family' : 'Business');
+// ----------------------------------------------------------------------------
+// PROMPT 1: REPORT GENERATOR AI™
+// ----------------------------------------------------------------------------
+const generateRiskReport = async (assessmentData, creIntelligence) => {
+  const { topRisks, recommendations, industryData } = creIntelligence;
   
-  // Extract report data if assessment exists
-  let reportData = '';
-  if (assessment && assessment.ai_report) {
-    try {
-      const parsedReport = JSON.parse(assessment.ai_report);
-      reportData = `
-        Executive Summary: ${parsedReport.executiveSummary || ''}
-        Top Priorities: ${Array.isArray(parsedReport.recommendedProtectionPriorities) ? parsedReport.recommendedProtectionPriorities.join(', ') : ''}
-        Financial Exposure: ${parsedReport.estimatedFinancialExposure || ''}
-      `;
-    } catch(e) {}
-  }
-
-  const prompt = `Draft a professional Insurance Proposal for ${name} (${industry}).
+  const systemPrompt = getIndustryConsultantPrompt(industryData);
   
-Context:
-Risk Level: ${lead.risk_level || 'Pending'}
-Score: ${lead.score || 0}/100
-Primary Concern: ${lead.primary_concern || 'Comprehensive Protection'}
-Assessment Insights: ${reportData}
+  const userPrompt = `Generate a P.R.O.T.E.C.T™ Report for the following assessment data.
 
-Requirements:
-- Format the output strictly as professional, well-spaced HTML without a <body> or <html> tag (just the content like <h2>, <p>, <ul>, <strong>).
-- Ensure paragraphs are well spaced by adding <br><br> between <p> tags or using CSS inline styles on <p> tags, e.g., <p style="margin-bottom: 16px;">.
-- Tone: Consultative, authoritative, reassuring, persuasive.
-- Include a warm greeting.
-- Include an "Executive Summary" section.
-- Include a "Recommended Coverage Portfolio" section (list 3-4 highly relevant insurance types).
-- Include an "Estimated Annual Investment" section stating that the estimated premium is roughly ₦${new Intl.NumberFormat('en-NG').format(lead.estimated_premium || 0)}.
-- Conclude with "Next Steps".
-- The signature MUST be branded as "CoverScore AI", with email "advisor@coverscore.site" and phone "+2349165304629".
-- Do not use markdown backticks in the response. Just return raw HTML.`;
+Assessment Context:
+${JSON.stringify(assessmentData, null, 2)}
+
+CRE Intelligence (Top Risks):
+${JSON.stringify(topRisks)}
+
+CRE Intelligence (Recommendations):
+${JSON.stringify(recommendations)}
+
+Required Output (JSON ONLY):
+{
+  "executiveSummary": "A calm, professional summary explaining overall risk exposure and resilience.",
+  "topExposures": ["Exposure 1", "Exposure 2", "Exposure 3"],
+  "topFinancialThreats": ["Threat 1", "Threat 2", "Threat 3"],
+  "topProtectionGaps": ["Gap 1", "Gap 2", "Gap 3"],
+  "topRecommendations": [
+    {
+      "timeframe": "Immediate / Short-term / Long-term",
+      "exposure": "Identified exposure",
+      "consequence": "Consequence if unprotected",
+      "protectionGap": "The current protection gap",
+      "action": "Recommended action"
+    }
+  ],
+  "professionalRecommendation": "A professional closing recommendation focusing on resilience."
+}
+
+Rules:
+- Never sound like a salesperson.
+- Focus on resilience.
+- Explain consequences clearly.
+- Prioritize actions.
+- Use Nigerian Naira (₦) formatting where appropriate.`;
 
   try {
-    if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
-      return `<h2>Proposal for ${name}</h2><p>Please configure the AI API key to generate automatic proposals.</p>`;
-    }
-
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${MISTRAL_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: MISTRAL_MODEL,
-        messages: [
-          { role: 'system', content: 'You are an expert Insurance Risk Advisor creating personalized HTML proposals.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.6
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Mistral AI API error');
-    }
-
-    const data = await response.json();
-    let draftHtml = data.choices?.[0]?.message?.content || '';
-    
-    // Clean up if the AI wraps in markdown html code block
-    draftHtml = draftHtml.replace(/^\s*```html\s*/i, '').replace(/\s*```\s*$/, '');
-    
-    return draftHtml.trim();
+    return await callMistral(systemPrompt, userPrompt, true);
   } catch (error) {
-    console.error('Error drafting proposal:', error);
-    return `<h2>Proposal for ${name}</h2><p>Our team has analyzed your CoverScore profile. Based on our review, we recommend a comprehensive coverage package tailored to your needs.</p><p>Please review the estimated pricing and coverage details below.</p>`;
+    console.error('Report Generator Error:', error);
+    // Fallback if API fails
+    return getFallbackReport(assessmentData);
   }
 };
 
-module.exports = { generateRiskReport, generateExplanations, handleConversationalAssessment, generateProposal };
+// ----------------------------------------------------------------------------
+// PROMPT 2: ADVISOR COPILOT™
+// ----------------------------------------------------------------------------
+const getAdvisorCopilot = async (assessmentData, creIntelligence) => {
+  const { advisorTalkingPoints, industryData } = creIntelligence;
+  const systemPrompt = getIndustryConsultantPrompt(industryData);
+
+  const userPrompt = `You are the Advisor Copilot. Your job is to help the human advisor prepare for a consultation with this client.
+
+Client Data:
+${JSON.stringify(assessmentData, null, 2)}
+
+Recommended Talking Points from CRE:
+${JSON.stringify(advisorTalkingPoints)}
+
+Required Output (JSON ONLY):
+{
+  "recommended_questions": ["Question 1", "Question 2", "Question 3"],
+  "potential_risks_to_highlight": ["Risk 1", "Risk 2"],
+  "likely_objections": [
+    { "objection": "It's too expensive", "suggested_response": "Focus on the cost of the risk event happening without cover..." }
+  ],
+  "next_actions": ["Action 1", "Action 2"]
+}
+
+Rules:
+- Make questions open-ended and diagnostic.
+- Anticipate realistic objections based on the client's profile.
+- Provide actionable advice for the advisor.`;
+
+  try {
+    return await callMistral(systemPrompt, userPrompt, true);
+  } catch (error) {
+    console.error('Advisor Copilot Error:', error);
+    return {
+      recommended_questions: advisorTalkingPoints || ['Can you tell me more about your business operations?'],
+      potential_risks_to_highlight: ['General Liability', 'Property Risk'],
+      likely_objections: [{ objection: 'Budget constraints', suggested_response: 'Prioritize critical statutory covers first.' }],
+      next_actions: ['Schedule consultation call']
+    };
+  }
+};
+
+// ----------------------------------------------------------------------------
+// PROMPT 4: PROPOSAL GENERATOR™
+// ----------------------------------------------------------------------------
+const generateProposal = async (lead, assessment) => {
+  const systemPrompt = `You are a CoverScore AI Proposal Generator. You create tailored, professional insurance proposals. You focus on building resilience rather than just selling products.`;
+  
+  const userPrompt = `Create a professional insurance proposal for ${lead.name || 'the client'}.
+
+Client Data:
+${JSON.stringify(lead)}
+Assessment Data:
+${JSON.stringify(assessment)}
+
+Return ONLY a valid HTML string (no markdown, no json wrappers) with this exact structure:
+<div class="proposal-document">
+  <h2>Executive Summary</h2>
+  <p>...</p>
+  
+  <h2>Findings</h2>
+  <p>...</p>
+  
+  <h2>Risks</h2>
+  <ul>...</ul>
+  
+  <h2>Recommendations</h2>
+  <ul>...</ul>
+  
+  <h2>Protection Plan</h2>
+  <p>...</p>
+</div>`;
+
+  try {
+    return await callMistral(systemPrompt, userPrompt, false);
+  } catch (error) {
+    console.error('Proposal Generator Error:', error);
+    return `<div class="proposal-document"><h2>Executive Summary</h2><p>Proposal generation failed.</p></div>`;
+  }
+};
+
+// Fallback logic in case API fails
+function getFallbackReport(assessmentData) {
+  return {
+    executiveSummary: "This is an automated fallback report due to AI generation timeout. Your risk profile requires attention.",
+    topExposures: ["General Liability", "Property Damage", "Financial Loss"],
+    topFinancialThreats: ["Out of pocket expenses", "Business interruption"],
+    topProtectionGaps: ["Uninsured assets", "Lack of income protection"],
+    topRecommendations: [
+      { timeframe: "Immediate", exposure: "Property", consequence: "Total loss", protectionGap: "No cover", action: "Obtain basic protection" }
+    ],
+    professionalRecommendation: "Please speak with an advisor for a comprehensive review."
+  };
+}
+
+// ----------------------------------------------------------------------------
+// PROMPT 3: WHATSAPP ADVISOR™
+// ----------------------------------------------------------------------------
+const getWhatsappAdvisor = async (conversationContext, currentState, userMessage) => {
+  const systemPrompt = `You are the CoverScore WhatsApp Advisor. Your goal is to drive qualification conversations.
+Rules:
+- Conversational, Professional, Educational
+- Never pushy or salesy
+- Provide short, engaging responses suitable for WhatsApp.`;
+
+  const userPrompt = `Context: ${JSON.stringify(conversationContext)}
+Current State: ${currentState}
+User Message: "${userMessage}"
+
+Generate the next response to guide the user towards qualification or an appointment.`;
+
+  try {
+    return await callMistral(systemPrompt, userPrompt, false);
+  } catch (error) {
+    console.error('WhatsApp Advisor Error:', error);
+    return "I'm sorry, I'm having trouble connecting right now. Let's continue this shortly.";
+  }
+};
+
+// ----------------------------------------------------------------------------
+// PROMPT 6: LEAD QUALIFIER™
+// ----------------------------------------------------------------------------
+const getLeadQualifier = async (whatsappConversations, assessmentData) => {
+  const systemPrompt = `You are the CoverScore Lead Qualifier. Your goal is to provide CRM intelligence based on user interactions.`;
+  
+  const userPrompt = `Evaluate this lead based on the following data:
+
+Assessment Data:
+${JSON.stringify(assessmentData, null, 2)}
+
+WhatsApp Conversations:
+${JSON.stringify(whatsappConversations, null, 2)}
+
+Required Output (JSON ONLY):
+{
+  "lead_status": "Hot Lead / Warm Lead / Cold Lead",
+  "next_best_action": "Specific action the advisor should take next",
+  "qualification_reasoning": "Brief explanation of why this status was assigned"
+}`;
+
+  try {
+    return await callMistral(systemPrompt, userPrompt, true);
+  } catch (error) {
+    console.error('Lead Qualifier Error:', error);
+    return {
+      lead_status: "Warm Lead",
+      next_best_action: "Review assessment and reach out.",
+      qualification_reasoning: "Fallback qualification due to AI error."
+    };
+  }
+};
+
+// ----------------------------------------------------------------------------
+// INTERACTIVE ADVISOR COPILOT CHAT
+// ----------------------------------------------------------------------------
+const handleAdvisorCopilotChat = async (leadContext, message) => {
+  const systemPrompt = `You are the CoverScore Risk Advisory Operating System (Copilot). 
+Your user is a human insurance advisor. Your goal is to guide them through the entire client journey and act as a "Super Advisor".
+
+You have access to the following lead context:
+${JSON.stringify(leadContext, null, 2)}
+
+Provide actionable, insightful, and highly professional advice. 
+If asked to generate a proposal, draft it directly. 
+If asked to draft a WhatsApp follow-up, provide the exact message text.
+If asked about risks, analyze the assessment data and highlight the most critical exposures.
+Format your responses using clean Markdown. Be concise but extremely valuable.`;
+
+  try {
+    return await callMistral(systemPrompt, message, false);
+  } catch (error) {
+    console.error('Copilot Chat Error:', error);
+    return "I'm sorry, I'm having trouble connecting to the AI brain right now. Please try again.";
+  }
+};
+
+module.exports = {
+  generateRiskReport,
+  getAdvisorCopilot,
+  generateProposal,
+  getWhatsappAdvisor,
+  getLeadQualifier,
+  handleAdvisorCopilotChat
+};

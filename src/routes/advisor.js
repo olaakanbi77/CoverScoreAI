@@ -3,6 +3,7 @@ const router = express.Router();
 const { all, get } = require('../config/database');
 const { authenticatePage } = require('../middleware/auth');
 const { calculateScore } = require('../services/scoringEngine');
+const { handleAdvisorCopilotChat } = require('../services/aiService');
 
 const requireSalesOrAdmin = (req, res, next) => {
   if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
@@ -30,7 +31,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
         conversations,
         contact: l.name,
         last_activity: l.updated_at || l.created_at,
-        sales_score: l.sales_score > 100 ? 100 : l.sales_score,
+        sales_score: (l.sales_score || 0) > 100 ? 100 : (l.sales_score || 0),
         likelihood_to_buy: l.sales_score >= 70 ? 'HIGH' : (l.sales_score >= 40 ? 'MEDIUM' : 'LOW'),
         premium_range: l.estimated_premium ? `₦${l.estimated_premium.toLocaleString()}` : 'N/A',
         recommended_product: l.recommended_covers || 'Review Assessment'
@@ -185,6 +186,58 @@ router.get('/proposal-writer/:leadId', authenticatePage, requireSalesOrAdmin, as
   } catch (err) {
     console.error('Error loading proposal writer:', err);
     res.status(500).send('Server Error');
+  }
+});
+
+router.post('/api/copilot-chat', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { leadId, message } = req.body;
+    if (!leadId || !message) {
+      return res.status(400).json({ error: 'Missing leadId or message' });
+    }
+
+    const lead = await get('SELECT * FROM leads WHERE id = ?', [leadId]);
+    if (!lead) return res.status(404).json({ error: 'Lead not found' });
+
+    let assessmentAnswers = null;
+    let aiReport = null;
+    if (lead.assessment_id) {
+      const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
+      if (assessment) {
+        assessmentAnswers = assessment.answers ? JSON.parse(assessment.answers) : null;
+        aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
+      }
+    }
+
+    let chatHistory = [];
+    try {
+      const parsed = JSON.parse(lead.chat_history || '{}');
+      chatHistory = Array.isArray(parsed.__messages) ? parsed.__messages : [];
+    } catch(e) {}
+
+    const leadContext = {
+      lead_profile: {
+        name: lead.name,
+        business_name: lead.business_name,
+        industry: lead.industry,
+        employees: lead.employees,
+        risk_level: lead.risk_level,
+        score: lead.score,
+        status: lead.status,
+        sales_score: lead.sales_score,
+        estimated_premium: lead.estimated_premium
+      },
+      assessment: assessmentAnswers,
+      ai_report_summary: aiReport,
+      whatsapp_history: chatHistory.slice(-20) // Only send last 20 messages to save tokens
+    };
+
+    const response = await handleAdvisorCopilotChat(leadContext, message);
+    res.json({ response });
+
+  } catch (err) {
+    console.error('Copilot Chat API Error:', err);
+    res.status(500).json({ error: 'Failed to process copilot request' });
   }
 });
 
