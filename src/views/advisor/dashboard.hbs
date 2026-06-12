@@ -603,21 +603,7 @@
         Settings
       </a>
     </nav>
-    {{#if leads.length}}
-    <div class="sidebar-summary">
-      <div class="summary-title">Today's Summary</div>
-      <div class="summary-grid">
-        <div class="summary-item"><div class="summary-label">Hot Leads</div><div class="summary-value" style="color:#ef4444;">{{summary.hotLeads}}</div></div>
-        <div class="summary-item"><div class="summary-label">Consultations</div><div class="summary-value" style="color:#22c55e;">{{summary.consultations}}</div></div>
-        <div class="summary-item"><div class="summary-label">Proposals Sent</div><div class="summary-value" style="color:#f59e0b;">{{summary.proposalsSent}}</div></div>
-        <div class="summary-item"><div class="summary-label">Policies Sold</div><div class="summary-value" style="color:#22c55e;">{{summary.policiesSold}}</div></div>
-      </div>
-      <div class="summary-premium">
-        <div class="summary-label">Est. Premium</div>
-        <div class="summary-value">{{summary.estPremium}}</div>
-      </div>
-    </div>
-    {{/if}}
+
     <div class="sidebar-profile">
       <div style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;">{{userInitials user.name}}</div>
       <div class="profile-info">
