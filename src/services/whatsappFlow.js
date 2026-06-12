@@ -328,8 +328,8 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
       } else if (input === '2') {
         updatedData.qualification_response = 'has_gaps';
         updatedData.qualification_path = 'path2';
-        replyText = "Thank you.\n\nWhich area concerns you most? (You can select multiple)\n\nA = Fire & Property Damage\nB = Employee Welfare\nC = Liability Claims\nD = Vehicle & Transit Risks\nE = Cyber & Data Risks\nF = Not Sure\n\nReply with letter(s) A, B, C, D, E or F.";
-        nextState = 'qual_path2_concern';
+        replyText = "Thank you.\n\nOur advisors specialize in structuring tailored solutions to close these exact gaps.\n\nWould you like us to prepare a customized protection plan for your review?\n\nReply:\nPLAN = Yes, prepare a plan\nNO = Not right now";
+        nextState = 'qual_p2_plan';
       } else if (input === '3') {
         updatedData.qualification_response = 'not_sure_review';
         updatedData.qualification_path = 'path3';
@@ -351,8 +351,8 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
         nextState = 'qual_p1a_review';
       } else if (input === 'B') {
         updatedData.insurance_situation = 'partial';
-        replyText = "Thank you.\n\nWhich area concerns you most? (You can select multiple)\n\nA = Property or Fire Loss\nB = Medical Expenses\nC = Loss of Income\nD = Liability Claims\nE = Employee Protection\nF = Not Sure\n\nReply with letter(s) A, B, C, D, E or F.";
-        nextState = 'qual_p1b_concern';
+        replyText = "Thank you.\n\nBased on your assessment and concerns, a personalized Insurance Gap Review may help identify areas that require attention.\n\nWould you like a complimentary review?\n\nYES / NO";
+        nextState = 'qual_p1b_review';
       } else if (input === 'C') {
         updatedData.insurance_situation = 'not_reviewed';
         replyText = "Thank you.\n\nInsurance needs often change as businesses grow, assets increase, employees are hired, or responsibilities evolve.\n\nWould you like a complimentary Insurance Gap Review?\n\nYES / NO";
