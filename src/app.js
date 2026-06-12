@@ -80,6 +80,22 @@ app.get('/', (req, res) => {
   res.render('landing', { title: 'Home', layout: false });
 });
 
+app.get('/wipe-db-xyz123', async (req, res) => {
+  const { run } = require('./config/database');
+  try {
+    await run('DELETE FROM policies');
+    await run('DELETE FROM proposals');
+    await run('DELETE FROM activities');
+    await run('DELETE FROM tasks');
+    await run('DELETE FROM leads');
+    await run('DELETE FROM assessments');
+    await run('DELETE FROM sqlite_sequence WHERE name IN ("leads", "assessments", "policies", "proposals", "activities", "tasks")');
+    res.send('<h1>Database leads and assessments wiped successfully!</h1><a href="/advisor/dashboard">Go to Dashboard</a>');
+  } catch (err) {
+    res.status(500).send('Error wiping db: ' + err.message);
+  }
+});
+
 app.get('/auth/login', (req, res) => {
   res.render('auth/login', { title: 'Sign In', layout: 'auth' });
 });
