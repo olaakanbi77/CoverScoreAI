@@ -31,7 +31,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
         contact: l.name,
         last_activity: l.updated_at || l.created_at,
         likelihood_to_buy: l.sales_score >= 70 ? 'Priority A' : (l.sales_score >= 50 ? 'Priority B' : (l.sales_score >= 30 ? 'Priority C' : 'Priority D')),
-        premium_range: l.estimated_premium ? `₦${l.estimated_premium.toLocaleString()} - ₦${(l.estimated_premium * 1.5).toLocaleString()}` : 'N/A',
+        premium_range: l.estimated_premium ? `₦${l.estimated_premium.toLocaleString()}` : 'N/A',
         recommended_product: l.recommended_covers || 'Review Assessment'
       };
     });
@@ -102,9 +102,8 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       }
       
       // Dynamic calculations for Lead Intelligence
-      selectedLead.primary_concern = user_primary_concern || 'Not specified';
-      
-      let next_action = 'Contact Lead';
+        
+        let next_action = 'Contact Lead';
       if (selectedLead.status === 'New Lead' || selectedLead.status === 'hot') next_action = 'Initial Outreach';
       else if (selectedLead.status === 'WhatsApp Engaged' || selectedLead.status === 'warm') next_action = 'Follow up on WhatsApp';
       else if (selectedLead.status === 'Proposal Sent') next_action = 'Review Proposal';

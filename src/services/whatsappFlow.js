@@ -164,15 +164,17 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
       if (['1','2','3','4'].includes(input)) {
         const svMap = {'1': 'less_1m', '2': '1_3m', '3': '3_6m', '4': 'more_6m'};
         updatedData.savings_buffer = svMap[input];
-        replyText = "Which of these concerns you most?\n\nA. Medical Expenses\nB. Loss of Income\nC. Family Financial Security\nD. Vehicle Damage\nE. Property Loss\n\nReply A, B, C, D, or E.";
+        replyText = "Which of these concerns you most? (You can select multiple, e.g., A, B)\n\nA. Medical Expenses\nB. Loss of Income\nC. Family Financial Security\nD. Vehicle Damage\nE. Property Loss\n\nReply with letter(s) A, B, C, D, or E.";
         nextState = 'personal_q9';
       } else { replyText = "Please reply with 1, 2, 3, or 4."; }
       break;
 
     case 'personal_q9':
-      if (['A','B','C','D','E'].includes(input)) {
+      const p9Matches = input.match(/[A-E]/g);
+      if (p9Matches && p9Matches.length > 0) {
         const conMap = {'A': 'Medical Expenses', 'B': 'Loss of Income', 'C': 'Family Financial Security', 'D': 'Vehicle Damage', 'E': 'Property Loss'};
-        updatedData.primary_concern = conMap[input];
+        const unique = [...new Set(p9Matches)];
+        updatedData.primary_concern = unique.map(m => conMap[m]).join(', ');
         replyText = `Thank you, ${updatedData.name || 'User'}.\n\nWe're analyzing your responses and preparing your CoverScore Risk Report.\nThis usually takes less than 30 seconds.`;
         isComplete = true;
       } else { replyText = "Please reply with A, B, C, D, or E."; }
@@ -296,15 +298,17 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
       if (['1','2','3','4'].includes(input)) {
         const biMap = {'1': 'minor', '2': 'significant', '3': 'severe', '4': 'survival_threatened'};
         updatedData.business_interruption_risk = biMap[input];
-        replyText = "Which area concerns you most?\n\nA. Fire & Property Damage\nB. Employee Welfare\nC. Liability Claims\nD. Business Interruption\nE. Vehicle & Transit Risks\nF. Cyber Risk\n\nReply A, B, C, D, E, or F.";
+        replyText = "Which area concerns you most? (You can select multiple, e.g., A, D)\n\nA. Fire & Property Damage\nB. Employee Welfare\nC. Liability Claims\nD. Business Interruption\nE. Vehicle & Transit Risks\nF. Cyber Risk\n\nReply with letter(s) A, B, C, D, E, or F.";
         nextState = 'business_q10';
       } else { replyText = "Please reply with 1, 2, 3, or 4."; }
       break;
 
     case 'business_q10':
-      if (['A','B','C','D','E','F'].includes(input)) {
+      const b10Matches = input.match(/[A-F]/g);
+      if (b10Matches && b10Matches.length > 0) {
         const conMap = {'A': 'Fire & Property Damage', 'B': 'Employee Welfare', 'C': 'Liability Claims', 'D': 'Business Interruption', 'E': 'Vehicle & Transit Risks', 'F': 'Cyber Risk'};
-        updatedData.primary_concern = conMap[input];
+        const unique = [...new Set(b10Matches)];
+        updatedData.primary_concern = unique.map(m => conMap[m]).join(', ');
         replyText = `Thank you, ${updatedData.name || 'User'}.\n\nWe're analyzing your responses and preparing your CoverScore Risk Report.\nThis usually takes less than 30 seconds.`;
         isComplete = true;
       } else { replyText = "Please reply with A, B, C, D, E, or F."; }
@@ -324,7 +328,7 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
       } else if (input === '2') {
         updatedData.qualification_response = 'has_gaps';
         updatedData.qualification_path = 'path2';
-        replyText = "Thank you.\n\nWhich area concerns you most?\n\nA = Fire & Property Damage\nB = Employee Welfare\nC = Liability Claims\nD = Vehicle & Transit Risks\nE = Cyber & Data Risks\nF = Not Sure\n\nReply A, B, C, D, E or F.";
+        replyText = "Thank you.\n\nWhich area concerns you most? (You can select multiple)\n\nA = Fire & Property Damage\nB = Employee Welfare\nC = Liability Claims\nD = Vehicle & Transit Risks\nE = Cyber & Data Risks\nF = Not Sure\n\nReply with letter(s) A, B, C, D, E or F.";
         nextState = 'qual_path2_concern';
       } else if (input === '3') {
         updatedData.qualification_response = 'not_sure_review';
@@ -347,7 +351,7 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
         nextState = 'qual_p1a_review';
       } else if (input === 'B') {
         updatedData.insurance_situation = 'partial';
-        replyText = "Thank you.\n\nWhich area concerns you most?\n\nA = Property or Fire Loss\nB = Medical Expenses\nC = Loss of Income\nD = Liability Claims\nE = Employee Protection\nF = Not Sure\n\nReply A, B, C, D, E or F.";
+        replyText = "Thank you.\n\nWhich area concerns you most? (You can select multiple)\n\nA = Property or Fire Loss\nB = Medical Expenses\nC = Loss of Income\nD = Liability Claims\nE = Employee Protection\nF = Not Sure\n\nReply with letter(s) A, B, C, D, E or F.";
         nextState = 'qual_p1b_concern';
       } else if (input === 'C') {
         updatedData.insurance_situation = 'not_reviewed';
@@ -391,9 +395,11 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
 
     // --- Path 1B: Partial cover → concern area ---
     case 'qual_p1b_concern':
-      if (['A','B','C','D','E','F'].includes(input)) {
+      const p1bMatches = input.match(/[A-F]/g);
+      if (p1bMatches && p1bMatches.length > 0) {
         const conMap = {'A': 'Property or Fire Loss', 'B': 'Medical Expenses', 'C': 'Loss of Income', 'D': 'Liability Claims', 'E': 'Employee Protection', 'F': 'Not Sure'};
-        updatedData.primary_concern = conMap[input];
+        const unique = [...new Set(p1bMatches)];
+        updatedData.primary_concern = unique.map(m => conMap[m]).join(', ');
         replyText = "Thank you.\n\nBased on your assessment and concerns, a personalized Insurance Gap Review may help identify areas that require attention.\n\nWould you like a complimentary review?\n\nYES / NO";
         nextState = 'qual_p1b_review';
       } else {
@@ -436,28 +442,30 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
     // ==========================================
 
     case 'qual_path2_concern':
-      if (['A','B','C','D','E','F'].includes(input)) {
+      const p2Matches = input.match(/[A-F]/g);
+      if (p2Matches && p2Matches.length > 0) {
         const conMap = {'A': 'Fire & Property Damage', 'B': 'Employee Welfare', 'C': 'Liability Claims', 'D': 'Vehicle & Transit Risks', 'E': 'Cyber & Data Risks', 'F': 'Not Sure'};
-        updatedData.primary_concern = conMap[input];
-        replyText = "Thank you.\n\nBased on your assessment, there may be opportunities to strengthen your protection in this area.\n\nWould you like a customized insurance recommendation based on your risk profile?\n\nYES / NO";
+        const unique = [...new Set(p2Matches)];
+        updatedData.primary_concern = unique.map(m => conMap[m]).join(', ');
+        replyText = "Thank you. Based on your assessment, there may be opportunities to strengthen your protection in this area. Would you like a customized insurance recommendation based on your risk profile?\n\nPLAN / NO";
         nextState = 'qual_p2_plan';
       } else {
         replyText = "Please reply with A, B, C, D, E or F.";
       }
       break;
 
-    // --- Path 2: YES / NO ---
+    // --- Path 2: PLAN / NO ---
     case 'qual_p2_plan':
-      if (input === 'YES') {
+      if (input === 'PLAN' || input === 'YES') {
         updatedData.requested_plan = true;
         replyText = "Excellent.\n\nHow would you prefer to receive your customized recommendation?\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
         nextState = 'consultation_preference';
       } else if (input === 'NO') {
         updatedData.requested_plan = false;
-        replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🙏";
+        replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🚀";
         nextState = 'finished';
       } else {
-        replyText = "Please reply with YES or NO.";
+        replyText = "Please reply with PLAN or NO.";
       }
       break;
 
