@@ -112,7 +112,7 @@ router.post('/evolution', async (req, res) => {
       let processText = incomingTextRaw;
       let evalState = currentState;
 
-      if (currentState === 'welcome_name' && isStartTrigger) {
+      if (currentState === 'welcome_name' && (isStartTrigger || isRestartTrigger)) {
         // Send initial welcome message instantly without advancing state
         const initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
         console.log(`   Sending welcome message to ${phoneNumber}...`);
