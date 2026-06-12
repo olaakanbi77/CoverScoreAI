@@ -3,7 +3,7 @@ const router = express.Router();
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { get, run } = require('../config/database');
-const { generateRiskReport } = require('../services/aiService');
+const { generateRiskReport, getLeadQualifier, getWhatsappAdvisor } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
 const { getNextStateAndReply } = require('../services/whatsappFlow');
 
@@ -132,11 +132,24 @@ router.post('/evolution', async (req, res) => {
         return; // wait for them to answer name
       }
 
-      console.log(`   Processing state: ${evalState} with input: "${processText}"`);
-      const { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, currentData);
-      console.log(`   State transition: ${evalState} → ${nextState}, isComplete: ${isComplete}`);
+      if (!evalState) {
+        evalState = 'welcome_name';
+      }
+
+      // 1. Process Message through State Machine
+      let { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, currentData);
+      console.log(`   State transition: ${evalState} -> ${nextState}, isComplete: ${isComplete}`);
 
       let finalReplyText = replyText;
+
+      // PROMPT 3: WHATSAPP ADVISOR INTELLIGENCE
+      // If the static flow doesn't know what to say (e.g. post-assessment), trigger AI
+      if (!finalReplyText && (evalState === 'finished' || evalState === 'qualification')) {
+        console.log(`   Triggering WhatsApp Advisor AI for state ${evalState}...`);
+        finalReplyText = await getWhatsappAdvisor(updatedData.__messages || [], evalState, processText);
+        // Ensure state remains finished so we don't restart flow
+        nextState = 'finished';
+      }
 
       // 2. Update Database & Send Next Message
       if (finalReplyText) {
@@ -194,36 +207,52 @@ router.post('/evolution', async (req, res) => {
         // Update lead state (only if message was sent successfully)
         await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), lead.id]);
         
-        // ── CHECK IF LEAD IS NOW QUALIFIED ──
-        if (nextState === 'finished' && updatedData.is_qualified) {
-          console.log(`   🎯 Lead ${lead.id} is now QUALIFIED!`);
+        // 🚀 CHECK IF LEAD IS NOW QUALIFIED 🚀
+        if (nextState === 'finished') {
+          console.log(`   🧠 Running Lead Qualifier AI for Lead ${lead.id}...`);
           
-          // Update CRM status
+          let assessmentData = {};
+          try {
+            if (lead.assessment_id) {
+              const assessRecord = await get('SELECT answers FROM assessments WHERE id = ?', [lead.assessment_id]);
+              if (assessRecord && assessRecord.answers) {
+                assessmentData = JSON.parse(assessRecord.answers);
+              }
+            }
+          } catch(e) {}
+          
+          const qualifierOutput = await getLeadQualifier(updatedData.__messages || [], assessmentData);
+          console.log(`   ✅ Qualifier output: ${JSON.stringify(qualifierOutput)}`);
+          
+          // Update CRM status with AI insights
           await run(`
             UPDATE leads 
-            SET status = 'Qualified', 
-                pipeline_stage = 4, 
-                is_qualified = 1, 
+            SET status = ?, 
+                pipeline_stage = ?, 
+                is_qualified = ?, 
                 consultation_preference = ?,
                 primary_concern = ?,
+                notes = ?,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
           `, [
+            qualifierOutput.lead_status || 'Qualified',
+            (qualifierOutput.lead_status || '').toLowerCase().includes('hot') ? 4 : 3,
+            updatedData.is_qualified ? 1 : 0,
             updatedData.consultation_preference || null,
             updatedData.primary_concern || null,
+            qualifierOutput.next_best_action + " - " + qualifierOutput.qualification_reasoning,
             lead.id
           ]);
           
-          // Send Admin Notification
-          if (process.env.ADMIN_PHONE) {
+          // Send Admin Notification if Hot or Qualified
+          if (process.env.ADMIN_PHONE && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || updatedData.is_qualified)) {
             const qualDetails = [];
-            if (updatedData.qualification_path) qualDetails.push(`Path: ${updatedData.qualification_path === 'path1' ? 'Adequately Protected' : updatedData.qualification_path === 'path2' ? 'Has Gaps' : 'Not Sure'}`);
             if (updatedData.primary_concern) qualDetails.push(`Primary Concern: ${updatedData.primary_concern}`);
             if (updatedData.consultation_preference) qualDetails.push(`Preferred Contact: ${updatedData.consultation_preference}`);
-            if (updatedData.insurance_situation) qualDetails.push(`Insurance Situation: ${updatedData.insurance_situation}`);
-            if (updatedData.describe_role) qualDetails.push(`Role: ${updatedData.describe_role}`);
+            if (qualifierOutput.next_best_action) qualDetails.push(`Suggested Action: ${qualifierOutput.next_best_action}`);
             
-            const notifMsg = `🚨 *NEW QUALIFIED LEAD* 🚨\n\n👤 *Name:* ${updatedData.name || lead.name}\n📱 *Phone:* ${phoneNumber}\n📊 *CoverScore:* ${lead.score || 'N/A'}\n⚠️ *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📋 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
+            const notifMsg = `🔥 *NEW QUALIFIED LEAD* 🔥\n\n👤 *Name:* ${updatedData.name || lead.name}\n📞 *Phone:* ${phoneNumber}\n🛡️ *CoverScore:* ${lead.score || 'N/A'}\n📊 *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📝 *CRM Insight:*\n${qualifierOutput.lead_status} - ${qualifierOutput.qualification_reasoning}\n\n🔍 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
             await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
             console.log(`   📱 Admin notification sent for qualified lead ${lead.id}`);
           }
@@ -410,6 +439,30 @@ router.post('/evolution', async (req, res) => {
               }
             }
 
+            // Calculate estimated premium
+            const PREMIUM_RATES = {
+              'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
+              'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
+              'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
+              'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
+              'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
+              'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
+              'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
+              'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
+              'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
+              'Travel Insurance': 0.01
+            };
+            
+            let estimatedPremium = 0;
+            if (scoreResult.min_loss) {
+              let totalRate = 0;
+              const recs = scoreResult.recommendations || [];
+              if (recs.length > 0) {
+                recs.forEach(rec => { totalRate += PREMIUM_RATES[rec] || 0.01; });
+              } else { totalRate = 0.013; }
+              estimatedPremium = Math.round(scoreResult.min_loss * totalRate);
+            }
+
             // Update lead with assessment data, set state to qualification, +20 engagement for completing assessment
             await run(`
               UPDATE leads 
@@ -417,12 +470,13 @@ router.post('/evolution', async (req, res) => {
                   name = ?, email = ?, wa_state = 'qualification', 
                   status = 'Report Sent', pipeline_stage = 2,
                   engagement_points = engagement_points + 20, sales_score = sales_score + 20,
+                  estimated_premium = ?,
                   chat_history = ?
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType, 
               (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 
-              JSON.stringify(updatedData), lead.id
+              estimatedPremium, JSON.stringify(updatedData), lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
 
