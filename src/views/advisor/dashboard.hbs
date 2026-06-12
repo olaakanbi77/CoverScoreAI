@@ -743,12 +743,12 @@
           <div class="section-body" style="padding:16px 20px;">
             <div class="intel-grid">
               <div class="intel-item">
-                <span class="intel-label">Lead Priority</span>
+                <span class="intel-label">Likelihood</span>
                 <span style="font-weight:700;color:var(--text);font-size:18px;">{{selectedLead.likelihood_to_buy}}</span>
               </div>
               <div class="intel-item">
-                <span class="intel-label">Primary Concern</span>
-                <span style="font-weight:700;color:var(--text);font-size:14px;">{{selectedLead.primary_concern}}</span>
+                <span class="intel-label">Entity Type</span>
+                <span style="font-weight:700;color:var(--text);font-size:14px;text-transform:capitalize;">{{#if selectedLead.entity_type}}{{selectedLead.entity_type}}{{else}}Individual{{/if}}</span>
               </div>
               <div class="intel-item">
                 <span class="intel-label">Status</span>
