@@ -30,7 +30,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
         conversations,
         contact: l.name,
         last_activity: l.updated_at || l.created_at,
-        likelihood_to_buy: l.sales_score > 70 ? 'HIGH' : (l.sales_score > 40 ? 'MEDIUM' : 'LOW'),
+        likelihood_to_buy: l.sales_score >= 70 ? 'Priority A' : (l.sales_score >= 50 ? 'Priority B' : (l.sales_score >= 30 ? 'Priority C' : 'Priority D')),
         premium_range: l.estimated_premium ? `₦${l.estimated_premium.toLocaleString()} - ₦${(l.estimated_premium * 1.5).toLocaleString()}` : 'N/A',
         recommended_product: l.recommended_covers || 'Review Assessment'
       };
@@ -81,21 +81,23 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       }
     }
 
-    if (selectedLead) {
+      if (selectedLead) {
       selectedLead.risks = risks.length > 0 ? risks.map(r => {
-        let formatted = r.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        let formatted = r.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         if (!formatted.toLowerCase().includes('risk')) formatted += ' Risk';
         return { ...r, name: formatted };
       }) : [{name: 'General Risk', score: selectedLead.score || 50}];
       selectedLead.protection_gaps = protection_gaps.length > 0 ? protection_gaps : ['Pending full analysis'];
+      selectedLead.primary_concern = Array.isArray(user_primary_concern) ? user_primary_concern.join(', ') : (user_primary_concern || selectedLead.primary_concern || 'Not Specified');
       selectedLead.financial_exposure_min = financial_exposure_min;
       selectedLead.financial_exposure_max = financial_exposure_max;
       
-      if (financial_exposure_min > 0) {
-        const premium_min = Math.round(financial_exposure_min * 0.01).toLocaleString();
-        const premium_max = Math.round(financial_exposure_max * 0.015).toLocaleString();
-        selectedLead.premium_range = `₦${premium_min} - ₦${premium_max}`;
-      } else if (selectedLead.premium_range === 'N/A' || !selectedLead.premium_range) {
+      const resilience = 100 - (selectedLead.score || 0);
+      selectedLead.resilience_score = resilience > 0 ? resilience : 0;
+      
+      if (selectedLead.estimated_premium > 0) {
+        selectedLead.premium_range = `₦${selectedLead.estimated_premium.toLocaleString()}`;
+      } else {
         selectedLead.premium_range = 'Pending';
       }
       

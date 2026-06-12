@@ -439,16 +439,16 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
       if (['A','B','C','D','E','F'].includes(input)) {
         const conMap = {'A': 'Fire & Property Damage', 'B': 'Employee Welfare', 'C': 'Liability Claims', 'D': 'Vehicle & Transit Risks', 'E': 'Cyber & Data Risks', 'F': 'Not Sure'};
         updatedData.primary_concern = conMap[input];
-        replyText = "Thank you.\n\nBased on your assessment, there may be opportunities to strengthen your protection in this area.\n\nWould you like a customized insurance recommendation based on your risk profile?\n\nPLAN / NO";
+        replyText = "Thank you.\n\nBased on your assessment, there may be opportunities to strengthen your protection in this area.\n\nWould you like a customized insurance recommendation based on your risk profile?\n\nYES / NO";
         nextState = 'qual_p2_plan';
       } else {
         replyText = "Please reply with A, B, C, D, E or F.";
       }
       break;
 
-    // --- Path 2: PLAN / NO ---
+    // --- Path 2: YES / NO ---
     case 'qual_p2_plan':
-      if (input === 'PLAN') {
+      if (input === 'YES') {
         updatedData.requested_plan = true;
         replyText = "Excellent.\n\nHow would you prefer to receive your customized recommendation?\n\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
         nextState = 'consultation_preference';
@@ -457,7 +457,7 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
         replyText = "No problem at all.\n\nIf you ever need assistance with your insurance arrangements, feel free to reach out. Your CoverScore report is always available.\n\nThank you for using CoverScore AI. 🙏";
         nextState = 'finished';
       } else {
-        replyText = "Please reply with PLAN or NO.";
+        replyText = "Please reply with YES or NO.";
       }
       break;
 

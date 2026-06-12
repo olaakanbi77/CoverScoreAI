@@ -22,7 +22,7 @@ Hi {{name}},
 We've completed your risk assessment and identified areas that could expose you to significant financial loss if left unaddressed.
 
 📊 *CoverScore:* {{score}}/100
-⚠️ *Risk Level:* {{risk_level}}
+⚠️ *Risk Level:* {{risk_level}}{{riskBreakdownMsg}}
 
 💰 *Potential Financial Exposure:*
 Based on your responses, a major uninsured incident could expose you to estimated losses between ₦{{min_loss}} and ₦{{max_loss}}.
@@ -348,7 +348,8 @@ const sendAssessmentComplete = async (lead, assessment) => {
     min_loss: formatCurrency(minLoss),
     max_loss: formatCurrency(maxLoss),
     report_link: `${APP_URL}/assessment/result/${assessment.id}`,
-    assessmentId: assessment.id
+    assessmentId: assessment.id,
+    riskBreakdownMsg: assessment.riskBreakdownMsg || ''
   });
 };
 

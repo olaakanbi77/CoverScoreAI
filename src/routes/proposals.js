@@ -93,7 +93,7 @@ router.post('/:token/action', async (req, res) => {
     
     // Auto-update lead status
     if (action === 'Accepted') {
-      await run('UPDATE leads SET status = "Won", pipeline_stage = 5 WHERE id = ?', [proposal.lead_id]);
+      await run('UPDATE leads SET status = "Proposal Accepted", pipeline_stage = 4 WHERE id = ?', [proposal.lead_id]);
     } else if (action === 'Declined') {
       await run('UPDATE leads SET status = "Lost", pipeline_stage = 6 WHERE id = ?', [proposal.lead_id]);
     }

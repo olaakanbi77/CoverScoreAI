@@ -836,7 +836,7 @@
         const report = data.aiReport;
 
         if (report) {
-          // Executive Summary & Overall Risk Score
+          // Executive Summary
           if (report.executiveSummary) {
             aiExplanationHtml += `
               <div class="ai-narrative fade-in stagger-2">
@@ -847,55 +847,55 @@
                   Executive Summary
                 </div>
                 <p class="ai-narrative-text" style="margin-bottom:15px;">${report.executiveSummary}</p>
-                ${report.overallRiskScoreExplanation ? `<p class="ai-narrative-text"><strong>Risk Assessment:</strong> ${report.overallRiskScoreExplanation}</p>` : ''}
-                ${report.estimatedFinancialExposure ? `<p class="ai-narrative-text" style="margin-top:15px; color:var(--danger);"><strong>Financial Exposure:</strong> ${report.estimatedFinancialExposure}</p>` : ''}
+                ${data.resilience_score ? `<p class="ai-narrative-text" style="margin-top:15px; color:var(--success);"><strong>Resilience Score:</strong> ${data.resilience_score}/100</p>` : ''}
               </div>`;
           }
 
-          // Risk Insights
-          if (report.riskInsights && report.riskInsights.length) {
+          // Top Exposures & Financial Threats
+          if ((report.topExposures && report.topExposures.length) || (report.topFinancialThreats && report.topFinancialThreats.length)) {
             aiExplanationHtml += `
               <div class="section-card fade-in">
                 <div class="section-header">
-                  <div class="section-icon info">
+                  <div class="section-icon danger">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                     </svg>
                   </div>
-                  <span class="section-title">Professional Risk Insights</span>
+                  <span class="section-title">Top Risk Exposures & Threats</span>
                 </div>
-                <div class="section-body" style="padding: 16px 24px;">
-                  <ul class="urgency-reasons" style="margin: 0; padding-left: 20px;">
-                    ${report.riskInsights.map(insight => `<li style="margin-bottom: 10px; color: var(--text-secondary);">${insight}</li>`).join('')}
-                  </ul>
+                <div class="section-body" style="padding: 16px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                  <div>
+                    <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--text);">Top 5 Exposures</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--text-secondary); font-size: 13px;">
+                      ${(report.topExposures || []).map(exp => `<li style="margin-bottom: 6px;">${exp}</li>`).join('')}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--danger);">Top 5 Financial Threats</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--danger); font-size: 13px;">
+                      ${(report.topFinancialThreats || []).map(threat => `<li style="margin-bottom: 6px;">${threat}</li>`).join('')}
+                    </ul>
+                  </div>
                 </div>
               </div>`;
           }
 
           // Key Protection Gaps
-          if (report.keyProtectionGaps && report.keyProtectionGaps.length) {
+          if (report.topProtectionGaps && report.topProtectionGaps.length) {
              aiExplanationHtml += `
               <div class="section-card fade-in">
                 <div class="section-header">
                   <div class="section-icon warning">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                   </div>
-                  <span class="section-title">Identified Protection Gaps</span>
+                  <span class="section-title">Top 5 Protection Gaps</span>
                 </div>
-                <div class="section-body" style="padding: 16px 24px;">`;
-            
-            report.keyProtectionGaps.forEach(gap => {
-              aiExplanationHtml += `
-                    <div class="education-item">
-                      <div class="education-item-title" style="color: #d97706;">Gap: ${gap.gap}</div>
-                      <p class="education-item-text" style="margin-bottom: 8px;"><strong>Impact:</strong> ${gap.impact}</p>
-                      <div class="education-item-benefit" style="color: var(--primary);">Recommended Action: ${gap.action}</div>
-                    </div>`;
-            });
-            
-            aiExplanationHtml += `
+                <div class="section-body" style="padding: 16px 24px;">
+                  <ul style="margin: 0; padding-left: 20px; color: #d97706; font-size: 14px;">
+                    ${report.topProtectionGaps.map(gap => `<li style="margin-bottom: 8px;">${gap}</li>`).join('')}
+                  </ul>
                 </div>
               </div>`;
           }
@@ -907,61 +907,44 @@
         let reportHtml = '';
 
         if (report) {
-          // Risk Breakdown By Category
-          if (report.riskBreakdownByCategory && report.riskBreakdownByCategory.length) {
+          // Recommended Actions
+          if (report.topRecommendations && report.topRecommendations.length) {
             reportHtml += `
               <div class="section-card fade-in stagger-3">
-                <div class="section-header">
-                  <div class="section-icon danger">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                  </div>
-                  <span class="section-title">Risk Breakdown by Category</span>
-                </div>
-                <div class="section-body" style="padding: 16px 24px;">
-                  <div class="risk-list">`;
-
-            report.riskBreakdownByCategory.forEach(ctx => {
-              const impact = (ctx.status || 'Moderate').toLowerCase();
-              const iconClass = impact.includes('high') || impact.includes('elevated') ? 'high' : impact.includes('low') ? 'low' : 'medium';
-              reportHtml += `
-                <div class="risk-item">
-                  <div class="risk-item-icon ${iconClass}">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                  </div>
-                  <div class="risk-item-content">
-                    <h4>${ctx.category}</h4>
-                    <p>${ctx.explanation}</p>
-                    <span class="risk-impact-tag ${iconClass}">${ctx.status}</span>
-                  </div>
-                </div>`;
-            });
-
-            reportHtml += `
-                  </div>
-                </div>
-              </div>`;
-          }
-
-          // Recommended Priorities
-          if (report.recommendedProtectionPriorities && report.recommendedProtectionPriorities.length) {
-            reportHtml += `
-              <div class="section-card fade-in stagger-4">
                 <div class="section-header">
                   <div class="section-icon success">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                   </div>
-                  <span class="section-title">Recommended Protection Priorities</span>
+                  <span class="section-title">Recommended Actions</span>
                 </div>
                 <div class="section-body" style="padding: 16px 24px;">
-                  <ol style="margin: 0; padding-left: 20px; color: var(--text-secondary);">
-                    ${report.recommendedProtectionPriorities.map(rec => `<li style="margin-bottom: 10px; font-weight: 500;">${rec}</li>`).join('')}
-                  </ol>
+                  <div class="risk-list">`;
+
+            report.topRecommendations.forEach(rec => {
+              const tfClass = (rec.timeframe || '').toLowerCase().includes('immediate') ? 'high' : 'medium';
+              reportHtml += `
+                <div class="risk-item">
+                  <div class="risk-item-icon ${tfClass}">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <div class="risk-item-content">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                      <h4 style="margin:0 0 4px 0; color:var(--text);">${rec.action}</h4>
+                      <span class="risk-impact-tag ${tfClass}">${rec.timeframe}</span>
+                    </div>
+                    <p style="margin: 4px 0; font-size: 13px; color:var(--text-secondary);"><strong>Exposure:</strong> ${rec.exposure}</p>
+                    <p style="margin: 4px 0; font-size: 13px; color:var(--danger);"><strong>Consequence:</strong> ${rec.consequence}</p>
+                    <p style="margin: 4px 0; font-size: 13px; color:#d97706;"><strong>Gap:</strong> ${rec.protectionGap}</p>
+                  </div>
+                </div>`;
+            });
+
+            reportHtml += `
+                  </div>
                 </div>
               </div>`;
           }

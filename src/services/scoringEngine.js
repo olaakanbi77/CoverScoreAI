@@ -6,179 +6,120 @@ const getRiskLevel = (score) => {
   return 'Critical Risk';
 };
 
+const calcCategory = (e, i, p, t) => {
+  return (e * 0.3) + (i * 0.3) + ((100 - p) * 0.2) + ((100 - t) * 0.2);
+};
+
+// Map textual answers to numerical values for Business
+const mapVal = (val, mapping, defaultVal = 0) => mapping[val] !== undefined ? mapping[val] : defaultVal;
+
 const calculateBusinessScore = (answers) => {
   const { business, property, business_interruption, employee_risk, liability, vehicle, cyber, claims } = answers;
 
-  let propertyScore = 0;
+  // Property Risk (15%)
+  let propE = 0, propI = 0, propP = 0, propT = 0;
   if (property) {
-    if (property.own_building === 'yes') propertyScore += 30;
-    
-    if (property.building_value === 'above_250m') propertyScore += 20;
-    else if (property.building_value === '50m_250m') propertyScore += 15;
-    else if (property.building_value === '10m_50m') propertyScore += 10;
-    else if (property.building_value === 'under_10m') propertyScore += 5;
-
-    if (property.equipment_value === 'above_100m') propertyScore += 20;
-    else if (property.equipment_value === '20m_100m') propertyScore += 15;
-    else if (property.equipment_value === '5m_20m') propertyScore += 10;
-    else if (property.equipment_value === 'under_5m') propertyScore += 5;
-
-    if (property.fire_extinguishers === 'none') propertyScore += 20;
-    else if (property.fire_extinguishers === 'some') propertyScore += 10;
-
-    if (property.fire_incident === 'yes') propertyScore += 10;
+    propE = mapVal(property.building_value, { 'under_10m': 20, '10m_50m': 50, '50m_250m': 75, 'above_250m': 100 }, 50);
+    propI = mapVal(property.equipment_value, { 'under_5m': 20, '5m_20m': 50, '20m_100m': 75, 'above_100m': 100 }, 50);
+    propP = mapVal(property.fire_extinguishers, { 'none': 0, 'some': 50, 'all': 100 }, 0);
+    propT = 0; // Assume 0 unless we have data
   }
+  const propertyScore = calcCategory(propE, propI, propP, propT);
 
-  let biScore = 0;
-  if (business_interruption) {
-    if (business_interruption.revenue_impact === 'catastrophically') biScore += 60;
-    else if (business_interruption.revenue_impact === 'significantly') biScore += 40;
-    else if (business_interruption.revenue_impact === 'moderately') biScore += 20;
-    else biScore += 5;
-
-    if (business_interruption.alt_location === 'no') biScore += 40;
+  // Employee Risk (15%)
+  let empE = 0, empI = 0, empP = 0, empT = 0;
+  if (business) {
+    empE = mapVal(business.employees, { '1_5': 20, '6_20': 50, '21_50': 75, '51_100': 100, '101_500': 100, '500plus': 100 }, 20);
   }
-
-  let employeeScore = 0;
   if (employee_risk) {
-    if (employee_risk.employ_staff === 'yes') employeeScore += 30;
-    if (employee_risk.death_benefits === 'no') employeeScore += 30;
-
-    if (employee_risk.accidents === 'above_5') employeeScore += 40;
-    else if (employee_risk.accidents === '3_5') employeeScore += 30;
-    else if (employee_risk.accidents === '1_2') employeeScore += 15;
+    empI = mapVal(employee_risk.accidents, { 'none': 20, '1_2': 50, '3_5': 75, 'above_5': 100 }, 50);
+    empP = 50; // Safety policies default
+    empT = mapVal(employee_risk.workers_comp, { 'yes': 100, 'no': 0 }, 0);
   }
+  const employeeScore = calcCategory(empE, empI, empP, empT);
 
-  let liabilityScore = 0;
+  // Liability Risk (15%)
+  let liabE = 0, liabI = 0, liabP = 0, liabT = 0;
   if (liability) {
-    if (liability.customer_interaction === 'frequently') liabilityScore += 40;
-    else if (liability.customer_interaction === 'occasionally') liabilityScore += 20;
-
-    if (liability.premises_injury === 'high') liabilityScore += 30;
-    else if (liability.premises_injury === 'moderate') liabilityScore += 15;
-
-    if (liability.product_liability === 'yes') liabilityScore += 30;
+    liabE = mapVal(liability.customer_interaction, { 'rarely': 20, 'occasionally': 50, 'frequently': 100 }, 50);
+    liabI = mapVal(liability.premises_injury, { 'low': 20, 'moderate': 50, 'high': 100 }, 50);
+    liabP = mapVal(liability.product_liability, { 'no': 80, 'yes': 20 }, 50);
   }
+  const liabilityScore = calcCategory(liabE, liabI, liabP, liabT);
 
-  let vehicleScore = 0;
+  // Operational Risk (15%) - Using Vehicle/Claims data as proxy if present
+  let opE = 50, opI = 50, opP = 50, opT = 0;
   if (vehicle && vehicle.own_vehicles === 'yes') {
-    if (vehicle.num_vehicles === 'above_50') vehicleScore += 30;
-    else if (vehicle.num_vehicles === '11_50') vehicleScore += 20;
-    else if (vehicle.num_vehicles === '4_10') vehicleScore += 10;
-
-    if (vehicle.transport_goods === 'daily') vehicleScore += 40;
-    else if (vehicle.transport_goods === 'weekly') vehicleScore += 25;
-    else if (vehicle.transport_goods === 'occasionally') vehicleScore += 10;
-
-    if (vehicle.transit_value === 'above_100m') vehicleScore += 30;
-    else if (vehicle.transit_value === '10m_100m') vehicleScore += 20;
-    else if (vehicle.transit_value === '1m_10m') vehicleScore += 10;
+    opE = mapVal(vehicle.num_vehicles, { '1_3': 30, '4_10': 60, '11_50': 80, 'above_50': 100 }, 50);
+    opI = mapVal(vehicle.transit_value, { 'under_1m': 20, '1m_10m': 50, '10m_100m': 80, 'above_100m': 100 }, 50);
+    opP = mapVal(vehicle.transport_goods, { 'occasionally': 60, 'weekly': 40, 'daily': 20 }, 50);
   }
+  const operationalScore = calcCategory(opE, opI, opP, opT);
 
-  let cyberScore = 0;
+  // Business Continuity Risk (15%)
+  let bcE = 50, bcI = 50, bcP = 0, bcT = 0;
+  if (business_interruption) {
+    bcI = mapVal(business_interruption.revenue_impact, { 'minimally': 20, 'moderately': 50, 'significantly': 80, 'catastrophically': 100 }, 50);
+    bcP = mapVal(business_interruption.alt_location, { 'yes': 80, 'no': 0 }, 0);
+  }
+  const continuityScore = calcCategory(bcE, bcI, bcP, bcT);
+
+  // Cyber Risk (10%)
+  let cybE = 0, cybI = 0, cybP = 0, cybT = 0;
   if (cyber) {
-    if (cyber.store_data === 'yes') cyberScore += 40;
-    if (cyber.incidents !== 'none') cyberScore += 30;
-
-    if (cyber.backups === 'never') cyberScore += 30;
-    else if (cyber.backups === 'occasionally') cyberScore += 20;
-    else if (cyber.backups === 'weekly') cyberScore += 10;
+    cybE = mapVal(cyber.store_data, { 'yes': 100, 'no': 20 }, 50);
+    cybI = mapVal(cyber.incidents, { 'none': 20, '1_2': 60, 'above_2': 100 }, 50);
+    cybP = mapVal(cyber.backups, { 'daily': 100, 'weekly': 70, 'occasionally': 30, 'never': 0 }, 50);
   }
+  const cyberScore = calcCategory(cybE, cybI, cybP, cybT);
 
-  let claimsScore = 0;
-  if (claims) {
-    if (claims.past_losses !== 'none') claimsScore += 50;
+  // Regulatory Risk (10%) & Key Person Risk (5%)
+  const regulatoryScore = 50; 
+  const keyPersonScore = 50;
 
-    if (claims.loss_value === 'above_50m') claimsScore += 50;
-    else if (claims.loss_value === '10m_50m') claimsScore += 40;
-    else if (claims.loss_value === '1m_10m') claimsScore += 25;
-    else if (claims.loss_value === 'under_1m') claimsScore += 10;
-  }
+  let finalScore = (propertyScore * 0.15) + (employeeScore * 0.15) + (liabilityScore * 0.15) + 
+                   (operationalScore * 0.15) + (continuityScore * 0.15) + (cyberScore * 0.10) + 
+                   (regulatoryScore * 0.10) + (keyPersonScore * 0.05);
 
-  let finalScore = 0;
-  if (!vehicle || vehicle.own_vehicles === 'no') {
-    finalScore = (propertyScore * 0.25 * 1.11) +
-                 (biScore * 0.15 * 1.11) +
-                 (employeeScore * 0.15 * 1.11) +
-                 (liabilityScore * 0.15 * 1.11) +
-                 (cyberScore * 0.10 * 1.11) +
-                 (claimsScore * 0.10 * 1.11);
-  } else {
-    finalScore = (propertyScore * 0.25) +
-                 (biScore * 0.15) +
-                 (employeeScore * 0.15) +
-                 (liabilityScore * 0.15) +
-                 (vehicleScore * 0.10) +
-                 (cyberScore * 0.10) +
-                 (claimsScore * 0.10);
-  }
+  const resilience_score = Math.max(0, 100 - Math.round(finalScore));
 
   const recommendations = [];
   const identified_gaps = [];
   
-  if (property && (property.own_building === 'yes' || ['5m_20m', '20m_100m', 'above_100m'].includes(property.equipment_value))) {
-    recommendations.push('Fire & Special Perils Insurance');
-    identified_gaps.push('No evidence of fire and property protection');
-  }
+  if (propP < 50 || propT < 50) { recommendations.push('Fire & Special Perils Insurance'); identified_gaps.push('Property protection gaps identified'); }
+  if (empT < 50) { recommendations.push('Group Life & Workmen Compensation'); identified_gaps.push('Employee risk exposure unprotected'); }
+  if (liabE > 50 && liabT < 50) { recommendations.push('Public Liability Insurance'); identified_gaps.push('High liability exposure with limited protection'); }
+  if (bcP < 50) { recommendations.push('Business Interruption Insurance'); identified_gaps.push('Vulnerable to business continuity disruption'); }
+  if (cybE > 50 && cybP < 50) { recommendations.push('Cyber Liability Insurance'); identified_gaps.push('Cyber risk management gaps'); }
 
-  if (employee_risk?.employ_staff === 'yes' && employee_risk.workers_comp === 'no') {
-    if (business && ['6_20', '21_50', '51_100', '101_500', '500plus'].includes(business.employees)) {
-      recommendations.push('Group Life Insurance');
-      recommendations.push('Employers Liability / Workmen Compensation');
-      identified_gaps.push('No employee death benefit or compensation arrangement');
-    }
-  }
-
-  if (vehicle && ['daily', 'weekly'].includes(vehicle.transport_goods)) {
-    recommendations.push('Goods in Transit Insurance');
-    identified_gaps.push('Unprotected transit and logistics exposure');
-  }
-  
-  if (liability && ['frequently', 'occasionally'].includes(liability.customer_interaction)) {
-    recommendations.push('Public Liability Insurance');
-    identified_gaps.push('Vulnerability to third-party public liability claims');
-  }
-
-  if (business_interruption && ['significantly', 'catastrophically'].includes(business_interruption.revenue_impact)) {
-    recommendations.push('Business Interruption Insurance');
-    identified_gaps.push('No business continuity or revenue disruption strategy');
-  }
-
-  if (cyber && cyber.store_data === 'yes') {
-    recommendations.push('Cyber Liability Insurance');
-    identified_gaps.push('Data breach and cyber security vulnerabilities');
-  }
-
-  let baseValue = 5000000; // default to 5M
-
+  let baseValue = 5000000;
   if (business && business.turnover) {
-    if (business.turnover === 'above_1b') { baseValue = 1000000000; }
-    else if (business.turnover === '250m_1b') { baseValue = 500000000; }
-    else if (business.turnover === '50m_250m') { baseValue = 150000000; }
-    else if (business.turnover === '10m_50m') { baseValue = 30000000; }
-    else if (business.turnover === 'under_10m') { baseValue = 8000000; }
+    if (business.turnover === 'above_1b') baseValue = 1000000000;
+    else if (business.turnover === '250m_1b') baseValue = 500000000;
+    else if (business.turnover === '50m_250m') baseValue = 150000000;
+    else if (business.turnover === '10m_50m') baseValue = 30000000;
+    else if (business.turnover === 'under_10m') baseValue = 8000000;
   }
 
-  // Calculate dynamic financial exposure scaled by the risk score
-  const riskPercentage = Math.min(Math.round(finalScore), 100) / 100;
-  // If score is 0, give at least a 5% baseline exposure so it's not 0
-  const effectiveRisk = Math.max(riskPercentage, 0.05);
-
+  const effectiveRisk = Math.max((finalScore / 100), 0.05);
   const maxLoss = Math.round(baseValue * effectiveRisk);
   const minLoss = Math.round(maxLoss * 0.4);
 
   return {
     score: Math.min(Math.round(finalScore), 100),
+    resilience_score,
+    risk_level: getRiskLevel(finalScore),
     recommendations,
     identified_gaps,
     risk_categories: {
-      property: propertyScore,
-      business_interruption: biScore,
-      employee: employeeScore,
-      liability: liabilityScore,
-      vehicle: vehicleScore,
-      cyber: cyberScore,
-      claims: claimsScore
+      property_risk: Math.round(propertyScore),
+      employee_risk: Math.round(employeeScore),
+      liability_risk: Math.round(liabilityScore),
+      operational_risk: Math.round(operationalScore),
+      business_continuity_risk: Math.round(continuityScore),
+      cyber_risk: Math.round(cyberScore),
+      regulatory_risk: Math.round(regulatoryScore),
+      key_person_risk: Math.round(keyPersonScore)
     },
     min_loss: minLoss,
     max_loss: maxLoss
@@ -188,128 +129,109 @@ const calculateBusinessScore = (answers) => {
 const calculateIndividualScore = (answers) => {
   const { personal, family_protection, health_protection, home_risk, motor_risk, financial_resilience } = answers;
 
-  let familyScore = 0;
-  if (personal && family_protection) {
-    if (personal.dependents === 'more_than_5') familyScore += 10;
-    else if (personal.dependents === '3_5') familyScore += 6;
-    else if (personal.dependents === '1_2') familyScore += 3;
-
-    if (family_protection.lifestyle_maintenance === 'less_than_3m') familyScore += 10;
-    else if (family_protection.lifestyle_maintenance === '3_6m') familyScore += 5;
-
-    if (family_protection.life_insurance === 'no') familyScore += 15;
+  // Life Risk (20%)
+  let lifeE = 50, lifeI = 50, lifeP = 50, lifeT = 0;
+  if (personal) {
+    lifeE = mapVal(personal.dependents, { 'none': 0, '1_2': 30, '3_5': 60, 'more_than_5': 100 }, 30);
   }
+  if (family_protection) {
+    lifeI = mapVal(family_protection.lifestyle_maintenance, { 'more_than_24m': 0, '12_24m': 30, '6_12m': 60, '3_6m': 80, 'less_than_3m': 100 }, 50);
+    lifeT = mapVal(family_protection.life_insurance, { 'yes': 100, 'no': 0 }, 0);
+  }
+  const lifeScore = calcCategory(lifeE, lifeI, lifeP, lifeT);
 
-  let healthScore = 0;
+  // Health Risk (20%)
+  let healthE = 50, healthI = 50, healthP = 50, healthT = 0;
   if (health_protection) {
-    if (health_protection.health_insurance === 'no') healthScore += 15;
-
-    if (['borrowing', 'not_sure'].includes(health_protection.medical_emergency)) healthScore += 10;
-    else if (health_protection.medical_emergency === 'family') healthScore += 5;
+    healthI = mapVal(health_protection.annual_spending, { 'under_100k': 20, '100k_500k': 50, '500k_1m': 80, 'above_1m': 100 }, 50);
+    healthT = mapVal(health_protection.health_insurance, { 'yes': 100, 'no': 0 }, 0);
   }
+  const healthScore = calcCategory(healthE, healthI, healthP, healthT);
 
-  let homeScore = 0;
-  if (home_risk) {
-    if (home_risk.household_contents_value === 'above_20m') homeScore += 15;
-    else if (home_risk.household_contents_value === '5m_20m') homeScore += 10;
-    else if (home_risk.household_contents_value === '1m_5m') homeScore += 5;
-    else homeScore += 2;
-
-    if (home_risk.burglary_fire_experience === 'yes') homeScore += 5;
-  }
-
-  let motorScore = 0;
-  if (motor_risk && motor_risk.own_vehicle === 'yes') {
-    if (motor_risk.motor_insurance_status === 'uninsured') motorScore += 15;
-    else if (motor_risk.motor_insurance_status === 'third_party') motorScore += 5;
-
-    if (motor_risk.accident_history === 'yes') motorScore += 5;
-  }
-
-  let financialScore = 0;
+  // Income Risk (20%)
+  let incE = 50, incI = 50, incP = 50, incT = 0;
   if (financial_resilience) {
-    if (financial_resilience.survival_months === 'less_than_1m') financialScore += 20;
-    else if (financial_resilience.survival_months === '1_3m') financialScore += 15;
-    else if (financial_resilience.survival_months === '3_6m') financialScore += 5;
+    incI = mapVal(financial_resilience.income_stop, { 'more_than_24m': 0, '12_24m': 25, '6_12m': 50, '3_6m': 75, 'less_than_3m': 100 }, 50);
+    incP = mapVal(financial_resilience.emergency_fund, { 'yes': 80, 'no': 20 }, 50);
   }
+  const incomeScore = calcCategory(incE, incI, incP, incT);
 
-  let finalScore = familyScore + healthScore + homeScore + motorScore + financialScore;
+  // Asset Risk (15%)
+  let assE = 50, assI = 50, assP = 50, assT = 0;
+  if (home_risk) {
+    assE = mapVal(home_risk.property_value, { 'under_10m': 20, '10m_50m': 50, '50m_100m': 80, 'above_100m': 100 }, 50);
+    assT = mapVal(home_risk.home_insurance, { 'yes': 100, 'no': 0 }, 0);
+  }
+  if (motor_risk && motor_risk.own_vehicle === 'yes') {
+    assE = Math.max(assE, 60); // higher exposure if owning car
+    if (motor_risk.motor_insurance === 'yes') assT = Math.max(assT, 50);
+  }
+  const assetScore = calcCategory(assE, assI, assP, assT);
+
+  // Liability Risk (10%) - Motor is biggest source of personal liability in this scope
+  let plE = 50, plI = 50, plP = 50, plT = 0;
+  if (motor_risk && motor_risk.own_vehicle === 'yes') {
+    plE = 80;
+    plT = mapVal(motor_risk.motor_insurance, { 'yes': 100, 'no': 0 }, 0);
+  }
+  const liabilityScore = calcCategory(plE, plI, plP, plT);
+
+  // Retirement Risk (10%) & Estate Planning Risk (5%)
+  const retirementScore = 50; 
+  const estateScore = 50;
+
+  let finalScore = (lifeScore * 0.20) + (healthScore * 0.20) + (incomeScore * 0.20) + 
+                   (assetScore * 0.15) + (liabilityScore * 0.10) + (retirementScore * 0.10) + 
+                   (estateScore * 0.05);
+
+  const resilience_score = Math.max(0, 100 - Math.round(finalScore));
 
   const recommendations = [];
   const identified_gaps = [];
 
-  if (family_protection?.life_insurance === 'no' && personal?.dependents && personal.dependents !== 'none') {
-    recommendations.push('Term Life Insurance');
-    identified_gaps.push('Lack of structured life cover increases family vulnerability');
-  }
+  if (lifeT < 50 && lifeE > 30) { recommendations.push('Life Insurance'); identified_gaps.push('Dependents exposed to loss of income'); }
+  if (healthT < 50) { recommendations.push('Health Insurance / HMO'); identified_gaps.push('Out-of-pocket medical expenses vulnerability'); }
+  if (assT < 50) { recommendations.push('Home/Property Insurance'); identified_gaps.push('Asset exposure to fire/theft'); }
+  if (plT < 50 && plE > 50) { recommendations.push('Comprehensive Motor Insurance'); identified_gaps.push('Vehicle liability exposure'); }
+  if (incI > 50) { recommendations.push('Income Protection Planning'); identified_gaps.push('Inadequate emergency buffers'); }
 
-  if (health_protection?.health_insurance === 'no') {
-    recommendations.push('HMO / Health Insurance');
-    identified_gaps.push('Medical emergencies could cause severe financial strain');
-  }
+  let baseValue = 5000000;
+  if (home_risk?.property_value === 'above_100m') baseValue = 150000000;
+  else if (home_risk?.property_value === '50m_100m') baseValue = 75000000;
+  else if (home_risk?.property_value === '10m_50m') baseValue = 30000000;
 
-  if (home_risk && (home_risk.residence_status === 'own' || ['1m_5m', '5m_20m', 'above_20m'].includes(home_risk.household_contents_value))) {
-    recommendations.push('Home/Property Contents Insurance');
-    identified_gaps.push('Property and household contents are fully exposed to loss');
-  }
-
-  if (motor_risk && motor_risk.own_vehicle === 'yes' && motor_risk.motor_insurance_status !== 'comprehensive') {
-    recommendations.push('Comprehensive Motor Insurance');
-    identified_gaps.push('Vehicle exposure to accident or theft without comprehensive cover');
-  }
-
-  if (financial_resilience && ['less_than_1m', '1_3m'].includes(financial_resilience.survival_months)) {
-    recommendations.push('Personal Accident & Disability Insurance');
-    identified_gaps.push('Emergency savings may not fully cover long-term income disruption');
-  }
-
-  let baseIncome = 1200000; // default 1.2M annual
-
-  if (personal && personal.monthly_income) {
-    if (personal.monthly_income === 'above_1m') { baseIncome = 18000000; } // 1.5M * 12
-    else if (personal.monthly_income === '500k_1m') { baseIncome = 9000000; } // 750k * 12
-    else if (personal.monthly_income === '100k_500k') { baseIncome = 3600000; } // 300k * 12
-    else if (personal.monthly_income === 'under_100k') { baseIncome = 1200000; } // 100k * 12
-  }
-
-  // Calculate dynamic financial exposure scaled by the risk score
-  const riskPercentage = Math.min(Math.round(finalScore), 100) / 100;
-  // If score is 0, give at least a 5% baseline exposure so it's not 0
-  const effectiveRisk = Math.max(riskPercentage, 0.05);
-
-  const maxLoss = Math.round(baseIncome * effectiveRisk);
+  const effectiveRisk = Math.max((finalScore / 100), 0.05);
+  const maxLoss = Math.round(baseValue * effectiveRisk);
   const minLoss = Math.round(maxLoss * 0.4);
 
-  return { 
-    score: Math.min(Math.round(finalScore), 100), 
+  return {
+    score: Math.min(Math.round(finalScore), 100),
+    resilience_score,
+    risk_level: getRiskLevel(finalScore),
     recommendations,
     identified_gaps,
     risk_categories: {
-      family: familyScore,
-      health: healthScore,
-      home: homeScore,
-      motor: motorScore,
-      financial: financialScore
+      life_risk: Math.round(lifeScore),
+      health_risk: Math.round(healthScore),
+      income_risk: Math.round(incomeScore),
+      asset_risk: Math.round(assetScore),
+      liability_risk: Math.round(liabilityScore),
+      retirement_risk: Math.round(retirementScore),
+      estate_planning_risk: Math.round(estateScore)
     },
-    min_loss: minLoss, 
-    max_loss: maxLoss 
+    min_loss: minLoss,
+    max_loss: maxLoss
   };
 };
 
 const calculateScore = (answers) => {
-  const entityType = answers?.type?.entity_type || 'business';
-  let result;
-
-  if (entityType === 'individual') {
-    result = calculateIndividualScore(answers);
-  } else {
-    result = calculateBusinessScore(answers);
+  if (answers?.type?.entity_type === 'individual') {
+    return calculateIndividualScore(answers);
   }
-
-  return { 
-    ...result,
-    riskLevel: getRiskLevel(result.score)
-  };
+  return calculateBusinessScore(answers);
 };
 
-module.exports = { calculateScore, getRiskLevel };
+module.exports = {
+  calculateScore,
+  getRiskLevel
+};

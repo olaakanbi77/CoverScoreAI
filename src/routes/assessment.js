@@ -209,6 +209,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       ...(aiReport || {}),
       min_loss,
       max_loss,
+      risk_categories,
       explanations: explanations,
       generatedAt: new Date().toISOString()
     };
@@ -232,11 +233,11 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     // Create lead if not exists
     let lead = await get('SELECT id, phone, name FROM leads WHERE assessment_id = ?', [assessment.id]);
     if (!lead) {
-      const name = req.user ? req.user.name : (answers.business?.contact_name || answers.personal?.name || 'Anonymous');
+      const name = req.user ? (req.user.name || answers.business?.contact_name || answers.personal?.name || 'Anonymous') : (answers.business?.contact_name || answers.personal?.name || 'Anonymous');
       const email = req.user ? req.user.email : (answers.business?.contact_email || answers.personal?.email || '');
       let rawPhone = req.user ? req.user.phone : (answers.business?.contact_phone || answers.personal?.phone || '');
       const cleanPhone = rawPhone ? String(rawPhone).replace(/\D/g, '') : '';
-      const businessName = entityType === 'business' ? (req.user ? req.user.business_name : (answers.business?.name || '')) : null;
+      const businessName = entityType === 'business' ? (req.user ? (req.user.business_name || answers.business?.name || '') : (answers.business?.name || '')) : null;
 
       // --- NEW CRM LOGIC ---
       const industry = answers.business?.industry || 'other';
@@ -267,13 +268,19 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       };
       const assignedAgent = agentMap[industry] || 'General Agent';
 
+      // Calculate Lead Value (CRASF)
+      const intentScore = 50; // Base intent for completing assessment
+      const authorityScore = 50; // Base authority
+      const protectionGap = Math.min(score + 20, 100); // Proxy based on risk score
+      const leadValue = Math.round((score * 0.4) + (intentScore * 0.3) + (authorityScore * 0.2) + (protectionGap * 0.1));
+
       const result = await run(`
         INSERT INTO leads (
           name, email, phone, business_name, assessment_id, score, risk_level, 
           status, entity_type, engagement_points, sales_score, pipeline_stage, 
           estimated_premium, industry, employees, recommended_covers, assigned_agent
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'New Lead', ?, 20, 20, 1, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'New Lead', ?, 20, ?, 1, ?, ?, ?, ?, ?)
       `, [
         name,
         email,
@@ -283,6 +290,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         score,
         dbRiskLevel,
         entityType,
+        leadValue,
         estimatedPremium,
         industry,
         employees,
@@ -359,12 +367,23 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
       try {
         const lead = await get('SELECT id, phone, name FROM leads WHERE assessment_id = ?', [assessmentId]);
         if (lead && lead.phone) {
+          let riskBreakdownMsg = '';
+          if (aiReport?.risk_categories) {
+            const formattedCategories = Object.entries(aiReport.risk_categories)
+              .map(([key, val]) => {
+                const title = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                return `• ${title}: ${val}/100`;
+              }).join('\n');
+            riskBreakdownMsg = `\n\n📈 *Risk Breakdown:*\n${formattedCategories}`;
+          }
+
           const assessmentData = {
             id: assessment.id,
             score: assessment.score,
             risk_level: assessment.risk_level,
             min_loss: aiReport?.min_loss || 500000,
-            max_loss: aiReport?.max_loss || 2000000
+            max_loss: aiReport?.max_loss || 2000000,
+            riskBreakdownMsg: riskBreakdownMsg
           };
           await sendAssessmentComplete(lead, assessmentData);
         }

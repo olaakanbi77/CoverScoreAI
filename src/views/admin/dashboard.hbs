@@ -1260,13 +1260,13 @@
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Saving...';
-      
+      const headers = { 'Content-Type': 'application/json' };
+      const token = localStorage.getItem('accessToken');
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
       const res = await fetch('/api/crm/policies', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-        },
+        headers,
         body: JSON.stringify(data)
       });
       

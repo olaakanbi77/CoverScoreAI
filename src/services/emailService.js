@@ -236,7 +236,25 @@ const sendAssessmentReport = async (to, assessmentResult) => {
       </div>`;
   }
 
-  const html = `
+        let riskBreakdownHtml = '';
+        if (aiReport?.risk_categories) {
+          const categories = Object.entries(aiReport.risk_categories).map(([key, val]) => {
+            const title = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            return `<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+              <span style="color: #64748b; font-size: 14px; font-weight: 500;">${title}</span>
+              <span style="color: #1e293b; font-size: 14px; font-weight: 700;">${val}/100</span>
+            </div>`;
+          }).join('');
+
+          riskBreakdownHtml = `
+            <div style="margin-bottom: 24px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+              <h2 style="font-size: 16px; font-weight: 600; color: #1e293b; margin: 0 0 12px;">Risk Breakdown</h2>
+              ${categories}
+            </div>
+          `;
+        }
+
+        const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -261,6 +279,8 @@ const sendAssessmentReport = async (to, assessmentResult) => {
             <div style="font-size: 14px; font-weight: 600; color: ${riskColors[riskLevel]}; text-transform: uppercase;">${riskLevel} Risk</div>
           </div>
         </div>
+
+        ${riskBreakdownHtml}
 
         ${explanationHtml}
 

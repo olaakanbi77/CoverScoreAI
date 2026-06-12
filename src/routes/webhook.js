@@ -252,17 +252,50 @@ router.post('/evolution', async (req, res) => {
               mockAnswers.business = {
                 business_name: updatedData.name || 'Your Business',
                 industry: updatedData.industry || 'General Business',
-                turnover: updatedData.turnover_bracket || '10m_50m'
+                turnover: updatedData.turnover_bracket || '10m_50m',
+                employees: updatedData.employee_bracket || '1_5'
               };
               mockAnswers.employee_risk = {
                 employ_staff: 'yes',
-                employees: updatedData.employee_bracket || '1_5'
+                death_benefits: updatedData.has_employee_benefits === 'yes' ? 'yes' : 'no',
+                accidents: 'none'
               };
               if (updatedData.has_location === 'yes') {
                 mockAnswers.property = { 
                   own_building: updatedData.location_ownership === 'own' ? 'yes' : 'no', 
                   building_value: updatedData.asset_value || 'under_5m', 
-                  equipment_value: updatedData.asset_value || 'under_5m' 
+                  equipment_value: updatedData.asset_value || 'under_5m',
+                  fire_extinguishers: 'some',
+                  fire_incident: 'no'
+                };
+              }
+              if (updatedData.has_vehicles === 'yes') {
+                mockAnswers.vehicle = {
+                  own_vehicles: 'yes',
+                  num_vehicles: '1_3',
+                  transport_goods: (updatedData.vehicle_type === 'both' || updatedData.vehicle_type === 'goods_only') ? 'daily' : 'never',
+                  transit_value: '1m_10m'
+                };
+              } else {
+                mockAnswers.vehicle = { own_vehicles: 'no' };
+              }
+              if (updatedData.business_interruption_risk) {
+                const impactMap = {
+                  'minor': 'minor',
+                  'significant': 'significantly',
+                  'severe': 'catastrophically',
+                  'survival_threatened': 'catastrophically'
+                };
+                mockAnswers.business_interruption = {
+                  revenue_impact: impactMap[updatedData.business_interruption_risk] || 'significantly',
+                  alt_location: 'no'
+                };
+              }
+              if (updatedData.public_liability_risk) {
+                mockAnswers.liability = {
+                  customer_interaction: updatedData.public_liability_risk === 'yes' ? 'frequently' : 'never',
+                  premises_injury: updatedData.public_liability_risk === 'yes' ? 'high' : 'low',
+                  product_liability: 'no'
                 };
               }
             } else {
@@ -339,8 +372,18 @@ router.post('/evolution', async (req, res) => {
             const minLossStr = formatNaira(scoreResult.min_loss);
             const maxLossStr = formatNaira(scoreResult.max_loss);
             
+            let riskBreakdownMsg = '';
+            if (scoreResult.risk_categories) {
+              const formattedCategories = Object.entries(scoreResult.risk_categories)
+                .map(([key, val]) => {
+                  const title = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                  return `• ${title}: ${val}/100`;
+                }).join('\n');
+              riskBreakdownMsg = `\n\n📈 *Risk Breakdown:*\n${formattedCategories}`;
+            }
+
             // Send combined Report Summary + Qualification Question (single message per user's spec)
-            const reportAndQualMsg = `🧾 *Your CoverScore Risk Report is Ready*\n\nHi ${updatedData.name || 'there'},\n\nWe've completed your risk assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n📊 *CoverScore:* ${scoreResult.score}/100\n⚠️ *Risk Level:* ${scoreResult.riskLevel}\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View your full report:\n${reportUrl}\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\nReply:\n1 = YES, I believe I'm adequately protected\n2 = NO, I think there may be gaps in my protection\n3 = NOT SURE, I'd like a free review`;
+            const reportAndQualMsg = `🧾 *Your CoverScore Risk Report is Ready*\n\nHi ${updatedData.name || 'there'},\n\nWe've completed your risk assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n📊 *CoverScore:* ${scoreResult.score}/100\n⚠️ *Risk Level:* ${scoreResult.riskLevel}${riskBreakdownMsg}\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View your full report:\n${reportUrl}\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\nReply:\n1 = YES, I believe I'm adequately protected\n2 = NO, I think there may be gaps in my protection\n3 = NOT SURE, I'd like a free review`;
             
             await sendWhatsApp(phoneNumber, null, { _message: reportAndQualMsg });
             

@@ -44,36 +44,36 @@ ${industryContext}
 
 Required Sections (Output JSON exact schema):
 {
-  "executiveSummary": "A calm, professional 4-5 sentence summary explaining the overall risk exposure.",
-  "overallRiskScoreExplanation": "Explain why this score was achieved based on the categories.",
-  "estimatedFinancialExposure": "Reference the financial exposure naturally and explain what could cause these losses (use Naira ₦ format).",
-  "riskBreakdownByCategory": [
-    { "category": "Category Name", "status": "Elevated/High/Moderate/Low", "explanation": "Explain the implications of this risk category" }
+  "executiveSummary": "A calm, professional summary explaining the overall risk exposure and resilience.",
+  "topExposures": [
+    "Exposure 1", "Exposure 2", "Exposure 3", "Exposure 4", "Exposure 5"
   ],
-  "keyProtectionGaps": [
-    { "gap": "Name of Gap", "impact": "Why this gap matters", "action": "Recommended action" }
+  "topFinancialThreats": [
+    "Threat 1", "Threat 2", "Threat 3", "Threat 4", "Threat 5"
   ],
-  "riskInsights": [
-    "Professional risk insight 1 (max 80 words, reference supplied data, avoid alarmist language)",
-    "Professional risk insight 2",
-    "Professional risk insight 3"
+  "topProtectionGaps": [
+    "Gap 1", "Gap 2", "Gap 3", "Gap 4", "Gap 5"
   ],
-  "recommendedProtectionPriorities": [
-    "Priority 1", "Priority 2", "Priority 3"
+  "topRecommendations": [
+    {
+      "timeframe": "Immediate / Short-term / Long-term",
+      "exposure": "Identified exposure",
+      "consequence": "Consequence if unprotected",
+      "protectionGap": "The current protection gap",
+      "action": "Recommended action (e.g. consider Group Life)"
+    }
   ],
-  "professionalRecommendation": "A professional closing recommendation. Encourage review, avoid sales language, position consultation as advisory (under 120 words)."
+  "professionalRecommendation": "A professional closing recommendation."
 }
 
 Rules:
-- Explain why the score was achieved.
-- Explain the implications of major risk categories.
+- For 'topRecommendations', strictly follow the 4-part rule: Identify exposure, Identify consequence, Identify protection gap, Recommend action.
+- Ensure recommendations are categorized into Immediate, Short-term, or Long-term.
 - Reference financial exposure naturally.
-- Rank recommended insurance covers by importance.
 - Keep recommendations practical.
 - Avoid technical insurance jargon.
 - Use Nigerian Naira formatting.
-- Do not invent risks not present in the supplied data.
-- Report length: 700-1200 words.`;
+- Do not invent risks not present in the supplied data.`;
 
   try {
     if (!MISTRAL_API_KEY || MISTRAL_API_KEY === 'your-mistral-api-key-here') {
@@ -607,11 +607,12 @@ Assessment Insights: ${reportData}
 
 Requirements:
 - Format the output strictly as professional, well-spaced HTML without a <body> or <html> tag (just the content like <h2>, <p>, <ul>, <strong>).
+- Ensure paragraphs are well spaced by adding <br><br> between <p> tags or using CSS inline styles on <p> tags, e.g., <p style="margin-bottom: 16px;">.
 - Tone: Consultative, authoritative, reassuring, persuasive.
 - Include a warm greeting.
 - Include an "Executive Summary" section.
 - Include a "Recommended Coverage Portfolio" section (list 3-4 highly relevant insurance types).
-- Include a placeholder for "Estimated Annual Investment" formatted nicely.
+- Include an "Estimated Annual Investment" section stating that the estimated premium is roughly ₦${new Intl.NumberFormat('en-NG').format(lead.estimated_premium || 0)}.
 - Conclude with "Next Steps".
 - The signature MUST be branded as "CoverScore AI", with email "advisor@coverscore.site" and phone "+2349165304629".
 - Do not use markdown backticks in the response. Just return raw HTML.`;
