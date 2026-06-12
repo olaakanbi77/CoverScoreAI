@@ -23,6 +23,7 @@ const { authenticate, authenticatePage, optionalAuth } = require('./middleware/a
 
 const app = express();
 app.set('trust proxy', 1);
+app.set('view cache', false);
 
 app.use(helmet({
   contentSecurityPolicy: false,
