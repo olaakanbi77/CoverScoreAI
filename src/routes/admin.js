@@ -244,4 +244,19 @@ router.delete('/users/:id',
   }
 );
 
+router.put('/settings', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const { meet_link } = req.body;
+    
+    // Only update meet_link for now, could expand to other settings later
+    if (meet_link !== undefined) {
+      await run('UPDATE users SET meet_link = ?, updated_at = datetime("now") WHERE id = ?', [meet_link.trim(), req.user.id]);
+    }
+    
+    res.json({ message: 'Settings updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

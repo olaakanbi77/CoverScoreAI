@@ -19,7 +19,7 @@ const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await get('SELECT id, email, name, role, industry FROM users WHERE id = ?', [decoded.userId]);
+    const user = await get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]);
 
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized', message: 'User not found' });
@@ -44,7 +44,7 @@ const optionalAuth = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await get('SELECT id, email, name, role, industry FROM users WHERE id = ?', [decoded.userId]);
+    const user = await get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]);
     if (user) {
       req.user = user;
       res.locals.user = user;
@@ -72,7 +72,7 @@ const authenticatePage = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await get('SELECT id, email, name, role, industry FROM users WHERE id = ?', [decoded.userId]);
+    const user = await get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]);
 
     if (!user) {
       res.clearCookie('accessToken');

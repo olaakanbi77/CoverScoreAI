@@ -146,15 +146,24 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
       <div class="form-group">
         <label class="form-label">Full Name</label>
-        <input type="text" class="form-control" value="Admin User" readonly>
+        <input type="text" class="form-control" value="{{user.name}}" readonly>
       </div>
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" class="form-control" value="admin@coverscore.ai" readonly>
+        <input type="email" class="form-control" value="{{user.email}}" readonly>
       </div>
     </div>
     
     <div class="form-group" style="margin-top: 16px;">
+      <label class="form-label">Google Meet Link (Video Consultations)</label>
+      <div style="display:flex; gap:12px;">
+        <input type="url" class="form-control" id="meetLink" value="{{user.meet_link}}" placeholder="https://meet.google.com/xxx-xxxx-xxx">
+        <button class="btn btn-primary" onclick="saveMeetLink()" id="btnSaveMeetLink">Save Link</button>
+      </div>
+      <p class="section-desc" style="margin-top:6px; font-size:12px;">This link will be automatically sent to clients when they book a video consultation.</p>
+    </div>
+
+    <div class="form-group" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
       <button class="btn btn-outline" onclick="alert('Password reset link sent to your email.')">Reset Password</button>
     </div>
   </div>
@@ -199,5 +208,41 @@
     input.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(input.value);
     alert("Token copied to clipboard!");
+  }
+
+  async function saveMeetLink() {
+    const btn = document.getElementById('btnSaveMeetLink');
+    const input = document.getElementById('meetLink');
+    const link = input.value.trim();
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      const token = localStorage.getItem('accessToken');
+      if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers,
+        credentials: 'same-origin',
+        body: JSON.stringify({ meet_link: link })
+      });
+
+      if (res.ok) {
+        btn.textContent = 'Saved!';
+        setTimeout(() => {
+          btn.textContent = 'Save Link';
+          btn.disabled = false;
+        }, 2000);
+      } else {
+        throw new Error('Failed to save settings');
+      }
+    } catch(err) {
+      alert(err.message);
+      btn.textContent = 'Save Link';
+      btn.disabled = false;
+    }
   }
 </script>

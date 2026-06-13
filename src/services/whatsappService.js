@@ -200,6 +200,26 @@ A new prospect has booked a consultation.
 {{message}}
 
 🔗 View CRM: {{adminUrl}}`
+  },
+
+  clientConsultationConfirmation: {
+    title: 'Client Consultation Confirmation',
+    template: `📅 *Consultation Confirmed*
+
+Hi {{name}},
+
+Your consultation has been successfully scheduled! 
+
+📋 *Meeting Details:*
+• Date: {{consultationDate}}
+• Time: {{consultationTime}}
+
+{{videoDetails}}
+
+If you need to reschedule, please reply to this message.
+
+—
+CoverScore AI`
   }
 };
 
@@ -434,6 +454,24 @@ const sendAdminWhatsAppConsultationAlert = async (leadData) => {
   });
 };
 
+const sendClientWhatsAppConsultationConfirmation = async (leadData, meetLink) => {
+  if (!leadData.phone) return { success: false, error: 'No phone number provided' };
+
+  let videoDetails = '';
+  if (leadData.consultationType === 'video' && meetLink) {
+    videoDetails = `🎥 *Google Meet Link:*\n${meetLink}\n(Click this link at the scheduled time to join)`;
+  } else if (leadData.consultationType === 'phone') {
+    videoDetails = `📞 Our advisor will call you at this number.`;
+  }
+
+  return sendWhatsApp(leadData.phone, 'clientConsultationConfirmation', {
+    name: leadData.name || 'Customer',
+    consultationDate: leadData.consultationDate || 'TBD',
+    consultationTime: leadData.consultationTime || 'TBD',
+    videoDetails
+  });
+};
+
 module.exports = {
   sendWhatsApp,
   sendAssessmentComplete,
@@ -443,6 +481,7 @@ module.exports = {
   sendHighRiskAlert,
   sendAdminWhatsAppQuoteAlert,
   sendAdminWhatsAppConsultationAlert,
+  sendClientWhatsAppConsultationConfirmation,
   normalizePhoneNumber,
   buildMessage,
   templates

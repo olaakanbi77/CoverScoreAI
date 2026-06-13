@@ -3,8 +3,8 @@ const { body, validationResult } = require('express-validator');
 const { db, run, get, all } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const { requireAgent } = require('../middleware/rbac');
-const { sendLeadContacted, sendLeadConverted, sendAdminWhatsAppQuoteAlert, sendAdminWhatsAppConsultationAlert } = require('../services/whatsappService');
-const { sendAdminQuoteNotification, sendAdminConsultationNotification } = require('../services/emailService');
+const { sendLeadContacted, sendLeadConverted, sendAdminWhatsAppQuoteAlert, sendAdminWhatsAppConsultationAlert, sendClientWhatsAppConsultationConfirmation } = require('../services/whatsappService');
+const { sendAdminQuoteNotification, sendAdminConsultationNotification, sendClientConsultationConfirmation } = require('../services/emailService');
 
 const router = express.Router();
 
@@ -314,10 +314,18 @@ router.post('/consultation-request', async (req, res, next) => {
       'consultation'
     ]);
 
+    // Fetch admin meet link
+    const adminUser = await get('SELECT meet_link FROM users WHERE role = "admin" LIMIT 1');
+    const meetLink = adminUser ? adminUser.meet_link : null;
+
     // Send notifications to Admin
     const leadData = { name, email, phone, consultationType, consultationDate, consultationTime, message };
     sendAdminConsultationNotification(leadData).catch(err => console.error('Admin email failed:', err));
     sendAdminWhatsAppConsultationAlert(leadData).catch(err => console.error('Admin WhatsApp failed:', err));
+
+    // Send confirmation to Client
+    sendClientConsultationConfirmation(leadData, meetLink).catch(err => console.error('Client email failed:', err));
+    sendClientWhatsAppConsultationConfirmation(leadData, meetLink).catch(err => console.error('Client WhatsApp failed:', err));
 
     res.status(201).json({
       message: 'Consultation booked successfully',

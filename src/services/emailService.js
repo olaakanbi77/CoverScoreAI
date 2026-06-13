@@ -527,11 +527,76 @@ const sendAdminConsultationNotification = async (leadData) => {
   });
 };
 
+const sendClientConsultationConfirmation = async (leadData, meetLink) => {
+  await ensureReady();
+
+  if (!transporter) {
+    console.warn('⚠️ Email not sent: SMTP not configured');
+    return;
+  }
+
+  if (!leadData.email) return;
+
+  let meetingDetailsHtml = `
+    <p><strong>Date:</strong> ${leadData.consultationDate}</p>
+    <p><strong>Time:</strong> ${leadData.consultationTime}</p>
+  `;
+
+  if (leadData.consultationType === 'video' && meetLink) {
+    meetingDetailsHtml += `
+      <div style="margin-top: 20px; padding: 16px; background-color: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 4px;">
+        <p style="margin: 0 0 10px 0; font-weight: bold; color: #166534;">Your Google Meet Link:</p>
+        <a href="${meetLink}" style="display: inline-block; background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold;">Join Video Meeting</a>
+        <p style="margin: 10px 0 0 0; font-size: 13px; color: #166534;">Or copy this link: <a href="${meetLink}">${meetLink}</a></p>
+      </div>
+    `;
+  } else if (leadData.consultationType === 'phone') {
+    meetingDetailsHtml += `<p>Our advisor will call you at: <strong>${leadData.phone}</strong></p>`;
+  }
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #1e293b; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">Consultation Confirmed</h1>
+      </div>
+      <div style="padding: 32px; background-color: white;">
+        <h2 style="color: #0f172a; margin-top: 0;">Hi ${leadData.name},</h2>
+        <p>Your consultation has been successfully scheduled! Here are your meeting details:</p>
+        
+        <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 24px 0;">
+          ${meetingDetailsHtml}
+        </div>
+        
+        <p>If you need to reschedule, please reply to this email or reach out to us on WhatsApp.</p>
+        <p>Best regards,<br>The CoverScore AI Team</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const info = await transporter.sendMail({
+      from: `CoverScore AI <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: leadData.email,
+      subject: `Your Consultation Confirmation - CoverScore AI`,
+      html
+    });
+    console.log('✅ Client consultation confirmation email sent:', info.messageId);
+    
+    if (etherealAccount) {
+      console.log('🔗 Preview URL:', nodemailer.getTestMessageUrl(info));
+    }
+  } catch (err) {
+    console.error('❌ Failed to send client consultation email:', err);
+    throw err;
+  }
+};
+
 module.exports = { 
   sendAssessmentReport, 
   sendPasswordResetEmail, 
   sendEmail, 
   getDiagnostics,
   sendAdminQuoteNotification,
-  sendAdminConsultationNotification
+  sendAdminConsultationNotification,
+  sendClientConsultationConfirmation
 };
