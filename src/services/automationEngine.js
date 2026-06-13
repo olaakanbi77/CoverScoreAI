@@ -15,6 +15,16 @@ const startCronJobs = () => {
       console.error('Error running daily automation tasks:', error);
     }
   });
+
+  // Run every hour to check for proposal follow-ups
+  cron.schedule('0 * * * *', async () => {
+    console.log('Running hourly automation tasks...');
+    try {
+      await processProposalFollowUps();
+    } catch (error) {
+      console.error('Error running hourly automation tasks:', error);
+    }
+  });
 };
 
 const sendMultiChannelMessage = async (lead, subject, message) => {
@@ -121,10 +131,29 @@ const processMonthlyRiskTips = async () => {
   }
 };
 
+const processProposalFollowUps = async () => {
+  // Find leads in 'Proposal Sent' stage whose last update was between 24 and 48 hours ago
+  const leads = await all(`
+    SELECT * FROM leads 
+    WHERE pipeline_stage = 'Proposal Sent' 
+      AND updated_at <= datetime('now', '-24 hours')
+      AND updated_at > datetime('now', '-48 hours')
+  `);
+
+  for (const lead of leads) {
+    const msg = `Hi ${lead.name.split(' ')[0]},\n\nI'm following up on the CoverScore insurance proposal we sent over yesterday.\n\nDo you have any questions or would you like to schedule a quick call to review it together?\n\n— Your Team at CoverScore`;
+    await sendMultiChannelMessage(lead, 'Following up on your CoverScore Proposal', msg);
+    
+    // We update the updated_at timestamp so it doesn't get picked up again in the next hour
+    await run("UPDATE leads SET updated_at = datetime('now') WHERE id = ?", [lead.id]);
+  }
+};
+
 module.exports = {
   startCronJobs,
   // Export for manual triggering
   processBirthdaysAndAnniversaries,
   processRenewalNotices,
-  processMonthlyRiskTips
+  processMonthlyRiskTips,
+  processProposalFollowUps
 };

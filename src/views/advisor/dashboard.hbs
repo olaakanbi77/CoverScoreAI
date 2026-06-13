@@ -894,9 +894,13 @@
         <div class="summary-item"><div class="summary-label">Proposals Sent</div><div class="summary-value" style="color:#f59e0b;">{{summary.proposalsSent}}</div></div>
         <div class="summary-item"><div class="summary-label">Policies Sold</div><div class="summary-value" style="color:#22c55e;">{{summary.policiesSold}}</div></div>
       </div>
+      <div class="summary-premium" style="margin-bottom: 12px;">
+        <div class="summary-label">Active Pipeline Value</div>
+        <div class="summary-value" style="color:var(--green);">{{summary.activePipelineValue}}</div>
+      </div>
       <div class="summary-premium">
-        <div class="summary-label">Est. Premium</div>
-        <div class="summary-value">{{summary.estPremium}}</div>
+        <div class="summary-label">Conversion Rate</div>
+        <div class="summary-value" style="color:#3b82f6;">{{summary.conversionRate}}</div>
       </div>
     </div>
     {{/if}}

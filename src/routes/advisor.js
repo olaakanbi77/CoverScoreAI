@@ -161,12 +161,29 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       ? `₦${(totalPremium/1000000).toFixed(1)}M` 
       : `₦${totalPremium.toLocaleString()}`;
 
+    const activePipelineLeads = leads.filter(l => ['New', 'Contacted', 'Meeting Set', 'Proposal Sent'].includes(l.pipeline_stage));
+    const activePipelineValue = activePipelineLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
+    const activePipelineValueFormatted = activePipelineValue > 1000000 
+      ? `₦${(activePipelineValue/1000000).toFixed(1)}M` 
+      : `₦${activePipelineValue.toLocaleString()}`;
+
+    const wonLeads = leads.filter(l => l.pipeline_stage === 'Won');
+    const wonDealsCount = wonLeads.length;
+    
+    // Proposals Pending (Proposal Sent stage)
+    const proposalsPendingCount = leads.filter(l => l.pipeline_stage === 'Proposal Sent').length;
+
+    // Conversion rate
+    const conversionRate = leads.length > 0 ? Math.round((wonDealsCount / leads.length) * 100) : 0;
+
     const summary = {
       hotLeads: hotLeadsCount,
       consultations: 0,
-      proposalsSent: proposalsCount,
-      policiesSold: 0,
-      estPremium: premiumFormatted
+      proposalsSent: proposalsPendingCount,
+      policiesSold: wonDealsCount,
+      estPremium: premiumFormatted,
+      activePipelineValue: activePipelineValueFormatted,
+      conversionRate: `${conversionRate}%`
     };
 
     res.render('advisor/dashboard', {
