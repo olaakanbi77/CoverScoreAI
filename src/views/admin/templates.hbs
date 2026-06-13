@@ -38,10 +38,10 @@
           {{/if}}
         </span>
       </div>
-      <div class="tpl-body">{{content}}</div>
+      <div class="tpl-body" id="tpl-content-{{id}}">{{content}}</div>
       <div class="tpl-footer">
-        <button class="btn btn-outline btn-sm">Edit</button>
-        <button class="btn btn-primary btn-sm">Use Template</button>
+        <button class="btn btn-outline btn-sm" onclick="openEditModal(this)" data-id="{{id}}" data-title="{{title}}" data-type="{{type}}">Edit</button>
+        <button class="btn btn-primary btn-sm" onclick="useTemplate({{id}})">Use Template</button>
       </div>
     </div>
     {{else}}
@@ -61,6 +61,7 @@
       <button class="modal-close" onclick="closeModal('templateModal')">&times;</button>
     </div>
     <form id="templateForm" onsubmit="submitTemplate(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      <input type="hidden" name="id" id="templateId">
       <div class="form-group">
         <label>Title</label>
         <input type="text" name="title" class="form-control" required placeholder="e.g. Follow-up Email">
@@ -86,10 +87,45 @@
 
 <script>
   function openModal(id) {
+    if (id === 'templateModal') {
+      document.getElementById('templateForm').reset();
+      document.getElementById('templateId').value = '';
+      document.querySelector('#templateModal .modal-title').textContent = 'Create New Template';
+    }
     document.getElementById(id).style.display = 'flex';
   }
+  
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
+  }
+  
+  function openEditModal(btn) {
+    const id = btn.getAttribute('data-id');
+    const title = btn.getAttribute('data-title');
+    const type = btn.getAttribute('data-type');
+    const content = document.getElementById('tpl-content-' + id).textContent;
+    
+    document.getElementById('templateId').value = id;
+    document.querySelector('#templateForm [name="title"]').value = title;
+    document.querySelector('#templateForm [name="type"]').value = type;
+    document.querySelector('#templateForm [name="content"]').value = content;
+    
+    document.querySelector('#templateModal .modal-title').textContent = 'Edit Template';
+    document.getElementById('templateModal').style.display = 'flex';
+  }
+  
+  function useTemplate(id) {
+    const content = document.getElementById('tpl-content-' + id).textContent;
+    navigator.clipboard.writeText(content).then(() => {
+      if (typeof showToast === 'function') {
+        showToast('Success', 'Template copied to clipboard!');
+      } else {
+        alert('Template copied to clipboard!');
+      }
+    }).catch(err => {
+      console.error('Failed to copy', err);
+      alert('Failed to copy to clipboard');
+    });
   }
   
   async function submitTemplate(e) {
@@ -97,14 +133,18 @@
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+    const isEdit = !!data.id;
     
     try {
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Saving...';
       
-      const res = await fetch('/api/crm/templates', {
-        method: 'POST',
+      const url = isEdit ? '/api/crm/templates/' + data.id : '/api/crm/templates';
+      const method = isEdit ? 'PUT' : 'POST';
+      
+      const res = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
@@ -116,7 +156,7 @@
         window.location.reload();
       } else {
         const err = await res.json();
-        alert(err.error || 'Failed to create template');
+        alert(err.error || 'Failed to save template');
         btn.disabled = false;
         btn.textContent = 'Save Template';
       }

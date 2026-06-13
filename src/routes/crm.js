@@ -87,4 +87,24 @@ router.post('/templates', authenticate, requireAgent, async (req, res, next) => 
   } catch (err) { next(err); }
 });
 
+// PUT /api/crm/templates/:id
+router.put('/templates/:id', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const { title, type, content } = req.body;
+    const { id } = req.params;
+    
+    if (!title || !type || !content) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    await run(`
+      UPDATE templates 
+      SET title = ?, type = ?, content = ?
+      WHERE id = ?
+    `, [title, type, content, id]);
+    
+    res.json({ success: true });
+  } catch (err) { next(err); }
+});
+
 module.exports = router;
