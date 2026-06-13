@@ -533,10 +533,10 @@
   async function loadLead() {
     const headers = { 'Content-Type': 'application/json' };
     const token = localStorage.getItem('accessToken');
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = `Bearer ${token}`;
 
     try {
-      const res = await fetch(`/api/leads/${leadId}`, { headers });
+      const res = await fetch(`/api/leads/${leadId}`, { headers, credentials: 'same-origin' });
       if (!res.ok) throw new Error('Failed to fetch lead');
       const data = await res.json();
       renderLead(data);
@@ -712,21 +712,23 @@
       return;
     }
 
+    const headers = { 'Content-Type': 'application/json' };
     const token = localStorage.getItem('accessToken');
+    if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = `Bearer ${token}`;
+
     try {
       const res = await fetch(`/api/leads/${leadId}/status`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
+        credentials: 'same-origin',
         body: JSON.stringify({ status: newStatus })
       });
       if (res.ok) {
         document.getElementById('leadStatus').textContent = newStatus;
         document.getElementById('leadStatus').className = `status-badge ${getBadgeClass(newStatus)}`;
       } else {
-        throw new Error('Failed to update status');
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || 'Failed to update status');
       }
     } catch (err) {
       alert(err.message);
@@ -790,12 +792,13 @@
 
     const headers = { 'Content-Type': 'application/json' };
     const token = localStorage.getItem('accessToken');
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = `Bearer ${token}`;
 
     try {
       const res = await fetch(`/api/leads/${leadId}`, {
         method: 'PUT',
         headers,
+        credentials: 'same-origin',
         body: JSON.stringify(data)
       });
       
@@ -803,10 +806,11 @@
         closeEditModal();
         loadLead();
       } else {
-        alert('Failed to update profile');
+        const errData = await res.json().catch(() => ({}));
+        alert(`Failed to update profile: ${errData.error || errData.message || res.statusText}`);
       }
     } catch(err) {
-      alert(err.message);
+      alert(`Network error: ${err.message}`);
     } finally {
       btn.disabled = false;
       btn.textContent = 'Save Changes';
@@ -830,11 +834,12 @@
       
       const headers = { 'Content-Type': 'application/json' };
       const token = localStorage.getItem('accessToken');
-      if (token) headers['Authorization'] = 'Bearer ' + token;
+      if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = 'Bearer ' + token;
       
       const res = await fetch('/api/crm/policies', {
         method: 'POST',
         headers,
+        credentials: 'same-origin',
         body: JSON.stringify(data)
       });
       
