@@ -5,6 +5,7 @@ const emailService = require('../services/emailService');
 const { get, run } = require('../config/database');
 const { generateRiskReport, getLeadQualifier, getWhatsappAdvisor } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
+const { generateRecommendations } = require('../services/cre');
 const { getNextStateAndReply } = require('../services/whatsappFlow');
 
 // Evolution API webhook endpoint
@@ -366,8 +367,7 @@ router.post('/evolution', async (req, res) => {
             // Calculate score
             const scoreResult = calculateScore(mockAnswers);
 
-            // Generate AI Report
-            const aiReportData = await generateRiskReport({
+            const assessmentDataObj = {
               answers: mockAnswers,
               score: scoreResult.score,
               riskLevel: scoreResult.riskLevel,
@@ -377,7 +377,13 @@ router.post('/evolution', async (req, res) => {
               identified_gaps: scoreResult.identified_gaps,
               risk_categories: scoreResult.risk_categories,
               entityType
-            });
+            };
+
+            // Run CRE Rules
+            const creIntelligence = generateRecommendations(assessmentDataObj);
+
+            // Generate AI Report
+            const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
 
             const dbRiskLevelMap = {
               'Very Low Risk': 'low',
