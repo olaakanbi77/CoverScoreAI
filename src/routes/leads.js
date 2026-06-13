@@ -143,6 +143,8 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       industry: lead.industry || 'other',
       createdAt: lead.created_at,
       updatedAt: lead.updated_at,
+      birthDate: lead.birth_date || null,
+      anniversaryDate: lead.anniversary_date || null,
       chatHistory: chatHistory,
       assessment: answers ? {
         score: lead.assessment_score,
@@ -375,7 +377,7 @@ router.post('/', authenticate, requireAgent, async (req, res, next) => {
 // PUT /api/leads/:id - Update lead details
 router.put('/:id', authenticate, requireAgent, async (req, res, next) => {
   try {
-    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry } = req.body;
+    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry, birthDate, anniversaryDate } = req.body;
 
     const lead = await get('SELECT id FROM leads WHERE id = ?', [req.params.id]);
     if (!lead) {
@@ -393,6 +395,8 @@ router.put('/:id', authenticate, requireAgent, async (req, res, next) => {
     if (estimatedPremium !== undefined) { queryParts.push('estimated_premium = ?'); params.push(estimatedPremium); }
     if (assignedAgent !== undefined) { queryParts.push('assigned_agent = ?'); params.push(assignedAgent); }
     if (industry !== undefined) { queryParts.push('industry = ?'); params.push(industry); }
+    if (birthDate !== undefined) { queryParts.push('birth_date = ?'); params.push(birthDate); }
+    if (anniversaryDate !== undefined) { queryParts.push('anniversary_date = ?'); params.push(anniversaryDate); }
     
     if (status !== undefined) {
       queryParts.push('status = ?');

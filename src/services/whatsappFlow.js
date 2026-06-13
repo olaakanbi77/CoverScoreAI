@@ -35,8 +35,8 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
     case 'assessment_type':
       if (input === '1') {
         updatedData.entity_type = 'individual';
-        replyText = "Which age group best describes you?\n\n1️⃣ Under 25\n2️⃣ 25–35\n3️⃣ 36–50\n4️⃣ 51–60\n5️⃣ Above 60";
-        nextState = 'personal_q1';
+        replyText = "What is your date of birth? (e.g., DD/MM/YYYY)";
+        nextState = 'personal_dob';
       } else if (input === '2') {
         updatedData.entity_type = 'business';
         replyText = "What is the name of your business?";
@@ -49,6 +49,30 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
     // ==========================================
     // PERSONAL FLOW
     // ==========================================
+    case 'personal_dob':
+      updatedData.birth_date = incomingText;
+      replyText = "Are you married?\n\nYES / NO";
+      nextState = 'personal_married';
+      break;
+      
+    case 'personal_married':
+      if (input === 'YES') {
+        replyText = "What is your wedding anniversary date? (e.g., DD/MM/YYYY)";
+        nextState = 'personal_anniversary';
+      } else if (input === 'NO') {
+        updatedData.anniversary_date = null;
+        replyText = "Which age group best describes you?\n\n1️⃣ Under 25\n2️⃣ 25–35\n3️⃣ 36–50\n4️⃣ 51–60\n5️⃣ Above 60";
+        nextState = 'personal_q1';
+      } else {
+        replyText = "Please reply with YES or NO.";
+      }
+      break;
+
+    case 'personal_anniversary':
+      updatedData.anniversary_date = incomingText;
+      replyText = "Which age group best describes you?\n\n1️⃣ Under 25\n2️⃣ 25–35\n3️⃣ 36–50\n4️⃣ 51–60\n5️⃣ Above 60";
+      nextState = 'personal_q1';
+      break;
     case 'personal_q1':
       if (['1','2','3','4','5'].includes(input)) {
         const ageMap = {'1': 'under_25', '2': '25_35', '3': '36_50', '4': '51_60', '5': 'over_60'};

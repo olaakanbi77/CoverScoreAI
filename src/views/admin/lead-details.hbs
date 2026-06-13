@@ -345,6 +345,14 @@
               <span class="info-label">Est. Premium</span>
               <span class="info-value" id="infoPremium">--</span>
             </div>
+            <div class="info-item">
+              <span class="info-label">Birthday <button onclick="editDate('birthDate')" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:12px;">Edit</button></span>
+              <span class="info-value" id="infoBirthday">--</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Anniversary <button onclick="editDate('anniversaryDate')" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:12px;">Edit</button></span>
+              <span class="info-value" id="infoAnniversary">--</span>
+            </div>
           </div>
         </div>
 
@@ -491,6 +499,8 @@
     document.getElementById('infoBusiness').textContent = lead.businessName || 'N/A';
     document.getElementById('infoIndustry').textContent = lead.industry || 'Unknown';
     document.getElementById('infoPremium').textContent = lead.estimatedPremium ? `$${lead.estimatedPremium}` : 'Pending';
+    document.getElementById('infoBirthday').textContent = lead.birthDate || 'Not specified';
+    document.getElementById('infoAnniversary').textContent = lead.anniversaryDate || 'Not specified';
 
     // Assessment
     if (lead.assessment) {
@@ -645,6 +655,35 @@
       alert(err.message);
       // Revert select
       loadLead(); 
+    }
+  }
+
+  async function editDate(field) {
+    const currentVal = document.getElementById(field === 'birthDate' ? 'infoBirthday' : 'infoAnniversary').textContent;
+    const initial = currentVal === 'Not specified' ? '' : currentVal;
+    const newVal = prompt(`Enter ${field === 'birthDate' ? 'Birthday' : 'Anniversary'} (DD/MM/YYYY):`, initial);
+    
+    if (newVal !== null) {
+      const token = localStorage.getItem('accessToken');
+      try {
+        const body = {};
+        body[field] = newVal;
+        const res = await fetch(`/api/leads/${leadId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(body)
+        });
+        if (res.ok) {
+          loadLead();
+        } else {
+          alert('Failed to update date');
+        }
+      } catch(err) {
+        alert(err.message);
+      }
     }
   }
 

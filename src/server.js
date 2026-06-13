@@ -1,11 +1,13 @@
 require('dotenv').config();
 const app = require('./app');
 const { initDatabase } = require('./config/database');
+const { startCronJobs } = require('./services/automationEngine');
 
 const PORT = process.env.PORT || 3016;
 
 const startServer = () => {
   initDatabase();
+  startCronJobs();
 
   app.listen(PORT, () => {
     console.log(`

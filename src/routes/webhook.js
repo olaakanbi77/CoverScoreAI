@@ -484,12 +484,18 @@ router.post('/evolution', async (req, res) => {
                   status = 'Report Sent', pipeline_stage = 2,
                   engagement_points = engagement_points + 20, sales_score = sales_score + 20,
                   estimated_premium = ?,
-                  chat_history = ?
+                  chat_history = ?,
+                  birth_date = ?,
+                  anniversary_date = ?
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType, 
-              (updatedData.name || 'WhatsApp User'), (updatedData.email || 'whatsapp@coverscore.site'), 
-              estimatedPremium, JSON.stringify(updatedData), lead.id
+              updatedData.name || 'WhatsApp User', 
+              updatedData.email || 'whatsapp@coverscore.site',
+              estimatedPremium, JSON.stringify(updatedData), 
+              updatedData.birth_date || null,
+              updatedData.anniversary_date || null,
+              lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
 

@@ -1118,6 +1118,12 @@
             <div class="client-info-item" style="grid-column: span 6;">
               <span style="font-weight:600;color:var(--text);margin-right:6px;">Assessment Date:</span> <span style="font-weight:400;color:var(--text-secondary);" title="{{selectedLead.created_at}}">{{selectedLead.created_at}}</span>
             </div>
+            <div class="client-info-item" style="grid-column: span 6;">
+              <span style="font-weight:600;color:var(--text);margin-right:6px;">Birthday:</span> <span style="font-weight:400;color:var(--text-secondary);">{{#if selectedLead.birth_date}}{{selectedLead.birth_date}}{{else}}N/A{{/if}}</span>
+            </div>
+            <div class="client-info-item" style="grid-column: span 6;">
+              <span style="font-weight:600;color:var(--text);margin-right:6px;">Anniversary:</span> <span style="font-weight:400;color:var(--text-secondary);">{{#if selectedLead.anniversary_date}}{{selectedLead.anniversary_date}}{{else}}N/A{{/if}}</span>
+            </div>
           </div>
           
           <hr style="border:0;border-top:1px solid var(--border);margin:24px 0;">
