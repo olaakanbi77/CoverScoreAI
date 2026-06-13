@@ -531,11 +531,12 @@
   const leadId = "{{leadId}}";
 
   async function loadLead() {
+    const headers = { 'Content-Type': 'application/json' };
     const token = localStorage.getItem('accessToken');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
     try {
-      const res = await fetch(`/api/leads/${leadId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`/api/leads/${leadId}`, { headers });
       if (!res.ok) throw new Error('Failed to fetch lead');
       const data = await res.json();
       renderLead(data);
@@ -612,6 +613,10 @@
     let chatData = lead.chatHistory;
     if (typeof chatData === 'string') {
       try { chatData = JSON.parse(chatData); } catch(e) {}
+    }
+
+    if (chatData && chatData.__messages && Array.isArray(chatData.__messages)) {
+      chatData = chatData.__messages;
     }
     
     if (chatData && typeof chatData === 'object') {
@@ -783,14 +788,14 @@
     if (data.birthDate) data.birthDate = formatDateForDB(data.birthDate);
     if (data.anniversaryDate) data.anniversaryDate = formatDateForDB(data.anniversaryDate);
 
+    const headers = { 'Content-Type': 'application/json' };
     const token = localStorage.getItem('accessToken');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
     try {
       const res = await fetch(`/api/leads/${leadId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
         body: JSON.stringify(data)
       });
       
