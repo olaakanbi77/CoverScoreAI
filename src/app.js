@@ -18,6 +18,7 @@ const whatsappRoutes = require('./routes/whatsapp');
 const crmRoutes = require('./routes/crm');
 const advisorRoutes = require('./routes/advisor');
 const proposalsRoutes = require('./routes/proposals');
+const documentsRoutes = require('./routes/documents');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
 
@@ -295,6 +296,7 @@ app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/webhook', webhookRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/proposals', proposalsRoutes);
+app.use('/api/documents', documentsRoutes);
 app.use('/advisor', advisorRoutes);
 
 // Serve QR code page for WhatsApp linking

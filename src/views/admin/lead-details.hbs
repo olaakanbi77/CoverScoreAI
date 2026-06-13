@@ -268,11 +268,62 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--glass-border);
     color: var(--text-primary);
-    padding: 8px 16px;
-    border-radius: var(--radius-md);
-    outline: none;
     font-size: 14px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
     cursor: pointer;
+    font-weight: 500;
+  }
+  
+  /* Documents UI */
+  .doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .doc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .doc-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .doc-icon {
+    color: var(--primary);
+  }
+  .doc-name {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .doc-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .doc-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+  .upload-area:hover, .upload-area.dragover {
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.05);
   }
 
   @media (max-width: 1024px) {
@@ -415,6 +466,26 @@
           <div class="card-body">
             <div class="timeline" id="timeline">
               <p style="color: var(--text-muted); font-size: 13px;">No activities recorded.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Documents
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('docUpload').click()">
+              <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-muted); margin-bottom: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Click or drag file to upload</p>
+              <input type="file" id="docUpload" style="display: none;" onchange="handleFileUpload(event)">
+            </div>
+            
+            <div class="doc-list" id="docList">
+              <p style="color: var(--text-muted); font-size: 13px; text-align:center;">No documents uploaded.</p>
             </div>
           </div>
         </div>
@@ -690,6 +761,9 @@
         </div>
       `).join('');
     }
+    
+    // Load documents for this lead
+    loadDocuments();
   }
 
   function getBadgeClass(status) {
@@ -857,6 +931,135 @@
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = false;
       btn.textContent = 'Save Policy';
+    }
+  }
+
+  // --- Documents Logic ---
+  
+  // Drag and drop events
+  const uploadArea = document.getElementById('uploadArea');
+  if (uploadArea) {
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        document.getElementById('docUpload').files = e.dataTransfer.files;
+        handleFileUpload({ target: { files: e.dataTransfer.files } });
+      }
+    });
+  }
+
+  async function loadDocuments() {
+    const list = document.getElementById('docList');
+    list.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; text-align:center;">Loading documents...</p>';
+    
+    try {
+      const headers = {};
+      const token = localStorage.getItem('accessToken');
+      if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = 'Bearer ' + token;
+      
+      const res = await fetch(`/api/documents/${leadId}`, { headers, credentials: 'same-origin' });
+      if (res.ok) {
+        const { documents } = await res.json();
+        
+        if (!documents || documents.length === 0) {
+          list.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; text-align:center;">No documents uploaded.</p>';
+          return;
+        }
+
+        list.innerHTML = documents.map(doc => {
+          const date = new Date(doc.created_at).toLocaleDateString();
+          return `
+            <div class="doc-item">
+              <div class="doc-info">
+                <svg class="doc-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                <div>
+                  <div class="doc-name">${doc.file_name}</div>
+                  <div class="doc-meta">Uploaded ${date}</div>
+                </div>
+              </div>
+              <div class="doc-actions">
+                <a href="/api/documents/download/${doc.id}" target="_blank" class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;">View</a>
+                <button onclick="deleteDocument(${doc.id})" class="btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 8px; font-size: 11px;">Del</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch (err) {
+      console.error(err);
+      list.innerHTML = '<p style="color: #ef4444; font-size: 13px; text-align:center;">Failed to load documents.</p>';
+    }
+  }
+
+  async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('lead_id', leadId);
+
+    const originalText = uploadArea.innerHTML;
+    uploadArea.innerHTML = '<p style="color: var(--primary); font-size: 13px; font-weight: 500;">Uploading...</p>';
+
+    try {
+      const headers = {};
+      const token = localStorage.getItem('accessToken');
+      if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = 'Bearer ' + token;
+
+      const res = await fetch('/api/documents/upload', {
+        method: 'POST',
+        headers,
+        credentials: 'same-origin',
+        body: formData
+      });
+
+      if (res.ok) {
+        uploadArea.innerHTML = originalText;
+        document.getElementById('docUpload').value = '';
+        loadDocuments();
+      } else {
+        const err = await res.json().catch(()=>({}));
+        alert(err.error || 'Failed to upload document');
+        uploadArea.innerHTML = originalText;
+      }
+    } catch (err) {
+      alert('Network error while uploading');
+      uploadArea.innerHTML = originalText;
+    }
+  }
+
+  async function deleteDocument(docId) {
+    if (!confirm('Are you sure you want to delete this document?')) return;
+
+    try {
+      const headers = {};
+      const token = localStorage.getItem('accessToken');
+      if (token && token !== 'null' && token !== 'undefined') headers['Authorization'] = 'Bearer ' + token;
+
+      const res = await fetch(`/api/documents/${docId}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'same-origin'
+      });
+
+      if (res.ok) {
+        loadDocuments();
+      } else {
+        const err = await res.json().catch(()=>({}));
+        alert(err.error || 'Failed to delete document');
+      }
+    } catch (err) {
+      alert('Network error while deleting');
     }
   }
 
