@@ -656,6 +656,33 @@
     .copilot-msg-download:hover {
       background: rgba(22, 163, 74, 0.2);
     }
+    .pipeline-btn {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .pipeline-btn:hover {
+      background: #f1f5f9;
+    }
+    .pipeline-btn.active {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+    }
+    .pipeline-btn.completed {
+      background: rgba(22, 163, 74, 0.1);
+      color: var(--green);
+      border-color: rgba(22, 163, 74, 0.2);
+    }
     .copilot-msg.human {
       background: var(--navy);
       color: white;
@@ -991,6 +1018,27 @@
           <div class="flex items-center gap-2">
             <button class="action-btn" onclick="window.location.href='/admin/leads{{#if selectedLead}}/{{selectedLead.id}}{{/if}}'" style="background:white;color:var(--text);border:1px solid var(--border);padding:6px 12px;font-size:12px;width:auto;">Edit Client</button>
             <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+          </div>
+        </div>
+
+        <!-- PIPELINE & ASSIGNMENT -->
+        <div class="pipeline-container" style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+          <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:12px; display:flex; justify-content:space-between;">
+            <span>PIPELINE STAGE</span>
+            <span id="assignContainer">
+              {{#if selectedLead.advisor_name}}
+                Assigned to: <strong style="color:var(--navy);">{{selectedLead.advisor_name}}</strong>
+              {{else}}
+                <button onclick="assignLead({{selectedLead.id}})" style="background:none;border:none;color:#2563EB;font-weight:700;font-size:11px;cursor:pointer;">+ Assign to Me</button>
+              {{/if}}
+            </span>
+          </div>
+          <div style="display:flex; gap:4px; overflow-x:auto;" id="pipelineButtons" data-current-stage="{{selectedLead.pipeline_stage}}">
+            <button class="pipeline-btn" data-stage="New" onclick="updatePipeline({{selectedLead.id}}, 'New')">New</button>
+            <button class="pipeline-btn" data-stage="Contacted" onclick="updatePipeline({{selectedLead.id}}, 'Contacted')">Contacted</button>
+            <button class="pipeline-btn" data-stage="Meeting Set" onclick="updatePipeline({{selectedLead.id}}, 'Meeting Set')">Meeting</button>
+            <button class="pipeline-btn" data-stage="Proposal Sent" onclick="updatePipeline({{selectedLead.id}}, 'Proposal Sent')">Proposal</button>
+            <button class="pipeline-btn" data-stage="Won" onclick="updatePipeline({{selectedLead.id}}, 'Won')">Won</button>
           </div>
         </div>
 
@@ -1514,6 +1562,70 @@ Already has fire insurance with AIICO.</textarea>
 
     if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
     if(sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+
+    // Render Pipeline visual state
+    function renderPipeline() {
+      const container = document.getElementById('pipelineButtons');
+      if (!container) return;
+      const currentStage = container.getAttribute('data-current-stage') || 'New';
+      const stages = ['New', 'Contacted', 'Meeting Set', 'Proposal Sent', 'Won'];
+      const currentIndex = stages.indexOf(currentStage);
+      
+      const buttons = container.querySelectorAll('.pipeline-btn');
+      buttons.forEach(btn => {
+        const stage = btn.getAttribute('data-stage');
+        const stageIndex = stages.indexOf(stage);
+        
+        btn.classList.remove('active', 'completed');
+        if (stage === currentStage) {
+          btn.classList.add('active');
+        } else if (stageIndex < currentIndex && currentIndex !== -1) {
+          btn.classList.add('completed');
+        }
+      });
+    }
+    renderPipeline();
+
+    window.assignLead = async function(leadId) {
+      if(!confirm("Assign this lead to yourself?")) return;
+      try {
+        const token = localStorage.getItem('accessToken');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        const res = await fetch(`/advisor/api/leads/${leadId}/assign`, { method: 'POST', headers });
+        if(res.ok) {
+          window.location.reload();
+        } else {
+          alert('Failed to assign lead');
+        }
+      } catch(e) {
+        alert('Network error');
+      }
+    };
+
+    window.updatePipeline = async function(leadId, stage) {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        const res = await fetch(`/advisor/api/leads/${leadId}/stage`, { 
+          method: 'POST', 
+          headers,
+          body: JSON.stringify({ stage })
+        });
+        if(res.ok) {
+          const container = document.getElementById('pipelineButtons');
+          container.setAttribute('data-current-stage', stage);
+          renderPipeline();
+        } else {
+          alert('Failed to update pipeline stage');
+        }
+      } catch(e) {
+        alert('Network error');
+      }
+    };
 
     async function updateLeadStatus(leadId, status, leadName) {
       if (!leadId) return alert("No lead selected");

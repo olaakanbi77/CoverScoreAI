@@ -13,7 +13,23 @@ const requireSalesOrAdmin = (req, res, next) => {
 
 router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
-    const rawLeads = await all('SELECT * FROM leads ORDER BY updated_at DESC, created_at DESC');
+    let rawLeads = [];
+    if (req.user.role === 'admin') {
+      rawLeads = await all(`
+        SELECT leads.*, users.name as advisor_name 
+        FROM leads 
+        LEFT JOIN users ON leads.advisor_id = users.id 
+        ORDER BY leads.updated_at DESC, leads.created_at DESC
+      `);
+    } else {
+      rawLeads = await all(`
+        SELECT leads.*, users.name as advisor_name 
+        FROM leads 
+        LEFT JOIN users ON leads.advisor_id = users.id 
+        WHERE leads.advisor_id = ? OR leads.advisor_id IS NULL
+        ORDER BY leads.updated_at DESC, leads.created_at DESC
+      `, [req.user.id]);
+    }
     
     const leads = rawLeads.map(l => {
       let conversations = [];
@@ -259,6 +275,38 @@ router.post('/api/export-docx', authenticatePage, requireSalesOrAdmin, async (re
   } catch (err) {
     console.error('DOCX Export Error:', err);
     res.status(500).json({ error: 'Failed to generate document' });
+  }
+});
+
+router.post('/api/leads/:id/assign', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const leadId = req.params.id;
+    const advisorId = req.user.id;
+    const { run } = require('../config/database');
+    await run('UPDATE leads SET advisor_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [advisorId, leadId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Assign Error:', err);
+    res.status(500).json({ error: 'Failed to assign lead' });
+  }
+});
+
+router.post('/api/leads/:id/stage', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const leadId = req.params.id;
+    const { stage } = req.body;
+    const validStages = ['New', 'Contacted', 'Meeting Set', 'Proposal Sent', 'Won', 'Lost'];
+    
+    if (!validStages.includes(stage)) {
+      return res.status(400).json({ error: 'Invalid stage' });
+    }
+
+    const { run } = require('../config/database');
+    await run('UPDATE leads SET pipeline_stage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [stage, leadId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Pipeline Update Error:', err);
+    res.status(500).json({ error: 'Failed to update pipeline stage' });
   }
 });
 
