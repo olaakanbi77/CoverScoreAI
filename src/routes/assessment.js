@@ -3,10 +3,10 @@ const { body, validationResult } = require('express-validator');
 const { db, run, get, all } = require('../config/database');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { calculateScore } = require('../services/scoringEngine');
-const { generateRiskReport, generateExplanations } = require('../services/aiService');
+const { generateRecommendations } = require('../services/cre');
+const { generateRiskReport, getAdvisorCopilot } = require('../services/aiService');
 const { sendAssessmentReport } = require('../services/emailService');
 const { sendAssessmentComplete } = require('../services/whatsappService');
-const { getIndustryRisks } = require('../services/industryIntelligence');
 
 const router = express.Router();
 
@@ -170,47 +170,48 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     const { score, riskLevel, recommendations, min_loss, max_loss, identified_gaps, risk_categories } = riskData;
 
     let aiReport = null;
-    let explanations = null;
+    let copilotData = null;
+    let creIntelligence = null;
     try {
       const guestName = answers.business?.contact_name || answers.personal?.name || 'Guest User';
       const guestBusinessName = answers.business?.name || 'Prospect';
       const aiUserObj = req.user || { name: guestName, business_name: guestBusinessName };
 
-      const [report, explanationLayer] = await Promise.all([
-        generateRiskReport({
-          answers,
-          score,
-          riskLevel,
-          min_loss,
-          max_loss,
-          recommendations,
-          identified_gaps,
-          risk_categories,
-          entityType,
-          user: aiUserObj
-        }),
-        generateExplanations({
-          answers,
-          score,
-          riskLevel,
-          entityType,
-          user: aiUserObj
-        })
+      const assessmentDataObj = {
+        answers,
+        score,
+        riskLevel,
+        min_loss,
+        max_loss,
+        identified_gaps,
+        risk_categories,
+        entityType,
+        user: aiUserObj
+      };
+
+      // 1. Run CRE Rules
+      creIntelligence = generateRecommendations(assessmentDataObj);
+
+      // 2. Generate AI Report and Copilot Data
+      const [report, copilot] = await Promise.all([
+        generateRiskReport(assessmentDataObj, creIntelligence),
+        getAdvisorCopilot(assessmentDataObj, creIntelligence)
       ]);
 
       aiReport = report;
-      explanations = explanationLayer;
+      copilotData = copilot;
     } catch (e) {
-      console.error('AI Report generation failed:', e.message);
+      console.error('AI Intelligence generation failed:', e.message);
     }
 
-    // Store both report and explanations
+    // Store report, copilot, and CRE intel
     const fullReport = {
       ...(aiReport || {}),
       min_loss,
       max_loss,
       risk_categories,
-      explanations: explanations,
+      copilot: copilotData,
+      cre_data: creIntelligence,
       generatedAt: new Date().toISOString()
     };
 
@@ -246,17 +247,22 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       
       let estimatedPremium = 0;
       if (min_loss) {
-        let totalRate = 0;
+        let annualPremium = 0;
+        let monthlyPremium = 0;
         const recs = recommendations || [];
         if (recs.length > 0) {
           recs.forEach(rec => {
-            // Find rate or default to 1%
-            totalRate += PREMIUM_RATES[rec] || 0.01;
+            const rate = PREMIUM_RATES[rec] || 0.01;
+            if (rec.toLowerCase().includes('life')) {
+              monthlyPremium += (min_loss * rate) / 12;
+            } else {
+              annualPremium += (min_loss * rate);
+            }
           });
+          estimatedPremium = Math.round(annualPremium + monthlyPremium);
         } else {
-          totalRate = 0.013; // default fallback
+          estimatedPremium = Math.round(min_loss * 0.013); // default fallback
         }
-        estimatedPremium = Math.round(min_loss * totalRate);
       }
       
       const agentMap = {

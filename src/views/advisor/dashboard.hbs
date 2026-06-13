@@ -851,7 +851,6 @@
       <a href="/admin/leads" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Leads
-        <span style="margin-left:auto;background:rgba(22,163,74,0.2);color:#4ade80;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">14</span>
       </a>
       <a href="/admin/leads?status=Won" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -956,9 +955,9 @@
             <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="16" y2="18"/></svg></button>
           </div>
           <div class="filter-tabs w-full justify-between">
-            <button class="filter-tab active">All Leads <span class="filter-badge">14</span></button>
-            <button class="filter-tab hot">🔥 Hot <span class="filter-badge">5</span></button>
-            <button class="filter-tab">Follow-up <span class="filter-badge">9</span></button>
+            <button class="filter-tab active">All Leads <span class="filter-badge">{{leads.length}}</span></button>
+            <button class="filter-tab hot">🔥 Hot <span class="filter-badge">{{summary.hotLeads}}</span></button>
+            <button class="filter-tab">Follow-up</button>
           </div>
         </div>
         <div class="lead-queue">

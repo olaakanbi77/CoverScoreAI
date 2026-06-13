@@ -458,12 +458,22 @@ router.post('/evolution', async (req, res) => {
             
             let estimatedPremium = 0;
             if (scoreResult.min_loss) {
-              let totalRate = 0;
+              let annualPremium = 0;
+              let monthlyPremium = 0;
               const recs = scoreResult.recommendations || [];
               if (recs.length > 0) {
-                recs.forEach(rec => { totalRate += PREMIUM_RATES[rec] || 0.01; });
-              } else { totalRate = 0.013; }
-              estimatedPremium = Math.round(scoreResult.min_loss * totalRate);
+                recs.forEach(rec => { 
+                  const rate = PREMIUM_RATES[rec] || 0.01;
+                  if (rec.toLowerCase().includes('life')) {
+                    monthlyPremium += (scoreResult.min_loss * rate) / 12;
+                  } else {
+                    annualPremium += (scoreResult.min_loss * rate);
+                  }
+                });
+                estimatedPremium = Math.round(annualPremium + monthlyPremium);
+              } else { 
+                estimatedPremium = Math.round(scoreResult.min_loss * 0.013); 
+              }
             }
 
             // Update lead with assessment data, set state to qualification, +20 engagement for completing assessment
