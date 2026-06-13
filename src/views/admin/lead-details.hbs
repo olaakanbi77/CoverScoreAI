@@ -73,11 +73,12 @@
   }
 
   .card {
-    background: var(--bg-surface);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
     overflow: hidden;
     margin-bottom: 24px;
+    box-shadow: var(--shadow);
   }
   .card-header {
     padding: 16px 24px;
@@ -110,10 +111,11 @@
     gap: 4px;
   }
   .info-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    font-weight: 600;
   }
   .info-value {
     font-size: 14px;
@@ -236,18 +238,20 @@
   .chat-msg {
     max-width: 85%;
     padding: 12px 16px;
-    border-radius: 12px;
-    font-size: 13px;
+    border-radius: 18px;
+    font-size: 14px;
     line-height: 1.5;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   }
   .chat-msg.bot {
-    background: rgba(255,255,255,0.05);
-    color: var(--text-primary);
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
   }
   .chat-msg.user {
-    background: var(--color-primary);
+    background: var(--color-primary, #22C55E);
     color: white;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
@@ -319,6 +323,10 @@
               <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Contact Information
             </div>
+            <button class="btn btn-outline" style="padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick="openEditModal()">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              Edit Profile
+            </button>
           </div>
           <div class="card-body info-grid">
             <div class="info-item">
@@ -346,11 +354,11 @@
               <span class="info-value" id="infoPremium">--</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Birthday <button onclick="editDate('birthDate')" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:12px;">Edit</button></span>
+              <span class="info-label">Birthday</span>
               <span class="info-value" id="infoBirthday">--</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Anniversary <button onclick="editDate('anniversaryDate')" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:12px;">Edit</button></span>
+              <span class="info-label">Anniversary</span>
               <span class="info-value" id="infoAnniversary">--</span>
             </div>
           </div>
@@ -458,6 +466,67 @@
   </div>
 </div>
 
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-container" style="max-width: 600px;">
+    <div class="modal-header">
+      <h2 class="modal-title">Edit Lead Profile</h2>
+      <button class="modal-close" onclick="closeEditModal()">&times;</button>
+    </div>
+    <form id="editForm" onsubmit="submitEdit(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="editName" name="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="editEmail" name="email" class="form-control">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="editPhone" name="phone" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" id="editBusiness" name="businessName" class="form-control">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>Industry</label>
+          <input type="text" id="editIndustry" name="industry" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Estimated Premium (₦)</label>
+          <input type="number" id="editPremium" name="estimatedPremium" class="form-control">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>Birthday</label>
+          <input type="date" id="editBirthday" name="birthDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Anniversary</label>
+          <input type="date" id="editAnniversary" name="anniversaryDate" class="form-control">
+        </div>
+      </div>
+      
+      <div class="modal-footer" style="margin-top: 16px; padding: 0;">
+        <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+        <button type="submit" class="btn-primary" id="saveEditBtn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
   const leadId = "{{leadId}}";
 
@@ -484,7 +553,10 @@
     }
   }
 
+  let currentLeadData = null;
+
   function renderLead(lead) {
+    currentLeadData = lead;
     document.getElementById('loadingOverlay').style.display = 'none';
     document.getElementById('leadContent').style.display = 'block';
 
@@ -658,32 +730,81 @@
     }
   }
 
-  async function editDate(field) {
-    const currentVal = document.getElementById(field === 'birthDate' ? 'infoBirthday' : 'infoAnniversary').textContent;
-    const initial = currentVal === 'Not specified' ? '' : currentVal;
-    const newVal = prompt(`Enter ${field === 'birthDate' ? 'Birthday' : 'Anniversary'} (DD/MM/YYYY):`, initial);
+  function openEditModal() {
+    if (!currentLeadData) return;
+    document.getElementById('editName').value = currentLeadData.name || '';
+    document.getElementById('editEmail').value = currentLeadData.email || '';
+    document.getElementById('editPhone').value = currentLeadData.phone || '';
+    document.getElementById('editBusiness').value = currentLeadData.businessName || '';
+    document.getElementById('editIndustry').value = currentLeadData.industry || '';
+    document.getElementById('editPremium').value = currentLeadData.estimatedPremium || '';
     
-    if (newVal !== null) {
-      const token = localStorage.getItem('accessToken');
-      try {
-        const body = {};
-        body[field] = newVal;
-        const res = await fetch(`/api/leads/${leadId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(body)
-        });
-        if (res.ok) {
-          loadLead();
-        } else {
-          alert('Failed to update date');
-        }
-      } catch(err) {
-        alert(err.message);
+    // Parse date formats if necessary
+    // Database might return "DD/MM/YYYY" or "YYYY-MM-DD", input type="date" expects "YYYY-MM-DD"
+    const parseToInputDate = (dateStr) => {
+      if (!dateStr || dateStr === 'Not specified') return '';
+      if (dateStr.includes('/')) {
+        const [d, m, y] = dateStr.split('/');
+        return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
       }
+      return dateStr;
+    };
+
+    document.getElementById('editBirthday').value = parseToInputDate(currentLeadData.birthDate);
+    document.getElementById('editAnniversary').value = parseToInputDate(currentLeadData.anniversaryDate);
+
+    document.getElementById('editModal').style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  async function submitEdit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('saveEditBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    // Format dates back from YYYY-MM-DD to DD/MM/YYYY for the backend if needed
+    // The backend uses DD/MM/YYYY generally based on earlier code
+    const formatDateForDB = (dateStr) => {
+      if (!dateStr) return '';
+      if (dateStr.includes('-')) {
+        const [y, m, d] = dateStr.split('-');
+        return `${d}/${m}/${y}`;
+      }
+      return dateStr;
+    };
+
+    if (data.birthDate) data.birthDate = formatDateForDB(data.birthDate);
+    if (data.anniversaryDate) data.anniversaryDate = formatDateForDB(data.anniversaryDate);
+
+    const token = localStorage.getItem('accessToken');
+    try {
+      const res = await fetch(`/api/leads/${leadId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+      
+      if (res.ok) {
+        closeEditModal();
+        loadLead();
+      } else {
+        alert('Failed to update profile');
+      }
+    } catch(err) {
+      alert(err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
     }
   }
 
