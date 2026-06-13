@@ -1155,7 +1155,7 @@
                   <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;font-weight:600;">Financial Exposure</div>
                   <div style="font-size:18px;font-weight:700;color:var(--green);">₦{{selectedLead.financial_exposure_min}} - ₦{{selectedLead.financial_exposure_max}}</div>
                 </div>
-                <a href="/public/proposal/{{selectedLead.id}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View Full Report &rarr;</a>
+                <a href="/advisor/proposal-writer/{{selectedLead.id}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View Full Report &rarr;</a>
               </div>
             </div>
             <!-- TOP RISKS -->
@@ -1174,7 +1174,7 @@
               {{#each selectedLead.protection_gaps}}
               <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> {{this}}</div>
               {{/each}}
-              <a href="{{#if selectedLead}}/public/proposal/{{selectedLead.id}}{{else}}#{{/if}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View All Gaps &rarr;</a>
+              <a href="/advisor/proposal-writer/{{selectedLead.id}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View All Gaps &rarr;</a>
             </div>
           </div>
           
