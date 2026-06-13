@@ -501,24 +501,12 @@ const getNextStateAndReply = (currentState, incomingText, currentData) => {
       if (['A','B','C'].includes(input)) {
         const prefMap = {'A': 'WhatsApp Review', 'B': 'Phone Call', 'C': 'Virtual Meeting'};
         updatedData.consultation_preference = prefMap[input];
-        replyText = "Thank you.\n\nTo help us prepare for your review, which best describes you?\n\n1 = Business Owner\n2 = Employee\n3 = Self-Employed Professional\n4 = Family Provider\n\nReply 1, 2, 3 or 4.";
-        nextState = 'qual_p3_describe';
-      } else {
-        replyText = "Please reply with A, B or C.";
-      }
-      break;
-
-    // --- Path 3: Describe yourself ---
-    case 'qual_p3_describe':
-      if (['1','2','3','4'].includes(input)) {
-        const descMap = {'1': 'Business Owner', '2': 'Employee', '3': 'Self-Employed Professional', '4': 'Family Provider'};
-        updatedData.describe_role = descMap[input];
         updatedData.is_qualified = true;
         updatedData.requested_review = true;
-        replyText = `Thank you, ${updatedData.name || 'there'}.\n\nYour review has been scheduled. An advisor will reach out to you shortly via ${updatedData.consultation_preference || 'your preferred channel'}.\n\nIn the meantime, you can review your full report anytime.\n\nThank you for using CoverScore AI. 🙏\n\n— CoverScore AI`;
+        replyText = `Thank you, ${updatedData.name || 'there'}.\n\nYour review has been scheduled. An advisor will reach out to you shortly via ${prefMap[input]}.\n\nIn the meantime, you can review your full report anytime.\n\nThank you for using CoverScore AI. 🙏\n\n— CoverScore AI`;
         nextState = 'finished';
       } else {
-        replyText = "Please reply with 1, 2, 3 or 4.";
+        replyText = "Please reply with A, B or C.";
       }
       break;
 
