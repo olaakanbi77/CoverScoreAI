@@ -66,6 +66,7 @@ const initDatabase = () => {
       is_qualified BOOLEAN DEFAULT 0,
       notes TEXT,
       chat_history TEXT DEFAULT '[]',
+      assessment_data TEXT DEFAULT '{}',
       sales_score INTEGER DEFAULT 0,
       pipeline_stage INTEGER DEFAULT 1,
       estimated_premium INTEGER DEFAULT 0,

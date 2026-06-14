@@ -52,16 +52,25 @@ router.post('/evolution', async (req, res) => {
       const words = incomingText.split(/\s+/);
       const isStartTrigger = words.some(w => w === 'START' || w === 'ASSESSMENT' || w === 'HELLO' || w === 'HI' || w === 'BEGIN');
       // Explicit restart requires specific phrases
-      const isRestartTrigger = incomingText.includes('START ASSESSMENT') || incomingText.includes('RESTART') || incomingText.includes('START OVER');
+      const isRestartTrigger = incomingText.includes('START ') && incomingText.includes(' ASSESSMENT') || incomingText.includes('RESTART') || incomingText.includes('START OVER');
 
-      console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}`);
+      // Detect Industry if they used dynamic link
+      let detectedIndustry = null;
+      if (incomingText.includes('START ') && incomingText.includes(' ASSESSMENT')) {
+        const match = incomingText.match(/START\s+(.+)\s+ASSESSMENT/);
+        if (match && match[1]) {
+          detectedIndustry = match[1].trim().toLowerCase();
+        }
+      }
+
+      console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
 
       if (!lead) {
         if (isStartTrigger) {
           const insertResult = await run(`
-            INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person)
-            VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?)
-          `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, 'WhatsApp User']);
+            INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
+            VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?, ?)
+          `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, 'WhatsApp User', detectedIndustry]);
           
           lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
           console.log(`   Created new lead ID: ${lead.id}`);
@@ -73,9 +82,9 @@ router.post('/evolution', async (req, res) => {
         // Create a completely new lead for explicit restart triggers to preserve previous assessments
         console.log(`   Creating NEW lead for phone ${phoneNumber} (explicit restart trigger)`);
         const insertResult = await run(`
-          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person)
-          VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?)
-        `, [lead.name, lead.email, phoneNumber, lead.name]);
+          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
+          VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?, ?)
+        `, [lead.name, lead.email, phoneNumber, lead.name, detectedIndustry || lead.industry]);
         
         lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
       }
@@ -102,9 +111,14 @@ router.post('/evolution', async (req, res) => {
         }
       }
 
-      let currentData = {};
+      let chatHistory = [];
       try {
-        currentData = JSON.parse(lead.chat_history || '{}');
+        chatHistory = JSON.parse(lead.chat_history || '[]');
+      } catch(e) {}
+
+      let assessmentData = {};
+      try {
+        assessmentData = JSON.parse(lead.assessment_data || '{}');
       } catch(e) {}
 
       // ── NEW STRUCTURED FLOW STATE MACHINE ──
@@ -120,18 +134,17 @@ router.post('/evolution', async (req, res) => {
         const welcomeResult = await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
         console.log(`   Welcome message result: ${JSON.stringify(welcomeResult)}`);
         
-        currentData.__messages = currentData.__messages || [];
-        currentData.__messages.push({
+        chatHistory.push({
           role: 'user',
           content: processText,
           timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
         });
-        currentData.__messages.push({
+        chatHistory.push({
           role: 'assistant',
           content: initialWelcome,
           timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
         });
-        await run('UPDATE leads SET chat_history = ? WHERE id = ?', [JSON.stringify(currentData), lead.id]);
+        await run('UPDATE leads SET chat_history = ? WHERE id = ?', [JSON.stringify(chatHistory), lead.id]);
         
         return; // wait for them to answer name
       }
@@ -141,7 +154,7 @@ router.post('/evolution', async (req, res) => {
       }
 
       // 1. Process Message through State Machine
-      let { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, currentData);
+      let { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, assessmentData, lead.industry);
       console.log(`   State transition: ${evalState} -> ${nextState}, isComplete: ${isComplete}`);
 
       let finalReplyText = replyText;
@@ -167,13 +180,12 @@ router.post('/evolution', async (req, res) => {
         }
         console.log(`   ✅ Reply sent successfully. Advancing state to: ${nextState}`);
         
-        updatedData.__messages = updatedData.__messages || [];
-        updatedData.__messages.push({
+        chatHistory.push({
           role: 'user',
           content: processText,
           timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
         });
-        updatedData.__messages.push({
+        chatHistory.push({
           role: 'assistant',
           content: finalReplyText,
           timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
@@ -182,34 +194,29 @@ router.post('/evolution', async (req, res) => {
         // ── ENGAGEMENT SCORING ──
         let engagementBonus = 0;
         
-        // +20 for first WhatsApp reply (assessment completed already gives +20)
-        if (evalState === 'welcome_name' && nextState === 'welcome_email') {
-          engagementBonus = 20; // Replied to WhatsApp
-        }
-        // +10 for selecting 1, 2, or 3 in qualification
-        if (evalState === 'qualification' && ['qual_path1_situation','qual_path2_concern','qual_path3_preference'].includes(nextState)) {
-          engagementBonus = 10;
-        }
-        // +30 for requesting review (YES) or plan (PLAN)
-        if (updatedData.requested_review === true && !currentData.requested_review) {
-          engagementBonus = 30;
-        }
-        if (updatedData.requested_plan === true && !currentData.requested_plan) {
-          engagementBonus = 30;
-        }
-        // +40 for choosing consultation type
-        if (updatedData.consultation_preference && !currentData.consultation_preference) {
-          engagementBonus = 40;
-        }
-        
-        // Apply engagement scoring
+        if (evalState === 'welcome_name' && nextState === 'welcome_email') engagementBonus = 20;
+
         if (engagementBonus > 0) {
           await run('UPDATE leads SET engagement_points = engagement_points + ?, sales_score = sales_score + ? WHERE id = ?', [engagementBonus, engagementBonus, lead.id]);
-          console.log(`   📊 Engagement +${engagementBonus} points for lead ${lead.id}`);
+        }
+
+        // Process final risk score if complete
+        if (isComplete && !updatedData._scored) {
+          const { processAssessment } = require('../services/riskEngine');
+          const riResults = processAssessment(updatedData);
+          updatedData._scored = true;
+          
+          // Save the results
+          updatedData.final_risk_score = riResults.risk_score;
+          updatedData.final_risk_level = riResults.risk_level;
+          updatedData.final_resilience_score = riResults.resilience_score;
+          
+          // Send report via WhatsApp as well
+          await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report });
         }
 
         // Update lead state (only if message was sent successfully)
-        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), lead.id]);
+        await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), JSON.stringify(chatHistory), lead.id]);
         
         // 🚀 CHECK IF LEAD IS NOW QUALIFIED 🚀
         if (nextState === 'finished') {

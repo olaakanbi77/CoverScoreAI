@@ -79,7 +79,35 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  res.render('landing', { title: 'Home', layout: false });
+  res.render('landing', { 
+    title: 'CoverScore AI', 
+    layout: false,
+    headline: 'Could Your Business Survive a Major Loss?',
+    subheadline: 'Discover Your Business Resilience Score in 5 Minutes.',
+    trigger: 'START SME ASSESSMENT'
+  });
+});
+
+const industryContent = require('./data/industry_content.json');
+
+app.get('/:industry', (req, res, next) => {
+  const industryKey = req.params.industry.toLowerCase();
+  
+  // Ignore reserved routes so they fall through
+  const reserved = ['login', 'api', 'webhook', 'whatsapp', 'admin', 'advisor', 'dashboard', 'wipe-db-xyz123', 'quote-request', 'consultation-request'];
+  if (reserved.includes(industryKey)) return next();
+
+  if (industryContent[industryKey]) {
+    res.render('landing', { 
+      title: industryContent[industryKey].title, 
+      layout: false,
+      headline: industryContent[industryKey].headline,
+      subheadline: industryContent[industryKey].subheadline,
+      trigger: industryContent[industryKey].trigger
+    });
+  } else {
+    next(); // 404 or fall through
+  }
 });
 
 app.get('/wipe-db-xyz123', async (req, res) => {
@@ -108,7 +136,8 @@ app.get('/auth/register', (req, res) => {
 
 app.get('/start-whatsapp', (req, res) => {
   const botNumber = process.env.WHATSAPP_BOT_NUMBER || '2349165304629';
-  const text = encodeURIComponent('START ASSESSMENT');
+  const textMsg = req.query.text || 'START ASSESSMENT';
+  const text = encodeURIComponent(textMsg);
   res.redirect(`https://wa.me/${botNumber}?text=${text}`);
 });
 
