@@ -41,9 +41,21 @@
           AI-POWERED RISK INTELLIGENCE
         </div>
         
-        <h1 class="mo-hero-title">Know Your Risks<br>Before They <span>Cost You.</span></h1>
+        <h1 class="mo-hero-title">
+          {{#if headline}}
+            {{headline}}
+          {{else}}
+            Know Your Risks<br>Before They <span>Cost You.</span>
+          {{/if}}
+        </h1>
         
-        <p class="mo-hero-subtitle">Get a personalized AI-powered risk assessment in minutes and discover hidden financial exposures affecting your business, family, or assets.</p>
+        <p class="mo-hero-subtitle">
+          {{#if subheadline}}
+            {{subheadline}}
+          {{else}}
+            Get a personalized AI-powered risk assessment in minutes and discover hidden financial exposures affecting your business, family, or assets.
+          {{/if}}
+        </p>
         
         <div class="mo-check-list">
           <div class="mo-check-item">
@@ -67,7 +79,7 @@
         <div class="mo-hero-actions">
           <a href="/start-whatsapp" class="mo-btn mo-btn-green">
             <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.68 4.19 1.84 5.86L2.5 21.5l3.75-1.25A9.95 9.95 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-            Start Assessment on WhatsApp
+            {{#if trigger}}{{trigger}}{{else}}Start Assessment on WhatsApp{{/if}}
           </a>
           <a href="#assessments" class="mo-btn mo-btn-outline">Get My Free Risk Score</a>
         </div>
