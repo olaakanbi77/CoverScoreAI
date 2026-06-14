@@ -207,32 +207,58 @@
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+    const btn = form.querySelector('button[type="submit"]');
     
     try {
-      const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Saving...';
-      const headers = { 'Content-Type': 'application/json' };
-      const token = localStorage.getItem('accessToken');
+      
+      let token = localStorage.getItem('accessToken');
+      let headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = 'Bearer ' + token;
 
-      const res = await fetch('/api/crm/policies', {
+      let res = await fetch('/api/crm/policies', {
         method: 'POST',
         headers,
         body: JSON.stringify(data)
       });
       
+      // Auto-refresh token if expired
+      if (res.status === 401) {
+        const refreshRes = await fetch('/api/auth/refresh', { 
+          method: 'POST',
+          credentials: 'same-origin'
+        });
+        
+        if (refreshRes.ok) {
+          const refreshData = await refreshRes.json();
+          token = refreshData.accessToken;
+          localStorage.setItem('accessToken', token);
+          headers['Authorization'] = 'Bearer ' + token;
+          
+          // Retry the request
+          res = await fetch('/api/crm/policies', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data)
+          });
+        } else {
+          window.location.href = '/auth/login';
+          return;
+        }
+      }
+      
       if (res.ok) {
         window.location.reload();
       } else {
         const err = await res.json();
-        alert(err.error || 'Failed to record policy');
+        alert(err.error || err.message || 'Failed to record policy');
         btn.disabled = false;
         btn.textContent = 'Save Policy';
       }
     } catch (error) {
+      console.error(error);
       alert('Error connecting to server');
-      const btn = form.querySelector('button[type="submit"]');
       btn.disabled = false;
       btn.textContent = 'Save Policy';
     }
