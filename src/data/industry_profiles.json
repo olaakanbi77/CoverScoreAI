@@ -1,0 +1,76 @@
+{
+  "sme": {
+    "name": "SME",
+    "domains": [
+      "Property Risk",
+      "Business Continuity Risk",
+      "Employee Risk",
+      "Liability Risk",
+      "Financial Risk",
+      "Cyber Risk",
+      "Operational Risk",
+      "Regulatory Risk",
+      "Key Person Risk",
+      "Crime & Security Risk"
+    ],
+    "modules": []
+  },
+  "school": {
+    "name": "School",
+    "domains": [
+      "Property Risk",
+      "Employee Risk",
+      "Liability Risk",
+      "Business Continuity Risk",
+      "Regulatory Risk"
+    ],
+    "modules": [
+      "Student Safety",
+      "School Transportation",
+      "Boarding Facilities"
+    ]
+  },
+  "manufacturing": {
+    "name": "Manufacturing",
+    "domains": [
+      "Property Risk",
+      "Employee Risk",
+      "Liability Risk",
+      "Business Continuity Risk",
+      "Operational Risk",
+      "Strategic Risk"
+    ],
+    "modules": [
+      "Machinery",
+      "Production",
+      "Supply Chain"
+    ]
+  },
+  "church": {
+    "name": "Church",
+    "domains": [
+      "Property Risk",
+      "Liability Risk",
+      "Business Continuity Risk"
+    ],
+    "modules": [
+      "Congregation Safety",
+      "Event Risk",
+      "Volunteer Risk"
+    ]
+  },
+  "hospital": {
+    "name": "Hospital",
+    "domains": [
+      "Property Risk",
+      "Employee Risk",
+      "Liability Risk",
+      "Operational Risk"
+    ],
+    "modules": [
+      "Clinical Risk",
+      "Patient Safety",
+      "Medical Malpractice"
+    ]
+  }
+}

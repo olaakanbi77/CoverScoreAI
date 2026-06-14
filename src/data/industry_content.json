@@ -1,0 +1,32 @@
+{
+  "sme": {
+    "title": "Discover Your Business Risk Score",
+    "headline": "Could Your Business Survive a Major Loss?",
+    "subheadline": "Discover Your Business Resilience Score in 5 Minutes.",
+    "trigger": "START SME ASSESSMENT"
+  },
+  "school": {
+    "title": "School Risk Assessment | CoverScore",
+    "headline": "Could Your School Survive a Major Fire, Bus Accident, or Liability Claim?",
+    "subheadline": "Discover Your School Resilience Score in 5 Minutes.",
+    "trigger": "START SCHOOL ASSESSMENT"
+  },
+  "church": {
+    "title": "Church Risk Assessment | CoverScore",
+    "headline": "Is Your Congregation Truly Protected?",
+    "subheadline": "Discover Your Church Resilience Score in 5 Minutes.",
+    "trigger": "START CHURCH ASSESSMENT"
+  },
+  "manufacturing": {
+    "title": "Manufacturing Risk Assessment | CoverScore",
+    "headline": "Could You Survive a Major Equipment Breakdown or Supply Chain Failure?",
+    "subheadline": "Discover Your Manufacturing Resilience Score in 5 Minutes.",
+    "trigger": "START MANUFACTURING ASSESSMENT"
+  },
+  "hospital": {
+    "title": "Healthcare Risk Assessment | CoverScore",
+    "headline": "Could Your Hospital Survive a Malpractice Claim or Critical System Failure?",
+    "subheadline": "Discover Your Healthcare Resilience Score in 5 Minutes.",
+    "trigger": "START HOSPITAL ASSESSMENT"
+  }
+}

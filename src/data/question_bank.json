@@ -1,0 +1,603 @@
+[
+  {
+    "id": "PR001",
+    "domain": "Property Risk",
+    "sub_domain": "Building Risk",
+    "pillar": "Exposure",
+    "question": "Do you operate from a physical business location?",
+    "question_type": "yes_no",
+    "weight": 10,
+    "branching": {
+      "YES": "PR002",
+      "NO": "PR101"
+    }
+  },
+  {
+    "id": "PR002",
+    "domain": "Property Risk",
+    "sub_domain": "Building Risk",
+    "pillar": "Exposure",
+    "question": "Do you own or rent the premises?",
+    "question_type": "single_choice",
+    "answers": ["Own", "Rent"],
+    "branching": {
+      "DEFAULT": "PR003"
+    }
+  },
+  {
+    "id": "PR003",
+    "domain": "Property Risk",
+    "sub_domain": "Building Risk",
+    "pillar": "Exposure",
+    "question": "What is the estimated replacement value of the building?",
+    "question_type": "single_choice",
+    "answers": ["Under ₦10M", "₦10M–₦50M", "₦50M–₦200M", "Above ₦200M"],
+    "risk_logic": {
+      "Under ₦10M": { "exposure_points": 10 },
+      "₦10M–₦50M": { "exposure_points": 25 },
+      "₦50M–₦200M": { "exposure_points": 50 },
+      "Above ₦200M": { "exposure_points": 100 }
+    },
+    "branching": {
+      "DEFAULT": "PR004"
+    }
+  },
+  {
+    "id": "PR004",
+    "domain": "Property Risk",
+    "sub_domain": "Building Risk",
+    "pillar": "Preparedness",
+    "question": "Do you have fire extinguishers installed?",
+    "question_type": "yes_no",
+    "weight": 15,
+    "risk_logic": {
+      "NO": { "vulnerability_points": 15, "category": "Preparedness Gap" }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "High",
+      "recommendation": "Implement basic fire protection measures."
+    },
+    "branching": {
+      "YES": "PR005",
+      "NO": "PR006"
+    }
+  },
+  {
+    "id": "PR005",
+    "domain": "Property Risk",
+    "sub_domain": "Building Risk",
+    "pillar": "Preparedness",
+    "question": "How often are fire extinguishers inspected?",
+    "question_type": "single_choice",
+    "answers": ["Monthly", "Quarterly", "Annually", "Never"],
+    "risk_logic": {
+      "Monthly": { "vulnerability_points": 0 },
+      "Quarterly": { "vulnerability_points": 5 },
+      "Annually": { "vulnerability_points": 10 },
+      "Never": { "vulnerability_points": 20 }
+    },
+    "branching": {
+      "DEFAULT": "PR006"
+    }
+  },
+  {
+    "id": "PR006",
+    "domain": "Property Risk",
+    "sub_domain": "Building Risk",
+    "pillar": "Vulnerability",
+    "question": "Have you experienced a fire incident within the last 5 years?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": { "vulnerability_points": 20, "severity": "High" }
+    },
+    "branching": {
+      "DEFAULT": "PR101"
+    }
+  },
+  {
+    "id": "PR101",
+    "domain": "Property Risk",
+    "sub_domain": "Inventory Risk",
+    "pillar": "Exposure",
+    "question": "Do you maintain inventory or stock?",
+    "question_type": "yes_no",
+    "branching": {
+      "YES": "PR102",
+      "NO": "BC001"
+    }
+  },
+  {
+    "id": "PR102",
+    "domain": "Property Risk",
+    "sub_domain": "Inventory Risk",
+    "pillar": "Exposure",
+    "question": "Estimated inventory value?",
+    "question_type": "single_choice",
+    "answers": ["Under ₦5M", "₦5M–₦20M", "₦20M–₦50M", "Above ₦50M"],
+    "branching": {
+      "DEFAULT": "PR103"
+    }
+  },
+  {
+    "id": "PR103",
+    "domain": "Property Risk",
+    "sub_domain": "Inventory Risk",
+    "pillar": "Preparedness",
+    "question": "Do you maintain inventory records?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 15 }
+    },
+    "branching": {
+      "DEFAULT": "BC001"
+    }
+  },
+  {
+    "id": "BC001",
+    "domain": "Business Continuity Risk",
+    "sub_domain": "Revenue Dependency",
+    "pillar": "Impact",
+    "question": "If your business stopped operating today, how long could it survive?",
+    "question_type": "single_choice",
+    "answers": [
+      "Less than 1 month",
+      "1–3 months",
+      "3–6 months",
+      "6–12 months",
+      "More than 12 months"
+    ],
+    "risk_logic": {
+      "Less than 1 month": { "impact_points": 100 },
+      "1–3 months": { "impact_points": 75 },
+      "3–6 months": { "impact_points": 50 },
+      "6–12 months": { "impact_points": 25 },
+      "More than 12 months": { "impact_points": 0 }
+    },
+    "branching": {
+      "DEFAULT": "BC002"
+    }
+  },
+  {
+    "id": "BC002",
+    "domain": "Business Continuity Risk",
+    "sub_domain": "Disaster Recovery",
+    "pillar": "Preparedness",
+    "question": "Do you have a documented business continuity plan?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 25 }
+    },
+    "branching": {
+      "DEFAULT": "BC003"
+    }
+  },
+  {
+    "id": "BC003",
+    "domain": "Business Continuity Risk",
+    "sub_domain": "Backup & Recovery",
+    "pillar": "Preparedness",
+    "question": "Do you maintain regular backups of critical business data?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 20 }
+    },
+    "branching": {
+      "DEFAULT": "ER001"
+    }
+  },
+  {
+    "id": "ER001",
+    "domain": "Employee Risk",
+    "sub_domain": "Workforce Size",
+    "pillar": "Exposure",
+    "question": "How many employees do you have?",
+    "question_type": "single_choice",
+    "answers": ["1-5", "6-20", "21-50", "50+"],
+    "risk_logic": {
+      "1-5": { "exposure_points": 10 },
+      "6-20": { "exposure_points": 30 },
+      "21-50": { "exposure_points": 60 },
+      "50+": { "exposure_points": 100 }
+    },
+    "branching": {
+      "DEFAULT": "ER002"
+    }
+  },
+  {
+    "id": "ER002",
+    "domain": "Employee Risk",
+    "sub_domain": "Death in Service",
+    "pillar": "Protection",
+    "question": "Do you provide Group Life Insurance for your employees?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 25 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Medium",
+      "recommendation": "Consider Group Life Insurance to protect employee families and limit liability."
+    },
+    "branching": {
+      "DEFAULT": "ER003"
+    }
+  },
+  {
+    "id": "ER003",
+    "domain": "Employee Risk",
+    "sub_domain": "Workplace Injury",
+    "pillar": "Preparedness",
+    "question": "How often is workplace safety training conducted?",
+    "question_type": "single_choice",
+    "answers": ["Monthly", "Quarterly", "Annually", "Never"],
+    "risk_logic": {
+      "Monthly": { "vulnerability_points": 0 },
+      "Quarterly": { "vulnerability_points": 5 },
+      "Annually": { "vulnerability_points": 10 },
+      "Never": { "vulnerability_points": 20 }
+    },
+    "branching": {
+      "DEFAULT": "LR001"
+    }
+  },
+  {
+    "id": "LR001",
+    "domain": "Liability Risk",
+    "sub_domain": "Public Liability",
+    "pillar": "Exposure",
+    "question": "Do customers or members of the public regularly visit your premises?",
+    "question_type": "yes_no",
+    "branching": {
+      "YES": "LR002",
+      "NO": "LR004"
+    }
+  },
+  {
+    "id": "LR002",
+    "domain": "Liability Risk",
+    "sub_domain": "Public Liability",
+    "pillar": "Exposure",
+    "question": "What is the average number of visitors you receive per day?",
+    "question_type": "single_choice",
+    "answers": ["0-10", "11-50", "51-100", "100+"],
+    "risk_logic": {
+      "0-10": { "exposure_points": 10 },
+      "11-50": { "exposure_points": 30 },
+      "51-100": { "exposure_points": 60 },
+      "100+": { "exposure_points": 100 }
+    },
+    "branching": {
+      "DEFAULT": "LR003"
+    }
+  },
+  {
+    "id": "LR003",
+    "domain": "Liability Risk",
+    "sub_domain": "Public Liability",
+    "pillar": "Protection",
+    "question": "Do you currently have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 25 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Medium",
+      "recommendation": "Obtain Public Liability Insurance to cover customer injury or property damage claims."
+    },
+    "branching": {
+      "DEFAULT": "LR004"
+    }
+  },
+  {
+    "id": "LR004",
+    "domain": "Liability Risk",
+    "sub_domain": "Professional Liability",
+    "pillar": "Exposure",
+    "question": "Do clients rely on your professional advice or services?",
+    "question_type": "yes_no",
+    "branching": {
+      "DEFAULT": "KP001"
+    }
+  },
+  {
+    "id": "KP001",
+    "domain": "Key Person Risk",
+    "sub_domain": "Founder Dependency",
+    "pillar": "Impact",
+    "question": "Could the business operate successfully for 90 days without the owner/founder?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "impact_points": 40, "vulnerability_points": 40 }
+    },
+    "branching": {
+      "DEFAULT": "KP002"
+    }
+  },
+  {
+    "id": "KP002",
+    "domain": "Key Person Risk",
+    "sub_domain": "Succession",
+    "pillar": "Preparedness",
+    "question": "Is there a documented succession plan in place?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 30 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "High",
+      "recommendation": "Develop a documented succession plan to mitigate Key Person Dependency."
+    },
+    "branching": {
+      "DEFAULT": "FR001"
+    }
+  },
+  {
+    "id": "FR001",
+    "domain": "Financial Risk",
+    "sub_domain": "Cash Flow Risk",
+    "pillar": "Preparedness",
+    "question": "How many months of cash reserves does the business currently hold?",
+    "question_type": "single_choice",
+    "answers": ["Less than 1 month", "1-3 months", "3-6 months", "More than 6 months"],
+    "risk_logic": {
+      "Less than 1 month": { "vulnerability_points": 40 },
+      "1-3 months": { "vulnerability_points": 20 },
+      "3-6 months": { "vulnerability_points": 10 },
+      "More than 6 months": { "vulnerability_points": 0 }
+    },
+    "branching": {
+      "DEFAULT": "CR001"
+    }
+  },
+  {
+    "id": "CR001",
+    "domain": "Cyber Risk",
+    "sub_domain": "Data Breach Risk",
+    "pillar": "Exposure",
+    "question": "Do you store sensitive customer or employee data electronically?",
+    "question_type": "yes_no",
+    "branching": {
+      "YES": "CR002",
+      "NO": "OR001"
+    }
+  },
+  {
+    "id": "CR002",
+    "domain": "Cyber Risk",
+    "sub_domain": "Cyber Attack Risk",
+    "pillar": "Preparedness",
+    "question": "Do employees use Multi-Factor Authentication (MFA) for critical systems?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 25 }
+    },
+    "branching": {
+      "DEFAULT": "CR003"
+    }
+  },
+  {
+    "id": "CR003",
+    "domain": "Cyber Risk",
+    "sub_domain": "Business Email Compromise",
+    "pillar": "Preparedness",
+    "question": "Do you have strict approval controls for large electronic payments?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 30 }
+    },
+    "branching": {
+      "DEFAULT": "OR001"
+    }
+  },
+  {
+    "id": "OR001",
+    "domain": "Operational Risk",
+    "sub_domain": "Process Dependency",
+    "pillar": "Preparedness",
+    "question": "Are your critical business processes formally documented?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 20 }
+    },
+    "branching": {
+      "DEFAULT": "RR001"
+    }
+  },
+  {
+    "id": "RR001",
+    "domain": "Regulatory Risk",
+    "sub_domain": "Compliance",
+    "pillar": "Preparedness",
+    "question": "Are all your business registrations and tax filings completely up to date?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 40 }
+    },
+    "branching": {
+      "DEFAULT": "SR001"
+    }
+  },
+  {
+    "id": "SR001",
+    "domain": "Crime & Security Risk",
+    "sub_domain": "Theft Risk",
+    "pillar": "Preparedness",
+    "question": "Are your premises equipped with CCTV cameras?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 15 }
+    },
+    "branching": {
+      "DEFAULT": "SR002"
+    }
+  },
+  {
+    "id": "SR002",
+    "domain": "Crime & Security Risk",
+    "sub_domain": "Employee Fraud",
+    "pillar": "Preparedness",
+    "question": "Is there a segregation of financial duties among employees?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 20 }
+    },
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SCH001",
+    "domain": "Student Safety",
+    "industry_module": "Student Safety",
+    "pillar": "Preparedness",
+    "question": "Are all visitors required to sign in and wear identification?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 30 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "High",
+      "recommendation": "Implement a strict visitor management and ID policy."
+    },
+    "branching": {
+      "DEFAULT": "SCH002"
+    }
+  },
+  {
+    "id": "SCH002",
+    "domain": "Student Safety",
+    "industry_module": "Student Safety",
+    "pillar": "Preparedness",
+    "question": "Are background checks conducted on all staff and regular volunteers?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 40 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Critical",
+      "recommendation": "Mandate comprehensive background checks for all personnel interacting with students."
+    },
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MFG001",
+    "domain": "Operational Risk",
+    "industry_module": "Machinery",
+    "pillar": "Preparedness",
+    "question": "Do you have a scheduled preventative maintenance program for all critical machinery?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 40 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Critical",
+      "recommendation": "Implement a preventative maintenance schedule to reduce equipment breakdown risk."
+    },
+    "branching": {
+      "DEFAULT": "MFG002"
+    }
+  },
+  {
+    "id": "MFG002",
+    "domain": "Operational Risk",
+    "industry_module": "Machinery",
+    "pillar": "Protection",
+    "question": "Do you hold Machinery Breakdown Insurance?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 30 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "High",
+      "recommendation": "Obtain Machinery Breakdown coverage to protect against catastrophic equipment failure."
+    },
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CHU001",
+    "domain": "Liability Risk",
+    "industry_module": "Congregation Safety",
+    "pillar": "Preparedness",
+    "question": "Are emergency exits clearly marked and kept unobstructed at all times?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 35 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Critical",
+      "recommendation": "Ensure all emergency exits are immediately cleared and marked with illuminated signs."
+    },
+    "branching": {
+      "DEFAULT": "CHU002"
+    }
+  },
+  {
+    "id": "CHU002",
+    "domain": "Liability Risk",
+    "industry_module": "Congregation Safety",
+    "pillar": "Preparedness",
+    "question": "Do you have trained medical personnel or an active first aid team present during large services?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 20 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "High",
+      "recommendation": "Form a volunteer medical or first-aid response team for main services."
+    },
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOS001",
+    "domain": "Liability Risk",
+    "industry_module": "Clinical Risk",
+    "pillar": "Preparedness",
+    "question": "Do you have a formalized incident reporting system for medical errors or near-misses?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 40 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Critical",
+      "recommendation": "Implement a mandatory, no-blame incident reporting protocol to mitigate clinical risk."
+    },
+    "branching": {
+      "DEFAULT": "HOS002"
+    }
+  },
+  {
+    "id": "HOS002",
+    "domain": "Liability Risk",
+    "industry_module": "Clinical Risk",
+    "pillar": "Protection",
+    "question": "Are all medical practitioners covered by active Medical Malpractice Insurance?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": { "vulnerability_points": 50 }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "priority": "Critical",
+      "recommendation": "Require proof of Medical Malpractice coverage for all attending physicians and clinical staff."
+    },
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  }
+]
