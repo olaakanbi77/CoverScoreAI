@@ -73,6 +73,23 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
         try {
           const answers = JSON.parse(assessment.answers);
           user_primary_concern = answers.primary_concern;
+          
+          if (answers.business) {
+            selectedLead.industry = answers.business.industry || 'Unknown';
+            selectedLead.employees = answers.business.employees ? answers.business.employees.replace('_', '-') : 'Unknown';
+            selectedLead.turnover = answers.business.turnover ? answers.business.turnover.replace('_', '-') : 'Unknown';
+          } else {
+            selectedLead.industry = 'Individual';
+            selectedLead.employees = 'N/A';
+            selectedLead.turnover = 'N/A';
+          }
+          
+          if (answers.type && answers.type.location) {
+             selectedLead.location = answers.type.location;
+          } else {
+             selectedLead.location = 'Nigeria'; // Default placeholder
+          }
+          
           const report = calculateScore(answers);
           
           if (assessment.ai_report) {
@@ -113,6 +130,10 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     }
 
       if (selectedLead) {
+      selectedLead.industry = selectedLead.industry || 'Unknown';
+      selectedLead.employees = selectedLead.employees || 'N/A';
+      selectedLead.turnover = selectedLead.turnover || 'N/A';
+      selectedLead.location = selectedLead.location || 'Nigeria';
       selectedLead.risks = risks.length > 0 ? risks.map(r => {
         let formatted = r.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         if (!formatted.toLowerCase().includes('risk')) formatted += ' Risk';
