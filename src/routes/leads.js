@@ -133,6 +133,7 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       email: lead.email,
       phone: lead.phone,
       businessName: lead.business_name,
+      contactPerson: lead.contact_person,
       score: lead.score,
       riskLevel: lead.risk_level,
       entity_type: lead.entity_type || 'business',
@@ -262,15 +263,15 @@ router.post('/quote-request', async (req, res, next) => {
     }
 
     const result = await run(`
-      INSERT INTO leads (name, email, phone, business_name, status, notes, entity_type)
-      VALUES (?, ?, ?, ?, 'New Lead', ?, 'quote')
+      INSERT INTO leads (name, email, phone, business_name, status, notes, entity_type, contact_person)
+      VALUES (?, ?, ?, ?, 'New Lead', ?, 'quote', ?)
     `, [
-      name,
+      businessName ? businessName : name,
       email,
       phone,
       businessName || null,
       JSON.stringify({ insuranceTypes, estimatedValue, message, source: 'quote_request' }),
-      'quote'
+      name
     ]);
 
     // Send notifications to Admin
@@ -339,7 +340,7 @@ router.post('/consultation-request', async (req, res, next) => {
 // POST /api/leads - Manually create a new lead
 router.post('/', authenticate, requireAgent, async (req, res, next) => {
   try {
-    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry } = req.body;
+    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry, contactPerson } = req.body;
     if (!name || !email) {
       return res.status(400).json({ error: 'Validation Error', message: 'Name and email are required' });
     }
@@ -360,11 +361,11 @@ router.post('/', authenticate, requireAgent, async (req, res, next) => {
     const result = await run(`
       INSERT INTO leads (
         name, email, phone, business_name, status, notes, 
-        estimated_premium, assigned_agent, industry, pipeline_stage, entity_type
+        estimated_premium, assigned_agent, industry, pipeline_stage, entity_type, contact_person
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'manual')
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'manual', ?)
     `, [
-      name, 
+      businessName ? businessName : name, 
       email, 
       phone || null, 
       businessName || null, 
@@ -373,7 +374,8 @@ router.post('/', authenticate, requireAgent, async (req, res, next) => {
       estimatedPremium || 0, 
       assignedAgent || 'General Agent', 
       industry || 'other', 
-      pipelineStage
+      pipelineStage,
+      contactPerson || name
     ]);
 
     res.status(201).json({ message: 'Lead created successfully', leadId: result.lastInsertRowid });
@@ -385,7 +387,7 @@ router.post('/', authenticate, requireAgent, async (req, res, next) => {
 // PUT /api/leads/:id - Update lead details
 router.put('/:id', authenticate, requireAgent, async (req, res, next) => {
   try {
-    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry, birthDate, anniversaryDate } = req.body;
+    const { name, email, phone, businessName, status, notes, estimatedPremium, assignedAgent, industry, birthDate, anniversaryDate, contactPerson } = req.body;
 
     const lead = await get('SELECT id FROM leads WHERE id = ?', [req.params.id]);
     if (!lead) {
@@ -405,6 +407,7 @@ router.put('/:id', authenticate, requireAgent, async (req, res, next) => {
     if (industry !== undefined) { queryParts.push('industry = ?'); params.push(industry); }
     if (birthDate !== undefined) { queryParts.push('birth_date = ?'); params.push(birthDate); }
     if (anniversaryDate !== undefined) { queryParts.push('anniversary_date = ?'); params.push(anniversaryDate); }
+    if (contactPerson !== undefined) { queryParts.push('contact_person = ?'); params.push(contactPerson); }
     
     if (status !== undefined) {
       queryParts.push('status = ?');

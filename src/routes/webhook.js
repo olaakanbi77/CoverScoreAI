@@ -59,9 +59,9 @@ router.post('/evolution', async (req, res) => {
       if (!lead) {
         if (isStartTrigger) {
           const insertResult = await run(`
-            INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
-            VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown')
-          `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber]);
+            INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person)
+            VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?)
+          `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, 'WhatsApp User']);
           
           lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
           console.log(`   Created new lead ID: ${lead.id}`);
@@ -73,9 +73,9 @@ router.post('/evolution', async (req, res) => {
         // Create a completely new lead for explicit restart triggers to preserve previous assessments
         console.log(`   Creating NEW lead for phone ${phoneNumber} (explicit restart trigger)`);
         const insertResult = await run(`
-          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type)
-          VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown')
-        `, [lead.name, lead.email, phoneNumber]);
+          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person)
+          VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?)
+        `, [lead.name, lead.email, phoneNumber, lead.name]);
         
         lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
       }
@@ -256,7 +256,8 @@ router.post('/evolution', async (req, res) => {
             if (updatedData.consultation_preference) qualDetails.push(`Preferred Contact: ${updatedData.consultation_preference}`);
             if (qualifierOutput.next_best_action) qualDetails.push(`Suggested Action: ${qualifierOutput.next_best_action}`);
             
-            const notifMsg = `🔥 *NEW QUALIFIED LEAD* 🔥\n\n👤 *Name:* ${updatedData.name || lead.name}\n📞 *Phone:* ${phoneNumber}\n🛡️ *CoverScore:* ${lead.score || 'N/A'}\n📊 *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📝 *CRM Insight:*\n${qualifierOutput.lead_status} - ${qualifierOutput.qualification_reasoning}\n\n🔍 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
+            const displayName = (updatedData.entity_type === 'business' && updatedData.business_name) ? updatedData.business_name : (updatedData.name || lead.name);
+            const notifMsg = `🔥 *NEW QUALIFIED LEAD* 🔥\n\n👤 *Name:* ${displayName}\n📞 *Phone:* ${phoneNumber}\n🛡️ *CoverScore:* ${lead.score || 'N/A'}\n📊 *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📝 *CRM Insight:*\n${qualifierOutput.lead_status} - ${qualifierOutput.qualification_reasoning}\n\n🔍 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
             await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
             console.log(`   📱 Admin notification sent for qualified lead ${lead.id}`);
           }
@@ -492,15 +493,17 @@ router.post('/evolution', async (req, res) => {
                   estimated_premium = ?,
                   chat_history = ?,
                   birth_date = ?,
-                  anniversary_date = ?
+                  anniversary_date = ?,
+                  contact_person = ?
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType, 
-              updatedData.name || 'WhatsApp User', 
+              (entityType === 'business' && updatedData.business_name) ? updatedData.business_name : (updatedData.name || 'WhatsApp User'), 
               updatedData.email || 'whatsapp@coverscore.site',
               estimatedPremium, JSON.stringify(updatedData), 
               updatedData.birth_date || null,
               updatedData.anniversary_date || null,
+              updatedData.name || 'WhatsApp User',
               lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);

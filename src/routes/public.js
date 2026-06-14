@@ -15,15 +15,16 @@ router.post('/quote-request', async (req, res, next) => {
     }
 
     const result = await run(`
-      INSERT INTO leads (name, email, phone, business_name, status, notes, entity_type)
-      VALUES (?, ?, ?, ?, 'New Lead', ?, ?)
+      INSERT INTO leads (name, email, phone, business_name, status, notes, entity_type, contact_person)
+      VALUES (?, ?, ?, ?, 'New Lead', ?, ?, ?)
     `, [
-      name,
+      businessName ? businessName : name,
       email,
       phone,
       businessName || null,
       JSON.stringify({ insuranceTypes, estimatedValue, message, source: 'quote_request' }),
-      'quote'
+      'quote',
+      name
     ]);
 
     // Send notifications to Admin
@@ -51,8 +52,8 @@ router.post('/consultation-request', async (req, res, next) => {
     }
 
     const result = await run(`
-      INSERT INTO leads (name, email, phone, status, notes, entity_type)
-      VALUES (?, ?, ?, 'New Lead', ?, ?)
+      INSERT INTO leads (name, email, phone, status, notes, entity_type, contact_person)
+      VALUES (?, ?, ?, 'New Lead', ?, ?, ?)
     `, [
       name,
       email,
@@ -64,7 +65,8 @@ router.post('/consultation-request', async (req, res, next) => {
         message,
         source: 'consultation_request'
       }),
-      'consultation'
+      'consultation',
+      name
     ]);
 
     // Fetch admin meet link

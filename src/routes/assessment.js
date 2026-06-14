@@ -284,11 +284,11 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         INSERT INTO leads (
           name, email, phone, business_name, assessment_id, score, risk_level, 
           status, entity_type, engagement_points, sales_score, pipeline_stage, 
-          estimated_premium, industry, employees, recommended_covers, assigned_agent
+          estimated_premium, industry, employees, recommended_covers, assigned_agent, contact_person
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'New Lead', ?, 20, ?, 1, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'New Lead', ?, 20, ?, 1, ?, ?, ?, ?, ?, ?)
       `, [
-        name,
+        (entityType === 'business' && businessName) ? businessName : name,
         email,
         cleanPhone,
         businessName,
@@ -301,7 +301,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         industry,
         employees,
         recommendedCoversStr,
-        assignedAgent
+        assignedAgent,
+        name
       ]);
 
       lead = { id: result.lastInsertRowid, phone: cleanPhone, name };
@@ -362,11 +363,12 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
     const cleanPhone = phone ? String(phone).replace(/\D/g, '') : null;
 
     // Update lead info with captured details (always do this regardless of email)
+    const leadName = businessName ? businessName : name;
     await run(`
       UPDATE leads 
-      SET email = ?, name = COALESCE(?, name), phone = COALESCE(?, phone), business_name = COALESCE(?, business_name)
+      SET email = ?, name = COALESCE(?, name), phone = COALESCE(?, phone), business_name = COALESCE(?, business_name), contact_person = COALESCE(?, contact_person)
       WHERE assessment_id = ?
-    `, [email, name, cleanPhone, businessName, assessmentId]);
+    `, [email, leadName, cleanPhone, businessName, name, assessmentId]);
 
     // Send WhatsApp notification if phone is provided (always try regardless of email)
     if (phone) {

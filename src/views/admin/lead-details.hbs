@@ -396,6 +396,10 @@
               <span class="info-value" id="infoPhone">--</span>
             </div>
             <div class="info-item">
+              <span class="info-label">Contact Person</span>
+              <span class="info-value" id="infoContactPerson">--</span>
+            </div>
+            <div class="info-item">
               <span class="info-label">Business</span>
               <span class="info-value" id="infoBusiness">--</span>
             </div>
@@ -526,6 +530,24 @@
           <option value="Fire & Special Perils">Fire & Special Perils</option>
           <option value="Health Insurance">Health Insurance</option>
           <option value="All Risks Insurance">All Risks Insurance</option>
+          <option value="Property All Risk">Property All Risk</option>
+          <option value="General Liability">General Liability</option>
+          <option value="Product Liability">Product Liability</option>
+          <option value="Workers Compensation">Workers Compensation</option>
+          <option value="Business Interruption">Business Interruption</option>
+          <option value="Cyber Insurance">Cyber Insurance</option>
+          <option value="Goods in Transit">Goods in Transit</option>
+          <option value="Marine Cargo">Marine Cargo</option>
+          <option value="Motor Fleet">Motor Fleet</option>
+          <option value="Public Liability">Public Liability</option>
+          <option value="Employers Liability">Employers Liability</option>
+          <option value="Shop Comprehensive">Shop Comprehensive</option>
+          <option value="Fidelity Guarantee">Fidelity Guarantee</option>
+          <option value="Cash in Transit">Cash in Transit</option>
+          <option value="Professional Indemnity">Professional Indemnity</option>
+          <option value="Directors & Officers">Directors & Officers</option>
+          <option value="Equipment All Risk">Equipment All Risk</option>
+          <option value="Medical Malpractice">Medical Malpractice</option>
         </select>
       </div>
       <div class="form-group">
@@ -563,11 +585,18 @@
           <input type="email" id="editEmail" name="email" class="form-control">
         </div>
       </div>
-      
+
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
         <div class="form-group">
           <label>Phone Number</label>
           <input type="text" id="editPhone" name="phone" class="form-control">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label>Contact Person</label>
+          <input type="text" id="editContactPerson" name="contactPerson" class="form-control">
         </div>
         <div class="form-group">
           <label>Business Name</label>
@@ -647,6 +676,7 @@
 
     document.getElementById('infoEmail').textContent = lead.email;
     document.getElementById('infoPhone').textContent = lead.phone || 'N/A';
+    document.getElementById('infoContactPerson').textContent = lead.contactPerson || 'N/A';
     document.getElementById('infoBusiness').textContent = lead.businessName || 'N/A';
     document.getElementById('infoIndustry').textContent = lead.industry || 'Unknown';
     document.getElementById('infoPremium').textContent = lead.estimatedPremium ? `$${lead.estimatedPremium}` : 'Pending';
@@ -823,6 +853,7 @@
     document.getElementById('editName').value = currentLeadData.name || '';
     document.getElementById('editEmail').value = currentLeadData.email || '';
     document.getElementById('editPhone').value = currentLeadData.phone || '';
+    document.getElementById('editContactPerson').value = currentLeadData.contactPerson || '';
     document.getElementById('editBusiness').value = currentLeadData.businessName || '';
     document.getElementById('editIndustry').value = currentLeadData.industry || '';
     document.getElementById('editPremium').value = currentLeadData.estimatedPremium || '';

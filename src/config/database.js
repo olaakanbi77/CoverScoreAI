@@ -53,6 +53,7 @@ const initDatabase = () => {
       email TEXT NOT NULL,
       phone TEXT,
       business_name TEXT,
+      contact_person TEXT,
       assessment_id INTEGER,
       score INTEGER,
       risk_level TEXT,
@@ -174,6 +175,7 @@ const initDatabase = () => {
           email TEXT NOT NULL,
           phone TEXT,
           business_name TEXT,
+          contact_person TEXT,
           assessment_id INTEGER,
           score INTEGER,
           risk_level TEXT,
@@ -198,8 +200,8 @@ const initDatabase = () => {
           updated_at DATETIME,
           FOREIGN KEY (assessment_id) REFERENCES assessments(id)
         );
-        INSERT INTO leads_new (id, name, email, phone, business_name, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at)
-        SELECT id, name, email, phone, business_name, assessment_id, score, risk_level, entity_type, 
+        INSERT INTO leads_new (id, name, email, phone, business_name, contact_person, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at)
+        SELECT id, name, email, phone, business_name, NULL, assessment_id, score, risk_level, entity_type, 
                CASE WHEN status = 'new' THEN 'New Lead' WHEN status = 'contacted' THEN 'WhatsApp Engaged' WHEN status = 'converted' THEN 'Won' WHEN status = 'lost' THEN 'Lost' ELSE 'New Lead' END,
                wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at 
         FROM leads;
@@ -223,7 +225,8 @@ const initDatabase = () => {
         "ALTER TABLE leads ADD COLUMN industry TEXT",
         "ALTER TABLE leads ADD COLUMN employees TEXT",
         "ALTER TABLE leads ADD COLUMN recommended_covers TEXT",
-        "ALTER TABLE leads ADD COLUMN assigned_agent TEXT"
+        "ALTER TABLE leads ADD COLUMN assigned_agent TEXT",
+        "ALTER TABLE leads ADD COLUMN contact_person TEXT"
       ];
       columnsToAdd.forEach(sql => {
         db.run(sql, (err) => {

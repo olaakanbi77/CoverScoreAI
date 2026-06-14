@@ -53,7 +53,17 @@ router.get('/activities', authenticate, requireAgent, async (req, res, next) => 
 // POST /api/crm/policies
 router.post('/policies', authenticate, requireAgent, async (req, res, next) => {
   try {
-    const { lead_id, policy_number, product, premium, expiry_date } = req.body;
+    let { lead_id, client_name, client_email, client_phone, policy_number, product, premium, expiry_date } = req.body;
+    
+    // Auto-create lead if manual client data is provided instead of lead_id
+    if (!lead_id && client_name) {
+      const insertLeadResult = await run(`
+        INSERT INTO leads (name, email, phone, status, entity_type, pipeline_stage, lead_source)
+        VALUES (?, ?, ?, 'Won', 'business', 6, 'migration')
+      `, [client_name, client_email || 'migrated@coverscore.ai', client_phone || null]);
+      lead_id = insertLeadResult.lastInsertRowid;
+    }
+
     if (!lead_id || !policy_number || !product || !premium || !expiry_date) {
       return res.status(400).json({ error: 'Missing required fields' });
     }

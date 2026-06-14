@@ -23,7 +23,7 @@
 <div class="page-container">
   <div class="page-header">
     <h1 class="page-title">Active Policies</h1>
-    <button class="btn btn-primary" onclick="openModal('policyModal')">+ Record Policy</button>
+    <button class="btn btn-primary" onclick="openModal('policyModal')">+ Create New Policy</button>
   </div>
 
   <div class="filters">
@@ -34,9 +34,28 @@
     </select>
     <select class="filter-select">
       <option value="all">All Products</option>
-      <option value="motor">Motor Comprehensive</option>
-      <option value="fire">Fire & Special Perils</option>
-      <option value="health">Health Insurance</option>
+      <option value="Motor Comprehensive">Motor Comprehensive</option>
+      <option value="Fire & Special Perils">Fire & Special Perils</option>
+      <option value="Health Insurance">Health Insurance</option>
+      <option value="All Risks Insurance">All Risks Insurance</option>
+      <option value="Property All Risk">Property All Risk</option>
+      <option value="General Liability">General Liability</option>
+      <option value="Product Liability">Product Liability</option>
+      <option value="Workers Compensation">Workers Compensation</option>
+      <option value="Business Interruption">Business Interruption</option>
+      <option value="Cyber Insurance">Cyber Insurance</option>
+      <option value="Goods in Transit">Goods in Transit</option>
+      <option value="Marine Cargo">Marine Cargo</option>
+      <option value="Motor Fleet">Motor Fleet</option>
+      <option value="Public Liability">Public Liability</option>
+      <option value="Employers Liability">Employers Liability</option>
+      <option value="Shop Comprehensive">Shop Comprehensive</option>
+      <option value="Fidelity Guarantee">Fidelity Guarantee</option>
+      <option value="Cash in Transit">Cash in Transit</option>
+      <option value="Professional Indemnity">Professional Indemnity</option>
+      <option value="Directors & Officers">Directors & Officers</option>
+      <option value="Equipment All Risk">Equipment All Risk</option>
+      <option value="Medical Malpractice">Medical Malpractice</option>
     </select>
   </div>
 
@@ -89,12 +108,29 @@
     <form id="policyForm" onsubmit="submitPolicy(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
       <div class="form-group">
         <label>Client</label>
-        <select name="lead_id" class="form-control" required>
-          <option value="">Select a client...</option>
+        <select name="lead_id" id="policyLeadSelect" class="form-control" onchange="toggleManualClient(this.value)">
+          <option value="">-- Create New Client --</option>
           {{#each leads}}
           <option value="{{this.id}}">{{this.name}} {{#if this.business_name}}({{this.business_name}}){{/if}}</option>
           {{/each}}
         </select>
+      </div>
+      <div id="manualClientFields" style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 14px; color: var(--text-primary);">New Client Details</h4>
+        <div class="form-group">
+          <label>Client Name</label>
+          <input type="text" name="client_name" id="manualClientName" class="form-control" placeholder="Enter full name or business name">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label>Email (Optional)</label>
+            <input type="email" name="client_email" class="form-control" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label>Phone (Optional)</label>
+            <input type="text" name="client_phone" class="form-control" placeholder="+234...">
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label>Policy Number</label>
@@ -107,6 +143,24 @@
           <option value="Fire & Special Perils">Fire & Special Perils</option>
           <option value="Health Insurance">Health Insurance</option>
           <option value="All Risks Insurance">All Risks Insurance</option>
+          <option value="Property All Risk">Property All Risk</option>
+          <option value="General Liability">General Liability</option>
+          <option value="Product Liability">Product Liability</option>
+          <option value="Workers Compensation">Workers Compensation</option>
+          <option value="Business Interruption">Business Interruption</option>
+          <option value="Cyber Insurance">Cyber Insurance</option>
+          <option value="Goods in Transit">Goods in Transit</option>
+          <option value="Marine Cargo">Marine Cargo</option>
+          <option value="Motor Fleet">Motor Fleet</option>
+          <option value="Public Liability">Public Liability</option>
+          <option value="Employers Liability">Employers Liability</option>
+          <option value="Shop Comprehensive">Shop Comprehensive</option>
+          <option value="Fidelity Guarantee">Fidelity Guarantee</option>
+          <option value="Cash in Transit">Cash in Transit</option>
+          <option value="Professional Indemnity">Professional Indemnity</option>
+          <option value="Directors & Officers">Directors & Officers</option>
+          <option value="Equipment All Risk">Equipment All Risk</option>
+          <option value="Medical Malpractice">Medical Malpractice</option>
         </select>
       </div>
       <div class="form-group">
@@ -128,9 +182,24 @@
 <script>
   function openModal(id) {
     document.getElementById(id).style.display = 'flex';
+    if (id === 'policyModal') {
+      toggleManualClient(document.getElementById('policyLeadSelect').value);
+    }
   }
   function closeModal(id) {
     document.getElementById(id).style.display = 'none';
+  }
+  
+  function toggleManualClient(val) {
+    const manualFields = document.getElementById('manualClientFields');
+    const clientName = document.getElementById('manualClientName');
+    if (val) {
+      manualFields.style.display = 'none';
+      clientName.required = false;
+    } else {
+      manualFields.style.display = 'block';
+      clientName.required = true;
+    }
   }
   
   async function submitPolicy(e) {
