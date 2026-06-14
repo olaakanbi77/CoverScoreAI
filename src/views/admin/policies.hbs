@@ -81,7 +81,7 @@
         <td>₦{{formatNumber premium}}</td>
         <td><span class="badge badge-{{toLowerCase status}}">{{status}}</span></td>
         <td>{{formatDate expiry_date}}</td>
-        <td><button class="btn btn-outline btn-sm">View Details</button></td>
+        <td><a href="/admin/leads/{{lead_id}}" class="btn btn-outline btn-sm" style="text-decoration: none; display: inline-block;">View Details</a></td>
       </tr>
       {{else}}
       <tr>
