@@ -9,8 +9,8 @@
   --color-primary-hover: #059669; /* Emerald 600 */
   --color-primary-light: #d1fae5; /* Emerald 100 */
   
-  --color-surface-dark: #0f172a; /* Slate 900 */
-  --color-surface-darker: #020617; /* Slate 950 */
+  --color-surface-dark: #061125; /* Original Dark Navy */
+  --color-surface-darker: #040b1a; /* Darker Navy */
   --color-surface-light: #ffffff; /* White */
   --color-surface-muted: #f8fafc; /* Slate 50 */
   
@@ -192,7 +192,7 @@ p { margin: 0; }
 }
 
 .mo-nav.nav-dark {
-  background: rgba(15, 23, 42, 0.85); /* Slate 900 */
+  background: rgba(6, 17, 37, 0.85); /* Original Dark Navy */
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
