@@ -257,6 +257,23 @@ const initDatabase = () => {
       });
     }
   });
+
+  // Simple auto-migration for missing columns in older databases
+  db.run("ALTER TABLE leads ADD COLUMN assessment_data TEXT DEFAULT '{}'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (assessment_data):', err.message);
+    }
+  });
+  db.run("ALTER TABLE leads ADD COLUMN chat_history TEXT DEFAULT '[]'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (chat_history):', err.message);
+    }
+  });
+  db.run("ALTER TABLE leads ADD COLUMN wa_state TEXT DEFAULT 'initial'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (wa_state):', err.message);
+    }
+  });
 };
 
 const run = (sql, params = []) => {
