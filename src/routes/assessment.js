@@ -7,6 +7,7 @@ const { generateRecommendations } = require('../services/cre');
 const { generateRiskReport, getAdvisorCopilot } = require('../services/aiService');
 const { sendAssessmentReport } = require('../services/emailService');
 const { sendAssessmentComplete } = require('../services/whatsappService');
+const { getIndustryRisks } = require('../services/industryIntelligence');
 
 const router = express.Router();
 
