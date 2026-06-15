@@ -32,30 +32,30 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
 
-  // Structured Qualification States
-  if (currentState === 'awaiting_gap_review') {
-    if (input === 'YES' || input === 'PLAN') {
-      replyText = "Thank you.\n\nWould you prefer:\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
-      nextState = 'awaiting_preference';
-    } else if (input === 'NO') {
-      replyText = "Noted. We are always here if you change your mind. Have a great day!";
+  // Structured Qualification States (V2 Flow)
+  if (currentState === 'awaiting_consultation') {
+    if (input === 'A' || input === 'YES') {
+      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
+      nextState = 'awaiting_consultation_day';
+      updatedData.is_qualified = true;
+    } else if (input === 'B' || input === 'MAYBE LATER' || input === 'C' || input === 'NO') {
+      replyText = "Noted. Your personalized report will still be sent to your email. We are always here if you change your mind. Have a great day!";
       nextState = 'finished';
       updatedData.is_qualified = false;
     } else {
-      replyText = "Please reply with YES or NO.";
+      replyText = "Please reply with A, B, or C.";
     }
     return { nextState, replyText, updatedData, isComplete };
   }
 
-  if (currentState === 'awaiting_preference') {
-    const prefMap = { A: 'WhatsApp', B: 'Phone Call', C: 'Virtual Meeting' };
-    if (['A', 'B', 'C'].includes(input)) {
-      updatedData.consultation_preference = prefMap[input];
-      updatedData.is_qualified = true;
-      replyText = "Thank you. Your request has been received.\n\nOur advisor will reach out to you shortly via your preferred channel.";
+  if (currentState === 'awaiting_consultation_day') {
+    const dayMap = { A: 'Monday', B: 'Tuesday', C: 'Wednesday', D: 'Thursday', E: 'Friday' };
+    if (['A', 'B', 'C', 'D', 'E'].includes(input)) {
+      updatedData.consultation_preference = dayMap[input];
+      replyText = "A Risk Advisor will contact you shortly to schedule your consultation.\n\nThank you for using CoverScore AI.";
       nextState = 'finished';
     } else {
-      replyText = "Please reply with A, B or C.";
+      replyText = "Please reply with A, B, C, D, or E.";
     }
     return { nextState, replyText, updatedData, isComplete };
   }
@@ -97,21 +97,58 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
   // 1. Validate Input
   let parsedAnswer = null;
   if (currentQ.question_type === 'yes_no') {
-    if (input === 'YES' || input === 'NO') {
-      parsedAnswer = input;
+    if (input === 'A' || input === 'YES') {
+      parsedAnswer = 'YES';
+    } else if (input === 'B' || input === 'NO') {
+      parsedAnswer = 'NO';
     } else {
-      replyText = "Please reply with YES or NO.";
+      replyText = "Please reply with A (Yes) or B (No).";
       return { nextState, replyText, updatedData, isComplete };
     }
   } else if (currentQ.question_type === 'single_choice') {
     const opts = currentQ.answers;
-    const num = parseInt(input, 10);
-    if (!isNaN(num) && num >= 1 && num <= opts.length) {
-      parsedAnswer = opts[num - 1];
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const letterIdx = letters.indexOf(input);
+    if (letterIdx !== -1 && letterIdx < opts.length) {
+      parsedAnswer = opts[letterIdx];
     } else {
-      replyText = `Please reply with a number from 1 to ${opts.length}.`;
+      const num = parseInt(input, 10);
+      if (!isNaN(num) && num >= 1 && num <= opts.length) {
+        parsedAnswer = opts[num - 1];
+      } else {
+        replyText = `Please reply with a valid option (e.g. A, B, C).`;
+        return { nextState, replyText, updatedData, isComplete };
+      }
+    }
+  } else if (currentQ.question_type === 'multi_choice') {
+    const opts = currentQ.answers;
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const selected = [];
+    const parts = input.split(/[\s,]+/);
+    let valid = true;
+    for (const part of parts) {
+      const char = part.trim();
+      if (!char) continue;
+      const idx = letters.indexOf(char);
+      if (idx !== -1 && idx < opts.length) {
+        selected.push(opts[idx]);
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    if (valid && selected.length > 0) {
+      parsedAnswer = selected;
+    } else {
+      replyText = `Please reply with the letters corresponding to your choices (e.g. A, B, C).`;
       return { nextState, replyText, updatedData, isComplete };
     }
+  } else if (currentQ.question_type === 'open_text') {
+    if (currentQ.validation === 'email' && !input.includes('@')) {
+      replyText = "Please enter a valid email address.";
+      return { nextState, replyText, updatedData, isComplete };
+    }
+    parsedAnswer = incomingText.trim();
   } else if (currentQ.question_type === 'number') {
     const num = parseInt(input, 10);
     if (!isNaN(num)) {
@@ -122,11 +159,14 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
     }
   } else {
     // Default fallback (accept anything)
-    parsedAnswer = incomingText;
+    parsedAnswer = incomingText.trim();
   }
 
   // 2. Store Answer and Execute Logic
   updatedData[`q_${currentQ.id}`] = parsedAnswer;
+  if (currentQ.data_mapping) {
+    updatedData[currentQ.data_mapping] = parsedAnswer;
+  }
   
   if (!updatedData.riskScores) {
     updatedData.riskScores = {
@@ -137,11 +177,16 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
     };
   }
 
+  if (!updatedData.sales_score) {
+    updatedData.sales_score = 0;
+  }
+
   if (currentQ.risk_logic && currentQ.risk_logic[parsedAnswer]) {
     const logic = currentQ.risk_logic[parsedAnswer];
     if (logic.exposure_points) updatedData.riskScores.exposure += logic.exposure_points;
     if (logic.vulnerability_points) updatedData.riskScores.vulnerability += logic.vulnerability_points;
     if (logic.impact_points) updatedData.riskScores.impact += logic.impact_points;
+    if (logic.lead_score_points) updatedData.sales_score += logic.lead_score_points;
     
     // Fallback for "risk_points" if not specified by pillar
     if (logic.risk_points) {
@@ -186,9 +231,9 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
 
   // 4. Format Reply
   if (!nextQId || nextQId === 'COMPLETE') {
-    replyText = `Thank you, ${updatedData.name || 'User'}.\n\nWe're analyzing your responses and preparing your CoverScore Risk Report.\nThis usually takes less than 30 seconds.`;
+    replyText = `Thank you.\n\nWe are now analyzing your responses and calculating your School Risk Score™.\n\nPlease wait a moment.`;
     isComplete = true;
-    nextState = 'awaiting_gap_review';
+    nextState = 'awaiting_consultation';
   } else {
     const nextQ = qbDict[nextQId];
     if (nextQ) {
@@ -208,12 +253,14 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
 const formatQuestion = (q) => {
   let text = q.question + "\n\n";
   if (q.question_type === 'yes_no') {
-    text += "YES / NO";
-  } else if (q.question_type === 'single_choice' && q.answers) {
+    text += "A. Yes\nB. No";
+  } else if ((q.question_type === 'single_choice' || q.question_type === 'multi_choice') && q.answers) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     q.answers.forEach((ans, idx) => {
-      text += `${idx + 1}️⃣ ${ans}\n`;
+      text += `${letters[idx]}. ${ans}\n`;
     });
-    text += `\nReply with a number from 1 to ${q.answers.length}.`;
+  } else if (q.question_type === 'open_text') {
+    // No specific options to display
   }
   return text.trim();
 };

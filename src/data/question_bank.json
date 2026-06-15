@@ -19,7 +19,10 @@
     "pillar": "Exposure",
     "question": "Do you own or rent the premises?",
     "question_type": "single_choice",
-    "answers": ["Own", "Rent"],
+    "answers": [
+      "Own",
+      "Rent"
+    ],
     "branching": {
       "DEFAULT": "PR003"
     }
@@ -31,12 +34,25 @@
     "pillar": "Exposure",
     "question": "What is the estimated replacement value of the building?",
     "question_type": "single_choice",
-    "answers": ["Under ₦10M", "₦10M–₦50M", "₦50M–₦200M", "Above ₦200M"],
+    "answers": [
+      "Under ₦10M",
+      "₦10M–₦50M",
+      "₦50M–₦200M",
+      "Above ₦200M"
+    ],
     "risk_logic": {
-      "Under ₦10M": { "exposure_points": 10 },
-      "₦10M–₦50M": { "exposure_points": 25 },
-      "₦50M–₦200M": { "exposure_points": 50 },
-      "Above ₦200M": { "exposure_points": 100 }
+      "Under ₦10M": {
+        "exposure_points": 10
+      },
+      "₦10M–₦50M": {
+        "exposure_points": 25
+      },
+      "₦50M–₦200M": {
+        "exposure_points": 50
+      },
+      "Above ₦200M": {
+        "exposure_points": 100
+      }
     },
     "branching": {
       "DEFAULT": "PR004"
@@ -51,7 +67,10 @@
     "question_type": "yes_no",
     "weight": 15,
     "risk_logic": {
-      "NO": { "vulnerability_points": 15, "category": "Preparedness Gap" }
+      "NO": {
+        "vulnerability_points": 15,
+        "category": "Preparedness Gap"
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -70,12 +89,25 @@
     "pillar": "Preparedness",
     "question": "How often are fire extinguishers inspected?",
     "question_type": "single_choice",
-    "answers": ["Monthly", "Quarterly", "Annually", "Never"],
+    "answers": [
+      "Monthly",
+      "Quarterly",
+      "Annually",
+      "Never"
+    ],
     "risk_logic": {
-      "Monthly": { "vulnerability_points": 0 },
-      "Quarterly": { "vulnerability_points": 5 },
-      "Annually": { "vulnerability_points": 10 },
-      "Never": { "vulnerability_points": 20 }
+      "Monthly": {
+        "vulnerability_points": 0
+      },
+      "Quarterly": {
+        "vulnerability_points": 5
+      },
+      "Annually": {
+        "vulnerability_points": 10
+      },
+      "Never": {
+        "vulnerability_points": 20
+      }
     },
     "branching": {
       "DEFAULT": "PR006"
@@ -89,7 +121,10 @@
     "question": "Have you experienced a fire incident within the last 5 years?",
     "question_type": "yes_no",
     "risk_logic": {
-      "YES": { "vulnerability_points": 20, "severity": "High" }
+      "YES": {
+        "vulnerability_points": 20,
+        "severity": "High"
+      }
     },
     "branching": {
       "DEFAULT": "PR101"
@@ -114,7 +149,12 @@
     "pillar": "Exposure",
     "question": "Estimated inventory value?",
     "question_type": "single_choice",
-    "answers": ["Under ₦5M", "₦5M–₦20M", "₦20M–₦50M", "Above ₦50M"],
+    "answers": [
+      "Under ₦5M",
+      "₦5M–₦20M",
+      "₦20M–₦50M",
+      "Above ₦50M"
+    ],
     "branching": {
       "DEFAULT": "PR103"
     }
@@ -127,7 +167,9 @@
     "question": "Do you maintain inventory records?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 15 }
+      "NO": {
+        "vulnerability_points": 15
+      }
     },
     "branching": {
       "DEFAULT": "BC001"
@@ -148,11 +190,21 @@
       "More than 12 months"
     ],
     "risk_logic": {
-      "Less than 1 month": { "impact_points": 100 },
-      "1–3 months": { "impact_points": 75 },
-      "3–6 months": { "impact_points": 50 },
-      "6–12 months": { "impact_points": 25 },
-      "More than 12 months": { "impact_points": 0 }
+      "Less than 1 month": {
+        "impact_points": 100
+      },
+      "1–3 months": {
+        "impact_points": 75
+      },
+      "3–6 months": {
+        "impact_points": 50
+      },
+      "6–12 months": {
+        "impact_points": 25
+      },
+      "More than 12 months": {
+        "impact_points": 0
+      }
     },
     "branching": {
       "DEFAULT": "BC002"
@@ -166,7 +218,9 @@
     "question": "Do you have a documented business continuity plan?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 25 }
+      "NO": {
+        "vulnerability_points": 25
+      }
     },
     "branching": {
       "DEFAULT": "BC003"
@@ -180,7 +234,9 @@
     "question": "Do you maintain regular backups of critical business data?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 20 }
+      "NO": {
+        "vulnerability_points": 20
+      }
     },
     "branching": {
       "DEFAULT": "ER001"
@@ -193,12 +249,25 @@
     "pillar": "Exposure",
     "question": "How many employees do you have?",
     "question_type": "single_choice",
-    "answers": ["1-5", "6-20", "21-50", "50+"],
+    "answers": [
+      "1-5",
+      "6-20",
+      "21-50",
+      "50+"
+    ],
     "risk_logic": {
-      "1-5": { "exposure_points": 10 },
-      "6-20": { "exposure_points": 30 },
-      "21-50": { "exposure_points": 60 },
-      "50+": { "exposure_points": 100 }
+      "1-5": {
+        "exposure_points": 10
+      },
+      "6-20": {
+        "exposure_points": 30
+      },
+      "21-50": {
+        "exposure_points": 60
+      },
+      "50+": {
+        "exposure_points": 100
+      }
     },
     "branching": {
       "DEFAULT": "ER002"
@@ -212,7 +281,9 @@
     "question": "Do you provide Group Life Insurance for your employees?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 25 }
+      "NO": {
+        "vulnerability_points": 25
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -230,12 +301,25 @@
     "pillar": "Preparedness",
     "question": "How often is workplace safety training conducted?",
     "question_type": "single_choice",
-    "answers": ["Monthly", "Quarterly", "Annually", "Never"],
+    "answers": [
+      "Monthly",
+      "Quarterly",
+      "Annually",
+      "Never"
+    ],
     "risk_logic": {
-      "Monthly": { "vulnerability_points": 0 },
-      "Quarterly": { "vulnerability_points": 5 },
-      "Annually": { "vulnerability_points": 10 },
-      "Never": { "vulnerability_points": 20 }
+      "Monthly": {
+        "vulnerability_points": 0
+      },
+      "Quarterly": {
+        "vulnerability_points": 5
+      },
+      "Annually": {
+        "vulnerability_points": 10
+      },
+      "Never": {
+        "vulnerability_points": 20
+      }
     },
     "branching": {
       "DEFAULT": "LR001"
@@ -260,12 +344,25 @@
     "pillar": "Exposure",
     "question": "What is the average number of visitors you receive per day?",
     "question_type": "single_choice",
-    "answers": ["0-10", "11-50", "51-100", "100+"],
+    "answers": [
+      "0-10",
+      "11-50",
+      "51-100",
+      "100+"
+    ],
     "risk_logic": {
-      "0-10": { "exposure_points": 10 },
-      "11-50": { "exposure_points": 30 },
-      "51-100": { "exposure_points": 60 },
-      "100+": { "exposure_points": 100 }
+      "0-10": {
+        "exposure_points": 10
+      },
+      "11-50": {
+        "exposure_points": 30
+      },
+      "51-100": {
+        "exposure_points": 60
+      },
+      "100+": {
+        "exposure_points": 100
+      }
     },
     "branching": {
       "DEFAULT": "LR003"
@@ -279,7 +376,9 @@
     "question": "Do you currently have Public Liability Insurance?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 25 }
+      "NO": {
+        "vulnerability_points": 25
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -309,7 +408,10 @@
     "question": "Could the business operate successfully for 90 days without the owner/founder?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "impact_points": 40, "vulnerability_points": 40 }
+      "NO": {
+        "impact_points": 40,
+        "vulnerability_points": 40
+      }
     },
     "branching": {
       "DEFAULT": "KP002"
@@ -323,7 +425,9 @@
     "question": "Is there a documented succession plan in place?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 30 }
+      "NO": {
+        "vulnerability_points": 30
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -341,12 +445,25 @@
     "pillar": "Preparedness",
     "question": "How many months of cash reserves does the business currently hold?",
     "question_type": "single_choice",
-    "answers": ["Less than 1 month", "1-3 months", "3-6 months", "More than 6 months"],
+    "answers": [
+      "Less than 1 month",
+      "1-3 months",
+      "3-6 months",
+      "More than 6 months"
+    ],
     "risk_logic": {
-      "Less than 1 month": { "vulnerability_points": 40 },
-      "1-3 months": { "vulnerability_points": 20 },
-      "3-6 months": { "vulnerability_points": 10 },
-      "More than 6 months": { "vulnerability_points": 0 }
+      "Less than 1 month": {
+        "vulnerability_points": 40
+      },
+      "1-3 months": {
+        "vulnerability_points": 20
+      },
+      "3-6 months": {
+        "vulnerability_points": 10
+      },
+      "More than 6 months": {
+        "vulnerability_points": 0
+      }
     },
     "branching": {
       "DEFAULT": "CR001"
@@ -372,7 +489,9 @@
     "question": "Do employees use Multi-Factor Authentication (MFA) for critical systems?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 25 }
+      "NO": {
+        "vulnerability_points": 25
+      }
     },
     "branching": {
       "DEFAULT": "CR003"
@@ -386,7 +505,9 @@
     "question": "Do you have strict approval controls for large electronic payments?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 30 }
+      "NO": {
+        "vulnerability_points": 30
+      }
     },
     "branching": {
       "DEFAULT": "OR001"
@@ -400,7 +521,9 @@
     "question": "Are your critical business processes formally documented?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 20 }
+      "NO": {
+        "vulnerability_points": 20
+      }
     },
     "branching": {
       "DEFAULT": "RR001"
@@ -414,7 +537,9 @@
     "question": "Are all your business registrations and tax filings completely up to date?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 40 }
+      "NO": {
+        "vulnerability_points": 40
+      }
     },
     "branching": {
       "DEFAULT": "SR001"
@@ -428,7 +553,9 @@
     "question": "Are your premises equipped with CCTV cameras?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 15 }
+      "NO": {
+        "vulnerability_points": 15
+      }
     },
     "branching": {
       "DEFAULT": "SR002"
@@ -442,7 +569,9 @@
     "question": "Is there a segregation of financial duties among employees?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 20 }
+      "NO": {
+        "vulnerability_points": 20
+      }
     },
     "branching": {
       "DEFAULT": "COMPLETE"
@@ -456,7 +585,9 @@
     "question": "Are all visitors required to sign in and wear identification?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 30 }
+      "NO": {
+        "vulnerability_points": 30
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -475,7 +606,9 @@
     "question": "Are background checks conducted on all staff and regular volunteers?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 40 }
+      "NO": {
+        "vulnerability_points": 40
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -494,7 +627,9 @@
     "question": "Do you have a scheduled preventative maintenance program for all critical machinery?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 40 }
+      "NO": {
+        "vulnerability_points": 40
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -513,7 +648,9 @@
     "question": "Do you hold Machinery Breakdown Insurance?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 30 }
+      "NO": {
+        "vulnerability_points": 30
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -532,7 +669,9 @@
     "question": "Are emergency exits clearly marked and kept unobstructed at all times?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 35 }
+      "NO": {
+        "vulnerability_points": 35
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -551,7 +690,9 @@
     "question": "Do you have trained medical personnel or an active first aid team present during large services?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 20 }
+      "NO": {
+        "vulnerability_points": 20
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -570,7 +711,9 @@
     "question": "Do you have a formalized incident reporting system for medical errors or near-misses?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 40 }
+      "NO": {
+        "vulnerability_points": 40
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
@@ -589,13 +732,2043 @@
     "question": "Are all medical practitioners covered by active Medical Malpractice Insurance?",
     "question_type": "yes_no",
     "risk_logic": {
-      "NO": { "vulnerability_points": 50 }
+      "NO": {
+        "vulnerability_points": 50
+      }
     },
     "recommendation_trigger": {
       "condition": "NO",
       "priority": "Critical",
       "recommendation": "Require proof of Medical Malpractice coverage for all attending physicians and clinical staff."
     },
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SCH_001",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your school, students, staff, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ School Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 5–7 minutes.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Tell Me More"
+    ],
+    "branching": {
+      "Yes": "SCH_003",
+      "Tell Me More": "SCH_002",
+      "DEFAULT": "SCH_003"
+    }
+  },
+  {
+    "id": "SCH_002",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "CoverScore helps school owners and administrators identify hidden risks before they become costly incidents.\n\nWe assess:\n\n✓ Student Safety\n✓ Staff Risks\n✓ School Facilities\n✓ Transportation\n✓ Liability Exposure\n✓ Regulatory Compliance\n✓ Business Continuity\n\nWould you like to continue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Start Assessment",
+      "Not Now"
+    ],
+    "branching": {
+      "Start Assessment": "SCH_003",
+      "Not Now": "COMPLETE",
+      "DEFAULT": "SCH_003"
+    }
+  },
+  {
+    "id": "SCH_003",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "Great.\n\nTo personalize your report, what is the name of your school?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "SCH_004"
+    }
+  },
+  {
+    "id": "SCH_004",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "What is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "SCH_005"
+    }
+  },
+  {
+    "id": "SCH_005",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "What is your role in the school?",
+    "question_type": "single_choice",
+    "answers": [
+      "Proprietor",
+      "Director",
+      "Principal",
+      "Administrator",
+      "Bursar",
+      "Other"
+    ],
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "SCH_006"
+    }
+  },
+  {
+    "id": "SCH_006",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "Where should we send your completed report?\n\nPlease enter your email address.",
+    "question_type": "open_text",
+    "validation": "email",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "SCH_007"
+    }
+  },
+  {
+    "id": "SCH_007",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "What type of school are we assessing?",
+    "question_type": "single_choice",
+    "answers": [
+      "Nursery",
+      "Primary",
+      "Secondary",
+      "Combined",
+      "Tertiary",
+      "Other"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_008"
+    }
+  },
+  {
+    "id": "SCH_008",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "Approximately how many students are enrolled?",
+    "question_type": "single_choice",
+    "answers": [
+      "Less than 100",
+      "100–300",
+      "301–700",
+      "701–1500",
+      "Above 1500"
+    ],
+    "risk_logic": {
+      "Less than 100": {
+        "exposure_points": 5
+      },
+      "100–300": {
+        "exposure_points": 15
+      },
+      "301–700": {
+        "exposure_points": 30
+      },
+      "701–1500": {
+        "exposure_points": 50
+      },
+      "Above 1500": {
+        "exposure_points": 80
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_009"
+    }
+  },
+  {
+    "id": "SCH_009",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "How many employees work in the school?",
+    "question_type": "single_choice",
+    "answers": [
+      "Less than 10",
+      "10–30",
+      "31–100",
+      "Above 100"
+    ],
+    "risk_logic": {
+      "Above 100": {
+        "exposure_points": 30
+      },
+      "31–100": {
+        "exposure_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_010"
+    }
+  },
+  {
+    "id": "SCH_010",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "Do you operate from:",
+    "question_type": "single_choice",
+    "answers": [
+      "Owned Premises",
+      "Rented Premises",
+      "Mixed"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_011"
+    }
+  },
+  {
+    "id": "SCH_011",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "Has any student suffered a serious injury on school premises within the last 3 years?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 30
+      }
+    },
+    "branching": {
+      "YES": "SCH_012",
+      "NO": "SCH_013",
+      "DEFAULT": "SCH_013"
+    }
+  },
+  {
+    "id": "SCH_012",
+    "domain": "Student Safety",
+    "pillar": "Exposure",
+    "question": "What caused the incident?",
+    "question_type": "single_choice",
+    "answers": [
+      "Playground",
+      "Sports",
+      "Laboratory",
+      "Transportation",
+      "Other"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_013"
+    }
+  },
+  {
+    "id": "SCH_013",
+    "domain": "Student Safety",
+    "pillar": "Preparedness",
+    "question": "Do you have documented student safety procedures?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not Sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 20
+      },
+      "Not Sure": {
+        "vulnerability_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Implement documented student safety procedures."
+    },
+    "branching": {
+      "DEFAULT": "SCH_014"
+    }
+  },
+  {
+    "id": "SCH_014",
+    "domain": "Student Safety",
+    "pillar": "Preparedness",
+    "question": "Are staff trained on emergency response procedures?",
+    "question_type": "single_choice",
+    "answers": [
+      "Regularly",
+      "Occasionally",
+      "Never"
+    ],
+    "risk_logic": {
+      "Never": {
+        "vulnerability_points": 30
+      },
+      "Occasionally": {
+        "vulnerability_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "Never",
+      "recommendation": "Conduct regular emergency response training for all staff."
+    },
+    "branching": {
+      "DEFAULT": "SCH_015"
+    }
+  },
+  {
+    "id": "SCH_015",
+    "domain": "School Transportation",
+    "pillar": "Exposure",
+    "question": "Does the school operate school buses?",
+    "question_type": "yes_no",
+    "branching": {
+      "YES": "SCH_016",
+      "NO": "SCH_020",
+      "DEFAULT": "SCH_020"
+    }
+  },
+  {
+    "id": "SCH_016",
+    "domain": "School Transportation",
+    "pillar": "Exposure",
+    "question": "How many school buses are currently in operation?",
+    "question_type": "number",
+    "branching": {
+      "DEFAULT": "SCH_017"
+    }
+  },
+  {
+    "id": "SCH_017",
+    "domain": "School Transportation",
+    "pillar": "Preparedness",
+    "question": "Do drivers receive regular safety training?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "recommendation": "Implement mandatory safety training for school bus drivers."
+    },
+    "branching": {
+      "DEFAULT": "SCH_018"
+    }
+  },
+  {
+    "id": "SCH_018",
+    "domain": "School Transportation",
+    "pillar": "Exposure",
+    "question": "Have any transport accidents occurred within the last 5 years?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_019"
+    }
+  },
+  {
+    "id": "SCH_019",
+    "domain": "School Transportation",
+    "pillar": "Preparedness",
+    "question": "Are all school buses insured?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Some",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 40
+      },
+      "Some": {
+        "vulnerability_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Ensure comprehensive insurance for all school buses."
+    },
+    "branching": {
+      "DEFAULT": "SCH_020"
+    }
+  },
+  {
+    "id": "SCH_020",
+    "domain": "Boarding Facilities",
+    "pillar": "Exposure",
+    "question": "Does the school operate boarding facilities?",
+    "question_type": "yes_no",
+    "branching": {
+      "YES": "SCH_021",
+      "NO": "SCH_024",
+      "DEFAULT": "SCH_024"
+    }
+  },
+  {
+    "id": "SCH_021",
+    "domain": "Boarding Facilities",
+    "pillar": "Preparedness",
+    "question": "Do boarding facilities have fire extinguishers?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 30
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "recommendation": "Install fire extinguishers in all boarding areas immediately."
+    },
+    "branching": {
+      "DEFAULT": "SCH_022"
+    }
+  },
+  {
+    "id": "SCH_022",
+    "domain": "Boarding Facilities",
+    "pillar": "Preparedness",
+    "question": "Are fire drills conducted?",
+    "question_type": "single_choice",
+    "answers": [
+      "Quarterly",
+      "Annually",
+      "Never"
+    ],
+    "risk_logic": {
+      "Never": {
+        "vulnerability_points": 25
+      },
+      "Annually": {
+        "vulnerability_points": 10
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_023"
+    }
+  },
+  {
+    "id": "SCH_023",
+    "domain": "Boarding Facilities",
+    "pillar": "Exposure",
+    "question": "Have there been major boarding incidents in the last 5 years?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_024"
+    }
+  },
+  {
+    "id": "SCH_024",
+    "domain": "Property Risk",
+    "pillar": "Exposure",
+    "question": "What is the estimated replacement value of the school's buildings and facilities?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under ₦50M",
+      "₦50M–₦200M",
+      "₦200M–₦500M",
+      "Above ₦500M"
+    ],
+    "risk_logic": {
+      "Above ₦500M": {
+        "exposure_points": 50
+      },
+      "₦200M–₦500M": {
+        "exposure_points": 30
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_025"
+    }
+  },
+  {
+    "id": "SCH_025",
+    "domain": "Property Risk",
+    "pillar": "Preparedness",
+    "question": "Do you have fire extinguishers across the school?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 25
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_026"
+    }
+  },
+  {
+    "id": "SCH_026",
+    "domain": "Property Risk",
+    "pillar": "Preparedness",
+    "question": "Do you have smoke detectors installed?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_027"
+    }
+  },
+  {
+    "id": "SCH_027",
+    "domain": "Property Risk",
+    "pillar": "Exposure",
+    "question": "Has the school experienced a fire incident before?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_028"
+    }
+  },
+  {
+    "id": "SCH_028",
+    "domain": "Property Risk",
+    "pillar": "Exposure",
+    "question": "Has the school experienced flooding?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_029"
+    }
+  },
+  {
+    "id": "SCH_029",
+    "domain": "Liability Risk",
+    "pillar": "Exposure",
+    "question": "If a parent filed a ₦10 million claim against the school tomorrow, would the school be financially prepared?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not Sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      },
+      "Not Sure": {
+        "vulnerability_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_030"
+    }
+  },
+  {
+    "id": "SCH_030",
+    "domain": "Liability Risk",
+    "pillar": "Exposure",
+    "question": "Has the school faced legal claims from parents, students, or staff before?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_031"
+    }
+  },
+  {
+    "id": "SCH_031",
+    "domain": "Liability Risk",
+    "pillar": "Preparedness",
+    "question": "Do you currently maintain Public Liability Insurance?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not Sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 40
+      },
+      "Not Sure": {
+        "vulnerability_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Obtain Public Liability Insurance to protect against claims."
+    },
+    "branching": {
+      "DEFAULT": "SCH_032"
+    }
+  },
+  {
+    "id": "SCH_032",
+    "domain": "Employee Risk",
+    "pillar": "Preparedness",
+    "question": "Does the school provide health or welfare benefits to employees?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_033"
+    }
+  },
+  {
+    "id": "SCH_033",
+    "domain": "Employee Risk",
+    "pillar": "Preparedness",
+    "question": "Do you maintain Group Life Insurance for staff?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "recommendation": "Implement Group Life Insurance for all eligible staff."
+    },
+    "branching": {
+      "DEFAULT": "SCH_034"
+    }
+  },
+  {
+    "id": "SCH_034",
+    "domain": "Employee Risk",
+    "pillar": "Exposure",
+    "question": "Could the school continue operating effectively if the proprietor or principal became unavailable for 90 days?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 30
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_035"
+    }
+  },
+  {
+    "id": "SCH_035",
+    "domain": "Cyber Risk",
+    "pillar": "Exposure",
+    "question": "Does the school store student records electronically?",
+    "question_type": "yes_no",
+    "branching": {
+      "YES": "SCH_036",
+      "NO": "SCH_038",
+      "DEFAULT": "SCH_038"
+    }
+  },
+  {
+    "id": "SCH_036",
+    "domain": "Cyber Risk",
+    "pillar": "Preparedness",
+    "question": "Do staff use password-protected systems?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not Sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      },
+      "Not Sure": {
+        "vulnerability_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_037"
+    }
+  },
+  {
+    "id": "SCH_037",
+    "domain": "Cyber Risk",
+    "pillar": "Exposure",
+    "question": "Have you experienced data loss or cyber incidents before?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "YES": {
+        "impact_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_038"
+    }
+  },
+  {
+    "id": "SCH_038",
+    "domain": "Business Continuity Risk",
+    "pillar": "Exposure",
+    "question": "If school operations were disrupted tomorrow, how long could the school continue functioning?",
+    "question_type": "single_choice",
+    "answers": [
+      "Less than 1 Week",
+      "1 Month",
+      "3 Months",
+      "More than 3 Months"
+    ],
+    "risk_logic": {
+      "Less than 1 Week": {
+        "vulnerability_points": 40
+      },
+      "1 Month": {
+        "vulnerability_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SCH_039"
+    }
+  },
+  {
+    "id": "SCH_039",
+    "domain": "Business Continuity Risk",
+    "pillar": "Preparedness",
+    "question": "Do you maintain an emergency response or continuity plan?",
+    "question_type": "yes_no",
+    "risk_logic": {
+      "NO": {
+        "vulnerability_points": 30
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "NO",
+      "recommendation": "Develop a formal Business Continuity Plan."
+    },
+    "branching": {
+      "DEFAULT": "SCH_040"
+    }
+  },
+  {
+    "id": "SCH_040",
+    "domain": "Protection Review",
+    "pillar": "Preparedness",
+    "question": "Which of the following protections currently exist?\n\nReply with all that apply:",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire Insurance",
+      "Burglary Insurance",
+      "School Bus Insurance",
+      "Public Liability Insurance",
+      "Group Life Insurance",
+      "Health Insurance",
+      "None"
+    ],
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MFG_001",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your manufacturing, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Tell Me More"
+    ],
+    "branching": {
+      "Yes": "MFG_003",
+      "Tell Me More": "MFG_002",
+      "DEFAULT": "MFG_002"
+    }
+  },
+  {
+    "id": "MFG_002",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Start Assessment",
+      "Not Now"
+    ],
+    "branching": {
+      "Start Assessment": "MFG_003",
+      "Not Now": "COMPLETE",
+      "DEFAULT": "MFG_003"
+    }
+  },
+  {
+    "id": "MFG_003",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your manufacturing?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "MFG_004"
+    }
+  },
+  {
+    "id": "MFG_004",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "MFG_005"
+    }
+  },
+  {
+    "id": "MFG_005",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "MFG_006"
+    }
+  },
+  {
+    "id": "MFG_006",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "MFG_007"
+    }
+  },
+  {
+    "id": "MFG_007",
+    "industry": "manufacturing",
+    "pillar": "Exposure",
+    "question": "How many factory workers do you employ?",
+    "question_type": "single_choice",
+    "answers": [
+      "1-50",
+      "51-200",
+      "200+"
+    ],
+    "risk_logic": {
+      "1-50": {
+        "exposure_points": 10,
+        "lead_score_points": 10
+      },
+      "51-200": {
+        "exposure_points": 20,
+        "lead_score_points": 20
+      },
+      "200+": {
+        "exposure_points": 30,
+        "lead_score_points": 30
+      }
+    },
+    "branching": {
+      "DEFAULT": "MFG_008"
+    }
+  },
+  {
+    "id": "MFG_008",
+    "industry": "manufacturing",
+    "pillar": "Vulnerability",
+    "question": "If a critical machine breaks down, how quickly would it halt operations?",
+    "question_type": "single_choice",
+    "answers": [
+      "Immediately",
+      "Within a few days",
+      "We have backups"
+    ],
+    "risk_logic": {
+      "Immediately": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      },
+      "Within a few days": {
+        "vulnerability_points": 15,
+        "lead_score_points": 10
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "Immediately",
+      "recommendation": "Machinery Breakdown Insurance required"
+    },
+    "branching": {
+      "DEFAULT": "MFG_009"
+    }
+  },
+  {
+    "id": "MFG_009",
+    "industry": "manufacturing",
+    "pillar": "Vulnerability",
+    "question": "Do you own the building you operate from?",
+    "question_type": "single_choice",
+    "answers": [
+      "Own",
+      "Rent"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_010"
+    }
+  },
+  {
+    "id": "MFG_010",
+    "industry": "manufacturing",
+    "pillar": "Vulnerability",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your building and contents?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Immediate need for Fire Insurance"
+    },
+    "branching": {
+      "DEFAULT": "MFG_011"
+    }
+  },
+  {
+    "id": "MFG_011",
+    "industry": "manufacturing",
+    "pillar": "Impact",
+    "question": "Have you experienced any major incidents (fire, theft, major accidents) in the last 3 years?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "impact_points": 25,
+        "lead_score_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "MFG_012"
+    }
+  },
+  {
+    "id": "MFG_012",
+    "industry": "manufacturing",
+    "pillar": "Exposure",
+    "question": "Are members of the public regularly at your premises?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "branching": {
+      "Yes": "MFG_013",
+      "No": "MFG_014",
+      "DEFAULT": "MFG_014"
+    }
+  },
+  {
+    "id": "MFG_013",
+    "industry": "manufacturing",
+    "pillar": "Vulnerability",
+    "question": "If a visitor was injured on your premises and sued for ₦10M, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "High priority: Public Liability Insurance required"
+    },
+    "branching": {
+      "DEFAULT": "MFG_014"
+    }
+  },
+  {
+    "id": "MFG_014",
+    "industry": "manufacturing",
+    "pillar": "Vulnerability",
+    "question": "Do you provide Health Insurance benefits for your staff?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 15,
+        "lead_score_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Consider Health Insurance for staff retention"
+    },
+    "branching": {
+      "DEFAULT": "MFG_015"
+    }
+  },
+  {
+    "id": "MFG_015",
+    "industry": "manufacturing",
+    "pillar": "Impact",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20,
+        "lead_score_points": 10
+      },
+      "No, we would close": {
+        "impact_points": 40,
+        "lead_score_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No, we would close",
+      "recommendation": "Critical need for Business Interruption Insurance"
+    },
+    "branching": {
+      "DEFAULT": "MFG_016"
+    }
+  },
+  {
+    "id": "MFG_016",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question_type": "multi_choice",
+    "branching": {
+      "DEFAULT": "MFG_017"
+    }
+  },
+  {
+    "id": "MFG_017",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "MFG_018",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MFG_018",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOS_001",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your hospital, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Tell Me More"
+    ],
+    "branching": {
+      "Yes": "HOS_003",
+      "Tell Me More": "HOS_002",
+      "DEFAULT": "HOS_002"
+    }
+  },
+  {
+    "id": "HOS_002",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Start Assessment",
+      "Not Now"
+    ],
+    "branching": {
+      "Start Assessment": "HOS_003",
+      "Not Now": "COMPLETE",
+      "DEFAULT": "HOS_003"
+    }
+  },
+  {
+    "id": "HOS_003",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your hospital?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "HOS_004"
+    }
+  },
+  {
+    "id": "HOS_004",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "HOS_005"
+    }
+  },
+  {
+    "id": "HOS_005",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "HOS_006"
+    }
+  },
+  {
+    "id": "HOS_006",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "HOS_007"
+    }
+  },
+  {
+    "id": "HOS_007",
+    "industry": "hospital",
+    "pillar": "Exposure",
+    "question": "Approximately how many patient beds does your facility have?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under 20",
+      "20-100",
+      "Over 100"
+    ],
+    "risk_logic": {
+      "Under 20": {
+        "exposure_points": 10,
+        "lead_score_points": 10
+      },
+      "20-100": {
+        "exposure_points": 20,
+        "lead_score_points": 20
+      },
+      "Over 100": {
+        "exposure_points": 30,
+        "lead_score_points": 30
+      }
+    },
+    "branching": {
+      "DEFAULT": "HOS_008"
+    }
+  },
+  {
+    "id": "HOS_008",
+    "industry": "hospital",
+    "pillar": "Vulnerability",
+    "question": "Are patient records stored electronically with access controls?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Cyber Insurance and data protection required"
+    },
+    "branching": {
+      "DEFAULT": "HOS_009"
+    }
+  },
+  {
+    "id": "HOS_009",
+    "industry": "hospital",
+    "pillar": "Vulnerability",
+    "question": "Do you own the building you operate from?",
+    "question_type": "single_choice",
+    "answers": [
+      "Own",
+      "Rent"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_010"
+    }
+  },
+  {
+    "id": "HOS_010",
+    "industry": "hospital",
+    "pillar": "Vulnerability",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your building and contents?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Immediate need for Fire Insurance"
+    },
+    "branching": {
+      "DEFAULT": "HOS_011"
+    }
+  },
+  {
+    "id": "HOS_011",
+    "industry": "hospital",
+    "pillar": "Impact",
+    "question": "Have you experienced any major incidents (fire, theft, major accidents) in the last 3 years?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "impact_points": 25,
+        "lead_score_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "HOS_012"
+    }
+  },
+  {
+    "id": "HOS_012",
+    "industry": "hospital",
+    "pillar": "Exposure",
+    "question": "Are members of the public regularly at your premises?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "branching": {
+      "Yes": "HOS_013",
+      "No": "HOS_014",
+      "DEFAULT": "HOS_014"
+    }
+  },
+  {
+    "id": "HOS_013",
+    "industry": "hospital",
+    "pillar": "Vulnerability",
+    "question": "If a visitor was injured on your premises and sued for ₦10M, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "High priority: Public Liability Insurance required"
+    },
+    "branching": {
+      "DEFAULT": "HOS_014"
+    }
+  },
+  {
+    "id": "HOS_014",
+    "industry": "hospital",
+    "pillar": "Vulnerability",
+    "question": "Do you provide Health Insurance benefits for your staff?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 15,
+        "lead_score_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Consider Health Insurance for staff retention"
+    },
+    "branching": {
+      "DEFAULT": "HOS_015"
+    }
+  },
+  {
+    "id": "HOS_015",
+    "industry": "hospital",
+    "pillar": "Impact",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20,
+        "lead_score_points": 10
+      },
+      "No, we would close": {
+        "impact_points": 40,
+        "lead_score_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No, we would close",
+      "recommendation": "Critical need for Business Interruption Insurance"
+    },
+    "branching": {
+      "DEFAULT": "HOS_016"
+    }
+  },
+  {
+    "id": "HOS_016",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question_type": "multi_choice",
+    "branching": {
+      "DEFAULT": "HOS_017"
+    }
+  },
+  {
+    "id": "HOS_017",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "HOS_018",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOS_018",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CHR_001",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your church, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Tell Me More"
+    ],
+    "branching": {
+      "Yes": "CHR_003",
+      "Tell Me More": "CHR_002",
+      "DEFAULT": "CHR_002"
+    }
+  },
+  {
+    "id": "CHR_002",
+    "industry": "church",
+    "pillar": "General",
+    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Start Assessment",
+      "Not Now"
+    ],
+    "branching": {
+      "Start Assessment": "CHR_003",
+      "Not Now": "COMPLETE",
+      "DEFAULT": "CHR_003"
+    }
+  },
+  {
+    "id": "CHR_003",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your church?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "CHR_004"
+    }
+  },
+  {
+    "id": "CHR_004",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "CHR_005"
+    }
+  },
+  {
+    "id": "CHR_005",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "CHR_006"
+    }
+  },
+  {
+    "id": "CHR_006",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "CHR_007"
+    }
+  },
+  {
+    "id": "CHR_007",
+    "industry": "church",
+    "pillar": "Exposure",
+    "question": "What is your average weekly congregation size?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under 200",
+      "200-1000",
+      "Over 1000"
+    ],
+    "risk_logic": {
+      "Under 200": {
+        "exposure_points": 10,
+        "lead_score_points": 10
+      },
+      "200-1000": {
+        "exposure_points": 20,
+        "lead_score_points": 20
+      },
+      "Over 1000": {
+        "exposure_points": 40,
+        "lead_score_points": 35
+      }
+    },
+    "branching": {
+      "DEFAULT": "CHR_008"
+    }
+  },
+  {
+    "id": "CHR_008",
+    "industry": "church",
+    "pillar": "Vulnerability",
+    "question": "Do you have high-value musical instruments and broadcast equipment on the premises?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "vulnerability_points": 20,
+        "lead_score_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "Yes",
+      "recommendation": "All Risk / Burglary Insurance for instruments"
+    },
+    "branching": {
+      "DEFAULT": "CHR_009"
+    }
+  },
+  {
+    "id": "CHR_009",
+    "industry": "church",
+    "pillar": "Vulnerability",
+    "question": "Do you own the building you operate from?",
+    "question_type": "single_choice",
+    "answers": [
+      "Own",
+      "Rent"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_010"
+    }
+  },
+  {
+    "id": "CHR_010",
+    "industry": "church",
+    "pillar": "Vulnerability",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your building and contents?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Immediate need for Fire Insurance"
+    },
+    "branching": {
+      "DEFAULT": "CHR_011"
+    }
+  },
+  {
+    "id": "CHR_011",
+    "industry": "church",
+    "pillar": "Impact",
+    "question": "Have you experienced any major incidents (fire, theft, major accidents) in the last 3 years?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "impact_points": 25,
+        "lead_score_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "CHR_012"
+    }
+  },
+  {
+    "id": "CHR_012",
+    "industry": "church",
+    "pillar": "Exposure",
+    "question": "Are members of the public regularly at your premises?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "branching": {
+      "Yes": "CHR_013",
+      "No": "CHR_014",
+      "DEFAULT": "CHR_014"
+    }
+  },
+  {
+    "id": "CHR_013",
+    "industry": "church",
+    "pillar": "Vulnerability",
+    "question": "If a visitor was injured on your premises and sued for ₦10M, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "High priority: Public Liability Insurance required"
+    },
+    "branching": {
+      "DEFAULT": "CHR_014"
+    }
+  },
+  {
+    "id": "CHR_014",
+    "industry": "church",
+    "pillar": "Vulnerability",
+    "question": "Do you provide Health Insurance benefits for your staff?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 15,
+        "lead_score_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Consider Health Insurance for staff retention"
+    },
+    "branching": {
+      "DEFAULT": "CHR_015"
+    }
+  },
+  {
+    "id": "CHR_015",
+    "industry": "church",
+    "pillar": "Impact",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20,
+        "lead_score_points": 10
+      },
+      "No, we would close": {
+        "impact_points": 40,
+        "lead_score_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No, we would close",
+      "recommendation": "Critical need for Business Interruption Insurance"
+    },
+    "branching": {
+      "DEFAULT": "CHR_016"
+    }
+  },
+  {
+    "id": "CHR_016",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question_type": "multi_choice",
+    "branching": {
+      "DEFAULT": "CHR_017"
+    }
+  },
+  {
+    "id": "CHR_017",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "CHR_018",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CHR_018",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SME_001",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your sme, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Tell Me More"
+    ],
+    "branching": {
+      "Yes": "SME_003",
+      "Tell Me More": "SME_002",
+      "DEFAULT": "SME_002"
+    }
+  },
+  {
+    "id": "SME_002",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Start Assessment",
+      "Not Now"
+    ],
+    "branching": {
+      "Start Assessment": "SME_003",
+      "Not Now": "COMPLETE",
+      "DEFAULT": "SME_003"
+    }
+  },
+  {
+    "id": "SME_003",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your sme?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "SME_004"
+    }
+  },
+  {
+    "id": "SME_004",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "SME_005"
+    }
+  },
+  {
+    "id": "SME_005",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "SME_006"
+    }
+  },
+  {
+    "id": "SME_006",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "SME_007"
+    }
+  },
+  {
+    "id": "SME_007",
+    "industry": "sme",
+    "pillar": "Exposure",
+    "question": "How many employees/staff do you have?",
+    "question_type": "single_choice",
+    "answers": [
+      "1-10",
+      "11-50",
+      "51+"
+    ],
+    "risk_logic": {
+      "1-10": {
+        "exposure_points": 5,
+        "lead_score_points": 5
+      },
+      "11-50": {
+        "exposure_points": 10,
+        "lead_score_points": 10
+      },
+      "51+": {
+        "exposure_points": 20,
+        "lead_score_points": 20
+      }
+    },
+    "branching": {
+      "DEFAULT": "SME_008"
+    }
+  },
+  {
+    "id": "SME_008",
+    "industry": "sme",
+    "pillar": "Exposure",
+    "question": "What is your estimated annual revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under ₦50M",
+      "₦50M - ₦200M",
+      "Over ₦200M"
+    ],
+    "risk_logic": {
+      "Under ₦50M": {
+        "exposure_points": 5,
+        "lead_score_points": 5
+      },
+      "₦50M - ₦200M": {
+        "exposure_points": 15,
+        "lead_score_points": 15
+      },
+      "Over ₦200M": {
+        "exposure_points": 25,
+        "lead_score_points": 25
+      }
+    },
+    "branching": {
+      "DEFAULT": "SME_009"
+    }
+  },
+  {
+    "id": "SME_009",
+    "industry": "sme",
+    "pillar": "Vulnerability",
+    "question": "Do you own the building you operate from?",
+    "question_type": "single_choice",
+    "answers": [
+      "Own",
+      "Rent"
+    ],
+    "branching": {
+      "DEFAULT": "SME_010"
+    }
+  },
+  {
+    "id": "SME_010",
+    "industry": "sme",
+    "pillar": "Vulnerability",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your building and contents?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Immediate need for Fire Insurance"
+    },
+    "branching": {
+      "DEFAULT": "SME_011"
+    }
+  },
+  {
+    "id": "SME_011",
+    "industry": "sme",
+    "pillar": "Impact",
+    "question": "Have you experienced any major incidents (fire, theft, major accidents) in the last 3 years?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "impact_points": 25,
+        "lead_score_points": 15
+      }
+    },
+    "branching": {
+      "DEFAULT": "SME_012"
+    }
+  },
+  {
+    "id": "SME_012",
+    "industry": "sme",
+    "pillar": "Exposure",
+    "question": "Are members of the public regularly at your premises?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "branching": {
+      "Yes": "SME_013",
+      "No": "SME_014",
+      "DEFAULT": "SME_014"
+    }
+  },
+  {
+    "id": "SME_013",
+    "industry": "sme",
+    "pillar": "Vulnerability",
+    "question": "If a visitor was injured on your premises and sued for ₦10M, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "High priority: Public Liability Insurance required"
+    },
+    "branching": {
+      "DEFAULT": "SME_014"
+    }
+  },
+  {
+    "id": "SME_014",
+    "industry": "sme",
+    "pillar": "Vulnerability",
+    "question": "Do you provide Health Insurance benefits for your staff?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 15,
+        "lead_score_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Consider Health Insurance for staff retention"
+    },
+    "branching": {
+      "DEFAULT": "SME_015"
+    }
+  },
+  {
+    "id": "SME_015",
+    "industry": "sme",
+    "pillar": "Impact",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20,
+        "lead_score_points": 10
+      },
+      "No, we would close": {
+        "impact_points": 40,
+        "lead_score_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No, we would close",
+      "recommendation": "Critical need for Business Interruption Insurance"
+    },
+    "branching": {
+      "DEFAULT": "SME_016"
+    }
+  },
+  {
+    "id": "SME_016",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question_type": "multi_choice",
+    "branching": {
+      "DEFAULT": "SME_017"
+    }
+  },
+  {
+    "id": "SME_017",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "SME_018",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SME_018",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
     "branching": {
       "DEFAULT": "COMPLETE"
     }

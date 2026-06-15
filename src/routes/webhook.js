@@ -65,16 +65,28 @@ router.post('/evolution', async (req, res) => {
 
       console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
 
+      const flowMap = {
+        'school': 'SCH_001',
+        'manufacturing': 'MFG_001',
+        'hospital': 'HOS_001',
+        'healthcare': 'HOS_001',
+        'church': 'CHR_001',
+        'sme': 'SME_001'
+      };
+      const getInitState = (ind) => flowMap[ind] || 'welcome_name';
+
       let currentState, chatHistory, assessmentData;
+      const resolvedIndustry = detectedIndustry || (lead ? lead.industry : null);
 
       if (lead) {
         if (isRestartTrigger) {
+          const initState = getInitState(resolvedIndustry);
           console.log(`   Lead ${lead.id} requesting restart mid-flow`);
-          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', ['welcome_name', '{}', '{}', lead.id]);
-          lead.wa_state = 'welcome_name';
+          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', [initState, '{}', '{}', lead.id]);
+          lead.wa_state = initState;
           lead.chat_history = '{}';
           lead.assessment_data = '{}';
-          currentState = 'welcome_name';
+          currentState = initState;
           chatHistory = [];
           assessmentData = {};
         } else {
@@ -83,15 +95,16 @@ router.post('/evolution', async (req, res) => {
           assessmentData = JSON.parse(lead.assessment_data || '{}');
         }
       } else if (isStartTrigger || isRestartTrigger) {
+        const initState = getInitState(resolvedIndustry);
         console.log(`   Creating NEW lead for phone ${phoneNumber} (implicit start trigger)`);
         const insertResult = await run(`
           INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
-          VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?, ?)
-        `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, 'WhatsApp User', detectedIndustry]);
+          VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?)
+        `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, initState, 'WhatsApp User', resolvedIndustry]);
         
         lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
         console.log(`   Created new lead ID: ${lead.id}`);
-        currentState = 'welcome_name';
+        currentState = initState;
         chatHistory = [];
         assessmentData = {};
       } else {
@@ -101,38 +114,56 @@ router.post('/evolution', async (req, res) => {
 
       // Handle leads in 'initial' state (from web form) or 'finished' state receiving a start trigger
       if ((lead.wa_state === 'initial' || lead.wa_state === null) && isStartTrigger) {
-        console.log(`   Lead ${lead.id} in '${lead.wa_state}' state, transitioning to welcome_name`);
-        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
-        lead.wa_state = 'welcome_name';
+        const initState = getInitState(resolvedIndustry);
+        console.log(`   Lead ${lead.id} in '${lead.wa_state}' state, transitioning to ${initState}`);
+        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [initState, '{}', lead.id]);
+        lead.wa_state = initState;
         lead.chat_history = '{}';
-        currentState = 'welcome_name';
+        currentState = initState;
       }
 
       if (!currentState) {
-        currentState = 'welcome_name';
+        currentState = getInitState(resolvedIndustry);
       }
       
-      if (currentState === 'finished') {
+      if (currentState === 'finished' || currentState === 'awaiting_consultation' || currentState === 'awaiting_consultation_day') {
         if (isRestartTrigger) {
-          // Allow finished leads to restart with explicit trigger
+          const initState = getInitState(resolvedIndustry);
           console.log(`   Lead ${lead.id} finished but requesting restart`);
-          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', ['welcome_name', '{}', '{}', lead.id]);
-          lead.wa_state = 'welcome_name';
-          currentState = 'welcome_name';
-        } else {
+          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', [initState, '{}', '{}', lead.id]);
+          lead.wa_state = initState;
+          currentState = initState;
+        } else if (currentState === 'finished') {
           console.log(`   Lead ${lead.id} is in finished state, passing to AI Advisor`);
         }
       }
 
       // ── NEW STRUCTURED FLOW STATE MACHINE ──
       
-      // If we are just starting, fake the first transition
       let processText = incomingTextRaw;
       let evalState = currentState;
 
-      if (currentState === 'welcome_name' && (isStartTrigger || isRestartTrigger)) {
-        // Send initial welcome message instantly without advancing state
-        const initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
+      // Send initial welcome message instantly without advancing state
+      if ((evalState === 'welcome_name' || evalState.endsWith('_001')) && (isStartTrigger || isRestartTrigger)) {
+        let initialWelcome = "";
+        if (evalState !== 'welcome_name') {
+          const qb = require('../data/question_bank.json');
+          const firstQ = qb.find(q => q.id === evalState);
+          if (firstQ) {
+            initialWelcome = firstQ.question + "\n\n";
+            if (firstQ.question_type === 'single_choice' && firstQ.answers) {
+              const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+              firstQ.answers.forEach((ans, idx) => {
+                initialWelcome += `${letters[idx]}. ${ans}\n`;
+              });
+            }
+            initialWelcome = initialWelcome.trim();
+          }
+        }
+        
+        if (!initialWelcome) {
+          initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
+        }
         console.log(`   Sending welcome message to ${phoneNumber}...`);
         const welcomeResult = await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
         console.log(`   Welcome message result: ${JSON.stringify(welcomeResult)}`);
@@ -215,12 +246,16 @@ router.post('/evolution', async (req, res) => {
           updatedData.final_resilience_score = riResults.resilience_score;
           
           // Send report via WhatsApp as well
-          const gapReviewPrompt = "\n\nBased on your assessment, a personalized Insurance Gap Review may help identify areas that require attention.\n\nWould you like a complimentary review?\n\nYES / NO";
-          await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report + gapReviewPrompt });
+          const consultationOffer = "\n\nBased on your assessment, several opportunities exist to strengthen your school's protection strategy.\n\nWould you like a complimentary 30-minute consultation with a CoverScore Certified Risk Advisor?\n\nA. Yes\nB. Maybe Later\nC. No";
+          await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report + consultationOffer });
         }
 
         // Update lead state (only if message was sent successfully)
         await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), JSON.stringify(chatHistory), lead.id]);
+        
+        if (updatedData.name || updatedData.email) {
+          await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email) WHERE id = ?', [updatedData.name || null, updatedData.email || null, lead.id]);
+        }
         
         // 🚀 CHECK IF LEAD IS NOW QUALIFIED 🚀
         if (nextState === 'finished') {
