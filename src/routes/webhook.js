@@ -237,6 +237,12 @@ router.post('/evolution', async (req, res) => {
         // Process final risk score if complete
         if (isComplete && !updatedData._scored) {
           const { processAssessment } = require('../services/riskEngine');
+          
+          // Pass the business name for the entity
+          if (lead.industry !== 'individual') {
+            updatedData.business_name = lead.business_name || lead.name;
+          }
+          
           const riResults = processAssessment(updatedData);
           updatedData._scored = true;
           
@@ -245,8 +251,11 @@ router.post('/evolution', async (req, res) => {
           updatedData.final_risk_level = riResults.risk_level;
           updatedData.final_resilience_score = riResults.resilience_score;
           
-          // Send report via WhatsApp as well
-          const consultationOffer = "\n\nBased on your assessment, several opportunities exist to strengthen your school's protection strategy.\n\nWould you like a complimentary 30-minute consultation with a CoverScore Certified Risk Advisor?\n\nA. Yes\nB. Maybe Later\nC. No";
+          const indName = lead.industry ? lead.industry.charAt(0).toUpperCase() + lead.industry.slice(1) : 'organization';
+          const consultationOffer = `\n\nBased on your assessment, several opportunities exist to strengthen your ${indName}'s protection strategy.\n\nWould you like a complimentary 30-minute consultation with a CoverScore Certified Risk Advisor?\n\nA. Yes\nB. Maybe Later\nC. No`;
+          
+          // Only send the text report + consultation question now. 
+          // Do NOT process the web report yet.
           await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report + consultationOffer });
         }
 
@@ -321,19 +330,23 @@ router.post('/evolution', async (req, res) => {
           `, [lead.id]);
         }
 
-        // If the flow is complete, trigger report generation
-        if (isComplete) {
+        // If the user just answered the consultation question, process and send the final report!
+        if ((evalState === 'awaiting_consultation' || evalState === 'awaiting_consultation_day') && nextState === 'finished' && !updatedData._report_sent) {
           try {
+            updatedData._report_sent = true;
             // Map the collected data to the scoring engine format
-            const entityType = updatedData.entity_type === 'business' ? 'business' : 'individual';
+            const entityType = lead.industry === 'individual' ? 'individual' : 'business';
             let mockAnswers = { type: { entity_type: entityType } };
 
             if (entityType === 'business') {
+              // Dynamically determine turnover from new flow data
+              const rawRev = updatedData.annual_revenue || updatedData.tuition_fees || updatedData.weekly_offering || updatedData.turnover_bracket || '10m_50m';
+              
               mockAnswers.business = {
-                business_name: updatedData.name || 'Your Business',
+                business_name: updatedData.business_name || updatedData.name || 'Your Business',
                 industry: updatedData.industry || 'General Business',
-                turnover: updatedData.turnover_bracket || '10m_50m',
-                employees: updatedData.employee_bracket || '1_5'
+                turnover: rawRev,
+                employees: updatedData.employees || updatedData.employee_bracket || '1_5'
               };
               mockAnswers.employee_risk = {
                 employ_staff: 'yes',
@@ -467,15 +480,15 @@ router.post('/evolution', async (req, res) => {
               riskBreakdownMsg = `\n\n📈 *Risk Breakdown:*\n${formattedCategories}`;
             }
 
-            // Send combined Report Summary + Qualification Question (single message per user's spec)
-            const reportAndQualMsg = `🧾 *Your CoverScore Risk Report is Ready*\n\nHi ${updatedData.name || 'there'},\n\nWe've completed your risk assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n📊 *CoverScore:* ${scoreResult.score}/100\n⚠️ *Risk Level:* ${scoreResult.riskLevel}${riskBreakdownMsg}\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View your full report:\n${reportUrl}\n\n❓ If an unexpected incident occurred tomorrow, are you confident you could absorb a loss of ₦${maxLossStr} without serious financial disruption?\n\nReply:\n1 = YES, I believe I'm adequately protected\n2 = NO, I think there may be gaps in my protection\n3 = NOT SURE, I'd like a free review`;
+            // Send Final Web Report Link with Financial Exposure AFTER consultation response
+            const finalReportMsg = `🧾 *Your Official CoverScore Risk Report is Ready*\n\nThank you for your response.\n\nWe've processed your full assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View and download your full report:\n${reportUrl}\n\nIf you requested a consultation, our Certified Risk Advisor will contact you shortly!`;
             
-            await sendWhatsApp(phoneNumber, null, { _message: reportAndQualMsg });
+            await sendWhatsApp(phoneNumber, null, { _message: finalReportMsg });
             
             updatedData.__messages = updatedData.__messages || [];
             updatedData.__messages.push({
               role: 'assistant',
-              content: reportAndQualMsg,
+              content: finalReportMsg,
               timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
             });
             
