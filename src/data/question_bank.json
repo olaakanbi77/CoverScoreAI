@@ -747,9 +747,9 @@
   },
   {
     "id": "SCH_001",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your school, students, staff, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ School Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 5–7 minutes.\n\nShall we begin?",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your school, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -758,14 +758,14 @@
     "branching": {
       "Yes": "SCH_003",
       "Tell Me More": "SCH_002",
-      "DEFAULT": "SCH_003"
+      "DEFAULT": "SCH_002"
     }
   },
   {
     "id": "SCH_002",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "CoverScore helps school owners and administrators identify hidden risks before they become costly incidents.\n\nWe assess:\n\n✓ Student Safety\n✓ Staff Risks\n✓ School Facilities\n✓ Transportation\n✓ Liability Exposure\n✓ Regulatory Compliance\n✓ Business Continuity\n\nWould you like to continue?",
+    "industry": "school",
+    "pillar": "General",
+    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
     "question_type": "single_choice",
     "answers": [
       "Start Assessment",
@@ -779,8 +779,8 @@
   },
   {
     "id": "SCH_003",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
+    "industry": "school",
+    "pillar": "General",
     "question": "Great.\n\nTo personalize your report, what is the name of your school?",
     "question_type": "open_text",
     "data_mapping": "business_name",
@@ -790,9 +790,9 @@
   },
   {
     "id": "SCH_004",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "What is your name?",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -801,18 +801,10 @@
   },
   {
     "id": "SCH_005",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "What is your role in the school?",
-    "question_type": "single_choice",
-    "answers": [
-      "Proprietor",
-      "Director",
-      "Principal",
-      "Administrator",
-      "Bursar",
-      "Other"
-    ],
+    "industry": "school",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
       "DEFAULT": "SCH_006"
@@ -820,11 +812,10 @@
   },
   {
     "id": "SCH_006",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "Where should we send your completed report?\n\nPlease enter your email address.",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
-    "validation": "email",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "SCH_007"
@@ -832,151 +823,156 @@
   },
   {
     "id": "SCH_007",
-    "domain": "Student Safety",
+    "industry": "school",
     "pillar": "Exposure",
-    "question": "What type of school are we assessing?",
+    "question": "Approximately how many students are enrolled in your school?",
     "question_type": "single_choice",
     "answers": [
-      "Nursery",
-      "Primary",
-      "Secondary",
-      "Combined",
-      "Tertiary",
-      "Other"
+      "Under 100",
+      "100-500",
+      "Over 500"
     ],
+    "risk_logic": {
+      "Under 100": {
+        "exposure_points": 10,
+        "lead_score_points": 10
+      },
+      "100-500": {
+        "exposure_points": 20,
+        "lead_score_points": 20
+      },
+      "Over 500": {
+        "exposure_points": 30,
+        "lead_score_points": 30
+      }
+    },
     "branching": {
       "DEFAULT": "SCH_008"
     }
   },
   {
     "id": "SCH_008",
-    "domain": "Student Safety",
+    "industry": "school",
     "pillar": "Exposure",
-    "question": "Approximately how many students are enrolled?",
+    "question": "What is the estimated average annual tuition fee per student?",
     "question_type": "single_choice",
     "answers": [
-      "Less than 100",
-      "100–300",
-      "301–700",
-      "701–1500",
-      "Above 1500"
+      "Under ₦100,000",
+      "₦100,000 - ₦500,000",
+      "Over ₦500,000"
     ],
     "risk_logic": {
-      "Less than 100": {
-        "exposure_points": 5
+      "Under ₦100,000": {
+        "exposure_points": 5,
+        "lead_score_points": 5
       },
-      "100–300": {
-        "exposure_points": 15
+      "₦100,000 - ₦500,000": {
+        "exposure_points": 15,
+        "lead_score_points": 15
       },
-      "301–700": {
-        "exposure_points": 30
-      },
-      "701–1500": {
-        "exposure_points": 50
-      },
-      "Above 1500": {
-        "exposure_points": 80
+      "Over ₦500,000": {
+        "exposure_points": 25,
+        "lead_score_points": 25
       }
     },
+    "data_mapping": "tuition_fees",
     "branching": {
       "DEFAULT": "SCH_009"
     }
   },
   {
     "id": "SCH_009",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "How many employees work in the school?",
+    "industry": "school",
+    "pillar": "Vulnerability",
+    "question": "Do you own the building you operate from?",
     "question_type": "single_choice",
     "answers": [
-      "Less than 10",
-      "10–30",
-      "31–100",
-      "Above 100"
+      "Own",
+      "Rent"
     ],
-    "risk_logic": {
-      "Above 100": {
-        "exposure_points": 30
-      },
-      "31–100": {
-        "exposure_points": 20
-      }
-    },
     "branching": {
       "DEFAULT": "SCH_010"
     }
   },
   {
     "id": "SCH_010",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "Do you operate from:",
-    "question_type": "single_choice",
+    "industry": "school",
+    "pillar": "Vulnerability",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your building and contents?",
+    "question_type": "yes_no",
     "answers": [
-      "Owned Premises",
-      "Rented Premises",
-      "Mixed"
+      "Yes",
+      "No"
     ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30,
+        "lead_score_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Immediate need for Fire Insurance"
+    },
     "branching": {
       "DEFAULT": "SCH_011"
     }
   },
   {
     "id": "SCH_011",
-    "domain": "Student Safety",
-    "pillar": "Exposure",
-    "question": "Has any student suffered a serious injury on school premises within the last 3 years?",
+    "industry": "school",
+    "pillar": "Impact",
+    "question": "Have you experienced any major incidents (fire, theft, major accidents) in the last 3 years?",
     "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
     "risk_logic": {
-      "YES": {
-        "impact_points": 30
+      "Yes": {
+        "impact_points": 25,
+        "lead_score_points": 15
       }
     },
     "branching": {
-      "YES": "SCH_012",
-      "NO": "SCH_013",
-      "DEFAULT": "SCH_013"
+      "DEFAULT": "SCH_012"
     }
   },
   {
     "id": "SCH_012",
-    "domain": "Student Safety",
+    "industry": "school",
     "pillar": "Exposure",
-    "question": "What caused the incident?",
-    "question_type": "single_choice",
+    "question": "Are members of the public regularly at your premises?",
+    "question_type": "yes_no",
     "answers": [
-      "Playground",
-      "Sports",
-      "Laboratory",
-      "Transportation",
-      "Other"
+      "Yes",
+      "No"
     ],
     "branching": {
-      "DEFAULT": "SCH_013"
+      "Yes": "SCH_013",
+      "No": "SCH_014",
+      "DEFAULT": "SCH_014"
     }
   },
   {
     "id": "SCH_013",
-    "domain": "Student Safety",
-    "pillar": "Preparedness",
-    "question": "Do you have documented student safety procedures?",
-    "question_type": "single_choice",
+    "industry": "school",
+    "pillar": "Vulnerability",
+    "question": "If a visitor was injured on your premises and sued for ₦10M, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "No",
-      "Not Sure"
+      "No"
     ],
     "risk_logic": {
       "No": {
-        "vulnerability_points": 20
-      },
-      "Not Sure": {
-        "vulnerability_points": 15
+        "vulnerability_points": 25,
+        "lead_score_points": 20
       }
     },
     "recommendation_trigger": {
       "condition": "No",
-      "recommendation": "Implement documented student safety procedures."
+      "recommendation": "High priority: Public Liability Insurance required"
     },
     "branching": {
       "DEFAULT": "SCH_014"
@@ -984,26 +980,23 @@
   },
   {
     "id": "SCH_014",
-    "domain": "Student Safety",
-    "pillar": "Preparedness",
-    "question": "Are staff trained on emergency response procedures?",
-    "question_type": "single_choice",
+    "industry": "school",
+    "pillar": "Vulnerability",
+    "question": "Do you provide Health Insurance benefits for your staff?",
+    "question_type": "yes_no",
     "answers": [
-      "Regularly",
-      "Occasionally",
-      "Never"
+      "Yes",
+      "No"
     ],
     "risk_logic": {
-      "Never": {
-        "vulnerability_points": 30
-      },
-      "Occasionally": {
-        "vulnerability_points": 15
+      "No": {
+        "vulnerability_points": 15,
+        "lead_score_points": 15
       }
     },
     "recommendation_trigger": {
-      "condition": "Never",
-      "recommendation": "Conduct regular emergency response training for all staff."
+      "condition": "No",
+      "recommendation": "Consider Health Insurance for staff retention"
     },
     "branching": {
       "DEFAULT": "SCH_015"
@@ -1011,462 +1004,72 @@
   },
   {
     "id": "SCH_015",
-    "domain": "School Transportation",
-    "pillar": "Exposure",
-    "question": "Does the school operate school buses?",
-    "question_type": "yes_no",
+    "industry": "school",
+    "pillar": "Impact",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20,
+        "lead_score_points": 10
+      },
+      "No, we would close": {
+        "impact_points": 40,
+        "lead_score_points": 25
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No, we would close",
+      "recommendation": "Critical need for Business Interruption Insurance"
+    },
     "branching": {
-      "YES": "SCH_016",
-      "NO": "SCH_020",
-      "DEFAULT": "SCH_020"
+      "DEFAULT": "SCH_016"
     }
   },
   {
     "id": "SCH_016",
-    "domain": "School Transportation",
-    "pillar": "Exposure",
-    "question": "How many school buses are currently in operation?",
-    "question_type": "number",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question_type": "multi_choice",
     "branching": {
       "DEFAULT": "SCH_017"
     }
   },
   {
     "id": "SCH_017",
-    "domain": "School Transportation",
-    "pillar": "Preparedness",
-    "question": "Do drivers receive regular safety training?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 25
-      }
-    },
-    "recommendation_trigger": {
-      "condition": "NO",
-      "recommendation": "Implement mandatory safety training for school bus drivers."
-    },
+    "industry": "school",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
     "branching": {
-      "DEFAULT": "SCH_018"
+      "Yes, please": "SCH_018",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "SCH_018",
-    "domain": "School Transportation",
-    "pillar": "Exposure",
-    "question": "Have any transport accidents occurred within the last 5 years?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "YES": {
-        "impact_points": 20
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_019"
-    }
-  },
-  {
-    "id": "SCH_019",
-    "domain": "School Transportation",
-    "pillar": "Preparedness",
-    "question": "Are all school buses insured?",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Some",
-      "No"
+      "Morning",
+      "Afternoon",
+      "Evening"
     ],
-    "risk_logic": {
-      "No": {
-        "vulnerability_points": 40
-      },
-      "Some": {
-        "vulnerability_points": 20
-      }
-    },
-    "recommendation_trigger": {
-      "condition": "No",
-      "recommendation": "Ensure comprehensive insurance for all school buses."
-    },
-    "branching": {
-      "DEFAULT": "SCH_020"
-    }
-  },
-  {
-    "id": "SCH_020",
-    "domain": "Boarding Facilities",
-    "pillar": "Exposure",
-    "question": "Does the school operate boarding facilities?",
-    "question_type": "yes_no",
-    "branching": {
-      "YES": "SCH_021",
-      "NO": "SCH_024",
-      "DEFAULT": "SCH_024"
-    }
-  },
-  {
-    "id": "SCH_021",
-    "domain": "Boarding Facilities",
-    "pillar": "Preparedness",
-    "question": "Do boarding facilities have fire extinguishers?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 30
-      }
-    },
-    "recommendation_trigger": {
-      "condition": "NO",
-      "recommendation": "Install fire extinguishers in all boarding areas immediately."
-    },
-    "branching": {
-      "DEFAULT": "SCH_022"
-    }
-  },
-  {
-    "id": "SCH_022",
-    "domain": "Boarding Facilities",
-    "pillar": "Preparedness",
-    "question": "Are fire drills conducted?",
-    "question_type": "single_choice",
-    "answers": [
-      "Quarterly",
-      "Annually",
-      "Never"
-    ],
-    "risk_logic": {
-      "Never": {
-        "vulnerability_points": 25
-      },
-      "Annually": {
-        "vulnerability_points": 10
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_023"
-    }
-  },
-  {
-    "id": "SCH_023",
-    "domain": "Boarding Facilities",
-    "pillar": "Exposure",
-    "question": "Have there been major boarding incidents in the last 5 years?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "YES": {
-        "impact_points": 20
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_024"
-    }
-  },
-  {
-    "id": "SCH_024",
-    "domain": "Property Risk",
-    "pillar": "Exposure",
-    "question": "What is the estimated replacement value of the school's buildings and facilities?",
-    "question_type": "single_choice",
-    "answers": [
-      "Under ₦50M",
-      "₦50M–₦200M",
-      "₦200M–₦500M",
-      "Above ₦500M"
-    ],
-    "risk_logic": {
-      "Above ₦500M": {
-        "exposure_points": 50
-      },
-      "₦200M–₦500M": {
-        "exposure_points": 30
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_025"
-    }
-  },
-  {
-    "id": "SCH_025",
-    "domain": "Property Risk",
-    "pillar": "Preparedness",
-    "question": "Do you have fire extinguishers across the school?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 25
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_026"
-    }
-  },
-  {
-    "id": "SCH_026",
-    "domain": "Property Risk",
-    "pillar": "Preparedness",
-    "question": "Do you have smoke detectors installed?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 15
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_027"
-    }
-  },
-  {
-    "id": "SCH_027",
-    "domain": "Property Risk",
-    "pillar": "Exposure",
-    "question": "Has the school experienced a fire incident before?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "YES": {
-        "impact_points": 15
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_028"
-    }
-  },
-  {
-    "id": "SCH_028",
-    "domain": "Property Risk",
-    "pillar": "Exposure",
-    "question": "Has the school experienced flooding?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "YES": {
-        "impact_points": 15
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_029"
-    }
-  },
-  {
-    "id": "SCH_029",
-    "domain": "Liability Risk",
-    "pillar": "Exposure",
-    "question": "If a parent filed a ₦10 million claim against the school tomorrow, would the school be financially prepared?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes",
-      "No",
-      "Not Sure"
-    ],
-    "risk_logic": {
-      "No": {
-        "vulnerability_points": 30
-      },
-      "Not Sure": {
-        "vulnerability_points": 20
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_030"
-    }
-  },
-  {
-    "id": "SCH_030",
-    "domain": "Liability Risk",
-    "pillar": "Exposure",
-    "question": "Has the school faced legal claims from parents, students, or staff before?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "YES": {
-        "impact_points": 20
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_031"
-    }
-  },
-  {
-    "id": "SCH_031",
-    "domain": "Liability Risk",
-    "pillar": "Preparedness",
-    "question": "Do you currently maintain Public Liability Insurance?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes",
-      "No",
-      "Not Sure"
-    ],
-    "risk_logic": {
-      "No": {
-        "vulnerability_points": 40
-      },
-      "Not Sure": {
-        "vulnerability_points": 25
-      }
-    },
-    "recommendation_trigger": {
-      "condition": "No",
-      "recommendation": "Obtain Public Liability Insurance to protect against claims."
-    },
-    "branching": {
-      "DEFAULT": "SCH_032"
-    }
-  },
-  {
-    "id": "SCH_032",
-    "domain": "Employee Risk",
-    "pillar": "Preparedness",
-    "question": "Does the school provide health or welfare benefits to employees?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 15
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_033"
-    }
-  },
-  {
-    "id": "SCH_033",
-    "domain": "Employee Risk",
-    "pillar": "Preparedness",
-    "question": "Do you maintain Group Life Insurance for staff?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 20
-      }
-    },
-    "recommendation_trigger": {
-      "condition": "NO",
-      "recommendation": "Implement Group Life Insurance for all eligible staff."
-    },
-    "branching": {
-      "DEFAULT": "SCH_034"
-    }
-  },
-  {
-    "id": "SCH_034",
-    "domain": "Employee Risk",
-    "pillar": "Exposure",
-    "question": "Could the school continue operating effectively if the proprietor or principal became unavailable for 90 days?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 30
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_035"
-    }
-  },
-  {
-    "id": "SCH_035",
-    "domain": "Cyber Risk",
-    "pillar": "Exposure",
-    "question": "Does the school store student records electronically?",
-    "question_type": "yes_no",
-    "branching": {
-      "YES": "SCH_036",
-      "NO": "SCH_038",
-      "DEFAULT": "SCH_038"
-    }
-  },
-  {
-    "id": "SCH_036",
-    "domain": "Cyber Risk",
-    "pillar": "Preparedness",
-    "question": "Do staff use password-protected systems?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes",
-      "No",
-      "Not Sure"
-    ],
-    "risk_logic": {
-      "No": {
-        "vulnerability_points": 25
-      },
-      "Not Sure": {
-        "vulnerability_points": 15
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_037"
-    }
-  },
-  {
-    "id": "SCH_037",
-    "domain": "Cyber Risk",
-    "pillar": "Exposure",
-    "question": "Have you experienced data loss or cyber incidents before?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "YES": {
-        "impact_points": 20
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_038"
-    }
-  },
-  {
-    "id": "SCH_038",
-    "domain": "Business Continuity Risk",
-    "pillar": "Exposure",
-    "question": "If school operations were disrupted tomorrow, how long could the school continue functioning?",
-    "question_type": "single_choice",
-    "answers": [
-      "Less than 1 Week",
-      "1 Month",
-      "3 Months",
-      "More than 3 Months"
-    ],
-    "risk_logic": {
-      "Less than 1 Week": {
-        "vulnerability_points": 40
-      },
-      "1 Month": {
-        "vulnerability_points": 20
-      }
-    },
-    "branching": {
-      "DEFAULT": "SCH_039"
-    }
-  },
-  {
-    "id": "SCH_039",
-    "domain": "Business Continuity Risk",
-    "pillar": "Preparedness",
-    "question": "Do you maintain an emergency response or continuity plan?",
-    "question_type": "yes_no",
-    "risk_logic": {
-      "NO": {
-        "vulnerability_points": 30
-      }
-    },
-    "recommendation_trigger": {
-      "condition": "NO",
-      "recommendation": "Develop a formal Business Continuity Plan."
-    },
-    "branching": {
-      "DEFAULT": "SCH_040"
-    }
-  },
-  {
-    "id": "SCH_040",
-    "domain": "Protection Review",
-    "pillar": "Preparedness",
-    "question": "Which of the following protections currently exist?\n\nReply with all that apply:",
-    "question_type": "multi_choice",
-    "answers": [
-      "Fire Insurance",
-      "Burglary Insurance",
-      "School Bus Insurance",
-      "Public Liability Insurance",
-      "Group Life Insurance",
-      "Health Insurance",
-      "None"
-    ],
+    "data_mapping": "consultation_time",
     "branching": {
       "DEFAULT": "COMPLETE"
     }

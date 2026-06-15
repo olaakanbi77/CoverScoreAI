@@ -12,6 +12,7 @@ const clearPrefix = (prefix) => {
 };
 
 const flows = [
+  { prefix: 'SCH', name: 'School', ind: 'school' },
   { prefix: 'MFG', name: 'Manufacturing', ind: 'manufacturing' },
   { prefix: 'HOS', name: 'Hospital', ind: 'hospital' },
   { prefix: 'CHR', name: 'Church', ind: 'church' },
@@ -26,7 +27,31 @@ flows.forEach(flow => {
   
   // Specific Exposure Questions based on Industry
   let specificExposure = [];
-  if (p === 'MFG') {
+  if (p === 'SCH') {
+    specificExposure = [
+      {
+        id: `${p}_007`,
+        industry: flow.ind,
+        pillar: 'Exposure',
+        question: `Approximately how many students are enrolled in your school?`,
+        question_type: 'single_choice',
+        answers: ['Under 100', '100-500', 'Over 500'],
+        risk_logic: { 'Under 100': { exposure_points: 10, lead_score_points: 10 }, '100-500': { exposure_points: 20, lead_score_points: 20 }, 'Over 500': { exposure_points: 30, lead_score_points: 30 } },
+        branching: { 'DEFAULT': `${p}_008` }
+      },
+      {
+        id: `${p}_008`,
+        industry: flow.ind,
+        pillar: 'Exposure',
+        question: `What is the estimated average annual tuition fee per student?`,
+        question_type: 'single_choice',
+        answers: ['Under ₦100,000', '₦100,000 - ₦500,000', 'Over ₦500,000'],
+        risk_logic: { 'Under ₦100,000': { exposure_points: 5, lead_score_points: 5 }, '₦100,000 - ₦500,000': { exposure_points: 15, lead_score_points: 15 }, 'Over ₦500,000': { exposure_points: 25, lead_score_points: 25 } },
+        data_mapping: 'tuition_fees',
+        branching: { 'DEFAULT': `${p}_009` }
+      }
+    ];
+  } else if (p === 'MFG') {
     specificExposure = [
       {
         id: `${p}_007`,
