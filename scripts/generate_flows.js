@@ -281,8 +281,10 @@ flows.forEach(flow => {
       id: `${p}_016`,
       industry: flow.ind,
       pillar: 'General',
-      question: `Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above`,
+      question: `Which of these insurances do you currently have? (Select all that apply, e.g., A, C)`,
       question_type: 'multi_choice',
+      answers: ['Fire & Property', 'Group Life / Health', 'Public Liability', 'Cyber Security', 'Motor / Fleet', 'None of the above'],
+      data_mapping: 'existing_insurance',
       branching: { 'DEFAULT': `${p}_017` }
     },
     {

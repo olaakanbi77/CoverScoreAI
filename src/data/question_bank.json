@@ -1035,8 +1035,17 @@
     "id": "SCH_016",
     "industry": "school",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
     "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
     "branching": {
       "DEFAULT": "SCH_017"
     }
@@ -1363,8 +1372,17 @@
     "id": "MFG_016",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
     "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
     "branching": {
       "DEFAULT": "MFG_017"
     }
@@ -1686,8 +1704,17 @@
     "id": "HOS_016",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
     "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
     "branching": {
       "DEFAULT": "HOS_017"
     }
@@ -2009,8 +2036,17 @@
     "id": "CHR_016",
     "industry": "church",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
     "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
     "branching": {
       "DEFAULT": "CHR_017"
     }
@@ -2337,8 +2373,17 @@
     "id": "SME_016",
     "industry": "sme",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)\n\nA. Fire & Property\nB. Group Life / Health\nC. Public Liability\nD. Cyber Security\nE. Motor / Fleet\nF. None of the above",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
     "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
     "branching": {
       "DEFAULT": "SME_017"
     }
