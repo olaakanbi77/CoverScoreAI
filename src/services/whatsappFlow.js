@@ -32,6 +32,11 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
 
+  // Hand off to AI Advisor if state is finished or qualification
+  if (currentState === 'finished' || currentState === 'qualification') {
+    return { nextState: currentState, replyText: null, updatedData, isComplete: false };
+  }
+
   // Hardcoded Welcome State (Before dynamic questions)
   if (currentState === 'welcome_name') {
     updatedData.name = incomingText;

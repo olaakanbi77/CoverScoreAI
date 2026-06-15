@@ -120,8 +120,7 @@ router.post('/evolution', async (req, res) => {
           lead.wa_state = 'welcome_name';
           currentState = 'welcome_name';
         } else {
-          console.log(`   Lead ${lead.id} already finished, ignoring message`);
-          return;
+          console.log(`   Lead ${lead.id} is in finished state, passing to AI Advisor`);
         }
       }
 
