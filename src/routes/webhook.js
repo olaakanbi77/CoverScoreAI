@@ -82,7 +82,7 @@ router.post('/evolution', async (req, res) => {
           chatHistory = JSON.parse(lead.chat_history || '[]');
           assessmentData = JSON.parse(lead.assessment_data || '{}');
         }
-      } else if (isStartTrigger) {
+      } else if (isStartTrigger || isRestartTrigger) {
         console.log(`   Creating NEW lead for phone ${phoneNumber} (implicit start trigger)`);
         const insertResult = await run(`
           INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
