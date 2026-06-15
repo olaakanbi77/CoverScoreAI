@@ -215,7 +215,8 @@ router.post('/evolution', async (req, res) => {
           updatedData.final_resilience_score = riResults.resilience_score;
           
           // Send report via WhatsApp as well
-          await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report });
+          const gapReviewPrompt = "\n\nBased on your assessment, a personalized Insurance Gap Review may help identify areas that require attention.\n\nWould you like a complimentary review?\n\nYES / NO";
+          await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report + gapReviewPrompt });
         }
 
         // Update lead state (only if message was sent successfully)

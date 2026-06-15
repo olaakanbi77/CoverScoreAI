@@ -32,9 +32,37 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
 
-  // Hand off to AI Advisor if state is finished or qualification
-  if (currentState === 'finished' || currentState === 'qualification') {
-    return { nextState: currentState, replyText: null, updatedData, isComplete: false };
+  // Structured Qualification States
+  if (currentState === 'awaiting_gap_review') {
+    if (input === 'YES' || input === 'PLAN') {
+      replyText = "Thank you.\n\nWould you prefer:\nA = WhatsApp Review\nB = Phone Call\nC = Virtual Meeting\n\nReply A, B or C.";
+      nextState = 'awaiting_preference';
+    } else if (input === 'NO') {
+      replyText = "Noted. We are always here if you change your mind. Have a great day!";
+      nextState = 'finished';
+      updatedData.is_qualified = false;
+    } else {
+      replyText = "Please reply with YES or NO.";
+    }
+    return { nextState, replyText, updatedData, isComplete };
+  }
+
+  if (currentState === 'awaiting_preference') {
+    const prefMap = { A: 'WhatsApp', B: 'Phone Call', C: 'Virtual Meeting' };
+    if (['A', 'B', 'C'].includes(input)) {
+      updatedData.consultation_preference = prefMap[input];
+      updatedData.is_qualified = true;
+      replyText = "Thank you. Your request has been received.\n\nOur advisor will reach out to you shortly via your preferred channel.";
+      nextState = 'finished';
+    } else {
+      replyText = "Please reply with A, B or C.";
+    }
+    return { nextState, replyText, updatedData, isComplete };
+  }
+
+  // Handle finished state explicitly
+  if (currentState === 'finished') {
+    return { nextState: currentState, replyText: "Your assessment and review request are complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
 
   // Hardcoded Welcome State (Before dynamic questions)
@@ -160,7 +188,7 @@ const getNextStateAndReply = (currentState, incomingText, currentData, industry 
   if (!nextQId || nextQId === 'COMPLETE') {
     replyText = `Thank you, ${updatedData.name || 'User'}.\n\nWe're analyzing your responses and preparing your CoverScore Risk Report.\nThis usually takes less than 30 seconds.`;
     isComplete = true;
-    nextState = 'finished';
+    nextState = 'awaiting_gap_review';
   } else {
     const nextQ = qbDict[nextQId];
     if (nextQ) {
