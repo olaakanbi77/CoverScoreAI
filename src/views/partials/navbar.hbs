@@ -6,7 +6,7 @@
 
     <div class="navbar-menu">
       <a href="/" class="navbar-item {{#if (eq activePage 'home')}}active{{/if}}">Home</a>
-      <a href="/start-whatsapp" class="navbar-item {{#if (eq activePage 'assessment')}}active{{/if}}">Start Assessment</a>
+      <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="navbar-item {{#if (eq activePage 'assessment')}}active{{/if}}">Start Assessment</a>
       
       {{#if user}}
         {{#if (or (eq user.role 'admin') (eq user.role 'sales') (eq user.role 'analyst'))}}
@@ -32,7 +32,7 @@
         </div>
       {{else}}
         <a href="/auth/login" class="navbar-item">Login</a>
-        <a href="/start-whatsapp" class="btn btn-primary">Free Assessment</a>
+        <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="btn btn-primary">Free Assessment</a>
       {{/if}}
       
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">

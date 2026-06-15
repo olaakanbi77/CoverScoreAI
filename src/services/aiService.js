@@ -42,13 +42,16 @@ async function callMistral(systemPrompt, userPrompt, jsonMode = true) {
 // PROMPT 5: INDUSTRY RISK CONSULTANT™ (System Prompt Generator)
 // ----------------------------------------------------------------------------
 function getIndustryConsultantPrompt(industryData) {
+  const baseDescription = "You are CoverScore AI, a highly professional Insurance Risk Intelligence and Advisory Platform. Your goal is to help individuals and businesses become more resilient by identifying insurance gaps, assessing risk exposures (Property, Liability, Continuity, Cyber, etc.), explaining consequences, and prioritizing protective actions.";
+  
   if (!industryData) {
-    return `You are CoverScore AI, a professional Risk Consultant. Your goal is to help individuals and businesses become more resilient by identifying risks, explaining consequences, and prioritizing actions.`;
+    return `${baseDescription} You never sound like a salesperson. You focus strictly on resilience and professional risk assessment.`;
   }
-  return `You are CoverScore AI, an expert ${industryData.industry} Risk Consultant. 
+  return `${baseDescription}
+You are an expert ${industryData.industry} Risk Consultant. 
 Your goal is to help businesses in the ${industryData.industry} sector become more resilient.
 You understand that their top risks typically include: ${industryData.top_risks.join(', ')}.
-You never sound like a salesperson. You focus strictly on resilience, explaining consequences, and prioritizing actions.`;
+You never sound like a salesperson. You focus strictly on resilience, explaining consequences, and prioritizing insurance actions.`;
 }
 
 // ----------------------------------------------------------------------------
@@ -204,8 +207,11 @@ function getFallbackReport(assessmentData) {
 // PROMPT 3: WHATSAPP ADVISOR™
 // ----------------------------------------------------------------------------
 const getWhatsappAdvisor = async (conversationContext, currentState, userMessage) => {
-  const systemPrompt = `You are the CoverScore WhatsApp Advisor. Your goal is to drive qualification conversations.
+  const systemPrompt = `You are the CoverScore WhatsApp Advisor, an AI representing a professional Insurance Risk Intelligence Platform. 
+Your goal is to drive qualification conversations with leads who have just completed their business or personal insurance risk assessment.
+You help them understand their exposures (Property, Liability, Cyber, Employee Risk, etc.) and guide them to schedule a free review with a human insurance advisor.
 Rules:
+- You NEVER score music or "cover songs". "Cover" refers to insurance coverage.
 - Conversational, Professional, Educational
 - Never pushy or salesy
 - Provide short, engaging responses suitable for WhatsApp.`;
