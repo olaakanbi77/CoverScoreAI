@@ -65,28 +65,38 @@ router.post('/evolution', async (req, res) => {
 
       console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
 
-      if (!lead) {
-        if (isStartTrigger) {
-          const insertResult = await run(`
-            INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
-            VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?, ?)
-          `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, 'WhatsApp User', detectedIndustry]);
-          
-          lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
-          console.log(`   Created new lead ID: ${lead.id}`);
+      let currentState, chatHistory, assessmentData;
+
+      if (lead) {
+        if (isRestartTrigger) {
+          console.log(`   Lead ${lead.id} requesting restart mid-flow`);
+          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', ['welcome_name', '{}', '{}', lead.id]);
+          lead.wa_state = 'welcome_name';
+          lead.chat_history = '{}';
+          lead.assessment_data = '{}';
+          currentState = 'welcome_name';
+          chatHistory = [];
+          assessmentData = {};
         } else {
-          console.log(`   Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
-          return;
+          currentState = lead.wa_state || 'initial';
+          chatHistory = JSON.parse(lead.chat_history || '[]');
+          assessmentData = JSON.parse(lead.assessment_data || '{}');
         }
-      } else if (isRestartTrigger) {
-        // Create a completely new lead for explicit restart triggers to preserve previous assessments
-        console.log(`   Creating NEW lead for phone ${phoneNumber} (explicit restart trigger)`);
+      } else if (isStartTrigger) {
+        console.log(`   Creating NEW lead for phone ${phoneNumber} (implicit start trigger)`);
         const insertResult = await run(`
           INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
           VALUES (?, ?, ?, 'New Lead', 'welcome_name', '{}', 'unknown', ?, ?)
-        `, [lead.name, lead.email, phoneNumber, lead.name, detectedIndustry || lead.industry]);
+        `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, 'WhatsApp User', detectedIndustry]);
         
         lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
+        console.log(`   Created new lead ID: ${lead.id}`);
+        currentState = 'welcome_name';
+        chatHistory = [];
+        assessmentData = {};
+      } else {
+        console.log(`   Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
+        return;
       }
 
       // Handle leads in 'initial' state (from web form) or 'finished' state receiving a start trigger
@@ -95,31 +105,25 @@ router.post('/evolution', async (req, res) => {
         await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
         lead.wa_state = 'welcome_name';
         lead.chat_history = '{}';
+        currentState = 'welcome_name';
       }
 
-      const currentState = lead.wa_state || 'welcome_name';
+      if (!currentState) {
+        currentState = 'welcome_name';
+      }
       
       if (currentState === 'finished') {
         if (isRestartTrigger) {
           // Allow finished leads to restart with explicit trigger
           console.log(`   Lead ${lead.id} finished but requesting restart`);
-          await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', ['welcome_name', '{}', lead.id]);
+          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', ['welcome_name', '{}', '{}', lead.id]);
           lead.wa_state = 'welcome_name';
+          currentState = 'welcome_name';
         } else {
           console.log(`   Lead ${lead.id} already finished, ignoring message`);
           return;
         }
       }
-
-      let chatHistory = [];
-      try {
-        chatHistory = JSON.parse(lead.chat_history || '[]');
-      } catch(e) {}
-
-      let assessmentData = {};
-      try {
-        assessmentData = JSON.parse(lead.assessment_data || '{}');
-      } catch(e) {}
 
       // ── NEW STRUCTURED FLOW STATE MACHINE ──
       
