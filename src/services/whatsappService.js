@@ -334,12 +334,12 @@ const sendWhatsApp = async (to, templateKey, data = {}) => {
       return { success: false, error: `Invalid response from WhatsApp API (Status: ${response.status})` };
     }
 
-    if (response.ok && (result.key || result.status === 'SUCCESS' || result.message?.key)) {
+    if (response.ok) {
       console.log(`✅ WhatsApp sent to ${phone} via Evolution API`);
-      return { success: true, messageId: result.key?.id || result.message?.key?.id || 'sent', messageBody: message };
+      return { success: true, messageId: result?.key?.id || result?.message?.key?.id || result?.id || 'sent', messageBody: message };
     } else {
       console.error(`❌ Evolution API failed (Status: ${response.status}): ${JSON.stringify(result)}`);
-      return { success: false, error: result.message || result.response?.message || JSON.stringify(result) };
+      return { success: false, error: result?.message || result?.response?.message || JSON.stringify(result) };
     }
   } catch (error) {
     console.error(`❌ WhatsApp network error: ${error.message}`);

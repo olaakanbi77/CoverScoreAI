@@ -142,7 +142,7 @@ app.get('/start-whatsapp', (req, res) => {
 });
 
 app.get('/assessment/start', optionalAuth, (req, res) => {
-  res.redirect('/start-whatsapp');
+  res.render('assessment/wizard', { title: 'Risk Assessment', activePage: 'assessment', layout: 'main' });
 });
 
 app.get('/assessment/result/:id', optionalAuth, (req, res) => {
