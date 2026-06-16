@@ -485,7 +485,8 @@ p { margin: 0; }
 }
 
 .calc-title {
-  font-size: 1.25rem;
+  font-size: 2.25rem;
+  line-height: 1.1;
   font-weight: 800;
   color: var(--color-surface-dark);
   margin-bottom: 12px;
