@@ -4,14 +4,15 @@
 */
 
 :root {
-  /* Semantic Color Tokens */
-  --color-primary: #10b981; /* Emerald 500 */
-  --color-primary-hover: #059669; /* Emerald 600 */
-  --color-primary-light: #d1fae5; /* Emerald 100 */
-  --color-primary-dark: #047857; /* Emerald 700 */
+  /* Semantic Color Tokens - Official Brand Colors */
+  --color-primary: #00A651; /* Action Emerald */
+  --color-primary-hover: #008f45; /* Darker Emerald */
+  --color-primary-light: #e6f6ed; /* Light Emerald */
+  --color-primary-dark: #007a3c; /* Dark Emerald */
   
-  --color-surface-dark: #061125; /* Dark Navy */
-  --color-surface-darker: #040b1a; /* Darker Navy */
+  --color-surface-dark: #0B1F5E; /* CoverScore Navy */
+  --color-surface-darker: #071540; /* Darker Navy */
+  --color-gold: #F5A623; /* CoverScore Gold */
   --color-surface-light: #ffffff; /* White */
   --color-surface-muted: #f8fafc; /* Slate 50 */
   
@@ -349,7 +350,7 @@ p { margin: 0; }
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #fbbf24;
+  color: var(--color-gold);
 }
 
 .overlay-metrics {
@@ -504,7 +505,7 @@ p { margin: 0; }
 .calc-output-val {
   font-size: 3rem;
   font-weight: 800;
-  color: #fbbf24;
+  color: var(--color-gold);
   line-height: 1;
   margin-bottom: 16px;
 }
