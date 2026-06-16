@@ -311,12 +311,17 @@ p { margin: 0; }
 }
 
 .hero-image {
-  width: 100%;
+  width: 115%;
+  max-width: 115%;
   height: auto;
+  margin-left: -7.5%;
+  margin-top: -5%;
   object-fit: contain;
   object-position: center top;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   display: block;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
 }
 
 @media (min-width: 1024px) {
