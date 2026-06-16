@@ -372,7 +372,6 @@ p { margin: 0; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  flex: 1;
 }
 
 @media (min-width: 1024px) {
@@ -380,7 +379,7 @@ p { margin: 0; }
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     gap: 0;
     padding-left: 12px;
   }
