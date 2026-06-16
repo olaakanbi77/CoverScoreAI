@@ -314,7 +314,7 @@ p { margin: 0; }
   width: 125%;
   max-width: 125%;
   height: auto;
-  margin-left: -15%;
+  margin-left: -20%;
   margin-top: -10%;
   object-fit: contain;
   object-position: center top;
@@ -344,7 +344,7 @@ p { margin: 0; }
   .hero-overlay {
     position: absolute;
     bottom: -20px;
-    right: 16px;
+    right: -8px;
     width: max-content;
     flex-direction: row;
     align-items: center;
