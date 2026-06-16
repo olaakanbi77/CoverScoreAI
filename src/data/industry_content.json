@@ -12,18 +12,54 @@
       ],
       "overlayStatement": "Your Patients' Safety. Our Priority.",
       "metrics": [
-        {"value": "500+", "label": "Healthcare Facilities Assessed", "icon": "🏥"},
-        {"value": "₦150B+", "label": "Risks Evaluated", "icon": "🛡️"},
-        {"value": "98%", "label": "Risk Accuracy Rate", "icon": "✅"},
-        {"value": "24/7", "label": "Healthcare Advisor Support", "icon": "👩‍⚕️"}
+        {
+          "value": "500+",
+          "label": "Healthcare Facilities Assessed",
+          "icon": "🏥"
+        },
+        {
+          "value": "₦150B+",
+          "label": "Risks Evaluated",
+          "icon": "🛡️"
+        },
+        {
+          "value": "98%",
+          "label": "Risk Accuracy Rate",
+          "icon": "✅"
+        },
+        {
+          "value": "24/7",
+          "label": "Healthcare Advisor Support",
+          "icon": "👩‍⚕️"
+        }
       ]
     },
     "whyChoose": [
-      {"icon": "🛡️", "title": "Identify Clinical Risks", "desc": "Discover threats before they become incidents."},
-      {"icon": "💰", "title": "Reduce Financial Losses", "desc": "Avoid unexpected costs and disruptions."},
-      {"icon": "👥", "title": "Protect Patients & Staff", "desc": "Create a safer environment every day."},
-      {"icon": "📋", "title": "Meet Compliance Standards", "desc": "Stay aligned with regulatory and insurance needs."},
-      {"icon": "📈", "title": "Make Smarter Decisions", "desc": "Use data-driven insights to plan with confidence."}
+      {
+        "icon": "🛡️",
+        "title": "Identify Clinical Risks",
+        "desc": "Discover threats before they become incidents."
+      },
+      {
+        "icon": "💰",
+        "title": "Reduce Financial Losses",
+        "desc": "Avoid unexpected costs and disruptions."
+      },
+      {
+        "icon": "👥",
+        "title": "Protect Patients & Staff",
+        "desc": "Create a safer environment every day."
+      },
+      {
+        "icon": "📋",
+        "title": "Meet Compliance Standards",
+        "desc": "Stay aligned with regulatory and insurance needs."
+      },
+      {
+        "icon": "📈",
+        "title": "Make Smarter Decisions",
+        "desc": "Use data-driven insights to plan with confidence."
+      }
     ],
     "stories": [
       {
@@ -54,11 +90,31 @@
       "score": 72,
       "riskText": "Moderate Risk",
       "topRisks": [
-        {"name": "Clinical Liability", "level": "High", "color": "#ef4444"},
-        {"name": "Equipment Failure", "level": "High", "color": "#ef4444"},
-        {"name": "Patient Safety", "level": "Medium", "color": "#f59e0b"},
-        {"name": "Cyber Risk", "level": "Medium", "color": "#f59e0b"},
-        {"name": "Business Continuity", "level": "Medium", "color": "#f59e0b"}
+        {
+          "name": "Clinical Liability",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Equipment Failure",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Patient Safety",
+          "level": "Medium",
+          "color": "#f59e0b"
+        },
+        {
+          "name": "Cyber Risk",
+          "level": "Medium",
+          "color": "#f59e0b"
+        },
+        {
+          "name": "Business Continuity",
+          "level": "Medium",
+          "color": "#f59e0b"
+        }
       ],
       "gapScore": 58,
       "exposure": "420,000,000"
@@ -67,11 +123,26 @@
       "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
       "exposure": "₦420M+",
       "icons": [
-        {"icon": "🩺", "label": "Medical Negligence"},
-        {"icon": "⚙️", "label": "Equipment Failure"},
-        {"icon": "🏥", "label": "Patient Safety"},
-        {"icon": "🔥", "label": "Fire"},
-        {"icon": "💻", "label": "Cyber Incident"}
+        {
+          "icon": "🩺",
+          "label": "Medical Negligence"
+        },
+        {
+          "icon": "⚙️",
+          "label": "Equipment Failure"
+        },
+        {
+          "icon": "🏥",
+          "label": "Patient Safety"
+        },
+        {
+          "icon": "🔥",
+          "label": "Fire"
+        },
+        {
+          "icon": "💻",
+          "label": "Cyber Incident"
+        }
       ]
     }
   },
@@ -88,18 +159,54 @@
       ],
       "overlayStatement": "Your School's Safety. Our Priority.",
       "metrics": [
-        {"value": "500+", "label": "Schools Assessed", "icon": "🏫"},
-        {"value": "98%", "label": "Risk Accuracy Rate", "icon": "✅"},
-        {"value": "24/7", "label": "Advisor Support", "icon": "👨‍💼"},
-        {"value": "₦50B+", "label": "Risks Evaluated", "icon": "🛡️"}
+        {
+          "value": "500+",
+          "label": "Schools Assessed",
+          "icon": "🏫"
+        },
+        {
+          "value": "98%",
+          "label": "Risk Accuracy Rate",
+          "icon": "✅"
+        },
+        {
+          "value": "24/7",
+          "label": "Advisor Support",
+          "icon": "👨‍💼"
+        },
+        {
+          "value": "₦50B+",
+          "label": "Risks Evaluated",
+          "icon": "🛡️"
+        }
       ]
     },
     "whyChoose": [
-      {"icon": "🛡️", "title": "Identify Hidden Risks", "desc": "Discover threats before they become incidents."},
-      {"icon": "💰", "title": "Reduce Financial Losses", "desc": "Avoid unexpected costs from lawsuits and disruptions."},
-      {"icon": "👥", "title": "Protect Students & Staff", "desc": "Create a safer environment for learning every day."},
-      {"icon": "📋", "title": "Meet Compliance Standards", "desc": "Stay aligned with regulatory requirements."},
-      {"icon": "📈", "title": "Make Smarter Decisions", "desc": "Use data-driven insights to strengthen risk strategy."}
+      {
+        "icon": "🛡️",
+        "title": "Identify Hidden Risks",
+        "desc": "Discover threats before they become incidents."
+      },
+      {
+        "icon": "💰",
+        "title": "Reduce Financial Losses",
+        "desc": "Avoid unexpected costs from lawsuits and disruptions."
+      },
+      {
+        "icon": "👥",
+        "title": "Protect Students & Staff",
+        "desc": "Create a safer environment for learning every day."
+      },
+      {
+        "icon": "📋",
+        "title": "Meet Compliance Standards",
+        "desc": "Stay aligned with regulatory requirements."
+      },
+      {
+        "icon": "📈",
+        "title": "Make Smarter Decisions",
+        "desc": "Use data-driven insights to strengthen risk strategy."
+      }
     ],
     "stories": [
       {
@@ -130,10 +237,26 @@
       "score": 68,
       "riskText": "Moderate Risk",
       "topRisks": [
-        {"name": "Student Safety", "level": "High", "color": "#ef4444"},
-        {"name": "Property Protection", "level": "High", "color": "#ef4444"},
-        {"name": "Liability Exposure", "level": "Medium", "color": "#f59e0b"},
-        {"name": "Business Continuity", "level": "Medium", "color": "#f59e0b"}
+        {
+          "name": "Student Safety",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Property Protection",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Liability Exposure",
+          "level": "Medium",
+          "color": "#f59e0b"
+        },
+        {
+          "name": "Business Continuity",
+          "level": "Medium",
+          "color": "#f59e0b"
+        }
       ],
       "gapScore": 41,
       "exposure": "185,000,000"
@@ -142,11 +265,442 @@
       "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
       "exposure": "₦250M+",
       "icons": [
-        {"icon": "🔥", "label": "Fire"},
-        {"icon": "⚖️", "label": "Liability Claim"},
-        {"icon": "🏃‍♂️", "label": "Student Injury"},
-        {"icon": "🌊", "label": "Flood"},
-        {"icon": "💻", "label": "Cyber Incident"}
+        {
+          "icon": "🔥",
+          "label": "Fire"
+        },
+        {
+          "icon": "⚖️",
+          "label": "Liability Claim"
+        },
+        {
+          "icon": "🏃‍♂️",
+          "label": "Student Injury"
+        },
+        {
+          "icon": "🌊",
+          "label": "Flood"
+        },
+        {
+          "icon": "💻",
+          "label": "Cyber Incident"
+        }
+      ]
+    }
+  },
+  "manufacturing": {
+    "title": "Manufacturing Risk Assessment | CoverScore",
+    "trigger": "START MANUFACTURING ASSESSMENT",
+    "hero": {
+      "headline": "Protect Your Factory. Secure Your Supply Chain.",
+      "subheadline": "Identify equipment vulnerabilities, prevent operational downtime, and safeguard your manufacturing business from financial shock.",
+      "benefits": [
+        "AI-Powered Operational Risk Assessment",
+        "Personalized Factory Risk Report",
+        "Industrial Risk Advisor Support"
+      ],
+      "overlayStatement": "Your Factory's Operations. Our Priority.",
+      "metrics": [
+        {
+          "value": "300+",
+          "label": "Factories Assessed",
+          "icon": "🏭"
+        },
+        {
+          "value": "₦250B+",
+          "label": "Assets Evaluated",
+          "icon": "🛡️"
+        },
+        {
+          "value": "99%",
+          "label": "Risk Accuracy Rate",
+          "icon": "✅"
+        },
+        {
+          "value": "24/7",
+          "label": "Expert Support",
+          "icon": "👷"
+        }
+      ]
+    },
+    "whyChoose": [
+      {
+        "icon": "⚙️",
+        "title": "Identify Equipment Risks",
+        "desc": "Discover machine threats before failure."
+      },
+      {
+        "icon": "💰",
+        "title": "Reduce Downtime Costs",
+        "desc": "Avoid massive losses from halted production."
+      },
+      {
+        "icon": "📦",
+        "title": "Supply Chain Resilience",
+        "desc": "Protect against logistics disruptions."
+      },
+      {
+        "icon": "📋",
+        "title": "Meet Compliance Standards",
+        "desc": "Stay aligned with safety regulations."
+      },
+      {
+        "icon": "📈",
+        "title": "Make Smarter Decisions",
+        "desc": "Use data to plan expansions safely."
+      }
+    ],
+    "stories": [
+      {
+        "icon": "🔥",
+        "title": "Factory Fire",
+        "desc": "A spark in the assembly line caused a massive fire, halting production for 3 months.",
+        "loss": "₦450,000,000"
+      },
+      {
+        "icon": "⚡",
+        "title": "Power Surge Equipment Failure",
+        "desc": "A sudden grid surge destroyed the main CNC machine, pausing deliveries.",
+        "loss": "₦120,000,000"
+      },
+      {
+        "icon": "🌊",
+        "title": "Warehouse Flood",
+        "desc": "Heavy rains flooded the warehouse, destroying finished goods awaiting shipment.",
+        "loss": "₦85,000,000"
+      }
+    ],
+    "testimonial": {
+      "quote": "CoverScore showed us financial exposures in our supply chain we completely ignored. We updated our strategy and avoided a major loss.",
+      "author": "Engr. Tunde",
+      "role": "Plant Manager, Apex Manufacturing"
+    },
+    "preview": {
+      "score": 61,
+      "riskText": "High Risk",
+      "topRisks": [
+        {
+          "name": "Equipment Breakdown",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Business Interruption",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Supply Chain",
+          "level": "Medium",
+          "color": "#f59e0b"
+        },
+        {
+          "name": "Property Damage",
+          "level": "Medium",
+          "color": "#f59e0b"
+        }
+      ],
+      "gapScore": 35,
+      "exposure": "850,000,000"
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
+      "exposure": "₦850M+",
+      "icons": [
+        {
+          "icon": "⚙️",
+          "label": "Machine Failure"
+        },
+        {
+          "icon": "🔥",
+          "label": "Factory Fire"
+        },
+        {
+          "icon": "📦",
+          "label": "Supply Disruption"
+        },
+        {
+          "icon": "🌊",
+          "label": "Flood Damage"
+        },
+        {
+          "icon": "💻",
+          "label": "Cyber Incident"
+        }
+      ]
+    }
+  },
+  "church": {
+    "title": "Church Risk Assessment | CoverScore",
+    "trigger": "START CHURCH ASSESSMENT",
+    "hero": {
+      "headline": "Protect Your Ministry. Safeguard Your Congregation.",
+      "subheadline": "Identify hidden liabilities, improve safety protocols, and ensure your church's physical and financial security.",
+      "benefits": [
+        "AI-Powered Ministry Risk Assessment",
+        "Personalized Church Risk Report",
+        "Faith-Based Risk Advisor Support"
+      ],
+      "overlayStatement": "Your Ministry's Safety. Our Priority.",
+      "metrics": [
+        {
+          "value": "400+",
+          "label": "Churches Assessed",
+          "icon": "⛪"
+        },
+        {
+          "value": "₦50B+",
+          "label": "Risks Evaluated",
+          "icon": "🛡️"
+        },
+        {
+          "value": "98%",
+          "label": "Accuracy Rate",
+          "icon": "✅"
+        },
+        {
+          "value": "24/7",
+          "label": "Advisor Support",
+          "icon": "🙏"
+        }
+      ]
+    },
+    "whyChoose": [
+      {
+        "icon": "🛡️",
+        "title": "Identify Hidden Liabilities",
+        "desc": "Discover threats before they escalate."
+      },
+      {
+        "icon": "💰",
+        "title": "Protect Financial Assets",
+        "desc": "Avoid unexpected costs from lawsuits."
+      },
+      {
+        "icon": "👥",
+        "title": "Protect Congregation",
+        "desc": "Ensure a safe worship environment."
+      },
+      {
+        "icon": "📋",
+        "title": "Compliance Standards",
+        "desc": "Meet local building and safety codes."
+      },
+      {
+        "icon": "📈",
+        "title": "Stewardship Planning",
+        "desc": "Use data-driven insights for church expansion."
+      }
+    ],
+    "stories": [
+      {
+        "icon": "🔥",
+        "title": "Auditorium Fire",
+        "desc": "An electrical fault in the sound system started a fire that destroyed the main hall.",
+        "loss": "₦150,000,000"
+      },
+      {
+        "icon": "⚖️",
+        "title": "Slip and Fall Lawsuit",
+        "desc": "A congregant fell during service, resulting in a massive medical liability claim.",
+        "loss": "₦15,000,000"
+      },
+      {
+        "icon": "💨",
+        "title": "Storm Roof Damage",
+        "desc": "A heavy storm blew off the roof, exposing expensive media equipment to rain.",
+        "loss": "₦40,000,000"
+      }
+    ],
+    "testimonial": {
+      "quote": "The assessment was eye-opening. We didn't realize our liability exposure during youth events. We feel much safer now.",
+      "author": "Pastor Emmanuel",
+      "role": "Senior Pastor"
+    },
+    "preview": {
+      "score": 75,
+      "riskText": "Moderate Risk",
+      "topRisks": [
+        {
+          "name": "Public Liability",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Property Damage",
+          "level": "Medium",
+          "color": "#f59e0b"
+        },
+        {
+          "name": "Event Safety",
+          "level": "Medium",
+          "color": "#f59e0b"
+        }
+      ],
+      "gapScore": 52,
+      "exposure": "210,000,000"
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
+      "exposure": "₦210M+",
+      "icons": [
+        {
+          "icon": "🔥",
+          "label": "Fire"
+        },
+        {
+          "icon": "⚖️",
+          "label": "Public Liability"
+        },
+        {
+          "icon": "💨",
+          "label": "Storm Damage"
+        },
+        {
+          "icon": "🚗",
+          "label": "Transport Accident"
+        },
+        {
+          "icon": "🎤",
+          "label": "Equipment Loss"
+        }
+      ]
+    }
+  },
+  "sme": {
+    "title": "SME Risk Assessment | CoverScore",
+    "trigger": "START SME ASSESSMENT",
+    "hero": {
+      "headline": "Could Your Business Survive a Major Loss?",
+      "subheadline": "Discover Your Business Resilience Score in 5 Minutes. Identify risks before they cost you your business.",
+      "benefits": [
+        "AI-Powered Business Assessment",
+        "Personalized SME Risk Report",
+        "Business Advisor Support"
+      ],
+      "overlayStatement": "Your Business Resilience. Our Priority.",
+      "metrics": [
+        {
+          "value": "2000+",
+          "label": "SMEs Assessed",
+          "icon": "🏢"
+        },
+        {
+          "value": "₦100B+",
+          "label": "Risks Evaluated",
+          "icon": "🛡️"
+        },
+        {
+          "value": "98%",
+          "label": "Accuracy Rate",
+          "icon": "✅"
+        },
+        {
+          "value": "24/7",
+          "label": "Advisor Support",
+          "icon": "💼"
+        }
+      ]
+    },
+    "whyChoose": [
+      {
+        "icon": "🛡️",
+        "title": "Identify Hidden Risks",
+        "desc": "Find vulnerabilities in your operations."
+      },
+      {
+        "icon": "💰",
+        "title": "Reduce Financial Shock",
+        "desc": "Avoid unexpected cash-flow crises."
+      },
+      {
+        "icon": "👥",
+        "title": "Protect Employees",
+        "desc": "Ensure safety for your workforce."
+      },
+      {
+        "icon": "📋",
+        "title": "Compliance Standards",
+        "desc": "Stay aligned with business regulations."
+      },
+      {
+        "icon": "📈",
+        "title": "Make Smarter Decisions",
+        "desc": "Use data to grow your SME safely."
+      }
+    ],
+    "stories": [
+      {
+        "icon": "🔥",
+        "title": "Office Fire",
+        "desc": "An electrical fire destroyed inventory and vital business records.",
+        "loss": "₦25,000,000"
+      },
+      {
+        "icon": "💻",
+        "title": "Cyber Ransomware",
+        "desc": "Hackers locked customer data, grinding the business to a halt for weeks.",
+        "loss": "₦12,000,000"
+      },
+      {
+        "icon": "⚖️",
+        "title": "Employee Injury",
+        "desc": "An accident on site led to a massive medical claim the SME couldn't afford.",
+        "loss": "₦8,000,000"
+      }
+    ],
+    "testimonial": {
+      "quote": "As a small business owner, I never thought about cyber risk. CoverScore saved us from a potential disaster.",
+      "author": "Sarah Johnson",
+      "role": "CEO, Retail Hub"
+    },
+    "preview": {
+      "score": 65,
+      "riskText": "Moderate Risk",
+      "topRisks": [
+        {
+          "name": "Business Interruption",
+          "level": "High",
+          "color": "#ef4444"
+        },
+        {
+          "name": "Cyber Risk",
+          "level": "Medium",
+          "color": "#f59e0b"
+        },
+        {
+          "name": "Liability",
+          "level": "Medium",
+          "color": "#f59e0b"
+        }
+      ],
+      "gapScore": 40,
+      "exposure": "55,000,000"
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
+      "exposure": "₦55M+",
+      "icons": [
+        {
+          "icon": "🔥",
+          "label": "Fire"
+        },
+        {
+          "icon": "💻",
+          "label": "Cyber Attack"
+        },
+        {
+          "icon": "⚖️",
+          "label": "Liability Claim"
+        },
+        {
+          "icon": "🌊",
+          "label": "Flood"
+        },
+        {
+          "icon": "📉",
+          "label": "Business Interruption"
+        }
       ]
     }
   }
