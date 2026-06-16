@@ -363,8 +363,8 @@ p { margin: 0; }
 }
 
 .overlay-statement svg {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
 }
 
 @media (min-width: 1024px) {
@@ -415,8 +415,8 @@ p { margin: 0; }
 }
 
 .overlay-metric-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
 }
 
 .overlay-metric-val {
