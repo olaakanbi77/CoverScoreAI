@@ -342,34 +342,47 @@ p { margin: 0; }
   .hero-overlay {
     position: absolute;
     bottom: -40px;
-    left: -180px;
-    right: 80px;
+    left: 20px;
+    right: 20px;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    padding: 32px 48px;
+    justify-content: center;
+    padding: 24px 32px;
+    gap: 0;
   }
 }
 
 .overlay-statement {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: var(--color-gold);
+  gap: 16px;
+  color: white;
+  padding-right: 24px;
+}
+
+@media (min-width: 1024px) {
+  .overlay-statement {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
 }
 
 .overlay-metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+  flex: 1;
 }
 
 @media (min-width: 1024px) {
   .overlay-metrics {
     display: flex;
-    gap: 48px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 0;
+    padding-left: 12px;
   }
 }
 
@@ -377,22 +390,41 @@ p { margin: 0; }
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 0 16px;
+}
+
+@media (min-width: 1024px) {
+  .overlay-metric {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .overlay-metric:last-child {
+    border-right: none;
+  }
 }
 
 .overlay-metric-icon {
-  font-size: 1.5rem;
-  opacity: 0.8;
+  font-size: 2rem;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-metric-icon svg {
+  width: 32px;
+  height: 32px;
 }
 
 .overlay-metric-val {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   line-height: 1.2;
 }
 
 .overlay-metric-lbl {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--text-inverse-muted);
+  line-height: 1.3;
 }
 
 
