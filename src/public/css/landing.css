@@ -301,21 +301,22 @@ p { margin: 0; }
 .hero-image-wrapper {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: auto;
 }
 
 @media (min-width: 1024px) {
   .hero-image-wrapper {
-    height: 600px;
+    height: auto;
   }
 }
 
 .hero-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   object-position: center top;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: block;
 }
 
 @media (min-width: 1024px) {
