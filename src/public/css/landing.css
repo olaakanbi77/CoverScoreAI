@@ -295,7 +295,7 @@ p { margin: 0; }
   gap: 8px;
   font-size: 0.875rem;
   color: var(--text-muted);
-  margin-top: 8px;
+  margin-top: 16px;
 }
 
 .hero-image-wrapper {
