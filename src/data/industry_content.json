@@ -5,6 +5,7 @@
     "hero": {
       "headline": "Protect Your Patients. Strengthen Your Hospital.",
       "subheadline": "Identify hidden risks, improve patient safety, and strengthen operational resilience—for your patients, staff, and hospital.",
+      "image": "/images/hero-hospital.jpg",
       "benefits": [
         "AI-Powered Clinical Risk Assessment",
         "Personalized Hospital Risk Report",
