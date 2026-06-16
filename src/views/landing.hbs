@@ -484,28 +484,7 @@
       updateExposure();
     };
 
-    const alignOverlay = () => {
-      const overlay = document.querySelector('.hero-overlay');
-      const securityText = document.querySelector('.hero-security');
-      const wrapper = document.querySelector('.hero-image-wrapper');
-      
-      if(overlay && securityText && wrapper && window.innerWidth >= 1024) {
-        const securityRect = securityText.getBoundingClientRect();
-        const wrapperRect = wrapper.getBoundingClientRect();
-        // Distance from bottom of wrapper to bottom of security text
-        const diff = wrapperRect.bottom - securityRect.bottom;
-        overlay.style.bottom = diff + 'px';
-      } else if (overlay) {
-        overlay.style.bottom = '';
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderInputs();
-      alignOverlay();
-    });
-    
-    window.addEventListener('resize', alignOverlay);
+    document.addEventListener('DOMContentLoaded', renderInputs);
   </script>
 </body>
 </html>
