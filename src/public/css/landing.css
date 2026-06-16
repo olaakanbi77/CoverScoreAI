@@ -347,7 +347,7 @@ p { margin: 0; }
 @media (min-width: 1024px) {
   .hero-overlay {
     position: absolute;
-    bottom: 40px;
+    bottom: 0px;
     right: -32px;
     width: max-content;
     flex-direction: row;
