@@ -78,17 +78,16 @@ app.use((req, res, next) => {
   next();
 });
 
+const industryContent = require('./data/industry_content.json');
+
 app.get('/', (req, res) => {
   res.render('landing', { 
     title: 'CoverScore AI', 
     layout: false,
-    headline: 'Could Your Business Survive a Major Loss?',
-    subheadline: 'Discover Your Business Resilience Score in 5 Minutes.',
-    trigger: 'START SME ASSESSMENT'
+    trigger: industryContent['school'].trigger,
+    data: industryContent['school']
   });
 });
-
-const industryContent = require('./data/industry_content.json');
 
 app.get('/:industry', (req, res, next) => {
   const industryKey = req.params.industry.toLowerCase();
@@ -101,9 +100,8 @@ app.get('/:industry', (req, res, next) => {
     res.render('landing', { 
       title: industryContent[industryKey].title, 
       layout: false,
-      headline: industryContent[industryKey].headline,
-      subheadline: industryContent[industryKey].subheadline,
-      trigger: industryContent[industryKey].trigger
+      trigger: industryContent[industryKey].trigger,
+      data: industryContent[industryKey]
     });
   } else {
     next(); // 404 or fall through

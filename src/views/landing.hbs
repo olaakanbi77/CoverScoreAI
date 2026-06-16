@@ -2,482 +2,484 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CoverScore AI - Risk Intelligence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{title}}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=17">
+  <link rel="stylesheet" href="/css/landing.css?v=20">
 </head>
-<body>
+<body style="padding-bottom: 72px;">
 
-  <!-- NAVBAR -->
-  <nav class="mo-nav">
-    <div class="mo-container" style="display: flex; justify-content: space-between; width: 100%; align-items: center; gap: 16px;">
-      <a href="/" class="mo-logo">COVERSCORE <span class="mo-logo-ai">AI</span></a>
-      <button class="mo-hamburger" onclick="document.getElementById('mo-mobile-menu').classList.toggle('active')">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      </button>
-      <div id="mo-mobile-menu" class="mo-nav-links">
-        <a href="/">Home</a>
-        <a href="#assessments">Assessments</a>
-        <a href="#sample">Sample Report</a>
+  <!-- 1. NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="funnel-container navbar-inner">
+      <a href="/" class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        COVERSCORE <span>AI</span>
+      </a>
+      <div class="desktop-nav">
+        <a href="#calculator">Exposure Calculator</a>
         <a href="#how-it-works">How It Works</a>
+        <a href="#sample">Sample Report</a>
         <a href="/auth/login">Login</a>
-        <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="mo-btn mo-btn-navy mo-mobile-only-btn">Start Free Assessment</a>
+        <a href="/start-whatsapp?text={{trigger}}" class="btn btn-green">{{trigger}}</a>
       </div>
-      <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="mo-btn mo-btn-navy mo-desktop-only-btn">Start Free Assessment</a>
+      <button class="mobile-menu-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
-  <section class="mo-section-navy">
-    <div class="mo-container mo-hero">
+  <!-- 2. HERO SECTION -->
+  <section class="funnel-section-light hero funnel-container">
+    <div class="hero-content">
+      <h1 class="hero-title">{{data.hero.headline}}</h1>
+      <p class="hero-subtitle">{{data.hero.subheadline}}</p>
       
-      <!-- Left Hero Content -->
+      <div class="hero-benefits">
+        {{#each data.hero.benefits}}
+        <div class="hero-benefit">
+          <div class="hero-benefit-icon">✓</div>
+          {{this}}
+        </div>
+        {{/each}}
+      </div>
+      
+      <div style="margin-top: 16px;">
+        <a href="/start-whatsapp?text={{trigger}}" class="btn btn-green w-full" style="font-size: 1.1rem; height: 56px;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.68 4.19 1.84 5.86L2.5 21.5l3.75-1.25A9.95 9.95 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          {{trigger}}
+        </a>
+        <div class="hero-security">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Secure. Private. Takes 5–7 minutes.
+        </div>
+      </div>
+    </div>
+    
+    <div class="hero-image-wrapper">
+      <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1453&q=80" alt="CoverScore AI Dashboard" class="hero-image">
+      
+      <div class="hero-overlay">
+        <div class="overlay-statement">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          {{data.hero.overlayStatement}}
+        </div>
+        <div class="overlay-metrics">
+          {{#each data.hero.metrics}}
+          <div class="overlay-metric">
+            <div class="overlay-metric-icon">{{this.icon}}</div>
+            <div>
+              <div class="overlay-metric-val">{{this.value}}</div>
+              <div class="overlay-metric-lbl">{{this.label}}</div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. RISK EXPOSURE CALCULATOR -->
+  <section id="calculator" class="funnel-section funnel-section-gray" style="margin-top: 64px;">
+    <div class="funnel-container">
+      <div class="calc-card">
+        <div class="calc-header">
+          <div class="calc-badge">1</div>
+          <div>
+            <h2 class="calc-title">INSTANT RISK EXPOSURE CALCULATOR™</h2>
+            <p class="calc-subtitle">Estimate the potential financial impact of major incidents on your organization.</p>
+          </div>
+        </div>
+        <div class="calc-body">
+          <div class="calc-inputs" id="calcInputs">
+            <!-- Injected via JS based on industry -->
+          </div>
+          <div class="calc-output">
+            <div class="calc-output-title">Your Potential Financial Exposure</div>
+            <div class="calc-output-val" id="exposureTotal">₦0</div>
+            <div class="calc-output-desc" id="exposureDesc">Based on your inputs, a major incident could expose you to significant losses.</div>
+            <a href="/start-whatsapp?text={{trigger}}" class="btn btn-green">Get My Full Risk Score ➔</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TRUST BAR -->
+  <section class="funnel-section-light">
+    <div class="funnel-container trust-bar">
+      <div class="trust-item"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Confidential & Secure</div>
+      <div class="trust-item"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> AI-Powered Insights</div>
+      <div class="trust-item"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Industry Leading Accuracy</div>
+      <div class="trust-item"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Actionable Recommendations</div>
+    </div>
+  </section>
+
+  <!-- 5. WHY CHOOSE COVERSCORE -->
+  <section class="funnel-section funnel-section-light">
+    <div class="funnel-container">
+      <div class="section-header">
+        <h2 class="section-title">Why Organizations Choose CoverScore</h2>
+      </div>
+      <div class="features-grid">
+        {{#each data.whyChoose}}
+        <div class="feature-card">
+          <div class="feature-icon">{{this.icon}}</div>
+          <h3 class="feature-title">{{this.title}}</h3>
+          <p class="feature-desc">{{this.desc}}</p>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. REAL RISK STORIES -->
+  <section class="funnel-section funnel-section-gray">
+    <div class="funnel-container">
+      <div class="stories-layout">
+        <div>
+          <div class="stories-header">
+            <div class="calc-badge">2</div>
+            <h2 class="calc-title">REAL RISK STORIES</h2>
+          </div>
+          <p style="padding: 0 32px; color: var(--text-muted); margin-top: 8px;">Incidents happen. Preparation makes the difference.</p>
+          <div class="stories-grid">
+            {{#each data.stories}}
+            <div class="story-card">
+              <div class="story-icon">{{this.icon}}</div>
+              <h4 class="story-title">{{this.title}}</h4>
+              <p class="story-desc">{{this.desc}}</p>
+              <div>
+                <div class="story-loss-label">Estimated Loss</div>
+                <div class="story-loss-val">{{this.loss}}</div>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+        <div class="insight-panel">
+          <div class="insight-quote">Most incidents begin as "unlikely events." Until they happen.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. HOW IT WORKS -->
+  <section id="how-it-works" class="funnel-section funnel-section-light">
+    <div class="funnel-container">
+      <div class="section-header">
+        <h2 class="section-title">How It Works</h2>
+      </div>
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div>
+            <h4 class="step-title">Start on WhatsApp</h4>
+            <p class="step-desc">Answer a few simple questions.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div>
+            <h4 class="step-title">AI Analyzes Risks</h4>
+            <p class="step-desc">Our AI evaluates your responses.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div>
+            <h4 class="step-title">Get Your Risk Score</h4>
+            <p class="step-desc">Receive your score instantly.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div>
+            <h4 class="step-title">Receive Your Report</h4>
+            <p class="step-desc">Get a personalized risk report.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <div>
+            <h4 class="step-title">Speak to an Advisor</h4>
+            <p class="step-desc">Connect with an expert for tailored solutions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. TRUSTED LEADERS -->
+  <section class="funnel-section funnel-section-gray">
+    <div class="funnel-container leaders-grid">
       <div>
-        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 24px;">
-          <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg>
-          AI-POWERED RISK INTELLIGENCE
+        <h2 class="section-title" style="text-align: left; margin-bottom: 32px;">Trusted by Leaders</h2>
+        <div class="metrics-grid">
+          {{#each data.hero.metrics}}
+          <div class="metric-card">
+            <div style="font-size: 2rem;">{{this.icon}}</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-surface-dark);">{{this.value}}</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">{{this.label}}</div>
+          </div>
+          {{/each}}
         </div>
-        
-        <h1 class="mo-hero-title">
-          {{#if headline}}
-            {{headline}}
-          {{else}}
-            Know Your Risks<br>Before They <span>Cost You.</span>
-          {{/if}}
-        </h1>
-        
-        <p class="mo-hero-subtitle">
-          {{#if subheadline}}
-            {{subheadline}}
-          {{else}}
-            Get a personalized AI-powered risk assessment in minutes and discover hidden financial exposures affecting your business, family, or assets.
-          {{/if}}
-        </p>
-        
-        <div class="mo-check-list">
-          <div class="mo-check-item">
-            <span class="mo-check-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
-            AI-Powered Risk Intelligence
-          </div>
-          <div class="mo-check-item">
-            <span class="mo-check-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Personalized Risk Reports
-          </div>
-          <div class="mo-check-item">
-            <span class="mo-check-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Business & Personal Assessments
-          </div>
-          <div class="mo-check-item">
-            <span class="mo-check-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
-            Free Consultation Available
+      </div>
+      <div class="testimonial-card">
+        <div class="t-quote">{{data.testimonial.quote}}</div>
+        <div class="t-author">
+          <div class="t-avatar"></div>
+          <div>
+            <div class="t-name">{{data.testimonial.author}}</div>
+            <div class="t-role">{{data.testimonial.role}}</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="mo-hero-actions">
-          <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="mo-btn mo-btn-green">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.68 4.19 1.84 5.86L2.5 21.5l3.75-1.25A9.95 9.95 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-            {{#if trigger}}{{trigger}}{{else}}Start Assessment on WhatsApp{{/if}}
-          </a>
-          <a href="#assessments" class="mo-btn mo-btn-outline">Get My Free Risk Score</a>
+  <!-- 9. REPORT PREVIEW -->
+  <section id="sample" class="funnel-section funnel-section-light">
+    <div class="funnel-container">
+      <div class="section-header" style="text-align: left; display: flex; align-items: center; gap: 16px;">
+        <div class="calc-badge">3</div>
+        <h2 class="section-title" style="margin: 0;">Your Personalized Risk Report Preview</h2>
+      </div>
+      
+      <div class="report-preview-grid">
+        <div class="rp-card">
+          <div class="rp-title">RISK SCORE™</div>
+          <div class="rp-score-val">{{data.preview.score}}<span class="rp-score-sub">/100</span></div>
+          <div class="rp-risk-level">{{data.preview.riskText}}</div>
         </div>
-
-        <div class="mo-hero-trust">
-          <div class="mo-avatars">
-            <div class="mo-avatar"></div>
-            <div class="mo-avatar"></div>
-            <div class="mo-avatar"></div>
-            <div class="mo-avatar"></div>
+        
+        <div class="rp-card" style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; text-align: left;">
+          <div>
+            <div class="rp-title">Top Risk Areas</div>
+            <div class="rp-list">
+              {{#each data.preview.topRisks}}
+              <div class="rp-item">
+                <div>✓ {{this.name}}</div>
+                <div style="color: {{this.color}}; font-weight: 600;"><span class="rp-dot" style="background: {{this.color}};"></span> {{this.level}}</div>
+              </div>
+              {{/each}}
+            </div>
           </div>
           <div>
-            <div style="color: #FBBF24;">★★★★★ <span style="color: white; font-weight: 600;">4.9/5</span></div>
-            <div style="font-size: 0.85rem; color: var(--mo-text-light-muted);">Trusted by 1,000+ business owners and families</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Dashboard Mockup -->
-      <div class="mo-mockup-card">
-        <!-- Sidebar -->
-        <div class="mo-mockup-sidebar">
-          <div style="font-weight: 800; margin-bottom: 32px; display: flex; align-items: center; gap: 4px;">
-            COVERSCORE <span style="background:var(--mo-green); width:8px; height:8px; border-radius:2px;"></span>
-          </div>
-          <ul style="display: flex; flex-direction: column; gap: 16px; font-size: 0.85rem; color: #94A3B8;">
-            <li style="color: white; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">⊞ Overview</li>
-            <li style="padding: 8px;">📊 Risk Breakdown</li>
-            <li style="padding: 8px;">💰 Potential Exposure</li>
-            <li style="padding: 8px;">🛡️ Protection Gaps</li>
-            <li style="padding: 8px;">✅ Recommendations</li>
-            <li style="padding: 8px;">➡️ Next Steps</li>
-          </ul>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="mo-mockup-main">
-          <!-- TOP ROW: Score & Risk Level -->
-          <div class="mo-mockup-row" style="align-items: center;">
-            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <div style="font-size: 0.8rem; color: var(--mo-text-muted); font-weight: 600; margin-bottom: 16px;">CoverScore</div>
-              <div style="position: relative; width: 140px; height: 140px;">
-                <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
-                  <!-- Background Circle -->
-                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" stroke-width="3" />
-                  <!-- Score Circle (72%) -->
-                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--mo-green)" stroke-width="3" stroke-dasharray="72, 100" stroke-linecap="round" />
-                </svg>
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                  <div style="font-size: 2rem; font-weight: 800; color: var(--mo-navy-dark); line-height: 1;">72</div>
-                  <div style="font-size: 0.7rem; color: var(--mo-text-muted); font-weight: 600;">/ 100</div>
-                </div>
-              </div>
-            </div>
+            <div class="rp-title">Protection Gap Score</div>
+            <div class="rp-score-val" style="font-size: 3rem;">{{data.preview.gapScore}}<span class="rp-score-sub" style="font-size: 1.2rem;">/100</span></div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">You have protection gaps that need attention.</p>
             
-            <div style="flex: 1.2; display: flex; flex-direction: column; justify-content: center;">
-              <div style="font-size: 0.8rem; color: var(--mo-text-muted); font-weight: 600; margin-bottom: 8px;">Risk Level</div>
-              <div style="font-size: 1.5rem; font-weight: 800; color: #F59E0B; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                <span style="display: inline-block; width: 12px; height: 12px; background: #F59E0B; border-radius: 50%;"></span> Moderate
-              </div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted);">Your business has an average level of risk exposure across assessed areas.</div>
-            </div>
+            <div class="rp-title" style="margin-top: 32px;">Estimated Exposure</div>
+            <div class="rp-score-val" style="font-size: 2rem;">₦{{data.preview.exposure}}</div>
           </div>
-          
-          <!-- MIDDLE ROW: Financial Exposure & Chart -->
-          <div class="mo-mockup-row" style="align-items: center; border-top: 1px solid var(--mo-border); border-bottom: 1px solid var(--mo-border); padding: 16px 0;">
-            <div style="flex: 0.8;">
-              <div style="font-size: 0.8rem; color: var(--mo-text-muted); font-weight: 600;">Potential Financial Exposure</div>
-              <div style="font-size: 1.5rem; font-weight: 800; color: var(--mo-green); margin: 4px 0;">₦12,500,000</div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted);">Estimated range: ₦8,000,000 - ₦20,000,000</div>
-            </div>
-            <div style="flex: 1.2; height: 70px; margin-left: 16px;">
-              <!-- Trend line mock SVG -->
-              <svg viewBox="0 0 100 40" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                <defs><linearGradient id="blue-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
-                <path d="M0 35 Q10 25, 20 30 T40 20 T60 15 T80 20 T100 5 L100 40 L0 40 Z" fill="url(#blue-grad)" opacity="0.2"/>
-                <path d="M0 35 Q10 25, 20 30 T40 20 T60 15 T80 20 T100 5" fill="none" stroke="#60A5FA" stroke-width="2"/>
-              </svg>
-            </div>
-          </div>
-          
-          <!-- BOTTOM ROW: Recommended Priorities & Risk Breakdown -->
-          <div class="mo-mockup-row" style="align-items: flex-start; border-top: 1px solid var(--mo-border); padding-top: 16px;">
-            <div style="flex: 1;">
-              <div style="font-size: 0.8rem; color: var(--mo-navy-dark); font-weight: 700; margin-bottom: 16px;">Recommended Priorities</div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); margin-bottom: 12px; display: flex; gap: 8px;"><span style="background: #F1F5F9; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--mo-navy-dark);">1</span> Fire Insurance</div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); margin-bottom: 12px; display: flex; gap: 8px;"><span style="background: #F1F5F9; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--mo-navy-dark);">2</span> Group Life Assurance</div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); margin-bottom: 12px; display: flex; gap: 8px;"><span style="background: #F1F5F9; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--mo-navy-dark);">3</span> Public Liability Insurance</div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); margin-bottom: 12px; display: flex; gap: 8px;"><span style="background: #F1F5F9; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--mo-navy-dark);">4</span> Business Interruption Cover</div>
-              
-              <div style="margin-top: 16px; padding-right: 16px;">
-                <a href="#sample" style="display: block; text-align: center; width: 100%; background: var(--mo-navy-dark); color: white; padding: 10px 0; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; box-sizing: border-box;">View Full Report</a>
-              </div>
-            </div>
-            
-            <div style="flex: 1.2;">
-              <div style="font-size: 0.8rem; color: var(--mo-navy-dark); font-weight: 700; margin-bottom: 16px;">Risk Breakdown</div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); display: flex; justify-content: space-between; margin-bottom: 12px;"><span>🏢 Property Risk</span> <span style="color: #EF4444; font-weight: 600; background: #FEF2F2; padding: 2px 6px; border-radius: 4px;">High</span></div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); display: flex; justify-content: space-between; margin-bottom: 12px;"><span>📉 Business Interruption</span> <span style="color: #EF4444; font-weight: 600; background: #FEF2F2; padding: 2px 6px; border-radius: 4px;">High</span></div>
-              <div style="font-size: 0.75rem; color: var(--mo-text-muted); display: flex; justify-content: space-between; margin-bottom: 12px;"><span>👥 Employee Welfare</span> <span style="color: #F59E0B; font-weight: 600; background: #FFFBEB; padding: 2px 6px; border-radius: 4px;">Medium</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works" class="mo-section mo-section-light">
-    <div class="mo-container">
-      <div style="text-align: center; margin-bottom: 48px;">
-        <div class="mo-kicker" style="justify-content: center;">SIMPLE. FAST. INSIGHTFUL.</div>
-        <h2 style="font-size: 2.5rem; color: var(--mo-navy-dark);">How CoverScore AI Works</h2>
-      </div>
-
-      <div class="mo-steps">
-        <div>
-          <div class="mo-step-icon">💬</div>
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--mo-text-muted);">Step 1</div>
-          <h3 style="font-size: 1.1rem; color: var(--mo-navy-dark); margin: 8px 0;">Complete a Quick Assessment</h3>
-          <p style="font-size: 0.9rem; color: var(--mo-text-muted);">Answer a few questions about yourself or your business.</p>
-        </div>
-        <div>
-          <div class="mo-step-icon">🧠</div>
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--mo-text-muted);">Step 2</div>
-          <h3 style="font-size: 1.1rem; color: var(--mo-navy-dark); margin: 8px 0;">Receive Your CoverScore</h3>
-          <p style="font-size: 0.9rem; color: var(--mo-text-muted);">Our intelligent risk engine analyzes your responses and calculates your risk profile.</p>
-        </div>
-        <div>
-          <div class="mo-step-icon">📊</div>
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--mo-text-muted);">Step 3</div>
-          <h3 style="font-size: 1.1rem; color: var(--mo-navy-dark); margin: 8px 0;">Discover Hidden Risks</h3>
-          <p style="font-size: 0.9rem; color: var(--mo-text-muted);">Identify areas where unexpected events could create financial pressure.</p>
-        </div>
-        <div>
-          <div class="mo-step-icon">✅</div>
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--mo-text-muted);">Step 4</div>
-          <h3 style="font-size: 1.1rem; color: var(--mo-navy-dark); margin: 8px 0;">Get Personalized Recommendations</h3>
-          <p style="font-size: 0.9rem; color: var(--mo-text-muted);">Receive practical actions and protection recommendations tailored to your situation.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CHOOSE YOUR ASSESSMENT -->
-  <section id="assessments" class="mo-section mo-section-gray">
-    <div class="mo-container">
-      <div style="text-align: center;">
-        <div class="mo-kicker" style="justify-content: center;">ASSESSMENTS FOR EVERY NEED</div>
-        <h2 style="font-size: 2.5rem; color: var(--mo-navy-dark);">Choose Your Assessment</h2>
-      </div>
-
-      <div class="mo-assessment-grid">
-        <!-- Business Card -->
-        <div class="mo-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="mo-card-content">
-            <div style="width: 96px; height: 96px; flex-shrink: 0; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #3B82F6; margin-top: 12px;">🏢</div>
-            <div style="padding-top: 8px;">
-              <h3 style="font-size: 1.5rem; color: var(--mo-navy-dark); margin-bottom: 8px;">Business Risk Assessment</h3>
-              <p style="color: var(--mo-text-muted); margin-bottom: 24px;">For businesses of all sizes and industries.</p>
-              
-              <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: #3B82F6;">✔️</span> Business Risk Score
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: #3B82F6;">✔️</span> Financial Exposure Estimate
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: #3B82F6;">✔️</span> Business Continuity Insights
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: #3B82F6;">✔️</span> Recommended Protection Priorities
-                </div>
-              </div>
-            </div>
-          </div>
-          <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="mo-btn mo-btn-navy" style="width: 100%;">Start Business Assessment ➔</a>
+  <!-- 10. ADVANTAGE TABLE -->
+  <section class="funnel-section funnel-section-light" style="padding-top: 0;">
+    <div class="funnel-container">
+      <h3 style="text-align: center; margin-bottom: 32px; font-size: 1.5rem; color: var(--color-surface-dark);">THE COVERSCORE ADVANTAGE</h3>
+      <div class="compare-table">
+        <div class="compare-row compare-header">
+          <div>Traditional Approach</div>
+          <div style="color: var(--color-primary-dark);">CoverScore Approach</div>
         </div>
-
-        <!-- Personal Card -->
-        <div class="mo-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-          <div class="mo-card-content">
-            <div style="width: 96px; height: 96px; flex-shrink: 0; background: var(--mo-green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--mo-green); margin-top: 12px;">👨‍👩‍👧‍👦</div>
-            <div style="padding-top: 8px;">
-              <h3 style="font-size: 1.5rem; color: var(--mo-green); margin-bottom: 8px;">Personal Risk Assessment</h3>
-              <p style="color: var(--mo-text-muted); margin-bottom: 24px;">For individuals and families.</p>
-              
-              <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: var(--mo-green);">✔️</span> Personal Risk Score
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: var(--mo-green);">✔️</span> Income Protection Assessment
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: var(--mo-green);">✔️</span> Family Financial Security Review
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--mo-text-dark);">
-                  <span style="color: var(--mo-green);">✔️</span> Insurance Gap Analysis
-                </div>
-              </div>
-            </div>
-          </div>
-          <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="mo-btn mo-btn-green" style="width: 100%;">Start Personal Assessment ➔</a>
+        <div class="compare-row">
+          <div class="compare-cell text-muted">Unknown Risks</div>
+          <div class="compare-cell pro">✓ Risk Intelligence</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell text-muted">Reactive Decisions</div>
+          <div class="compare-cell pro">✓ Proactive Planning</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell text-muted">Insurance Purchased Blindly</div>
+          <div class="compare-cell pro">✓ Risk-Based Recommendations</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell text-muted">No Visibility Into Exposure</div>
+          <div class="compare-cell pro">✓ Financial Exposure Analysis</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-cell text-muted">Generic Advice</div>
+          <div class="compare-cell pro">✓ Personalized Recommendations</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- REPORT PREVIEW -->
-  <section id="sample" class="mo-section mo-section-light">
-    <div class="mo-container mo-sample-grid">
+  <!-- 11. CTA BANNER -->
+  <section class="funnel-section funnel-section-light" style="padding-top: 0;">
+    <div class="funnel-container">
+      <div class="cta-banner">
+        <h2 class="cta-banner-title">{{data.finalBanner.headline}}</h2>
+        <div class="cta-icons-grid">
+          {{#each data.finalBanner.icons}}
+          <div class="cta-icon-item">
+            <div class="cta-icon-icon">{{this.icon}}</div>
+            <div class="cta-icon-lbl">{{this.label}}</div>
+          </div>
+          {{/each}}
+        </div>
+        <div class="cta-loss-box">
+          <div class="cta-loss-lbl">Potential Loss:</div>
+          <div class="cta-loss-val">{{data.finalBanner.exposure}}</div>
+        </div>
+        <a href="/start-whatsapp?text={{trigger}}" class="btn btn-green" style="height: 56px; font-size: 1.1rem; width: 100%; max-width: 400px;">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.68 4.19 1.84 5.86L2.5 21.5l3.75-1.25A9.95 9.95 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          Get My Risk Score
+        </a>
+        <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-inverse-muted);">Secure • Confidential • No Obligation • Takes Less Than 5 Minutes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. FOOTER -->
+  <footer class="footer">
+    <div class="funnel-container footer-grid">
       <div>
-        <div class="mo-kicker">TRANSPARENT. DETAILED. ACTIONABLE.</div>
-        <h2 style="font-size: 2.5rem; color: var(--mo-navy-dark); margin-bottom: 24px;">See What Your Report Looks Like</h2>
-        <p style="color: var(--mo-text-muted); margin-bottom: 32px; font-size: 1.1rem;">Our reports are easy to understand, visually clear, and packed with insights that help you make better decisions.</p>
-        <a href="#assessments" class="mo-btn mo-btn-green">👁️ View Sample Report</a>
-      </div>
-
-      <!-- Wide Mockup Dashboard -->
-      <div class="mo-card mo-sample-card" style="padding: 24px;">
-        <h4 style="margin-bottom: 16px; border-bottom: 1px solid var(--mo-border); padding-bottom: 16px;">CoverScore Report</h4>
-        <div class="mo-sample-stats">
-          <div>
-            <div style="font-size: 0.75rem; color: var(--mo-text-muted);">CoverScore</div>
-            <div style="font-size: 2rem; font-weight: 800; color: var(--mo-navy-dark);">58<span style="font-size: 1rem; color: #94A3B8;">/100</span></div>
-          </div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--mo-text-muted);">Risk Level</div>
-            <div style="font-size: 1.25rem; font-weight: 800; color: #F59E0B;">🟠 Moderate</div>
-          </div>
-          <div>
-            <div style="font-size: 0.75rem; color: var(--mo-text-muted);">Estimated Exposure</div>
-            <div style="font-size: 1.25rem; font-weight: 800; color: var(--mo-green);">₦5M - ₦15M</div>
-          </div>
-        </div>
-
-        <div class="mo-sample-details">
-          <div>
-            <h5 style="margin-bottom: 16px; font-size: 0.85rem;">Key Risks</h5>
-            <div style="font-size: 0.8rem; margin-bottom: 8px;">🔥 Income Interruption <span style="float:right; color:#EF4444;">High</span></div>
-            <div style="font-size: 0.8rem; margin-bottom: 8px;">🏥 Health Exposure <span style="float:right; color:#F59E0B;">Med</span></div>
-            <div style="font-size: 0.8rem; margin-bottom: 8px;">🏠 Property Risk <span style="float:right; color:#F59E0B;">Med</span></div>
-          </div>
-          <div>
-            <h5 style="margin-bottom: 16px; font-size: 0.85rem;">Recommendations</h5>
-            <div style="font-size: 0.8rem; margin-bottom: 8px; color: var(--mo-text-muted);">✔️ Life Insurance</div>
-            <div style="font-size: 0.8rem; margin-bottom: 8px; color: var(--mo-text-muted);">✔️ Health Insurance</div>
-            <div style="font-size: 0.8rem; margin-bottom: 8px; color: var(--mo-text-muted);">✔️ Emergency Fund</div>
-          </div>
-          <div style="text-align: center;">
-            <h5 style="margin-bottom: 16px; font-size: 0.85rem; text-align: left;">Risk Breakdown</h5>
-            <div style="width: 100px; height: 100px; border-radius: 50%; border: 16px solid var(--mo-navy-dark); border-right-color: #3B82F6; border-bottom-color: #F59E0B; margin: 0 auto;"></div>
-          </div>
+        <a href="/" class="footer-logo">
+          COVERSCORE <span>AI</span>
+        </a>
+        <p style="margin-bottom: 24px;">CoverScore helps organizations identify, understand, and manage risks so they can focus on what matters most—building a secure future.</p>
+        <div style="display: flex; gap: 16px;">
+          <!-- Social Icons -->
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.597 1.323-1.325V1.325C24 .597 23.403 0 22.675 0z"/></svg>
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- WHAT YOU'LL LEARN -->
-  <section class="mo-section mo-section-gray">
-    <div class="mo-container">
-      <div style="text-align: center;">
-        <div class="mo-kicker" style="justify-content: center;">POWERFUL INSIGHTS. BETTER DECISIONS.</div>
-        <h2 style="font-size: 2.5rem; color: var(--mo-navy-dark);">What You'll Learn</h2>
-      </div>
-
-      <div class="mo-learn-grid">
-        <div>
-          <div class="mo-learn-icon">₦</div>
-          <h4 style="margin-bottom: 12px; font-size: 1rem;">Potential Financial Exposure</h4>
-          <p style="font-size: 0.85rem; color: var(--mo-text-muted);">Estimate how much an unexpected event could cost you.</p>
-        </div>
-        <div>
-          <div class="mo-learn-icon">🛡️</div>
-          <h4 style="margin-bottom: 12px; font-size: 1rem;">Hidden Protection Gaps</h4>
-          <p style="font-size: 0.85rem; color: var(--mo-text-muted);">Identify areas where your current arrangements may be insufficient.</p>
-        </div>
-        <div>
-          <div class="mo-learn-icon">📊</div>
-          <h4 style="margin-bottom: 12px; font-size: 1rem;">Risk Breakdown</h4>
-          <p style="font-size: 0.85rem; color: var(--mo-text-muted);">Understand which areas contribute most to your overall risk score.</p>
-        </div>
-        <div>
-          <div class="mo-learn-icon">🎯</div>
-          <h4 style="margin-bottom: 12px; font-size: 1rem;">Protection Priorities</h4>
-          <p style="font-size: 0.85rem; color: var(--mo-text-muted);">Know where to focus first to reduce risk and improve resilience.</p>
-        </div>
-        <div>
-          <div class="mo-learn-icon">📋</div>
-          <h4 style="margin-bottom: 12px; font-size: 1rem;">Practical Recommendations</h4>
-          <p style="font-size: 0.85rem; color: var(--mo-text-muted);">Get actionable steps tailored to your unique situation.</p>
+      <div>
+        <h4>Solutions</h4>
+        <div class="footer-links">
+          <a href="/school">School Risk Assessment</a>
+          <a href="/hospital">Hospital Risk Assessment</a>
+          <a href="/manufacturing">Manufacturing Assessment</a>
+          <a href="/church">Church Risk Assessment</a>
+          <a href="/sme">SME Risk Assessment</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="mo-section mo-section-light">
-    <div class="mo-container">
-      <div style="text-align: center;">
-        <div class="mo-kicker" style="justify-content: center;">TRUSTED BY BUSINESSES AND FAMILIES</div>
-        <h2 style="font-size: 2.5rem; color: var(--mo-navy-dark);">What Our Users Say</h2>
-      </div>
-
-      <div class="mo-test-grid">
-        <div class="mo-test-card">
-          <div style="color: #FBBF24; margin-bottom: 16px;">★★★★★</div>
-          <p style="color: var(--mo-text-muted); font-size: 0.95rem; margin-bottom: 24px; font-style: italic;">"The assessment highlighted risks I hadn't considered. The report was clear, professional, and very practical."</p>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #ccc;"></div>
-            <div>
-              <div style="font-weight: 700; font-size: 0.9rem;">- Ayo. T</div>
-              <div style="font-size: 0.8rem; color: var(--mo-text-muted);">Small Business Owner</div>
-            </div>
-          </div>
-        </div>
-        <div class="mo-test-card">
-          <div style="color: #FBBF24; margin-bottom: 16px;">★★★★★</div>
-          <p style="color: var(--mo-text-muted); font-size: 0.95rem; margin-bottom: 24px; font-style: italic;">"I finally understood where my biggest financial exposures were. This is a must for every business owner."</p>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #ccc;"></div>
-            <div>
-              <div style="font-weight: 700; font-size: 0.9rem;">- Chidinma O.</div>
-              <div style="font-size: 0.8rem; color: var(--mo-text-muted);">Entrepreneur</div>
-            </div>
-          </div>
-        </div>
-        <div class="mo-test-card">
-          <div style="color: #FBBF24; margin-bottom: 16px;">★★★★★</div>
-          <p style="color: var(--mo-text-muted); font-size: 0.95rem; margin-bottom: 24px; font-style: italic;">"The recommendations helped us review our existing insurance arrangements and close important gaps."</p>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #ccc;"></div>
-            <div>
-              <div style="font-weight: 700; font-size: 0.9rem;">- Pastor Daniel</div>
-              <div style="font-size: 0.8rem; color: var(--mo-text-muted);">Church Administrator</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BOTTOM CTA -->
-  <section class="mo-section-navy" style="padding: 64px 0;">
-    <div class="mo-container" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
-      <div style="max-width: 600px;">
-        <h2 style="font-size: 2.5rem; margin-bottom: 16px;">Discover Your Risk Profile Today</h2>
-        <p style="color: var(--mo-text-light-muted); font-size: 1.1rem;">Every business and individual faces risks. The difference is knowing where they are before they become costly.</p>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px; width: 100%;">
-        <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="mo-btn mo-btn-green">Start Free Assessment on WhatsApp</a>
-        <a href="#assessments" class="mo-btn mo-btn-outline">Get My Free Risk Score ➔</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="mo-section-navy" style="border-top: 1px solid rgba(255,255,255,0.1);">
-    <div class="mo-container mo-footer">
-      <div class="mo-footer-col mo-footer-brand">
-        <div class="mo-logo" style="color: white; margin-bottom: 16px;">COVERSCORE <span class="mo-logo-ai">AI</span></div>
-        <p style="color: var(--mo-text-light-muted); font-size: 0.85rem;">Risk Intelligence. Protection Insights.<br>Better Decisions.</p>
-      </div>
-      <div class="mo-footer-col">
-        <h4>Quick Links</h4>
-        <a href="/">Home</a>
-        <a href="#assessments">Assessments</a>
-        <a href="#sample">Sample Report</a>
-        <a href="#how-it-works">How It Works</a>
-      </div>
-      <div class="mo-footer-col">
-        <h4>Company</h4>
-        <a href="#">About Us</a>
-        <a href="#">Our Approach</a>
-        <a href="#">FAQs</a>
-        <a href="#">Blog</a>
-      </div>
-      <div class="mo-footer-col">
+      <div>
         <h4>Resources</h4>
-        <a href="#">Risk Guide</a>
-        <a href="#">Insurance Basics</a>
-        <a href="#">Business Resources</a>
-        <a href="#">News & Insights</a>
+        <div class="footer-links">
+          <a href="#">Blog</a>
+          <a href="#">Risk Guides</a>
+          <a href="#">Case Studies</a>
+        </div>
       </div>
-      <div class="mo-footer-col">
-        <h4>Contact Us</h4>
-        <div style="color: var(--mo-text-light-muted); font-size: 0.9rem; margin-bottom: 12px;">📞 +2349165304629</div>
-        <div style="color: var(--mo-text-light-muted); font-size: 0.9rem; margin-bottom: 12px;">✉️ support@coverscore.site</div>
-        <div style="color: var(--mo-text-light-muted); font-size: 0.9rem; margin-bottom: 12px;">📍 Lagos, Nigeria</div>
+      <div>
+        <h4>Need Help?</h4>
+        <div class="footer-links">
+          <span style="display: flex; align-items: center; gap: 8px;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +234 800 123 4567</span>
+          <span style="display: flex; align-items: center; gap: 8px;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> hello@coverscore.ai</span>
+        </div>
       </div>
     </div>
-    <div class="mo-container" style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 0; margin-top: 48px; text-align: center;">
-      <div style="font-size: 0.8rem; color: #64748B;">© 2026 CoverScore AI. All rights reserved. (v2.1)</div>
+    <div class="funnel-container footer-bottom">
+      <div>&copy; 2026 CoverScore. All rights reserved.</div>
+      <div style="display: flex; gap: 24px;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
     </div>
   </footer>
 
+  <!-- STICKY MOBILE CTA -->
+  <a href="/start-whatsapp?text={{trigger}}" class="mobile-sticky-cta">
+    <div>
+      <h4>Get My Risk Score</h4>
+      <p>Fast • Secure • Confidential</p>
+    </div>
+    <div class="mobile-sticky-cta-icon">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+  </a>
+
+  <!-- INTERACTIVE CALCULATOR JS -->
+  <script>
+    // Industry specific calculator configs
+    const calcConfigs = {
+      hospital: {
+        inputs: [
+          { id: 'inp_beds', label: 'Number of Beds', min: 10, max: 1000, val: 150, step: 10, factor: 1500000 },
+          { id: 'inp_staff', label: 'Number of Staff', min: 5, max: 2000, val: 350, step: 5, factor: 500000 },
+          { id: 'inp_equip', label: 'Equipment Value (₦M)', min: 10, max: 5000, val: 800, step: 50, factor: 200000 }
+        ],
+        baseExposure: 25000000
+      },
+      school: {
+        inputs: [
+          { id: 'inp_students', label: 'Number of Students', min: 50, max: 5000, val: 500, step: 50, factor: 300000 },
+          { id: 'inp_staff', label: 'Number of Staff', min: 10, max: 500, val: 45, step: 5, factor: 500000 },
+          { id: 'inp_building', label: 'Building Value (₦M)', min: 10, max: 2000, val: 300, step: 10, factor: 250000 },
+          { id: 'inp_buses', label: 'School Buses', min: 0, max: 50, val: 3, step: 1, factor: 5000000 }
+        ],
+        baseExposure: 10000000
+      }
+    };
+
+    // Determine current industry from URL or fallback to school
+    const path = window.location.pathname.replace('/', '').toLowerCase();
+    const industryKey = calcConfigs[path] ? path : 'school';
+    const config = calcConfigs[industryKey];
+
+    const formatCurrency = (num) => {
+      return '₦' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    const updateExposure = () => {
+      let total = config.baseExposure;
+      config.inputs.forEach(inp => {
+        const val = parseInt(document.getElementById(inp.id).value) || inp.val;
+        total += (val * inp.factor);
+      });
+      document.getElementById('exposureTotal').innerText = formatCurrency(total);
+      
+      const inMillions = Math.round(total / 1000000);
+      document.getElementById('exposureDesc').innerText = `Based on your inputs, a major incident could expose your organization to losses exceeding ₦${inMillions} million.`;
+    };
+
+    const renderInputs = () => {
+      const container = document.getElementById('calcInputs');
+      let html = '';
+      config.inputs.forEach(inp => {
+        html += `
+          <div class="calc-input-group">
+            <div class="calc-input-label">
+              ${inp.label}
+            </div>
+            <div class="calc-controls">
+              <button class="btn btn-outline" style="border-color: #e2e8f0; color: #0f172a; height: 32px; padding: 0 12px;" onclick="changeVal('${inp.id}', -${inp.step})">-</button>
+              <div class="calc-val" id="${inp.id}_disp">${inp.val}</div>
+              <button class="btn btn-outline" style="border-color: #e2e8f0; color: #0f172a; height: 32px; padding: 0 12px;" onclick="changeVal('${inp.id}', ${inp.step})">+</button>
+            </div>
+            <input type="hidden" id="${inp.id}" value="${inp.val}">
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+      updateExposure();
+    };
+
+    window.changeVal = (id, delta) => {
+      const inp = config.inputs.find(i => i.id === id);
+      const el = document.getElementById(id);
+      const disp = document.getElementById(id + '_disp');
+      
+      let newVal = parseInt(el.value) + delta;
+      if (newVal < inp.min) newVal = inp.min;
+      if (newVal > inp.max) newVal = inp.max;
+      
+      el.value = newVal;
+      disp.innerText = newVal;
+      updateExposure();
+    };
+
+    document.addEventListener('DOMContentLoaded', renderInputs);
+  </script>
 </body>
 </html>

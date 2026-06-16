@@ -1,32 +1,153 @@
 {
-  "sme": {
-    "title": "Discover Your Business Risk Score",
-    "headline": "Could Your Business Survive a Major Loss?",
-    "subheadline": "Discover Your Business Resilience Score in 5 Minutes.",
-    "trigger": "START SME ASSESSMENT"
+  "hospital": {
+    "title": "Hospital Risk Assessment | CoverScore",
+    "trigger": "START HOSPITAL ASSESSMENT",
+    "hero": {
+      "headline": "Protect Your Patients. Strengthen Your Hospital.",
+      "subheadline": "Identify hidden risks, improve patient safety, and strengthen operational resilience—for your patients, staff, and hospital.",
+      "benefits": [
+        "AI-Powered Clinical Risk Assessment",
+        "Personalized Hospital Risk Report",
+        "Healthcare Risk Advisor Support"
+      ],
+      "overlayStatement": "Your Patients' Safety. Our Priority.",
+      "metrics": [
+        {"value": "500+", "label": "Healthcare Facilities Assessed", "icon": "🏥"},
+        {"value": "₦150B+", "label": "Risks Evaluated", "icon": "🛡️"},
+        {"value": "98%", "label": "Risk Accuracy Rate", "icon": "✅"},
+        {"value": "24/7", "label": "Healthcare Advisor Support", "icon": "👩‍⚕️"}
+      ]
+    },
+    "whyChoose": [
+      {"icon": "🛡️", "title": "Identify Clinical Risks", "desc": "Discover threats before they become incidents."},
+      {"icon": "💰", "title": "Reduce Financial Losses", "desc": "Avoid unexpected costs and disruptions."},
+      {"icon": "👥", "title": "Protect Patients & Staff", "desc": "Create a safer environment every day."},
+      {"icon": "📋", "title": "Meet Compliance Standards", "desc": "Stay aligned with regulatory and insurance needs."},
+      {"icon": "📈", "title": "Make Smarter Decisions", "desc": "Use data-driven insights to plan with confidence."}
+    ],
+    "stories": [
+      {
+        "icon": "🔥",
+        "title": "Electrical Fire in ICU",
+        "desc": "An electrical fire spread overnight, destroying critical care equipment and halting operations.",
+        "loss": "₦85,000,000"
+      },
+      {
+        "icon": "⚖️",
+        "title": "Medical Negligence Claim",
+        "desc": "A severe patient complication led to a major malpractice lawsuit and reputational damage.",
+        "loss": "₦120,000,000"
+      },
+      {
+        "icon": "⚡",
+        "title": "MRI Equipment Breakdown",
+        "desc": "A critical MRI machine failed due to power surge, halting diagnostics for weeks.",
+        "loss": "₦60,000,000"
+      }
+    ],
+    "testimonial": {
+      "quote": "The report helped us identify critical risks we had never considered and prioritize actions that improved patient safety.",
+      "author": "Dr. Aisha Bello",
+      "role": "Chief Medical Director, CityCare Hospital"
+    },
+    "preview": {
+      "score": 72,
+      "riskText": "Moderate Risk",
+      "topRisks": [
+        {"name": "Clinical Liability", "level": "High", "color": "#ef4444"},
+        {"name": "Equipment Failure", "level": "High", "color": "#ef4444"},
+        {"name": "Patient Safety", "level": "Medium", "color": "#f59e0b"},
+        {"name": "Cyber Risk", "level": "Medium", "color": "#f59e0b"},
+        {"name": "Business Continuity", "level": "Medium", "color": "#f59e0b"}
+      ],
+      "gapScore": 58,
+      "exposure": "420,000,000"
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
+      "exposure": "₦420M+",
+      "icons": [
+        {"icon": "🩺", "label": "Medical Negligence"},
+        {"icon": "⚙️", "label": "Equipment Failure"},
+        {"icon": "🏥", "label": "Patient Safety"},
+        {"icon": "🔥", "label": "Fire"},
+        {"icon": "💻", "label": "Cyber Incident"}
+      ]
+    }
   },
   "school": {
     "title": "School Risk Assessment | CoverScore",
-    "headline": "Could Your School Survive a Major Fire, Bus Accident, or Liability Claim?",
-    "subheadline": "Discover Your School Resilience Score in 5 Minutes.",
-    "trigger": "START SCHOOL ASSESSMENT"
-  },
-  "church": {
-    "title": "Church Risk Assessment | CoverScore",
-    "headline": "Is Your Congregation Truly Protected?",
-    "subheadline": "Discover Your Church Resilience Score in 5 Minutes.",
-    "trigger": "START CHURCH ASSESSMENT"
-  },
-  "manufacturing": {
-    "title": "Manufacturing Risk Assessment | CoverScore",
-    "headline": "Could You Survive a Major Equipment Breakdown or Supply Chain Failure?",
-    "subheadline": "Discover Your Manufacturing Resilience Score in 5 Minutes.",
-    "trigger": "START MANUFACTURING ASSESSMENT"
-  },
-  "hospital": {
-    "title": "Healthcare Risk Assessment | CoverScore",
-    "headline": "Could Your Hospital Survive a Malpractice Claim or Critical System Failure?",
-    "subheadline": "Discover Your Healthcare Resilience Score in 5 Minutes.",
-    "trigger": "START HOSPITAL ASSESSMENT"
+    "trigger": "START SCHOOL ASSESSMENT",
+    "hero": {
+      "headline": "Protect Your School. Protect Their Future.",
+      "subheadline": "Identify hidden risks, strengthen safety, and safeguard what matters most—your students, staff, and school.",
+      "benefits": [
+        "AI-Powered Risk Assessment",
+        "Personalized Risk Report",
+        "Expert Risk Advisor Support"
+      ],
+      "overlayStatement": "Your School's Safety. Our Priority.",
+      "metrics": [
+        {"value": "500+", "label": "Schools Assessed", "icon": "🏫"},
+        {"value": "98%", "label": "Risk Accuracy Rate", "icon": "✅"},
+        {"value": "24/7", "label": "Advisor Support", "icon": "👨‍💼"},
+        {"value": "₦50B+", "label": "Risks Evaluated", "icon": "🛡️"}
+      ]
+    },
+    "whyChoose": [
+      {"icon": "🛡️", "title": "Identify Hidden Risks", "desc": "Discover threats before they become incidents."},
+      {"icon": "💰", "title": "Reduce Financial Losses", "desc": "Avoid unexpected costs from lawsuits and disruptions."},
+      {"icon": "👥", "title": "Protect Students & Staff", "desc": "Create a safer environment for learning every day."},
+      {"icon": "📋", "title": "Meet Compliance Standards", "desc": "Stay aligned with regulatory requirements."},
+      {"icon": "📈", "title": "Make Smarter Decisions", "desc": "Use data-driven insights to strengthen risk strategy."}
+    ],
+    "stories": [
+      {
+        "icon": "🔥",
+        "title": "Fire Incident",
+        "desc": "A private secondary school lost multiple classrooms after an electrical fire spread overnight. The school had no documented recovery plan.",
+        "loss": "₦75,000,000"
+      },
+      {
+        "icon": "⚖️",
+        "title": "Liability Claim",
+        "desc": "A student suffered a serious injury during a sporting activity. The resulting legal claim placed significant financial pressure.",
+        "loss": "₦24,500,000"
+      },
+      {
+        "icon": "🚌",
+        "title": "School Bus Accident",
+        "desc": "A transport incident resulted in unexpected repair costs, operational disruption, and reputational concerns.",
+        "loss": "₦8,600,000"
+      }
+    ],
+    "testimonial": {
+      "quote": "The assessment revealed risks we had never considered. The report helped us prioritize actions that improved both safety and operational resilience.",
+      "author": "School Administrator",
+      "role": "Private High School, Lagos"
+    },
+    "preview": {
+      "score": 68,
+      "riskText": "Moderate Risk",
+      "topRisks": [
+        {"name": "Student Safety", "level": "High", "color": "#ef4444"},
+        {"name": "Property Protection", "level": "High", "color": "#ef4444"},
+        {"name": "Liability Exposure", "level": "Medium", "color": "#f59e0b"},
+        {"name": "Business Continuity", "level": "Medium", "color": "#f59e0b"}
+      ],
+      "gapScore": 41,
+      "exposure": "185,000,000"
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually Higher Than The Cost Of Preparing For It.",
+      "exposure": "₦250M+",
+      "icons": [
+        {"icon": "🔥", "label": "Fire"},
+        {"icon": "⚖️", "label": "Liability Claim"},
+        {"icon": "🏃‍♂️", "label": "Student Injury"},
+        {"icon": "🌊", "label": "Flood"},
+        {"icon": "💻", "label": "Cyber Incident"}
+      ]
+    }
   }
 }
