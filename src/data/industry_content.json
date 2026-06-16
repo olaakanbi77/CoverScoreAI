@@ -15,7 +15,7 @@
       "metrics": [
         {
           "value": "500+",
-          "label": "Healthcare Facilities Assessed",
+          "label": "Healthcare Facilities<br>Assessed",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M3 21h18\"/><path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\"/><path d=\"M10 10h4\"/><path d=\"M12 8v4\"/><path d=\"M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4\"/></svg>"
         },
         {
@@ -25,12 +25,12 @@
         },
         {
           "value": "98%",
-          "label": "Risk Accuracy Rate",
+          "label": "Risk Accuracy<br>Rate",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 12l2 2 4-4\"/></svg>"
         },
         {
           "value": "24/7",
-          "label": "Healthcare Advisor Support",
+          "label": "Healthcare Advisor<br>Support",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
         }
       ]
