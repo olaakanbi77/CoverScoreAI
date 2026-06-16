@@ -243,13 +243,13 @@ p { margin: 0; }
 }
 
 .hero-title {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: var(--color-surface-dark);
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
 @media (min-width: 768px) {
-  .hero-title { font-size: 3.5rem; }
+  .hero-title { font-size: 2.8rem; }
 }
 
 .hero-title span { color: var(--color-primary); }
@@ -257,6 +257,8 @@ p { margin: 0; }
 .hero-subtitle {
   font-size: 1.125rem;
   color: var(--text-muted);
+  max-width: 480px;
+  line-height: 1.6;
 }
 
 .hero-benefits {
