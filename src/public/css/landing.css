@@ -466,7 +466,7 @@ p { margin: 0; }
   .calc-header {
     border-bottom: none;
     border-right: 1px solid var(--border-light);
-    justify-content: center;
+    justify-content: flex-start;
   }
 }
 
@@ -488,6 +488,7 @@ p { margin: 0; }
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--color-surface-dark);
+  margin-bottom: 12px;
 }
 
 .calc-subtitle {

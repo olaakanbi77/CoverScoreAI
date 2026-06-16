@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=28">
+  <link rel="stylesheet" href="/css/landing.css?v=29">
 </head>
 <body style="padding-bottom: 72px;">
 
@@ -91,7 +91,6 @@
     <div class="funnel-container">
       <div class="calc-card">
         <div class="calc-header">
-          <div class="calc-badge">1</div>
           <div>
             <h2 class="calc-title">INSTANT RISK EXPOSURE CALCULATOR™</h2>
             <p class="calc-subtitle">Estimate the potential financial impact of major incidents on your organization.</p>
@@ -413,7 +412,8 @@
         inputs: [
           { id: 'inp_beds', label: 'Number of Beds', min: 10, max: 1000, val: 150, step: 10, factor: 1500000 },
           { id: 'inp_staff', label: 'Number of Staff', min: 5, max: 2000, val: 350, step: 5, factor: 500000 },
-          { id: 'inp_equip', label: 'Equipment Value (₦M)', min: 10, max: 5000, val: 800, step: 50, factor: 200000 }
+          { id: 'inp_equip', label: 'Equipment Value (₦M)', min: 10, max: 5000, val: 800, step: 50, factor: 200000 },
+          { id: 'inp_ccu', label: 'Critical Car Units', min: 0, max: 100, val: 5, step: 1, factor: 5000000 }
         ],
         baseExposure: 25000000
       },
