@@ -342,8 +342,8 @@ p { margin: 0; }
   .hero-overlay {
     position: absolute;
     bottom: -40px;
-    left: -350px; /* Extend deep into the left column for max width */
-    right: 20px;
+    left: -150px; /* Reduced width so it doesn't overlap the CTA */
+    right: 0px;
     flex-direction: row;
     align-items: center;
     justify-content: center;
