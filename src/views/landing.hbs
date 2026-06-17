@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=39">
+  <link rel="stylesheet" href="/css/landing.css?v=40">
 </head>
 <body style="padding-bottom: 72px;">
 
@@ -142,32 +142,32 @@
 
   <!-- 6. REAL RISK STORIES -->
   <section class="funnel-section funnel-section-gray">
-    <div class="funnel-container">
-      <div class="stories-layout">
-        <div>
-          <div class="stories-header">
-            <div class="calc-badge">2</div>
-            <h2 class="calc-title">REAL RISK STORIES</h2>
-          </div>
-          <p style="padding: 0 32px; color: var(--text-muted); margin-top: 8px;">Incidents happen. Preparation makes the difference.</p>
-          <div class="stories-grid">
-            {{#each data.stories}}
-            <div class="story-card">
-              <div class="story-icon">{{this.icon}}</div>
-              <h4 class="story-title">{{this.title}}</h4>
-              <p class="story-desc">{{this.desc}}</p>
-              <div>
-                <div class="story-loss-label">Estimated Loss</div>
-                <div class="story-loss-val">{{this.loss}}</div>
-              </div>
-            </div>
-            {{/each}}
+    <div class="funnel-container" style="display: flex; flex-direction: column;">
+      
+      <div class="stories-header" style="justify-content: center; padding: 0;">
+        <div class="calc-badge">2</div>
+        <h2 class="calc-title">REAL RISK STORIES</h2>
+      </div>
+      <p style="text-align: center; color: var(--text-muted); margin-top: 8px; margin-bottom: 40px;">Incidents happen. Preparation makes the difference.</p>
+      
+      <div style="display: grid; gap: 24px; align-items: start;" class="stories-cards-grid">
+        {{#each data.stories}}
+        <div class="story-card" style="background: var(--color-surface-light); padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); height: 100%;">
+          <div class="story-icon">{{this.icon}}</div>
+          <h4 class="story-title">{{this.title}}</h4>
+          <p class="story-desc">{{this.desc}}</p>
+          <div>
+            <div class="story-loss-label">Estimated Loss</div>
+            <div class="story-loss-val">{{this.loss}}</div>
           </div>
         </div>
-        <div class="insight-panel">
-          <div class="insight-quote">Most incidents begin as "unlikely events." Until they happen.</div>
+        {{/each}}
+        
+        <div class="insight-panel" style="border: 1px solid var(--border-light); padding: 40px 24px; border-radius: var(--radius-md); background: var(--color-surface-muted); display: flex; flex-direction: column; justify-content: center; min-height: 115%;">
+          <div class="insight-quote" style="text-align: center; font-size: 1.25rem;">Most incidents begin as "unlikely events." Until they happen.</div>
         </div>
       </div>
+
     </div>
   </section>
 
