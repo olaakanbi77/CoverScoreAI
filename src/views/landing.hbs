@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=36">
+  <link rel="stylesheet" href="/css/landing.css?v=37">
 </head>
 <body style="padding-bottom: 72px;">
 
@@ -225,9 +225,9 @@
         <div class="metrics-grid">
           {{#each data.hero.metrics}}
           <div class="metric-card">
-            <div style="font-size: 2rem;">{{this.icon}}</div>
+            <div style="font-size: 2rem;">{{{this.icon}}}</div>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-surface-dark);">{{this.value}}</div>
-            <div style="font-size: 0.9rem; color: var(--text-muted);">{{this.label}}</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">{{{this.label}}}</div>
           </div>
           {{/each}}
         </div>
