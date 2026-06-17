@@ -548,6 +548,7 @@ p { margin: 0; }
   font-size: 1.1rem;
   min-width: 40px;
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .calc-slider {
@@ -560,7 +561,7 @@ p { margin: 0; }
   padding: 32px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background: var(--color-surface-dark);
   color: white;
 }
@@ -577,12 +578,13 @@ p { margin: 0; }
   color: var(--color-gold);
   line-height: 1;
   margin-bottom: 16px;
+  font-variant-numeric: tabular-nums;
 }
 
 .calc-output-desc {
   color: var(--text-inverse-muted);
   font-size: 0.9rem;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 /* 3. Trust Bar */
