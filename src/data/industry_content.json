@@ -37,6 +37,11 @@
     },
     "whyChoose": [
       {
+        "icon": "🛡️",
+        "title": "Identify Clinical Risks",
+        "desc": "Discover threats before they become incidents."
+      },
+      {
         "icon": "💰",
         "title": "Reduce Financial Losses",
         "desc": "Avoid unexpected costs from incidents lawsuits and disruptions."
