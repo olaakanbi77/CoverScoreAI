@@ -424,7 +424,7 @@ p { margin: 0; }
 
 .overlay-metric:not(:first-child) .overlay-metric-icon img {
   filter: brightness(0) invert(1);
-  mix-blend-mode: normal !important;
+  mix-blend-mode: screen !important;
 }
 
 .overlay-metric:not(:first-child) .overlay-metric-icon svg {
