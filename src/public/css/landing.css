@@ -680,10 +680,6 @@ p { margin: 0; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  background: var(--color-surface-light);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
 }
 
 @media (min-width: 1024px) {
