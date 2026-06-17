@@ -695,15 +695,18 @@ p { margin: 0; }
   gap: 16px;
 }
 
-.stories-grid {
+.stories-grid-four {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  padding: 32px;
 }
 
 @media (min-width: 768px) {
-  .stories-grid { grid-template-columns: repeat(3, 1fr); }
+  .stories-grid-four { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .stories-grid-four { grid-template-columns: repeat(4, 1fr); }
 }
 
 .story-card {
