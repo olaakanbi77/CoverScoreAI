@@ -494,7 +494,8 @@ p { margin: 0; }
 
 .calc-subtitle {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
 }
 
 
@@ -502,7 +503,7 @@ p { margin: 0; }
   padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
   border-right: 1px solid var(--border-light);
 }
 
@@ -513,8 +514,19 @@ p { margin: 0; }
   gap: 16px;
   background: var(--color-surface-muted);
   padding: 16px;
-  border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
+  border-bottom: none;
+}
+
+.calc-input-group:first-child {
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+}
+
+.calc-input-group:last-child {
+  border-bottom: 1px solid var(--border-light);
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
 }
 
 .calc-input-label {
