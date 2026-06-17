@@ -566,6 +566,13 @@ p { margin: 0; }
   color: white;
 }
 
+@media (min-width: 1024px) {
+  .calc-output {
+    margin: 32px 32px 32px 0;
+    border-radius: var(--radius-lg);
+  }
+}
+
 .calc-output-title {
   font-size: 1.1rem;
   color: var(--text-inverse-muted);
@@ -573,7 +580,7 @@ p { margin: 0; }
 }
 
 .calc-output-val {
-  font-size: 3rem;
+  font-size: 2.25rem;
   font-weight: 800;
   color: var(--color-gold);
   line-height: 1;
