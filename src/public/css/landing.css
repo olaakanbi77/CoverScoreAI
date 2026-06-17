@@ -422,17 +422,6 @@ p { margin: 0; }
   height: 32px;
 }
 
-.overlay-metric:not(:first-child) .overlay-metric-icon img {
-  filter: brightness(0) invert(1);
-  mix-blend-mode: normal !important;
-}
-
-.overlay-metric:not(:first-child) .overlay-metric-icon svg {
-  color: white;
-  fill: white;
-  stroke: white;
-}
-
 .overlay-metric-val {
   font-size: 1.2rem;
   font-weight: 800;
