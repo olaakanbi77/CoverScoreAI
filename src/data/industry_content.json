@@ -37,29 +37,24 @@
     },
     "whyChoose": [
       {
-        "icon": "🛡️",
-        "title": "Identify Clinical Risks",
-        "desc": "Discover threats before they become incidents."
-      },
-      {
         "icon": "💰",
         "title": "Reduce Financial Losses",
-        "desc": "Avoid unexpected costs and disruptions."
+        "desc": "Avoid unexpected costs from incidents lawsuits and disruptions."
       },
       {
         "icon": "👥",
         "title": "Protect Patients & Staff",
-        "desc": "Create a safer environment every day."
+        "desc": "Create a safer environment for patients and a better workplace for staff."
       },
       {
         "icon": "📋",
         "title": "Meet Compliance Standards",
-        "desc": "Stay aligned with regulatory and insurance needs."
+        "desc": "Stay aligned with regulatory and insurance requirements."
       },
       {
         "icon": "📈",
         "title": "Make Smarter Decisions",
-        "desc": "Use data-driven insights to plan with confidence."
+        "desc": "Use data driven insights to strengthen your risk management strategy."
       }
     ],
     "stories": [
