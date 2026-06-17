@@ -284,19 +284,19 @@
             {{/each}}
           </div>
 
-          <div style="display: flex; gap: 20px; align-items: flex-start; margin-top: auto;">
-            <div style="width: 56px; height: 56px; border-radius: 50%; background: #eee; flex-shrink: 0; overflow: hidden;">
-              <img src="https://ui-avatars.com/api/?name=Aisha+Bello&background=0D8ABC&color=fff&size=112" style="width: 100%; height: 100%; object-fit: cover;">
+          <div style="display: flex; gap: 24px; align-items: flex-start; margin-top: auto;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0;">
+              <div style="width: 80px; height: 80px; border-radius: 50%; background: #eee; overflow: hidden;">
+                <img src="https://ui-avatars.com/api/?name=Aisha+Bello&background=0D8ABC&color=fff&size=160" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div style="color: #F5A623; font-size: 1.1rem; letter-spacing: 2px;">★★★★★</div>
             </div>
-            <div>
-              <div style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main); margin-bottom: 12px;">
+            <div style="flex: 1;">
+              <div style="font-size: 1.05rem; font-style: italic; line-height: 1.6; color: var(--text-main); margin-bottom: 12px;">
                 "{{data.testimonial.quote}}"
               </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="color: #F5A623; font-size: 1rem; letter-spacing: 2px;">★★★★★</div>
-                <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-surface-dark);">
-                  – {{data.testimonial.author}}, {{data.testimonial.role}}
-                </div>
+              <div style="font-size: 0.9rem; font-weight: 700; color: var(--color-surface-dark);">
+                {{data.testimonial.author}}, <span style="font-weight: normal; color: var(--text-muted);">{{data.testimonial.role}}</span>
               </div>
             </div>
           </div>

@@ -22,22 +22,22 @@
       "metrics": [
         {
           "value": "500+",
-          "label": "Healthcare<br>Facilities Assessed",
+          "label": "<b>Facilities assessed</b>",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M3 21h18\"/><path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\"/><path d=\"M10 10h4\"/><path d=\"M12 8v4\"/><path d=\"M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4\"/></svg>"
         },
         {
           "value": "₦150B+",
-          "label": "Risks Evaluated",
+          "label": "<b>Risk evaluated</b>",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"M9 10v6\"/><path d=\"M15 10v6\"/><path d=\"M9 10l6 6\"/><path d=\"M8 12h8\"/><path d=\"M8 14h8\"/></svg>"
         },
         {
           "value": "98%",
-          "label": "Risk Accuracy<br>Rate",
+          "label": "<b>Risk accuracy rate</b>",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 12l2 2 4-4\"/></svg>"
         },
         {
           "value": "24/7",
-          "label": "Healthcare<br>Advisor Support",
+          "label": "<b>Assessment experience</b>",
           "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
         }
       ]
@@ -90,7 +90,7 @@
       }
     ],
     "testimonial": {
-      "quote": "The report helped us identify critical risks we had never considered and prioritize actions that improved patient safety.",
+      "quote": "The assessment revealed risks we had never considered. The report helped us prioritize actions that improved patient safety and reduced our exposure significantly.",
       "author": "Dr. Aisha Bello",
       "role": "Chief Medical Director, CityCare Hospital"
     },
