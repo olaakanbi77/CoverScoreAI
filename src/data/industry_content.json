@@ -153,7 +153,13 @@
           "label": "Cyber Incident"
         }
       ]
-    }
+    },
+    "faq": [
+      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your hospital's unique risk profile across clinical, operational, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
+      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
+      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed in compliance with healthcare data protection standards. We never share your information with third parties." },
+      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a healthcare risk advisor for tailored recommendations." }
+    ]
   },
   "school": {
     "title": "School Risk Assessment | CoverScore",
@@ -303,7 +309,13 @@
           "label": "Cyber Incident"
         }
       ]
-    }
+    },
+    "faq": [
+      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your school's unique risk profile across safety, operational, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
+      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
+      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
+      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a risk advisor for tailored recommendations." }
+    ]
   },
   "manufacturing": {
     "title": "Manufacturing Risk Assessment | CoverScore",
@@ -453,7 +465,13 @@
           "label": "Cyber Incident"
         }
       ]
-    }
+    },
+    "faq": [
+      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your facility's unique risk profile across operational, safety, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
+      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
+      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
+      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with an industrial risk advisor for tailored recommendations." }
+    ]
   },
   "church": {
     "title": "Church Risk Assessment | CoverScore",
@@ -598,7 +616,13 @@
           "label": "Equipment Loss"
         }
       ]
-    }
+    },
+    "faq": [
+      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your ministry's unique risk profile across operational, safety, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
+      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
+      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
+      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a risk advisor for tailored recommendations." }
+    ]
   },
   "sme": {
     "title": "SME Risk Assessment | CoverScore",
@@ -743,6 +767,12 @@
           "label": "Business Interruption"
         }
       ]
-    }
+    },
+    "faq": [
+      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your business's unique risk profile across operational, safety, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
+      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
+      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
+      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a business risk advisor for tailored recommendations." }
+    ]
   }
 }
