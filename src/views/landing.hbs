@@ -92,8 +92,8 @@
       <div class="calc-card">
         <div class="calc-header">
           <div>
-            <h2 class="calc-title">INSTANT HOSPITAL RISK EXPOSURE CALCULATOR™</h2>
-            <p class="calc-subtitle">Estimate the potential financial impact of major incidents on your hospital.</p>
+            <h2 class="calc-title">{{data.calculator.title}}</h2>
+            <p class="calc-subtitle">{{data.calculator.subtitle}}</p>
           </div>
         </div>
         <div class="calc-inputs" id="calcInputs">
@@ -117,7 +117,7 @@
     <div class="funnel-container trust-bar">
       <div class="trust-item"><img src="/images/trust-lock.jpg" alt="" width="42" height="42" style="object-fit: contain;"> Confidential & Secure</div>
       <div class="trust-item"><img src="/images/trust-ai.jpg" alt="" width="42" height="42" style="object-fit: contain;"> AI-Powered Insights</div>
-      <div class="trust-item"><img src="/images/trust-shield.jpg" alt="" width="42" height="42" style="object-fit: contain;"> Healthcare Expertise</div>
+      <div class="trust-item"><img src="/images/trust-shield.jpg" alt="" width="42" height="42" style="object-fit: contain;"> {{data.trustBarExpertise}}</div>
       <div class="trust-item"><img src="/images/trust-check.jpg" alt="" width="42" height="42" style="object-fit: contain;"> Actionable Recommendations</div>
     </div>
   </section>
@@ -126,7 +126,7 @@
   <section class="funnel-section funnel-section-light">
     <div class="funnel-container">
       <div class="section-header">
-        <h2 class="section-title">Why Hospitals Choose CoverScore</h2>
+        <h2 class="section-title">{{data.whyChooseTitle}}</h2>
       </div>
       <div class="features-grid">
         {{#each data.whyChoose}}
@@ -255,7 +255,7 @@
 
         <!-- RIGHT COLUMN: TRUSTED LEADERS -->
         <div style="background: white; border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border-light); display: flex; flex-direction: column;">
-          <h2 class="section-title" style="margin: 0 0 40px 0; text-align: left; font-size: 1.5rem;">Trusted by Healthcare Leaders</h2>
+          <h2 class="section-title" style="margin: 0 0 40px 0; text-align: left; font-size: 1.5rem;">{{data.trustedByTitle}}</h2>
           
           <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
             {{#each data.hero.metrics}}
@@ -314,7 +314,7 @@
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 24px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-               <div class="rp-title" style="font-size: 0.75rem; font-weight: 700; color: #1B2B4C; text-transform: uppercase;">HOSPITAL RISK SCORE™</div>
+               <div class="rp-title" style="font-size: 0.75rem; font-weight: 700; color: #1B2B4C; text-transform: uppercase;">{{data.preview.scoreTitle}}</div>
                <div class="rp-score-val" style="font-size: 3.5rem; margin: 8px 0; color: #1B2B4C; font-weight: 800; line-height: 1;">{{data.preview.score}}<span class="rp-score-sub" style="font-size: 1.5rem; color: var(--text-muted); font-weight: 600;">/100</span></div>
                <div class="rp-risk-level" style="color: #F5A623; font-weight: 700; font-size: 1.1rem;">{{data.preview.riskText}}</div>
             </div>
@@ -511,6 +511,33 @@
           { id: 'inp_staff', label: 'Number of Staff', min: 0, max: 500, val: 0, step: 5, factor: 500000 },
           { id: 'inp_building', label: 'Building Value', min: 0, max: 2000000000, val: 0, step: 10000000, factor: 0.25 },
           { id: 'inp_buses', label: 'School Buses', min: 0, max: 50, val: 0, step: 1, factor: 5000000 }
+        ],
+        baseExposure: 0
+      },
+      manufacturing: {
+        inputs: [
+          { id: 'inp_facilities', label: 'Number of Facilities', min: 0, max: 50, val: 0, step: 1, factor: 20000000 },
+          { id: 'inp_staff', label: 'Number of Staff', min: 0, max: 5000, val: 0, step: 50, factor: 500000 },
+          { id: 'inp_machinery', label: 'Machinery Value', min: 0, max: 10000000000, val: 0, step: 50000000, factor: 0.2 },
+          { id: 'inp_daily_prod', label: 'Daily Production Value', min: 0, max: 500000000, val: 0, step: 1000000, factor: 10 }
+        ],
+        baseExposure: 0
+      },
+      church: {
+        inputs: [
+          { id: 'inp_attendance', label: 'Weekly Attendance', min: 0, max: 20000, val: 0, step: 100, factor: 200000 },
+          { id: 'inp_staff', label: 'Staff/Volunteers', min: 0, max: 500, val: 0, step: 10, factor: 100000 },
+          { id: 'inp_building', label: 'Building Value', min: 0, max: 5000000000, val: 0, step: 25000000, factor: 0.2 },
+          { id: 'inp_equipment', label: 'Equipment Value', min: 0, max: 500000000, val: 0, step: 5000000, factor: 0.3 }
+        ],
+        baseExposure: 0
+      },
+      sme: {
+        inputs: [
+          { id: 'inp_revenue', label: 'Monthly Revenue', min: 0, max: 100000000, val: 0, step: 500000, factor: 3 },
+          { id: 'inp_staff', label: 'Number of Employees', min: 0, max: 200, val: 0, step: 1, factor: 500000 },
+          { id: 'inp_inventory', label: 'Inventory Value', min: 0, max: 500000000, val: 0, step: 1000000, factor: 0.5 },
+          { id: 'inp_equipment', label: 'Equipment Value', min: 0, max: 200000000, val: 0, step: 500000, factor: 0.3 }
         ],
         baseExposure: 0
       }

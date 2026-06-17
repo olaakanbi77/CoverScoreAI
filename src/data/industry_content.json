@@ -2,6 +2,13 @@
   "hospital": {
     "title": "Hospital Risk Assessment | CoverScore",
     "trigger": "START HOSPITAL ASSESSMENT",
+    "trustBarExpertise": "Healthcare Expertise",
+    "calculator": {
+      "title": "INSTANT HOSPITAL RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of major incidents on your hospital."
+    },
+    "whyChooseTitle": "Why Hospitals Choose CoverScore",
+    "trustedByTitle": "Trusted by Healthcare Leaders",
     "hero": {
       "headline": "Protect Your Patients. <br>Strengthen Your <span style=\"color: var(--color-gold);\">Hospital.</span>",
       "subheadline": "Identify hidden risks, improve patient safety, and strengthen operational resilience—for your patients, staff, and hospital.",
@@ -88,6 +95,7 @@
       "role": "Chief Medical Director, CityCare Hospital"
     },
     "preview": {
+      "scoreTitle": "HOSPITAL RISK SCORE™",
       "score": 72,
       "riskText": "Moderate Risk",
       "topRisks": [
@@ -150,6 +158,13 @@
   "school": {
     "title": "School Risk Assessment | CoverScore",
     "trigger": "START SCHOOL ASSESSMENT",
+    "trustBarExpertise": "Education Expertise",
+    "calculator": {
+      "title": "INSTANT SCHOOL RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of major incidents on your school."
+    },
+    "whyChooseTitle": "Why Schools Choose CoverScore",
+    "trustedByTitle": "Trusted by Education Leaders",
     "hero": {
       "headline": "Protect Your School. Protect Their Future.",
       "subheadline": "Identify hidden risks, strengthen safety, and safeguard what matters most—your students, staff, and school.",
@@ -162,23 +177,23 @@
       "metrics": [
         {
           "value": "500+",
-          "label": "Schools Assessed",
-          "icon": "🏫"
-        },
-        {
-          "value": "98%",
-          "label": "Risk Accuracy Rate",
-          "icon": "✅"
-        },
-        {
-          "value": "24/7",
-          "label": "Advisor Support",
-          "icon": "👨‍💼"
+          "label": "Educational<br>Facilities Assessed",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M3 21h18\"/><path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\"/><path d=\"M10 10h4\"/><path d=\"M12 8v4\"/><path d=\"M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4\"/></svg>"
         },
         {
           "value": "₦50B+",
           "label": "Risks Evaluated",
-          "icon": "🛡️"
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"M9 10v6\"/><path d=\"M15 10v6\"/><path d=\"M9 10l6 6\"/><path d=\"M8 12h8\"/><path d=\"M8 14h8\"/></svg>"
+        },
+        {
+          "value": "98%",
+          "label": "Risk Accuracy<br>Rate",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 12l2 2 4-4\"/></svg>"
+        },
+        {
+          "value": "24/7",
+          "label": "Education<br>Advisor Support",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
         }
       ]
     },
@@ -235,6 +250,7 @@
       "role": "Private High School, Lagos"
     },
     "preview": {
+      "scoreTitle": "SCHOOL RISK SCORE™",
       "score": 68,
       "riskText": "Moderate Risk",
       "topRisks": [
@@ -292,6 +308,13 @@
   "manufacturing": {
     "title": "Manufacturing Risk Assessment | CoverScore",
     "trigger": "START MANUFACTURING ASSESSMENT",
+    "trustBarExpertise": "Industrial Expertise",
+    "calculator": {
+      "title": "INSTANT FACTORY RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of major incidents on your factory."
+    },
+    "whyChooseTitle": "Why Manufacturers Choose CoverScore",
+    "trustedByTitle": "Trusted by Industry Leaders",
     "hero": {
       "headline": "Protect Your Factory. Secure Your Supply Chain.",
       "subheadline": "Identify equipment vulnerabilities, prevent operational downtime, and safeguard your manufacturing business from financial shock.",
@@ -304,23 +327,23 @@
       "metrics": [
         {
           "value": "300+",
-          "label": "Factories Assessed",
-          "icon": "🏭"
+          "label": "Manufacturing<br>Facilities Assessed",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M3 21h18\"/><path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\"/><path d=\"M10 10h4\"/><path d=\"M12 8v4\"/><path d=\"M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4\"/></svg>"
         },
         {
           "value": "₦250B+",
-          "label": "Assets Evaluated",
-          "icon": "🛡️"
+          "label": "Risks Evaluated",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"M9 10v6\"/><path d=\"M15 10v6\"/><path d=\"M9 10l6 6\"/><path d=\"M8 12h8\"/><path d=\"M8 14h8\"/></svg>"
         },
         {
           "value": "99%",
-          "label": "Risk Accuracy Rate",
-          "icon": "✅"
+          "label": "Risk Accuracy<br>Rate",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 12l2 2 4-4\"/></svg>"
         },
         {
           "value": "24/7",
-          "label": "Expert Support",
-          "icon": "👷"
+          "label": "Industrial<br>Advisor Support",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
         }
       ]
     },
@@ -377,6 +400,7 @@
       "role": "Plant Manager, Apex Manufacturing"
     },
     "preview": {
+      "scoreTitle": "FACTORY RISK SCORE™",
       "score": 61,
       "riskText": "High Risk",
       "topRisks": [
@@ -434,6 +458,13 @@
   "church": {
     "title": "Church Risk Assessment | CoverScore",
     "trigger": "START CHURCH ASSESSMENT",
+    "trustBarExpertise": "Ministry Expertise",
+    "calculator": {
+      "title": "INSTANT MINISTRY RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of major incidents on your church."
+    },
+    "whyChooseTitle": "Why Churches Choose CoverScore",
+    "trustedByTitle": "Trusted by Ministry Leaders",
     "hero": {
       "headline": "Protect Your Ministry. Safeguard Your Congregation.",
       "subheadline": "Identify hidden liabilities, improve safety protocols, and ensure your church's physical and financial security.",
@@ -446,23 +477,23 @@
       "metrics": [
         {
           "value": "400+",
-          "label": "Churches Assessed",
-          "icon": "⛪"
+          "label": "Faith-Based<br>Facilities Assessed",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M3 21h18\"/><path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\"/><path d=\"M10 10h4\"/><path d=\"M12 8v4\"/><path d=\"M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4\"/></svg>"
         },
         {
           "value": "₦50B+",
           "label": "Risks Evaluated",
-          "icon": "🛡️"
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"M9 10v6\"/><path d=\"M15 10v6\"/><path d=\"M9 10l6 6\"/><path d=\"M8 12h8\"/><path d=\"M8 14h8\"/></svg>"
         },
         {
           "value": "98%",
-          "label": "Accuracy Rate",
-          "icon": "✅"
+          "label": "Risk Accuracy<br>Rate",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 12l2 2 4-4\"/></svg>"
         },
         {
           "value": "24/7",
-          "label": "Advisor Support",
-          "icon": "🙏"
+          "label": "Ministry<br>Advisor Support",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
         }
       ]
     },
@@ -519,6 +550,7 @@
       "role": "Senior Pastor"
     },
     "preview": {
+      "scoreTitle": "MINISTRY RISK SCORE™",
       "score": 75,
       "riskText": "Moderate Risk",
       "topRisks": [
@@ -571,6 +603,13 @@
   "sme": {
     "title": "SME Risk Assessment | CoverScore",
     "trigger": "START SME ASSESSMENT",
+    "trustBarExpertise": "Business Expertise",
+    "calculator": {
+      "title": "INSTANT BUSINESS RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of major incidents on your business."
+    },
+    "whyChooseTitle": "Why SMEs Choose CoverScore",
+    "trustedByTitle": "Trusted by Business Owners",
     "hero": {
       "headline": "Could Your Business Survive a Major Loss?",
       "subheadline": "Discover Your Business Resilience Score in 5 Minutes. Identify risks before they cost you your business.",
@@ -583,23 +622,23 @@
       "metrics": [
         {
           "value": "2000+",
-          "label": "SMEs Assessed",
-          "icon": "🏢"
+          "label": "Small Business<br>Facilities Assessed",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M3 21h18\"/><path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\"/><path d=\"M10 10h4\"/><path d=\"M12 8v4\"/><path d=\"M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4\"/></svg>"
         },
         {
           "value": "₦100B+",
           "label": "Risks Evaluated",
-          "icon": "🛡️"
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"M9 10v6\"/><path d=\"M15 10v6\"/><path d=\"M9 10l6 6\"/><path d=\"M8 12h8\"/><path d=\"M8 14h8\"/></svg>"
         },
         {
           "value": "98%",
-          "label": "Accuracy Rate",
-          "icon": "✅"
+          "label": "Risk Accuracy<br>Rate",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 12l2 2 4-4\"/></svg>"
         },
         {
           "value": "24/7",
-          "label": "Advisor Support",
-          "icon": "💼"
+          "label": "Business<br>Advisor Support",
+          "icon": "<svg width=\"32\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" viewBox=\"0 0 24 24\"><path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>"
         }
       ]
     },
@@ -656,6 +695,7 @@
       "role": "CEO, Retail Hub"
     },
     "preview": {
+      "scoreTitle": "BUSINESS RISK SCORE™",
       "score": 65,
       "riskText": "Moderate Risk",
       "topRisks": [
