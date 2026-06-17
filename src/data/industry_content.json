@@ -173,7 +173,7 @@
         "Personalized Risk Report",
         "Expert Risk Advisor Support"
       ],
-      "overlayStatement": "Your School's Safety. Our Priority.",
+      "overlayStatement": "Your School's Safety.<br>Our Priority.",
       "metrics": [
         {
           "value": "500+",
@@ -323,7 +323,7 @@
         "Personalized Factory Risk Report",
         "Industrial Risk Advisor Support"
       ],
-      "overlayStatement": "Your Factory's Operations. Our Priority.",
+      "overlayStatement": "Your Factory's Operations.<br>Our Priority.",
       "metrics": [
         {
           "value": "300+",
@@ -473,7 +473,7 @@
         "Personalized Church Risk Report",
         "Faith-Based Risk Advisor Support"
       ],
-      "overlayStatement": "Your Ministry's Safety. Our Priority.",
+      "overlayStatement": "Your Ministry's Safety.<br>Our Priority.",
       "metrics": [
         {
           "value": "400+",
@@ -618,7 +618,7 @@
         "Personalized SME Risk Report",
         "Business Advisor Support"
       ],
-      "overlayStatement": "Your Business Resilience. Our Priority.",
+      "overlayStatement": "Your Business Resilience.<br>Our Priority.",
       "metrics": [
         {
           "value": "2000+",
