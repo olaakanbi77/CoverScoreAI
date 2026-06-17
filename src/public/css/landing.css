@@ -687,8 +687,8 @@ p { margin: 0; }
 }
 
 @media (min-width: 1024px) {
-  .stories-cards-grid {
-    grid-template-columns: repeat(4, 1fr);
+  .stories-layout {
+    grid-template-columns: 3fr 1fr;
   }
 }
 
