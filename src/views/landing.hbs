@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=33">
+  <link rel="stylesheet" href="/css/landing.css?v=34">
 </head>
 <body style="padding-bottom: 72px;">
 
@@ -412,7 +412,7 @@
         inputs: [
           { id: 'inp_beds', label: 'Number of Beds', min: 10, max: 1000, val: 150, step: 10, factor: 1500000 },
           { id: 'inp_staff', label: 'Number of Staff', min: 5, max: 2000, val: 350, step: 5, factor: 500000 },
-          { id: 'inp_equip', label: 'Equipment Value (₦M)', min: 10, max: 5000, val: 800, step: 50, factor: 200000 },
+          { id: 'inp_equip', label: 'Equipment Value', min: 10000000, max: 5000000000, val: 800000000, step: 10000000, factor: 0.2 },
           { id: 'inp_ccu', label: 'Critical Car Units', min: 0, max: 100, val: 5, step: 1, factor: 5000000 }
         ],
         baseExposure: 25000000
@@ -421,7 +421,7 @@
         inputs: [
           { id: 'inp_students', label: 'Number of Students', min: 50, max: 5000, val: 500, step: 50, factor: 300000 },
           { id: 'inp_staff', label: 'Number of Staff', min: 10, max: 500, val: 45, step: 5, factor: 500000 },
-          { id: 'inp_building', label: 'Building Value (₦M)', min: 10, max: 2000, val: 300, step: 10, factor: 250000 },
+          { id: 'inp_building', label: 'Building Value', min: 10000000, max: 2000000000, val: 300000000, step: 10000000, factor: 0.25 },
           { id: 'inp_buses', label: 'School Buses', min: 0, max: 50, val: 3, step: 1, factor: 5000000 }
         ],
         baseExposure: 10000000
@@ -453,17 +453,20 @@
       const container = document.getElementById('calcInputs');
       let html = '';
       config.inputs.forEach(inp => {
+        let displayVal = inp.val;
+        if (inp.id === 'inp_equip' || inp.id === 'inp_building') {
+          displayVal = formatCurrency(inp.val);
+        } else {
+          displayVal = inp.val.toLocaleString();
+        }
+        
         html += `
-          <div class="calc-input-group">
-            <div class="calc-input-label">
-              ${inp.label}
+          <div class="calc-input-group" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+              <div class="calc-input-label">${inp.label}</div>
+              <div class="calc-val" id="${inp.id}_disp" style="color: var(--color-primary);">${displayVal}</div>
             </div>
-            <div class="calc-controls">
-              <button class="btn btn-outline" style="border-color: #e2e8f0; color: #0f172a; height: 32px; padding: 0 12px;" onclick="changeVal('${inp.id}', -${inp.step})">-</button>
-              <div class="calc-val" id="${inp.id}_disp">${inp.val}</div>
-              <button class="btn btn-outline" style="border-color: #e2e8f0; color: #0f172a; height: 32px; padding: 0 12px;" onclick="changeVal('${inp.id}', ${inp.step})">+</button>
-            </div>
-            <input type="hidden" id="${inp.id}" value="${inp.val}">
+            <input type="range" class="calc-slider" id="${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.val}" oninput="changeVal('${inp.id}', this.value)">
           </div>
         `;
       });
@@ -471,17 +474,23 @@
       updateExposure();
     };
 
-    window.changeVal = (id, delta) => {
+    window.changeVal = (id, newValStr) => {
       const inp = config.inputs.find(i => i.id === id);
       const el = document.getElementById(id);
       const disp = document.getElementById(id + '_disp');
       
-      let newVal = parseInt(el.value) + delta;
+      let newVal = parseInt(newValStr);
       if (newVal < inp.min) newVal = inp.min;
       if (newVal > inp.max) newVal = inp.max;
       
       el.value = newVal;
-      disp.innerText = newVal;
+      
+      if (id === 'inp_equip' || id === 'inp_building') {
+        disp.innerText = formatCurrency(newVal);
+      } else {
+        disp.innerText = newVal.toLocaleString();
+      }
+      
       updateExposure();
     };
 

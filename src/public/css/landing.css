@@ -552,8 +552,8 @@ p { margin: 0; }
 
 .calc-slider {
   width: 100%;
-  margin-top: 12px;
   accent-color: var(--color-primary);
+  cursor: pointer;
 }
 
 .calc-output {
