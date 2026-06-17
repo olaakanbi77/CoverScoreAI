@@ -36,8 +36,8 @@
           "icon": "<img src=\"/images/icon-check-metric.jpg\" style=\"width: 48px; height: 48px; object-fit: contain; mix-blend-mode: multiply;\">"
         },
         {
-          "value": "5-Minutes",
-          "label": "<b>Assessment experience</b>",
+          "value": "24/7",
+          "label": "<b>Healthcare Advisor Support</b>",
           "icon": "<img src=\"/images/icon-person-metric.jpg\" style=\"width: 48px; height: 48px; object-fit: contain; mix-blend-mode: multiply;\">"
         }
       ]
