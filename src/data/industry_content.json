@@ -64,19 +64,19 @@
     ],
     "stories": [
       {
-        "icon": "<img src=\"/images/icon-fire.jpg\" alt=\"Fire\" style=\"width: 36px; height: 36px; object-fit: contain; margin-top: -4px;\">",
+        "icon": "<img src=\"/images/icon-fire.jpg\" alt=\"Fire\" style=\"width: 56px; height: 56px; object-fit: contain; margin-top: -4px;\">",
         "title": "Electrical Fire in ICU",
         "desc": "An electrical fire spread overnight, destroying critical care equipment and halting operations.",
         "loss": "₦85,000,000"
       },
       {
-        "icon": "<img src=\"/images/icon-scale.jpg\" alt=\"Scale\" style=\"width: 36px; height: 36px; object-fit: contain; margin-top: -4px;\">",
+        "icon": "<img src=\"/images/icon-scale.jpg\" alt=\"Scale\" style=\"width: 56px; height: 56px; object-fit: contain; margin-top: -4px;\">",
         "title": "Medical Negligence Claim",
         "desc": "A severe patient complication led to a major malpractice lawsuit and reputational damage.",
         "loss": "₦120,000,000"
       },
       {
-        "icon": "<img src=\"/images/icon-mri.jpg\" alt=\"MRI\" style=\"width: 36px; height: 36px; object-fit: contain; margin-top: -4px;\">",
+        "icon": "<img src=\"/images/icon-mri.jpg\" alt=\"MRI\" style=\"width: 56px; height: 56px; object-fit: contain; margin-top: -4px;\">",
         "title": "MRI Equipment Breakdown",
         "desc": "A critical MRI machine failed due to power surge, halting diagnostics for weeks.",
         "loss": "₦60,000,000"
