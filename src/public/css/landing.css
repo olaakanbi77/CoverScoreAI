@@ -703,7 +703,7 @@ p { margin: 0; }
 
 @media (min-width: 1024px) {
   .stories-layout {
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 3.5fr 1fr;
   }
 }
 
