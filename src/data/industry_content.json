@@ -12,6 +12,12 @@
     "hero": {
       "headline": "Protect Your Patients. <br>Strengthen Your <span style=\"color: var(--color-gold);\">Hospital.</span>",
       "subheadline": "Identify hidden risks, improve patient safety, and strengthen operational resilience—for your patients, staff, and hospital.",
+      "mobileHeadline": "See Your Hospital's<br><span class=\"hero-highlight\">Risk Score</span><br>In Less Than 5 Minutes.",
+      "mobileSubheadline": "Most hospitals discover critical risks they never knew existed.",
+      "mobileCta": "Get My Hospital Risk Score",
+      "mobileCtaSub": "Takes Less Than 5 Minutes",
+      "trustBadgeTitle": "500+ Healthcare Facilities Assessed",
+      "trustBadgeDesc": "Trusted by hospital leaders across the country.",
       "image": "/images/hero-hospital.jpg",
       "benefits": [
         "AI-Powered Clinical Risk Assessment",
