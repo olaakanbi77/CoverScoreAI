@@ -104,8 +104,29 @@ p { margin: 0; }
 
 .funnel-section { padding: 80px 0; }
 @media (max-width: 1023px) {
-  .funnel-section { padding: 48px 0; }
-  
+  /* ===== CoverScore Mobile Funnel Law™ =====
+     One Section = One Screen
+     Every screen has: One Message. One Emotion. One Goal. */
+  .funnel-section {
+    min-height: 100dvh;
+    min-height: 100vh; /* fallback */
+    padding: 32px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    /* Account for sticky CTA at bottom */
+    padding-bottom: 80px;
+  }
+
+  /* Each section's container centers its content */
+  .funnel-section > .funnel-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+  }
+
   .mobile-swipeable-cards {
     display: flex !important;
     overflow-x: auto;
@@ -254,6 +275,16 @@ p { margin: 0; }
   gap: 48px;
   align-items: center;
   position: relative;
+}
+
+@media (max-width: 1023px) {
+  .hero {
+    min-height: 100dvh;
+    min-height: 100vh;
+    gap: 24px;
+    padding: 24px 0 80px 0;
+    box-sizing: border-box;
+  }
 }
 
 @media (min-width: 1024px) {
