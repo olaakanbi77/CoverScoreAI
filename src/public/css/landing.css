@@ -2238,68 +2238,67 @@ p { margin: 0; }
 /* --- Section 5: Why Choose (Redesign) --- */
 .section-why-choose {
   background: white;
-  padding: 40px 0;
 }
 .wc-top-pill-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 .wc-top-pill {
   background: #f0fdf4;
   color: #10B981;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  padding: 6px 16px;
+  padding: 4px 12px;
   border-radius: 20px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   letter-spacing: 0.5px;
 }
 .wc-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 .wc-header .section-title {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 900;
   line-height: 1.2;
   color: #071739;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 .wc-title-divider {
   width: 40px;
   height: 4px;
   background: #10B981;
-  margin: 0 auto 16px auto;
+  margin: 0 auto 8px auto;
   border-radius: 2px;
 }
 .wc-subtitle {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #4b5563;
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
 }
 .why-choose-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 .why-choose-card {
   display: flex;
   gap: 12px;
   background: white;
-  padding: 16px;
-  border-radius: 16px;
+  padding: 12px;
+  border-radius: 12px;
   border: 1px solid #f1f5f9;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
   align-items: flex-start;
 }
 .wc-icon-col {
   position: relative;
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2348,24 +2347,24 @@ p { margin: 0; }
 .theme-purple.wc-number-pill { background: #f3e8ff; color: #5b21b6; }
 
 .wc-title {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #071739;
   margin: 0;
 }
 .wc-desc {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #64748b;
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
 }
 .wc-check-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.75rem;
+  gap: 6px;
+  font-size: 0.65rem;
   font-weight: 700;
-  padding: 6px 12px;
+  padding: 4px 8px;
   border-radius: 20px;
   align-self: flex-start;
 }
@@ -2376,11 +2375,11 @@ p { margin: 0; }
 .wc-trust-banner {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 32px;
-  padding: 20px;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 12px;
   background: #f0fdf4;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 .wc-shield-icon {
   flex-shrink: 0;
