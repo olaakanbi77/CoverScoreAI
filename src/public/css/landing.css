@@ -3161,7 +3161,7 @@ p { margin: 0; }
   .hiw-timeline { padding-left: 0 !important; }
   
   /* Shrink the green step circle and shift layout slightly */
-  .hiw-step { gap: 10px !important; margin-bottom: 16px !important; }
+  .hiw-step { gap: 4px !important; margin-bottom: 16px !important; }
   .hiw-step > div:first-child { width: 28px !important; height: 28px !important; font-size: 0.85rem !important; border-width: 2px !important; }
   
   /* Shrink elements inside the card to prevent column crush without wrapping */
