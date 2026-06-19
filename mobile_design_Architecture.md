@@ -121,7 +121,28 @@ Can I trust this?
 What happens next?
 If those 4 questions are answered, conversion happens.
 
-Mobile Specifications
+## 3. The "Scroll-Pause" Pacing
+Each section ends with a visual pause:
+- Subdued gradient separators
+- Generous padding before the next section
+- "End of thought" UI indicators
+
+## 4. CTA Visibility Rules
+For CoverScore Master Mobile Funnel™ v1, the presence of Embedded and Sticky CTAs follows these explicit rules per section:
+
+| Section | Embedded CTA | Sticky CTA |
+| :--- | :---: | :---: |
+| **Hero** | ✅ | ❌ |
+| **Calculator** | ✅ | ✅ |
+| **Why CoverScore** | ❌ | ✅ |
+| **Real Risk Stories** | ❌ | ✅ |
+| **Sample Risk Score** | ✅ | ✅ |
+| **How It Works** | ❌ | ✅ |
+| **FAQ** | ✅ | ✅ |
+
+---
+
+# Section-by-Section Specifications
 Viewport Width:
 390px
 
