@@ -1020,7 +1020,7 @@ p { margin: 0; }
 
   /* Headlines */
   .calc-mobile-headline {
-    font-size: 2.0rem;
+    font-size: 1.6rem;
     font-weight: 900;
     color: var(--color-surface-dark);
     line-height: 1.15;
@@ -1030,7 +1030,7 @@ p { margin: 0; }
   }
 
   .calc-mobile-subheadline {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     line-height: 1.4;
     margin-bottom: 8px;
@@ -1084,7 +1084,7 @@ p { margin: 0; }
   }
 
   .calc-mobile-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--color-surface-dark);
   }
@@ -1096,7 +1096,7 @@ p { margin: 0; }
   }
 
   .calc-mobile-val {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--color-surface-dark);
     line-height: 1;
@@ -1180,7 +1180,7 @@ p { margin: 0; }
   }
 
   .calc-mobile-result-val {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: #b91c1c; /* dark red */
     line-height: 1.1;
