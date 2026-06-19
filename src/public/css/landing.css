@@ -1033,7 +1033,7 @@ p { margin: 0; }
     font-size: 0.9rem;
     color: var(--text-muted);
     line-height: 1.4;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     text-align: left;
     font-weight: 500;
   }
@@ -1160,7 +1160,7 @@ p { margin: 0; }
     border-radius: 12px;
     padding: 10px 14px;
     position: relative;
-    margin-bottom: 6px;
+    margin-bottom: 16px;
   }
 
   .calc-mobile-result-icon {
