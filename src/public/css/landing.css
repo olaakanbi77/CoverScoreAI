@@ -2284,13 +2284,13 @@ p { margin: 0; }
 .why-choose-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 .why-choose-card {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   background: white;
-  padding: 24px;
+  padding: 16px;
   border-radius: 16px;
   border: 1px solid #f1f5f9;
   box-shadow: 0 4px 24px rgba(0,0,0,0.03);
@@ -2298,8 +2298,8 @@ p { margin: 0; }
 }
 .wc-icon-col {
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2326,7 +2326,7 @@ p { margin: 0; }
 .wc-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   padding-top: 4px;
 }
 .wc-title-row {
