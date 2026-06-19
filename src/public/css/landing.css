@@ -3162,6 +3162,15 @@ p { margin: 0; }
   .hiw-trust-item { flex-direction: column !important; text-align: center !important; gap: 4px !important; }
   .hiw-trust-text { font-size: 0.6rem !important; }
   
+  /* Result Box Single Line */
+  .hiw-result-box { padding: 16px 12px !important; gap: 8px !important; flex-wrap: nowrap !important; }
+  .hiw-result-icon-left { width: 40px !important; height: 40px !important; }
+  .hiw-result-icon-left svg { width: 20px !important; height: 20px !important; }
+  .hiw-result-icon-right svg { width: 32px !important; height: 28px !important; }
+  .hiw-result-title { font-size: 0.9rem !important; }
+  .hiw-result-sub { font-size: 0.75rem !important; }
+  .hiw-result-desc { font-size: 0.6rem !important; }
+  
   /* Shrink elements inside the card to prevent column crush without wrapping */
   .hiw-card { padding: 12px 10px !important; gap: 8px !important; }
   
