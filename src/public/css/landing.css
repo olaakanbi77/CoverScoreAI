@@ -3156,13 +3156,7 @@ p { margin: 0; }
 
 /* How It Works Mobile Responsiveness */
 @media (max-width: 768px) {
-  /* Hide the dashed timeline line on mobile */
-  .hiw-timeline > div:first-child { display: none !important; }
-  .hiw-timeline { padding-left: 0 !important; }
-  
-  /* Shrink the green step circle and shift layout slightly */
-  .hiw-step { gap: 0 !important; margin-bottom: 16px !important; }
-  .hiw-step > div:first-child { width: 28px !important; height: 28px !important; font-size: 0.85rem !important; border-width: 2px !important; margin-right: -10px !important; }
+  .hiw-step { margin-bottom: 16px !important; }
   
   /* Shrink elements inside the card to prevent column crush without wrapping */
   .hiw-card { padding: 12px 10px !important; gap: 8px !important; }
