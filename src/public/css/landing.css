@@ -1182,15 +1182,19 @@ p { margin: 0; }
   /* Scoped Trust Icons specifically for the Calculator so they don't break the main Hero section */
   #calculator .hero-trust-icons {
     padding-top: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 8px;
   }
-  #calculator .hero-trust-icon-item {
-    gap: 4px;
-    padding: 0 4px;
-    font-size: 0.55rem;
+  
+  /* Hide the second separator so the third item wraps cleanly */
+  #calculator .hero-trust-icons > div:nth-child(4) {
+    display: none;
   }
-  #calculator .hero-trust-icon-item svg {
-    width: 14px;
-    height: 14px;
+  
+  #calculator .hero-trust-icon-item:nth-child(5) {
+    flex-basis: 100%; /* Force it to take full width and center */
+    margin-top: 2px;
   }
 
   .calc-mobile-result-title {
