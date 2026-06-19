@@ -3196,8 +3196,8 @@ p { margin: 0; }
   .hero-mobile-cta { margin-top: 8px !important; padding: 10px 14px !important; }
   
   /* Trust Box Single Line */
-  .hiw-trust-box { padding-top: 12px !important; margin-top: 12px !important; gap: 6px !important; flex-wrap: nowrap !important; }
+  .hiw-trust-box { padding-top: 6px !important; margin-top: 6px !important; gap: 4px !important; flex-wrap: nowrap !important; }
   .hiw-trust-item { flex-direction: column !important; text-align: center !important; gap: 2px !important; flex: 1 !important; justify-content: flex-start !important; }
-  .hiw-trust-icon svg { width: 16px !important; height: 16px !important; }
-  .hiw-trust-text { font-size: 0.55rem !important; line-height: 1.1 !important; }
+  .hiw-trust-icon svg { width: 14px !important; height: 14px !important; }
+  .hiw-trust-text { font-size: 0.5rem !important; line-height: 1.1 !important; font-weight: 600 !important; }
 }
