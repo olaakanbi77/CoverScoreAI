@@ -3155,7 +3155,7 @@ p { margin: 0; }
 .hiw-step:nth-child(even) .hiw-step-icon { color: #2563eb; background: #eff6ff; }
 
 /* How It Works Mobile Responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   /* Timeline fixes */
   .hiw-timeline-line { display: none !important; }
   .hiw-timeline { padding-left: 0 !important; }
