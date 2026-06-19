@@ -72,6 +72,22 @@
         "desc": "Get clear recommendations you can implement immediately to reduce risk, improve safety, and protect your bottom line.",
         "pill": "Real impact. Measurable improvement.",
         "colorTheme": "purple"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/></svg>",
+        "number": "04",
+        "title": "Comprehensive Clinical Safety",
+        "desc": "Identify vulnerabilities in patient care protocols to prevent medical errors and improve outcomes.",
+        "pill": "Safer care. Better outcomes.",
+        "colorTheme": "orange"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\"/><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"/><path d=\"m9 14 2 2 4-4\"/></svg>",
+        "number": "05",
+        "title": "Regulatory Compliance Alignment",
+        "desc": "Stay ahead of regulatory changes and ensure your facility meets all national healthcare standards.",
+        "pill": "Always compliant. Always ready.",
+        "colorTheme": "red"
       }
     ],
     "stories": [
