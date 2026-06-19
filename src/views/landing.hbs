@@ -828,42 +828,130 @@
   </section>
 
   <!-- 7. HOW IT WORKS -->
-  <section class="funnel-section section-how-it-works">
-    <div class="funnel-container">
-      <div class="section-header">
-        <h2 class="section-title">Simple Process.<br>Powerful Results.</h2>
+  <section class="funnel-section section-how-it-works" style="background: #ffffff; padding: 60px 0;">
+    <div class="funnel-container" style="max-width: 600px; margin: 0 auto; padding: 0 20px;">
+      
+      <!-- Top Pill -->
+      <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+        <div class="hiw-top-pill" style="background: #f0fdf4; color: #16a34a; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          HOW IT WORKS™
+        </div>
+      </div>
+
+      <!-- Headers -->
+      <div style="text-align: center; margin-bottom: 40px;">
+        <h2 style="font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 0; color: #0f172a; letter-spacing: -1px;">Simple Process.<br><span style="color: #16a34a;">Powerful Results.</span></h2>
+        <p style="color: #475569; font-size: 1.05rem; font-weight: 500; margin: 16px 0 0 0;">Get your hospital risk score in less than 5 minutes.</p>
       </div>
       
-      <div class="timeline-container">
-        <div class="timeline-line"></div>
+      <!-- Timeline -->
+      <div class="hiw-timeline" style="position: relative; padding-left: 20px;">
+        <div style="position: absolute; left: 35px; top: 20px; bottom: 20px; width: 2px; border-left: 2px dashed #16a34a; z-index: 1;"></div>
+        
         {{#each data.howItWorks}}
-        <div class="timeline-step">
-          <div class="timeline-icon-box">
-            {{{this.icon}}}
+        <div class="hiw-step" style="display: flex; gap: 20px; margin-bottom: 24px; position: relative; z-index: 2;">
+          <!-- Left Circle -->
+          <div style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: #16a34a; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; border: 4px solid white;">
+            {{this.number}}
           </div>
-          <div class="timeline-content">
-            <div class="step-num">Step {{this.number}}</div>
-            <h3 class="step-title">{{this.title}}</h3>
-            <p class="step-desc">{{{this.desc}}}</p>
-          </div>
-          <div class="timeline-badge">
-            <div class="badge-icon">{{{this.badgeIcon}}}</div>
-            <div class="badge-text">{{{this.badgeText}}}</div>
+          
+          <!-- Card -->
+          <div class="hiw-card" style="flex: 1; background: white; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+            <!-- Icon -->
+            <div class="hiw-step-icon" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              {{{this.icon}}}
+            </div>
+            
+            <!-- Text Content -->
+            <div style="flex: 1;">
+              <div style="font-size: 1rem; font-weight: 800; color: #1e1b4b; margin-bottom: 4px;">{{this.title}}</div>
+              <div style="font-size: 0.8rem; color: #475569; line-height: 1.4;">{{{this.desc}}}</div>
+            </div>
+            
+            <!-- Right Badge -->
+            <div style="flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px solid #f1f5f9;">
+              <div style="color: #64748b; margin-bottom: 2px; transform: scale(0.85);">
+                {{{this.badgeIcon}}}
+              </div>
+              <div style="font-size: 0.5rem; font-weight: 800; color: #1e1b4b; line-height: 1.1; letter-spacing: -0.2px;">{{{this.badgeText}}}</div>
+            </div>
           </div>
         </div>
         {{/each}}
       </div>
       
-      <div class="hiw-result-banner">
-        <strong>The Result?</strong> You get total clarity on your hospital's true risk exposure.
+      <!-- The Result Box -->
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e6fced 100%); border-radius: 16px; padding: 24px; display: flex; gap: 16px; margin: 32px 0 24px 0; border: 1px solid #dcfce7; align-items: center;">
+        <!-- Shield Icon -->
+        <div style="flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(22,163,74,0.15);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10" stroke="white" stroke-width="3" fill="none"></polyline></svg>
+        </div>
+        <!-- Text -->
+        <div style="flex: 1;">
+          <div style="font-size: 1.1rem; font-weight: 800; color: #16a34a; margin-bottom: 2px;">The Result?</div>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Clarity. Confidence. Control.</div>
+          <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; font-weight: 500;">Know your risks. Fix the gaps.<br>Protect your patients and your future.</div>
+        </div>
+        <!-- Chart Graphic -->
+        <div style="flex-shrink: 0;">
+          <svg width="60" height="50" viewBox="0 0 72 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Bars -->
+            <path d="M12 60V44" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
+            <path d="M32 60V32" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
+            <path d="M52 60V16" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
+            <!-- Trend Line -->
+            <path d="M2 36L28 20L44 28L68 4" stroke="#16a34a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Arrow Head -->
+            <path d="M68 4L54 4M68 4V18" stroke="#16a34a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
       
-      <div class="green-cta-block">
-        <h3 style="color: white; font-size: 1.25rem; margin-bottom: 16px; font-weight: 800; text-align: center;">Discover Your Hospital's Hidden Risks</h3>
-        <a href="/start-whatsapp?text={{trigger}}" class="btn-primary" style="width: 100%; display: block; text-align: center; background: white; color: #10B981;">
-          Get My Hospital Risk Score
-        </a>
+      <!-- CTA Bar -->
+      <a href="/start-whatsapp?text={{trigger}}" style="background: #16a34a; border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: white; box-shadow: 0 8px 24px rgba(22,163,74,0.25);">
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div>
+            <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Get My Hospital Risk Score</div>
+            <div style="font-size: 0.85rem; font-weight: 500; opacity: 0.95;">Start now. It's fast, secure & free.</div>
+          </div>
+        </div>
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </a>
+      
+      <!-- Footer Badges List -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; font-size: 0.75rem; color: #1e293b; font-weight: 600;">
+        <div style="display: flex; align-items: center; gap: 6px; color: #16a34a;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" fill="none" stroke-width="2"></path></svg> 
+          <span style="color: #1e293b;">100% Secure</span>
+        </div>
+        <div style="width: 4px; height: 4px; border-radius: 50%; background: #cbd5e1;"></div>
+        <div>Private & Confidential</div>
+        <div style="width: 4px; height: 4px; border-radius: 50%; background: #cbd5e1;"></div>
+        <div>No Obligation</div>
       </div>
+      
+      <!-- Bottom Trust Box -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 24px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: #1e293b; line-height: 1.3;">Trusted by 500+<br>Healthcare Facilities</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: #1e293b; line-height: 1.3;">100% Secure<br>& Confidential</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: #1e293b; line-height: 1.3;">Takes Less<br>Than 5 Minutes</div>
+        </div>
+      </div>
+
     </div>
   </section>
 

@@ -3149,3 +3149,7 @@ p { margin: 0; }
 .theme-blue { background: #eff6ff; color: #2563eb; }
 .theme-blue .rs-pill-icon svg, .theme-blue .rs-lesson-icon svg { color: #2563eb; }
 .theme-blue .rs-lesson-title { color: #2563eb; }
+
+/* How It Works Timeline Colors */
+.hiw-step:nth-child(odd) .hiw-step-icon { color: #16a34a; background: #f0fdf4; }
+.hiw-step:nth-child(even) .hiw-step-icon { color: #2563eb; background: #eff6ff; }
