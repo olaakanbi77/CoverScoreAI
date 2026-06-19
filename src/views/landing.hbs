@@ -857,14 +857,14 @@
           </div>
           
           <!-- Card -->
-          <div class="hiw-card" style="flex: 1; background: white; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+          <div class="hiw-card" style="flex: 1; background: white; border-radius: 16px; padding: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
             <!-- Icon -->
             <div class="hiw-step-icon" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
               {{{this.icon}}}
             </div>
             
             <!-- Text Content -->
-            <div style="flex: 1;">
+            <div style="flex: 1; min-width: 150px;">
               <div style="font-size: 1rem; font-weight: 800; color: #1e1b4b; margin-bottom: 4px;">{{this.title}}</div>
               <div style="font-size: 0.8rem; color: #475569; line-height: 1.4;">{{{this.desc}}}</div>
             </div>
@@ -882,13 +882,13 @@
       </div>
       
       <!-- The Result Box -->
-      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e6fced 100%); border-radius: 16px; padding: 24px; display: flex; gap: 16px; margin: 32px 0 24px 0; border: 1px solid #dcfce7; align-items: center;">
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e6fced 100%); border-radius: 16px; padding: 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin: 32px 0 24px 0; border: 1px solid #dcfce7; align-items: center;">
         <!-- Shield Icon -->
         <div style="flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(22,163,74,0.15);">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10" stroke="white" stroke-width="3" fill="none"></polyline></svg>
         </div>
         <!-- Text -->
-        <div style="flex: 1;">
+        <div style="flex: 1; min-width: 200px; text-align: center;">
           <div style="font-size: 1.1rem; font-weight: 800; color: #16a34a; margin-bottom: 2px;">The Result?</div>
           <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Clarity. Confidence. Control.</div>
           <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; font-weight: 500;">Know your risks. Fix the gaps.<br>Protect your patients and your future.</div>
@@ -909,7 +909,7 @@
       </div>
       
       <!-- CTA Bar -->
-      <a href="/start-whatsapp?text={{trigger}}" style="background: #16a34a; border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: white; box-shadow: 0 8px 24px rgba(22,163,74,0.25);">
+      <a href="/start-whatsapp?text={{trigger}}" style="background: #16a34a; border-radius: 16px; padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; text-decoration: none; color: white; box-shadow: 0 8px 24px rgba(22,163,74,0.25);">
         <div style="display: flex; gap: 16px; align-items: center;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
@@ -925,7 +925,7 @@
       </a>
       
       <!-- Footer Badges List -->
-      <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; font-size: 0.75rem; color: #1e293b; font-weight: 600;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; font-size: 0.75rem; color: #1e293b; font-weight: 600;">
         <div style="display: flex; align-items: center; gap: 6px; color: #16a34a;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" fill="none" stroke-width="2"></path></svg> 
           <span style="color: #1e293b;">100% Secure</span>
@@ -937,7 +937,7 @@
       </div>
       
       <!-- Bottom Trust Box -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 24px;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 24px; gap: 24px;">
         <div style="display: flex; align-items: center; gap: 8px;">
           <div style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
           <div style="font-size: 0.75rem; font-weight: 700; color: #1e293b; line-height: 1.3;">Trusted by 500+<br>Healthcare Facilities</div>
