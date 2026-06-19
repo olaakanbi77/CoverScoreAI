@@ -848,7 +848,7 @@ p { margin: 0; }
     justify-content: center;
     gap: 9px;
     padding: 0 8px;
-    font-size: clamp(0.7rem, 2.5vw, 1.0rem);
+    font-size: clamp(0.88rem, 3.3vw, 1.28rem);
     line-height: 1.1;
     color: #2d3a4c;
     font-weight: 650;
@@ -856,8 +856,8 @@ p { margin: 0; }
   }
 
   .hero-trust-icon-item svg {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     stroke: #2d3a4c;
     stroke-width: 1.8;
     flex: 0 0 auto;
@@ -970,14 +970,14 @@ p { margin: 0; }
   }
 
   .hero-trust-icon-item {
-    gap: 4px;
+    gap: 6px;
     padding: 0 4px;
-    font-size: 0.55rem;
+    font-size: 0.78rem;
   }
 
   .hero-trust-icon-item svg {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
   }
 
   .hero-trust-icon-sep {
@@ -1170,6 +1170,27 @@ p { margin: 0; }
     opacity: 0.5;
     width: 24px;
     height: 24px;
+  }
+
+  .calc-mobile-result-sub {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.9;
+  }
+
+  /* Scoped Trust Icons specifically for the Calculator so they don't break the main Hero section */
+  #calculator .hero-trust-icons {
+    padding-top: 0;
+  }
+  #calculator .hero-trust-icon-item {
+    gap: 4px;
+    padding: 0 4px;
+    font-size: 0.55rem;
+  }
+  #calculator .hero-trust-icon-item svg {
+    width: 14px;
+    height: 14px;
   }
 
   .calc-mobile-result-title {
