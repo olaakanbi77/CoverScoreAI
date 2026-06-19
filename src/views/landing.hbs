@@ -731,7 +731,7 @@
         <div class="rs-header-top">
           <div class="rs-pill">REAL RISK STORIES™</div>
           <button class="rs-pause-btn" id="rsPauseBtn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
           </button>
         </div>
         
@@ -754,13 +754,12 @@
           {{#each data.stories}}
           <div class="rs-slide" data-index="{{@index}}">
             <div class="rs-card">
-              <!-- Top Pill & Title -->
-              <div class="rs-card-pill theme-{{this.pillTheme}}">
-                <span class="rs-pill-icon">{{{this.pillIcon}}}</span> {{this.pill}}
-              </div>
-              
               <div class="rs-card-header">
                 <div class="rs-card-text">
+                  <!-- Top Pill moved inside left column -->
+                  <div class="rs-card-pill theme-{{this.pillTheme}}">
+                    <span class="rs-pill-icon">{{{this.pillIcon}}}</span> {{this.pill}}
+                  </div>
                   <h3 class="rs-card-title">{{this.title}}</h3>
                   <div class="rs-card-location">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
