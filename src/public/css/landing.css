@@ -3158,6 +3158,10 @@ p { margin: 0; }
 @media (max-width: 768px) {
   .hiw-step { margin-bottom: 16px !important; }
   
+  /* Trust Box Single Line */
+  .hiw-trust-item { flex-direction: column !important; text-align: center !important; gap: 4px !important; }
+  .hiw-trust-text { font-size: 0.6rem !important; }
+  
   /* Shrink elements inside the card to prevent column crush without wrapping */
   .hiw-card { padding: 12px 10px !important; gap: 8px !important; }
   
