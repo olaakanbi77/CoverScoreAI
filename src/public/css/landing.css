@@ -3207,3 +3207,9 @@ p { margin: 0; }
   .hiw-trust-icon svg { width: 14px !important; height: 14px !important; }
   .hiw-trust-text { font-size: 0.5rem !important; line-height: 1.1 !important; font-weight: 600 !important; }
 }
+
+/* Result Box Desktop Sizes */
+.hiw-result-icon-left { width: 64px; height: 64px; }
+.hiw-result-icon-left svg { width: 32px; height: 32px; }
+.hiw-result-icon-right svg { width: 60px; height: 50px; }
+
