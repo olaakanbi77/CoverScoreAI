@@ -50,25 +50,28 @@
     },
     "whyChoose": [
       {
-        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--color-primary)\" stroke-width=\"1.5\"><path d=\"M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z\"/><path d=\"M12 6a6 6 0 1 0 6 6A6 6 0 0 0 12 6Z\"/><path d=\"M12 10a2 2 0 1 0 2 2A2 2 0 0 0 12 10Z\"/></svg>",
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z\"/><path d=\"M12 6a6 6 0 1 0 6 6A6 6 0 0 0 12 6Z\"/><path d=\"M12 10a2 2 0 1 0 2 2A2 2 0 0 0 12 10Z\"/></svg>",
         "number": "01",
         "title": "AI-Powered Risk Intelligence",
         "desc": "Our advanced AI analyzes thousands of risk factors to uncover hidden threats others miss.",
-        "pill": "Smarter insights. Better decisions."
+        "pill": "Smarter insights. Better decisions.",
+        "colorTheme": "green"
       },
       {
-        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--color-primary)\" stroke-width=\"1.5\"><path d=\"M9 11l3 3L22 4\"/><path d=\"M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11\"/></svg>",
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M9 11l3 3L22 4\"/><path d=\"M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11\"/></svg>",
         "number": "02",
         "title": "Industry-Standard Risk Model",
         "desc": "Built by risk and healthcare experts. Aligned with global standards and regulatory requirements.",
-        "pill": "Trusted methodology. Reliable results."
+        "pill": "Trusted methodology. Reliable results.",
+        "colorTheme": "blue"
       },
       {
-        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--color-primary)\" stroke-width=\"1.5\"><path d=\"M3 3v18h18\"/><path d=\"m19 9-5 5-4-4-3 3\"/></svg>",
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M3 3v18h18\"/><path d=\"m19 9-5 5-4-4-3 3\"/></svg>",
         "number": "03",
         "title": "Actionable. Practical. Proven.",
         "desc": "Get clear recommendations you can implement immediately to reduce risk, improve safety, and protect your bottom line.",
-        "pill": "Real impact. Measurable improvement."
+        "pill": "Real impact. Measurable improvement.",
+        "colorTheme": "purple"
       }
     ],
     "stories": [
