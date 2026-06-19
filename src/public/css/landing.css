@@ -1020,7 +1020,7 @@ p { margin: 0; }
 
   /* Headlines */
   .calc-mobile-headline {
-    font-size: 1.7rem;
+    font-size: 2.0rem;
     font-weight: 900;
     color: var(--color-surface-dark);
     line-height: 1.15;
