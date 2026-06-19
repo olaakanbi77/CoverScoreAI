@@ -989,54 +989,220 @@
   </section>
 
   <!-- 8. SAMPLE RISK SCORE -->
-  <section class="funnel-section section-sample-score">
-    <div class="funnel-container">
-      <div class="section-header">
-        <h2 class="section-title">See the Clarity.<br>Before You Get Yours.</h2>
+  <section class="funnel-section section-sample-score" style="background: #ffffff; padding: 60px 0;">
+    <style>
+      .ss-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; margin-bottom: 24px; }
+      .ss-trust-badges { display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 16px; padding-top: 8px; }
+      @media (max-width: 768px) {
+        .ss-grid { grid-template-columns: 1fr; }
+        .ss-trust-badges { flex-wrap: wrap; text-align: center; justify-content: center; }
+        .ss-trust-badges > div { border-right: none !important; padding-right: 0 !important; width: 100%; justify-content: center; margin-bottom: 8px; }
+        .ss-header-title { font-size: 1.8rem !important; }
+        .wtm-box { flex-direction: column; text-align: center !important; align-items: center !important; }
+        .wtm-arrow { display: none; }
+      }
+    </style>
+    <div class="funnel-container" style="max-width: 600px; margin: 0 auto; padding: 0 16px;">
+      
+      <!-- Top Pill & Headers -->
+      <div style="text-align: center; margin-bottom: 32px;">
+        <div class="ss-top-pill" style="display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; color: #16a34a; font-size: 0.75rem; font-weight: 800; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          SAMPLE RISK SCORE™
+        </div>
+        <h2 class="ss-header-title" style="font-size: 2.4rem; font-weight: 900; line-height: 1.1; margin: 0; color: #0f172a; letter-spacing: -1px;">
+          See the Clarity.<br>
+          <span style="color: #16a34a;">Before You Get Yours.</span>
+        </h2>
+        <div style="width: 40px; height: 3px; background: #16a34a; border-radius: 2px; margin: 20px auto;"></div>
+        <p style="color: #475569; font-size: 1.05rem; font-weight: 500; margin: 0; line-height: 1.5;">
+          This is a sample risk score for a general hospital.<br>
+          Your score will be based on your actual data.
+        </p>
       </div>
       
-      <div class="sample-score-card">
-        <div class="ss-top-pill">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          {{data.preview.scoreTitle}}
-        </div>
-        <h3 class="ss-headline">{{data.preview.scoreSubTitle}}</h3>
+      <!-- The Card -->
+      <div class="sample-score-card" style="background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; padding: 24px; margin-bottom: 24px;">
         
-        <div class="ss-gauge-container">
-          <div class="ss-gauge-value">{{data.preview.score}}<span>/100</span></div>
-          <div class="ss-gauge-label">{{data.preview.riskText}}</div>
-        </div>
-        
-        <div class="ss-warning-box">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-          {{data.preview.warning}}
-        </div>
-        
-        <h4 class="ss-sub-title">KEY RISK AREAS</h4>
-        <div class="ss-risk-bars">
-          {{#each data.preview.topRisks}}
-          <div class="risk-bar-item">
-            <div class="risk-bar-header">
-              <div class="rb-name">{{{this.icon}}} {{this.name}}</div>
-              <div class="rb-level" style="color: {{this.color}}">{{this.level}}</div>
+        <!-- Card Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
             </div>
-            <div class="progress-bar-track">
-              <div class="progress-bar-fill" style="width: {{this.percent}}; background-color: {{this.color}};"></div>
+            <div style="font-weight: 900; font-size: 1.05rem; line-height: 1; letter-spacing: -0.5px; color: #0f172a;">
+              COVERSCORE<br><span style="font-size: 0.65rem; color: #64748b; font-weight: 700; letter-spacing: 0;">RISK SCORE</span>
             </div>
           </div>
-          {{/each}}
+          <div style="background: #f1f5f9; color: #475569; font-size: 0.7rem; font-weight: 800; padding: 6px 12px; border-radius: 16px;">
+            SAMPLE REPORT
+          </div>
         </div>
         
-        <div class="ss-lock-box">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          {{data.preview.lockText}}
+        <!-- Card Grid Layout -->
+        <div class="ss-grid">
+          
+          <!-- Left: Overall Score -->
+          <div style="background: #fafaf9; border-radius: 16px; border: 1px solid #f5f5f4; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; margin-bottom: 24px;">OVERALL RISK SCORE</div>
+            
+            <div style="position: relative; width: 100%; max-width: 180px; aspect-ratio: 2/1; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-end;">
+              <!-- Gauge SVG -->
+              <svg viewBox="0 0 100 50" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible;">
+                <!-- Gray background arc -->
+                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f1f5f9" stroke-width="14" stroke-linecap="round"/>
+                <!-- Green section -->
+                <path d="M 10 50 A 40 40 0 0 1 30 20" fill="none" stroke="#22c55e" stroke-width="14" stroke-linecap="round"/>
+                <!-- Yellow/Orange section -->
+                <path d="M 30 20 A 40 40 0 0 1 70 20" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="butt"/>
+                <!-- Red section -->
+                <path d="M 70 20 A 40 40 0 0 1 90 50" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round"/>
+                
+                <!-- Needle -->
+                <line x1="50" y1="50" x2="72" y2="22" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="4" fill="#1e293b"/>
+              </svg>
+              <div style="font-size: 4rem; font-weight: 900; color: #d97706; line-height: 0.8; z-index: 2; margin-bottom: -4px;">68</div>
+            </div>
+            
+            <div style="font-size: 0.9rem; font-weight: 800; color: #d97706; margin-bottom: 20px;">MODERATE RISK</div>
+            
+            <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 12px; display: flex; gap: 8px; align-items: flex-start; text-align: left; width: 100%;">
+              <div style="width: 20px; height: 20px; border-radius: 50%; background: #fbbf24; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 0.8rem;">!</div>
+              <div style="font-size: 0.7rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your hospital is more exposed than 68% of similar facilities.</div>
+            </div>
+          </div>
+          
+          <!-- Right: Key Risk Areas -->
+          <div style="display: flex; flex-direction: column;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; margin-bottom: 20px;">KEY RISK AREAS</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <!-- Item 1: Fire Safety -->
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Fire Safety</span>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: #ef4444;">HIGH</span>
+                  </div>
+                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 85%; background: #ef4444; border-radius: 3px;"></div></div>
+                </div>
+              </div>
+              <!-- Item 2: Medical Equipment -->
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #ffedd5; color: #f97316; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Medical Equipment</span>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: #f97316;">HIGH</span>
+                  </div>
+                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 75%; background: #f97316; border-radius: 3px;"></div></div>
+                </div>
+              </div>
+              <!-- Item 3: Patient Safety -->
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #fef9c3; color: #eab308; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="3"></circle></svg>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Patient Safety</span>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: #eab308;">MEDIUM</span>
+                  </div>
+                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 50%; background: #eab308; border-radius: 3px;"></div></div>
+                </div>
+              </div>
+              <!-- Item 4: Cyber Security -->
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Cyber Security</span>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: #22c55e;">LOW</span>
+                  </div>
+                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 25%; background: #22c55e; border-radius: 3px;"></div></div>
+                </div>
+              </div>
+              <!-- Item 5: Operational Continuity -->
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Operational Continuity</span>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: #22c55e;">LOW</span>
+                  </div>
+                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 15%; background: #22c55e; border-radius: 3px;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card Footer (Lock Box) -->
+        <div style="background: #f0fdf4; border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: center; gap: 12px; color: #15803d; text-align: left;">
+          <div style="flex-shrink: 0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          </div>
+          <div style="font-size: 0.85rem; font-weight: 600; line-height: 1.4;">Your full risk score includes 25+ risk factors<br class="hide-on-mobile"> across 6 categories.</div>
         </div>
       </div>
       
-      <div class="what-this-means-box">
-        <h4>What This Means For You</h4>
-        <p>A score of {{data.preview.score}} means you have significant vulnerabilities that could lead to financial loss or compliance issues if not addressed immediately.</p>
+      <!-- What This Means Box -->
+      <div class="wtm-box" style="background: #eff6ff; border-radius: 16px; padding: 24px; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px;">
+        <div style="width: 56px; height: 56px; border-radius: 12px; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 9l-5 5-4-4-5 5"></path><path d="M18 9h-4v-4"></path></svg>
+        </div>
+        <div style="flex: 1; text-align: left;">
+          <div style="font-size: 1.1rem; font-weight: 800; color: #1e3a8a; margin-bottom: 6px;">What This Means</div>
+          <div style="font-size: 0.9rem; color: #1e3a8a; font-weight: 500; line-height: 1.4; margin-bottom: 6px;">You have critical exposures that could result in significant financial losses and operational disruption.</div>
+          <a href="/start-whatsapp?text={{trigger}}" style="font-size: 0.85rem; font-weight: 700; color: #2563eb; text-decoration: none;">Get your exact risk score and fix the gaps.</a>
+        </div>
+        <div class="wtm-arrow" style="color: #1e3a8a; flex-shrink: 0; align-self: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
       </div>
+      
+      <!-- CTA Button -->
+      <a href="/start-whatsapp?text={{trigger}}" style="background: #16a34a; border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; box-shadow: 0 8px 24px rgba(22,163,74,0.25); margin-bottom: 24px;">
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <div style="width: 56px; height: 56px; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+          </div>
+          <div style="text-align: left; color: white;">
+            <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Get My Actual Hospital Risk Score</div>
+            <div style="font-size: 0.85rem; font-weight: 500; opacity: 0.95;">Personalized. Detailed. Actionable.</div>
+          </div>
+        </div>
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </a>
+      
+      <!-- Trust Badges -->
+      <div class="ss-trust-badges">
+        <div style="display: flex; align-items: center; gap: 8px; border-right: 1px solid #e2e8f0; padding-right: 16px;">
+          <div style="color: #16a34a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
+          <div style="font-size: 0.7rem; font-weight: 700; color: #1e293b; line-height: 1.3; text-align: left;">Trusted by 500+<br>Healthcare Facilities</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; border-right: 1px solid #e2e8f0; padding-right: 16px;">
+          <div style="color: #16a34a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+          <div style="font-size: 0.7rem; font-weight: 700; color: #1e293b; line-height: 1.3; text-align: left;">100% Secure<br>& Confidential</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="color: #16a34a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+          <div style="font-size: 0.7rem; font-weight: 700; color: #1e293b; line-height: 1.3; text-align: left;">Takes Less<br>Than 5 Minutes</div>
+        </div>
+      </div>
+      
     </div>
   </section>
 
