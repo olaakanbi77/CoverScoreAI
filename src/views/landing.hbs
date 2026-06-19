@@ -857,24 +857,24 @@
           </div>
           
           <!-- Card -->
-          <div class="hiw-card" style="flex: 1; background: white; border-radius: 16px; padding: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+          <div class="hiw-card" style="flex: 1; background: white; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
             <!-- Icon -->
             <div class="hiw-step-icon" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
               {{{this.icon}}}
             </div>
             
             <!-- Text Content -->
-            <div style="flex: 1; min-width: 150px;">
+            <div class="hiw-card-text" style="flex: 1;">
               <div style="font-size: 1rem; font-weight: 800; color: #1e1b4b; margin-bottom: 4px;">{{this.title}}</div>
               <div style="font-size: 0.8rem; color: #475569; line-height: 1.4;">{{{this.desc}}}</div>
             </div>
             
             <!-- Right Badge -->
-            <div style="flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px solid #f1f5f9;">
-              <div style="color: #64748b; margin-bottom: 2px; transform: scale(0.85);">
+            <div class="hiw-right-badge" style="flex-shrink: 0; width: 64px; height: 64px; border-radius: 50%; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1px solid #f1f5f9;">
+              <div class="hiw-badge-icon-wrap" style="color: #64748b; margin-bottom: 2px; transform: scale(0.85);">
                 {{{this.badgeIcon}}}
               </div>
-              <div style="font-size: 0.5rem; font-weight: 800; color: #1e1b4b; line-height: 1.1; letter-spacing: -0.2px;">{{{this.badgeText}}}</div>
+              <div class="hiw-badge-text" style="font-size: 0.5rem; font-weight: 800; color: #1e1b4b; line-height: 1.1; letter-spacing: -0.2px;">{{{this.badgeText}}}</div>
             </div>
           </div>
         </div>

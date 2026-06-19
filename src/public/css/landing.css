@@ -3153,3 +3153,31 @@ p { margin: 0; }
 /* How It Works Timeline Colors */
 .hiw-step:nth-child(odd) .hiw-step-icon { color: #16a34a; background: #f0fdf4; }
 .hiw-step:nth-child(even) .hiw-step-icon { color: #2563eb; background: #eff6ff; }
+
+/* How It Works Mobile Responsiveness */
+@media (max-width: 768px) {
+  /* Hide the dashed timeline line on mobile */
+  .hiw-timeline > div:first-child { display: none !important; }
+  .hiw-timeline { padding-left: 0 !important; }
+  
+  /* Shrink the green step circle and shift layout slightly */
+  .hiw-step { gap: 10px !important; margin-bottom: 16px !important; }
+  .hiw-step > div:first-child { width: 28px !important; height: 28px !important; font-size: 0.85rem !important; border-width: 2px !important; }
+  
+  /* Shrink elements inside the card to prevent column crush without wrapping */
+  .hiw-card { padding: 12px 10px !important; gap: 8px !important; }
+  
+  /* Shrink Left Icon */
+  .hiw-step-icon { width: 36px !important; height: 36px !important; }
+  .hiw-step-icon svg { width: 20px; height: 20px; }
+  
+  /* Shrink Middle Text */
+  .hiw-card-text { font-size: 0.85rem !important; }
+  .hiw-card-text > div:first-child { font-size: 0.95rem !important; margin-bottom: 2px !important; }
+  .hiw-card-text > div:last-child { font-size: 0.75rem !important; line-height: 1.3 !important; }
+  
+  /* Shrink Right Badge */
+  .hiw-right-badge { width: 48px !important; height: 48px !important; }
+  .hiw-badge-icon-wrap { transform: scale(0.65) !important; margin-bottom: 0 !important; }
+  .hiw-badge-text { font-size: 0.45rem !important; letter-spacing: -0.5px !important; }
+}
