@@ -2121,36 +2121,31 @@ p { margin: 0; }
 /* Steps Flow - How It Works */
 .steps-flow {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  align-items: flex-start;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
   position: relative;
-  padding: 20px 0;
+  padding: 0;
+  margin: 0;
 }
-@media (max-width: 1023px) {
-  .steps-flow {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  .steps-flow .step-item {
-    display: grid;
-    grid-template-columns: 48px 1fr;
-    grid-template-rows: auto;
-    gap: 0 16px;
-    text-align: left !important;
-    align-items: center;
-  }
-  .steps-flow .step-item > div:first-child {
-    grid-row: 1 / 3;
-    margin: 0 !important;
-    align-self: center;
-  }
-  .steps-flow .step-item > div[style*="position: absolute"] {
-    display: none;
-  }
-  .steps-flow .step-item > div[style*="margin-bottom: 12px"]:nth-child(2) {
-    display: none;
-  }
+
+.steps-flow .step-item {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  grid-template-rows: auto;
+  gap: 0 16px;
+  text-align: left;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.steps-flow .step-item > div:first-child {
+  grid-row: 1 / 3;
+  margin: 0;
+  align-self: center;
+  display: flex;
+  justify-content: center;
 }
 
 /* FAQ Accordion */
