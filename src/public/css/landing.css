@@ -3188,9 +3188,9 @@ p { margin: 0; }
   .hiw-result-text { text-align: left !important; }
   .hiw-result-icon-right { display: flex !important; align-items: center !important; }
   .hiw-result-icon-right svg { width: 14px !important; height: 12px !important; }
-  .hiw-result-title { font-size: 11px !important; white-space: nowrap !important; }
-  .hiw-result-sub { font-size: 8.5px !important; margin-bottom: 0 !important; letter-spacing: -0.2px !important; white-space: nowrap !important; }
-  .hiw-result-desc { font-size: 7.5px !important; line-height: 1.1 !important; white-space: nowrap !important; }
+  .hiw-result-title { font-size: 9.5px !important; white-space: nowrap !important; }
+  .hiw-result-sub { font-size: 7px !important; margin-bottom: 0 !important; letter-spacing: -0.2px !important; white-space: nowrap !important; }
+  .hiw-result-desc { font-size: 6px !important; line-height: 1.1 !important; white-space: nowrap !important; }
   .hiw-result-br { display: none !important; }
   
   /* Mobile CTA spacing and sub text */
