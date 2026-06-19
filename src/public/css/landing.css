@@ -1210,49 +1210,7 @@ p { margin: 0; }
     max-width: 90%;
   }
 
-  /* Secondary Action Banner */
-  .calc-mobile-action-banner {
-    display: flex;
-    align-items: center;
-    background: #f0fdf4; /* light green */
-    border: 1px solid #dcfce7;
-    border-radius: 10px;
-    padding: 10px 12px;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-
-  .calc-mobile-action-icon {
-    width: 28px;
-    height: 28px;
-    background: #dcfce7;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  
-  .calc-mobile-action-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .calc-mobile-action-text {
-    flex-grow: 1;
-  }
-
-  .calc-mobile-action-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--color-primary);
-  }
-
-  .calc-mobile-action-sub {
-    font-size: 0.7rem;
-    color: #166534;
-    margin-top: 2px;
-  }
+  /* Removed Secondary Action Banner */
 }
 
 /* 2. Interactive Calculator */
