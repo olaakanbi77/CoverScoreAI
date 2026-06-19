@@ -1016,21 +1016,7 @@ p { margin: 0; }
     max-height: 100dvh; /* Force one screen limit */
   }
 
-  /* Badge */
-  .calc-mobile-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: #eff6ff;
-    color: #3b82f6;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    width: fit-content;
-    margin-bottom: 12px;
-  }
+  /* Badge removed */
 
   /* Headlines */
   .calc-mobile-headline {
