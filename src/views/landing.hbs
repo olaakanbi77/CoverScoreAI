@@ -255,374 +255,211 @@
   </section>
 
   <!-- 5. WHY CHOOSE COVERSCORE -->
-  <section class="funnel-section funnel-section-light">
+  <section class="funnel-section section-why-choose">
     <div class="funnel-container">
       <div class="section-header">
         <h2 class="section-title">{{data.whyChooseTitle}}</h2>
       </div>
-      <div class="features-grid">
+      <div class="why-choose-list">
         {{#each data.whyChoose}}
-        <div class="feature-card">
-          <div class="feature-icon">{{this.icon}}</div>
-          <h3 class="feature-title">{{this.title}}</h3>
-          <p class="feature-desc">{{this.desc}}</p>
+        <div class="why-choose-card">
+          <div class="wc-number-pill">{{this.number}}</div>
+          <div class="wc-content">
+            <h3 class="wc-title">{{this.title}}</h3>
+            <p class="wc-desc">{{this.desc}}</p>
+            <div class="wc-check-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {{this.pill}}
+            </div>
+          </div>
         </div>
         {{/each}}
+      </div>
+      
+      <div class="wc-trust-banner">
+        <div class="wc-trust-avatars">
+          <img src="https://ui-avatars.com/api/?name=Health+Leader&background=0D8ABC&color=fff&size=160" alt="Leader">
+          <img src="https://ui-avatars.com/api/?name=Dr+T&background=10B981&color=fff&size=160" alt="Leader">
+          <img src="https://ui-avatars.com/api/?name=CMD&background=F5A623&color=fff&size=160" alt="Leader">
+        </div>
+        <div class="wc-trust-text">
+          <strong>500+ Healthcare Facilities</strong><br>
+          <span>Trust CoverScore</span>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 6. REAL RISK STORIES -->
-  <section class="funnel-section funnel-section-gray">
+  <section class="funnel-section section-risk-stories">
     <div class="funnel-container">
-      <div class="stories-layout" style="background: #FFF4E6; padding: 48px; border-radius: var(--radius-lg); align-items: stretch;">
-        <div style="display: flex; flex-direction: column;">
-          <div class="stories-header">
-            <h2 class="calc-title">REAL RISK STORIES</h2>
-          </div>
-          <p style="padding: 0 32px; color: var(--color-surface-dark); margin-top: 8px;">Incidents happen. Preparation makes the difference.</p>
-          
-          <div class="stories-grid-three mobile-swipeable-cards" style="display: grid; gap: 24px; margin-top: 32px;">
-            {{#each data.stories}}
-            <div class="story-card" style="background: white; padding: 24px; border-radius: var(--radius-md); display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;">
-              <div class="story-icon" style="margin-bottom: 0; font-size: 2.25rem; line-height: 1;">{{{this.icon}}}</div>
-              <div class="story-content" style="display: flex; flex-direction: column; height: 100%;">
-                <h4 class="story-title" style="margin-bottom: 8px;">{{this.title}}</h4>
-                <p class="story-desc" style="margin-bottom: 12px; flex-grow: 1;">{{this.desc}}</p>
-                <div>
-                  <div class="story-loss-label">Estimated Loss</div>
-                  <div class="story-loss-val">{{this.loss}}</div>
-                </div>
-              </div>
-            </div>
-            {{/each}}
-          </div>
-        </div>
-
-        <div class="insight-panel" style="background: transparent; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 32px; display: flex; flex-direction: column; justify-content: center; margin-top: 16px;">
-          <div class="insight-quote" style="text-align: center; color: var(--color-surface-dark); font-size: 1.5rem; font-weight: 800; line-height: 1.4;">
-            Most incidents begin as "unlikely events."<br><br>
-            <span style="display: block;">Until they happen.</span>
-          </div>
-        </div>
+      <div class="section-header">
+        <h2 class="section-title" style="color: white;">Real Incidents. Real Impact.</h2>
+        <p style="color: rgba(255,255,255,0.8); margin-top: 8px;">Incidents happen. Preparation makes the difference.</p>
       </div>
-
-    </div>
-  </section>
-
-  <!-- 7/8. HOW IT WORKS & TRUSTED LEADERS -->
-  <section id="how-it-works" class="funnel-section funnel-section-light" style="background: white;">
-    <div class="funnel-container" style="display: grid; grid-template-columns: 1fr; gap: 24px;">
       
-      <style>
-        @media(min-width: 1024px) {
-          .combined-section-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-      </style>
-      
-      <div class="combined-section-grid" style="display: grid; gap: 24px;">
-        <!-- LEFT COLUMN: HOW IT WORKS -->
-        <div style="background: white; border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border-light);">
-          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 40px;">
-            <h2 class="section-title" style="margin: 0; text-align: left; font-size: 1.5rem;">How It Works</h2>
+      <div class="stories-slider mobile-swipeable-cards">
+        {{#each data.stories}}
+        <div class="story-card-new">
+          <div class="story-pill-badge">{{this.pill}}</div>
+          <div class="story-header-content">
+            <div>
+              <h3 class="story-title">{{this.title}}</h3>
+              <p class="story-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                {{this.location}}
+              </p>
+            </div>
+            {{#if this.image}}
+            <img src="{{this.image}}" alt="{{this.title}}" class="story-card-image">
+            {{/if}}
+          </div>
+          <p class="story-desc">{{this.desc}}</p>
+          
+          <div class="story-loss-box">
+            <div class="story-loss-label">{{this.lossLabel}}</div>
+            <div class="story-loss-amount">{{this.lossAmount}}</div>
+            <div class="story-loss-words">{{this.lossWords}}</div>
           </div>
           
-          <div class="steps-flow">
-            <!-- Horizontal Connector Line Removed -->
-            
-            <div class="step-item" style="text-align: center; z-index: 2; position: relative; min-width: 0;">
-              <div style="width: 32px; height: 32px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: bold; font-size: 0.9rem;">1</div>
-              <div style="margin-bottom: 12px;">
-                <svg width="32" height="32" fill="#10B981" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto;" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              </div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-surface-dark); margin-bottom: 12px; line-height: 1.3;">Start on WhatsApp</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Answer a few simple questions about your hospital</div>
-              <div style="position: absolute; right: -20px; top: 10px; color: var(--color-surface-dark); font-size: 1.6rem; font-weight: 800;">→</div>
-            </div>
-
-            <div class="step-item" style="text-align: center; z-index: 2; position: relative; min-width: 0;">
-              <div style="width: 32px; height: 32px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: bold; font-size: 0.9rem;">2</div>
-              <div style="color: #1B2B4C; margin-bottom: 12px;">
-                <svg width="32" height="32" fill="none" stroke="#1B2B4C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;" viewBox="0 0 24 24">
-                  <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-                  <path d="M8 16V8l4 8V8" stroke-width="1.5"/>
-                  <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>
-                </svg>
-              </div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-surface-dark); margin-bottom: 12px; line-height: 1.3;">AI Analyzes Risks</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Our AI evaluate your responses across key risk areas</div>
-              <div style="position: absolute; right: -20px; top: 10px; color: var(--color-surface-dark); font-size: 1.6rem; font-weight: 800;">→</div>
-            </div>
-
-            <div class="step-item" style="text-align: center; z-index: 2; position: relative; min-width: 0;">
-              <div style="width: 32px; height: 32px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: bold; font-size: 0.9rem;">3</div>
-              <div style="color: #1B2B4C; margin-bottom: 12px;">
-                <svg width="32" height="32" fill="none" stroke="#1B2B4C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;" viewBox="0 0 24 24">
-                  <path d="M3.34 19a10 10 0 1 1 17.32 0"/>
-                  <circle cx="12" cy="14" r="2" fill="#1B2B4C"/>
-                  <path d="m12 14 4-4"/>
-                </svg>
-              </div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-surface-dark); margin-bottom: 12px; line-height: 1.3;">Get your risk score</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Receive your score on financial exposure instantly</div>
-              <div style="position: absolute; right: -20px; top: 10px; color: var(--color-surface-dark); font-size: 1.6rem; font-weight: 800;">→</div>
-            </div>
-
-            <div class="step-item" style="text-align: center; z-index: 2; position: relative; min-width: 0;">
-              <div style="width: 32px; height: 32px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: bold; font-size: 0.9rem;">4</div>
-              <div style="color: #1B2B4C; margin-bottom: 12px;">
-                <svg width="32" height="32" fill="none" stroke="#1B2B4C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;" viewBox="0 0 24 24">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h5"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <path d="M20 10v2"/>
-                  <path d="M16 22c3-1.5 4-4.5 4-7v-3l-4-1.5-4 1.5v3c0 2.5 1 5.5 4 7z" fill="white"/>
-                  <path d="M8 13h4"/>
-                  <path d="M8 17h3"/>
-                </svg>
-              </div>
-              <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-surface-dark); margin-bottom: 12px; line-height: 1.3;">Receive your report</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Get a personalized risk reports with actionable recommendations</div>
-              <div style="position: absolute; right: -20px; top: 10px; color: var(--color-surface-dark); font-size: 1.6rem; font-weight: 800;">→</div>
-            </div>
-
-
-            
-          </div>
-        </div>
-
-        <!-- RIGHT COLUMN: TRUSTED LEADERS -->
-        <div class="hide-on-mobile" style="background: white; border-radius: var(--radius-lg); padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border-light); display: flex; flex-direction: column;">
-          <h2 class="section-title" style="margin: 0 0 40px 0; text-align: left; font-size: 1.5rem;">{{data.trustedByTitle}}</h2>
-          
-          <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-            {{#each data.hero.metrics}}
-            <div style="text-align: center; flex: 1; padding: 0 4px;">
-              <div style="font-size: 1.5rem; margin-bottom: 12px; display: flex; justify-content: center;">{{{this.icon}}}</div>
-              <div style="font-weight: 800; font-size: 1.35rem; color: var(--color-surface-dark); margin-bottom: 8px;">{{this.value}}</div>
-              <div style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.4;">{{{this.label}}}</div>
-            </div>
-            {{/each}}
-          </div>
-
-          <div style="display: flex; gap: 24px; align-items: flex-start; margin-top: auto;">
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0;">
-              <div style="width: 80px; height: 80px; border-radius: 50%; background: #eee; overflow: hidden;">
-                <img src="https://ui-avatars.com/api/?name=Aisha+Bello&background=0D8ABC&color=fff&size=160" style="width: 100%; height: 100%; object-fit: cover;">
-              </div>
-              <div style="color: #F5A623; font-size: 1.1rem; letter-spacing: 2px;">★★★★★</div>
-            </div>
-            <div style="flex: 1;">
-              <div style="font-size: 1.05rem; font-style: italic; line-height: 1.6; color: var(--text-main); margin-bottom: 12px;">
-                "{{data.testimonial.quote}}"
-              </div>
-              <div style="font-size: 1.1rem; font-weight: 700; color: var(--color-surface-dark); white-space: nowrap;">
-                {{data.testimonial.author}}, <span style="color: var(--text-muted);">{{data.testimonial.role}}</span>
-              </div>
+          <div class="key-lesson-box">
+            <div class="kl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
+            <div class="kl-content">
+              <strong>{{this.lessonTitle}}:</strong> {{this.lessonDesc}}
             </div>
           </div>
         </div>
-
+        {{/each}}
       </div>
-    </div>
-  </section>
-
-  <!-- 9 & 10. REPORT PREVIEW & ADVANTAGE (TWO-COLUMN) -->
-  <section id="sample" class="funnel-section funnel-section-light">
-    <div class="funnel-container">
-      <style>
-        .report-advantage-grid {
-          display: grid;
-          gap: 24px;
-        }
-        .rp-score-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 16px;
-        }
-        .cta-banner-container {
-          background: #071739;
-          border-radius: 8px;
-          padding: 24px 16px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 24px;
-          text-align: center;
-        }
-        .cta-banner-middle {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 16px;
-          width: 100%;
-        }
-        .cta-banner-icons {
-          display: flex;
-          gap: 16px;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-        .cta-banner-right {
-          flex-shrink: 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-        }
-        .rp-container, .advantage-container {
-          padding: 20px !important;
-        }
-        @media(min-width: 1024px) {
-          .report-advantage-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-          .rp-score-grid {
-            grid-template-columns: 2fr 3fr;
-          }
-          .cta-banner-container {
-            flex-direction: row;
-            justify-content: space-between;
-            padding: 24px 32px;
-            text-align: left;
-          }
-          .cta-banner-middle {
-            align-items: flex-start;
-            min-width: 350px;
-            width: auto;
-          }
-          .cta-banner-icons {
-            gap: 24px;
-            justify-content: flex-start;
-          }
-          .cta-banner-right {
-            width: auto;
-            min-width: 280px;
-          }
-          .rp-container, .advantage-container {
-            padding: 32px !important;
-          }
-        }
-      </style>
       
-      <div class="report-advantage-grid">
-        <!-- LEFT COLUMN: REPORT PREVIEW -->
-        <div class="rp-container" style="background: white; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
-            <h2 class="section-title" style="margin: 0; font-size: 1.25rem; color: #1B2B4C;">Your Personalized Risk Report Preview</h2>
-          </div>
-          
-          <div class="rp-score-grid">
-            <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 32px 24px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-               <div class="rp-title" style="font-size: 0.95rem; font-weight: 800; color: #1B2B4C; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">{{data.preview.scoreTitle}}</div>
-               <div class="rp-score-val" style="font-size: 4rem; margin: 24px 0; color: #1B2B4C; font-weight: 800; line-height: 1;">{{data.preview.score}}<span class="rp-score-sub" style="font-size: 1.75rem; color: var(--text-muted); font-weight: 600;">/100</span></div>
-               <div class="rp-risk-level" style="color: #F5A623; font-weight: 900; font-size: 1.25rem; text-transform: uppercase; white-space: nowrap;">{{data.preview.riskText}}</div>
-            </div>
-            
-            <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 24px;">
-               <div class="rp-title" style="font-size: 0.9rem; font-weight: 800; margin-bottom: 16px; color: #1B2B4C; text-transform: uppercase; letter-spacing: 0.5px;">Top Risk Areas</div>
-               <div class="rp-list" style="display: flex; flex-direction: column; gap: 12px;">
-                 {{#each data.preview.topRisks}}
-                 <div class="rp-item" style="display: flex; justify-content: space-between; font-size: 0.85rem; align-items: center;">
-                   <div style="display: flex; gap: 8px; align-items: flex-start; color: #1B2B4C;">
-                     <div style="width: 16px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; padding-top: 2px;">
-                       {{#if this.icon}}
-                         {{{this.icon}}}
-                       {{else}}
-                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                       {{/if}}
-                     </div>
-                     <span style="line-height: 1.4;">{{this.name}}</span>
-                   </div>
-                   <div style="color: {{this.color}}; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-shrink: 0;"><span class="rp-dot" style="background: {{this.color}}; width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0;"></span> {{this.level}}</div>
-                 </div>
-                 {{/each}}
-               </div>
-            </div>
-
-            <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 24px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-              <div class="rp-title" style="font-size: 0.9rem; font-weight: 800; color: #1B2B4C; text-transform: uppercase; letter-spacing: 0.5px;">Protection Gap Score</div>
-              <div class="rp-score-val" style="font-size: 2.5rem; margin: 12px 0; color: #1B2B4C; font-weight: 800; line-height: 1;">{{data.preview.gapScore}}<span class="rp-score-sub" style="font-size: 1.2rem; color: var(--text-muted); font-weight: 600;">/100</span></div>
-              <div style="background: #E5E7EB; height: 4px; border-radius: 2px; width: 80%; margin: 0 auto 16px; position: relative;"><div style="position: absolute; left: 0; top: 0; height: 100%; width: {{data.preview.gapScore}}%; background: #F5A623; border-radius: 2px;"></div></div>
-              <p style="font-size: 0.8rem; color: #1B2B4C; line-height: 1.4;">You have protection gaps<br>that need attention.</p>
-            </div>
-
-            <div style="border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 24px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-              <div class="rp-title" style="font-size: 0.85rem; font-weight: 800; margin-bottom: 12px; color: #1B2B4C; text-transform: uppercase; letter-spacing: 0.5px;">Estimated Financial Exposure</div>
-              <div class="rp-score-val" style="font-size: 1.75rem; font-weight: 800; color: #1B2B4C; margin-bottom: 16px; letter-spacing: -0.5px;">₦{{data.preview.exposure}}</div>
-              <p style="font-size: 0.8rem; color: #1B2B4C; line-height: 1.4;">Potential financial impact from<br>uninsured risks.</p>
-            </div>
-          </div>
-          
-          <div style="display: flex; justify-content: space-between; margin-top: 24px; font-size: 0.75rem; color: var(--text-muted);">
-            <div>Report Generated: May 20, 2025</div>
-            <div>Report ID: CS8-78492</div>
-          </div>
-        </div>
-
-        <!-- RIGHT COLUMN: ADVANTAGE TABLE -->
-        <div class="advantage-col hide-on-mobile" style="background: white; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-            <h2 class="section-title" style="margin: 0; font-size: 1.25rem; color: #1B2B4C; text-transform: uppercase;">THE COVERSCORE ADVANTAGE</h2>
-          </div>
-          <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 24px; text-align: left;">See how we go beyond traditional approaches.</p>
-          
-          <div class="compare-table" style="background: #ffffff; border-radius: var(--radius-md); border: 1px solid var(--border-light); overflow: hidden;">
-            <div class="compare-row compare-header" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; font-weight: 700; font-size: 0.9rem; border-bottom: 1px solid var(--border-light); background: #F8FAFC;">
-              <div style="text-align: left; color: #1B2B4C;">Traditional Approach</div>
-              <div style="text-align: left; color: #1B2B4C;">CoverScore Approach</div>
-            </div>
-            
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">Generic Risk Assessment</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> AI-Powered Risk Intelligence</div>
-            </div>
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">Reactive Problem Solving</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Proactive Risk Planning</div>
-            </div>
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">One-Size-Fits-All Advice</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Personalized Recommendations</div>
-            </div>
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">Focus on Insurance Only</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Holistic Risk Protection</div>
-            </div>
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">No Financial Impact Analysis</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Financial Exposure Analysis</div>
-            </div>
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; border-bottom: 1px solid var(--border-light); font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">Basic Reporting</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Actionable Risk Report</div>
-            </div>
-            <div class="compare-row" style="display: grid; grid-template-columns: 1fr 1fr; padding: 12px 12px; font-size: 0.85rem;">
-              <div class="compare-cell text-muted" style="padding: 0; color: var(--text-main); display: flex; align-items: center; text-align: left;">Limited Support</div>
-              <div class="compare-cell pro" style="padding: 0; background: transparent; color: #10B981; font-weight: 600; display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Expert Advisor Support</div>
-            </div>
-          </div>
+      <div class="insight-panel" style="background: white; border-radius: var(--radius-md); padding: 24px; margin-top: 24px;">
+        <div class="insight-quote" style="text-align: center; color: var(--color-surface-dark); font-size: 1.25rem; font-weight: 800; line-height: 1.4;">
+          Most incidents begin as "unlikely events."<br>
+          <span style="color: #ef4444;">Until they happen.</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 7. FAQ SECTION -->
-  <section class="funnel-section funnel-section-light faq-section">
+  <!-- 7. HOW IT WORKS -->
+  <section class="funnel-section section-how-it-works">
     <div class="funnel-container">
-      <h2 class="section-title text-center" style="margin-bottom: 32px; font-size: 1.5rem;">Frequently Asked Questions</h2>
-      <div class="faq-list">
+      <div class="section-header">
+        <h2 class="section-title">Simple Process.<br>Powerful Results.</h2>
+      </div>
+      
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        {{#each data.howItWorks}}
+        <div class="timeline-step">
+          <div class="timeline-icon-box">
+            {{{this.icon}}}
+          </div>
+          <div class="timeline-content">
+            <div class="step-num">Step {{this.number}}</div>
+            <h3 class="step-title">{{this.title}}</h3>
+            <p class="step-desc">{{{this.desc}}}</p>
+          </div>
+          <div class="timeline-badge">
+            <div class="badge-icon">{{{this.badgeIcon}}}</div>
+            <div class="badge-text">{{{this.badgeText}}}</div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      
+      <div class="hiw-result-banner">
+        <strong>The Result?</strong> You get total clarity on your hospital's true risk exposure.
+      </div>
+      
+      <div class="green-cta-block">
+        <h3 style="color: white; font-size: 1.25rem; margin-bottom: 16px; font-weight: 800; text-align: center;">Discover Your Hospital's Hidden Risks</h3>
+        <a href="/start-whatsapp?text={{trigger}}" class="btn-primary" style="width: 100%; display: block; text-align: center; background: white; color: #10B981;">
+          Get My Hospital Risk Score
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. SAMPLE RISK SCORE -->
+  <section class="funnel-section section-sample-score">
+    <div class="funnel-container">
+      <div class="section-header">
+        <h2 class="section-title">See the Clarity.<br>Before You Get Yours.</h2>
+      </div>
+      
+      <div class="sample-score-card">
+        <div class="ss-top-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          {{data.preview.scoreTitle}}
+        </div>
+        <h3 class="ss-headline">{{data.preview.scoreSubTitle}}</h3>
+        
+        <div class="ss-gauge-container">
+          <div class="ss-gauge-value">{{data.preview.score}}<span>/100</span></div>
+          <div class="ss-gauge-label">{{data.preview.riskText}}</div>
+        </div>
+        
+        <div class="ss-warning-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          {{data.preview.warning}}
+        </div>
+        
+        <h4 class="ss-sub-title">KEY RISK AREAS</h4>
+        <div class="ss-risk-bars">
+          {{#each data.preview.topRisks}}
+          <div class="risk-bar-item">
+            <div class="risk-bar-header">
+              <div class="rb-name">{{{this.icon}}} {{this.name}}</div>
+              <div class="rb-level" style="color: {{this.color}}">{{this.level}}</div>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" style="width: {{this.percent}}; background-color: {{this.color}};"></div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        
+        <div class="ss-lock-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          {{data.preview.lockText}}
+        </div>
+      </div>
+      
+      <div class="what-this-means-box">
+        <h4>What This Means For You</h4>
+        <p>A score of {{data.preview.score}} means you have significant vulnerabilities that could lead to financial loss or compliance issues if not addressed immediately.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FAQ SECTION -->
+  <section class="funnel-section section-faq">
+    <div class="funnel-container">
+      <div class="section-header">
+        <h2 class="section-title">Questions?<br>We've Got Answers.</h2>
+      </div>
+      <div class="faq-accordion-list">
         {{#each data.faq}}
-        <div class="faq-item" onclick="this.classList.toggle('open')">
-          <button class="faq-question" type="button">{{this.q}}</button>
-          <div class="faq-answer">
+        <div class="faq-accordion-item" onclick="this.classList.toggle('open')">
+          <button class="faq-question-btn" type="button">
+            {{this.q}}
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="faq-answer-content">
             <div class="faq-answer-inner">{{this.a}}</div>
           </div>
         </div>
         {{/each}}
+      </div>
+      
+      <div class="faq-trust-bottom">
+        <div class="wc-trust-avatars" style="justify-content: center; margin-bottom: 16px;">
+          <img src="https://ui-avatars.com/api/?name=H1&background=0D8ABC&color=fff&size=160" alt="Hospital">
+          <img src="https://ui-avatars.com/api/?name=H2&background=10B981&color=fff&size=160" alt="Hospital">
+          <img src="https://ui-avatars.com/api/?name=H3&background=F5A623&color=fff&size=160" alt="Hospital">
+        </div>
+        <p style="text-align: center; color: var(--text-main); font-weight: 600;">Join 500+ Healthcare Facilities</p>
       </div>
     </div>
   </section>
