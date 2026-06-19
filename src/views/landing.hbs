@@ -717,108 +717,121 @@
   </section>
 
   <!-- 6. REAL RISK STORIES -->
-  <section class="funnel-section section-risk-stories">
-    <div style="text-align: center; margin-bottom: 32px;">
-      <h2 class="section-title" style="margin: 0; font-size: 1.5rem; color: #071739;">Real Risk Stories</h2>
-      <p class="wc-subtitle" style="margin-top: 8px;">Real incidents. Real losses. Real lessons.</p>
-    </div>
-    <div class="funnel-container" style="padding: 0;">
-      
-      <!-- Top header area with progress bars -->
-      <div class="rs-header-area">
-        <div class="rs-progress-container" id="rsProgressContainer">
-          {{#each data.stories}}
-          <div class="rs-progress-bar"><div class="rs-progress-fill" id="rs-prog-{{@index}}"></div></div>
-          {{/each}}
-        </div>
-        
-        <div class="rs-header-top">
-          <div class="rs-pill">REAL RISK STORIES™</div>
-          <button class="rs-pause-btn" id="rsPauseBtn">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-          </button>
-        </div>
-        
-        <div class="rs-slide-indicator" id="rsSlideIndicator">
-          <span class="rs-current">1</span> OF <span class="rs-total">{{data.stories.length}}</span>
-        </div>
-        <div class="rs-subtitle">Real incidents. Real losses. Real lessons.</div>
+  <section class="funnel-section section-risk-stories" style="background: #fafafa; padding: 40px 16px;">
+    
+    <!-- Top Pill & Header -->
+    <div style="text-align: center; margin-bottom: 24px;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: #ecfdf5; color: #10b981; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; margin-bottom: 16px; letter-spacing: 0.5px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg> 
+        REAL RISK STORIES™
       </div>
+      <h2 class="section-title" style="margin: 0; font-size: 2.5rem; color: #0f172a; line-height: 1.1;">Real Incidents.<br><span style="color: #10B981;">Real Impact.</span></h2>
+      <p style="margin-top: 12px; color: #475569; font-size: 1rem; line-height: 1.5; font-weight: 500;">Actual events. Real losses.<br>Lessons every hospital should learn.</p>
+    </div>
 
+    <div class="funnel-container" style="padding: 0; background: transparent; box-shadow: none; overflow: visible;">
+      
       <!-- The Carousel -->
-      <div class="rs-carousel-wrapper">
+      <div class="rs-carousel-wrapper" style="position: relative;">
+        <!-- Left/Right Nav Arrows (Absolute outside slider) -->
+        <button class="rs-nav-btn prev" id="rsPrevBtn" style="position: absolute; left: -16px; top: 40%; transform: translateY(-50%); width: 44px; height: 44px; background: white; border: 1px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #10b981; box-shadow: 0 4px 12px rgba(0,0,0,0.05); z-index: 10; cursor: pointer;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="rs-nav-btn next" id="rsNextBtn" style="position: absolute; right: -16px; top: 40%; transform: translateY(-50%); width: 44px; height: 44px; background: white; border: 1px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #10b981; box-shadow: 0 4px 12px rgba(0,0,0,0.05); z-index: 10; cursor: pointer;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
         
-        <div class="rs-slider" id="rsSlider">
+        <div class="rs-slider" id="rsSlider" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;">
           {{#each data.stories}}
-          <div class="rs-slide" data-index="{{@index}}">
-            <div class="rs-card">
-              <div class="rs-card-header">
-                <div class="rs-card-text">
-                  <!-- Top Pill moved inside left column -->
-                  <div class="rs-card-pill theme-{{this.pillTheme}}">
-                    <span class="rs-pill-icon">{{{this.pillIcon}}}</span> {{this.pill}}
+          <div class="rs-slide" style="min-width: 100%; flex: 0 0 100%; scroll-snap-align: center; padding: 0; box-sizing: border-box;">
+            <!-- White Card with Shadow -->
+            <div class="rs-card" style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #f8fafc;">
+              
+              <div style="display: flex; gap: 16px;">
+                <div style="flex: 1;">
+                  <!-- Theme Pill -->
+                  <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; background: #fef2f2; color: #dc2626;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    {{this.pill}}
                   </div>
-                  <h3 class="rs-card-title">{{this.title}}</h3>
-                  <div class="rs-card-location">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    {{this.location}}
-                  </div>
-                  <p class="rs-card-desc">{{this.desc}}</p>
+                  <h3 style="font-size: 1.3rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0; line-height: 1.3;">{{this.title}}</h3>
+                  <div style="font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 16px;">{{this.location}}</div>
+                  <p style="font-size: 0.85rem; color: #475569; line-height: 1.5; margin: 0;">{{this.desc}}</p>
                 </div>
+                
                 {{#if this.image}}
-                <div class="rs-card-image-wrapper">
-                  <img src="{{this.image}}" alt="{{this.title}}" class="rs-card-image">
+                <div style="width: 130px; flex-shrink: 0; border-radius: 12px; overflow: hidden; position: relative;">
+                  <img src="{{this.image}}" alt="{{this.title}}" style="width: 100%; height: 100%; object-fit: cover;">
                   {{#if this.date}}
-                  <div class="rs-date-badge">{{this.date}}</div>
+                  <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 600;">{{this.date}}</div>
                   {{/if}}
                 </div>
                 {{/if}}
               </div>
 
+              <div style="height: 1px; background: #f1f5f9; margin: 24px 0;"></div>
+
               <!-- Financial Impact -->
-              <div class="rs-loss-box">
-                <div class="rs-loss-label">{{this.lossLabel}}</div>
-                <div class="rs-loss-amount">{{this.lossAmount}}</div>
-                <div class="rs-loss-words">{{{this.lossWords}}}</div>
+              <div>
+                <div style="font-size: 0.75rem; color: #64748b; font-weight: 700; margin-bottom: 4px; text-transform: uppercase;">{{this.lossLabel}}</div>
+                <div style="font-size: 2.2rem; color: #b91c1c; font-weight: 900; letter-spacing: -1px; line-height: 1;">{{this.lossAmount}}</div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">{{{this.lossWords}}}</div>
               </div>
 
               <!-- Key Lesson -->
-              <div class="rs-lesson-box theme-{{this.lessonTheme}}">
-                <div class="rs-lesson-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+              <div style="background: #fef2f2; border-radius: 12px; padding: 16px; display: flex; gap: 12px; margin-top: 20px;">
+                <div style="color: #dc2626;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
                 </div>
-                <div class="rs-lesson-content">
-                  <div class="rs-lesson-title">{{this.lessonTitle}}</div>
-                  <div class="rs-lesson-desc">{{this.lessonDesc}}</div>
+                <div>
+                  <div style="color: #dc2626; font-weight: 700; font-size: 0.85rem;">Key Lesson</div>
+                  <div style="color: #0f172a; font-size: 0.85rem; font-weight: 500; line-height: 1.4; margin-top: 4px;">{{this.lessonDesc}}</div>
                 </div>
               </div>
 
-              <!-- Trust Banner (Inside slide so it changes) -->
-              <div class="rs-trust-box">
-                <div class="rs-trust-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
-                </div>
-                <div class="rs-trust-text">
-                  <div class="rs-trust-line1">{{this.trustLine1}}</div>
-                  <div class="rs-trust-line2">{{{this.trustLine2}}}</div>
-                </div>
+              <!-- Pagination Dots inside the card at bottom -->
+              <div class="rs-pagination" style="display: flex; justify-content: center; gap: 6px; margin-top: 24px;" id="rsDots-{{@index}}">
+                {{#each ../data.stories}}
+                <div class="rs-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; transition: background 0.3s;"></div>
+                {{/each}}
               </div>
+
             </div>
           </div>
           {{/each}}
         </div>
       </div>
 
-      <!-- CTA (Fixed below slider) -->
-      <div class="rs-cta-container">
-
-        <div class="rs-trust-footer">
-          <div class="rs-footer-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 100% Secure</div>
-          <div class="rs-footer-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg> Private & Confidential</div>
-          <div class="rs-footer-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Takes Less Than 5 Minutes</div>
+      <!-- Trust Box (Static below carousel) -->
+      <div style="background: #f0fdf4; border-radius: 12px; padding: 16px; display: flex; gap: 16px; margin-top: 24px; align-items: flex-start; border: 1px solid #dcfce7;">
+        <div style="color: #10b981; margin-top: 2px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div style="font-size: 0.95rem; color: #064e3b; line-height: 1.5;">
+          <strong style="color: #10b981;">500+</strong> facilities assessed.<br>
+          Thousands of risks uncovered.<br>
+          Don't wait for an incident to find yours.
         </div>
       </div>
-      
+
+      <!-- CTA Button -->
+      <a href="/start-whatsapp?text={{trigger}}" style="background: #10b981; border-radius: 12px; padding: 16px; display: flex; gap: 16px; color: white; text-decoration: none; align-items: center; justify-content: center; margin-top: 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <div>
+          <div style="font-size: 1.1rem; font-weight: 700;">Get My Hospital Risk Score</div>
+          <div style="font-size: 0.85rem; font-weight: 500;">Find risks before they find you.</div>
+        </div>
+      </a>
+
+      <!-- Footer Elements -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 20px; font-size: 0.65rem; color: #475569; font-weight: 600;">
+        <div style="display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 100% Secure</div>
+        <div style="width: 1px; height: 10px; background: #cbd5e1;"></div>
+        <div style="display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg> Private & Confidential</div>
+        <div style="width: 1px; height: 10px; background: #cbd5e1;"></div>
+        <div style="display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Takes Less Than 5 Minutes</div>
+      </div>
+
     </div>
   </section>
 
@@ -1262,41 +1275,25 @@
   const rsSlider = document.getElementById('rsSlider');
   const rsPrevBtn = document.getElementById('rsPrevBtn');
   const rsNextBtn = document.getElementById('rsNextBtn');
-  const rsPauseBtn = document.getElementById('rsPauseBtn');
-  const rsCurrent = document.querySelector('.rs-current');
   const rsSlides = document.querySelectorAll('.rs-slide');
-  const rsProgressFills = document.querySelectorAll('.rs-progress-fill');
 
   if (rsSlider && rsSlides.length > 0) {
     let currentSlideIndex = 0;
     const totalSlides = rsSlides.length;
     let autoAdvanceTimer = null;
     const SLIDE_DURATION = 6000;
-    let isPaused = false;
-    let startTime = 0;
-    let remainingTime = SLIDE_DURATION;
 
     function updateCarouselUI() {
-      if(rsCurrent) rsCurrent.textContent = currentSlideIndex + 1;
-      
-      rsProgressFills.forEach((fill, index) => {
-        fill.style.transition = 'none';
-        if (index < currentSlideIndex) {
-          fill.style.width = '100%';
-        } else {
-          fill.style.width = '0%';
-        }
+      // Update pagination dots in all slides
+      document.querySelectorAll('.rs-pagination').forEach((pag) => {
+        pag.querySelectorAll('.rs-dot').forEach((dot, dIdx) => {
+          if(dIdx === currentSlideIndex) {
+            dot.style.background = '#10b981';
+          } else {
+            dot.style.background = '#e2e8f0';
+          }
+        });
       });
-      
-      if (!isPaused) {
-        const currentFill = document.getElementById(`rs-prog-${currentSlideIndex}`);
-        if (currentFill) {
-          setTimeout(() => {
-            currentFill.style.transition = `width ${remainingTime}ms linear`;
-            currentFill.style.width = '100%';
-          }, 50);
-        }
-      }
     }
 
     function goToSlide(index) {
@@ -1310,7 +1307,6 @@
         behavior: 'smooth'
       });
       
-      remainingTime = SLIDE_DURATION;
       updateCarouselUI();
       resetAutoAdvance();
     }
@@ -1319,47 +1315,18 @@
     function prevSlide() { goToSlide(currentSlideIndex - 1); }
 
     function startAutoAdvance() {
-      if (isPaused) return;
-      startTime = Date.now();
       autoAdvanceTimer = setTimeout(() => {
         nextSlide();
-      }, remainingTime);
-    }
-
-    function pauseAutoAdvance() {
-      isPaused = true;
-      clearTimeout(autoAdvanceTimer);
-      remainingTime -= (Date.now() - startTime);
-      if (rsPauseBtn) rsPauseBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>';
-      
-      const currentFill = document.getElementById(`rs-prog-${currentSlideIndex}`);
-      if (currentFill) {
-        currentFill.style.transition = 'none';
-        const percent = Math.min(100, Math.max(0, 100 - ((remainingTime / SLIDE_DURATION) * 100)));
-        currentFill.style.width = `${percent}%`;
-      }
-    }
-
-    function resumeAutoAdvance() {
-      isPaused = false;
-      if (rsPauseBtn) rsPauseBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
-      updateCarouselUI();
-      startAutoAdvance();
-    }
-
-    function togglePause() {
-      if (isPaused) resumeAutoAdvance();
-      else pauseAutoAdvance();
+      }, SLIDE_DURATION);
     }
 
     function resetAutoAdvance() {
       clearTimeout(autoAdvanceTimer);
-      if (!isPaused) startAutoAdvance();
+      startAutoAdvance();
     }
 
     if(rsNextBtn) rsNextBtn.addEventListener('click', nextSlide);
     if(rsPrevBtn) rsPrevBtn.addEventListener('click', prevSlide);
-    if(rsPauseBtn) rsPauseBtn.addEventListener('click', togglePause);
     
     let scrollTimeout;
     rsSlider.addEventListener('scroll', () => {
@@ -1371,7 +1338,6 @@
         
         if (newIndex !== currentSlideIndex) {
           currentSlideIndex = newIndex;
-          remainingTime = SLIDE_DURATION;
           updateCarouselUI();
           resetAutoAdvance();
         }
