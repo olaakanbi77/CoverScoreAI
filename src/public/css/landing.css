@@ -3188,13 +3188,18 @@ p { margin: 0; }
   .hiw-result-text { text-align: left !important; }
   .hiw-result-icon-right { display: flex !important; align-items: center !important; }
   .hiw-result-icon-right svg { width: 20px !important; height: 18px !important; }
-  .hiw-result-title { font-size: 0.85rem !important; }
-  .hiw-result-sub { font-size: 0.7rem !important; margin-bottom: 0 !important; }
-  .hiw-result-desc { font-size: 0.55rem !important; line-height: 1.1 !important; }
+  .hiw-result-title { font-size: 0.75rem !important; }
+  .hiw-result-sub { font-size: 0.6rem !important; margin-bottom: 0 !important; letter-spacing: -0.2px !important; }
+  .hiw-result-desc { font-size: 0.45rem !important; line-height: 1.1 !important; }
   .hiw-result-br { display: none !important; }
   
-  /* Mobile CTA spacing */
+  /* Mobile CTA spacing and sub text */
   .hero-mobile-cta { margin-top: 8px !important; padding: 10px 14px !important; }
+  .hero-mobile-cta-sub { font-size: 0.65rem !important; }
+  
+  /* Footer badges for mobile */
+  .hiw-badges-list { font-size: 0.55rem !important; gap: 6px !important; margin-top: 10px !important; }
+  .hiw-badges-list svg { width: 10px !important; height: 10px !important; }
   
   /* Trust Box Single Line */
   .hiw-trust-box { padding-top: 6px !important; margin-top: 6px !important; gap: 4px !important; flex-wrap: nowrap !important; }

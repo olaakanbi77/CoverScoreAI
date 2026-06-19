@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=84">
+  <link rel="stylesheet" href="/css/landing.css?v=86">
 </head>
 <body style="padding-bottom: 72px;">
 
@@ -930,14 +930,14 @@
           <div class="hero-mobile-cta-title">
             {{#if data.hero.mobileCta}}{{data.hero.mobileCta}}{{else}}Get My Hospital Risk Score{{/if}}
           </div>
-          <div class="hero-mobile-cta-sub">
-            {{#if data.hero.mobileCtaSub}}{{data.hero.mobileCtaSub}}{{else}}Takes Less Than 5 Minutes{{/if}}
+          <div class="hero-mobile-cta-sub" style="white-space: nowrap;">
+            Start now. It's fast, secure &amp; free.
           </div>
         </div>
       </a>
       
       <!-- Footer Badges List -->
-      <div class="hide-on-mobile" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; font-size: 0.75rem; color: #1e293b; font-weight: 600;">
+      <div class="hiw-badges-list" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; font-size: 0.75rem; color: #1e293b; font-weight: 600;">
         <div style="display: flex; align-items: center; gap: 6px; color: #16a34a;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" fill="none" stroke-width="2"></path></svg> 
           <span style="color: #1e293b;">100% Secure</span>
@@ -949,12 +949,12 @@
       </div>
       
       <!-- Bottom Trust Box -->
-      <div class="hiw-trust-box" style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; border-top: 1px solid #f1f5f9; margin-top: 32px; padding-top: 24px; gap: 24px;">
-        <div class="hiw-trust-item" style="display: flex; align-items: center; gap: 8px;">
+      <div class="hiw-trust-box" style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; margin-top: 16px; padding-top: 16px; gap: 12px;">
+        <div class="hiw-trust-item" style="display: flex; align-items: center; gap: 8px; border-right: 1px solid #e2e8f0; padding-right: 12px;">
           <div class="hiw-trust-icon" style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
           <div class="hiw-trust-text" style="font-size: 0.75rem; font-weight: 700; color: #1e293b; line-height: 1.3;">Trusted by 500+<br>Healthcare Facilities</div>
         </div>
-        <div class="hiw-trust-item" style="display: flex; align-items: center; gap: 8px;">
+        <div class="hiw-trust-item" style="display: flex; align-items: center; gap: 8px; border-right: 1px solid #e2e8f0; padding-right: 12px;">
           <div class="hiw-trust-icon" style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
           <div class="hiw-trust-text" style="font-size: 0.75rem; font-weight: 700; color: #1e293b; line-height: 1.3;">100% Secure<br>& Confidential</div>
         </div>
