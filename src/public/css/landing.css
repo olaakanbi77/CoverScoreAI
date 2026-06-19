@@ -3156,11 +3156,23 @@ p { margin: 0; }
 
 /* How It Works Mobile Responsiveness */
 @media (max-width: 768px) {
-  .hiw-step { margin-bottom: 8px !important; }
+  /* Timeline fixes */
+  .hiw-timeline-line { display: none !important; }
+  .hiw-timeline { padding-left: 0 !important; }
+  .hiw-step-circle { display: none !important; }
+  .hiw-mobile-number { display: inline !important; }
+  .hiw-step { gap: 0 !important; margin-bottom: 8px !important; }
   
-  /* Trust Box Single Line */
-  .hiw-trust-item { flex-direction: column !important; text-align: center !important; gap: 4px !important; }
-  .hiw-trust-text { font-size: 0.6rem !important; }
+  /* Shrink elements inside the card */
+  .hiw-card { padding: 12px 10px !important; gap: 8px !important; }
+  .hiw-step-icon { width: 36px !important; height: 36px !important; }
+  .hiw-step-icon svg { width: 20px; height: 20px; }
+  .hiw-card-text { font-size: 0.85rem !important; }
+  .hiw-card-text > div:first-child { font-size: 0.95rem !important; margin-bottom: 2px !important; }
+  .hiw-card-text > div:last-child { font-size: 0.75rem !important; line-height: 1.3 !important; }
+  .hiw-right-badge { width: 48px !important; height: 48px !important; }
+  .hiw-badge-icon-wrap { transform: scale(0.65) !important; margin-bottom: 0 !important; }
+  .hiw-badge-text { font-size: 0.45rem !important; letter-spacing: -0.5px !important; }
   
   /* Result Box Single Line */
   .hiw-result-box { padding: 16px 12px !important; gap: 8px !important; flex-wrap: nowrap !important; }
@@ -3170,21 +3182,11 @@ p { margin: 0; }
   .hiw-result-title { font-size: 0.9rem !important; }
   .hiw-result-sub { font-size: 0.75rem !important; }
   .hiw-result-desc { font-size: 0.6rem !important; }
+  .hiw-result-br { display: none !important; }
   
-  /* Shrink elements inside the card to prevent column crush without wrapping */
-  .hiw-card { padding: 12px 10px !important; gap: 8px !important; }
-  
-  /* Shrink Left Icon */
-  .hiw-step-icon { width: 36px !important; height: 36px !important; }
-  .hiw-step-icon svg { width: 20px; height: 20px; }
-  
-  /* Shrink Middle Text */
-  .hiw-card-text { font-size: 0.85rem !important; }
-  .hiw-card-text > div:first-child { font-size: 0.95rem !important; margin-bottom: 2px !important; }
-  .hiw-card-text > div:last-child { font-size: 0.75rem !important; line-height: 1.3 !important; }
-  
-  /* Shrink Right Badge */
-  .hiw-right-badge { width: 48px !important; height: 48px !important; }
-  .hiw-badge-icon-wrap { transform: scale(0.65) !important; margin-bottom: 0 !important; }
-  .hiw-badge-text { font-size: 0.45rem !important; letter-spacing: -0.5px !important; }
+  /* Trust Box Single Line */
+  .hiw-trust-box { padding-top: 16px !important; margin-top: 24px !important; gap: 8px !important; flex-wrap: nowrap !important; }
+  .hiw-trust-item { flex-direction: column !important; text-align: center !important; gap: 4px !important; flex: 1 !important; justify-content: flex-start !important; }
+  .hiw-trust-icon svg { width: 20px !important; height: 20px !important; }
+  .hiw-trust-text { font-size: 0.6rem !important; line-height: 1.2 !important; }
 }
