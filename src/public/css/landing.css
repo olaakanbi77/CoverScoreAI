@@ -972,12 +972,12 @@ p { margin: 0; }
   .hero-trust-icon-item {
     gap: 4px;
     padding: 0 4px;
-    font-size: 0.65rem;
+    font-size: 0.55rem;
   }
 
   .hero-trust-icon-item svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   .hero-trust-icon-sep {
