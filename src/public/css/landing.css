@@ -2987,8 +2987,8 @@ p { margin: 0; }
   color: #4b5563;
   line-height: 1.5;
   margin: 0;
-}
 .rs-card-image-wrapper {
+  display: none;
   flex: 0 0 130px;
   min-height: 180px;
   border-radius: 12px;
