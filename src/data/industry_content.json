@@ -77,39 +77,55 @@
     "stories": [
       {
         "pill": "FIRE INCIDENT",
+        "pillTheme": "red",
+        "pillIcon": "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg>",
         "image": "/images/story-fire.jpg",
+        "date": "Jan 2024",
         "title": "Electrical Fire in Hospital Ward",
         "location": "Lagos, Nigeria",
         "desc": "A short circuit led to a fire outbreak, damaging critical equipment and disrupting operations.",
         "lossLabel": "TOTAL FINANCIAL IMPACT",
         "lossAmount": "₦127,000,000",
         "lossWords": "One hundred and twenty seven million naira",
-        "lessonTitle": "Key Lesson",
-        "lessonDesc": "Regular electrical inspections and maintenance could have prevented this costly disruption."
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Regular electrical inspections and maintenance could have prevented this costly disruption.",
+        "lessonTheme": "red",
+        "trustLine1": "500+ facilities assessed.",
+        "trustLine2": "Thousands of risks uncovered.<br>Don't wait for an incident to find yours."
       },
       {
-        "pill": "LIABILITY CLAIM",
+        "pill": "MEDICAL NEGLIGENCE",
+        "pillTheme": "orange",
+        "pillIcon": "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg>",
         "image": "/images/story-liability.jpg",
-        "title": "Medical Negligence Claim",
+        "title": "Wrong Medication Administration",
         "location": "Abuja, Nigeria",
-        "desc": "A severe patient complication led to a major malpractice lawsuit and reputational damage.",
+        "desc": "A medication error led to severe complications, resulting in a patient lawsuit and settlement.",
         "lossLabel": "TOTAL FINANCIAL IMPACT",
         "lossAmount": "₦120,000,000",
         "lossWords": "One hundred and twenty million naira",
-        "lessonTitle": "Key Lesson",
-        "lessonDesc": "Strict adherence to clinical protocols and documentation reduces liability exposure."
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Strong medication protocols, staff training, and double-check systems can prevent costly mistakes.",
+        "lessonTheme": "orange",
+        "trustLine1": "Don't wait for an incident to find your risks.",
+        "trustLine2": "Uncover vulnerabilities before they<br>become liabilities."
       },
       {
         "pill": "EQUIPMENT FAILURE",
+        "pillTheme": "blue",
+        "pillIcon": "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\"/></svg>",
         "image": "/images/story-mri.jpg",
-        "title": "MRI Equipment Breakdown",
+        "title": "MRI Machine Breakdown",
         "location": "Port Harcourt, Nigeria",
-        "desc": "A critical MRI machine failed due to a power surge, halting diagnostics for weeks.",
+        "desc": "A sudden MRI machine failure caused cancellation of hundreds of appointments and expensive emergency repairs.",
         "lossLabel": "TOTAL FINANCIAL IMPACT",
         "lossAmount": "₦60,000,000",
-        "lossWords": "Sixty million naira",
-        "lessonTitle": "Key Lesson",
-        "lessonDesc": "Installing proper surge protection and backup systems ensures operational continuity."
+        "lossWords": "Sixty million naira<br>in losses and restoration costs.",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Preventive maintenance and service contracts reduce downtime and protect your bottom line.",
+        "lessonTheme": "orange",
+        "trustLine1": "Every risk has a cost.",
+        "trustLine2": "Know yours before it becomes<br>your loss."
       }
     ],
     "testimonial": {

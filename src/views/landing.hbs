@@ -718,52 +718,117 @@
 
   <!-- 6. REAL RISK STORIES -->
   <section class="funnel-section section-risk-stories">
-    <div class="funnel-container">
-      <div class="section-header">
-        <h2 class="section-title" style="color: white;">Real Incidents. Real Impact.</h2>
-        <p style="color: rgba(255,255,255,0.8); margin-top: 8px;">Incidents happen. Preparation makes the difference.</p>
+    <div class="funnel-container" style="padding: 0;">
+      
+      <!-- Top header area with progress bars -->
+      <div class="rs-header-area">
+        <div class="rs-progress-container" id="rsProgressContainer">
+          {{#each data.stories}}
+          <div class="rs-progress-bar"><div class="rs-progress-fill" id="rs-prog-{{@index}}"></div></div>
+          {{/each}}
+        </div>
+        
+        <div class="rs-header-top">
+          <div class="rs-pill">REAL RISK STORIES™</div>
+          <button class="rs-pause-btn" id="rsPauseBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+          </button>
+        </div>
+        
+        <div class="rs-slide-indicator" id="rsSlideIndicator">
+          <span class="rs-current">1</span> OF <span class="rs-total">{{data.stories.length}}</span>
+        </div>
+        <div class="rs-subtitle">Real incidents. Real losses. Real lessons.</div>
+      </div>
+
+      <!-- The Carousel -->
+      <div class="rs-carousel-wrapper">
+        <button class="rs-nav-btn prev" id="rsPrevBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="rs-nav-btn next" id="rsNextBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        
+        <div class="rs-slider" id="rsSlider">
+          {{#each data.stories}}
+          <div class="rs-slide" data-index="{{@index}}">
+            <div class="rs-card">
+              <!-- Top Pill & Title -->
+              <div class="rs-card-pill theme-{{this.pillTheme}}">
+                <span class="rs-pill-icon">{{{this.pillIcon}}}</span> {{this.pill}}
+              </div>
+              
+              <div class="rs-card-header">
+                <div class="rs-card-text">
+                  <h3 class="rs-card-title">{{this.title}}</h3>
+                  <div class="rs-card-location">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    {{this.location}}
+                  </div>
+                  <p class="rs-card-desc">{{this.desc}}</p>
+                </div>
+                {{#if this.image}}
+                <div class="rs-card-image-wrapper">
+                  <img src="{{this.image}}" alt="{{this.title}}" class="rs-card-image">
+                  {{#if this.date}}
+                  <div class="rs-date-badge">{{this.date}}</div>
+                  {{/if}}
+                </div>
+                {{/if}}
+              </div>
+
+              <!-- Financial Impact -->
+              <div class="rs-loss-box">
+                <div class="rs-loss-label">{{this.lossLabel}}</div>
+                <div class="rs-loss-amount">{{this.lossAmount}}</div>
+                <div class="rs-loss-words">{{{this.lossWords}}}</div>
+              </div>
+
+              <!-- Key Lesson -->
+              <div class="rs-lesson-box theme-{{this.lessonTheme}}">
+                <div class="rs-lesson-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                </div>
+                <div class="rs-lesson-content">
+                  <div class="rs-lesson-title">{{this.lessonTitle}}</div>
+                  <div class="rs-lesson-desc">{{this.lessonDesc}}</div>
+                </div>
+              </div>
+
+              <!-- Trust Banner (Inside slide so it changes) -->
+              <div class="rs-trust-box">
+                <div class="rs-trust-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                </div>
+                <div class="rs-trust-text">
+                  <div class="rs-trust-line1">{{this.trustLine1}}</div>
+                  <div class="rs-trust-line2">{{{this.trustLine2}}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <!-- CTA (Fixed below slider) -->
+      <div class="rs-cta-container">
+        <a href="/start-whatsapp?text={{trigger}}" class="rs-cta-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <div class="rs-cta-text">
+            <div class="rs-cta-main">Get My Hospital Risk Score</div>
+            <div class="rs-cta-sub">Find risks before they find you.</div>
+          </div>
+        </a>
+        
+        <div class="rs-trust-footer">
+          <div class="rs-footer-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 100% Secure</div>
+          <div class="rs-footer-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg> Private & Confidential</div>
+          <div class="rs-footer-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Takes Less Than 5 Minutes</div>
+        </div>
       </div>
       
-      <div class="stories-slider mobile-swipeable-cards">
-        {{#each data.stories}}
-        <div class="story-card-new">
-          <div class="story-pill-badge">{{this.pill}}</div>
-          <div class="story-header-content">
-            <div>
-              <h3 class="story-title">{{this.title}}</h3>
-              <p class="story-location">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{this.location}}
-              </p>
-            </div>
-            {{#if this.image}}
-            <img src="{{this.image}}" alt="{{this.title}}" class="story-card-image">
-            {{/if}}
-          </div>
-          <p class="story-desc">{{this.desc}}</p>
-          
-          <div class="story-loss-box">
-            <div class="story-loss-label">{{this.lossLabel}}</div>
-            <div class="story-loss-amount">{{this.lossAmount}}</div>
-            <div class="story-loss-words">{{this.lossWords}}</div>
-          </div>
-          
-          <div class="key-lesson-box">
-            <div class="kl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00A651" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
-            <div class="kl-content">
-              <strong>{{this.lessonTitle}}:</strong> {{this.lessonDesc}}
-            </div>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-      
-      <div class="insight-panel" style="background: white; border-radius: var(--radius-md); padding: 24px; margin-top: 24px;">
-        <div class="insight-quote" style="text-align: center; color: var(--color-surface-dark); font-size: 1.25rem; font-weight: 800; line-height: 1.4;">
-          Most incidents begin as "unlikely events."<br>
-          <span style="color: #ef4444;">Until they happen.</span>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1203,6 +1268,129 @@
         observer.observe(heroSection);
       }
     });
+  // --- REAL RISK STORIES CAROUSEL LOGIC ---
+  const rsSlider = document.getElementById('rsSlider');
+  const rsPrevBtn = document.getElementById('rsPrevBtn');
+  const rsNextBtn = document.getElementById('rsNextBtn');
+  const rsPauseBtn = document.getElementById('rsPauseBtn');
+  const rsCurrent = document.querySelector('.rs-current');
+  const rsSlides = document.querySelectorAll('.rs-slide');
+  const rsProgressFills = document.querySelectorAll('.rs-progress-fill');
+
+  if (rsSlider && rsSlides.length > 0) {
+    let currentSlideIndex = 0;
+    const totalSlides = rsSlides.length;
+    let autoAdvanceTimer = null;
+    const SLIDE_DURATION = 6000;
+    let isPaused = false;
+    let startTime = 0;
+    let remainingTime = SLIDE_DURATION;
+
+    function updateCarouselUI() {
+      if(rsCurrent) rsCurrent.textContent = currentSlideIndex + 1;
+      
+      rsProgressFills.forEach((fill, index) => {
+        fill.style.transition = 'none';
+        if (index < currentSlideIndex) {
+          fill.style.width = '100%';
+        } else {
+          fill.style.width = '0%';
+        }
+      });
+      
+      if (!isPaused) {
+        const currentFill = document.getElementById(`rs-prog-${currentSlideIndex}`);
+        if (currentFill) {
+          setTimeout(() => {
+            currentFill.style.transition = `width ${remainingTime}ms linear`;
+            currentFill.style.width = '100%';
+          }, 50);
+        }
+      }
+    }
+
+    function goToSlide(index) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      currentSlideIndex = index;
+      
+      const slideWidth = rsSlides[0].offsetWidth;
+      rsSlider.scrollTo({
+        left: slideWidth * currentSlideIndex,
+        behavior: 'smooth'
+      });
+      
+      remainingTime = SLIDE_DURATION;
+      updateCarouselUI();
+      resetAutoAdvance();
+    }
+
+    function nextSlide() { goToSlide(currentSlideIndex + 1); }
+    function prevSlide() { goToSlide(currentSlideIndex - 1); }
+
+    function startAutoAdvance() {
+      if (isPaused) return;
+      startTime = Date.now();
+      autoAdvanceTimer = setTimeout(() => {
+        nextSlide();
+      }, remainingTime);
+    }
+
+    function pauseAutoAdvance() {
+      isPaused = true;
+      clearTimeout(autoAdvanceTimer);
+      remainingTime -= (Date.now() - startTime);
+      if (rsPauseBtn) rsPauseBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>';
+      
+      const currentFill = document.getElementById(`rs-prog-${currentSlideIndex}`);
+      if (currentFill) {
+        currentFill.style.transition = 'none';
+        const percent = Math.min(100, Math.max(0, 100 - ((remainingTime / SLIDE_DURATION) * 100)));
+        currentFill.style.width = `${percent}%`;
+      }
+    }
+
+    function resumeAutoAdvance() {
+      isPaused = false;
+      if (rsPauseBtn) rsPauseBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+      updateCarouselUI();
+      startAutoAdvance();
+    }
+
+    function togglePause() {
+      if (isPaused) resumeAutoAdvance();
+      else pauseAutoAdvance();
+    }
+
+    function resetAutoAdvance() {
+      clearTimeout(autoAdvanceTimer);
+      if (!isPaused) startAutoAdvance();
+    }
+
+    if(rsNextBtn) rsNextBtn.addEventListener('click', nextSlide);
+    if(rsPrevBtn) rsPrevBtn.addEventListener('click', prevSlide);
+    if(rsPauseBtn) rsPauseBtn.addEventListener('click', togglePause);
+    
+    let scrollTimeout;
+    rsSlider.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const slideWidth = rsSlides[0].offsetWidth;
+        const scrollPos = rsSlider.scrollLeft;
+        const newIndex = Math.round(scrollPos / slideWidth);
+        
+        if (newIndex !== currentSlideIndex) {
+          currentSlideIndex = newIndex;
+          remainingTime = SLIDE_DURATION;
+          updateCarouselUI();
+          resetAutoAdvance();
+        }
+      }, 100);
+    });
+
+    updateCarouselUI();
+    startAutoAdvance();
+  }
   </script>
 </body>
 </html>

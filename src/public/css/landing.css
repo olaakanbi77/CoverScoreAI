@@ -2803,3 +2803,328 @@ p { margin: 0; }
 .faq-trust-bottom {
   margin-top: 32px;
 }
+
+/* --- REAL RISK STORIES NEW MOBILE CAROUSEL --- */
+.section-risk-stories {
+  background: #050b14;
+  padding: 16px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.section-risk-stories .funnel-container {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.rs-header-area {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.rs-progress-container {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 0 16px;
+}
+.rs-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.rs-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #10B981;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+.rs-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 12px;
+}
+.rs-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #071739;
+  letter-spacing: 0.5px;
+}
+.rs-pause-btn {
+  position: absolute;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.rs-slide-indicator {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #10B981;
+  margin-bottom: 4px;
+}
+.rs-subtitle {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+.rs-carousel-wrapper {
+  position: relative;
+  margin: 0 -16px;
+}
+.rs-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rs-slider::-webkit-scrollbar {
+  display: none;
+}
+.rs-slide {
+  min-width: 100%;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.rs-nav-btn {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: white;
+  border: 1px solid #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10B981;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 10;
+  cursor: pointer;
+}
+.rs-nav-btn.prev { left: -10px; }
+.rs-nav-btn.next { right: -10px; }
+
+/* The inner card */
+.rs-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rs-card-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+.rs-card-pill.theme-red { background: #fef2f2; color: #ef4444; }
+.rs-card-pill.theme-orange { background: #fff7ed; color: #ea580c; }
+.rs-card-pill.theme-blue { background: #eff6ff; color: #2563eb; }
+
+.rs-card-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.rs-card-text {
+  flex: 1;
+}
+.rs-card-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #071739;
+  line-height: 1.2;
+  margin: 0 0 8px 0;
+}
+.rs-card-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #071739;
+  margin-bottom: 12px;
+}
+.rs-card-desc {
+  font-size: 0.85rem;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+}
+.rs-card-image-wrapper {
+  width: 110px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+.rs-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rs-date-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.rs-loss-box {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+}
+.rs-loss-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.rs-loss-amount {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #b91c1c;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+.rs-loss-words {
+  font-size: 0.85rem;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.rs-lesson-box {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+}
+.rs-lesson-box.theme-red { background: #fef2f2; }
+.rs-lesson-box.theme-orange { background: #fff7ed; }
+.rs-lesson-box.theme-blue { background: #eff6ff; }
+
+.rs-lesson-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.theme-red .rs-lesson-icon { color: #ef4444; }
+.theme-orange .rs-lesson-icon { color: #ea580c; }
+.theme-blue .rs-lesson-icon { color: #2563eb; }
+
+.rs-lesson-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.theme-red .rs-lesson-title { color: #ef4444; }
+.theme-orange .rs-lesson-title { color: #ea580c; }
+.theme-blue .rs-lesson-title { color: #2563eb; }
+
+.rs-lesson-desc {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #071739;
+  line-height: 1.4;
+}
+
+.rs-trust-box {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: #ecfdf5;
+  border-radius: 12px;
+  border: 1px solid #d1fae5;
+}
+.rs-trust-icon {
+  color: #10B981;
+}
+.rs-trust-line1 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #065f46;
+  margin-bottom: 2px;
+}
+.rs-trust-line2 {
+  font-size: 0.8rem;
+  color: #064e3b;
+  line-height: 1.4;
+}
+
+.rs-cta-container {
+  margin-top: 20px;
+}
+.rs-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #10B981;
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+.rs-cta-main {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.rs-cta-sub {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+.rs-trust-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #64748b;
+}
+.rs-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
