@@ -3127,3 +3127,25 @@ p { margin: 0; }
   gap: 4px;
 }
 
+/* Card Themes */
+.rs-card-pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px;
+}
+.rs-lesson-box {
+  border-radius: 12px; padding: 16px; display: flex; gap: 12px; margin-top: 20px;
+}
+.rs-lesson-title {
+  font-weight: 700; font-size: 0.85rem;
+}
+
+.theme-red { background: #fef2f2; color: #dc2626; }
+.theme-red .rs-pill-icon svg, .theme-red .rs-lesson-icon svg { color: #dc2626; }
+.theme-red .rs-lesson-title { color: #dc2626; }
+
+.theme-orange { background: #fff7ed; color: #ea580c; }
+.theme-orange .rs-pill-icon svg, .theme-orange .rs-lesson-icon svg { color: #ea580c; }
+.theme-orange .rs-lesson-title { color: #ea580c; }
+
+.theme-blue { background: #eff6ff; color: #2563eb; }
+.theme-blue .rs-pill-icon svg, .theme-blue .rs-lesson-icon svg { color: #2563eb; }
+.theme-blue .rs-lesson-title { color: #2563eb; }

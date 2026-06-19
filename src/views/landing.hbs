@@ -750,9 +750,8 @@
               <div style="display: flex; gap: 16px;">
                 <div style="flex: 1;">
                   <!-- Theme Pill -->
-                  <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; background: #fef2f2; color: #dc2626;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    {{this.pill}}
+                  <div class="rs-card-pill theme-{{this.pillTheme}}">
+                    <span class="rs-pill-icon">{{{this.pillIcon}}}</span> {{this.pill}}
                   </div>
                   <h3 style="font-size: 1.3rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0; line-height: 1.3;">{{this.title}}</h3>
                   <div style="font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 16px;">{{this.location}}</div>
@@ -779,12 +778,12 @@
               </div>
 
               <!-- Key Lesson -->
-              <div style="background: #fef2f2; border-radius: 12px; padding: 16px; display: flex; gap: 12px; margin-top: 20px;">
-                <div style="color: #dc2626;">
+              <div class="rs-lesson-box theme-{{this.lessonTheme}}">
+                <div class="rs-lesson-icon">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
                 </div>
                 <div>
-                  <div style="color: #dc2626; font-weight: 700; font-size: 0.85rem;">Key Lesson</div>
+                  <div class="rs-lesson-title">Key Lesson</div>
                   <div style="color: #0f172a; font-size: 0.85rem; font-weight: 500; line-height: 1.4; margin-top: 4px;">{{this.lessonDesc}}</div>
                 </div>
               </div>
