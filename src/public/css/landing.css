@@ -3156,7 +3156,7 @@ p { margin: 0; }
 
 /* How It Works Mobile Responsiveness */
 @media (max-width: 768px) {
-  .hiw-step { margin-bottom: 16px !important; }
+  .hiw-step { margin-bottom: 8px !important; }
   
   /* Trust Box Single Line */
   .hiw-trust-item { flex-direction: column !important; text-align: center !important; gap: 4px !important; }
