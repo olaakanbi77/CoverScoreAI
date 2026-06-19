@@ -264,7 +264,7 @@
       <div class="features-grid">
         {{#each data.whyChoose}}
         <div class="feature-card">
-          <div class="feature-icon">{{this.icon}}</div>
+          <div class="feature-icon">{{{this.icon}}}</div>
           <h3 class="feature-title">{{this.title}}</h3>
           <p class="feature-desc">{{this.desc}}</p>
         </div>
@@ -286,13 +286,13 @@
           <div class="stories-grid-three mobile-swipeable-cards" style="display: grid; gap: 24px; margin-top: 32px;">
             {{#each data.stories}}
             <div class="story-card" style="background: white; padding: 24px; border-radius: var(--radius-md); display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;">
-              <div class="story-icon" style="margin-bottom: 0; font-size: 2.25rem; line-height: 1;">{{{this.icon}}}</div>
+              <div class="story-icon" style="margin-bottom: 0; font-size: 2.25rem; line-height: 1;">{{{or this.icon this.pillIcon}}}</div>
               <div class="story-content" style="display: flex; flex-direction: column; height: 100%;">
                 <h4 class="story-title" style="margin-bottom: 8px;">{{this.title}}</h4>
                 <p class="story-desc" style="margin-bottom: 12px; flex-grow: 1;">{{this.desc}}</p>
                 <div>
                   <div class="story-loss-label">Estimated Loss</div>
-                  <div class="story-loss-val">{{this.loss}}</div>
+                  <div class="story-loss-val">{{or this.loss this.lossAmount}}</div>
                 </div>
               </div>
             </div>

@@ -138,6 +138,8 @@
       "scoreSubTitle": "RISK SCORE",
       "score": 68,
       "riskText": "MODERATE RISK",
+      "gapScore": 58,
+      "exposure": "420,000,000",
       "warning": "Your hospital is more exposed than 68% of similar facilities.",
       "lockText": "Your full risk score includes 25+ risk factors across 6 categories.",
       "topRisks": [
