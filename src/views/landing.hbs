@@ -879,9 +879,19 @@
       </div>
       
       <!-- The Result Box -->
+      <style>
+        .hiw-icon-left-responsive { width: 64px; height: 64px; }
+        .hiw-icon-left-responsive svg { width: 32px; height: 32px; }
+        .hiw-icon-right-responsive svg { width: 60px; height: 50px; }
+        @media (max-width: 1023px) {
+          .hiw-icon-left-responsive { width: 18px !important; height: 18px !important; }
+          .hiw-icon-left-responsive svg { width: 10px !important; height: 10px !important; }
+          .hiw-icon-right-responsive svg { width: 14px !important; height: 12px !important; }
+        }
+      </style>
       <div class="hiw-result-box" style="background: linear-gradient(135deg, #f0fdf4 0%, #e6fced 100%); border-radius: 16px; padding: 24px; display: flex; flex-wrap: nowrap; justify-content: center; gap: 16px; margin: 32px 0 24px 0; border: 1px solid #dcfce7; align-items: center;">
         <!-- Shield Icon -->
-        <div class="hiw-result-icon-left" style="flex-shrink: 0; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(22,163,74,0.15);">
+        <div class="hiw-result-icon-left hiw-icon-left-responsive" style="flex-shrink: 0; border-radius: 50%; background: white; color: #16a34a; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(22,163,74,0.15);">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10" stroke="white" stroke-width="3" fill="none"></polyline></svg>
         </div>
         <!-- Text -->
@@ -891,7 +901,7 @@
           <div class="hiw-result-desc" style="font-size: 0.8rem; color: #475569; line-height: 1.4; font-weight: 500;">Know your risks. Fix the gaps.<br class="hiw-result-br">Protect your patients and your future.</div>
         </div>
         <!-- Chart Graphic -->
-        <div class="hiw-result-icon-right" style="flex-shrink: 0;">
+        <div class="hiw-result-icon-right hiw-icon-right-responsive" style="flex-shrink: 0;">
           <svg viewBox="0 0 72 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Bars -->
             <path d="M12 60V44" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
