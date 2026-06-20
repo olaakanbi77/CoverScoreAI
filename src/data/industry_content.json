@@ -320,6 +320,7 @@
     "whyChooseTitle": "Why Schools Choose CoverScore",
     "trustedByTitle": "Trusted by Education Leaders",
     "hero": {
+      "image": "/images/hero-school.jpg",
       "headline": "Protect Your School. Protect Their Future.",
       "subheadline": "Identify hidden risks, strengthen safety, and safeguard what matters most—your students, staff, and school.",
       "benefits": [
@@ -496,6 +497,7 @@
     "whyChooseTitle": "Why Manufacturers Choose CoverScore",
     "trustedByTitle": "Trusted by Industry Leaders",
     "hero": {
+      "image": "/images/hero-manufacturing.jpg",
       "headline": "Protect Your Factory. Secure Your Supply Chain.",
       "subheadline": "Identify equipment vulnerabilities, prevent operational downtime, and safeguard your manufacturing business from financial shock.",
       "benefits": [
@@ -672,6 +674,7 @@
     "whyChooseTitle": "Why Churches Choose CoverScore",
     "trustedByTitle": "Trusted by Ministry Leaders",
     "hero": {
+      "image": "/images/hero-church.jpg",
       "headline": "Protect Your Ministry. Safeguard Your Congregation.",
       "subheadline": "Identify hidden liabilities, improve safety protocols, and ensure your church's physical and financial security.",
       "benefits": [
@@ -843,6 +846,7 @@
     "whyChooseTitle": "Why SMEs Choose CoverScore",
     "trustedByTitle": "Trusted by Business Owners",
     "hero": {
+      "image": "/images/hero-sme.jpg",
       "headline": "Could Your Business Survive a Major Loss?",
       "subheadline": "Discover Your Business Resilience Score in 5 Minutes. Identify risks before they cost you your business.",
       "benefits": [
