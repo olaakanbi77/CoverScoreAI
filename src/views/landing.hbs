@@ -612,15 +612,20 @@
   </section>
 
   <!-- 7. FAQ SECTION -->
-  <section class="funnel-section funnel-section-light faq-section">
-    <div class="funnel-container">
-      <h2 class="section-title text-center" style="margin-bottom: 32px; font-size: 1.5rem;">Frequently Asked Questions</h2>
-      <div class="faq-list">
+  <section class="funnel-section funnel-section-light faq-section" style="background: #f8fafc; padding: 64px 20px;">
+    <div class="funnel-container" style="max-width: 800px; margin: 0 auto;">
+      <h2 class="section-title text-center" style="margin-bottom: 32px; font-size: 2rem;">Frequently Asked Questions</h2>
+      <div class="premium-faq-list">
         {{#each data.faq}}
-        <div class="faq-item" onclick="this.classList.toggle('open')">
-          <button class="faq-question" type="button">{{this.q}}</button>
-          <div class="faq-answer">
-            <div class="faq-answer-inner">{{this.a}}</div>
+        <div class="premium-faq-item" onclick="this.classList.toggle('open')">
+          <button class="premium-faq-btn" type="button">
+            <span class="premium-faq-title">{{this.q}}</span>
+            <span class="premium-faq-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </button>
+          <div class="premium-faq-answer">
+            <div class="premium-faq-answer-inner">{{this.a}}</div>
           </div>
         </div>
         {{/each}}
@@ -1202,30 +1207,32 @@
   </section>
 
   <!-- 9. FAQ SECTION -->
-  <section class="funnel-section section-faq">
+  <section class="funnel-section section-faq" style="background: #f8fafc; padding: 48px 20px;">
     <div class="funnel-container">
-      <div class="section-header">
+      <div class="section-header" style="margin-bottom: 24px;">
         <h2 class="section-title">Questions?<br>We've Got Answers.</h2>
       </div>
-      <div class="faq-accordion-list">
+      <div class="premium-faq-list">
         {{#each data.faq}}
-        <div class="faq-accordion-item" onclick="this.classList.toggle('open')">
-          <button class="faq-question-btn" type="button">
-            {{this.q}}
-            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="premium-faq-item" onclick="this.classList.toggle('open')">
+          <button class="premium-faq-btn" type="button">
+            <span class="premium-faq-title">{{this.q}}</span>
+            <span class="premium-faq-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
           </button>
-          <div class="faq-answer-content">
-            <div class="faq-answer-inner">{{this.a}}</div>
+          <div class="premium-faq-answer">
+            <div class="premium-faq-answer-inner">{{this.a}}</div>
           </div>
         </div>
         {{/each}}
       </div>
       
-      <div class="faq-trust-bottom">
-        <div class="wc-trust-avatars" style="justify-content: center; margin-bottom: 16px;">
-          <img src="https://ui-avatars.com/api/?name=H1&background=0D8ABC&color=fff&size=160" alt="Hospital">
-          <img src="https://ui-avatars.com/api/?name=H2&background=10B981&color=fff&size=160" alt="Hospital">
-          <img src="https://ui-avatars.com/api/?name=H3&background=F5A623&color=fff&size=160" alt="Hospital">
+      <div class="faq-trust-bottom" style="margin-top: 32px;">
+        <div class="wc-trust-avatars" style="display: flex; justify-content: center; margin-bottom: 16px;">
+          <img src="https://ui-avatars.com/api/?name=H1&background=0D8ABC&color=fff&size=160" alt="Hospital" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; margin-left: -10px;">
+          <img src="https://ui-avatars.com/api/?name=H2&background=10B981&color=fff&size=160" alt="Hospital" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; margin-left: -10px;">
+          <img src="https://ui-avatars.com/api/?name=H3&background=F5A623&color=fff&size=160" alt="Hospital" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; margin-left: -10px;">
         </div>
         <p style="text-align: center; color: var(--text-main); font-weight: 600;">Join 500+ Healthcare Facilities</p>
       </div>

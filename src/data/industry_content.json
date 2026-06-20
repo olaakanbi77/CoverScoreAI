@@ -273,12 +273,22 @@
       }
     ],
     "faq": [
-      { "q": "What is CoverScore?", "a": "CoverScore is a hospital risk assessment platform that analyzes 25+ risk factors across 6 key categories to generate your overall risk score." },
-      { "q": "How long does it take?", "a": "It takes less than 5 minutes to complete the assessment and get your risk score." },
-      { "q": "Is my data secure?", "a": "Yes. Your data is 100% secure and confidential. We use industry-standard encryption and never share your information." },
-      { "q": "What do I get with my risk score?", "a": "You'll receive a detailed risk report showing your score, risk breakdown, identified gaps, potential impact, and actionable recommendations." },
-      { "q": "How much does it cost?", "a": "Your risk assessment is completely free. No hidden fees. No credit card required." },
-      { "q": "Can I speak with someone?", "a": "Absolutely! Our team is here to help. Contact us anytime at support@coverscore.com" }
+      {
+        "q": "Is it free?",
+        "a": "Yes. Your risk assessment is completely free. There are no hidden fees and no credit card is required."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "It takes less than 5 minutes to complete the questions and get your personalized risk score."
+      },
+      {
+        "q": "Will I be pressured to buy insurance?",
+        "a": "No. You are under no obligation to buy anything. CoverScore provides objective risk intelligence to help you make informed decisions."
+      },
+      {
+        "q": "Is my information confidential?",
+        "a": "Absolutely. Your data is 100% secure and confidential. We use industry-standard encryption and never share your information with third parties without your consent."
+      }
     ]
   },
   "school": {
@@ -431,10 +441,22 @@
       ]
     },
     "faq": [
-      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your school's unique risk profile across safety, operational, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
-      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
-      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
-      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a risk advisor for tailored recommendations." }
+      {
+        "q": "Is it free?",
+        "a": "Yes. Your risk assessment is completely free. There are no hidden fees and no credit card is required."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "It takes less than 5 minutes to complete the questions and get your personalized risk score."
+      },
+      {
+        "q": "Will I be pressured to buy insurance?",
+        "a": "No. You are under no obligation to buy anything. CoverScore provides objective risk intelligence to help you make informed decisions."
+      },
+      {
+        "q": "Is my information confidential?",
+        "a": "Absolutely. Your data is 100% secure and confidential. We use industry-standard encryption and never share your information with third parties without your consent."
+      }
     ]
   },
   "manufacturing": {
@@ -587,10 +609,22 @@
       ]
     },
     "faq": [
-      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your facility's unique risk profile across operational, safety, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
-      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
-      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
-      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with an industrial risk advisor for tailored recommendations." }
+      {
+        "q": "Is it free?",
+        "a": "Yes. Your risk assessment is completely free. There are no hidden fees and no credit card is required."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "It takes less than 5 minutes to complete the questions and get your personalized risk score."
+      },
+      {
+        "q": "Will I be pressured to buy insurance?",
+        "a": "No. You are under no obligation to buy anything. CoverScore provides objective risk intelligence to help you make informed decisions."
+      },
+      {
+        "q": "Is my information confidential?",
+        "a": "Absolutely. Your data is 100% secure and confidential. We use industry-standard encryption and never share your information with third parties without your consent."
+      }
     ]
   },
   "church": {
@@ -738,10 +772,22 @@
       ]
     },
     "faq": [
-      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your ministry's unique risk profile across operational, safety, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
-      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
-      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
-      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a risk advisor for tailored recommendations." }
+      {
+        "q": "Is it free?",
+        "a": "Yes. Your risk assessment is completely free. There are no hidden fees and no credit card is required."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "It takes less than 5 minutes to complete the questions and get your personalized risk score."
+      },
+      {
+        "q": "Will I be pressured to buy insurance?",
+        "a": "No. You are under no obligation to buy anything. CoverScore provides objective risk intelligence to help you make informed decisions."
+      },
+      {
+        "q": "Is my information confidential?",
+        "a": "Absolutely. Your data is 100% secure and confidential. We use industry-standard encryption and never share your information with third parties without your consent."
+      }
     ]
   },
   "sme": {
@@ -889,10 +935,22 @@
       ]
     },
     "faq": [
-      { "q": "What is a CoverScore Risk Assessment?", "a": "CoverScore uses AI to analyze your business's unique risk profile across operational, safety, financial, and compliance categories — giving you a personalized score and actionable insights in minutes." },
-      { "q": "How long does the assessment take?", "a": "The entire process takes less than 5 minutes. You answer a few simple questions via WhatsApp, and our AI generates your full risk report instantly." },
-      { "q": "Is my data secure and confidential?", "a": "Absolutely. All data is encrypted end-to-end and processed securely. We never share your information with third parties." },
-      { "q": "What happens after I get my risk score?", "a": "You'll receive a detailed report highlighting your top risk areas and financial exposure. You can optionally speak with a business risk advisor for tailored recommendations." }
+      {
+        "q": "Is it free?",
+        "a": "Yes. Your risk assessment is completely free. There are no hidden fees and no credit card is required."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "It takes less than 5 minutes to complete the questions and get your personalized risk score."
+      },
+      {
+        "q": "Will I be pressured to buy insurance?",
+        "a": "No. You are under no obligation to buy anything. CoverScore provides objective risk intelligence to help you make informed decisions."
+      },
+      {
+        "q": "Is my information confidential?",
+        "a": "Absolutely. Your data is 100% secure and confidential. We use industry-standard encryption and never share your information with third parties without your consent."
+      }
     ]
   }
 }
