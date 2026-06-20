@@ -1001,8 +1001,6 @@
         .ss-trust-badges svg { width: 16px; height: 16px; flex-shrink: 0; }
         .tb-text { font-size: 0.55rem !important; text-align: left !important; line-height: 1.1 !important; }
         .tb-text br { display: none; }
-        .wtm-box { flex-direction: column; text-align: center !important; align-items: center !important; }
-        .wtm-arrow { display: none; }
       }
     </style>
     <div class="funnel-container" style="max-width: 600px; margin: 0 auto; padding: 0 16px;">
@@ -1154,9 +1152,15 @@
       </div>
       
       <!-- What This Means Box -->
-      <div class="wtm-box" style="background: #eff6ff; border-radius: 16px; padding: 24px; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px;">
+      <div style="background: #eff6ff; border-radius: 16px; padding: 24px; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px;">
         <div style="width: 56px; height: 56px; border-radius: 12px; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 9l-5 5-4-4-5 5"></path><path d="M18 9h-4v-4"></path></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="14" width="5" height="8" rx="1.5" fill="currentColor" />
+            <rect x="9.5" y="9" width="5" height="13" rx="1.5" fill="currentColor" />
+            <rect x="17" y="4" width="5" height="18" rx="1.5" fill="currentColor" />
+            <path d="M 4 10 Q 12 3 22 2" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <polyline points="16 2 22 2 22 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
         <div style="flex: 1; text-align: left;">
           <div style="font-size: 1.1rem; font-weight: 800; color: #1e3a8a; margin-bottom: 6px;">What This Means</div>
