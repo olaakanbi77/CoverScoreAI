@@ -91,7 +91,7 @@
         {{#if data.hero.mobileHeadline}}
           {{{data.hero.mobileHeadline}}}
         {{else}}
-          See Your Hospital's<br><span class="hero-highlight">Risk Score</span><br>In Less Than 5 Minutes.
+          See Your {{data.shortName}}'s<br><span class="hero-highlight">Risk Score</span><br>In Less Than 5 Minutes.
         {{/if}}
       </h1>
       <div class="hero-mobile-divider"></div>
@@ -99,7 +99,7 @@
         {{#if data.hero.mobileSubheadline}}
           {{data.hero.mobileSubheadline}}
         {{else}}
-          Most hospitals discover critical risks they never knew existed.
+          Most {{data.shortNamePlural}} discover critical risks they never knew existed.
         {{/if}}
       </p>
 
@@ -110,7 +110,7 @@
         </div>
         <div>
           <div class="hero-mobile-cta-title">
-            {{#if data.hero.mobileCta}}{{data.hero.mobileCta}}{{else}}Get My Hospital Risk Score{{/if}}
+            {{#if data.hero.mobileCta}}{{data.hero.mobileCta}}{{else}}Get My {{data.shortName}} Risk Score{{/if}}
           </div>
           <div class="hero-mobile-cta-sub">
             {{#if data.hero.mobileCtaSub}}{{data.hero.mobileCtaSub}}{{else}}Takes Less Than 5 Minutes{{/if}}
@@ -128,7 +128,7 @@
             {{#if data.hero.trustBadgeTitle}}{{data.hero.trustBadgeTitle}}{{else}}500+ Healthcare Facilities Assessed{{/if}}
           </div>
           <div class="hero-trust-badge-desc">
-            {{#if data.hero.trustBadgeDesc}}{{data.hero.trustBadgeDesc}}{{else}}Trusted by hospital leaders across the country.{{/if}}
+            {{#if data.hero.trustBadgeDesc}}{{data.hero.trustBadgeDesc}}{{else}}Trusted by {{data.shortNameLower}} leaders across the country.{{/if}}
           </div>
         </div>
       </div>
@@ -184,8 +184,8 @@
       <!-- === MOBILE CALCULATOR (Hidden on Desktop) === -->
       <div class="calc-mobile-content">
         
-        <h2 class="calc-mobile-headline">What Could One Incident Cost Your <span style="color: #00A651;">Hospital</span>?</h2>
-        <p class="calc-mobile-subheadline">A quick estimate based on your hospital size and equipment value.</p>
+        <h2 class="calc-mobile-headline">What Could One Incident Cost Your <span style="color: #00A651;">{{data.shortName}}</span>?</h2>
+        <p class="calc-mobile-subheadline">A quick estimate based on your {{data.shortNameLower}} size and equipment value.</p>
         
         <div id="calcInputsMobile" class="calc-mobile-inputs-container">
           <!-- Injected via JS -->
@@ -196,7 +196,7 @@
           <svg class="calc-mobile-result-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FCA5A5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <div class="calc-mobile-result-title">Your Potential Financial Exposure</div>
           <div class="calc-mobile-result-val" id="exposureTotalMobile">₦0</div>
-          <div class="calc-mobile-result-desc">This is what one major incident could cost your hospital.</div>
+          <div class="calc-mobile-result-desc">This is what one major incident could cost your {{data.shortNameLower}}.</div>
         </div>
 
         <!-- Action Banner -->
@@ -217,7 +217,7 @@
             <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </div>
           <div class="hero-mobile-cta-title" style="margin: 0 auto; padding-right: 32px;">
-            Get My Actual Hospital Risk Score
+            Get My Actual {{data.shortName}} Risk Score
           </div>
         </a>
 
@@ -339,7 +339,7 @@
                 <svg width="32" height="32" fill="#10B981" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto;" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               </div>
               <div style="font-size: 0.95rem; font-weight: 700; color: var(--color-surface-dark); margin-bottom: 12px; line-height: 1.3;">Start on WhatsApp</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Answer a few simple questions about your hospital</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">Answer a few simple questions about your {{data.shortNameLower}}</div>
               <div style="position: absolute; right: -20px; top: 10px; color: var(--color-surface-dark); font-size: 1.6rem; font-weight: 800;">→</div>
             </div>
 
@@ -714,7 +714,7 @@
         <div class="cta-banner-right">
           <a href="/start-whatsapp?text={{trigger}}" style="background: #10B981; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 24px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; text-decoration: none; width: 100%; margin-bottom: 12px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Get My Hospital Risk Score
+            Get My {{data.shortName}} Risk Score
           </a>
           <div style="font-size: 0.8rem; color: white; font-weight: 600; line-height: 1.6; text-align: center;">
             Secure • Confidential • No Obligation<br>Takes Less Than 5 Minutes
@@ -736,7 +736,7 @@
         </div>
       </div>
       <div class="section-header wc-header">
-        <h2 class="section-title">Why Hospitals Choose<br><span style="color:#071739">Cover</span><span style="color:#10B981">Score</span><sup style="font-size:0.5em;color:#10B981;vertical-align:super;">™</sup></h2>
+        <h2 class="section-title">Why {{data.shortNamePlural}} Choose<br><span style="color:#071739">Cover</span><span style="color:#10B981">Score</span><sup style="font-size:0.5em;color:#10B981;vertical-align:super;">™</sup></h2>
         <div class="wc-title-divider"></div>
         <p class="wc-subtitle">Accurate insights. Actionable recommendations.<br>Stronger protection for <strong style="color:#10B981">what matters most.</strong></p>
       </div>
@@ -775,7 +775,7 @@
         REAL RISK STORIES™
       </div>
       <h2 class="section-title" style="margin: 0; font-size: 2.5rem; color: #0f172a; line-height: 1.1;">Real Incidents.<br><span style="color: #10B981;">Real Impact.</span></h2>
-      <p style="margin-top: 12px; color: #475569; font-size: 1rem; line-height: 1.5; font-weight: 500;">Actual events. Real losses.<br>Lessons every hospital should learn.</p>
+      <p style="margin-top: 12px; color: #475569; font-size: 1rem; line-height: 1.5; font-weight: 500;">Actual events. Real losses.<br>Lessons every {{data.shortNameLower}} should learn.</p>
     </div>
 
     <div class="funnel-container" style="padding: 0; background: transparent; box-shadow: none; overflow: visible;">
@@ -891,7 +891,7 @@
       <!-- Headers -->
       <div style="text-align: center; margin-bottom: 40px;">
         <h2 style="font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin: 0; color: #0f172a; letter-spacing: -1px;">Simple Process.<br><span style="color: #16a34a;">Powerful Results.</span></h2>
-        <p style="color: #475569; font-size: 1.05rem; font-weight: 500; margin: 16px 0 0 0;">Get your hospital risk score in less than 5 minutes.</p>
+        <p style="color: #475569; font-size: 1.05rem; font-weight: 500; margin: 16px 0 0 0;">Get your {{data.shortNameLower}} risk score in less than 5 minutes.</p>
       </div>
       
       <!-- Timeline -->
@@ -974,7 +974,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
           </div>
           <div>
-            <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Get My Hospital Risk Score</div>
+            <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;">Get My {{data.shortName}} Risk Score</div>
             <div style="font-size: 0.85rem; font-weight: 500; opacity: 0.95;">Start now. It's fast, secure & free.</div>
           </div>
         </div>
@@ -990,7 +990,7 @@
         </div>
         <div>
           <div class="hero-mobile-cta-title">
-            {{#if data.hero.mobileCta}}{{data.hero.mobileCta}}{{else}}Get My Hospital Risk Score{{/if}}
+            {{#if data.hero.mobileCta}}{{data.hero.mobileCta}}{{else}}Get My {{data.shortName}} Risk Score{{/if}}
           </div>
           <div class="hero-mobile-cta-sub" style="white-space: nowrap;">
             Start now. It's fast, secure &amp; free.
@@ -1020,7 +1020,7 @@
       <div class="hiw-trust-box" style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; margin-top: 16px; padding-top: 16px; gap: 12px;">
         <div class="hiw-trust-item" style="display: flex; align-items: center; gap: 6px; border-right: 1px solid #e2e8f0; padding-right: 12px;">
           <div class="hiw-trust-icon" style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
-          <div class="hiw-trust-text" style="font-size: 13px; font-weight: 500; color: #1e293b; line-height: 1.3;">Trusted by 500+<br>Healthcare Facilities</div>
+          <div class="hiw-trust-text" style="font-size: 13px; font-weight: 500; color: #1e293b; line-height: 1.3;">Trusted by 500+<br>{{data.facilityType}}</div>
         </div>
         <div class="hiw-trust-item" style="display: flex; align-items: center; gap: 6px; border-right: 1px solid #e2e8f0; padding-right: 12px;">
           <div class="hiw-trust-icon" style="color: #16a34a;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
@@ -1066,7 +1066,7 @@
         </h2>
         <div style="width: 40px; height: 3px; background: #16a34a; border-radius: 2px; margin: 20px auto;"></div>
         <p style="color: #475569; font-size: 0.95rem; font-weight: 500; margin: 0; line-height: 1.5;">
-          This is a sample risk score for a general hospital.<br>
+          This is a sample risk score for a typical {{data.shortNameLower}}.<br>
           Your score will be based on your actual data.
         </p>
       </div>
@@ -1107,7 +1107,7 @@
             
             <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 12px; display: flex; gap: 8px; align-items: flex-start; text-align: left; width: 100%;">
               <div style="width: 20px; height: 20px; border-radius: 50%; background: #fbbf24; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 0.8rem;">!</div>
-              <div style="font-size: 0.75rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your hospital is more exposed than 68% of similar facilities.</div>
+              <div style="font-size: 0.75rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your {{data.shortNameLower}} is more exposed than 68% of similar facilities.</div>
             </div>
           </div>
           
@@ -1227,7 +1227,7 @@
           <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         </div>
         <div class="hero-mobile-cta-title" style="margin: 0 auto; padding-right: 32px;">
-          Get My Actual Hospital Risk Score
+          Get My Actual {{data.shortName}} Risk Score
         </div>
       </a>
       
@@ -1235,7 +1235,7 @@
       <div class="ss-trust-badges">
         <div style="display: flex; align-items: center; gap: 6px; border-right: 1px solid #e2e8f0; padding-right: 16px;">
           <div style="color: #16a34a; flex-shrink: 0;"><svg class="inline-trust-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg></div>
-          <div class="tb-text" style="font-size: 13px; font-weight: 500; color: #1e293b; line-height: 1.3; text-align: left;">Trusted by 500+<br>Healthcare Facilities</div>
+          <div class="tb-text" style="font-size: 13px; font-weight: 500; color: #1e293b; line-height: 1.3; text-align: left;">Trusted by 500+<br>{{data.facilityType}}</div>
         </div>
         <div style="display: flex; align-items: center; gap: 6px; border-right: 1px solid #e2e8f0; padding-right: 16px;">
           <div style="color: #16a34a; flex-shrink: 0;"><svg class="inline-trust-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
@@ -1302,8 +1302,8 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
         </div>
         <div>
-          <h4 style="color: #0f172a; font-weight: 800; font-size: 1.1rem; margin: 0 0 8px 0;">Trusted by 500+ Healthcare Facilities</h4>
-          <p style="color: #64748b; font-size: 0.9rem; margin: 0; line-height: 1.5;">Join hospitals that are taking control of risk and protecting what matters most.</p>
+          <h4 style="color: #0f172a; font-weight: 800; font-size: 1.1rem; margin: 0 0 8px 0;">Trusted by 500+ {{data.facilityType}}</h4>
+          <p style="color: #64748b; font-size: 0.9rem; margin: 0; line-height: 1.5;">Join {{data.shortNamePlural}} that are taking control of risk and protecting what matters most.</p>
         </div>
         <div style="display: flex; justify-content: center; align-items: center;">
           <div style="display: flex; margin-left: 10px;">
@@ -1318,7 +1318,7 @@
             </div>
             <div style="width: 44px; height: 44px; border-radius: 50%; background: #3b82f6; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; margin-left: -10px; z-index: 4; flex-direction: column;">
               <span style="color: white; font-weight: 800; font-size: 0.65rem; line-height: 1;">500+</span>
-              <span style="color: white; font-size: 0.45rem; line-height: 1;">Hospitals</span>
+              <span style="color: white; font-size: 0.45rem; line-height: 1;">{{data.shortNamePlural}}</span>
             </div>
           </div>
         </div>
@@ -1331,7 +1331,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
           </div>
           <div>
-            <div style="color: white; font-weight: 800; font-size: 1.15rem; margin-bottom: 2px;">Get My Hospital Risk Score</div>
+            <div style="color: white; font-weight: 800; font-size: 1.15rem; margin-bottom: 2px;">Get My {{data.shortName}} Risk Score</div>
             <div style="color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 500;">Fast. Secure. Free.</div>
           </div>
         </div>
@@ -1348,7 +1348,7 @@
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; padding: 0 12px;">
           <svg class="inline-trust-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
-          <span style="font-size: 13px; font-weight: 500; color: #0f172a; line-height: 1.3;">Trusted by 500+<br>Healthcare Facilities</span>
+          <span style="font-size: 13px; font-weight: 500; color: #0f172a; line-height: 1.3;">Trusted by 500+<br>{{data.facilityType}}</span>
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;">
           <svg class="inline-trust-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -1396,7 +1396,7 @@
         <div class="cta-banner-right">
           <a href="/start-whatsapp?text={{trigger}}" style="background: #10B981; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 24px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; text-decoration: none; width: 100%; margin-bottom: 12px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Get My Hospital Risk Score
+            Get My {{data.shortName}} Risk Score
           </a>
           <div style="font-size: 0.8rem; color: white; font-weight: 600; line-height: 1.6; text-align: center;">
             Secure • Confidential • No Obligation<br>Takes Less Than 5 Minutes
@@ -1622,7 +1622,7 @@
       </div>
       <div style="width:100%; height:1px; background:rgba(255,255,255,0.08); margin: 20px 0;"></div>
       <p style="text-align:center; color:#e2e8f0; font-size:15px; line-height:1.6; max-width:280px; margin:0 auto; font-weight:400;">
-        Helping hospitals identify, quantify and reduce operational, liability and financial risks.
+        Helping {{data.shortNamePlural}} identify, quantify and reduce operational, liability and financial risks.
       </p>
     </div>
 
@@ -1657,7 +1657,7 @@
     <a href="/start-whatsapp?text={{trigger}}" class="mff-glowing-btn">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="white" style="position: absolute; left: 20px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
-        <span style="font-size:13px; font-weight:700; color:white; letter-spacing:0.5px; opacity: 0.95;">GET MY HOSPITAL</span>
+        <span style="font-size:13px; font-weight:700; color:white; letter-spacing:0.5px; opacity: 0.95; text-transform: uppercase;">GET MY {{data.shortName}}</span>
         <span style="font-size:22px; font-weight:800; color:white; line-height:1.1;">RISK SCORE™</span>
       </div>
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 20px;"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -1671,7 +1671,7 @@
       </svg>
       <div style="text-align:center; color:white; font-size:15px; font-weight:500;">
         It's <span style="color:#10B981; font-weight:800;">FREE</span>. It's <span style="color:#10B981; font-weight:800;">Fast</span>. It's <span style="color:#10B981; font-weight:800;">Smart</span>.<br>
-        <span style="font-size:13.5px; color:#e2e8f0; font-weight:400; margin-top:6px; display:inline-block;">Take the first step toward a safer hospital.</span>
+        <span style="font-size:13.5px; color:#e2e8f0; font-weight:400; margin-top:6px; display:inline-block;">Take the first step toward a safer {{data.shortNameLower}}.</span>
       </div>
     </div>
 

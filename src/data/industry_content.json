@@ -303,7 +303,11 @@
         "q": "Can I speak with someone?",
         "a": "Absolutely! Our team is here to help. Contact us anytime at <span style=\"color: #10B981; font-weight: 700;\">support@coverscore.com</span>"
       }
-    ]
+    ],
+    "shortName": "Hospital",
+    "shortNameLower": "hospital",
+    "shortNamePlural": "hospitals",
+    "facilityType": "Healthcare Facilities"
   },
   "school": {
     "title": "School Risk Assessment | CoverScore",
@@ -475,7 +479,11 @@
         "q": "Is my information confidential?",
         "a": "Yes. Your data is <span style=\"color: #10B981; font-weight: 700;\">100% secure</span> and confidential. We use industry-standard encryption and never share your information."
       }
-    ]
+    ],
+    "shortName": "School",
+    "shortNameLower": "school",
+    "shortNamePlural": "schools",
+    "facilityType": "Educational Institutions"
   },
   "manufacturing": {
     "title": "Manufacturing Risk Assessment | CoverScore",
@@ -647,7 +655,11 @@
         "q": "Is my information confidential?",
         "a": "Yes. Your data is <span style=\"color: #10B981; font-weight: 700;\">100% secure</span> and confidential. We use industry-standard encryption and never share your information."
       }
-    ]
+    ],
+    "shortName": "Manufacturing Facility",
+    "shortNameLower": "manufacturing facility",
+    "shortNamePlural": "manufacturing facilities",
+    "facilityType": "Manufacturing Plants"
   },
   "church": {
     "title": "Church Risk Assessment | CoverScore",
@@ -814,7 +826,11 @@
         "q": "Is my information confidential?",
         "a": "Yes. Your data is <span style=\"color: #10B981; font-weight: 700;\">100% secure</span> and confidential. We use industry-standard encryption and never share your information."
       }
-    ]
+    ],
+    "shortName": "Church",
+    "shortNameLower": "church",
+    "shortNamePlural": "churches",
+    "facilityType": "Religious Organizations"
   },
   "sme": {
     "title": "SME Risk Assessment | CoverScore",
@@ -981,6 +997,10 @@
         "q": "Is my information confidential?",
         "a": "Yes. Your data is <span style=\"color: #10B981; font-weight: 700;\">100% secure</span> and confidential. We use industry-standard encryption and never share your information."
       }
-    ]
+    ],
+    "shortName": "Business",
+    "shortNameLower": "business",
+    "shortNamePlural": "businesses",
+    "facilityType": "Small Businesses"
   }
 }
