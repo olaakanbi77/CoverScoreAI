@@ -1026,15 +1026,15 @@
         
         <!-- Card Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-          <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
             <div style="width: 32px; height: 32px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
             </div>
-            <div style="font-weight: 900; font-size: 1.05rem; line-height: 1; letter-spacing: -0.5px; color: #0f172a;">
-              COVERSCORE<br><span style="font-size: 0.65rem; color: #64748b; font-weight: 700; letter-spacing: 0;">RISK SCORE</span>
+            <div style="font-weight: 900; font-size: 1.15rem; line-height: 1.1; letter-spacing: -0.5px; color: #0f172a;">
+              COVER<span style="color: #16a34a;">SCORE</span><br><span style="font-size: 0.7rem; color: #64748b; font-weight: 700; letter-spacing: 0;">RISK SCORE</span>
             </div>
           </div>
-          <div style="background: #f1f5f9; color: #475569; font-size: 0.7rem; font-weight: 800; padding: 6px 12px; border-radius: 16px;">
+          <div style="background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 800; padding: 8px 16px; border-radius: 20px;">
             SAMPLE REPORT
           </div>
         </div>
@@ -1043,104 +1043,99 @@
         <div class="ss-grid">
           
           <!-- Left: Overall Score -->
-          <div style="background: #fafaf9; border-radius: 16px; border: 1px solid #f5f5f4; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <div style="font-size: 0.75rem; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; margin-bottom: 24px;">OVERALL RISK SCORE</div>
+          <div style="background: #ffffff; border-radius: 16px; border: 1px solid #f1f5f9; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+            <div style="font-size: 0.8rem; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; margin-bottom: 32px;">OVERALL RISK SCORE</div>
             
-            <div style="position: relative; width: 100%; max-width: 180px; aspect-ratio: 2/1; margin-bottom: 20px; display: flex; justify-content: center; align-items: flex-end;">
+            <div style="position: relative; width: 100%; max-width: 220px; aspect-ratio: 2/1.1; margin-bottom: 24px; display: flex; justify-content: center; align-items: flex-end;">
               <!-- Gauge SVG -->
-              <svg viewBox="0 0 100 50" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible;">
-                <!-- Gray background arc -->
-                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f1f5f9" stroke-width="14" stroke-linecap="round"/>
-                <!-- Green section -->
-                <path d="M 10 50 A 40 40 0 0 1 30 20" fill="none" stroke="#22c55e" stroke-width="14" stroke-linecap="round"/>
-                <!-- Yellow/Orange section -->
-                <path d="M 30 20 A 40 40 0 0 1 70 20" fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="butt"/>
-                <!-- Red section -->
-                <path d="M 70 20 A 40 40 0 0 1 90 50" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round"/>
-                
-                <!-- Needle -->
-                <line x1="50" y1="50" x2="72" y2="22" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="50" cy="50" r="4" fill="#1e293b"/>
+              <svg viewBox="0 0 200 110" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible;">
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f1f5f9" stroke-width="24" stroke-linecap="round"/>
+                <g transform="rotate(180, 100, 100)">
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="#22c55e" stroke-width="24" stroke-linecap="round" stroke-dasharray="75 500" stroke-dashoffset="0" />
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="#f97316" stroke-width="24" stroke-linecap="round" stroke-dasharray="90 500" stroke-dashoffset="-85" />
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="#ef4444" stroke-width="24" stroke-linecap="round" stroke-dasharray="66 500" stroke-dashoffset="-185" />
+                </g>
+                <line x1="148" y1="22" x2="158" y2="46" stroke="#1e293b" stroke-width="5" stroke-linecap="round" />
               </svg>
-              <div style="font-size: 4rem; font-weight: 900; color: #d97706; line-height: 0.8; z-index: 2; margin-bottom: -4px;">68</div>
+              <div style="font-size: 5rem; font-weight: 900; color: #d97706; line-height: 0.8; z-index: 2; margin-bottom: -4px;">68</div>
             </div>
             
-            <div style="font-size: 0.9rem; font-weight: 800; color: #d97706; margin-bottom: 20px;">MODERATE RISK</div>
+            <div style="font-size: 1rem; font-weight: 800; color: #d97706; margin-bottom: 24px;">MODERATE RISK</div>
             
             <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 12px; display: flex; gap: 8px; align-items: flex-start; text-align: left; width: 100%;">
               <div style="width: 20px; height: 20px; border-radius: 50%; background: #fbbf24; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 0.8rem;">!</div>
-              <div style="font-size: 0.7rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your hospital is more exposed than 68% of similar facilities.</div>
+              <div style="font-size: 0.75rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your hospital is more exposed than 68% of similar facilities.</div>
             </div>
           </div>
           
           <!-- Right: Key Risk Areas -->
           <div style="display: flex; flex-direction: column;">
-            <div style="font-size: 0.75rem; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; margin-bottom: 20px;">KEY RISK AREAS</div>
+            <div style="font-size: 0.8rem; font-weight: 800; color: #1e293b; letter-spacing: 0.5px; margin-bottom: 20px; margin-top: 12px;">KEY RISK AREAS</div>
             
-            <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
               <!-- Item 1: Fire Safety -->
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                 </div>
                 <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Fire Safety</span>
-                    <span style="font-size: 0.7rem; font-weight: 800; color: #ef4444;">HIGH</span>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Fire Safety</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: #ef4444;">HIGH</span>
                   </div>
-                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 85%; background: #ef4444; border-radius: 3px;"></div></div>
+                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 85%; background: #ef4444; border-radius: 2px;"></div></div>
                 </div>
               </div>
               <!-- Item 2: Medical Equipment -->
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #ffedd5; color: #f97316; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #ffedd5; color: #f97316; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                 </div>
                 <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Medical Equipment</span>
-                    <span style="font-size: 0.7rem; font-weight: 800; color: #f97316;">HIGH</span>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Medical Equipment</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: #f97316;">HIGH</span>
                   </div>
-                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 75%; background: #f97316; border-radius: 3px;"></div></div>
+                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 75%; background: #f97316; border-radius: 2px;"></div></div>
                 </div>
               </div>
               <!-- Item 3: Patient Safety -->
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #fef9c3; color: #eab308; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="3"></circle></svg>
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fef9c3; color: #eab308; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="3"></circle></svg>
                 </div>
                 <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Patient Safety</span>
-                    <span style="font-size: 0.7rem; font-weight: 800; color: #eab308;">MEDIUM</span>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Patient Safety</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: #eab308;">MEDIUM</span>
                   </div>
-                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 50%; background: #eab308; border-radius: 3px;"></div></div>
+                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 50%; background: #eab308; border-radius: 2px;"></div></div>
                 </div>
               </div>
               <!-- Item 4: Cyber Security -->
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 </div>
                 <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Cyber Security</span>
-                    <span style="font-size: 0.7rem; font-weight: 800; color: #22c55e;">LOW</span>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Cyber Security</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: #22c55e;">LOW</span>
                   </div>
-                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 25%; background: #22c55e; border-radius: 3px;"></div></div>
+                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 25%; background: #22c55e; border-radius: 2px;"></div></div>
                 </div>
               </div>
               <!-- Item 5: Operational Continuity -->
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 </div>
                 <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                    <span style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Operational Continuity</span>
-                    <span style="font-size: 0.7rem; font-weight: 800; color: #22c55e;">LOW</span>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Operational Continuity</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: #22c55e;">LOW</span>
                   </div>
-                  <div style="height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: 15%; background: #22c55e; border-radius: 3px;"></div></div>
+                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 15%; background: #22c55e; border-radius: 2px;"></div></div>
                 </div>
               </div>
             </div>
@@ -1148,11 +1143,11 @@
         </div>
         
         <!-- Card Footer (Lock Box) -->
-        <div style="background: #f0fdf4; border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: center; gap: 12px; color: #15803d; text-align: left;">
+        <div style="background: #f0fdf4; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; gap: 12px; color: #15803d; text-align: left;">
           <div style="flex-shrink: 0;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           </div>
-          <div style="font-size: 0.85rem; font-weight: 600; line-height: 1.4;">Your full risk score includes 25+ risk factors<br class="hide-on-mobile"> across 6 categories.</div>
+          <div style="font-size: 0.9rem; font-weight: 600; line-height: 1.4;">Your full risk score includes 25+ risk factors across 6 categories.</div>
         </div>
       </div>
       
