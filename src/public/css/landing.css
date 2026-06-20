@@ -3322,7 +3322,6 @@ p { margin: 0; }
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
   padding: 20px;
-  cursor: pointer;
   transition: all 0.3s ease;
 }
 
