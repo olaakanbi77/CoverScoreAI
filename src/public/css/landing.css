@@ -2367,6 +2367,7 @@ p { margin: 0; }
   padding: 4px 10px;
   border-radius: 20px;
   align-self: flex-start;
+  white-space: nowrap;
 }
 .theme-green.wc-check-pill { background: #f0fdf4; color: #10B981; }
 .theme-blue.wc-check-pill { background: #eff6ff; color: #3b82f6; }

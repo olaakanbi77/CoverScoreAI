@@ -484,7 +484,57 @@
     "shortName": "School",
     "shortNameLower": "school",
     "shortNamePlural": "schools",
-    "facilityType": "Educational Institutions"
+    "facilityType": "Educational Institutions",
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/><line x1=\"9\" y1=\"11\" x2=\"15\" y2=\"11\"/><line x1=\"9\" y1=\"19\" x2=\"11\" y2=\"19\"/></svg>",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hospital in a few simple steps. Takes <strong>less than 2 minutes.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>",
+        "badgeText": "~2<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg>",
+        "title": "Secure Data Analysis",
+        "desc": "We securely analyze your data against <strong>25+</strong> risk factors across <strong>6 key</strong> categories.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/><path d=\"M11 8v3l2 2\"/></svg>",
+        "title": "Risk Assessment",
+        "desc": "Our advanced model identifies <strong>gaps, vulnerabilities,</strong> and potential <strong>exposures</strong> specific to your hospital.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><line x1=\"12\" y1=\"7\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"12\" x2=\"16\" y2=\"16\"/></svg>",
+        "title": "Generate Your Risk Score",
+        "desc": "We calculate your <strong>overall risk score</strong> and show you where you stand.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M18 20V10\"/><path d=\"M12 20V4\"/><path d=\"M6 20v-6\"/></svg>",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><path d=\"M16 13H8\"/><path d=\"M16 17H8\"/><path d=\"M10 9H8\"/></svg>",
+        "title": "Get Your Full Report",
+        "desc": "Receive a <strong>detailed report</strong> with key findings, risk breakdown, and recommended actions.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/></svg>",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your insights to fix gaps, reduce exposure, and <strong>protect what matters most.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ]
   },
   "manufacturing": {
     "title": "Manufacturing Risk Assessment | CoverScore",
@@ -661,7 +711,57 @@
     "shortName": "Manufacturing Facility",
     "shortNameLower": "manufacturing facility",
     "shortNamePlural": "manufacturing facilities",
-    "facilityType": "Manufacturing Plants"
+    "facilityType": "Manufacturing Plants",
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/><line x1=\"9\" y1=\"11\" x2=\"15\" y2=\"11\"/><line x1=\"9\" y1=\"19\" x2=\"11\" y2=\"19\"/></svg>",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hospital in a few simple steps. Takes <strong>less than 2 minutes.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>",
+        "badgeText": "~2<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg>",
+        "title": "Secure Data Analysis",
+        "desc": "We securely analyze your data against <strong>25+</strong> risk factors across <strong>6 key</strong> categories.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/><path d=\"M11 8v3l2 2\"/></svg>",
+        "title": "Risk Assessment",
+        "desc": "Our advanced model identifies <strong>gaps, vulnerabilities,</strong> and potential <strong>exposures</strong> specific to your hospital.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><line x1=\"12\" y1=\"7\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"12\" x2=\"16\" y2=\"16\"/></svg>",
+        "title": "Generate Your Risk Score",
+        "desc": "We calculate your <strong>overall risk score</strong> and show you where you stand.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M18 20V10\"/><path d=\"M12 20V4\"/><path d=\"M6 20v-6\"/></svg>",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><path d=\"M16 13H8\"/><path d=\"M16 17H8\"/><path d=\"M10 9H8\"/></svg>",
+        "title": "Get Your Full Report",
+        "desc": "Receive a <strong>detailed report</strong> with key findings, risk breakdown, and recommended actions.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/></svg>",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your insights to fix gaps, reduce exposure, and <strong>protect what matters most.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ]
   },
   "church": {
     "title": "Church Risk Assessment | CoverScore",
@@ -833,7 +933,57 @@
     "shortName": "Church",
     "shortNameLower": "church",
     "shortNamePlural": "churches",
-    "facilityType": "Religious Organizations"
+    "facilityType": "Religious Organizations",
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/><line x1=\"9\" y1=\"11\" x2=\"15\" y2=\"11\"/><line x1=\"9\" y1=\"19\" x2=\"11\" y2=\"19\"/></svg>",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hospital in a few simple steps. Takes <strong>less than 2 minutes.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>",
+        "badgeText": "~2<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg>",
+        "title": "Secure Data Analysis",
+        "desc": "We securely analyze your data against <strong>25+</strong> risk factors across <strong>6 key</strong> categories.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/><path d=\"M11 8v3l2 2\"/></svg>",
+        "title": "Risk Assessment",
+        "desc": "Our advanced model identifies <strong>gaps, vulnerabilities,</strong> and potential <strong>exposures</strong> specific to your hospital.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><line x1=\"12\" y1=\"7\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"12\" x2=\"16\" y2=\"16\"/></svg>",
+        "title": "Generate Your Risk Score",
+        "desc": "We calculate your <strong>overall risk score</strong> and show you where you stand.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M18 20V10\"/><path d=\"M12 20V4\"/><path d=\"M6 20v-6\"/></svg>",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><path d=\"M16 13H8\"/><path d=\"M16 17H8\"/><path d=\"M10 9H8\"/></svg>",
+        "title": "Get Your Full Report",
+        "desc": "Receive a <strong>detailed report</strong> with key findings, risk breakdown, and recommended actions.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/></svg>",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your insights to fix gaps, reduce exposure, and <strong>protect what matters most.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ]
   },
   "sme": {
     "title": "SME Risk Assessment | CoverScore",
@@ -1005,6 +1155,56 @@
     "shortName": "Business",
     "shortNameLower": "business",
     "shortNamePlural": "businesses",
-    "facilityType": "Small Businesses"
+    "facilityType": "Small Businesses",
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/><line x1=\"9\" y1=\"11\" x2=\"15\" y2=\"11\"/><line x1=\"9\" y1=\"19\" x2=\"11\" y2=\"19\"/></svg>",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hospital in a few simple steps. Takes <strong>less than 2 minutes.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>",
+        "badgeText": "~2<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg>",
+        "title": "Secure Data Analysis",
+        "desc": "We securely analyze your data against <strong>25+</strong> risk factors across <strong>6 key</strong> categories.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/><path d=\"M11 8v3l2 2\"/></svg>",
+        "title": "Risk Assessment",
+        "desc": "Our advanced model identifies <strong>gaps, vulnerabilities,</strong> and potential <strong>exposures</strong> specific to your hospital.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><line x1=\"12\" y1=\"7\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"12\" x2=\"16\" y2=\"16\"/></svg>",
+        "title": "Generate Your Risk Score",
+        "desc": "We calculate your <strong>overall risk score</strong> and show you where you stand.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M18 20V10\"/><path d=\"M12 20V4\"/><path d=\"M6 20v-6\"/></svg>",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><path d=\"M16 13H8\"/><path d=\"M16 17H8\"/><path d=\"M10 9H8\"/></svg>",
+        "title": "Get Your Full Report",
+        "desc": "Receive a <strong>detailed report</strong> with key findings, risk breakdown, and recommended actions.",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "<svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/></svg>",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your insights to fix gaps, reduce exposure, and <strong>protect what matters most.</strong>",
+        "badgeIcon": "<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><polyline points=\"9 12 11 14 15 10\"/></svg>",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ]
   }
 }
