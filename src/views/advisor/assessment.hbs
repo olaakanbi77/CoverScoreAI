@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{title}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F172A;
+      --navy-light: #1E293B;
+      --green: #108A43;
+      --green-light: #16A34A;
+      --green-bg: #F0FDF4;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #0F172A;
+      --text-sec: #64748B;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font);
+      background-color: #E2E8F0;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--bg);
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; background: var(--card);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .back-btn {
+      background: none; border: none; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none;
+    }
+    .page-title { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .save-exit-btn {
+      background: none; border: none; color: var(--green); font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none;
+    }
+
+    .main-content {
+      padding: 16px 16px 120px; /* space for bottom actions and nav */
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    /* HEADER CARD */
+    .header-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--border);
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .lead-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; flex-shrink: 0;
+      background: var(--green-bg); color: var(--green);
+    }
+    .lead-title { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .lead-title h1 { font-size: 16px; font-weight: 700; color: var(--navy); }
+    .lead-meta { font-size: 13px; color: var(--text-sec); }
+    .status-pill {
+      font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px;
+      background: var(--green-bg); color: var(--green); white-space: nowrap;
+    }
+
+    /* ASSESSMENT CARD */
+    .assessment-card {
+      background: var(--card); border-radius: 16px; padding: 24px 20px;
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 24px;
+    }
+
+    /* PROGRESS */
+    .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .question-count { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .percent-complete { font-size: 12px; font-weight: 600; color: var(--text-sec); }
+    .progress-bar-bg { width: 100%; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.3s; }
+
+    /* QUESTION */
+    .question-section { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .question-text-wrap { flex: 1; }
+    .question-title { font-size: 20px; font-weight: 800; color: var(--navy); line-height: 1.3; margin-bottom: 8px; }
+    .question-sub { font-size: 14px; color: var(--text-sec); }
+    .question-icon { width: 64px; height: 64px; color: var(--green-light); flex-shrink: 0; }
+
+    /* ANSWER DISPLAY */
+    .answer-display {
+      border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .answer-icon { color: var(--green); }
+    .answer-value { font-size: 24px; font-weight: 800; color: var(--navy); flex: 1; text-align: center; }
+    .answer-unit { font-size: 14px; color: var(--text-sec); font-weight: 500; width: 40px; text-align: right; }
+    .looks-good {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      color: var(--green); font-size: 13px; font-weight: 700; margin-top: -12px;
+    }
+
+    /* SLIDER ADJUSTMENT */
+    .adjust-section {
+      border: 1px solid var(--border); border-radius: 12px; padding: 20px 16px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .adjust-label { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .slider-container { position: relative; width: 100%; margin-top: 20px; margin-bottom: 8px; }
+    
+    input[type=range] {
+      -webkit-appearance: none; width: 100%; background: transparent;
+    }
+    input[type=range]:focus { outline: none; }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%; height: 4px; cursor: pointer; background: var(--border); border-radius: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 24px; width: 24px; border-radius: 50%; background: var(--green);
+      cursor: pointer; -webkit-appearance: none; margin-top: -10px; position: relative; z-index: 3;
+    }
+    .slider-track-fill {
+      position: absolute; top: 0; left: 0; height: 4px; background: var(--green);
+      border-radius: 2px; z-index: 1; pointer-events: none;
+    }
+    .slider-tooltip {
+      position: absolute; top: -36px; left: 50%; transform: translateX(-50%);
+      background: var(--green); color: white; padding: 4px 8px; border-radius: 6px;
+      font-size: 12px; font-weight: 700; pointer-events: none;
+    }
+    .slider-tooltip::after {
+      content: ''; position: absolute; top: 100%; left: 50%; margin-left: -4px;
+      border-width: 4px; border-style: solid; border-color: var(--green) transparent transparent transparent;
+    }
+    .slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sec); }
+
+    /* TIP */
+    .tip-card {
+      background: var(--green-bg); border-radius: 12px; padding: 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .tip-icon { color: var(--green); margin-top: 2px; }
+    .tip-content .tip-title { font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+    .tip-content .tip-text { font-size: 13px; color: var(--text-sec); line-height: 1.4; }
+
+    /* BOTTOM ACTIONS */
+    .bottom-actions {
+      display: flex; gap: 16px; margin-top: 8px;
+    }
+    .btn-action {
+      flex: 1; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+    }
+    .btn-back { background: transparent; border: 1px solid var(--border); color: var(--navy); }
+    .btn-next { background: var(--green); border: none; color: white; }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: var(--card); border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around; padding: 12px 16px 24px;
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
+      z-index: 50;
+    }
+    .b-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--text-sec);
+    }
+    .b-nav-item.active { color: var(--green-light); border-bottom: 2px solid var(--green-light); padding-bottom: 2px; }
+    .b-nav-item span { font-size: 11px; font-weight: 600; }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <a href="/admin/leads/{{lead.id}}" class="back-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <div class="page-title">Assessment</div>
+      <a href="/admin/leads/{{lead.id}}" class="save-exit-btn">Save & Exit</a>
+    </header>
+
+    <main class="main-content">
+      
+      <!-- HEADER CARD -->
+      <div class="header-card">
+        <div class="header-left">
+          <div class="lead-avatar">{{lead.initials}}</div>
+          <div>
+            <div class="lead-title">
+              <h1>{{lead.business_name}}</h1>
+            </div>
+            <div class="lead-meta">
+              {{lead.entity_type_display}} • {{lead.address}}
+            </div>
+          </div>
+        </div>
+        <div class="status-pill">In Progress</div>
+      </div>
+
+      <!-- ASSESSMENT CONTENT -->
+      <div class="assessment-card">
+        
+        <div class="progress-section">
+          <div class="progress-header">
+            <div class="question-count" id="q-count">Question 4 of 12</div>
+            <div class="percent-complete" id="q-percent">33% Complete</div>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="q-bar" style="width: 33%;"></div>
+          </div>
+        </div>
+
+        <div class="question-section">
+          <div class="question-text-wrap">
+            <div class="question-title" id="q-title">What is the total number of hospital beds?</div>
+            <div class="question-sub" id="q-sub">Include all inpatient beds.</div>
+          </div>
+          <div class="question-icon" id="q-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="20" y="8" width="24" height="32" rx="2"/>
+              <path d="M28 20h8M32 16v8"/>
+              <path d="M12 40h40v12H12z"/>
+              <path d="M12 46h40M20 52v4M44 52v4"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="answer-display">
+          <svg class="answer-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></svg>
+          <div class="answer-value" id="display-value">120</div>
+          <div class="answer-unit" id="display-unit">beds</div>
+        </div>
+
+        <div class="looks-good">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--green)" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+          Looks good
+        </div>
+
+        <div class="adjust-section">
+          <div class="adjust-label">Adjust if needed</div>
+          <div class="slider-container">
+            <div class="slider-track-fill" id="slider-fill" style="width: 12%;"></div>
+            <div class="slider-tooltip" id="slider-tooltip" style="left: 12%;">120</div>
+            <input type="range" id="range-input" min="1" max="1000" value="120">
+          </div>
+          <div class="slider-labels">
+            <span id="slider-min-lbl">1</span>
+            <span id="slider-max-lbl">1,000</span>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <svg class="tip-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2v1M12 7a5 5 0 1 0 0 10v1"/></svg>
+          <div class="tip-content">
+            <div class="tip-title">Tip</div>
+            <div class="tip-text" id="q-tip">This helps us assess your capacity and potential exposure more accurately.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="bottom-actions">
+        <button class="btn-action btn-back" id="btn-back">Back</button>
+        <button class="btn-action btn-next" id="btn-next">Next <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a href="/advisor/dashboard" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="/admin/leads" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Leads</span>
+      </a>
+      <a href="/admin/assessments" class="b-nav-item active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 9h-2V7h-2v5H6v2h2v5h2v-5h2v-2z"/></svg>
+        <span>Assessments</span>
+      </a>
+      <a href="/admin/proposals" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Quotes</span>
+      </a>
+      <a href="/admin/settings" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>More</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    // 12 Mock Questions
+    const questions = [
+      { id: 1, title: "What is your primary medical specialty?", sub: "Select the specialty that accounts for the majority of your practice.", min: 1, max: 10, val: 2, unit: "spec", tip: "Different specialties carry inherently different risk profiles for malpractice." },
+      { id: 2, title: "How many years of active practice experience?", sub: "Count only fully licensed years.", min: 1, max: 50, val: 12, unit: "yrs", tip: "Experience level strongly correlates with claim frequency and severity." },
+      { id: 3, title: "What is the total number of hospital locations?", sub: "Count only physical campuses.", min: 1, max: 50, val: 3, unit: "loc", tip: "Multi-site operations require complex liability calculations." },
+      { id: 4, title: "What is the total number of hospital beds?", sub: "Include all inpatient beds.", min: 1, max: 1000, val: 120, unit: "beds", tip: "This helps us assess your capacity and potential exposure more accurately." },
+      { id: 5, title: "Annual outpatient visits?", sub: "Average estimate for the past year.", min: 1000, max: 100000, val: 15000, unit: "visits", tip: "Outpatient volume is a key driver for general liability risk." },
+      { id: 6, title: "Number of employed physicians?", sub: "Full-time equivalent only.", min: 1, max: 500, val: 45, unit: "MDs", tip: "Staffing ratios impact quality of care and risk." },
+      { id: 7, title: "Number of nursing staff?", sub: "Registered nurses and practitioners.", min: 10, max: 2000, val: 350, unit: "RNs", tip: "Adequate nursing staff reduces the risk of operational negligence." },
+      { id: 8, title: "Annual revenue estimate?", sub: "Gross revenue in millions.", min: 1, max: 1000, val: 25, unit: "$M", tip: "Revenue bands dictate the scale of financial protection needed." },
+      { id: 9, title: "Previous malpractice claims in 5 years?", sub: "Include closed and open claims.", min: 0, max: 20, val: 1, unit: "claims", tip: "Claims history is the most heavily weighted predictive factor." },
+      { id: 10, title: "Cybersecurity audit score?", sub: "From your latest annual IT audit.", min: 1, max: 100, val: 85, unit: "pts", tip: "Cyber liability is a rapidly growing area of medical risk." },
+      { id: 11, title: "Percentage of surgical procedures?", sub: "Compared to general care.", min: 0, max: 100, val: 40, unit: "%", tip: "Surgical volume exponentially increases malpractice exposure." },
+      { id: 12, title: "Desired coverage limit?", sub: "Per occurrence in millions.", min: 1, max: 50, val: 5, unit: "$M", tip: "Higher limits offer more protection but increase premium costs." },
+    ];
+
+    let currentIdx = 3; // Start at question 4 (0-indexed = 3)
+    
+    const elements = {
+      count: document.getElementById('q-count'),
+      percent: document.getElementById('q-percent'),
+      bar: document.getElementById('q-bar'),
+      title: document.getElementById('q-title'),
+      sub: document.getElementById('q-sub'),
+      dispVal: document.getElementById('display-value'),
+      dispUnit: document.getElementById('display-unit'),
+      tip: document.getElementById('q-tip'),
+      input: document.getElementById('range-input'),
+      sliderFill: document.getElementById('slider-fill'),
+      sliderTooltip: document.getElementById('slider-tooltip'),
+      sliderMin: document.getElementById('slider-min-lbl'),
+      sliderMax: document.getElementById('slider-max-lbl'),
+      btnBack: document.getElementById('btn-back'),
+      btnNext: document.getElementById('btn-next')
+    };
+
+    function updateSliderUI(val, min, max) {
+      const percentage = ((val - min) / (max - min)) * 100;
+      elements.sliderFill.style.width = percentage + '%';
+      elements.sliderTooltip.style.left = percentage + '%';
+      elements.sliderTooltip.innerText = parseInt(val).toLocaleString();
+      elements.dispVal.innerText = parseInt(val).toLocaleString();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIdx];
+      const qNum = currentIdx + 1;
+      const pct = Math.round((qNum / questions.length) * 100);
+      
+      elements.count.innerText = `Question ${qNum} of ${questions.length}`;
+      elements.percent.innerText = `${pct}% Complete`;
+      elements.bar.style.width = `${pct}%`;
+      
+      elements.title.innerText = q.title;
+      elements.sub.innerText = q.sub;
+      elements.tip.innerText = q.tip;
+      elements.dispUnit.innerText = q.unit;
+      
+      elements.input.min = q.min;
+      elements.input.max = q.max;
+      elements.input.value = q.val;
+      
+      elements.sliderMin.innerText = q.min.toLocaleString();
+      elements.sliderMax.innerText = q.max.toLocaleString();
+      
+      updateSliderUI(q.val, q.min, q.max);
+    }
+
+    elements.input.addEventListener('input', (e) => {
+      const val = e.target.value;
+      const min = e.target.min;
+      const max = e.target.max;
+      questions[currentIdx].val = val; // save
+      updateSliderUI(val, min, max);
+    });
+
+    elements.btnBack.addEventListener('click', () => {
+      if (currentIdx > 0) {
+        currentIdx--;
+        renderQuestion();
+      }
+    });
+
+    elements.btnNext.addEventListener('click', () => {
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        renderQuestion();
+      } else {
+        alert('Assessment Review Complete!');
+        window.location.href = `/admin/leads/{{lead.id}}`;
+      }
+    });
+
+    // Init
+    renderQuestion();
+  </script>
+</body>
+</html>

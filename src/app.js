@@ -328,6 +328,28 @@ app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
   }
 });
 
+app.get('/admin/leads/:id/assessment', authenticatePage, async (req, res) => {
+  try {
+    const lead = await get("SELECT * FROM leads WHERE id = ?", [req.params.id]);
+    if (!lead) return res.status(404).send('Lead not found');
+
+    const initials = (lead.business_name || lead.name || '??').substring(0, 2).toUpperCase();
+    lead.initials = initials;
+    lead.address = lead.location || 'Abuja';
+    lead.entity_type_display = lead.entity_type === 'hospital' ? 'Hospital' : 'Clinic';
+    
+    res.render('advisor/assessment', { 
+      title: 'Assessment', 
+      activePage: 'assessments', 
+      layout: false, 
+      lead
+    });
+  } catch (err) {
+    console.error('Error fetching lead assessment:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get('/admin/settings', authenticatePage, (req, res) => {
   res.render('admin/settings', { title: 'Settings', activePage: 'settings', layout: 'admin' });
 });
