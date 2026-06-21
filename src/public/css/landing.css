@@ -297,10 +297,12 @@ p { margin: 0; }
     padding: 14px 0 12px;
     border-bottom: 0;
     box-shadow: none;
+    position: relative;
+    z-index: 1000;
   }
 
   .navbar-inner {
-    padding: 0 30px;
+    padding: 0 16px;
   }
 
   .logo img {
