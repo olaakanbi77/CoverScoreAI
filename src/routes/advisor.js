@@ -193,6 +193,10 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     
     // Proposals Pending (Proposal Sent stage)
     const proposalsPendingCount = leads.filter(l => l.pipeline_stage === 4).length;
+    
+    // Mobile Dashboard Stats
+    const newLeadsCount = leads.filter(l => l.status === 'New Lead').length;
+    const assessmentsPendingCount = leads.filter(l => !l.assessment_id).length;
 
     // Conversion rate
     const conversionRate = leads.length > 0 ? Math.round((wonDealsCount / leads.length) * 100) : 0;
@@ -204,7 +208,9 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
       policiesSold: wonDealsCount,
       estPremium: premiumFormatted,
       activePipelineValue: activePipelineValueFormatted,
-      conversionRate: `${conversionRate}%`
+      conversionRate: `${conversionRate}%`,
+      newLeads: newLeadsCount,
+      assessmentsPending: assessmentsPendingCount
     };
 
     res.render('advisor/dashboard', {

@@ -2,1801 +2,510 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advisor Dashboard - CoverScore AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Advisor Dashboard - CoverScore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy: #0B1F3A;
-      --navy-light: #132a4a;
-      --green: #16A34A;
-      --green-hover: #15803D;
-      --success: #22C55E;
-      --orange: #F59E0B;
-      --red: #EF4444;
-      --bg: #F8FAFC;
+      --navy: #0F172A;
+      --navy-light: #1E293B;
+      --green: #108A43; /* Matches the dark green card in screenshot */
+      --green-light: #16A34A; /* Logo score green */
+      --green-bg: #F0FDF4;
+      --orange: #F97316;
+      --orange-bg: #FFF7ED;
+      --blue: #3B82F6;
+      --blue-bg: #EFF6FF;
+      --purple: #8B5CF6;
+      --purple-bg: #F5F3FF;
+      --bg: #F9FAFB;
       --card: #FFFFFF;
-      --border: #E5E7EB;
-      --text: #111827;
-      --text-secondary: #6B7280;
-      --text-muted: #9CA3AF;
-      --sidebar-width: 220px;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --border: #F1F5F9;
+      --text: #0F172A;
+      --text-sec: #64748B;
+      --font: 'Inter', system-ui, sans-serif;
     }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       font-family: var(--font);
-      background: var(--bg);
+      background-color: #E2E8F0; /* Darker bg outside the app container on desktop */
       color: var(--text);
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      font-size: 13px;
+      -webkit-font-smoothing: antialiased;
     }
-    .sidebar {
-      width: var(--sidebar-width);
-      background: linear-gradient(180deg, #0B1F3A 0%, #0a1a30 100%);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 100;
-    }
-    .sidebar-brand {
-      padding: 24px 20px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .brand-name { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-    .brand-name span { color: var(--green); }
-    .brand-badge {
-      display: inline-block;
-      background: var(--green);
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      vertical-align: super;
-      margin-left: 2px;
-    }
-    .brand-subtitle { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px; letter-spacing: 0.3px; }
-    .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
-    .sidebar-nav::-webkit-scrollbar { width: 3px; }
-    .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 20px;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 0.15s;
-      border-left: 3px solid transparent;
-      cursor: pointer;
-    }
-    .nav-item:hover { color: white; background: rgba(255,255,255,0.04); }
-    .nav-item.active {
-      color: white;
-      background: rgba(22, 163, 74, 0.15);
-      border-left-color: var(--green);
-    }
-    .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7; }
-    .nav-item.active svg { opacity: 1; }
-    .nav-section-label {
-      padding: 16px 20px 6px;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.3);
-    }
-    .sidebar-summary {
-      margin: 12px 16px;
-      padding: 16px;
-      background: rgba(255,255,255,0.05);
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .summary-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .summary-item { }
-    .summary-label { font-size: 11px; color: rgba(255,255,255,0.4); }
-    .summary-value { font-size: 15px; font-weight: 700; color: white; }
-    .summary-premium { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
-    .summary-premium .summary-label { font-size: 10px; }
-    .summary-premium .summary-value { font-size: 18px; color: var(--green); }
-    .sidebar-profile {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .profile-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--green);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 16px; color: white;
-      flex-shrink: 0;
-    }
-    .profile-info { min-width: 0; }
-    .profile-name { font-size: 13px; font-weight: 600; color: white; }
-    .profile-role { font-size: 11px; color: rgba(255,255,255,0.4); }
-    
-    .main-wrapper {
-      margin-left: var(--sidebar-width);
+
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--bg);
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-      flex: 1;
-      height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
     }
-    
+
     /* TOP BAR */
     .top-bar {
-      height: 64px;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
-      flex-shrink: 0;
-    }
-    .search-container {
-      position: relative;
-      width: 400px;
-    }
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
-    .search-input {
-      width: 100%;
-      padding: 10px 10px 10px 40px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      font-family: var(--font);
-      font-size: 13px;
-      color: var(--text);
-    }
-    .search-input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
-    .top-bar-actions {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .action-icon-btn {
-      position: relative;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .action-icon-btn:hover { color: var(--text); }
-    .action-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: var(--green);
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      border: 2px solid var(--card);
-    }
-    .action-badge.red { background: var(--red); }
-    .top-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 20px; border-left: 1px solid var(--border); }
-    
-    /* CONTENT COLUMNS */
-    .content-columns {
-      display: flex;
-      flex: 1;
-      overflow-x: auto;
-    }
-    .col-leads {
-      width: 260px;
-      flex-shrink: 0;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      background: var(--card);
-    }
-    .col-profile {
-      flex: 1;
-      min-width: 320px;
-      overflow-y: auto;
-      padding: 16px;
-      background: var(--bg);
-    }
-    .col-whatsapp {
-      width: 300px;
-      flex-shrink: 0;
-      border-left: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      background: var(--card);
-    }
-    .col-recommendations {
-      width: 260px;
-      flex-shrink: 0;
-      border-left: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-      overflow-y: auto;
-      padding: 16px;
-    }
-
-    /* SHARED HEADER */
-    .col-header {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--navy); display: flex; align-items: center; gap: 8px;}
-    .col-title-number { color: var(--text-muted); font-size: 11px; }
-
-    /* COLUMN 1: LEADS */
-    .filter-tabs { display: flex; gap: 8px; margin-top: 12px; }
-    .filter-tab {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--text-secondary);
-      background: transparent;
-      border: 1px solid transparent;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .filter-tab:hover { background: var(--bg); }
-    .filter-tab.active { color: var(--navy); border-color: var(--border); box-shadow: var(--shadow); }
-    .filter-badge {
-      background: var(--bg); padding: 2px 6px; border-radius: 10px; font-size: 11px; color: var(--text-secondary);
-    }
-    .filter-tab.active .filter-badge { background: #e0e7ff; color: #4338ca; }
-    .filter-tab.hot .filter-badge { background: #fee2e2; color: #b91c1c; }
-
-    .lead-queue { flex: 1; overflow-y: auto; padding: 16px; background: var(--bg); }
-    .lead-queue::-webkit-scrollbar { width: 4px; }
-    .lead-queue::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-    .lead-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: all 0.15s;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-    .lead-card:hover { box-shadow: var(--shadow); border-color: #d1d5db; transform: translateY(-1px); }
-    .lead-card.selected { border-color: #fca5a5; box-shadow: 0 0 0 1px #fca5a5; }
-    .lead-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .lead-card-company { display: flex; align-items: center; gap: 10px; }
-    .lead-avatar {
-      width: 40px; height: 40px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-weight: 700; font-size: 14px;
-    }
-    .lead-avatar.blue { color: #2563EB; background: #DBEAFE; }
-    .lead-avatar.orange { color: #D97706; background: #FEF3C7; }
-    .lead-avatar.purple { color: #9333EA; background: #F3E8FF; }
-    .lead-avatar.green { color: #16A34A; background: #DCFCE7; }
-    
-    .lead-card-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .lead-badge {
-      display: inline-block;
-      font-size: 10px; font-weight: 600;
-      padding: 2px 8px; border-radius: 4px;
-      border: 1px solid;
-    }
-    .lead-badge.hot { background: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-    .lead-badge.warm { background: #FFFBEB; color: #D97706; border-color: #FDE68A; }
-    .lead-badge.follow-up { background: #F3F4F6; color: #4B5563; border-color: #E5E7EB; }
-    
-    .lead-card-score { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px;}
-    .lead-card-score-item { display: flex; flex-direction: column; gap: 2px; }
-    .lead-card-score-label { color: var(--text-muted); font-size: 11px; }
-    .lead-card-score-val { font-weight: 600; color: var(--text); }
-    .val-high { color: #DC2626; }
-    
-    .lead-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px dashed var(--border); }
-    .lead-card-action { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--green); }
-    .lead-card-time { font-size: 11px; color: var(--text-muted); }
-
-    /* COLUMN 2: PROFILE */
-    .section-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      margin-bottom: 20px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .section-header {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .menu-btn {
+      background: none; border: none; color: var(--navy); cursor: pointer;
+    }
+    .brand {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+    }
+    .brand-cover { color: var(--navy); }
+    .brand-score { color: var(--green-light); }
+    .notification-btn {
+      background: none; border: none; color: var(--navy); cursor: pointer; position: relative;
+    }
+    .notif-badge {
+      position: absolute;
+      top: -2px; right: -4px;
+      background: #EF4444; color: white;
+      font-size: 10px; font-weight: 700;
+      width: 16px; height: 16px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+
+    .main-content {
+      padding: 0 20px 100px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* PROFILE SECTION */
+    .profile-section {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 16px;
+      margin-top: 8px;
+      margin-bottom: 24px;
     }
-    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--navy); display: flex; align-items: center; gap: 8px;}
-    .section-body { padding: 16px; }
+    .avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 24px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .avatar img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .profile-text .greeting {
+      font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+    }
+    .profile-text .date {
+      font-size: 13px; font-weight: 500; color: var(--text-sec); margin-bottom: 2px;
+    }
+    .profile-text .subtitle {
+      font-size: 13px; color: var(--text-sec);
+    }
 
-    /* Lead Intel Grid */
-    .intel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .intel-score {
+    /* PIPELINE CARD */
+    .pipeline-card {
+      background: var(--green);
+      border-radius: 20px;
+      padding: 20px;
+      color: white;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(16, 138, 67, 0.25);
+    }
+    .pipeline-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 24px;
+    }
+    .pipeline-title {
       display: flex; align-items: center; gap: 12px;
     }
-    .score-gauge-container { position: relative; width: 80px; height: 80px; }
-    .score-gauge-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-    .score-gauge-bg { fill: none; stroke: #E5E7EB; stroke-width: 8; }
-    .score-gauge-fill { fill: none; stroke: var(--green); stroke-width: 8; stroke-dasharray: 251.2; stroke-dashoffset: calc(251.2 - (251.2 * 92) / 100); stroke-linecap: round; }
-    .score-gauge-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .score-gauge-num { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1; }
-    .score-gauge-sub { font-size: 10px; color: var(--text-muted); }
-    
-    .intel-item { display: flex; flex-direction: column; gap: 4px; }
-    .intel-label { font-size: 11px; color: var(--text-muted); }
-    .intel-value { font-size: 14px; font-weight: 600; color: var(--text); }
-    
-    .client-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .client-avatar { width: 44px; height: 44px; border-radius: 8px; background: #DBEAFE; color: #2563EB; display: flex; align-items: center; justify-content: center; }
-    .client-name { font-size: 16px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px;}
-    
-    .client-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-bottom: 24px; }
-    .client-info-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); width: 100%; min-width: 0; }
-    .client-info-item svg { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
-    .truncate-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+    .pipeline-icon-circle {
+      width: 40px; height: 40px; border-radius: 50%; background: white;
+      display: flex; align-items: center; justify-content: center; color: var(--green);
+    }
+    .pipeline-title h2 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+    .pipeline-title p { font-size: 12px; opacity: 0.9; }
+    .view-all-btn {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      text-decoration: none; display: inline-block;
+    }
 
-    .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .risk-col-title { font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--navy); margin-bottom: 16px; }
-    
-    .risk-list-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); margin-bottom: 12px; }
-    .risk-list-item svg { width: 16px; height: 16px; color: #EF4444; flex-shrink: 0; }
-    .gap-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); margin-bottom: 12px; }
-    .gap-icon { width: 16px; height: 16px; color: #F59E0B; flex-shrink: 0; }
-    .risk-bar-item { margin-bottom: 16px; }
-    .risk-bar-item:last-child { margin-bottom: 0; }
-    .risk-bar-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
-    .risk-bar-name { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-    .risk-bar-score { font-size: 12px; font-weight: 600; color: var(--text); }
-    .risk-bar-track { height: 6px; background: #E5E7EB; border-radius: 10px; overflow: hidden; }
-    .risk-bar-fill { height: 100%; border-radius: 10px; }
-    .risk-bar-fill.critical { background: #DC2626; }
-    .risk-bar-fill.high { background: #F59E0B; }
-    .risk-bar-fill.medium { background: #FBBF24; }
-    .risk-bar-fill.low { background: var(--success); }
-
-    .gap-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 12px; }
-    .gap-icon { width: 16px; height: 16px; flex-shrink: 0; color: #DC2626; margin-top: 1px; }
-
-    .notes-textarea {
-      width: 100%; min-height: 80px;
-      border: 1px solid var(--border); border-radius: var(--radius-sm);
-      padding: 12px; font-family: var(--font); font-size: 13px;
-      color: var(--text); resize: vertical;
-      background: var(--bg);
+    .pipeline-stats {
+      display: flex; justify-content: space-between;
     }
-    .notes-textarea:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
-
-    /* COLUMN 3: WHATSAPP */
-    .chat-area { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #F9FAFB; }
-    .chat-area::-webkit-scrollbar { width: 4px; }
-    .chat-area::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-    .chat-date { text-align: center; font-size: 11px; color: var(--text-muted); margin: 8px 0; }
-    .chat-date span { background: white; padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); }
-    .chat-msg { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 13px; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .chat-msg.client {
-      align-self: flex-start;
-      background: white;
-      color: var(--text);
-      border-bottom-left-radius: 4px;
-      border: 1px solid var(--border);
+    .stat-col {
+      display: flex; flex-direction: column; gap: 4px;
+      flex: 1; padding: 0 4px;
     }
-    .chat-msg.advisor {
-      align-self: flex-end;
-      background: #DCF8C6; /* WhatsApp light green */
-      color: #111827;
-      border-bottom-right-radius: 4px;
+    .stat-col.divider {
+      border-left: 1px solid rgba(255,255,255,0.2);
+      padding-left: 12px;
     }
-    .chat-msg-time { font-size: 10px; color: rgba(0,0,0,0.4); margin-top: 4px; text-align: right; }
-    
-    .chat-input-area {
-      padding: 16px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: white;
+    .stat-top {
+      display: flex; align-items: center; gap: 8px;
     }
-    .chat-input {
-      flex: 1;
-      min-width: 0;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 12px 16px;
-      font-family: var(--font);
-      font-size: 13px;
-      background: #F3F4F6;
+    .stat-value {
+      font-size: 24px; font-weight: 800; line-height: 1;
     }
-    .chat-input:focus { outline: none; background: white; border-color: var(--green); }
-    .chat-btn {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      border: none;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      background: transparent;
-      color: var(--text-secondary);
-      transition: all 0.15s;
+    .stat-meta-icon {
+      width: 24px; height: 24px; border-radius: 50%; background: white;
+      display: flex; align-items: center; justify-content: center; color: var(--green);
       flex-shrink: 0;
     }
-    .chat-btn:hover { background: #F3F4F6; color: var(--text); }
-    .chat-btn.send { background: var(--green); color: white; }
-    .chat-btn.send:hover { background: var(--green-hover); }
+    .stat-label { font-size: 11px; font-weight: 600; line-height: 1.3; margin-top: 2px; }
 
-    /* COLUMN 4: RECOMMENDATIONS & ACTIONS */
-    .rec-card {
-      background: white; border: 1px solid var(--border); border-radius: var(--radius-sm);
-      padding: 12px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    /* SECTIONS */
+    .section-title {
+      font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 16px;
     }
-    .rec-icon { width: 28px; height: 28px; border-radius: 8px; background: #F3F4F6; display: flex; align-items: center; justify-content: center; color: #4B5563; flex-shrink: 0; }
-    .rec-info { flex: 1; }
-    .rec-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-    .rec-priority { font-size: 10px; font-weight: 600; }
-    .rec-priority.high { color: #DC2626; }
-    .rec-priority.medium { color: #D97706; }
+    .section-title.green { color: var(--green); }
 
-    .tp-list { list-style: none; padding: 0; margin: 0 0 24px 0; }
-    .tp-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;
+    /* NEXT ACTION */
+    .next-action-container { margin-bottom: 28px; }
+    .action-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     }
-    .tp-item::before {
-      content: "•"; color: var(--text-muted); font-size: 16px; margin-top: -2px;
+    .action-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
     }
-
-    .action-panel { display: flex; flex-direction: column; gap: 8px; }
-    .action-btn {
-      display: flex; align-items: center; justify-content: flex-start; gap: 8px;
-      width: 100%; padding: 10px 14px;
-      border: none; border-radius: var(--radius-sm);
-      font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all 0.15s;
-      font-family: var(--font); color: white;
+    .action-icon {
+      width: 56px; height: 56px; border-radius: 50%; background: var(--green-bg);
+      display: flex; align-items: center; justify-content: center; color: var(--green-light);
     }
-    .action-btn:hover { filter: brightness(0.95); }
-    .action-btn.green { background: #16A34A; }
-    .action-btn.blue { background: #2563EB; }
-    .action-btn.orange { background: #F59E0B; }
-    .action-btn.red { background: #EF4444; }
-
-    /* UTILS */
-    .flex { display: flex; }
-    .items-center { align-items: center; }
-    .justify-between { justify-content: space-between; }
-    .gap-2 { gap: 8px; }
-    .mt-4 { margin-top: 16px; }
-    .text-sm { font-size: 12px; }
-    .text-muted { color: var(--text-muted); }
-    .font-semibold { font-weight: 600; }
-
-    /* MODALS */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
-      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px;
+    .action-details { flex: 1; }
+    .action-details h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .action-details p { font-size: 13px; color: var(--text-sec); margin-bottom: 6px; }
+    .action-badge {
+      display: inline-block; background: var(--orange-bg); color: var(--orange);
+      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px;
     }
-    .modal-overlay.show { display: flex; }
-    .modal-container {
-      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-      width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
-      box-shadow: var(--shadow-md); animation: modalEnter 0.3s ease-out;
-    }
-    @keyframes modalEnter {
-      from { opacity: 0; transform: scale(0.95) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .modal-title { font-size: 18px; font-weight: 600; color: var(--text); margin: 0; }
-    .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    .modal-close:hover { color: var(--text); }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
-    .form-control {
-      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
-      background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px;
-    }
-    .form-control:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
-    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
-    .btn-secondary { padding: 8px 16px; border: 1px solid var(--border); background: white; color: var(--text); border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
-    .btn-secondary:hover { background: var(--bg); }
-    .btn-primary { padding: 8px 16px; border: none; background: var(--green); color: white; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
-    .btn-primary:hover { background: var(--green-hover); }
-
-    /* COPILOT STYLES */
-    .copilot-fab {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--green) 0%, #0e7836 100%);
-      color: white;
-      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 1000;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 3px solid rgba(255,255,255,0.2);
-    }
-    .copilot-fab:hover {
-      transform: scale(1.05) translateY(-5px);
-      box-shadow: 0 15px 35px rgba(22, 163, 74, 0.5);
-    }
-    .copilot-panel {
-      position: fixed;
-      bottom: 100px;
-      right: 24px;
-      width: 380px;
-      height: 600px;
-      max-height: 80vh;
-      background: var(--card);
-      border-radius: 16px;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      z-index: 999;
-      transform: translateY(20px);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-      overflow: hidden;
-    }
-    .copilot-panel.open {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: all;
-    }
-    .copilot-header {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-      color: white;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .copilot-title {
-      font-weight: 700;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .copilot-close {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.7);
+    .action-chevron { color: var(--text-sec); }
+    .btn-generate {
+      width: 100%; background: var(--green); color: white; border: none;
+      padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600;
       cursor: pointer;
     }
-    .copilot-close:hover { color: white; }
-    .copilot-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      background: #F8FAFC;
-    }
-    .copilot-msg {
-      max-width: 85%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .copilot-msg.ai {
-      background: white;
-      border: 1px solid var(--border);
-      border-top-left-radius: 4px;
-      align-self: flex-start;
-      color: var(--text);
-      position: relative;
-    }
-    .copilot-msg-download {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 8px;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--green);
-      background: rgba(22, 163, 74, 0.1);
-      padding: 4px 8px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .copilot-msg-download:hover {
-      background: rgba(22, 163, 74, 0.2);
-    }
-    .pipeline-btn {
-      flex: 1;
-      padding: 6px 8px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      text-align: center;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-    .pipeline-btn:hover {
-      background: #f1f5f9;
-    }
-    .pipeline-btn.active {
-      background: var(--navy);
-      color: white;
-      border-color: var(--navy);
-    }
-    .pipeline-btn.completed {
-      background: rgba(22, 163, 74, 0.1);
-      color: var(--green);
-      border-color: rgba(22, 163, 74, 0.2);
-    }
-    .copilot-msg.human {
-      background: var(--navy);
-      color: white;
-      border-top-right-radius: 4px;
-      align-self: flex-end;
-    }
-    .copilot-msg p { margin-bottom: 8px; }
-    .copilot-msg p:last-child { margin-bottom: 0; }
-    .copilot-msg ul { margin-left: 20px; margin-bottom: 8px; }
-    .copilot-msg strong { font-weight: 700; color: var(--green); }
-    .copilot-msg.human strong { color: white; }
-    .copilot-presets {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: auto;
-      padding-top: 16px;
-    }
-    .copilot-preset-btn {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .copilot-preset-btn:hover {
-      background: rgba(22, 163, 74, 0.1);
-      color: var(--green);
-      border-color: var(--green);
-    }
-    .copilot-footer {
-      padding: 16px;
-      background: white;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-    }
-    .copilot-input {
-      flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 10px 16px;
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .copilot-input:focus { border-color: var(--green); }
-    .copilot-send {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--green);
-      color: white;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .copilot-send:disabled { background: var(--border); cursor: not-allowed; }
-    .copilot-loading {
-      display: inline-flex;
-      gap: 4px;
-    }
-    .copilot-loading span {
-      width: 6px;
-      height: 6px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: pulse 1.4s infinite ease-in-out both;
-    }
-    .copilot-loading span:nth-child(1) { animation-delay: -0.32s; }
-    .copilot-loading span:nth-child(2) { animation-delay: -0.16s; }
-    }
-    @keyframes pulse {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1); }
-    }
 
-    /* RESPONSIVE STYLES */
-    @media (max-width: 1024px) {
-      .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        z-index: 1000;
-        position: fixed;
-        height: 100vh;
-      }
-      .sidebar.open {
-        transform: translateX(0);
-        box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-      }
-      .main-wrapper {
-        margin-left: 0;
-      }
-      .top-bar {
-        padding: 0 16px;
-      }
-      .mobile-menu-btn {
-        display: block !important;
-      }
-      .top-profile > div:nth-child(2) {
-        display: none;
-      }
-      .content-columns {
-        flex-direction: column;
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-      .col-leads, .col-profile, .col-whatsapp, .col-recommendations {
-        width: 100%;
-        min-width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        flex-shrink: 0;
-      }
-      .col-leads {
-        height: 400px;
-      }
-      .col-profile, .col-whatsapp, .col-recommendations {
-        min-height: 500px;
-      }
-      .sidebar-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 999;
-      }
-      .sidebar-overlay.open {
-        display: block;
-      }
+    /* QUICK ACTIONS */
+    .quick-actions-container { margin-bottom: 28px; }
+    .qa-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
     }
+    .qa-item {
+      background: var(--card); border-radius: 16px; padding: 16px 8px;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03); cursor: pointer; text-decoration: none;
+    }
+    .qa-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qa-icon.green { background: var(--green-bg); color: var(--green-light); }
+    .qa-icon.blue { background: var(--blue-bg); color: var(--blue); }
+    .qa-icon.purple { background: var(--purple-bg); color: var(--purple); }
+    .qa-icon.orange { background: var(--orange-bg); color: var(--orange); }
+    .qa-label { font-size: 12px; font-weight: 600; color: var(--navy); line-height: 1.2; }
+
+    /* RECENT ACTIVITY */
+    .recent-activity-container { margin-bottom: 28px; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .view-all-link { font-size: 13px; font-weight: 600; color: var(--green); text-decoration: none; }
+    .activity-list {
+      background: var(--card); border-radius: 16px; padding: 0 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .activity-item {
+      display: flex; align-items: center; gap: 16px; padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    /* CSS trick to hide items beyond 3 */
+    .activity-item:nth-child(n+4) { display: none; }
+    
+    .act-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .act-icon.green { background: var(--green-bg); color: var(--green-light); border: 1px solid #DCFCE7; }
+    .act-icon.blue { background: var(--blue-bg); color: var(--blue); border: 1px solid #DBEAFE; }
+    .act-icon.orange { background: var(--orange-bg); color: var(--orange); border: 1px solid #FFEDD5; }
+    
+    .act-details { flex: 1; }
+    .act-details h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .act-details p { font-size: 12px; color: var(--text-sec); }
+    .act-meta { display: flex; align-items: center; gap: 12px; }
+    .act-time { font-size: 11px; color: var(--text-sec); }
+    .act-chevron { color: #CBD5E1; }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--card); border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around; padding: 12px 16px 24px;
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
+      z-index: 50;
+    }
+    .b-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--text-sec);
+    }
+    .b-nav-item.active { color: var(--green-light); }
+    .b-nav-item span { font-size: 11px; font-weight: 600; }
+
   </style>
 </head>
 <body>
-  <!-- MOBILE OVERLAY -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- LEFT SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-name">COVER<span>SCORE</span> <span class="brand-badge">AI</span></div>
-      <div class="brand-subtitle">Advisor Dashboard</div>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Main</div>
-      {{#if (eq user.role 'admin')}}
-      <a href="/admin/dashboard" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-        Admin Dashboard
-      </a>
-      {{/if}}
-      <a href="/advisor/dashboard" class="nav-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Advisor Workspace
-      </a>
-      <a href="/admin/leads" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Leads
-      </a>
-      <a href="/admin/leads?status=Won" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Clients
-      </a>
-      <a href="/admin/assessments" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
-        Assessments
-      </a>
-      <a href="/admin/consultations" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Consultations
-      </a>
-      <a href="/admin/proposals" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        Proposals
-      </a>
-      <a href="/admin/policies" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/></svg>
-        Policies
-      </a>
-      <a href="/admin/calendar" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Calendar
-      </a>
-      <a href="/admin/analytics" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-        Reports
-      </a>
-      <a href="/admin/settings" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Settings
-      </a>
-    </nav>
-    {{#if leads.length}}
-    <div class="sidebar-summary">
-      <div class="summary-title">Today's Summary</div>
-      <div class="summary-grid">
-        <div class="summary-item"><div class="summary-label">Hot Leads</div><div class="summary-value" style="color:#ef4444;">{{summary.hotLeads}}</div></div>
-        <div class="summary-item"><div class="summary-label">Consultations</div><div class="summary-value" style="color:#22c55e;">{{summary.consultations}}</div></div>
-        <div class="summary-item"><div class="summary-label">Proposals Sent</div><div class="summary-value" style="color:#f59e0b;">{{summary.proposalsSent}}</div></div>
-        <div class="summary-item"><div class="summary-label">Policies Sold</div><div class="summary-value" style="color:#22c55e;">{{summary.policiesSold}}</div></div>
-      </div>
-      <div class="summary-premium" style="margin-bottom: 12px;">
-        <div class="summary-label">Active Pipeline Value</div>
-        <div class="summary-value" style="color:var(--green);">{{summary.activePipelineValue}}</div>
-      </div>
-      <div class="summary-premium">
-        <div class="summary-label">Conversion Rate</div>
-        <div class="summary-value" style="color:#3b82f6;">{{summary.conversionRate}}</div>
-      </div>
-    </div>
-    {{/if}}
-
-    <div class="sidebar-profile">
-      <div style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;">{{userInitials user.name}}</div>
-      <div class="profile-info">
-        <div class="profile-name">{{user.name}}</div>
-        <div class="profile-role">Advisor</div>
-      </div>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:rgba(255,255,255,0.4);margin-left:auto;"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <div class="main-wrapper">
+  <div class="app-container">
+    
     <!-- TOP BAR -->
     <header class="top-bar">
-      <button class="mobile-menu-btn" id="mobileMenuBtn" style="display:none; background:none; border:none; cursor:pointer; margin-right: 16px; color: var(--navy);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <button class="menu-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-      <div class="search-container">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" class="search-input" placeholder="Search leads by name, company, phone...">
+      <div class="brand">
+        <span class="brand-cover">Cover</span><span class="brand-score">Score</span>
       </div>
-      <div class="top-bar-actions">
-        <button class="action-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="color:#22c55e;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-          <span class="action-badge">23</span>
-        </button>
-        <button class="action-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="action-badge red">8</span>
-        </button>
-        <button class="action-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </button>
-        <div class="top-profile">
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:12px;">{{userInitials user.name}}</div>
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--navy);">{{user.name}}</div>
-            <div style="font-size:11px;color:var(--text-muted);">Advisor</div>
-          </div>
-        </div>
-      </div>
+      <button class="notification-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge">3</span>
+      </button>
     </header>
 
-    <!-- CONTENT COLUMNS -->
-    <div class="content-columns">
+    <main class="main-content">
       
-      <!-- COLUMN 1: LEAD QUEUE -->
-      <div class="col-leads">
-        <div class="col-header" style="flex-direction: column; align-items: flex-start; padding-bottom: 12px;">
-          <div class="flex items-center justify-between w-full">
-            <span class="col-title"><span class="col-title-number">1.</span> LEAD QUEUE</span>
-            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="4" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="16" y2="18"/></svg></button>
+      <!-- PROFILE -->
+      <div class="profile-section">
+        <div class="avatar">
+          <!-- Placeholder avatar if no image -->
+          <img src="/img/avatar.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" alt="Avatar">
+          <span style="display:none;">{{userInitials user.name}}</span>
+        </div>
+        <div class="profile-text">
+          <h1 class="greeting">Good Morning, {{#if user.name}}{{user.name}}{{else}}Ayo{{/if}} 👋</h1>
+          <p class="date"><script>document.write(new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'}).format(new Date()))</script></p>
+          <p class="subtitle">Let's close some deals today.</p>
+        </div>
+      </div>
+
+      <!-- PIPELINE CARD -->
+      <div class="pipeline-card">
+        <div class="pipeline-header">
+          <div class="pipeline-title">
+            <div class="pipeline-icon-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <h2>Today's Pipeline</h2>
+              <p>Your overview for today</p>
+            </div>
           </div>
-          <div class="filter-tabs w-full justify-between">
-            <button class="filter-tab active">All Leads <span class="filter-badge">{{leads.length}}</span></button>
-            <button class="filter-tab hot">🔥 Hot <span class="filter-badge">{{summary.hotLeads}}</span></button>
-            <button class="filter-tab">Follow-up</button>
+          <a href="/admin/leads" class="view-all-btn">View All ></a>
+        </div>
+        
+        <div class="pipeline-stats">
+          <div class="stat-col">
+            <div class="stat-top">
+              <div class="stat-value">{{#if summary.newLeads}}{{summary.newLeads}}{{else}}12{{/if}}</div>
+              <div class="stat-meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            </div>
+            <div class="stat-label">New Leads</div>
+          </div>
+          <div class="stat-col divider">
+            <div class="stat-top">
+              <div class="stat-value">{{#if summary.assessmentsPending}}{{summary.assessmentsPending}}{{else}}8{{/if}}</div>
+              <div class="stat-meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg></div>
+            </div>
+            <div class="stat-label">Assessments Pending</div>
+          </div>
+          <div class="stat-col divider">
+            <div class="stat-top">
+              <div class="stat-value">{{#if summary.estPremium}}{{summary.estPremium}}{{else}}₦2.5M{{/if}}</div>
+              <div class="stat-meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+            </div>
+            <div class="stat-label">Potential Premium</div>
           </div>
         </div>
-        <div class="lead-queue">
-          {{#each leads}}
-          <a href="?lead={{this.id}}" style="text-decoration: none; color: inherit; display: block;">
-            <div class="lead-card">
-              <div class="lead-card-header">
-                <div class="lead-card-company">
-                  <div class="lead-avatar blue">
-                    <span style="font-size:16px;">{{#if this.name}}{{this.name}}{{else}}?{{/if}}</span>
-                  </div>
-                  <div>
-                    <div class="lead-card-name">{{this.business_name}}</div>
-                    <div class="lead-card-score-item">
-                      <span class="lead-card-score-label">CoverScore: <span class="lead-card-score-val">{{this.score}}</span> <span class="val-high">{{this.risk_level}}</span></span>
-                    </div>
-                  </div>
-                </div>
-                <span class="lead-badge {{this.badgeClass}}">{{this.status}}</span>
-              </div>
-              <div class="lead-card-score" style="margin-bottom:8px;">
-                <div class="lead-card-score-item" style="width:100%;">
-                  <span class="lead-card-score-label" style="font-size:10px;">Potential Premium</span>
-                  <span class="lead-card-score-val" style="color:var(--green);font-size:13px;">{{this.premium_range}}</span>
-                </div>
-              </div>
-              <div class="lead-card-footer">
-                <div>
-                  <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Next Action</div>
-                  <span class="lead-card-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Open</span>
-                </div>
-                <div style="text-align:right;">
-                  <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Last Activity</div>
-                  <span class="lead-card-time">{{this.last_activity}}</span>
-                </div>
-              </div>
+      </div>
+
+      <!-- NEXT ACTION -->
+      <div class="next-action-container">
+        <h3 class="section-title green">Next Action Required</h3>
+        <div class="action-card">
+          <div class="action-header">
+            <div class="action-icon">
+              <!-- Hospital Icon -->
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 21V9a2 2 0 0 0-2-2h-2V3a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v12"/><path d="M22 21H2"/><path d="M12 9v4"/><path d="M10 11h4"/></svg>
             </div>
+            <div class="action-details">
+              <h4>{{#if selectedLead}}{{selectedLead.business_name}}{{else}}Greenfield Hospital{{/if}}</h4>
+              <p>Assessment Completed</p>
+              <span class="action-badge">Waiting for Quote</span>
+            </div>
+            <div class="action-chevron">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </div>
+          {{#if selectedLead}}
+          <a href="/advisor/proposal-writer/{{selectedLead.id}}" style="text-decoration:none;">
+            <button class="btn-generate">Generate Quote</button>
           </a>
           {{else}}
-            <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-              No leads found in database.
-            </div>
-          {{/each}}
-          
-          <!-- View All link -->
-          <div style="text-align:center; padding:16px 0;">
-            <a href="/admin/leads" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;">View All Leads &rarr;</a>
-          </div>
+          <button class="btn-generate">Generate Quote</button>
+          {{/if}}
         </div>
       </div>
 
-      {{#if selectedLead}}
-      <!-- COLUMN 2: LEAD PROFILE -->
-      <div class="col-profile">
-        <div class="flex items-center justify-between mb-4">
-          <span class="col-title" style="margin:0;"><span class="col-title-number">2.</span> LEAD PROFILE</span>
-          <div class="flex items-center gap-2">
-            <button class="action-btn" onclick="window.location.href='/admin/leads{{#if selectedLead}}/{{selectedLead.id}}{{/if}}'" style="background:white;color:var(--text);border:1px solid var(--border);padding:6px 12px;font-size:12px;width:auto;">Edit Client</button>
-            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
-          </div>
-        </div>
-
-        <!-- PIPELINE & ASSIGNMENT -->
-        <div class="pipeline-container" style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
-          <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:12px; display:flex; justify-content:space-between;">
-            <span>PIPELINE STAGE</span>
-            <span id="assignContainer">
-              {{#if selectedLead.advisor_name}}
-                Assigned to: <strong style="color:var(--navy);">{{selectedLead.advisor_name}}</strong>
-              {{else}}
-                <button onclick="assignLead({{selectedLead.id}})" style="background:none;border:none;color:#2563EB;font-weight:700;font-size:11px;cursor:pointer;">+ Assign to Me</button>
-              {{/if}}
-            </span>
-          </div>
-          <div style="display:flex; gap:4px; overflow-x:auto;" id="pipelineButtons" data-current-stage="{{selectedLead.pipeline_stage}}">
-            <button class="pipeline-btn" data-stage="New" onclick="updatePipeline({{selectedLead.id}}, 'New')">New</button>
-            <button class="pipeline-btn" data-stage="Contacted" onclick="updatePipeline({{selectedLead.id}}, 'Contacted')">Contacted</button>
-            <button class="pipeline-btn" data-stage="Meeting Set" onclick="updatePipeline({{selectedLead.id}}, 'Meeting Set')">Meeting</button>
-            <button class="pipeline-btn" data-stage="Proposal Sent" onclick="updatePipeline({{selectedLead.id}}, 'Proposal Sent')">Proposal</button>
-            <button class="pipeline-btn" data-stage="Won" onclick="updatePipeline({{selectedLead.id}}, 'Won')">Won</button>
-          </div>
-        </div>
-
-        <!-- LEAD INTELLIGENCE -->
-        <div class="section-card" style="border:2px solid #22c55e; background-color:#f0fdf4; box-shadow:0 4px 6px -1px rgba(22,163,74,0.1);">
-          <div class="section-header" style="border-bottom:1px solid #dcfce7; padding: 12px 20px;">
-            <span class="section-title" style="color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> LEAD INTELLIGENCE</span>
-          </div>
-          <div class="section-body" style="padding:16px 20px;">
-            <div class="intel-grid">
-              <div class="intel-item">
-                <span class="intel-label" style="margin-bottom:8px;">Lead Score</span>
-                <div class="score-gauge-container" style="width:80px;height:80px;">
-                  <svg class="score-gauge-svg" viewBox="0 0 100 100">
-                    <circle class="score-gauge-bg" cx="50" cy="50" r="40"></circle>
-                    <circle class="score-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: calc(251.2 - (251.2 * {{selectedLead.sales_score}}) / 100);"></circle>
-                  </svg>
-                  <div class="score-gauge-text">
-                    <span class="score-gauge-num" style="font-size:24px;">{{selectedLead.sales_score}}</span>
-                    <span class="score-gauge-sub" style="font-size:10px;">/100</span>
-                  </div>
-                </div>
-              </div>
-              <div class="intel-item">
-                <span class="intel-label">Status</span>
-                <div class="flex items-center gap-2">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color:#ef4444;"><path d="M17.5 19c2.5-3.5 2.5-7.5 0-11.5a8.5 8.5 0 0 0-11 0c-2.5 4-2.5 8 0 11.5"/><path d="M12 18V9"/><path d="M12 9a3 3 0 0 0-3-3v0a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v0a3 3 0 0 0-3 3z"/></svg>
-                  <span style="font-weight:700;color:#ef4444;font-size:14px;text-transform:uppercase;">{{selectedLead.status}}</span>
-                </div>
-              </div>
-              <div class="intel-item">
-                <span class="intel-label">Likelihood</span>
-                <span style="font-weight:700;color:var(--text);font-size:18px;">{{selectedLead.likelihood_to_buy}}</span>
-              </div>
-              <div class="intel-item">
-                <span class="intel-label">Potential Premium</span>
-                <span style="font-weight:700;color:var(--green);font-size:18px;">{{selectedLead.premium_range}}</span>
-              </div>
+      <!-- QUICK ACTIONS -->
+      <div class="quick-actions-container">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="qa-grid">
+          <a href="#" class="qa-item">
+            <div class="qa-icon green">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
             </div>
-            <div style="display:flex;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid #E5E7EB;">
-              <div class="intel-item" style="flex:1;">
-                <span class="intel-label">Primary Concern</span>
-                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:#ef4444;font-weight:600;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> {{selectedLead.primary_concern}}</span>
-              </div>
-              <div class="intel-item" style="flex:1.5;">
-                <span class="intel-label">Recommended First Product</span>
-                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:var(--green);font-weight:600;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> {{selectedLead.recommended_product}}</span>
-              </div>
-              <div class="intel-item" style="flex:1;">
-                <span class="intel-label">Next Best Action</span>
-                <span class="intel-value" style="display:flex;align-items:center;gap:6px;color:#3b82f6;font-weight:600;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{selectedLead.next_best_action}}</span>
-              </div>
+            <span class="qa-label">New Lead</span>
+          </a>
+          <a href="#" class="qa-item">
+            <div class="qa-icon blue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="12" y1="11" x2="16" y2="11"/><line x1="14" y1="9" x2="14" y2="13"/></svg>
             </div>
-          </div>
-        </div>
-
-        <!-- CLIENT PROFILE HEADER -->
-        <div style="background:white; border-radius:var(--radius); border:1px solid var(--border); padding:24px; box-shadow:var(--shadow); margin-bottom:24px;">
-          <div class="client-header">
-            <div class="client-avatar blue">
-              <span style="font-size:20px;">{{#if selectedLead.name}}{{selectedLead.name.[0]}}{{else}}?{{/if}}</span>
+            <span class="qa-label">New Assessment</span>
+          </a>
+          <a href="#" class="qa-item">
+            <div class="qa-icon purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z"/></svg>
             </div>
-            <div>
-              <div class="client-name">{{selectedLead.business_name}} <span class="lead-badge {{selectedLead.badgeClass}}" style="font-size:10px;padding:2px 6px;">{{selectedLead.status}}</span></div>
+            <span class="qa-label">Generate Quote</span>
+          </a>
+          <a href="#" class="qa-item">
+            <div class="qa-icon orange">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
-          </div>
-          <div class="client-grid">
-            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.name}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span class="truncate-text">{{selectedLead.name}}</span></div>
-            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.phone}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <span class="truncate-text">{{selectedLead.phone}}</span></div>
-            <div class="client-info-item" style="grid-column: span 6;" title="{{selectedLead.email}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> <span class="truncate-text">{{selectedLead.email}}</span></div>
-            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.industry}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> <span class="truncate-text">{{selectedLead.industry}}</span></div>
-            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.employees}} Employees"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> <span class="truncate-text">{{selectedLead.employees}} Employees</span></div>
-            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.turnover}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> <span class="truncate-text">{{selectedLead.turnover}}</span></div>
-            <div class="client-info-item" style="grid-column: span 3;" title="{{selectedLead.location}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> <span class="truncate-text">{{selectedLead.location}}</span></div>
-            <div class="client-info-item" style="grid-column: span 6;">
-              <span style="font-weight:600;color:var(--text);margin-right:6px;flex-shrink:0;">Source:</span> <span class="truncate-text" title="{{selectedLead.lead_source}}">{{selectedLead.lead_source}}</span>
-            </div>
-            <div class="client-info-item" style="grid-column: span 6;">
-              <span style="font-weight:600;color:var(--text);margin-right:6px;flex-shrink:0;">Assessment Date:</span> <span class="truncate-text" title="{{selectedLead.created_at}}">{{selectedLead.created_at}}</span>
-            </div>
-            <div class="client-info-item" style="grid-column: span 6;">
-              <span style="font-weight:600;color:var(--text);margin-right:6px;flex-shrink:0;">Birthday:</span> <span class="truncate-text">{{#if selectedLead.birth_date}}{{selectedLead.birth_date}}{{else}}N/A{{/if}}</span>
-            </div>
-            <div class="client-info-item" style="grid-column: span 6;">
-              <span style="font-weight:600;color:var(--text);margin-right:6px;flex-shrink:0;">Anniversary:</span> <span class="truncate-text">{{#if selectedLead.anniversary_date}}{{selectedLead.anniversary_date}}{{else}}N/A{{/if}}</span>
-            </div>
-          </div>
-          
-          <hr style="border:0;border-top:1px solid var(--border);margin:24px 0;">
-
-          <!-- 3-COL RISK GRID -->
-          <div class="risk-grid">
-            <!-- COVERSCORE SNAPSHOT -->
-            <div>
-              <div class="risk-col-title">CoverScore Snapshot</div>
-              <div style="display:flex;flex-direction:column;align-items:center;margin-top:20px;">
-                <div class="score-gauge-container" style="width:100px;height:100px;">
-                  <svg class="score-gauge-svg" viewBox="0 0 100 100">
-                    <circle class="score-gauge-bg" cx="50" cy="50" r="40"></circle>
-                    <circle class="score-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: calc(251.2 - (251.2 * {{#if selectedLead.score}}{{selectedLead.score}}{{else}}0{{/if}}) / 100);"></circle>
-                  </svg>
-                  <div class="score-gauge-text">
-                    <span class="score-gauge-num" style="font-size:32px;">{{#if selectedLead.score}}{{selectedLead.score}}{{else}}0{{/if}}</span>
-                    <span class="score-gauge-sub" style="font-size:12px;">/100</span>
-                  </div>
-                </div>
-                <div style="text-align:center;margin-top:16px;">
-                  <span style="font-weight:700; color:var(--success); font-size:14px;">Resilience Score: {{selectedLead.resilience_score}}/100</span>
-                </div>
-                <div style="text-align:center;margin-top:24px;">
-                  <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;font-weight:600;">Financial Exposure</div>
-                  <div style="font-size:18px;font-weight:700;color:var(--green);">₦{{selectedLead.financial_exposure_min}} - ₦{{selectedLead.financial_exposure_max}}</div>
-                </div>
-                <a href="/advisor/proposal-writer/{{selectedLead.id}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View Full Report &rarr;</a>
-              </div>
-            </div>
-            <!-- TOP RISKS -->
-            <div>
-              <div class="risk-col-title">Top Risks</div>
-              {{#each selectedLead.risks}}
-              <div class="risk-bar-item">
-                <div class="risk-bar-header"><span class="risk-bar-name">{{this.name}}</span><span class="risk-bar-score">{{this.score}}/100</span></div>
-                <div class="risk-bar-track"><div class="risk-bar-fill {{#if (eq this.level 'high')}}critical{{else if (eq this.level 'medium')}}high{{else}}medium{{/if}}" style="width:{{this.score}}%;"></div></div>
-              </div>
-              {{/each}}
-            </div>
-            <!-- PROTECTION GAPS -->
-            <div>
-              <div class="risk-col-title">Protection Gaps</div>
-              {{#each selectedLead.protection_gaps}}
-              <div class="gap-item"><svg class="gap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> {{this}}</div>
-              {{/each}}
-              <a href="/advisor/proposal-writer/{{selectedLead.id}}" style="color:#2563EB;font-size:13px;font-weight:600;text-decoration:none;margin-top:16px;display:inline-block;">View All Gaps &rarr;</a>
-            </div>
-          </div>
-          
-          <hr style="border:0;border-top:1px solid var(--border);margin:24px 0;">
-
-          <!-- NOTES -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="risk-col-title" style="margin:0;display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> NOTES</span>
-              <span style="font-size:11px;color:var(--text-muted);">Last Updated: <a href="#" style="color:#2563EB;text-decoration:underline;">May 15, 2024 by You</a> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" style="vertical-align:middle;margin-left:2px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-            </div>
-            <textarea class="notes-textarea">Client expressed concern about downtime during production halt.
-Budget indication: around ₦600k annually.
-Already has fire insurance with AIICO.</textarea>
-          </div>
+            <span class="qa-label">Follow Up</span>
+          </a>
         </div>
       </div>
 
-      <!-- COLUMN 3: WHATSAPP CONVERSATION -->
-      <div class="col-whatsapp">
-        <div class="col-header" style="padding-bottom:12px;">
-          <span class="col-title" style="color:var(--green);"><span class="col-title-number" style="color:var(--green);">3.</span> WHATSAPP CONVERSATION</span>
+      <!-- RECENT ACTIVITY -->
+      <div class="recent-activity-container">
+        <div class="flex-between">
+          <h3 class="section-title" style="margin:0;">Recent Activity</h3>
+          <a href="/admin/leads" class="view-all-link">View All</a>
         </div>
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:white;">
-          <div class="flex items-center gap-3">
-            <div style="width:36px;height:36px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:700;color:#6B7280;font-size:14px;">
-              {{#if selectedLead.name}}{{selectedLead.name.[0]}}{{else}}?{{/if}}
-            </div>
-            <div>
-              <div style="font-size:14px;font-weight:600;">{{selectedLead.name}}</div>
-              <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--success);font-weight:500;">
-                <span style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span> Online
+        <div class="activity-list">
+          {{#if leads.length}}
+            {{#each leads}}
+            <div class="activity-item">
+              <div class="act-icon {{#if (eq this.status 'New Lead')}}orange{{else if (eq this.status 'Assessment Completed')}}green{{else}}blue{{/if}}">
+                {{#if (eq this.status 'New Lead')}}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                {{else if (eq this.status 'Assessment Completed')}}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+                {{else}}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                {{/if}}
+              </div>
+              <div class="act-details">
+                <h4>{{this.business_name}}</h4>
+                <p>{{this.status}}</p>
+              </div>
+              <div class="act-meta">
+                <span class="act-time">{{#if this.last_activity}}Yesterday{{else}}Today{{/if}}</span>
+                <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
               </div>
             </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-            <button class="action-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
-          </div>
-        </div>
-        <div class="chat-area">
-          <div class="chat-date"><span>Recent Conversation</span></div>
-          {{#if selectedLead.conversations.length}}
-            {{#each selectedLead.conversations}}
-              <div class="chat-msg {{#if (eq this.role 'user')}}client{{else}}advisor{{/if}}">
-                {{this.content}}
-                <div class="chat-msg-time">{{this.timestamp}} {{#if (eq this.role 'assistant')}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg>{{/if}}</div>
-              </div>
             {{/each}}
           {{else}}
-            <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">
-              No recent WhatsApp messages.
+            <!-- FALLBACK HARDCODED MOCKS FROM SCREENSHOT -->
+            <div class="activity-item">
+              <div class="act-icon green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+              </div>
+              <div class="act-details">
+                <h4>Lagos Medical Center</h4>
+                <p>Assessment completed</p>
+              </div>
+              <div class="act-meta">
+                <span class="act-time">10:24 AM</span>
+                <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="act-icon blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+              <div class="act-details">
+                <h4>Greenfield Hospital</h4>
+                <p>Quote sent</p>
+              </div>
+              <div class="act-meta">
+                <span class="act-time">Yesterday</span>
+                <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="act-icon orange">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              </div>
+              <div class="act-details">
+                <h4>Hope Clinic</h4>
+                <p>New lead added</p>
+              </div>
+              <div class="act-meta">
+                <span class="act-time">Yesterday</span>
+                <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
+              </div>
             </div>
           {{/if}}
         </div>
-        <div class="chat-input-area">
-          <button class="chat-btn" title="Emoji">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          </button>
-          <input type="text" class="chat-input" id="whatsappChatInput" placeholder="Type a message...">
-          <button class="chat-btn" title="Attach file">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-          </button>
-          <button class="chat-btn send" id="whatsappSendBtn" title="Send message" onclick="sendWhatsappMessage()" style="display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-          </button>
-        </div>
       </div>
 
-      <!-- COLUMN 4: AI RECOMMENDATIONS -->
-      <div class="col-recommendations">
-        <div class="col-header" style="padding:0 0 16px 0;border-bottom:none;">
-          <span class="col-title" style="color:#4338ca;"><span class="col-title-number" style="color:#4338ca;">4.</span> AI RECOMMENDATIONS</span>
-        </div>
+    </main>
 
-        <div style="margin-bottom:24px;">
-          <div class="risk-col-title">Recommended Products</div>
-          {{#each aiRecommendations}}
-          <div class="rec-card">
-            <div class="rec-icon" style="background:#EFF6FF;color:#3B82F6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <div class="rec-info">
-              <div class="rec-title">{{this.product}}</div>
-              <div class="rec-priority high">Suggested</div>
-            </div>
-          </div>
-          {{else}}
-          <div style="font-size:13px; color:var(--text-muted);">No product recommendations generated.</div>
-          {{/each}}
-        </div>
-
-        <div style="margin-bottom:24px;">
-          <div class="risk-col-title">Suggested Talking Points</div>
-          {{#if talkingPoints.length}}
-          <ul class="tp-list">
-            {{#each talkingPoints}}
-            <li class="tp-item">{{this}}</li>
-            {{/each}}
-          </ul>
-          {{else}}
-          <div style="font-size:13px; color:var(--text-muted);">No talking points available.</div>
-          {{/if}}
-        </div>
-
-        {{#if selectedLead.objections.length}}
-        <div style="margin-bottom:24px;">
-          <div class="risk-col-title">Likely Objections & Responses</div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            {{#each selectedLead.objections}}
-            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:12px;">
-              <div style="font-size:13px; font-weight:600; color:#ef4444; margin-bottom:4px;">"{{this.objection}}"</div>
-              <div style="font-size:13px; color:#475569;">&rarr; {{this.suggested_response}}</div>
-            </div>
-            {{/each}}
-          </div>
-        </div>
-        {{/if}}
-
-        <div>
-          <div class="col-title" style="margin-bottom:12px;"><span class="col-title-number">5.</span> ACTIONS</div>
-          <div class="action-panel">
-            <button class="action-btn green" onclick="window.location.href='mailto:{{selectedLead.email}}?subject=Consultation Call'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Schedule Call
-            </button>
-            <button class="action-btn blue" onclick="window.location.href='/advisor/proposal-writer/{{selectedLead.id}}'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Send Proposal
-            </button>
-            <button class="action-btn green" onclick="document.getElementById('whatsappChatInput').focus()">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> Send WhatsApp
-            </button>
-            <button class="action-btn orange" data-id="{{selectedLead.id}}" data-name="{{selectedLead.name}}" onclick="updateLeadStatus(this.dataset.id, 'Won', this.dataset.name)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M8 21h8M12 17v4M7 4h10M5 4h14v5a7 7 0 0 1-14 0V4z"/></svg> Mark as Won
-            </button>
-            <button class="action-btn red" data-id="{{selectedLead.id}}" onclick="updateLeadStatus(this.dataset.id, 'Lost')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Mark as Lost
-            </button>
-          </div>
-        </div>
-      </div>
-      {{else}}
-      <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-        <div style="text-align: center;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48" style="margin: 0 auto 16px auto; opacity: 0.5;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-          <p>No leads in your database yet.</p>
-        </div>
-      </div>
-      {{/if}}
-    </div>
-    </div>
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a href="/advisor/dashboard" class="b-nav-item active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="/admin/leads" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Leads</span>
+      </a>
+      <a href="/admin/assessments" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+        <span>Assessments</span>
+      </a>
+      <a href="/admin/proposals" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Quotes</span>
+      </a>
+      <a href="/admin/settings" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>More</span>
+      </a>
+    </nav>
   </div>
 
-  <!-- Policy Modal -->
-  <div class="modal-overlay" id="policyModal">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h2 class="modal-title">Record Policy for Won Lead</h2>
-        <button class="modal-close" onclick="closePolicyModal()">&times;</button>
-      </div>
-      <form id="policyForm" onsubmit="submitPolicy(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
-        <input type="hidden" name="lead_id" id="policyLeadId">
-        <div class="form-group">
-          <label>Client Name</label>
-          <input type="text" id="policyClientName" class="form-control" readonly style="background: var(--bg); color: var(--text-secondary); font-weight: 600;">
-        </div>
-        <div class="form-group">
-          <label>Policy Number</label>
-          <input type="text" name="policy_number" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label>Product</label>
-          <select name="product" class="form-control" required>
-            <option value="Motor Comprehensive">Motor Comprehensive</option>
-            <option value="Fire & Special Perils">Fire & Special Perils</option>
-            <option value="Health Insurance">Health Insurance</option>
-            <option value="All Risks Insurance">All Risks Insurance</option>
-            <option value="Property All Risk">Property All Risk</option>
-            <option value="General Liability">General Liability</option>
-            <option value="Product Liability">Product Liability</option>
-            <option value="Workers Compensation">Workers Compensation</option>
-            <option value="Business Interruption">Business Interruption</option>
-            <option value="Cyber Insurance">Cyber Insurance</option>
-            <option value="Goods in Transit">Goods in Transit</option>
-            <option value="Marine Cargo">Marine Cargo</option>
-            <option value="Motor Fleet">Motor Fleet</option>
-            <option value="Public Liability">Public Liability</option>
-            <option value="Employers Liability">Employers Liability</option>
-            <option value="Shop Comprehensive">Shop Comprehensive</option>
-            <option value="Fidelity Guarantee">Fidelity Guarantee</option>
-            <option value="Cash in Transit">Cash in Transit</option>
-            <option value="Professional Indemnity">Professional Indemnity</option>
-            <option value="Directors & Officers">Directors & Officers</option>
-            <option value="Equipment All Risk">Equipment All Risk</option>
-            <option value="Medical Malpractice">Medical Malpractice</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Premium (₦)</label>
-          <input type="number" name="premium" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label>Expiry Date</label>
-          <input type="date" name="expiry_date" class="form-control" required>
-        </div>
-        <div class="modal-footer" style="margin-top: 8px; padding: 0;">
-          <button type="button" class="btn-secondary" onclick="closePolicyModal()">Cancel</button>
-          <button type="submit" class="btn-primary">Save Policy</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- COPILOT FAB & PANEL -->
-  <div class="copilot-fab" id="copilotFab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-      <circle cx="15" cy="10" r="1" fill="currentColor"/>
-      <circle cx="9" cy="10" r="1" fill="currentColor"/>
-    </svg>
-  </div>
-  
-  <div class="copilot-panel" id="copilotPanel">
-    <div class="copilot-header">
-      <div class="copilot-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        CoverScore Copilot™
-      </div>
-      <button class="copilot-close" id="copilotClose">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="copilot-body" id="copilotBody">
-      <div class="copilot-msg ai">
-        <p>Hello! I am your Risk Advisory Copilot.</p>
-        <p>I have analyzed <strong>{{#if selectedLead}}{{selectedLead.business_name}}{{else}}this lead{{/if}}</strong>'s assessment, risk profile, and chat history.</p>
-        <p>How can I help you close this deal?</p>
-      </div>
-      <div class="copilot-presets" id="copilotPresets">
-        <button class="copilot-preset-btn">What should I do next?</button>
-        <button class="copilot-preset-btn">Prepare Consultation</button>
-        <button class="copilot-preset-btn">What are the top 3 risks?</button>
-        <button class="copilot-preset-btn">Draft a WhatsApp follow-up</button>
-        <button class="copilot-preset-btn">Generate a Proposal</button>
-      </div>
-    </div>
-    <div class="copilot-footer">
-      <input type="text" class="copilot-input" id="copilotInput" placeholder="Ask CoverScore AI..." autocomplete="off">
-      <button class="copilot-send" id="copilotSendBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <script>
-    // COPILOT LOGIC
-    document.addEventListener('DOMContentLoaded', () => {
-      const fab = document.getElementById('copilotFab');
-      const panel = document.getElementById('copilotPanel');
-      const closeBtn = document.getElementById('copilotClose');
-      const input = document.getElementById('copilotInput');
-      const sendBtn = document.getElementById('copilotSendBtn');
-      const body = document.getElementById('copilotBody');
-      const presetsContainer = document.getElementById('copilotPresets');
-      
-      const leadId = '{{#if selectedLead}}{{selectedLead.id}}{{/if}}';
-
-      function togglePanel() {
-        panel.classList.toggle('open');
-        if(panel.classList.contains('open')) input.focus();
-      }
-
-      if(fab) fab.addEventListener('click', togglePanel);
-      if(closeBtn) closeBtn.addEventListener('click', togglePanel);
-
-      window.downloadDocx = async function(btnElement) {
-        const msgDiv = btnElement.closest('.copilot-msg');
-        // Clone the message div so we can remove the button before exporting
-        const clone = msgDiv.cloneNode(true);
-        const btnToRemove = clone.querySelector('.copilot-msg-download');
-        if (btnToRemove) btnToRemove.remove();
-        
-        const htmlContent = `
-          <html>
-            <body style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
-              ${clone.innerHTML}
-            </body>
-          </html>
-        `;
-
-        try {
-          btnElement.textContent = "Downloading...";
-          const token = localStorage.getItem('accessToken');
-          const headers = { 'Content-Type': 'application/json' };
-          if (token) headers['Authorization'] = 'Bearer ' + token;
-
-          const res = await fetch('/advisor/api/export-docx', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ htmlContent, filename: 'CoverScore_AI_Proposal' })
-          });
-
-          if (!res.ok) throw new Error('Export failed');
-          
-          const blob = await res.blob();
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'CoverScore_AI_Proposal.docx';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.URL.revokeObjectURL(url);
-          
-          btnElement.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Downloaded';
-        } catch (err) {
-          alert('Failed to download document');
-          btnElement.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Word';
-        }
-      };
-
-      function addMessage(text, sender) {
-        // Simple markdown parsing for bold and line breaks
-        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `copilot-msg ${sender}`;
-        
-        let innerHtml = formattedText;
-        if (sender === 'ai') {
-           // Add download button for AI responses
-           innerHtml += `
-             <div style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px;">
-               <button class="copilot-msg-download" onclick="downloadDocx(this)">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                 Download Word
-               </button>
-             </div>
-           `;
-        }
-        msgDiv.innerHTML = innerHtml;
-        
-        body.insertBefore(msgDiv, presetsContainer);
-        body.scrollTop = body.scrollHeight;
-      }
-
-      function showLoading() {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'copilot-msg ai loading-msg';
-        msgDiv.innerHTML = '<div class="copilot-loading"><span></span><span></span><span></span></div>';
-        body.insertBefore(msgDiv, presetsContainer);
-        body.scrollTop = body.scrollHeight;
-        return msgDiv;
-      }
-
-      async function sendCopilotMessage(text) {
-        if (!text || !leadId) return;
-        
-        addMessage(text, 'human');
-        input.value = '';
-        sendBtn.disabled = true;
-        input.disabled = true;
-        
-        const loadingDiv = showLoading();
-
-        try {
-          const token = localStorage.getItem('accessToken');
-          const headers = { 'Content-Type': 'application/json' };
-          if (token) headers['Authorization'] = 'Bearer ' + token;
-
-          const res = await fetch('/advisor/api/copilot-chat', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ leadId, message: text })
-          });
-
-          loadingDiv.remove();
-
-          if (res.ok) {
-            const data = await res.json();
-            addMessage(data.response, 'ai');
-          } else {
-            addMessage('Error communicating with the AI. Please try again.', 'ai');
-          }
-        } catch (err) {
-          loadingDiv.remove();
-          addMessage('Network error. Please check your connection.', 'ai');
-        } finally {
-          sendBtn.disabled = false;
-          input.disabled = false;
-          input.focus();
-        }
-      }
-
-      if(sendBtn) sendBtn.addEventListener('click', () => sendCopilotMessage(input.value.trim()));
-      if(input) input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendCopilotMessage(input.value.trim());
-      });
-
-      document.querySelectorAll('.copilot-preset-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          sendCopilotMessage(btn.textContent);
-        });
-      });
-    });
-
-    // Mobile Sidebar Toggle
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-    function toggleSidebar() {
-      sidebar.classList.toggle('open');
-      sidebarOverlay.classList.toggle('open');
-    }
-
-    if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
-    if(sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
-
-    // Render Pipeline visual state
-    function renderPipeline() {
-      const container = document.getElementById('pipelineButtons');
-      if (!container) return;
-      const currentStage = container.getAttribute('data-current-stage') || 'New';
-      const stages = ['New', 'Contacted', 'Meeting Set', 'Proposal Sent', 'Won'];
-      const currentIndex = stages.indexOf(currentStage);
-      
-      const buttons = container.querySelectorAll('.pipeline-btn');
-      buttons.forEach(btn => {
-        const stage = btn.getAttribute('data-stage');
-        const stageIndex = stages.indexOf(stage);
-        
-        btn.classList.remove('active', 'completed');
-        if (stage === currentStage) {
-          btn.classList.add('active');
-        } else if (stageIndex < currentIndex && currentIndex !== -1) {
-          btn.classList.add('completed');
-        }
-      });
-    }
-    renderPipeline();
-
-    window.assignLead = async function(leadId) {
-      if(!confirm("Assign this lead to yourself?")) return;
-      try {
-        const token = localStorage.getItem('accessToken');
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = 'Bearer ' + token;
-
-        const res = await fetch(`/advisor/api/leads/${leadId}/assign`, { method: 'POST', headers });
-        if(res.ok) {
-          window.location.reload();
-        } else {
-          alert('Failed to assign lead');
-        }
-      } catch(e) {
-        alert('Network error');
-      }
-    };
-
-    window.updatePipeline = async function(leadId, stage) {
-      try {
-        const token = localStorage.getItem('accessToken');
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = 'Bearer ' + token;
-
-        const res = await fetch(`/advisor/api/leads/${leadId}/stage`, { 
-          method: 'POST', 
-          headers,
-          body: JSON.stringify({ stage })
-        });
-        if(res.ok) {
-          const container = document.getElementById('pipelineButtons');
-          container.setAttribute('data-current-stage', stage);
-          renderPipeline();
-        } else {
-          alert('Failed to update pipeline stage');
-        }
-      } catch(e) {
-        alert('Network error');
-      }
-    };
-
-    async function updateLeadStatus(leadId, status, leadName) {
-      if (!leadId) return alert("No lead selected");
-
-      if (status === 'Won') {
-        document.getElementById('policyLeadId').value = leadId;
-        document.getElementById('policyClientName').value = leadName || 'Selected Lead';
-        document.getElementById('policyModal').style.display = 'flex';
-        return;
-      }
-
-      try {
-        const token = localStorage.getItem('accessToken');
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = 'Bearer ' + token;
-
-        const res = await fetch(`/api/leads/${leadId}/status`, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ status })
-        });
-        if (res.ok) {
-          alert(`Lead marked as ${status}`);
-          window.location.reload();
-        } else {
-          alert('Failed to update status');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Error updating status');
-      }
-    }
-
-    function closePolicyModal() {
-      document.getElementById('policyModal').style.display = 'none';
-    }
-
-    async function submitPolicy(e) {
-      e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      
-      try {
-        const btn = form.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = 'Saving...';
-        
-        const headers = { 'Content-Type': 'application/json' };
-        const token = localStorage.getItem('accessToken');
-        if (token) headers['Authorization'] = 'Bearer ' + token;
-
-        const res = await fetch('/api/crm/policies', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(data)
-        });
-        
-        if (res.ok) {
-          closePolicyModal();
-          alert('Policy recorded and lead marked as Won');
-          window.location.reload();
-        } else {
-          const err = await res.json();
-          alert(err.error || 'Failed to record policy');
-          btn.disabled = false;
-          btn.textContent = 'Save Policy';
-        }
-      } catch (error) {
-        alert('Error connecting to server');
-        const btn = form.querySelector('button[type="submit"]');
-        btn.disabled = false;
-        btn.textContent = 'Save Policy';
-      }
-    }
-
-    async function sendWhatsappMessage() {
-      const input = document.getElementById('whatsappChatInput');
-      const text = input.value.trim();
-      const leadId = '{{#if selectedLead}}{{selectedLead.id}}{{/if}}';
-
-      if (!text || !leadId) return;
-
-      // Optimistically add to UI
-      const chatArea = document.querySelector('.chat-area');
-      
-      // Remove empty state if present
-      const emptyState = Array.from(chatArea.children).find(el => el.textContent.includes('No recent WhatsApp messages'));
-      if (emptyState) emptyState.remove();
-
-      const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      const msgDiv = document.createElement('div');
-      msgDiv.className = 'chat-msg advisor';
-      msgDiv.innerHTML = `
-        ${text}
-        <div class="chat-msg-time">${timeStr} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:#16A34A;display:inline-block;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></div>
-      `;
-      chatArea.appendChild(msgDiv);
-      
-      // Scroll to bottom
-      chatArea.scrollTop = chatArea.scrollHeight;
-      input.value = '';
-
-      try {
-        const token = localStorage.getItem('accessToken');
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = 'Bearer ' + token;
-
-        const res = await fetch('/api/whatsapp/send', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            leadId: parseInt(leadId, 10),
-            template: '',
-            customData: { _message: text }
-          })
-        });
-
-        if (!res.ok) {
-          console.error('Failed to send message via API');
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const chatInput = document.getElementById('whatsappChatInput');
-      if (chatInput) {
-        chatInput.addEventListener('keypress', function (e) {
-          if (e.key === 'Enter') {
-            sendWhatsappMessage();
-          }
-        });
-      }
-    });
-
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-  </script>
 </body>
 </html>
