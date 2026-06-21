@@ -216,7 +216,7 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
     res.render('advisor/dashboard', {
       layout: false,
       user: req.user,
-      leads,
+      leads: leads.slice(0, 3),
       proposals,
       summary,
       aiRecommendations,
