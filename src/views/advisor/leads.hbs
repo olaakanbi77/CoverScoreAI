@@ -203,6 +203,14 @@
       padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
     }
 
+    .hidden-lead { display: none !important; }
+    .view-all-wrap { text-align: center; margin: 0 20px 16px; }
+    .btn-view-all { 
+      background: transparent; color: var(--green); border: 1px solid var(--green);
+      padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      cursor: pointer; width: 100%;
+    }
+
     /* BOTTOM NAV */
     .bottom-nav {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -275,9 +283,9 @@
       </div>
 
       <!-- LEAD LIST -->
-      <div class="leads-list">
+      <div class="leads-list" id="mainLeadsList">
         {{#each parsedLeads}}
-        <a href="/admin/leads/{{this.id}}" class="lead-card">
+        <a href="/admin/leads/{{this.id}}" class="lead-card {{#if (gte @index 4)}}hidden-lead{{/if}}">
           <div class="lead-avatar color-{{this.colorTheme}}">{{this.initials}}</div>
           
           <div class="lead-info">
@@ -315,6 +323,12 @@
         </a>
         {{/each}}
       </div>
+
+      {{#if (gte parsedLeads.length 5)}}
+      <div class="view-all-wrap">
+        <button id="viewAllBtn" class="btn-view-all">View All Leads</button>
+      </div>
+      {{/if}}
 
       <!-- BOTTOM BANNER -->
       <div class="bottom-banner">
@@ -356,6 +370,16 @@
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('viewAllBtn');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.hidden-lead').forEach(el => el.classList.remove('hidden-lead'));
+          btn.style.display = 'none';
+        });
+      }
+    });
+
     // Stub for existing Add Lead Modal logic
     function openAddLeadModal() {
       alert("Open existing Add Lead Modal");
