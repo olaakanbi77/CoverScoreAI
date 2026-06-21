@@ -415,25 +415,27 @@
         <div class="activity-list">
           {{#if leads.length}}
             {{#each leads}}
-            <div class="activity-item">
-              <div class="act-icon {{#if (eq this.status 'New Lead')}}orange{{else if (eq this.status 'Assessment Completed')}}green{{else}}blue{{/if}}">
-                {{#if (eq this.status 'New Lead')}}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-                {{else if (eq this.status 'Assessment Completed')}}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
-                {{else}}
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                {{/if}}
+              {{#if (lte @index 2)}}
+              <div class="activity-item">
+                <div class="act-icon {{#if (eq this.status 'New Lead')}}orange{{else if (eq this.status 'Assessment Completed')}}green{{else}}blue{{/if}}">
+                  {{#if (eq this.status 'New Lead')}}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                  {{else if (eq this.status 'Assessment Completed')}}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+                  {{else}}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  {{/if}}
+                </div>
+                <div class="act-details">
+                  <h4>{{this.business_name}}</h4>
+                  <p>{{this.status}}</p>
+                </div>
+                <div class="act-meta">
+                  <span class="act-time">{{#if this.last_activity}}Yesterday{{else}}Today{{/if}}</span>
+                  <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
+                </div>
               </div>
-              <div class="act-details">
-                <h4>{{this.business_name}}</h4>
-                <p>{{this.status}}</p>
-              </div>
-              <div class="act-meta">
-                <span class="act-time">{{#if this.last_activity}}Yesterday{{else}}Today{{/if}}</span>
-                <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
-              </div>
-            </div>
+              {{/if}}
             {{/each}}
           {{else}}
             <!-- FALLBACK HARDCODED MOCKS FROM SCREENSHOT -->
