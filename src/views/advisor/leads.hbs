@@ -105,14 +105,14 @@
       border-bottom: 1px solid var(--border);
     }
     .filter-tabs {
-      display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none;
+      display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
     }
     .filter-tabs::-webkit-scrollbar { display: none; }
     
     .tab-pill {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 20px;
-      font-size: 13px; font-weight: 600; white-space: nowrap;
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; white-space: nowrap;
       cursor: pointer; border: 1px solid var(--border);
       background: var(--card); color: var(--text);
     }
@@ -267,16 +267,16 @@
       <!-- FILTER TABS -->
       <div class="filter-tabs-wrapper">
         <div class="filter-tabs">
-          <div class="tab-pill active">
+          <div class="tab-pill active" data-filter="All">
             All Leads <div class="tab-badge">{{counts.all}}</div>
           </div>
-          <div class="tab-pill">
+          <div class="tab-pill" data-filter="New">
             New <div class="tab-badge">{{counts.new}}</div>
           </div>
-          <div class="tab-pill">
+          <div class="tab-pill" data-filter="Contacted">
             Contacted <div class="tab-badge">{{counts.contacted}}</div>
           </div>
-          <div class="tab-pill">
+          <div class="tab-pill" data-filter="Qualified">
             Qualified <div class="tab-badge">{{counts.qualified}}</div>
           </div>
         </div>
@@ -285,7 +285,7 @@
       <!-- LEAD LIST -->
       <div class="leads-list" id="mainLeadsList">
         {{#each parsedLeads}}
-        <a href="/admin/leads/{{this.id}}" class="lead-card {{#if (gte @index 4)}}hidden-lead{{/if}}">
+        <a href="/admin/leads/{{this.id}}" class="lead-card {{#if (gte @index 4)}}hidden-lead{{/if}}" data-status="{{this.displayStatus}}">
           <div class="lead-avatar color-{{this.colorTheme}}">{{this.initials}}</div>
           
           <div class="lead-info">
@@ -372,12 +372,45 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const btn = document.getElementById('viewAllBtn');
+      const tabs = document.querySelectorAll('.tab-pill');
+      const cards = document.querySelectorAll('.lead-card');
+
       if (btn) {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.hidden-lead').forEach(el => el.classList.remove('hidden-lead'));
           btn.style.display = 'none';
         });
       }
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          const filter = tab.getAttribute('data-filter');
+          let visibleCount = 0;
+          
+          cards.forEach(card => {
+            card.classList.remove('hidden-lead');
+            const status = card.getAttribute('data-status');
+            
+            if (filter === 'All' || status === filter) {
+              card.style.display = 'flex';
+              visibleCount++;
+              if (filter === 'All' && visibleCount > 4) {
+                card.classList.add('hidden-lead');
+              }
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          if (btn) {
+            btn.style.display = (filter === 'All' && visibleCount > 4) ? 'block' : 'none';
+          }
+        });
+      });
     });
 
     // Stub for existing Add Lead Modal logic
