@@ -280,6 +280,13 @@ p { margin: 0; }
     margin-top: 8px;
     justify-content: center;
   }
+  .desktop-nav a.btn-green {
+    font-size: 0.85rem !important;
+    padding: 10px 12px !important;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
 }
 @media (min-width: 1024px) {
   .desktop-nav {
@@ -338,8 +345,8 @@ p { margin: 0; }
   }
 
   .logo img {
-    height: 65px !important;
-    max-width: 60vw;
+    height: 80px !important;
+    max-width: 75vw;
   }
 
   .mobile-menu-btn svg {
@@ -918,8 +925,8 @@ p { margin: 0; }
   }
 
   .logo img {
-    height: 55px !important;
-    max-width: 65vw;
+    height: 70px !important;
+    max-width: 80vw;
   }
 
   .mobile-menu-btn svg {
