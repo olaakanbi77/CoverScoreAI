@@ -259,8 +259,73 @@ app.get('/admin/analytics', authenticatePage, (req, res) => {
   res.render('admin/analytics', { title: 'Analytics', activePage: 'analytics', layout: 'admin' });
 });
 
-app.get('/admin/leads/:id', authenticatePage, (req, res) => {
-  res.render('admin/lead-details', { title: 'Lead Details', activePage: 'leads', layout: 'admin', leadId: req.params.id });
+app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
+  try {
+    const lead = await get("SELECT * FROM leads WHERE id = ?", [req.params.id]);
+    if (!lead) return res.status(404).send('Lead not found');
+
+    const activities = await all("SELECT * FROM activities WHERE lead_id = ? ORDER BY created_at DESC", [req.params.id]);
+
+    const initials = (lead.business_name || lead.name || '??').substring(0, 2).toUpperCase();
+    
+    const score = lead.score || 0;
+    const r = 17;
+    const c = Math.PI * (r * 2);
+    const dashOffset = ((100 - score) / 100) * c;
+    
+    const timeAgo = (dateString) => {
+      if (!dateString) return 'Unknown';
+      const diff = Date.now() - new Date(dateString).getTime();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      if (days === 0) return 'Today';
+      if (days === 1) return 'Yesterday';
+      return `${days} days ago`;
+    };
+    
+    const formatDate = (dateString) => {
+      if (!dateString) return '';
+      const d = new Date(dateString);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    lead.added_time = timeAgo(lead.created_at);
+    lead.last_contact_time = timeAgo(lead.updated_at);
+    lead.initials = initials;
+    lead.dashOffset = dashOffset;
+    lead.contact_person = lead.contact_person || 'N/A';
+    lead.phone = lead.phone || 'N/A';
+    lead.email = lead.email || 'N/A';
+    lead.address = lead.location || 'N/A'; // We'll fallback location for address
+    lead.entity_type_display = lead.entity_type === 'hospital' ? 'Hospital' : 'Clinic';
+    lead.employees = lead.employees || 'N/A';
+    lead.hospital_type = lead.industry || 'Private';
+    lead.owner = lead.assigned_agent || 'Ayo Johnson';
+    lead.lead_source = lead.lead_source || 'Referral';
+
+    let colorTheme = 'blue';
+    let statusLower = (lead.status || '').toLowerCase();
+    if (statusLower.includes('new')) colorTheme = 'green';
+    else if (statusLower.includes('qualified')) colorTheme = 'purple';
+    else if (statusLower.includes('lost')) colorTheme = 'pink';
+    else if (statusLower.includes('won')) colorTheme = 'orange';
+    lead.colorTheme = colorTheme;
+
+    const parsedActivities = activities.map(act => ({
+      ...act,
+      formatted_date: formatDate(act.created_at)
+    }));
+
+    res.render('advisor/lead-details', { 
+      title: 'Lead Details', 
+      activePage: 'leads', 
+      layout: false, 
+      lead,
+      activities: parsedActivities
+    });
+  } catch (err) {
+    console.error('Error fetching lead details:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 app.get('/admin/settings', authenticatePage, (req, res) => {

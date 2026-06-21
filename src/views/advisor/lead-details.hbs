@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{title}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F172A;
+      --navy-light: #1E293B;
+      --green: #108A43;
+      --green-light: #16A34A;
+      --green-bg: #F0FDF4;
+      --orange: #F97316;
+      --orange-bg: #FFF7ED;
+      --blue: #3B82F6;
+      --blue-bg: #EFF6FF;
+      --purple: #8B5CF6;
+      --purple-bg: #F5F3FF;
+      --pink: #E11D48;
+      --pink-bg: #FFE4E6;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #0F172A;
+      --text-sec: #64748B;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font);
+      background-color: #E2E8F0;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--bg);
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; background: var(--card);
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid var(--border);
+    }
+    .back-btn {
+      background: none; border: none; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none;
+    }
+    .page-title { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .top-actions { display: flex; align-items: center; gap: 16px; }
+    .action-icon { color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    .main-content {
+      padding: 16px 16px 140px; /* space for bottom nav and quick actions */
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    /* HEADER CARD */
+    .header-card {
+      background: var(--card); border-radius: 16px; padding: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--border);
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .lead-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; flex-shrink: 0;
+    }
+    .color-green { background: var(--green-bg); color: var(--green-light); }
+    .color-blue { background: var(--blue-bg); color: var(--blue); }
+    .color-purple { background: var(--purple-bg); color: var(--purple); }
+    .color-orange { background: var(--orange-bg); color: var(--orange); }
+    .color-pink { background: var(--pink-bg); color: var(--pink); }
+
+    .lead-title { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .lead-title h1 { font-size: 18px; font-weight: 700; color: var(--navy); }
+    .status-pill {
+      font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px;
+    }
+    .lead-meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-sec); }
+
+    .score-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .score-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: var(--navy);
+      position: relative;
+    }
+    .score-circle svg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .score-circle circle { fill: none; stroke-width: 3; stroke-linecap: round; }
+    .score-circle .bg { stroke: var(--border); }
+    .score-label { font-size: 10px; font-weight: 600; color: var(--text-sec); text-align: center; }
+
+    /* QUICK INFO GRID */
+    .quick-info-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      border: 1px solid var(--border);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .info-item { display: flex; flex-direction: column; gap: 4px; }
+    .info-label { font-size: 11px; color: var(--text-sec); }
+    .info-val { font-size: 13px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 6px; }
+    .info-val.green-text { color: var(--green); }
+    .owner-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; background: var(--border); }
+
+    /* PIPELINE TRACKER */
+    .pipeline-card {
+      background: var(--card); border-radius: 16px; padding: 20px 16px;
+      border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none;
+    }
+    .pipeline-card::-webkit-scrollbar { display: none; }
+    .pipeline-track {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      position: relative; min-width: 400px;
+    }
+    .pipeline-line {
+      position: absolute; top: 16px; left: 24px; right: 24px; height: 2px;
+      background: var(--border); z-index: 1;
+    }
+    .pipeline-line-fill {
+      position: absolute; top: 0; left: 0; height: 100%;
+      background: var(--green); z-index: 2; transition: width 0.3s;
+    }
+    .pipe-step {
+      display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 3;
+      width: 70px; text-align: center;
+    }
+    .pipe-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--card); border: 2px solid var(--border); color: var(--text-sec);
+    }
+    .pipe-step.active .pipe-icon, .pipe-step.completed .pipe-icon {
+      background: var(--green); border-color: var(--green); color: white;
+    }
+    .pipe-label { font-size: 10px; font-weight: 600; color: var(--navy); line-height: 1.2; }
+    .pipe-date { font-size: 9px; color: var(--green); font-weight: 700; }
+
+    /* LEAD INFORMATION LIST */
+    .details-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      border: 1px solid var(--border);
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .btn-edit {
+      background: transparent; border: none; color: var(--green); font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+    
+    .detail-row {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .detail-label {
+      display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sec);
+    }
+    .detail-label svg { opacity: 0.7; }
+    .detail-val {
+      font-size: 13px; font-weight: 600; color: var(--navy); text-align: right;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ACTION CARDS */
+    .actions-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .act-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;
+    }
+    .act-card-header { display: flex; align-items: flex-start; gap: 10px; }
+    .act-card-icon {
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .act-card-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .act-card-sub { font-size: 10px; color: var(--text-sec); line-height: 1.3; }
+    .btn-card-action {
+      background: var(--green); color: white; border: none; border-radius: 8px;
+      padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: center;
+    }
+    .btn-card-action.outline {
+      background: transparent; border: 1px solid var(--green); color: var(--green);
+    }
+
+    /* RECENT ACTIVITY */
+    .activity-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      border: 1px solid var(--border); margin-bottom: 16px;
+    }
+    .activity-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .view-all-link { font-size: 12px; font-weight: 600; color: var(--green); text-decoration: none; }
+    
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .activity-icon {
+      width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: var(--green-bg); color: var(--green); flex-shrink: 0; margin-top: 2px;
+    }
+    .activity-icon.blue { background: var(--blue-bg); color: var(--blue); }
+    .activity-content { flex: 1; }
+    .activity-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .activity-desc { font-size: 12px; color: var(--text-sec); line-height: 1.4; }
+    .activity-time { font-size: 11px; color: var(--text-sec); text-align: right; white-space: nowrap; }
+
+    /* QUICK ACTIONS BAR */
+    .quick-actions-bar {
+      position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px; padding: 12px 16px;
+      background: transparent; z-index: 40; display: flex; gap: 12px; justify-content: space-between;
+    }
+    .qa-btn {
+      flex: 1; background: var(--card); border-radius: 12px; padding: 12px 8px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-decoration: none;
+    }
+    .qa-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .qa-whatsapp { color: var(--green-light); }
+    .qa-call { color: var(--blue); }
+    .qa-email { color: var(--purple); }
+    .qa-meeting { color: var(--orange); }
+    .qa-label { font-size: 10px; font-weight: 700; color: var(--navy); text-align: center; }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: var(--card); border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around; padding: 12px 16px 24px;
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
+      z-index: 50;
+    }
+    .b-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--text-sec);
+    }
+    .b-nav-item.active { color: var(--green-light); border-bottom: 2px solid var(--green-light); padding-bottom: 2px; }
+    .b-nav-item span { font-size: 11px; font-weight: 600; }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <a href="/admin/leads" class="back-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <div class="page-title">Lead Details</div>
+      <div class="top-actions">
+        <div class="action-icon" onclick="alert('Menu')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      
+      <!-- HEADER CARD -->
+      <div class="header-card">
+        <div class="header-left">
+          <div class="lead-avatar color-{{lead.colorTheme}}">{{lead.initials}}</div>
+          <div>
+            <div class="lead-title">
+              <h1>{{lead.business_name}}</h1>
+              <span class="status-pill color-{{lead.colorTheme}}">{{lead.status}}</span>
+            </div>
+            <div class="lead-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21V9a2 2 0 0 0-2-2h-2V3a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v12"/><path d="M22 21H2"/><path d="M12 9v4"/><path d="M10 11h4"/></svg>
+              {{lead.entity_type_display}} • {{lead.address}}
+            </div>
+          </div>
+        </div>
+        <div class="score-wrap">
+          <div class="score-circle">
+            <svg>
+              <circle class="bg" cx="24" cy="24" r="21"></circle>
+              <circle cx="24" cy="24" r="21" style="stroke: var(--{{lead.colorTheme}}); stroke-dasharray: 131.9; stroke-dashoffset: {{lead.dashOffset}}px;"></circle>
+            </svg>
+            <span>{{lead.score}}</span>
+          </div>
+          <span class="score-label">Risk Score</span>
+        </div>
+      </div>
+
+      <!-- QUICK INFO GRID -->
+      <div class="quick-info-card">
+        <div class="info-item">
+          <span class="info-label">Lead Source</span>
+          <span class="info-val green-text">{{lead.lead_source}}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Added</span>
+          <span class="info-val">{{lead.added_time}}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Last Contact</span>
+          <span class="info-val">{{lead.last_contact_time}}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Owner</span>
+          <span class="info-val">
+            <img src="https://ui-avatars.com/api/?name={{lead.owner}}&background=random&color=fff" class="owner-avatar" alt="">
+            {{lead.owner}}
+          </span>
+        </div>
+      </div>
+
+      <!-- PIPELINE TRACKER -->
+      <div class="pipeline-card">
+        <div class="pipeline-track">
+          <!-- Width of fill: (pipeline_stage - 1) * 25% -->
+          <div class="pipeline-line">
+            <div class="pipeline-line-fill" style="width: calc(({{#if lead.pipeline_stage}}{{lead.pipeline_stage}}{{else}}1{{/if}} - 1) * 25%);"></div>
+          </div>
+          
+          <div class="pipe-step {{#if (gte lead.pipeline_stage 1)}}completed{{/if}}">
+            <div class="pipe-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="pipe-label">Lead Created</div>
+            <div class="pipe-date">Jun 16</div>
+          </div>
+          
+          <div class="pipe-step {{#if (gte lead.pipeline_stage 2)}}completed{{/if}}">
+            <div class="pipe-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div class="pipe-label">Assessment Completed</div>
+            {{#if (gte lead.pipeline_stage 2)}}<div class="pipe-date">Jun 17</div>{{/if}}
+          </div>
+          
+          <div class="pipe-step {{#if (gte lead.pipeline_stage 3)}}completed{{/if}}">
+            <div class="pipe-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="pipe-label">Quote Pending</div>
+          </div>
+          
+          <div class="pipe-step {{#if (gte lead.pipeline_stage 4)}}completed{{/if}}">
+            <div class="pipe-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <div class="pipe-label">Follow Up Scheduled</div>
+          </div>
+          
+          <div class="pipe-step {{#if (gte lead.pipeline_stage 5)}}completed{{/if}}">
+            <div class="pipe-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div class="pipe-label">Policy Issued</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LEAD INFORMATION -->
+      <div class="details-card">
+        <div class="card-header">
+          <div class="card-title">Lead Information</div>
+          <button class="btn-edit">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit
+          </button>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Contact Person
+          </div>
+          <div class="detail-val">{{lead.contact_person}}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Phone
+          </div>
+          <div class="detail-val">
+            {{lead.phone}}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green);"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </div>
+          <div class="detail-val">
+            {{lead.email}}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Address
+          </div>
+          <div class="detail-val" style="text-align: right; max-width: 60%;">
+            {{lead.address}}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green); flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21V9a2 2 0 0 0-2-2h-2V3a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v12"/><path d="M22 21H2"/><path d="M12 9v4"/><path d="M10 11h4"/></svg>
+            Hospital Type
+          </div>
+          <div class="detail-val">{{lead.hospital_type}}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M3 18h18"/><path d="M3 6h18"/></svg>
+            Number of Beds
+          </div>
+          <div class="detail-val">120</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Employees
+          </div>
+          <div class="detail-val">{{lead.employees}}</div>
+        </div>
+      </div>
+
+      <!-- ACTION CARDS -->
+      <div class="actions-grid">
+        <div class="act-card">
+          <div class="act-card-header">
+            <div class="act-card-icon" style="background:#DCFCE7; color:var(--green);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><path d="M10 13l-2 2-1-1"/></svg>
+            </div>
+            <div>
+              <div class="act-card-title">Assessment<br>Completed</div>
+              <div class="act-card-sub">Jun 17, 2024 • 10:24 AM</div>
+            </div>
+          </div>
+          <button class="btn-card-action">View Assessment</button>
+        </div>
+
+        <div class="act-card">
+          <div class="act-card-header">
+            <div class="act-card-icon" style="background:#FEF3C7; color:#D97706;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <div>
+              <div class="act-card-title">Next Step<br>Generate Quote</div>
+              <div class="act-card-sub" style="margin-top:4px;">Assessment completed. Create and send a quote.</div>
+            </div>
+          </div>
+          <button class="btn-card-action">Generate Quote</button>
+        </div>
+      </div>
+
+      <div class="details-card" style="display:flex; align-items:center; justify-content:space-between; padding:16px;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="act-card-icon" style="background:#DCFCE7; color:var(--green);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="act-card-sub" style="max-width:200px;">
+            Interested in Medical Malpractice and Group Life covers. Meeting scheduled for next week.
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          <a href="#" class="view-all-link">View All</a>
+          <span style="font-size:10px; color:var(--text-sec);">Jun 17, 2024</span>
+        </div>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="activity-card">
+        <div class="activity-header">
+          <div class="card-title">Recent Activity</div>
+          <a href="#" class="view-all-link">View All</a>
+        </div>
+        
+        {{#if activities.length}}
+          {{#each activities}}
+            {{#if (lte @index 2)}}
+            <div class="activity-item">
+              <div class="activity-icon {{#if (eq this.type 'system')}}blue{{/if}}">
+                {{#if (eq this.title 'Assessment completed')}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                {{else if (eq this.title 'Lead created')}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                {{else}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {{/if}}
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">{{this.title}}</div>
+                <div class="activity-desc">by {{../lead.owner}}</div>
+              </div>
+              <div class="activity-time">
+                {{this.formatted_date}}
+              </div>
+            </div>
+            {{/if}}
+          {{/each}}
+        {{else}}
+          <!-- MOCK FALLBACK -->
+          <div class="activity-item">
+            <div class="activity-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">Assessment completed</div>
+              <div class="activity-desc">by Ayo Johnson</div>
+            </div>
+            <div class="activity-time">
+              Jun 17, 2024<br>10:24 AM
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon blue">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">Lead created</div>
+              <div class="activity-desc">by Ayo Johnson</div>
+            </div>
+            <div class="activity-time">
+              Jun 16, 2024<br>02:15 PM
+            </div>
+          </div>
+        {{/if}}
+      </div>
+
+    </main>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions-bar">
+      <a href="https://wa.me/{{lead.phone}}" class="qa-btn" target="_blank">
+        <div class="qa-icon qa-whatsapp">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="qa-label">WhatsApp</div>
+      </a>
+      <a href="tel:{{lead.phone}}" class="qa-btn">
+        <div class="qa-icon qa-call">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="qa-label">Call</div>
+      </a>
+      <a href="mailto:{{lead.email}}" class="qa-btn">
+        <div class="qa-icon qa-email">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="qa-label">Email</div>
+      </a>
+      <a href="#" class="qa-btn">
+        <div class="qa-icon qa-meeting">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="qa-label">Schedule Meeting</div>
+      </a>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a href="/advisor/dashboard" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="/admin/leads" class="b-nav-item active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span>Leads</span>
+      </a>
+      <a href="/admin/assessments" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+        <span>Assessments</span>
+      </a>
+      <a href="/admin/proposals" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Quotes</span>
+      </a>
+      <a href="/admin/settings" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>More</span>
+      </a>
+    </nav>
+  </div>
+
+</body>
+</html>
