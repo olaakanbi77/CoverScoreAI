@@ -15,7 +15,7 @@
   <nav class="navbar">
     <div class="funnel-container navbar-inner">
       <a href="/" class="logo">
-        <img src="/images/logo.png" alt="CoverScore AI" style="height: 80px; width: auto; object-fit: contain;">
+        <img src="/images/logo.png" alt="CoverScore AI" style="height: 95px; width: auto; object-fit: contain;">
       </a>
       <div class="desktop-nav">
         <a href="#calculator">Exposure Calculator</a>
@@ -2065,6 +2065,18 @@
         }
       });
     });
+  })();
+</script>
+
+<script>
+  (function() {
+    var mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    var mobileNavMenu = document.getElementById('mobileNavMenu');
+    if (mobileMenuBtn && mobileNavMenu) {
+      mobileMenuBtn.addEventListener('click', function() {
+        mobileNavMenu.classList.toggle('active');
+      });
+    }
   })();
 </script>
 </body>
