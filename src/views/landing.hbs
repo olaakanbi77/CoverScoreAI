@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/landing.css?v=97">
+  <link rel="stylesheet" href="/css/landing.css?v=98">
 </head>
 <body style="padding-bottom: 72px;">
 
@@ -17,7 +17,7 @@
       <a href="/" class="logo">
         <img src="/images/logo.png" alt="CoverScore AI" style="height: 85px; width: auto; object-fit: contain;">
       </a>
-      <div class="desktop-nav">
+      <div class="desktop-nav" id="desktopNav">
         <a href="#calculator">Exposure Calculator</a>
         <a href="#how-it-works">How It Works</a>
         <a href="#sample">Sample Report</a>
@@ -27,17 +27,9 @@
           {{trigger}}
         </a>
       </div>
-      <button class="mobile-menu-btn" aria-label="Open navigation menu">
+      <button class="mobile-menu-btn" aria-label="Open navigation menu" onclick="document.getElementById('desktopNav').classList.toggle('active')">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-    </div>
-
-    <!-- MOBILE MENU -->
-    <div class="mobile-nav-menu" id="mobileNavMenu">
-      <a href="#calculator">Exposure Calculator</a>
-      <a href="#how-it-works">How It Works</a>
-      <a href="#sample">Sample Report</a>
-      <a href="/auth/login">Login</a>
     </div>
   </nav>
 
@@ -2079,10 +2071,10 @@
 <script>
   (function() {
     var mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    var mobileNavMenu = document.getElementById('mobileNavMenu');
-    if (mobileMenuBtn && mobileNavMenu) {
+    var desktopNav = document.getElementById('desktopNav');
+    if (mobileMenuBtn && desktopNav) {
       mobileMenuBtn.addEventListener('click', function() {
-        mobileNavMenu.classList.toggle('active');
+        desktopNav.classList.toggle('active');
       });
     }
   })();
