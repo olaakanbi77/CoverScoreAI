@@ -249,7 +249,7 @@ p { margin: 0; }
 .logo span { color: var(--color-primary); }
 
 .desktop-nav { display: none; }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .desktop-nav {
     display: flex;
     gap: 32px;
@@ -272,7 +272,7 @@ p { margin: 0; }
   padding: 8px;
   cursor: pointer;
 }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .mobile-menu-btn { display: none; }
 }
 
@@ -304,8 +304,8 @@ p { margin: 0; }
   }
 
   .logo img {
-    height: 85px !important;
-    max-width: 280px;
+    height: 65px !important;
+    max-width: 60vw;
   }
 
   .mobile-menu-btn svg {
@@ -884,8 +884,8 @@ p { margin: 0; }
   }
 
   .logo img {
-    height: 75px !important;
-    max-width: 250px;
+    height: 55px !important;
+    max-width: 65vw;
   }
 
   .mobile-menu-btn svg {
