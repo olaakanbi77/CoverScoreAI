@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Leads - CoverScore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F172A;
+      --navy-light: #1E293B;
+      --green: #108A43; /* Matches the dark green card in screenshot */
+      --green-light: #16A34A; /* Logo score green */
+      --green-bg: #F0FDF4;
+      --orange: #F97316;
+      --orange-bg: #FFF7ED;
+      --blue: #3B82F6;
+      --blue-bg: #EFF6FF;
+      --purple: #8B5CF6;
+      --purple-bg: #F5F3FF;
+      --pink: #E11D48;
+      --pink-bg: #FFE4E6;
+      --bg: #F9FAFB;
+      --card: #FFFFFF;
+      --border: #F1F5F9;
+      --text: #0F172A;
+      --text-sec: #64748B;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font);
+      background-color: #E2E8F0; /* Darker bg outside the app container on desktop */
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: var(--card); /* white bg for leads page */
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--card);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .menu-btn {
+      background: none; border: none; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .page-title {
+      font-size: 18px; font-weight: 800; color: var(--navy);
+    }
+    .top-actions {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .action-icon {
+      color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    /* Filter icon active dot */
+    .filter-dot {
+      position: absolute; top: -2px; right: -2px; width: 6px; height: 6px; border-radius: 50%; background: var(--green-light);
+    }
+
+    .main-content {
+      padding: 0 0 100px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* HEADER */
+    .header-section {
+      padding: 12px 20px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-text h1 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .header-text p { font-size: 12px; color: var(--text-sec); }
+    .btn-new-lead {
+      background: var(--green); color: white; border: none; border-radius: 8px;
+      padding: 10px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* FILTER TABS */
+    .filter-tabs-wrapper {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-tabs {
+      display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    
+    .tab-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; white-space: nowrap;
+      cursor: pointer; border: 1px solid var(--border);
+      background: var(--card); color: var(--text);
+    }
+    .tab-pill.active {
+      background: var(--green); color: white; border-color: var(--green);
+    }
+    .tab-badge {
+      display: flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; border-radius: 10px;
+      font-size: 11px; font-weight: 700; background: var(--green-bg); color: var(--green);
+      padding: 0 6px;
+    }
+    .tab-pill.active .tab-badge {
+      background: white; color: var(--green);
+    }
+
+    /* LEAD LIST */
+    .leads-list {
+      padding: 16px 20px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .lead-card {
+      background: var(--card); border-radius: 16px; padding: 16px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      cursor: pointer; text-decoration: none; color: inherit;
+    }
+    
+    .lead-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; flex-shrink: 0;
+    }
+    /* Dynamic Avatar Colors */
+    .color-green { background: var(--green-bg); color: var(--green-light); }
+    .color-blue { background: var(--blue-bg); color: var(--blue); }
+    .color-purple { background: var(--purple-bg); color: var(--purple); }
+    .color-orange { background: var(--orange-bg); color: var(--orange); }
+    .color-pink { background: var(--pink-bg); color: var(--pink); }
+
+    .lead-info { flex: 1; min-width: 0; }
+    .lead-info h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lead-sub { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-sec); margin-bottom: 8px; }
+    .lead-sub-icon { display: flex; align-items: center; justify-content: center; opacity: 0.7; }
+    .lead-time { font-size: 11px; color: var(--text-sec); }
+
+    .lead-stats {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    }
+    .status-pill {
+      font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px;
+    }
+    
+    .score-gauge-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .score-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: var(--navy);
+      position: relative;
+    }
+    .score-circle svg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .score-circle circle {
+      fill: none; stroke-width: 3; stroke-linecap: round;
+    }
+    .score-circle .bg { stroke: var(--border); }
+    .score-label { font-size: 9px; color: var(--text-sec); text-align: center; }
+    
+    .chevron { color: var(--navy); margin-left: 8px; display: flex; align-items: center; }
+
+    /* BOTTOM BANNER */
+    .bottom-banner {
+      margin: 8px 20px 24px; background: var(--green-bg); border-radius: 16px;
+      padding: 20px; display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid #DCFCE7;
+    }
+    .banner-icon { width: 40px; height: 40px; border-radius: 50%; background: #DCFCE7; color: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .banner-text { flex: 1; margin: 0 16px; }
+    .banner-text h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .banner-text p { font-size: 12px; color: var(--text-sec); }
+    .btn-add-lead-outline {
+      border: 1px solid var(--green); background: transparent; color: var(--green);
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--card); border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around; padding: 12px 16px 24px;
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
+      z-index: 50;
+    }
+    .b-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      text-decoration: none; color: var(--text-sec);
+    }
+    .b-nav-item.active { color: var(--green-light); border-bottom: 2px solid var(--green-light); padding-bottom: 2px; }
+    .b-nav-item span { font-size: 11px; font-weight: 600; }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <button class="menu-btn" onclick="alert('Menu opened')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="page-title">Leads</div>
+      <div class="top-actions">
+        <div class="action-icon" onclick="alert('Search leads...')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="action-icon" onclick="alert('Open filters...')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <div class="filter-dot"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      
+      <!-- HEADER -->
+      <div class="header-section">
+        <div class="header-text">
+          <h1>Manage your prospects</h1>
+          <p>Track, follow up and convert more leads.</p>
+        </div>
+        <button class="btn-new-lead" onclick="openAddLeadModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Lead
+        </button>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="filter-tabs-wrapper">
+        <div class="filter-tabs">
+          <div class="tab-pill active">
+            All Leads <div class="tab-badge">{{counts.all}}</div>
+          </div>
+          <div class="tab-pill">
+            New <div class="tab-badge">{{counts.new}}</div>
+          </div>
+          <div class="tab-pill">
+            Contacted <div class="tab-badge">{{counts.contacted}}</div>
+          </div>
+          <div class="tab-pill">
+            Qualified <div class="tab-badge">{{counts.qualified}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAD LIST -->
+      <div class="leads-list">
+        {{#each parsedLeads}}
+        <a href="/admin/leads/{{this.id}}" class="lead-card">
+          <div class="lead-avatar color-{{this.colorTheme}}">{{this.initials}}</div>
+          
+          <div class="lead-info">
+            <h3>{{this.business_name}}</h3>
+            <div class="lead-sub">
+              <span class="lead-sub-icon">
+                {{#if (eq this.entity_type 'hospital')}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21V9a2 2 0 0 0-2-2h-2V3a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v12"/><path d="M22 21H2"/><path d="M12 9v4"/><path d="M10 11h4"/></svg>
+                {{else}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+                {{/if}}
+              </span>
+              <span>{{#if (eq this.entity_type 'hospital')}}Hospital{{else}}Clinic{{/if}} • {{this.location}}</span>
+            </div>
+            <div class="lead-time">Added {{this.timeAgo}}</div>
+          </div>
+          
+          <div class="lead-stats">
+            <div class="status-pill color-{{this.colorTheme}}">{{this.displayStatus}}</div>
+            <div class="score-gauge-wrap">
+              <div class="score-circle">
+                <svg>
+                  <circle class="bg" cx="20" cy="20" r="17"></circle>
+                  <circle cx="20" cy="20" r="17" style="stroke: var(--{{this.colorTheme}}); stroke-dasharray: 106.8; stroke-dashoffset: {{this.dashOffset}};"></circle>
+                </svg>
+                <span>{{this.score}}</span>
+              </div>
+              <span class="score-label">Potential Score</span>
+            </div>
+          </div>
+
+          <div class="chevron">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+        </a>
+        {{/each}}
+      </div>
+
+      <!-- BOTTOM BANNER -->
+      <div class="bottom-banner">
+        <div class="banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="banner-text">
+          <h4>More leads, more protection.</h4>
+          <p>Add new leads and grow your pipeline.</p>
+        </div>
+        <button class="btn-add-lead-outline" onclick="openAddLeadModal()">Add Lead</button>
+      </div>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <a href="/advisor/dashboard" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="/admin/leads" class="b-nav-item active">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span>Leads</span>
+      </a>
+      <a href="/admin/assessments" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+        <span>Assessments</span>
+      </a>
+      <a href="/admin/proposals" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Quotes</span>
+      </a>
+      <a href="/admin/settings" class="b-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>More</span>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    // Stub for existing Add Lead Modal logic
+    function openAddLeadModal() {
+      alert("Open existing Add Lead Modal");
+      // document.getElementById('addLeadModal').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>

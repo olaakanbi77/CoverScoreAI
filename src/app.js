@@ -174,8 +174,85 @@ app.get('/admin/dashboard', authenticatePage, (req, res) => {
   res.render('admin/dashboard', { title: 'Admin Dashboard', activePage: 'dashboard', layout: 'admin' });
 });
 
-app.get('/admin/leads', authenticatePage, (req, res) => {
-  res.render('admin/dashboard', { title: 'Lead Management', activePage: 'leads', layout: 'admin' });
+app.get('/admin/leads', authenticatePage, async (req, res) => {
+  try {
+    const rawLeads = await all("SELECT * FROM leads ORDER BY updated_at DESC");
+    
+    let counts = { all: 0, new: 0, contacted: 0, qualified: 0 };
+    counts.all = rawLeads.length;
+
+    const parsedLeads = rawLeads.map(lead => {
+      let colorTheme = 'blue';
+      let displayStatus = lead.status || 'Unknown';
+      let statusLower = displayStatus.toLowerCase();
+
+      if (statusLower.includes('new')) {
+        colorTheme = 'green';
+        displayStatus = 'New';
+        counts.new++;
+      } else if (statusLower.includes('qualified')) {
+        colorTheme = 'purple';
+        displayStatus = 'Qualified';
+        counts.qualified++;
+      } else if (statusLower.includes('engaged') || statusLower.includes('contacted') || statusLower.includes('sent')) {
+        colorTheme = 'blue';
+        displayStatus = 'Contacted';
+        counts.contacted++;
+      } else if (statusLower.includes('lost')) {
+        colorTheme = 'pink';
+      } else {
+        colorTheme = 'orange';
+      }
+
+      let initials = 'NA';
+      if (lead.business_name) {
+        const words = lead.business_name.split(' ').filter(w => w.length > 0);
+        if (words.length >= 2) {
+          initials = (words[0][0] + words[1][0]).toUpperCase();
+        } else if (words.length === 1) {
+          initials = words[0].substring(0, 2).toUpperCase();
+        }
+      }
+
+      const score = parseInt(lead.score) || 0;
+      const dashOffset = (106.8 - (106.8 * score / 100)).toFixed(1);
+
+      let timeAgo = 'Just now';
+      if (lead.created_at) {
+        const diffMs = new Date() - new Date(lead.created_at);
+        const diffMins = Math.floor(diffMs / 60000);
+        if (diffMins < 60) timeAgo = `${diffMins || 1}m ago`;
+        else if (diffMins < 1440) timeAgo = `${Math.floor(diffMins/60)}h ago`;
+        else timeAgo = `${Math.floor(diffMins/1440)}d ago`;
+      }
+
+      let location = 'Lagos';
+      let entity_type = 'hospital';
+      if (lead.answers) {
+        try {
+          const ans = typeof lead.answers === 'string' ? JSON.parse(lead.answers) : lead.answers;
+          if (ans.business && ans.business.location) location = ans.business.location;
+          if (ans.business && ans.business.industry) entity_type = ans.business.industry.toLowerCase();
+        } catch(e){}
+      }
+
+      return {
+        ...lead,
+        colorTheme,
+        displayStatus,
+        initials,
+        dashOffset,
+        timeAgo,
+        location,
+        entity_type
+      };
+    });
+
+    res.render('advisor/leads', { title: 'Manage your prospects', activePage: 'leads', layout: false, parsedLeads, counts });
+  } catch (err) {
+    console.error('Error fetching leads:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 app.get('/admin/analytics', authenticatePage, (req, res) => {
