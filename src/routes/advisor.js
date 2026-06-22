@@ -250,6 +250,23 @@ router.get('/proposal-writer/:leadId', authenticatePage, requireSalesOrAdmin, as
   }
 });
 
+router.get('/follow-up/:leadId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
+    if (!lead) return res.status(404).send('Lead not found');
+
+    res.render('advisor/follow-up', {
+      layout: 'admin',
+      user: req.user,
+      lead,
+      activePage: 'more'
+    });
+  } catch (err) {
+    console.error('Error loading follow up screen:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.post('/api/copilot-chat', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const { leadId, message } = req.body;
