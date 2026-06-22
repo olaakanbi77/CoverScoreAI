@@ -14,16 +14,28 @@
     --bg-page: #f8fafc;
   }
 
+  /* Override Admin Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+
   body {
     background-color: var(--bg-page);
   }
 
-  .assessments-page {
-    max-width: 600px;
+  .mobile-app-container {
+    max-width: 480px;
     margin: 0 auto;
+    background: var(--bg-page);
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    position: relative;
+    padding-bottom: 90px; /* space for bottom nav */
+  }
+
+  .assessments-page {
     font-family: 'Inter', sans-serif;
     padding: 24px 16px;
-    padding-bottom: 100px; /* space for bottom nav if needed */
     color: var(--c-dark);
   }
 
@@ -366,8 +378,43 @@
   .icon-sm { width: 14px; height: 14px; }
   .icon-md { width: 18px; height: 18px; }
   .icon-lg { width: 24px; height: 24px; }
+  /* Bottom Navigation */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0 24px 0; /* padding for safe area */
+    border-top: 1px solid #e2e8f0;
+    z-index: 100;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--c-gray);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .nav-item.active {
+    color: var(--c-green);
+  }
+  .nav-item svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
 </style>
 
+<div class="mobile-app-container">
 <div class="assessments-page">
   <!-- Header -->
   <div class="a-header-wrapper">
@@ -638,5 +685,34 @@
     <div style="margin-left: auto; color: #064e3b;">
       <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
     </div>
+  </div>
+</div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="/advisor/dashboard" class="nav-item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Home
+    </a>
+    <a href="/admin/leads" class="nav-item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+      Leads
+    </a>
+    <a href="/admin/assessments" class="nav-item active">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      Assessments
+    </a>
+    <a href="/admin/proposals" class="nav-item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Quotes
+    </a>
+    <a href="/admin/consultations" class="nav-item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      Follow-Up
+    </a>
+    <a href="#" class="nav-item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+      More
+    </a>
   </div>
 </div>
