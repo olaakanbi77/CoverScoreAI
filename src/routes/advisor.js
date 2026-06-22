@@ -267,6 +267,19 @@ router.get('/follow-up/:leadId', authenticatePage, requireSalesOrAdmin, async (r
   }
 });
 
+router.get('/notifications', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/notifications', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'more'
+    });
+  } catch (err) {
+    console.error('Error loading notifications screen:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.post('/api/copilot-chat', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const { leadId, message } = req.body;
