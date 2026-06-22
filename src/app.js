@@ -384,6 +384,10 @@ app.get('/admin/opportunities', authenticatePage, async (req, res) => {
   }
 });
 
+app.get('/admin/more', authenticatePage, async (req, res) => {
+  res.render('admin/more', { title: 'More', activePage: 'more', layout: 'admin' });
+});
+
 app.get('/admin/consultations', authenticatePage, async (req, res) => {
   try {
     const requested = await all("SELECT * FROM leads WHERE consultation_preference IS NOT NULL AND status != 'Won' ORDER BY created_at DESC");
