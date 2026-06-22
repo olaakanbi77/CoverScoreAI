@@ -1,16 +1,18 @@
 <style>
   :root {
     --c-green: #10b981;
-    --c-green-light: #d1fae5;
+    --c-green-light: #ecfdf5;
     --c-orange: #f59e0b;
-    --c-orange-light: #fef3c7;
+    --c-orange-light: #fffbeb;
     --c-blue: #3b82f6;
-    --c-blue-light: #dbeafe;
+    --c-blue-light: #eff6ff;
     --c-purple: #8b5cf6;
-    --c-purple-light: #ede9fe;
-    --c-gray: #6b7280;
-    --c-gray-light: #f3f4f6;
-    --c-dark: #111827;
+    --c-purple-light: #f5f3ff;
+    --c-red: #ef4444;
+    --c-red-light: #fef2f2;
+    --c-gray: #64748b;
+    --c-gray-light: #f8fafc;
+    --c-dark: #0f172a;
     --bg-page: #f8fafc;
   }
 
@@ -18,340 +20,351 @@
   .admin-sidebar, .admin-topbar { display: none !important; }
   .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
   body.admin-layout { background: var(--bg-page) !important; }
-
+  
   body {
     background-color: var(--bg-page);
+    font-family: 'Inter', sans-serif;
   }
 
   .mobile-app-container {
     max-width: 480px;
     margin: 0 auto;
-    background: var(--bg-page);
+    background: #ffffff;
     min-height: 100vh;
     box-shadow: 0 0 20px rgba(0,0,0,0.05);
     position: relative;
-    padding-bottom: 90px; /* space for bottom nav */
+    padding-bottom: 90px;
   }
 
   .assessments-page {
-    font-family: 'Inter', sans-serif;
     padding: 24px 16px;
     color: var(--c-dark);
   }
 
-  /* Header Section */
-  .a-header-wrapper {
-    margin-bottom: 24px;
-  }
-  .a-header-top {
+  /* Header */
+  .header-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    margin-bottom: 24px;
   }
-  .a-title {
-    font-size: 28px;
+  .header-left h1 {
+    font-size: 26px;
     font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 8px 0;
-    letter-spacing: -0.5px;
+    color: var(--c-dark);
+    margin: 0 0 4px 0;
   }
-  .a-subtitle {
-    font-size: 14px;
+  .header-left p {
+    font-size: 13px;
     color: var(--c-gray);
+    margin: 0;
+    max-width: 160px;
     line-height: 1.4;
-    max-width: 250px;
   }
-
-  .a-header-actions {
+  .header-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 12px;
   }
-  .btn-new-link {
-    background: #047857;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 13px;
-    display: flex;
+  .btn-share {
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(4, 120, 87, 0.2);
-  }
-  .btn-share-link {
-    color: #047857;
-    background: transparent;
-    border: none;
-    font-weight: 600;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  /* Status Cards */
-  .a-status-scroll {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .a-status-card {
-    background: white;
-    border-radius: 12px;
-    padding: 12px 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    border: 1px solid #e2e8f0;
-    position: relative;
-    overflow: hidden;
-  }
-  .a-status-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 8px;
-    right: 8px;
-    height: 3px;
-    border-radius: 3px 3px 0 0;
-  }
-  .a-status-card.c-green::after { background: var(--c-green); }
-  .a-status-card.c-orange::after { background: var(--c-orange); }
-  .a-status-card.c-blue::after { background: var(--c-blue); }
-  .a-status-card.c-purple::after { background: var(--c-purple); }
-
-  .a-status-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 8px auto;
-  }
-  .icon-xs { width: 12px; height: 12px; }
-  .a-status-card.c-green .a-status-icon { background: var(--c-green-light); color: var(--c-green); }
-  .a-status-card.c-orange .a-status-icon { background: var(--c-orange-light); color: var(--c-orange); }
-  .a-status-card.c-blue .a-status-icon { background: var(--c-blue-light); color: var(--c-blue); }
-  .a-status-card.c-purple .a-status-icon { background: var(--c-purple-light); color: var(--c-purple); }
-
-  .a-status-num {
-    font-size: 18px;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 4px;
-    line-height: 1;
-  }
-  .a-status-card.c-green .a-status-num { color: var(--c-green); }
-  .a-status-card.c-orange .a-status-num { color: var(--c-orange); }
-  .a-status-card.c-blue .a-status-num { color: var(--c-blue); }
-  .a-status-card.c-purple .a-status-num { color: var(--c-purple); }
-
-  .a-status-title {
-    font-size: 9px;
-    font-weight: 700;
-    text-align: center;
-    color: var(--c-dark);
-    margin-bottom: 2px;
-    line-height: 1.1;
-  }
-  .a-status-sub {
-    font-size: 8px;
-    text-align: center;
-    color: var(--c-gray);
-    line-height: 1.1;
-  }
-
-  /* List Sections */
-  .a-list-section {
-    margin-bottom: 32px;
-  }
-  .a-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  .a-section-title-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .a-section-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--c-dark);
-    margin: 0;
-  }
-  .a-section-badge {
-    background: var(--c-green-light);
+    border: 1px solid var(--c-green);
     color: var(--c-green);
-    padding: 2px 8px;
-    border-radius: 12px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 8px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
   }
-  .a-section-badge.orange { background: var(--c-orange-light); color: var(--c-orange); }
-  .a-section-badge.blue { background: var(--c-blue-light); color: var(--c-blue); }
-  .a-section-badge.purple { background: var(--c-purple-light); color: var(--c-purple); }
-
-  .a-view-all {
-    color: #047857;
+  .btn-templates {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--c-green);
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
   }
 
-  /* List Items */
-  .a-list-card {
+  /* Goal Card */
+  .goal-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    margin-bottom: 16px;
+  }
+  .goal-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--c-green-light);
+    color: var(--c-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .goal-text .g-label {
+    font-size: 11px;
+    color: var(--c-gray);
+    text-transform: capitalize;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .goal-text .g-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 6px;
+  }
+  .goal-text .g-desc {
+    font-size: 12px;
+    color: var(--c-gray);
+    line-height: 1.5;
+  }
+
+  /* Stats Grid */
+  .stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 8px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    margin-bottom: 32px;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid #f1f5f9;
+  }
+  .stat-item:last-child {
+    border-right: none;
+  }
+  .stat-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .stat-item:nth-child(1) .stat-icon { background: var(--c-blue-light); color: var(--c-blue); }
+  .stat-item:nth-child(2) .stat-icon { background: var(--c-orange-light); color: var(--c-orange); }
+  .stat-item:nth-child(3) .stat-icon { background: var(--c-green-light); color: var(--c-green); }
+  .stat-item:nth-child(4) .stat-icon { background: var(--c-purple-light); color: var(--c-purple); }
+
+  .stat-val {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  .stat-item:nth-child(1) .stat-val { color: var(--c-blue); }
+  .stat-item:nth-child(2) .stat-val { color: var(--c-orange); }
+  .stat-item:nth-child(3) .stat-val { color: var(--c-green); }
+  .stat-item:nth-child(4) .stat-val { color: var(--c-purple); }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 2px;
+  }
+  .stat-sub {
+    font-size: 9px;
+    color: var(--c-gray);
+  }
+  .stat-item:nth-child(2) .stat-sub { color: var(--c-orange); font-weight: 600; }
+  .stat-item:nth-child(3) .stat-sub { color: var(--c-green); font-weight: 600; }
+
+  /* Lists */
+  .list-section {
+    margin-bottom: 24px;
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0;
+  }
+  .section-view-all {
+    font-size: 13px;
+    font-weight: 600;
+    color: #047857;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .list-card {
     background: white;
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 8px;
     display: flex;
     align-items: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    border: 1px solid #e2e8f0;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   }
-
-
-  .a-card-body {
-    flex-grow: 1;
-  }
-  .a-card-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--c-dark);
-    margin: 0 0 4px 0;
-  }
-  .a-card-sub {
-    font-size: 12px;
-    color: var(--c-gray);
-    margin: 0 0 2px 0;
-  }
-  .a-card-time {
-    font-size: 11px;
-    color: #94a3b8;
-    margin: 0;
+  .c-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin-right: 12px;
+    flex-shrink: 0;
   }
-  .a-card-time.orange::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: var(--c-orange);
-    border-radius: 50%;
-  }
+  .c-avatar.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .c-avatar.green { background: var(--c-green-light); color: var(--c-green); }
+  .c-avatar.red { background: var(--c-red-light); color: var(--c-red); }
 
-  .a-card-right {
+  .c-body {
+    flex-grow: 1;
+  }
+  .c-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0 0 2px 0;
+  }
+  .c-sub {
+    font-size: 11px;
+    color: var(--c-gray);
+    margin: 0 0 4px 0;
+  }
+  .c-time {
+    font-size: 11px;
+    color: var(--c-gray);
+    margin: 0;
+  }
+  .c-time.red { color: var(--c-red); font-weight: 600; }
+  
+  .c-right {
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 12px;
     flex-shrink: 0;
   }
-  .a-risk-score-box {
-    border: 1px solid #e2e8f0;
+  
+  /* Progress specific */
+  .c-progress-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .c-prog-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-dark);
+  }
+  .c-prog-lbl {
+    font-size: 10px;
+    color: var(--c-gray);
+    margin-bottom: 4px;
+  }
+  .c-prog-bar-bg {
+    width: 60px;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .c-prog-bar-fill {
+    height: 100%;
+    background: var(--c-orange);
+    border-radius: 2px;
+  }
+
+  /* Risk specific */
+  .c-risk-box {
+    border: 1px solid var(--c-green);
     border-radius: 6px;
     padding: 4px 8px;
     text-align: center;
   }
-  .a-risk-lbl {
+  .c-risk-lbl {
     font-size: 9px;
-    text-transform: uppercase;
     color: var(--c-green);
-    font-weight: 700;
-    margin-bottom: 2px;
+    font-weight: 600;
   }
-  .a-risk-val {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--c-green);
-    line-height: 1;
-  }
-
-  .a-btn-action {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--c-green-light);
-    color: var(--c-green);
-    border: none;
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .a-btn-action.orange { background: var(--c-orange-light); color: var(--c-orange); }
-  .a-btn-action.blue { background: var(--c-blue-light); color: var(--c-blue); border-radius: 6px; }
-  .a-btn-action.purple { background: var(--c-purple-light); color: var(--c-purple); }
-  
-  .a-action-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .a-icon-btn {
-    color: var(--c-gray);
-    background: transparent;
-    border: none;
-    padding: 4px;
-    cursor: pointer;
-  }
-
-  .a-premium-lbl {
-    font-size: 11px;
-    color: var(--c-gray);
-    margin-bottom: 2px;
-    text-align: right;
-  }
-  .a-premium-val {
+  .c-risk-val {
     font-size: 16px;
     font-weight: 800;
-    color: var(--c-purple);
+    color: var(--c-green);
   }
 
-  /* Analytics Banner */
-  .a-analytics-banner {
+  /* Reminder specific */
+  .btn-reminder {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--c-red-light);
+    color: var(--c-red);
+    border: 1px solid var(--c-red);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .chevron {
+    color: #cbd5e1;
+  }
+
+  /* Tip Card */
+  .tip-card {
     background: var(--c-green-light);
     border-radius: 12px;
     padding: 16px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-top: 16px;
-    cursor: pointer;
+    gap: 12px;
+    margin-top: 24px;
   }
-  .a-analytics-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--c-green);
-    color: white;
-    border-radius: 8px;
+  .tip-icon {
+    width: 32px;
+    height: 32px;
+    background: #d1fae5;
+    color: var(--c-green);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
-  .a-analytics-text h4 {
-    margin: 0 0 4px 0;
+  .tip-text h4 {
+    font-size: 13px;
+    font-weight: 700;
     color: #064e3b;
-    font-size: 15px;
+    margin: 0 0 2px 0;
   }
-  .a-analytics-text p {
-    margin: 0;
+  .tip-text p {
+    font-size: 11px;
     color: #065f46;
-    font-size: 12px;
+    margin: 0;
     line-height: 1.4;
   }
 
@@ -359,7 +372,8 @@
   .icon-sm { width: 14px; height: 14px; }
   .icon-md { width: 18px; height: 18px; }
   .icon-lg { width: 24px; height: 24px; }
-  /* Bottom Navigation */
+
+  /* Bottom Nav */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -371,7 +385,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 12px 0 24px 0; /* padding for safe area */
+    padding: 12px 0 24px 0;
     border-top: 1px solid #e2e8f0;
     z-index: 100;
   }
@@ -396,295 +410,182 @@
 </style>
 
 <div class="mobile-app-container">
-<div class="assessments-page">
-  <!-- Header -->
-  <div class="a-header-wrapper">
-    <div class="a-header-top">
-      <div>
-        <h1 class="a-title">Assessments</h1>
-        <p class="a-subtitle">Leads complete assessments. You review risks and recommend protection.</p>
+  <div class="assessments-page">
+    
+    <!-- Header -->
+    <div class="header-row">
+      <div class="header-left">
+        <h1>Assessments</h1>
+        <p>Track assessment activity<br>and lead progress</p>
       </div>
-      <div class="a-header-actions">
-        <button class="btn-new-link">
-          <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          New Assessment Link
-        </button>
-        <button class="btn-share-link">
+      <div class="header-right">
+        <a href="#" class="btn-share">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
           Share Assessment Link
-        </button>
+        </a>
+        <a href="#" class="btn-templates">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Templates
+        </a>
       </div>
     </div>
-  </div>
 
-  <!-- Status Cards Scroll -->
-  <div class="a-status-scroll">
-    <div class="a-status-card c-green">
-      <div class="a-status-icon">
-        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    <!-- Goal Card -->
+    <div class="goal-card">
+      <div class="goal-icon">
+        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
       </div>
-      <div class="a-status-num">12</div>
-      <div class="a-status-title">New Assessments</div>
-      <div class="a-status-sub">Submitted, not reviewed</div>
+      <div class="goal-text">
+        <div class="g-label">Your Goal</div>
+        <div class="g-title">Increase Completed Assessments</div>
+        <div class="g-desc">More completed assessments = more risk insights for leads and more opportunities for you.</div>
+      </div>
     </div>
 
-    <div class="a-status-card c-orange">
-      <div class="a-status-icon">
-        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-      </div>
-      <div class="a-status-num">7</div>
-      <div class="a-status-title">Under Review</div>
-      <div class="a-status-sub">You're reviewing</div>
-    </div>
-
-    <div class="a-status-card c-blue">
-      <div class="a-status-icon">
-        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      </div>
-      <div class="a-status-num">28</div>
-      <div class="a-status-title">Reports Generated</div>
-      <div class="a-status-sub">Reports ready</div>
-    </div>
-
-    <div class="a-status-card c-purple">
-      <div class="a-status-icon">
-        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-      </div>
-      <div class="a-status-num">6</div>
-      <div class="a-status-title">Quotes Pending</div>
-      <div class="a-status-sub">Awaiting client decision</div>
-    </div>
-  </div>
-
-  <!-- New Assessments -->
-  <div class="a-list-section">
-    <div class="a-section-header">
-      <div class="a-section-title-wrap">
-        <h2 class="a-section-title">New Assessments</h2>
-        <span class="a-section-badge">12</span>
-      </div>
-      <a href="#" class="a-view-all">View All</a>
-    </div>
-
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">Greenfield Hospital</h3>
-        <p class="a-card-sub">Abuja, FCT • Hospital</p>
-        <p class="a-card-time">Submitted 2 hours ago</p>
-      </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">74</div>
+    <!-- Stats Grid -->
+    <div class="stats-card">
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>
         </div>
-        <button class="a-btn-action">Review <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+        <div class="stat-val">32</div>
+        <div class="stat-label">Started</div>
+        <div class="stat-sub">Not completed</div>
       </div>
-    </div>
-
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">PrimeWorld Schools</h3>
-        <p class="a-card-sub">Lekki, Lagos • School</p>
-        <p class="a-card-time">Submitted 5 hours ago</p>
-      </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">63</div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <button class="a-btn-action">Review <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+        <div class="stat-val">18</div>
+        <div class="stat-label">In Progress</div>
+        <div class="stat-sub">Continue</div>
       </div>
-    </div>
-
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">Rhema Chapel</h3>
-        <p class="a-card-sub">Ibadan, Oyo State • Church</p>
-        <p class="a-card-time">Submitted 1 day ago</p>
-      </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">58</div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <button class="a-btn-action">Review <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+        <div class="stat-val">45</div>
+        <div class="stat-label">Completed</div>
+        <div class="stat-sub">Report sent</div>
       </div>
-    </div>
-  </div>
-
-  <!-- Under Review -->
-  <div class="a-list-section">
-    <div class="a-section-header">
-      <div class="a-section-title-wrap">
-        <h2 class="a-section-title">Under Review</h2>
-        <span class="a-section-badge orange">7</span>
-      </div>
-      <a href="#" class="a-view-all">View All</a>
-    </div>
-
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">St. Anthony School</h3>
-        <p class="a-card-sub">Port Harcourt, Rivers State • School</p>
-        <p class="a-card-time orange">Started review 1 day ago</p>
-      </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">69</div>
+      <div class="stat-item">
+        <div class="stat-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <button class="a-btn-action orange">Continue <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+        <div class="stat-val">78%</div>
+        <div class="stat-label">Completion Rate</div>
+        <div class="stat-sub" style="color:var(--c-gray); font-weight:normal;">Last 30 days</div>
       </div>
     </div>
 
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">MultiFab Industries</h3>
-        <p class="a-card-sub">Kaduna, Kaduna State • Manufacturing</p>
-        <p class="a-card-time orange">Started review 2 days ago</p>
+    <!-- In Progress -->
+    <div class="list-section">
+      <div class="section-header">
+        <h2 class="section-title">In Progress</h2>
+        <a href="#" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
       </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">71</div>
+      <div class="list-card">
+        <div class="c-avatar orange">GH</div>
+        <div class="c-body">
+          <h3 class="c-title">Greenfield Hospital</h3>
+          <p class="c-sub">Abuja, FCT • Hospital</p>
+          <p class="c-time">Last active 2 hours ago</p>
         </div>
-        <button class="a-btn-action orange">Continue <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Reports Generated -->
-  <div class="a-list-section">
-    <div class="a-section-header">
-      <div class="a-section-title-wrap">
-        <h2 class="a-section-title">Reports Generated</h2>
-        <span class="a-section-badge blue">28</span>
-      </div>
-      <a href="#" class="a-view-all">View All</a>
-    </div>
-
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">Kings Temple Church</h3>
-        <p class="a-card-sub">Kano, Kano State • Church</p>
-        <p class="a-card-time">Report generated 2 days ago</p>
-      </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">58</div>
+        <div class="c-right">
+          <div class="c-progress-box">
+            <div class="c-prog-val">38%</div>
+            <div class="c-prog-lbl">Complete</div>
+            <div class="c-prog-bar-bg">
+              <div class="c-prog-bar-fill" style="width: 38%;"></div>
+            </div>
+          </div>
+          <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
-        <div class="a-action-row">
-          <button class="a-btn-action blue">View Report</button>
-          <button class="a-icon-btn">
-            <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      </div>
+    </div>
+
+    <!-- Recently Completed -->
+    <div class="list-section">
+      <div class="section-header">
+        <h2 class="section-title">Recently Completed</h2>
+        <a href="#" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="list-card">
+        <div class="c-avatar green">PW</div>
+        <div class="c-body">
+          <h3 class="c-title">PrimeWorld Schools</h3>
+          <p class="c-sub">Lekki, Lagos • School</p>
+          <p class="c-time">Completed 1 day ago</p>
+        </div>
+        <div class="c-right">
+          <div class="c-risk-box">
+            <div class="c-risk-lbl">Risk Score</div>
+            <div class="c-risk-val">63</div>
+          </div>
+          <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Abandoned -->
+    <div class="list-section">
+      <div class="section-header">
+        <h2 class="section-title">Abandoned</h2>
+        <a href="#" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="list-card">
+        <div class="c-avatar red">RC</div>
+        <div class="c-body">
+          <h3 class="c-title">Rhema Chapel</h3>
+          <p class="c-sub">Ibadan, Oyo State • Church</p>
+          <p class="c-time red">Stopped at Question 3 of 10</p>
+          <p class="c-time">2 days ago</p>
+        </div>
+        <div class="c-right">
+          <button class="btn-reminder">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            Send Reminder
           </button>
+          <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
       </div>
     </div>
 
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">BestMed Clinic</h3>
-        <p class="a-card-sub">Enugu, Enugu State • Healthcare</p>
-        <p class="a-card-time">Report generated 3 days ago</p>
+    <!-- Tip Card -->
+    <div class="tip-card">
+      <div class="tip-icon">
+        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
       </div>
-      <div class="a-card-right">
-        <div class="a-risk-score-box">
-          <div class="a-risk-lbl">Risk Score</div>
-          <div class="a-risk-val">66</div>
-        </div>
-        <div class="a-action-row">
-          <button class="a-btn-action blue">View Report</button>
-          <button class="a-icon-btn">
-            <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          </button>
-        </div>
+      <div class="tip-text">
+        <h4>Tip</h4>
+        <p>Remind leads to complete their assessment.<br>Completed assessments get instant risk reports.</p>
       </div>
-    </div>
-  </div>
-
-  <!-- Quotes Pending -->
-  <div class="a-list-section">
-    <div class="a-section-header">
-      <div class="a-section-title-wrap">
-        <h2 class="a-section-title">Quotes Pending</h2>
-        <span class="a-section-badge purple">6</span>
-      </div>
-      <a href="#" class="a-view-all">View All</a>
+      <svg class="icon-md chevron" style="margin-left:auto; color:#065f46" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
     </div>
 
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">BlueLine Logistics</h3>
-        <p class="a-card-sub">Apapa, Lagos • Logistics</p>
-        <p class="a-card-time">Quote sent 1 day ago</p>
-      </div>
-      <div class="a-card-right" style="align-items: flex-end;">
-        <div>
-          <div class="a-premium-lbl">Premium</div>
-          <div class="a-premium-val">₦1.85M</div>
-        </div>
-        <button class="a-btn-action purple">Follow Up <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-      </div>
-    </div>
-
-    <div class="a-list-card">
-      <div class="a-card-body">
-        <h3 class="a-card-title">Gracefield Academy</h3>
-        <p class="a-card-sub">Ikeja, Lagos • School</p>
-        <p class="a-card-time">Quote sent 2 days ago</p>
-      </div>
-      <div class="a-card-right" style="align-items: flex-end;">
-        <div>
-          <div class="a-premium-lbl">Premium</div>
-          <div class="a-premium-val">₦920K</div>
-        </div>
-        <button class="a-btn-action purple">Follow Up <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Assessment Analytics Banner -->
-  <div class="a-analytics-banner">
-    <div class="a-analytics-icon">
-      <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-    </div>
-    <div class="a-analytics-text">
-      <h4>Assessment Analytics</h4>
-      <p>Track conversion, response time, risk trends and performance.</p>
-    </div>
-    <div style="margin-left: auto; color: #064e3b;">
-      <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </div>
   </div>
 </div>
 
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <a href="/advisor/dashboard" class="nav-item">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-      Home
-    </a>
-    <a href="/admin/leads" class="nav-item">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-      Leads
-    </a>
-    <a href="/admin/assessments" class="nav-item active">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-      Assessments
-    </a>
-    <a href="/admin/opportunities" class="nav-item">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-      Opportunities
-    </a>
-    <a href="/admin/consultations" class="nav-item">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-      Follow-Up
-    </a>
-    <a href="/admin/proposals" class="nav-item">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      Quotes
-    </a>
-  </div>
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item active">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Opportunities
+  </a>
+  <a href="#" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
 </div>
