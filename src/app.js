@@ -376,6 +376,14 @@ app.get('/admin/assessments', authenticatePage, async (req, res) => {
   }
 });
 
+app.get('/admin/opportunities', authenticatePage, async (req, res) => {
+  try {
+    res.render('admin/opportunities', { title: 'Opportunities', activePage: 'opportunities', layout: 'admin' });
+  } catch (error) {
+    res.status(500).send('Error loading opportunities');
+  }
+});
+
 app.get('/admin/consultations', authenticatePage, async (req, res) => {
   try {
     const requested = await all("SELECT * FROM leads WHERE consultation_preference IS NOT NULL AND status != 'Won' ORDER BY created_at DESC");

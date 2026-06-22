@@ -1,0 +1,676 @@
+<style>
+  :root {
+    --c-green: #10b981;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f59e0b;
+    --c-orange-light: #fffbeb;
+    --c-blue: #3b82f6;
+    --c-blue-light: #eff6ff;
+    --c-purple: #8b5cf6;
+    --c-purple-light: #f5f3ff;
+    --c-red: #ef4444;
+    --c-red-light: #fef2f2;
+    --c-gray: #64748b;
+    --c-gray-light: #f8fafc;
+    --c-dark: #0f172a;
+    --bg-page: #ffffff;
+  }
+
+  /* Override Admin Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  
+  body {
+    background-color: var(--bg-page);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .mobile-app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    position: relative;
+    padding-bottom: 90px;
+  }
+
+  .opportunities-page {
+    padding: 24px 16px;
+    color: var(--c-dark);
+  }
+
+  /* Header */
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .header-left h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0 0 4px 0;
+  }
+  .header-left p {
+    font-size: 13px;
+    color: var(--c-gray);
+    margin: 0;
+    max-width: 180px;
+    line-height: 1.4;
+  }
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .btn-new-opp {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #047857;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .btn-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #cbd5e1;
+    color: var(--c-dark);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    background: white;
+  }
+
+  /* 4 Cards Grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    right: 15%;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+  }
+  .stat-card.c-green::after { background: var(--c-green); }
+  .stat-card.c-orange::after { background: var(--c-orange); }
+  .stat-card.c-blue::after { background: var(--c-blue); }
+  .stat-card.c-purple::after { background: var(--c-purple); }
+
+  .stat-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .stat-icon-wrap svg { width: 18px; height: 18px; }
+  
+  .c-green .stat-icon-wrap { background: var(--c-green-light); color: var(--c-green); }
+  .c-orange .stat-icon-wrap { background: var(--c-orange-light); color: var(--c-orange); }
+  .c-blue .stat-icon-wrap { background: var(--c-blue-light); color: var(--c-blue); }
+  .c-purple .stat-icon-wrap { background: var(--c-purple-light); color: var(--c-purple); }
+
+  .stat-val {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  .c-green .stat-val { color: var(--c-green); }
+  .c-orange .stat-val { color: var(--c-orange); }
+  .c-blue .stat-val { color: var(--c-blue); }
+  .c-purple .stat-val { color: var(--c-purple); }
+
+  .stat-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--c-dark);
+    line-height: 1.2;
+  }
+
+  /* Pipeline Section */
+  .pipeline-section {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    margin-bottom: 24px;
+  }
+  .pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .pipeline-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--c-dark);
+  }
+  .pipeline-view-all {
+    font-size: 12px;
+    font-weight: 600;
+    color: #047857;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .pl-bar {
+    display: flex;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    gap: 4px;
+    background: transparent;
+  }
+  .pl-segment {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .pl-segment.s-green { background: var(--c-green); width: 40%; }
+  .pl-segment.s-orange { background: var(--c-orange); width: 25%; }
+  .pl-segment.s-blue { background: var(--c-blue); width: 15%; }
+  .pl-segment.s-purple { background: var(--c-purple); width: 10%; }
+  .pl-segment.s-gray { background: #cbd5e1; width: 10%; }
+
+  .pl-stats {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+  }
+  .pl-item {
+    flex: 1;
+  }
+  .pl-item-lbl {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 4px;
+  }
+  .pl-item-val {
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .pl-item.i-green .pl-item-val { color: var(--c-green); }
+  .pl-item.i-orange .pl-item-val { color: var(--c-orange); }
+  .pl-item.i-blue .pl-item-val { color: var(--c-blue); }
+  .pl-item.i-purple .pl-item-val { color: var(--c-purple); }
+  .pl-item.i-gray .pl-item-val { color: #64748b; }
+
+  /* Lists */
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+  .list-title {
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: var(--c-dark);
+  }
+  .badge {
+    background: #f1f5f9;
+    color: var(--c-gray);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+  .badge.green { background: var(--c-green-light); color: var(--c-green); }
+  .badge.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .badge.purple { background: var(--c-purple-light); color: var(--c-purple); }
+
+  .section-view-all {
+    font-size: 13px;
+    font-weight: 600;
+    color: #047857;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .list-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .c-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .c-avatar.green { background: var(--c-green-light); color: var(--c-green); }
+  .c-avatar.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .c-avatar.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .c-avatar.blue { background: var(--c-blue-light); color: var(--c-blue); }
+
+  .c-body {
+    flex-grow: 1;
+  }
+  .c-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0 0 2px 0;
+  }
+  .c-sub {
+    font-size: 11px;
+    color: var(--c-gray);
+    margin: 0 0 4px 0;
+  }
+  .c-meta {
+    font-size: 11px;
+    color: var(--c-gray);
+    margin: 0;
+  }
+  .c-meta strong {
+    font-weight: 600;
+    color: var(--c-dark);
+  }
+  .c-meta .t-green { color: var(--c-green); font-weight: 700; }
+  .c-meta .t-purple { color: var(--c-purple); font-weight: 700; }
+
+  .c-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .c-right-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 44px;
+  }
+  .c-time {
+    font-size: 9px;
+    color: var(--c-gray);
+    font-weight: 600;
+  }
+  
+  .btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .btn-action.bg-green { background: var(--c-green-light); color: #047857; }
+  .btn-action.bg-blue { background: var(--c-blue-light); color: #1d4ed8; }
+  .btn-action.bg-purple { background: var(--c-purple-light); color: #6d28d9; }
+
+  .chevron {
+    color: #cbd5e1;
+  }
+
+  /* Tip Card */
+  .tip-card {
+    background: var(--c-green-light);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .tip-icon {
+    width: 32px;
+    height: 32px;
+    background: #d1fae5;
+    color: var(--c-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tip-text h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #064e3b;
+    margin: 0 0 2px 0;
+  }
+  .tip-text p {
+    font-size: 11px;
+    color: #065f46;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* Icons */
+  .icon-sm { width: 14px; height: 14px; }
+  .icon-md { width: 18px; height: 18px; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0 24px 0;
+    border-top: 1px solid #e2e8f0;
+    z-index: 100;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--c-gray);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .nav-item.active {
+    color: var(--c-green);
+  }
+  .nav-item svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
+</style>
+
+<div class="mobile-app-container">
+  <div class="opportunities-page">
+    
+    <!-- Header -->
+    <div class="header-row">
+      <div class="header-left">
+        <h1>Opportunities</h1>
+        <p>Manage your sales pipeline and close more business.</p>
+      </div>
+      <div class="header-right">
+        <a href="#" class="btn-new-opp">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          New Opportunity
+        </a>
+        <a href="#" class="btn-filter">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          Filter
+        </a>
+      </div>
+    </div>
+
+    <!-- 4 Cards Grid -->
+    <div class="cards-grid">
+      <div class="stat-card c-green">
+        <div class="stat-icon-wrap">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+        <div class="stat-val">18</div>
+        <div class="stat-lbl">New<br>Opportunities</div>
+      </div>
+      <div class="stat-card c-orange">
+        <div class="stat-icon-wrap">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        </div>
+        <div class="stat-val">12</div>
+        <div class="stat-lbl">Contacted</div>
+      </div>
+      <div class="stat-card c-blue">
+        <div class="stat-icon-wrap">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div class="stat-val">7</div>
+        <div class="stat-lbl">Quotes Sent</div>
+      </div>
+      <div class="stat-card c-purple">
+        <div class="stat-icon-wrap">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        </div>
+        <div class="stat-val">4</div>
+        <div class="stat-lbl">Closed Won</div>
+      </div>
+    </div>
+
+    <!-- Pipeline Section -->
+    <div class="pipeline-section">
+      <div class="pipeline-header">
+        <h2 class="pipeline-title">Pipeline</h2>
+        <a href="#" class="pipeline-view-all">View pipeline <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="pl-bar">
+        <div class="pl-segment s-green"></div>
+        <div class="pl-segment s-orange"></div>
+        <div class="pl-segment s-blue"></div>
+        <div class="pl-segment s-purple"></div>
+        <div class="pl-segment s-gray"></div>
+      </div>
+      <div class="pl-stats">
+        <div class="pl-item i-green">
+          <div class="pl-item-lbl">New</div>
+          <div class="pl-item-val">18</div>
+        </div>
+        <div class="pl-item i-orange">
+          <div class="pl-item-lbl">Contacted</div>
+          <div class="pl-item-val">12</div>
+        </div>
+        <div class="pl-item i-blue">
+          <div class="pl-item-lbl">Quotes Sent</div>
+          <div class="pl-item-val">7</div>
+        </div>
+        <div class="pl-item i-purple">
+          <div class="pl-item-lbl">Negotiation</div>
+          <div class="pl-item-val">5</div>
+        </div>
+        <div class="pl-item i-gray">
+          <div class="pl-item-lbl">Closed Won</div>
+          <div class="pl-item-val">4</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Opportunities -->
+    <div class="list-header">
+      <h2 class="list-title">New Opportunities <span class="badge green">18</span></h2>
+      <a href="#" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+    </div>
+    
+    <div class="list-card">
+      <div class="c-avatar green">GH</div>
+      <div class="c-body">
+        <h3 class="c-title">Greenfield Hospital</h3>
+        <p class="c-sub">Abuja, FCT • Hospital</p>
+        <p class="c-meta">Risk Score: <span class="t-green">74</span> • Exposure: <strong>₦185M</strong></p>
+      </div>
+      <div class="c-right">
+        <div class="c-right-col">
+          <div class="c-time">2h ago</div>
+          <a href="#" class="btn-action bg-green">Contact</a>
+        </div>
+        <svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <div class="list-card">
+      <div class="c-avatar purple">PW</div>
+      <div class="c-body">
+        <h3 class="c-title">PrimeWorld Schools</h3>
+        <p class="c-sub">Lekki, Lagos • School</p>
+        <p class="c-meta">Risk Score: <span class="t-green">63</span> • Exposure: <strong>₦112M</strong></p>
+      </div>
+      <div class="c-right">
+        <div class="c-right-col">
+          <div class="c-time">5h ago</div>
+          <a href="#" class="btn-action bg-green">Contact</a>
+        </div>
+        <svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <div class="list-card">
+      <div class="c-avatar orange">SA</div>
+      <div class="c-body">
+        <h3 class="c-title">St. Anthony School</h3>
+        <p class="c-sub">Port Harcourt, Rivers State • School</p>
+        <p class="c-meta">Risk Score: <span class="t-green">58</span> • Exposure: <strong>₦92M</strong></p>
+      </div>
+      <div class="c-right">
+        <div class="c-right-col">
+          <div class="c-time">1d ago</div>
+          <a href="#" class="btn-action bg-green">Contact</a>
+        </div>
+        <svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Quotes Sent -->
+    <div class="list-header">
+      <h2 class="list-title">Quotes Sent <span class="badge blue">7</span></h2>
+      <a href="#" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="list-card">
+      <div class="c-avatar blue">KT</div>
+      <div class="c-body">
+        <h3 class="c-title">Kings Temple Church</h3>
+        <p class="c-sub">Kano, Kano State • Church</p>
+        <p class="c-meta">Quote: <strong class="t-green">₦1.85M</strong> • Sent 1 day ago</p>
+      </div>
+      <div class="c-right">
+        <div class="c-right-col" style="justify-content: center;">
+          <a href="#" class="btn-action bg-blue">Follow Up</a>
+        </div>
+        <svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <div class="list-card">
+      <div class="c-avatar blue">BM</div>
+      <div class="c-body">
+        <h3 class="c-title">BestMed Clinic</h3>
+        <p class="c-sub">Enugu, Enugu State • Healthcare</p>
+        <p class="c-meta">Quote: <strong class="t-green">₦2.45M</strong> • Sent 2 days ago</p>
+      </div>
+      <div class="c-right">
+        <div class="c-right-col" style="justify-content: center;">
+          <a href="#" class="btn-action bg-blue">Follow Up</a>
+        </div>
+        <svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Closing Soon -->
+    <div class="list-header">
+      <h2 class="list-title">Closing Soon <span class="badge purple">5</span></h2>
+      <a href="#" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="list-card">
+      <div class="c-avatar purple">BL</div>
+      <div class="c-body">
+        <h3 class="c-title">BlueLine Logistics</h3>
+        <p class="c-sub">Apapa, Lagos • Logistics</p>
+        <p class="c-meta">Quote: <strong class="t-purple">₦1.20M</strong> • <span class="t-purple">In Negotiation</span></p>
+      </div>
+      <div class="c-right">
+        <div class="c-right-col" style="justify-content: center;">
+          <a href="#" class="btn-action bg-purple">Follow Up</a>
+        </div>
+        <svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Tip Card -->
+    <div class="tip-card">
+      <div class="tip-icon">
+        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      </div>
+      <div class="tip-text">
+        <h4>Tip</h4>
+        <p>Timely follow-ups increase your chances of closing.<br>Keep the conversation going!</p>
+      </div>
+      <svg class="chevron icon-md" style="margin-left:auto; color:#065f46" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item active">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Opportunities
+  </a>
+  <a href="#" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</div>
