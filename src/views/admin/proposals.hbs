@@ -1,67 +1,602 @@
 <style>
-  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
-  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
-  
-  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
-  .data-table th, .data-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid var(--glass-border); }
-  .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
-  .data-table td { font-size: 14px; color: var(--text-primary); }
-  .data-table tr:last-child td { border-bottom: none; }
-  
-  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
-  .badge-draft { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
-  .badge-sent { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-  .badge-accepted { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-  .badge-rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+  :root {
+    --c-green: #10b981;
+    --c-green-light: #ecfdf5;
+    --c-green-dark: #047857;
+    --c-orange: #f59e0b;
+    --c-orange-light: #fffbeb;
+    --c-blue: #3b82f6;
+    --c-blue-light: #eff6ff;
+    --c-purple: #8b5cf6;
+    --c-purple-light: #f5f3ff;
+    --c-red: #ef4444;
+    --c-red-light: #fef2f2;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-dark: #0f172a;
+    --bg-page: #ffffff;
+  }
 
-  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
-  .empty-state { text-align: center; padding: 64px 24px; }
+  /* Override Admin Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  
+  body {
+    background-color: var(--bg-page);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .mobile-app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    position: relative;
+    padding-bottom: 90px;
+  }
+
+  .quotes-page {
+    padding: 16px;
+    color: var(--c-dark);
+  }
+
+  /* Top Bar */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 24px;
+  }
+  .screen-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0;
+  }
+  .icon-btn {
+    background: none;
+    border: none;
+    color: var(--c-dark);
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+  }
+  .icon-btn svg { width: 24px; height: 24px; }
+
+  /* Tabs Row */
+  .tabs-row {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .tabs-row::-webkit-scrollbar { display: none; }
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 12px;
+    position: relative;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-gray);
+    cursor: pointer;
+  }
+  .tab.active { color: var(--c-green-dark); }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--c-green-dark);
+    border-radius: 2px 2px 0 0;
+  }
+  .tab-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 12px;
+  }
+  .tab-badge.bg-green { background: var(--c-green-dark); color: white; }
+  .tab-badge.bg-gray { background: #f1f5f9; color: var(--c-gray); }
+
+  /* Summary Card */
+  .summary-card {
+    background: #f4fdf8;
+    border: 1px solid #e6f9ed;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .sum-left { display: flex; align-items: flex-start; gap: 12px; }
+  .sum-icon {
+    width: 44px;
+    height: 44px;
+    background: #e6f9ed;
+    color: var(--c-green-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .sum-icon svg { width: 22px; height: 22px; }
+  .sum-lbl {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    margin: 0 0 4px 0;
+  }
+  .sum-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0 0 4px 0;
+  }
+  .sum-sub {
+    font-size: 11px;
+    color: var(--c-gray);
+    margin: 0;
+  }
+  .growth-box {
+    background: #e6f9ed;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 70px;
+  }
+  .growth-val {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-green-dark);
+    margin-bottom: 2px;
+  }
+  .growth-val svg { width: 14px; height: 14px; }
+  .growth-lbl {
+    font-size: 9px;
+    color: var(--c-gray);
+    font-weight: 600;
+  }
+
+  /* List Area */
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .list-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0;
+  }
+  .view-all {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-green-dark);
+    text-decoration: none;
+  }
+
+  /* List Cards */
+  .list-card {
+    background: white;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .c-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+  .c-avatar.green { background: #ecfdf5; color: #059669; }
+  .c-avatar.purple { background: #f5f3ff; color: #7c3aed; }
+  .c-avatar.blue { background: #eff6ff; color: #2563eb; }
+  .c-avatar.orange { background: #fffbeb; color: #d97706; }
+  .c-avatar.red { background: #fef2f2; color: #dc2626; }
+
+  .c-body { flex-grow: 1; }
+  .c-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0 0 4px 0;
+  }
+  .c-sub {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--c-gray);
+    margin: 0 0 6px 0;
+  }
+  .c-sub svg { width: 12px; height: 12px; }
+  
+  .c-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+  .status-badge svg { width: 10px; height: 10px; }
+  .status-badge.green { background: #ecfdf5; color: #059669; }
+  .status-badge.orange { background: #fffbeb; color: #d97706; }
+  .status-badge.red { background: #fef2f2; color: #dc2626; }
+  .meta-dot { color: #cbd5e1; font-size: 10px; }
+  .meta-time { font-size: 10px; color: var(--c-gray); font-weight: 500; }
+
+  .c-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .c-amount {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin-bottom: 4px;
+  }
+  .c-freq {
+    font-size: 10px;
+    color: var(--c-gray);
+  }
+
+  .chevron {
+    color: #cbd5e1;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* Create CTA Card */
+  .create-cta {
+    background: #f4fdf8;
+    border: 1px solid #d1fae5;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .cta-icon {
+    width: 36px;
+    height: 36px;
+    background: #e6f9ed;
+    color: var(--c-green-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .cta-icon svg { width: 18px; height: 18px; }
+  .cta-text { flex-grow: 1; }
+  .cta-text h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #064e3b;
+    margin: 0 0 2px 0;
+  }
+  .cta-text p {
+    font-size: 10px;
+    color: #065f46;
+    margin: 0;
+    line-height: 1.3;
+  }
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #047857;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .btn-cta svg { width: 12px; height: 12px; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0 24px 0;
+    border-top: 1px solid #e2e8f0;
+    z-index: 100;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--c-gray);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .nav-item.active {
+    color: var(--c-green);
+  }
+  .nav-item svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
 </style>
 
-<div class="page-container">
-  <div class="page-header">
-    <h1 class="page-title">Proposals</h1>
-  </div>
+<div class="mobile-app-container">
+  <div class="quotes-page">
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <button class="icon-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <h1 class="screen-title">Quotes</h1>
+      <button class="icon-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </button>
+    </div>
 
-  <div class="table-responsive">
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Proposal Title</th>
-        <th>Client / Business</th>
-        <th>Premium Amount</th>
-        <th>Status</th>
-        <th>Date Created</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each proposals}}
-      <tr>
-        <td style="font-weight: 500; color: white;">{{title}}</td>
-        <td>
-          <div style="color: white;">{{lead_name}}</div>
-          <div style="font-size: 12px; color: var(--text-secondary);">{{business_name}}</div>
-        </td>
-        <td>₦{{formatNumber amount}}</td>
-        <td><span class="badge badge-{{toLowerCase status}}">{{status}}</span></td>
-        <td>{{formatDate created_at}}</td>
-        <td>
-          <a href="/p/{{token}}" class="btn btn-outline btn-sm" target="_blank">View Proposal</a>
-        </td>
-      </tr>
-      {{else}}
-      <tr>
-        <td colspan="6">
-          <div class="empty-state">
-            <h3 style="margin-bottom: 8px; color: white;">No Proposals Generated</h3>
-            <p style="color: var(--text-secondary);">Proposals created by advisors will appear here.</p>
+    <!-- Tabs -->
+    <div class="tabs-row">
+      <div class="tab active">
+        <span>All Quotes</span>
+        <span class="tab-badge bg-green">12</span>
+      </div>
+      <div class="tab">
+        <span>Draft</span>
+        <span class="tab-badge bg-gray">4</span>
+      </div>
+      <div class="tab">
+        <span>Sent</span>
+        <span class="tab-badge bg-gray">6</span>
+      </div>
+      <div class="tab">
+        <span>Expired</span>
+        <span class="tab-badge bg-gray">2</span>
+      </div>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="summary-card">
+      <div class="sum-left">
+        <div class="sum-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div>
+          <p class="sum-lbl">Total Potential Premium</p>
+          <h2 class="sum-val">₦2,560,000</h2>
+          <p class="sum-sub">Across 12 Quotes</p>
+        </div>
+      </div>
+      <div class="sum-right">
+        <div class="growth-box">
+          <div class="growth-val">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            +18%
           </div>
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+          <div class="growth-lbl">vs last 30 days</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Quotes -->
+    <div class="list-header">
+      <h2 class="list-title">Recent Quotes</h2>
+      <a href="#" class="view-all">View All</a>
+    </div>
+
+    <!-- Card 1 -->
+    <div class="list-card">
+      <div class="c-avatar green">GH</div>
+      <div class="c-body">
+        <h3 class="c-title">Greenfield Hospital</h3>
+        <p class="c-sub">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Abuja, FCT
+        </p>
+        <div class="c-meta">
+          <div class="status-badge green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            Sent
+          </div>
+          <span class="meta-dot">•</span>
+          <span class="meta-time">Sent 2h ago</span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="c-amount">₦850,000</div>
+        <div class="c-freq">Annual Premium</div>
+      </div>
+      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="list-card">
+      <div class="c-avatar purple">VH</div>
+      <div class="c-body">
+        <h3 class="c-title">Victory Hospital</h3>
+        <p class="c-sub">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Port Harcourt, Rivers
+        </p>
+        <div class="c-meta">
+          <div class="status-badge orange">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            Draft
+          </div>
+          <span class="meta-dot">•</span>
+          <span class="meta-time">Updated 1d ago</span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="c-amount">₦620,000</div>
+        <div class="c-freq">Annual Premium</div>
+      </div>
+      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="list-card">
+      <div class="c-avatar blue">LC</div>
+      <div class="c-body">
+        <h3 class="c-title">Lagos Medical Center</h3>
+        <p class="c-sub">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Lagos, Lagos
+        </p>
+        <div class="c-meta">
+          <div class="status-badge green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            Sent
+          </div>
+          <span class="meta-dot">•</span>
+          <span class="meta-time">Sent 2d ago</span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="c-amount">₦420,000</div>
+        <div class="c-freq">Annual Premium</div>
+      </div>
+      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="list-card">
+      <div class="c-avatar orange">NH</div>
+      <div class="c-body">
+        <h3 class="c-title">New Hope Medical</h3>
+        <p class="c-sub">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Ibadan, Oyo
+        </p>
+        <div class="c-meta">
+          <div class="status-badge green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Viewed
+          </div>
+          <span class="meta-dot">•</span>
+          <span class="meta-time">Viewed 3d ago</span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="c-amount">₦380,000</div>
+        <div class="c-freq">Annual Premium</div>
+      </div>
+      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="list-card">
+      <div class="c-avatar red">BC</div>
+      <div class="c-body">
+        <h3 class="c-title">Brightcare Hospital</h3>
+        <p class="c-sub">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Enugu, Enugu
+        </p>
+        <div class="c-meta">
+          <div class="status-badge red">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Expired
+          </div>
+          <span class="meta-dot">•</span>
+          <span class="meta-time">Expired 5d ago</span>
+        </div>
+      </div>
+      <div class="c-right">
+        <div class="c-amount">₦290,000</div>
+        <div class="c-freq">Annual Premium</div>
+      </div>
+      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- Create Quote CTA -->
+    <div class="create-cta">
+      <div class="cta-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
+      <div class="cta-text">
+        <h4>Create a new quote</h4>
+        <p>Generate customized insurance quotes in minutes.</p>
+      </div>
+      <a href="#" class="btn-cta">
+        Create Quote 
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
   </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Opportunities
+  </a>
+  <a href="/admin/more" class="nav-item active">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
 </div>
