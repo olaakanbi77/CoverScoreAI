@@ -1,287 +1,607 @@
-<!-- Include Quill stylesheet -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-
 <style>
-.writer-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  margin-top: 1.5rem;
-}
-.editor-panel {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-}
-.editor-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #eee;
-}
-.editor-body {
-  flex-grow: 1;
-  background: #fff;
-  border-radius: 0 0 12px 12px;
-}
-#editor {
-  height: 500px;
-  border: none;
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-}
-.sidebar-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-.form-group {
-  margin-bottom: 1rem;
-}
-.form-group label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #6b7280;
-  margin-bottom: 0.5rem;
-}
-.form-control {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.95rem;
-}
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  width: 100%;
-  text-align: center;
-  transition: all 0.2s;
-}
-.btn-primary { background: #2563eb; color: white; }
-.btn-primary:hover { opacity: 0.9; }
-.btn-secondary { background: #eee; color: #333; }
-.btn-ai { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; }
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
-}
-.info-row:last-child { border: none; }
+  :root {
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --bg-page: #ffffff;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    position: relative;
+    padding-bottom: 320px; /* Space for fixed action bar + nav */
+  }
+
+  /* Topbar */
+  .qb-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    background: white;
+  }
+  .qb-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .qb-actions { display: flex; align-items: center; gap: 12px; }
+  .qb-save { color: var(--c-green-dark); font-size: 13px; font-weight: 700; text-decoration: none; }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2.5; }
+
+  /* Header Card */
+  .qb-header {
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+  }
+  .lead-info-row { display: flex; align-items: center; gap: 12px; }
+  .c-avatar {
+    width: 52px;
+    height: 52px;
+    background: #ecfdf5;
+    color: #059669;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .lead-details h2 { font-size: 15px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; }
+  .lead-details p { font-size: 12px; color: var(--c-gray); margin: 0 0 6px 0; }
+  .badge-completed {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ecfdf5;
+    color: #059669;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+  .risk-score-box { text-align: center; }
+  .risk-circle {
+    width: 44px;
+    height: 44px;
+    border: 2px solid #059669;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0 auto 4px auto;
+  }
+  .risk-lbl { font-size: 10px; color: var(--c-gray); font-weight: 500; }
+
+  /* Stepper */
+  .stepper-container {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    background: white;
+  }
+  .stepper-line {
+    position: absolute;
+    top: 36px;
+    left: 40px;
+    right: 40px;
+    height: 1px;
+    background: #e2e8f0;
+    z-index: 1;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+  }
+  .step-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid white;
+  }
+  .step-icon svg { width: 14px; height: 14px; stroke-width: 2; }
+  .step.active .step-icon { background: #059669; color: white; }
+  .step-lbl { font-size: 10px; font-weight: 700; color: #94a3b8; }
+  .step.active .step-lbl { color: #059669; }
+
+  /* Section Title */
+  .section-header { padding: 20px 16px 12px; background: white; }
+  .sh-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .sh-title { font-size: 16px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .sh-count { font-size: 12px; font-weight: 700; color: #059669; }
+  .sh-sub { font-size: 12px; color: var(--c-gray); margin: 0; }
+
+  /* Covers List */
+  .covers-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; background: white; }
+  .cover-item {
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cover-item.active { border-color: #a7f3d0; background: #f4fdf8; }
+  .cb-custom {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .cover-item.active .cb-custom { background: #059669; border-color: #059669; color: white; }
+  .cb-custom svg { width: 14px; height: 14px; display: none; stroke-width: 3; }
+  .cover-item.active .cb-custom svg { display: block; }
+  
+  .cover-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .cover-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  .bg-g { background: #ecfdf5; color: #059669; }
+  .bg-o { background: #fffbeb; color: #d97706; }
+  .bg-p { background: #f5f3ff; color: #7c3aed; }
+  .bg-b { background: #eff6ff; color: #2563eb; }
+  .bg-c { background: #e0f2fe; color: #0ea5e9; }
+  .bg-y { background: #fef9c3; color: #ca8a04; }
+
+  .cover-details { flex-grow: 1; }
+  .cd-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0 0 4px 0;
+  }
+  .badge-rec {
+    background: #ecfdf5;
+    color: #059669;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 12px;
+  }
+  .cd-desc { font-size: 11px; color: var(--c-gray); margin: 0; line-height: 1.4; }
+
+  .cover-price { text-align: right; display: flex; flex-direction: column; justify-content: center; }
+  .cp-val { font-size: 14px; font-weight: 800; color: var(--c-dark); margin: 0 0 2px 0; }
+  .cp-freq { font-size: 10px; color: var(--c-gray); }
+  .chevron-down { color: #cbd5e1; width: 16px; height: 16px; margin-left: 12px; }
+
+  /* Bottom Action Bar */
+  .bottom-action-bar {
+    position: fixed;
+    bottom: 65px; /* Above global bottom nav */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    border-top: 1px solid #f1f5f9;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 15px rgba(0,0,0,0.03);
+    padding: 16px 20px;
+    z-index: 90;
+  }
+  .bab-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .bab-title { font-size: 15px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .bab-link { font-size: 12px; font-weight: 700; color: #059669; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .bab-link svg { width: 14px; height: 14px; stroke-width: 2.5; }
+
+  .bab-stats { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
+  .stat-check { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--c-gray); font-weight: 600; }
+  .stat-check .circle-check { width: 20px; height: 20px; border: 2px solid #059669; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .stat-check .circle-check svg { width: 12px; height: 12px; stroke-width: 3; }
+
+  .stat-group-wrap { display: flex; gap: 20px; }
+  .stat-item { text-align: right; }
+  .stat-lbl { font-size: 10px; color: var(--c-gray); margin-bottom: 4px; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+  .stat-lbl svg { width: 12px; height: 12px; color: #94a3b8; }
+  .stat-val { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .stat-val.green { color: #059669; }
+
+  .bundle-box {
+    background: #f4fdf8;
+    border: 1px solid #d1fae5;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #059669;
+  }
+  .bundle-box svg { width: 16px; height: 16px; }
+
+  .btn-row { display: flex; gap: 12px; }
+  .btn-back {
+    flex: 1;
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: var(--c-dark);
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-next {
+    flex: 2;
+    background: #047857;
+    color: white;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-next svg { width: 16px; height: 16px; stroke-width: 2.5; }
+
+  /* Standard Nav included from unify script */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0 24px 0;
+    border-top: 1px solid #e2e8f0;
+    z-index: 100;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--c-gray);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .nav-item.active {
+    color: var(--c-green);
+  }
+  .nav-item svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
 </style>
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <div>
-    <h1 style="margin:0;">Proposal Writer</h1>
-    <p style="color: #6b7280; margin-top:0.5rem;">Drafting for: <strong>{{lead.name}}</strong> ({{or lead.business_name 'Individual'}})</p>
+<div class="mobile-app-container">
+  
+  <!-- Topbar -->
+  <div class="qb-topbar">
+    <a href="/admin/proposals" class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </a>
+    <h1 class="qb-title">Quote Builder</h1>
+    <div class="qb-actions">
+      <a href="#" class="qb-save">Save Draft</a>
+      <button class="icon-btn" style="padding:0;">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+      </button>
+    </div>
   </div>
-  <a href="/advisor/dashboard" style="color: #6b7280; text-decoration: none;">&larr; Back to Dashboard</a>
+
+  <!-- Header Card -->
+  <div class="qb-header">
+    <div class="lead-info-row">
+      <div class="c-avatar">GH</div>
+      <div class="lead-details">
+        <h2>{{or lead.name 'Greenfield Hospital'}}</h2>
+        <p>Abuja, FCT • Private Hospital</p>
+        <div class="badge-completed">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="12" height="12"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+          Assessment Completed
+        </div>
+      </div>
+    </div>
+    <div class="risk-score-box">
+      <div class="risk-circle">{{or lead.score '72'}}</div>
+      <div class="risk-lbl">Risk Score</div>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper-container">
+    <div class="stepper-line"></div>
+    <div class="step active">
+      <div class="step-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      </div>
+      <div class="step-lbl">Covers</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+      </div>
+      <div class="step-lbl">Limits</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div class="step-lbl">Premium</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
+      <div class="step-lbl">Review</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      </div>
+      <div class="step-lbl">Send</div>
+    </div>
+  </div>
+
+  <!-- Section Title -->
+  <div class="section-header">
+    <div class="sh-top">
+      <h2 class="sh-title">1. Select Covers</h2>
+      <div class="sh-count">4 of 6 selected</div>
+    </div>
+    <p class="sh-sub">Recommended covers based on the risk assessment.</p>
+  </div>
+
+  <!-- Covers List -->
+  <div class="covers-list">
+    
+    <div class="cover-item active">
+      <div class="cb-custom">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="cover-icon bg-g">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      </div>
+      <div class="cover-details">
+        <div class="cd-title">
+          Medical Malpractice
+          <span class="badge-rec">Recommended</span>
+        </div>
+        <p class="cd-desc">Covers claims of negligence or professional indemnity.</p>
+      </div>
+      <div class="cover-price">
+        <div class="cp-val">₦320,000</div>
+        <div class="cp-freq">/ year</div>
+      </div>
+      <svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+    <div class="cover-item active">
+      <div class="cb-custom">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="cover-icon bg-o">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>
+      </div>
+      <div class="cover-details">
+        <div class="cd-title">
+          Fire & Special Perils
+          <span class="badge-rec">Recommended</span>
+        </div>
+        <p class="cd-desc">Covers fire, explosion, lightning and related perils.</p>
+      </div>
+      <div class="cover-price">
+        <div class="cp-val">₦180,000</div>
+        <div class="cp-freq">/ year</div>
+      </div>
+      <svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+    <div class="cover-item active">
+      <div class="cb-custom">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="cover-icon bg-p">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+      </div>
+      <div class="cover-details">
+        <div class="cd-title">
+          Group Life
+          <span class="badge-rec">Recommended</span>
+        </div>
+        <p class="cd-desc">Provides life cover for your employees.</p>
+      </div>
+      <div class="cover-price">
+        <div class="cp-val">₦250,000</div>
+        <div class="cp-freq">/ year</div>
+      </div>
+      <svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+    <div class="cover-item">
+      <div class="cb-custom">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="cover-icon bg-b">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      </div>
+      <div class="cover-details">
+        <div class="cd-title">
+          Public Liability
+        </div>
+        <p class="cd-desc">Covers legal liability to third parties for bodily injury or property damage.</p>
+      </div>
+      <div class="cover-price">
+        <div class="cp-val">₦120,000</div>
+        <div class="cp-freq">/ year</div>
+      </div>
+      <svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+    <div class="cover-item">
+      <div class="cb-custom">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="cover-icon bg-c">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </div>
+      <div class="cover-details">
+        <div class="cd-title">
+          Cyber Liability
+        </div>
+        <p class="cd-desc">Covers losses from cyber attacks, data breach and system failure.</p>
+      </div>
+      <div class="cover-price">
+        <div class="cp-val">₦90,000</div>
+        <div class="cp-freq">/ year</div>
+      </div>
+      <svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+    <div class="cover-item">
+      <div class="cb-custom">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="cover-icon bg-y">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+      </div>
+      <div class="cover-details">
+        <div class="cd-title">
+          Marine (Transportation)
+        </div>
+        <p class="cd-desc">Covers loss or damage to goods in transit by any means.</p>
+      </div>
+      <div class="cover-price">
+        <div class="cp-val">₦75,000</div>
+        <div class="cp-freq">/ year</div>
+      </div>
+      <svg class="chevron-down" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+
+  </div>
+
+  <!-- Bottom Action Bar (Fixed) -->
+  <div class="bottom-action-bar">
+    <div class="bab-header">
+      <h3 class="bab-title">Quote Summary</h3>
+      <a href="#" class="bab-link">View Breakdown <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></a>
+    </div>
+
+    <div class="bab-stats">
+      <div class="stat-check">
+        <div class="circle-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        4 Covers Selected
+      </div>
+      
+      <div class="stat-group-wrap">
+        <div class="stat-item">
+          <div class="stat-lbl">
+            Total Annual Premium
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="stat-val">₦750,000</div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-lbl">
+            Potential Discount
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="stat-val green">₦45,000</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bundle-box">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+      You qualify for a 6% bundle discount
+    </div>
+
+    <div class="btn-row">
+      <a href="/admin/proposals" class="btn-back">Back</a>
+      <a href="#" class="btn-next">
+        Next: Set Limits
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
 </div>
 
-<div class="writer-container">
-  <!-- Editor -->
-  <div class="editor-panel">
-    <div class="editor-header">
-      <input type="text" id="propTitle" class="form-control" style="font-size: 1.2rem; font-weight: bold; border: none; padding: 0;" placeholder="Proposal Title..." value="{{or proposal.title 'Comprehensive Insurance Proposal'}}">
-    </div>
-    <div class="editor-body">
-      <div id="editor"></div>
-    </div>
-  </div>
-
-  <!-- Sidebar Controls -->
-  <div class="sidebar-panel">
-    <div class="card">
-      <h3 style="margin-top:0;">AI Assistant</h3>
-      <p style="font-size:0.9rem; color:#6b7280;">Generate a smart proposal draft based on this lead's CoverScore assessment.</p>
-      <button id="btnGenerateAI" class="btn btn-ai">✨ Generate Draft with AI</button>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-top:0;">Proposal Settings</h3>
-      <div class="form-group">
-        <label>Estimated Premium (₦)</label>
-        <input type="number" id="propAmount" class="form-control" value="{{or proposal.amount lead.estimated_premium}}">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="propStatus" class="form-control">
-          <option value="Draft" {{#if (eq proposal.status 'Draft')}}selected{{/if}}>Draft</option>
-          <option value="Sent" {{#if (eq proposal.status 'Sent')}}selected{{/if}}>Sent</option>
-        </select>
-      </div>
-      
-      <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
-        <button id="btnSave" class="btn btn-primary">Save Proposal</button>
-      </div>
-      
-      <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
-        <button id="btnSend" class="btn btn-secondary" style="background-color: #f1f5f9; color: #475569;">Copy Public Link</button>
-        <button id="btnSendWhatsApp" class="btn" style="background-color: #25D366; color: white;">Send via WhatsApp</button>
-        <button id="btnSendEmail" class="btn" style="background-color: #f59e0b; color: white;">Send via Email</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-top:0;">Lead Context</h3>
-      <div class="info-row">
-        <span style="color:var(--text-muted)">Score</span>
-        <strong><span style="color: {{#if (eq lead.risk_level 'critical')}}#ef4444{{else}}#10b981{{/if}}">{{lead.score}}/100</span></strong>
-      </div>
-      <div class="info-row">
-        <span style="color:var(--text-muted)">Risk Level</span>
-        <strong>{{lead.risk_level}}</strong>
-      </div>
-      <div class="info-row">
-        <span style="color:var(--text-muted)">Primary Concern</span>
-        <strong>{{lead.primary_concern}}</strong>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // Initialize Quill editor
-  var quill = new Quill('#editor', {
-    theme: 'snow',
-    placeholder: 'Start writing the proposal, or use AI to generate a draft...',
-    modules: {
-      toolbar: [
-        [{ 'header': [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        ['clean']
-      ]
-    }
-  });
-
-  // Pre-load content if exists
-  const existingContent = `{{{proposal.content}}}`;
-  if (existingContent && existingContent.trim() !== '') {
-    quill.clipboard.dangerouslyPasteHTML(existingContent);
-  }
-
-  const leadId = {{lead.id}};
-  const proposalId = {{or proposal.id 'null'}};
-  const token = localStorage.getItem('accessToken');
-
-  document.getElementById('btnGenerateAI').addEventListener('click', async () => {
-    const btn = document.getElementById('btnGenerateAI');
-    btn.innerHTML = 'Generating... Please wait';
-    btn.disabled = true;
-
-    try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      const res = await fetch('/api/proposals/generate', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ leadId })
-      });
-      const data = await res.json();
-      if (data.success) {
-        quill.clipboard.dangerouslyPasteHTML(data.draft);
-      } else {
-        alert(data.error || 'Failed to generate proposal');
-      }
-    } catch(err) {
-      alert('Network error');
-    } finally {
-      btn.innerHTML = '✨ Generate Draft with AI';
-      btn.disabled = false;
-    }
-  });
-
-  document.getElementById('btnSave').addEventListener('click', async () => {
-    const btn = document.getElementById('btnSave');
-    btn.innerHTML = 'Saving...';
-    
-    const payload = {
-      id: proposalId,
-      leadId: leadId,
-      title: document.getElementById('propTitle').value,
-      content: quill.root.innerHTML,
-      amount: parseInt(document.getElementById('propAmount').value) || 0,
-      status: document.getElementById('propStatus').value
-    };
-
-    try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      const res = await fetch('/api/proposals/save', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (data.success) {
-        alert('Proposal saved successfully!');
-        window.location.reload();
-      } else {
-        alert(data.error || 'Save failed');
-      }
-    } catch(err) {
-      alert('Network error');
-    } finally {
-      btn.innerHTML = 'Save Proposal';
-    }
-  });
-
-  document.getElementById('btnSend').addEventListener('click', () => {
-    if (!proposalId) return alert('Please save the proposal first before copying the link.');
-    const link = `${window.location.origin}/api/proposals/view/{{proposal.token}}`;
-    navigator.clipboard.writeText(link).then(() => {
-      alert('Public proposal link copied to clipboard!\nYou can paste this into WhatsApp or Email to send to the lead.');
-    });
-  });
-
-  async function sendProposal(method) {
-    if (!proposalId) return alert('Please save the proposal first before sending.');
-    
-    const btn = document.getElementById(method === 'whatsapp' ? 'btnSendWhatsApp' : 'btnSendEmail');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = 'Sending...';
-    btn.disabled = true;
-
-    try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      const res = await fetch('/api/proposals/send', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ proposalId: proposalId, method: method })
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        alert(data.message);
-      } else {
-        alert(data.error || 'Failed to send proposal');
-      }
-    } catch(err) {
-      alert('Network error');
-    } finally {
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    }
-  }
-
-  document.getElementById('btnSendWhatsApp').addEventListener('click', () => sendProposal('whatsapp'));
-  document.getElementById('btnSendEmail').addEventListener('click', () => sendProposal('email'));
-</script>
+<!-- Bottom Navigation (Standard) -->
+<nav class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Opportunities
+  </a>
+  <a href="/admin/more" class="nav-item active">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</nav>
