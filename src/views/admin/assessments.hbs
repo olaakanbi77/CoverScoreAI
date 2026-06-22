@@ -97,23 +97,16 @@
 
   /* Status Cards */
   .a-status-scroll {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding-bottom: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
     margin-bottom: 24px;
-    scrollbar-width: none; /* Firefox */
-  }
-  .a-status-scroll::-webkit-scrollbar {
-    display: none; /* Chrome */
   }
 
   .a-status-card {
     background: white;
     border-radius: 12px;
-    padding: 16px;
-    min-width: 140px;
-    flex: 0 0 auto;
+    padding: 12px 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     border: 1px solid #e2e8f0;
     position: relative;
@@ -123,8 +116,8 @@
     content: '';
     position: absolute;
     bottom: 0;
-    left: 16px;
-    right: 16px;
+    left: 8px;
+    right: 8px;
     height: 3px;
     border-radius: 3px 3px 0 0;
   }
@@ -134,21 +127,22 @@
   .a-status-card.c-purple::after { background: var(--c-purple); }
 
   .a-status-icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 12px auto;
+    margin: 0 auto 8px auto;
   }
+  .icon-xs { width: 12px; height: 12px; }
   .a-status-card.c-green .a-status-icon { background: var(--c-green-light); color: var(--c-green); }
   .a-status-card.c-orange .a-status-icon { background: var(--c-orange-light); color: var(--c-orange); }
   .a-status-card.c-blue .a-status-icon { background: var(--c-blue-light); color: var(--c-blue); }
   .a-status-card.c-purple .a-status-icon { background: var(--c-purple-light); color: var(--c-purple); }
 
   .a-status-num {
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 800;
     text-align: center;
     margin-bottom: 4px;
@@ -160,16 +154,18 @@
   .a-status-card.c-purple .a-status-num { color: var(--c-purple); }
 
   .a-status-title {
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 700;
     text-align: center;
     color: var(--c-dark);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    line-height: 1.1;
   }
   .a-status-sub {
-    font-size: 10px;
+    font-size: 8px;
     text-align: center;
     color: var(--c-gray);
+    line-height: 1.1;
   }
 
   /* List Sections */
@@ -273,9 +269,9 @@
 
   .a-card-right {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
     flex-shrink: 0;
   }
   .a-risk-score-box {
