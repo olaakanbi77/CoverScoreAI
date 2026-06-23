@@ -318,6 +318,19 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
   }
 });
 
+router.get('/profile', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/profile', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'more'
+    });
+  } catch (err) {
+    console.error('Error loading profile:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/copilot', {
