@@ -297,10 +297,23 @@ router.get('/notifications', authenticatePage, requireSalesOrAdmin, async (req, 
     res.render('advisor/notifications', {
       layout: 'admin',
       user: req.user,
-      activePage: 'more'
+      activePage: 'notifications'
     });
   } catch (err) {
-    console.error('Error loading notifications screen:', err);
+    console.error('Error loading notifications:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/copilot', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'copilot'
+    });
+  } catch (err) {
+    console.error('Error loading copilot:', err);
     res.status(500).send('Server Error');
   }
 });

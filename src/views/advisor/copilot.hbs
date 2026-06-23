@@ -1,0 +1,365 @@
+<style>
+  :root {
+    --c-purple: #7c3aed;
+    --c-purple-dark: #6d28d9;
+    --c-purple-light: #f5f3ff;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-green: #10b981;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f59e0b;
+    --c-orange-light: #fff7ed;
+    --c-blue: #3b82f6;
+    --c-blue-light: #eff6ff;
+    --bg-page: #ffffff;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative; padding-bottom: 180px;
+  }
+
+  /* Topbar */
+  .cp-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: white; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #f8fafc; }
+  .cp-title { font-size: 16px; font-weight: 800; color: var(--c-dark); margin: 0; display: flex; align-items: center; gap: 6px; }
+  .cp-title svg { width: 18px; height: 18px; color: var(--c-purple); }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+
+  .cp-content { padding: 16px; }
+
+  /* Welcome Header */
+  .welcome-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .wh-text h1 { font-size: 22px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; display: flex; align-items: center; gap: 4px; }
+  .wh-text p { font-size: 12px; color: var(--c-gray); margin: 0; font-weight: 500; }
+  .btn-pro { display: inline-flex; align-items: center; gap: 4px; border: 1px solid #fef08a; background: #fefce8; color: #ca8a04; font-size: 10px; font-weight: 800; padding: 6px 10px; border-radius: 8px; text-decoration: none; }
+  .btn-pro svg { width: 14px; height: 14px; }
+
+  /* Next Best Action Card */
+  .nba-card { background: var(--c-purple-light); border: 1px solid #ede9fe; border-radius: 16px; padding: 20px; position: relative; margin-bottom: 32px; }
+  .nba-badge { display: inline-flex; align-items: center; gap: 4px; color: var(--c-purple); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .nba-badge svg { width: 14px; height: 14px; }
+  
+  .nba-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0 0 12px 0; }
+  
+  .nba-list { list-style: none; padding: 0; margin: 0 0 16px 0; display: flex; flex-direction: column; gap: 8px; }
+  .nba-list li { font-size: 12px; color: var(--c-dark); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .nba-list li svg { width: 14px; height: 14px; color: var(--c-gray); flex-shrink: 0; }
+  
+  .nba-desc { font-size: 11px; color: var(--c-gray); margin: 0 0 20px 0; }
+  
+  .nba-actions { display: flex; gap: 12px; }
+  .btn-primary { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; background: var(--c-purple); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; }
+  .btn-outline { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; background: white; color: var(--c-purple); border: 1px solid var(--c-purple); padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; }
+  .nba-actions svg { width: 16px; height: 16px; }
+
+  /* Donut overlay on NBA */
+  .nba-donut { position: absolute; top: 20px; right: 20px; width: 80px; height: 80px; }
+  .donut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .donut-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .donut-val { font-size: 18px; font-weight: 800; color: var(--c-purple-dark); line-height: 1.1; }
+  .donut-lbl { font-size: 8px; font-weight: 600; color: var(--c-dark); line-height: 1.2; max-width: 50px; }
+
+  /* Help Suggestions (Horizontal Scroll) */
+  .sect-header { font-size: 11px; font-weight: 800; color: var(--c-dark); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0; }
+  .sect-header-row { display: flex; justify-content: space-between; align-items: center; margin: 0 0 12px 0; }
+  .sect-header-row h3 { font-size: 11px; font-weight: 800; color: var(--c-dark); text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+  .sect-link { font-size: 11px; font-weight: 700; color: var(--c-green-dark); text-decoration: none; }
+  
+  .help-scroller { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 24px; scrollbar-width: none; }
+  .help-scroller::-webkit-scrollbar { display: none; }
+  .help-card { width: 120px; flex-shrink: 0; background: white; border: 1px solid var(--c-gray-light); border-radius: 12px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; cursor: pointer; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .help-card-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .help-card.hc-1 { border-color: #d1fae5; }
+  .help-card.hc-1 .help-card-icon { background: var(--c-green-light); color: var(--c-green-dark); }
+  .help-card.hc-2 { border-color: #dbeafe; }
+  .help-card.hc-2 .help-card-icon { background: var(--c-blue-light); color: var(--c-blue); }
+  .help-card.hc-3 { border-color: #ffedd5; }
+  .help-card.hc-3 .help-card-icon { background: var(--c-orange-light); color: var(--c-orange-dark); }
+  .help-card.hc-4 { border-color: #ede9fe; }
+  .help-card.hc-4 .help-card-icon { background: var(--c-purple-light); color: var(--c-purple-dark); }
+  .help-card-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  .help-card-text { font-size: 11px; font-weight: 600; color: var(--c-dark); line-height: 1.4; }
+
+  /* AI Insights List */
+  .insights-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .insight-item { background: white; border: 1px solid var(--c-gray-light); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .insight-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .insight-icon.g { background: var(--c-green-light); color: var(--c-green-dark); }
+  .insight-icon.o { background: var(--c-orange-light); color: var(--c-orange-dark); }
+  .insight-icon.p { background: var(--c-purple-light); color: var(--c-purple-dark); }
+  .insight-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  
+  .insight-content { flex: 1; }
+  .insight-title { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; display: flex; align-items: center; gap: 6px; }
+  .tag-new { background: var(--c-green-light); color: var(--c-green-dark); font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 12px; text-transform: uppercase; }
+  .insight-desc { font-size: 11px; color: var(--c-gray); margin: 0; line-height: 1.4; }
+  
+  .insight-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; }
+  .ir-val { font-size: 16px; font-weight: 800; }
+  .ir-val.g { color: var(--c-green-dark); }
+  .ir-val.o { color: var(--c-orange-dark); }
+  .ir-val.p { color: var(--c-purple-dark); }
+  .ir-lbl { font-size: 9px; font-weight: 600; color: var(--c-gray); }
+  .chevron { color: #cbd5e1; width: 16px; height: 16px; margin-left: 8px; }
+
+  /* Recent Questions */
+  .recent-q-list { display: flex; flex-direction: column; gap: 0; margin-bottom: 24px; border: 1px solid var(--c-gray-light); border-radius: 12px; background: white; overflow: hidden; }
+  .rq-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--c-gray-light); text-decoration: none; }
+  .rq-item:last-child { border-bottom: none; }
+  .rq-item svg { width: 16px; height: 16px; color: var(--c-gray); flex-shrink: 0; stroke-width: 2.5; }
+  .rq-text { font-size: 11px; font-weight: 500; color: var(--c-dark); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rq-time { font-size: 10px; color: var(--c-gray); flex-shrink: 0; }
+
+  /* Floating Input Area */
+  .floating-input-wrapper { position: fixed; bottom: 65px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; padding: 12px 16px; background: linear-gradient(to top, rgba(255,255,255,1) 85%, rgba(255,255,255,0)); z-index: 90; }
+  .ai-input-box { display: flex; align-items: center; gap: 12px; background: white; border: 1px solid #d8b4fe; border-radius: 24px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08); }
+  .ai-input-box svg.star { width: 20px; height: 20px; color: var(--c-purple); flex-shrink: 0; }
+  .ai-input-box input { flex: 1; border: none; outline: none; font-size: 13px; color: var(--c-dark); background: transparent; font-family: 'Inter', sans-serif; }
+  .ai-input-box input::placeholder { color: #94a3b8; }
+  .ai-input-box svg.mic { width: 20px; height: 20px; color: var(--c-purple); flex-shrink: 0; cursor: pointer; }
+  .disclaimer { text-align: center; font-size: 9px; font-weight: 500; color: var(--c-gray); margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .disclaimer svg { width: 10px; height: 10px; }
+
+  /* Bottom Nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0 24px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--c-gray); text-decoration: none; font-size: 10px; font-weight: 600; }
+  .nav-item.active { color: var(--c-purple); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+</style>
+
+<div class="mobile-app-container">
+
+  <!-- Topbar -->
+  <div class="cp-topbar">
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <h1 class="cp-title">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2zm6.5 1.5l1 3.5 3.5 1-3.5 1-1 3.5-1-3.5-3.5-1 3.5-1 1-3.5z"/></svg>
+      AI Advisor Copilot
+    </h1>
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </button>
+  </div>
+
+  <div class="cp-content">
+    
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <div class="wh-text">
+        <h1>Good morning, Ayo! 👋</h1>
+        <p>Here's what I recommend you focus on today.</p>
+      </div>
+      <a href="javascript:void(0)" class="btn-pro">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+        Copilot Pro <span style="font-size: 12px; margin-left: 2px;">></span>
+      </a>
+    </div>
+
+    <!-- Next Best Action Card -->
+    <div class="nba-card">
+      <div class="nba-badge">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        NEXT BEST ACTION
+      </div>
+      
+      <h2 class="nba-title">Call Greenfield Hospital</h2>
+      
+      <ul class="nba-list">
+        <li>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Quote sent 2 days ago
+        </li>
+        <li>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          Quote viewed twice
+        </li>
+        <li>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          No response yet
+        </li>
+      </ul>
+      
+      <p class="nba-desc">This is the best opportunity to close today.</p>
+      
+      <div class="nba-actions">
+        <a href="tel:+1234567890" class="btn-primary">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Call Now
+        </a>
+        <a href="https://wa.me/" class="btn-outline">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          Send WhatsApp
+        </a>
+      </div>
+
+      <div class="nba-donut">
+        <svg class="donut-svg" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="78 100" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <div class="donut-text">
+          <div class="donut-val">78%</div>
+          <div class="donut-lbl">Likelihood<br>to close</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Suggestions -->
+    <h3 class="sect-header">WHAT CAN I HELP YOU WITH?</h3>
+    <div class="help-scroller">
+      <a href="javascript:void(0)" class="help-card hc-1">
+        <div class="help-card-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div class="help-card-text">Which leads should I focus on?</div>
+      </a>
+      <a href="javascript:void(0)" class="help-card hc-2">
+        <div class="help-card-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+        </div>
+        <div class="help-card-text">Which quotes are likely to close?</div>
+      </a>
+      <a href="javascript:void(0)" class="help-card hc-3">
+        <div class="help-card-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="help-card-text">Which clients are underinsured?</div>
+      </a>
+      <a href="javascript:void(0)" class="help-card hc-4">
+        <div class="help-card-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </div>
+        <div class="help-card-text">Draft a follow-up message</div>
+      </a>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="sect-header-row">
+      <h3>AI INSIGHTS</h3>
+      <a href="javascript:void(0)" class="sect-link">View All Insights ></a>
+    </div>
+    
+    <div class="insights-list">
+      <!-- Insight 1 -->
+      <a href="/advisor/follow-up/1" class="insight-item">
+        <div class="insight-icon g">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">High Closing Opportunity <span class="tag-new">New</span></h4>
+          <p class="insight-desc">Greenfield Hospital has a 78% chance to close. Recommend calling today.</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val g">78%</span>
+          <span class="ir-lbl">Likelihood</span>
+        </div>
+        <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Insight 2 -->
+      <a href="/admin/opportunities" class="insight-item">
+        <div class="insight-icon o">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">Quote Follow-Up <span class="tag-new">New</span></h4>
+          <p class="insight-desc">3 quotes were viewed but not responded to. Follow up within 24 hours.</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val o">3</span>
+          <span class="ir-lbl">Quotes</span>
+        </div>
+        <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Insight 3 -->
+      <a href="/admin/leads" class="insight-item">
+        <div class="insight-icon p">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">Coverage Gap Alert</h4>
+          <p class="insight-desc">12 clients may be underinsured based on new benchmark data.</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val p">12</span>
+          <span class="ir-lbl">Clients</span>
+        </div>
+        <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Recent Questions -->
+    <div class="sect-header-row">
+      <h3>RECENT QUESTIONS</h3>
+      <a href="javascript:void(0)" class="sect-link" style="color:var(--c-green-dark);">Clear</a>
+    </div>
+
+    <div class="recent-q-list">
+      <a href="javascript:void(0)" class="rq-item">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="rq-text">Which lead should I call today?</span>
+        <span class="rq-time">Just now</span>
+      </a>
+      <a href="javascript:void(0)" class="rq-item">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="rq-text">Show me quotes likely to close this month</span>
+        <span class="rq-time">Yesterday</span>
+      </a>
+      <a href="javascript:void(0)" class="rq-item">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="rq-text">Which client has the highest risk exposure?</span>
+        <span class="rq-time">2 days ago</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Floating Input -->
+  <div class="floating-input-wrapper">
+    <div class="ai-input-box">
+      <svg class="star" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2zm6.5 1.5l1 3.5 3.5 1-3.5 1-1 3.5-1-3.5-3.5-1 3.5-1 1-3.5z"/></svg>
+      <input type="text" placeholder="Ask me anything about your business...">
+      <svg class="mic" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+    </div>
+    <div class="disclaimer">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      Copilot uses AI. Responses may not always be 100% accurate.
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Quotes
+  </a>
+  <a href="/advisor/copilot" class="nav-item active">
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2zm6.5 1.5l1 3.5 3.5 1-3.5 1-1 3.5-1-3.5-3.5-1 3.5-1 1-3.5z"/></svg>
+    Copilot
+  </a>
+</div>
