@@ -155,9 +155,55 @@ const initDatabase = () => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS academy_levels (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      description TEXT,
+      order_index INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS academy_modules (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      level_id INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      order_index INTEGER NOT NULL,
+      video_url TEXT,
+      content TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (level_id) REFERENCES academy_levels(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS academy_progress (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      module_id INTEGER NOT NULL,
+      status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'in_progress', 'completed')),
+      completed_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (module_id) REFERENCES academy_modules(id),
+      UNIQUE(user_id, module_id)
+    );
+
     INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
       (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
       (2, 'Proposal Sent', 'email', 'Dear {{name}},\n\nPlease find attached the insurance proposal based on our recent consultation for {{business_name}}.\n\nLet me know if you have any questions.\n\nBest regards,\nCoverScore AI Advisor');
+
+    INSERT OR IGNORE INTO academy_levels (id, name, description, order_index) VALUES 
+      (1, 'CoverScore Certified Associate™ (CCA™)', 'Foundation Level', 1),
+      (2, 'CoverScore Risk Assessment Specialist™ (CRAS™)', 'Intermediate Level', 2),
+      (3, 'CoverScore Commercial Risk Advisor™ (CCRA™)', 'Advanced Level', 3),
+      (4, 'CoverScore Specialized Risk Advisor™ (CSRA™)', 'Expert Level', 4),
+      (5, 'CoverScore Master Risk Advisor™ (CMRA™)', 'Mastery Level', 5);
+
+    INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index) VALUES 
+      (1, 1, 'Introduction to Insurance', 'Basics of insurance', 1),
+      (2, 1, 'Principles of Risk Management', 'Core risk management principles', 2),
+      (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3),
+      (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4),
+      (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5);
 
   `);
 
