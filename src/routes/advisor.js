@@ -250,6 +250,10 @@ router.get('/proposal-writer/:leadId', authenticatePage, requireSalesOrAdmin, as
   }
 });
 
+router.get('/follow-up', authenticatePage, requireSalesOrAdmin, (req, res) => {
+  res.redirect('/advisor/follow-up/1');
+});
+
 router.get('/follow-up/:leadId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
