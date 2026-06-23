@@ -143,7 +143,7 @@
     <div class="stat-card overdue">
       <h3 class="stat-title">Overdue</h3>
       <div class="stat-bottom">
-        <div class="stat-num">5</div>
+        <div class="stat-num">{{tasksData.overdue.length}}</div>
         <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
     </div>
@@ -151,7 +151,7 @@
     <div class="stat-card today">
       <h3 class="stat-title">Due Today</h3>
       <div class="stat-bottom">
-        <div class="stat-num">8</div>
+        <div class="stat-num">{{tasksData.today.length}}</div>
         <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
       </div>
     </div>
@@ -159,7 +159,7 @@
     <div class="stat-card week">
       <h3 class="stat-title">This Week</h3>
       <div class="stat-bottom">
-        <div class="stat-num">14</div>
+        <div class="stat-num">{{tasksData.week.length}}</div>
         <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
       </div>
     </div>
@@ -167,7 +167,7 @@
     <div class="stat-card completed">
       <h3 class="stat-title">Completed</h3>
       <div class="stat-bottom">
-        <div class="stat-num">24</div>
+        <div class="stat-num">{{tasksData.completed.length}}</div>
         <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
       </div>
     </div>
@@ -186,87 +186,33 @@
     <div class="group-header">
       <div class="gh-left">
         <h2 class="gh-title">Due Today</h2>
-        <div class="gh-badge r">8</div>
+        <div class="gh-badge r">{{tasksData.today.length}}</div>
       </div>
       <a href="javascript:void(0)" class="gh-view-all">View All</a>
     </div>
     
     <div class="task-list">
-      <!-- Item 1 -->
-      <a href="/advisor/follow-up/1" class="task-item">
-        <div class="task-icon r">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        </div>
-        <div class="task-content">
-          <h3 class="task-title">Call Greenfield Hospital</h3>
-          <p class="task-sub">Quote sent 2 days ago • No response yet</p>
-          <p class="task-lead">Lead: Greenfield Hospital</p>
-        </div>
-        <div class="task-right">
-          <div class="tr-time r">10:00 AM</div>
-          <div class="tr-bottom">
-            <span class="tr-badge r">High</span>
-            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </a>
-
-      <!-- Item 2 -->
-      <a href="javascript:void(0)" class="task-item">
+      {{#each tasksData.today}}
+      <a href="/advisor/tasks/{{this.id}}" class="task-item">
         <div class="task-icon g">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
         </div>
         <div class="task-content">
-          <h3 class="task-title">Follow up on WhatsApp</h3>
-          <p class="task-sub">Shared risk report yesterday</p>
-          <p class="task-lead">Lead: Sunrise Medical Center</p>
+          <h3 class="task-title">{{this.title}}</h3>
+          <p class="task-sub">{{this.description}}</p>
+          <p class="task-lead">Lead: {{this.business_name}}</p>
         </div>
         <div class="task-right">
-          <div class="tr-time o">11:30 AM</div>
+          <div class="tr-time o">Today</div>
           <div class="tr-bottom">
             <span class="tr-badge o">Medium</span>
             <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
           </div>
         </div>
       </a>
-
-      <!-- Item 3 -->
-      <a href="javascript:void(0)" class="task-item">
-        <div class="task-icon p">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        </div>
-        <div class="task-content">
-          <h3 class="task-title">Meeting with City Care Hospital</h3>
-          <p class="task-sub">Discuss insurance requirements</p>
-          <p class="task-lead">Lead: City Care Hospital</p>
-        </div>
-        <div class="task-right">
-          <div class="tr-time b">2:00 PM</div>
-          <div class="tr-bottom">
-            <span class="tr-badge o">Medium</span>
-            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </a>
-
-      <!-- Item 4 -->
-      <a href="javascript:void(0)" class="task-item">
-        <div class="task-icon b">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        </div>
-        <div class="task-content">
-          <h3 class="task-title">Send Quote & Proposal</h3>
-          <p class="task-sub">Prepare and send updated proposal</p>
-          <p class="task-lead">Lead: HealthPlus Hospital</p>
-        </div>
-        <div class="task-right">
-          <div class="tr-time b">4:00 PM</div>
-          <div class="tr-bottom">
-            <span class="tr-badge g">Low</span>
-            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </a>
+      {{else}}
+      <div style="padding: 16px; text-align: center; color: var(--c-gray); font-size: 12px; font-weight: 600;">No tasks due today.</div>
+      {{/each}}
     </div>
   </div>
 
@@ -275,68 +221,33 @@
     <div class="group-header">
       <div class="gh-left">
         <h2 class="gh-title">This Week</h2>
-        <div class="gh-badge b">14</div>
+        <div class="gh-badge b">{{tasksData.week.length}}</div>
       </div>
       <a href="javascript:void(0)" class="gh-view-all">View All</a>
     </div>
     
     <div class="task-list">
-      <!-- Item 1 -->
-      <a href="javascript:void(0)" class="task-item">
+      {{#each tasksData.week}}
+      <a href="/advisor/tasks/{{this.id}}" class="task-item">
         <div class="task-icon p">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         </div>
         <div class="task-content">
-          <h3 class="task-title">Meeting with Victory Hospital</h3>
-          <p class="task-sub">Policy review and discussion</p>
-          <p class="task-lead" style="color:var(--c-gray);">Tomorrow, 10:00 AM</p>
+          <h3 class="task-title">{{this.title}}</h3>
+          <p class="task-sub">{{this.description}}</p>
+          <p class="task-lead" style="color:var(--c-gray);">{{this.due_date}}</p>
         </div>
         <div class="task-right">
-          <div class="tr-time b">Tomorrow</div>
+          <div class="tr-time b">Upcoming</div>
           <div class="tr-bottom">
             <span class="tr-badge o">Medium</span>
             <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
           </div>
         </div>
       </a>
-
-      <!-- Item 2 -->
-      <a href="javascript:void(0)" class="task-item">
-        <div class="task-icon g">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        </div>
-        <div class="task-content">
-          <h3 class="task-title">Call Wellness Hospital</h3>
-          <p class="task-sub">Follow up on coverage needs</p>
-          <p class="task-lead" style="color:var(--c-gray);">May 17, 11:00 AM</p>
-        </div>
-        <div class="task-right">
-          <div class="tr-time b">May 17</div>
-          <div class="tr-bottom">
-            <span class="tr-badge g">Low</span>
-            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </a>
-
-      <!-- Item 3 -->
-      <a href="javascript:void(0)" class="task-item">
-        <div class="task-icon o">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        </div>
-        <div class="task-content">
-          <h3 class="task-title">Review Assessment</h3>
-          <p class="task-sub">Review newly completed assessment</p>
-          <p class="task-lead" style="color:var(--c-gray);">May 18, 9:30 AM</p>
-        </div>
-        <div class="task-right">
-          <div class="tr-time b">May 18</div>
-          <div class="tr-bottom">
-            <span class="tr-badge g">Low</span>
-            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </a>
+      {{else}}
+      <div style="padding: 16px; text-align: center; color: var(--c-gray); font-size: 12px; font-weight: 600;">No tasks due later this week.</div>
+      {{/each}}
     </div>
   </div>
 
@@ -345,49 +256,33 @@
     <div class="group-header">
       <div class="gh-left">
         <h2 class="gh-title">Overdue</h2>
-        <div class="gh-badge r">5</div>
+        <div class="gh-badge r">{{tasksData.overdue.length}}</div>
       </div>
       <a href="javascript:void(0)" class="gh-view-all">View All</a>
     </div>
     
     <div class="task-list">
-      <!-- Item 1 -->
-      <a href="javascript:void(0)" class="task-item">
+      {{#each tasksData.overdue}}
+      <a href="/advisor/tasks/{{this.id}}" class="task-item">
         <div class="task-icon r">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
         </div>
         <div class="task-content">
-          <h3 class="task-title">Call Metro Hospital</h3>
-          <p class="task-sub">Quote viewed but no response</p>
-          <p class="task-lead" style="color:var(--c-gray);">May 13, 10:00 AM</p>
+          <h3 class="task-title">{{this.title}}</h3>
+          <p class="task-sub">{{this.description}}</p>
+          <p class="task-lead" style="color:var(--c-gray);">{{this.due_date}}</p>
         </div>
         <div class="task-right">
-          <div class="tr-time r">2 days overdue</div>
+          <div class="tr-time r">Overdue</div>
           <div class="tr-bottom">
             <span class="tr-badge r">High</span>
             <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
           </div>
         </div>
       </a>
-
-      <!-- Item 2 -->
-      <a href="javascript:void(0)" class="task-item">
-        <div class="task-icon r">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        </div>
-        <div class="task-content">
-          <h3 class="task-title">Email City Life Hospital</h3>
-          <p class="task-sub">Proposal follow up</p>
-          <p class="task-lead" style="color:var(--c-gray);">May 12, 4:30 PM</p>
-        </div>
-        <div class="task-right">
-          <div class="tr-time r">3 days overdue</div>
-          <div class="tr-bottom">
-            <span class="tr-badge o">Medium</span>
-            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </a>
+      {{else}}
+      <div style="padding: 16px; text-align: center; color: var(--c-gray); font-size: 12px; font-weight: 600;">No overdue tasks.</div>
+      {{/each}}
     </div>
   </div>
 

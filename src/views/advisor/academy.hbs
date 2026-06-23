@@ -202,12 +202,12 @@
       <div class="hero-progress">
         <div class="hp-text-row">
           <span>Your Progress</span>
-          <span>65% complete</span>
+          <span>{{progressPercentage}}% complete</span>
         </div>
         <div class="hp-bar-bg">
-          <div class="hp-bar-fill"></div>
+          <div class="hp-bar-fill" style="width: {{progressPercentage}}%"></div>
         </div>
-        <span class="hp-sub">12 of 18 lessons completed</span>
+        <span class="hp-sub">{{completedModules}} of {{totalModules}} lessons completed</span>
       </div>
     </div>
 
@@ -251,49 +251,19 @@
       </div>
       
       <div class="paths-scroll">
-        <!-- Path 1 -->
+        {{#each levels}}
         <div class="path-card">
           <div class="pc-icon green">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           </div>
-          <h4 class="pc-title">Foundation Program</h4>
-          <p class="pc-sub">5 Lessons</p>
-          <div class="pc-pct green">100%</div>
-          <div class="pc-bar green"></div>
-        </div>
-
-        <!-- Path 2 -->
-        <div class="path-card">
-          <div class="pc-icon blue">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+          <h4 class="pc-title">{{this.name}}</h4>
+          <p class="pc-sub">{{this.modules.length}} Lessons</p>
+          <div class="pc-pct green">
+            {{#if (eq this.modules.length 0)}}0%{{else}}...{{/if}}
           </div>
-          <h4 class="pc-title">Risk Assessment Mastery</h4>
-          <p class="pc-sub">6 Lessons</p>
-          <div class="pc-pct blue">67%</div>
-          <div class="pc-bar blue"></div>
+          <div class="pc-bar green" style="width: 100%"></div>
         </div>
-
-        <!-- Path 3 -->
-        <div class="path-card">
-          <div class="pc-icon purple">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          </div>
-          <h4 class="pc-title">Quote & Proposal Excellence</h4>
-          <p class="pc-sub">5 Lessons</p>
-          <div class="pc-pct purple">40%</div>
-          <div class="pc-bar purple"></div>
-        </div>
-
-        <!-- Path 4 -->
-        <div class="path-card">
-          <div class="pc-icon orange">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          </div>
-          <h4 class="pc-title">Advanced Sales Strategies</h4>
-          <p class="pc-sub">4 Lessons</p>
-          <div class="pc-pct orange">25%</div>
-          <div class="pc-bar orange"></div>
-        </div>
+        {{/each}}
       </div>
     </div>
 
@@ -305,72 +275,31 @@
       </div>
       
       <div class="fc-list">
-        <!-- Course 1 -->
-        <div class="fc-item">
-          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-            <div class="fc-img-text">COVERSCORE<br>OVERVIEW</div>
-            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+        {{#each levels}}
+          {{#each this.modules}}
+          <div class="fc-item">
+            <div class="fc-img-wrap" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+              <div class="fc-img-text">{{this.title}}</div>
+              <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+            </div>
+            <div class="fc-info">
+              <h4 class="fc-title">{{this.title}}</h4>
+              <p class="fc-desc">{{this.description}}</p>
+            </div>
+            <div class="fc-action">
+              {{#if (eq this.status 'completed')}}
+              <a href="#" class="fc-btn completed">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                Completed
+              </a>
+              {{else}}
+              <a href="#" class="fc-btn start">Start</a>
+              {{/if}}
+              <span class="fc-time">{{this.duration_minutes}} min</span>
+            </div>
           </div>
-          <div class="fc-info">
-            <h4 class="fc-title">CoverScore Platform Overview</h4>
-            <p class="fc-desc">Get started with the CoverScore platform and explore key features.</p>
-          </div>
-          <div class="fc-action">
-            <a href="#" class="fc-btn completed">
-              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              Completed
-            </a>
-            <span class="fc-time">15 min</span>
-          </div>
-        </div>
-
-        <!-- Course 2 -->
-        <div class="fc-item">
-          <div class="fc-img-wrap">
-            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&auto=format&fit=crop&q=60" alt="Cyber Risk">
-            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-          </div>
-          <div class="fc-info">
-            <h4 class="fc-title">Cyber Risk Essentials</h4>
-            <p class="fc-desc">Understand cyber threats facing hospitals and how to address them.</p>
-          </div>
-          <div class="fc-action">
-            <a href="#" class="fc-btn start">Start</a>
-            <span class="fc-time">18 min</span>
-          </div>
-        </div>
-
-        <!-- Course 3 -->
-        <div class="fc-item">
-          <div class="fc-img-wrap">
-            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=500&auto=format&fit=crop&q=60" alt="Client Meetings">
-            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-          </div>
-          <div class="fc-info">
-            <h4 class="fc-title">Winning Client Meetings</h4>
-            <p class="fc-desc">Best practices to engage decision makers and win more business.</p>
-          </div>
-          <div class="fc-action">
-            <a href="#" class="fc-btn start">Start</a>
-            <span class="fc-time">18 min</span>
-          </div>
-        </div>
-
-        <!-- Course 4 -->
-        <div class="fc-item">
-          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #1e293b, #3b82f6);">
-            <div class="fc-img-text" style="text-align:center;">MEDICAL<br>EQUIPMENT</div>
-            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-          </div>
-          <div class="fc-info">
-            <h4 class="fc-title">Medical Equipment Breakdown Coverage</h4>
-            <p class="fc-desc">Learn how to uncover gaps and recommend the right protection.</p>
-          </div>
-          <div class="fc-action">
-            <a href="#" class="fc-btn start">Start</a>
-            <span class="fc-time">16 min</span>
-          </div>
-        </div>
+          {{/each}}
+        {{/each}}
       </div>
     </div>
 

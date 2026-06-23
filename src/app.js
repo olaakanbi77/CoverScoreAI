@@ -378,7 +378,28 @@ app.get('/admin/assessments', authenticatePage, async (req, res) => {
 
 app.get('/admin/opportunities', authenticatePage, async (req, res) => {
   try {
-    res.render('admin/opportunities', { title: 'Opportunities', activePage: 'opportunities', layout: 'admin' });
+    let rawLeads = [];
+    if (req.user.role === 'admin') {
+      rawLeads = await all("SELECT * FROM leads ORDER BY updated_at DESC");
+    } else {
+      rawLeads = await all("SELECT * FROM leads WHERE advisor_id = ? ORDER BY updated_at DESC", [req.user.id]);
+    }
+    
+    const pipelineData = {
+      stage1: rawLeads.filter(l => l.pipeline_stage === 1),
+      stage2: rawLeads.filter(l => l.pipeline_stage === 2),
+      stage3: rawLeads.filter(l => l.pipeline_stage === 3),
+      stage4: rawLeads.filter(l => l.pipeline_stage === 4),
+      stage5: rawLeads.filter(l => l.pipeline_stage === 5),
+      stage6: rawLeads.filter(l => l.pipeline_stage === 6),
+    };
+
+    res.render('admin/opportunities', { 
+      title: 'Opportunities', 
+      activePage: 'opportunities', 
+      layout: 'admin',
+      pipelineData 
+    });
   } catch (error) {
     res.status(500).send('Error loading opportunities');
   }

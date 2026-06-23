@@ -307,10 +307,37 @@ router.get('/notifications', authenticatePage, requireSalesOrAdmin, async (req, 
 
 router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const tasks = await all(`
+      SELECT t.*, l.name as lead_name, l.business_name 
+      FROM tasks t 
+      JOIN leads l ON t.lead_id = l.id 
+      WHERE l.advisor_id = ? AND t.status != 'completed'
+      ORDER BY t.due_date ASC
+    `, [req.user.id]);
+    
+    // Group tasks into today, tomorrow, this week
+    const now = new Date();
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const tomorrowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59);
+    
+    const todayTasks = [];
+    const tomorrowTasks = [];
+    const laterTasks = [];
+    
+    tasks.forEach(t => {
+      const due = new Date(t.due_date || now);
+      if (due <= todayEnd) todayTasks.push(t);
+      else if (due <= tomorrowEnd) tomorrowTasks.push(t);
+      else laterTasks.push(t);
+    });
+
     res.render('advisor/tasks', {
       layout: 'admin',
       user: req.user,
-      activePage: 'more'
+      activePage: 'more',
+      todayTasks,
+      tomorrowTasks,
+      laterTasks
     });
   } catch (err) {
     console.error('Error loading tasks:', err);
@@ -320,10 +347,26 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
 
 router.get('/profile', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const leads = await all("SELECT pipeline_stage, estimated_premium FROM leads WHERE advisor_id = ?", [req.user.id]);
+    
+    const leadsAdded = leads.length;
+    const assessments = leads.filter(l => l.pipeline_stage >= 2).length; // mock
+    const quotesSent = leads.filter(l => l.pipeline_stage >= 3).length; // mock
+    const premiumPipeline = leads.filter(l => [1,2,3,4].includes(l.pipeline_stage)).reduce((acc, l) => acc + (l.estimated_premium || 0), 0);
+    const premiumFormatted = premiumPipeline > 1000000 ? `₦${(premiumPipeline/1000000).toFixed(1)}M` : `₦${premiumPipeline.toLocaleString()}`;
+
+    const stats = {
+      leadsAdded,
+      assessments,
+      quotesSent,
+      premiumFormatted
+    };
+
     res.render('advisor/profile', {
       layout: 'admin',
       user: req.user,
-      activePage: 'more'
+      activePage: 'more',
+      stats
     });
   } catch (err) {
     console.error('Error loading profile:', err);
@@ -333,10 +376,33 @@ router.get('/profile', authenticatePage, requireSalesOrAdmin, async (req, res) =
 
 router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const tasks = await all(`
+      SELECT t.*, l.name as lead_name, l.business_name 
+      FROM tasks t 
+      JOIN leads l ON t.lead_id = l.id 
+      WHERE l.advisor_id = ? AND t.status != 'completed'
+      ORDER BY t.due_date ASC
+    `, [req.user.id]);
+
+    // Same grouping logic as tasks for simplicity, or just pass all
+    const now = new Date();
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    
+    const todayTasks = [];
+    const upcomingTasks = [];
+    
+    tasks.forEach(t => {
+      const due = new Date(t.due_date || now);
+      if (due <= todayEnd) todayTasks.push(t);
+      else upcomingTasks.push(t);
+    });
+
     res.render('advisor/calendar', {
       layout: 'admin',
       user: req.user,
-      activePage: 'calendar'
+      activePage: 'calendar',
+      todayTasks,
+      upcomingTasks
     });
   } catch (err) {
     console.error('Error loading calendar:', err);
@@ -346,10 +412,29 @@ router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) 
 
 router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const leads = await all("SELECT * FROM leads WHERE advisor_id = ? ORDER BY updated_at DESC", [req.user.id]);
+    
+    const pipelineData = {
+      stage1: leads.filter(l => l.pipeline_stage === 1),
+      stage2: leads.filter(l => l.pipeline_stage === 2),
+      stage3: leads.filter(l => l.pipeline_stage === 3),
+      stage4: leads.filter(l => l.pipeline_stage === 4),
+      stage5: leads.filter(l => l.pipeline_stage === 5),
+      stage6: leads.filter(l => l.pipeline_stage === 6),
+    };
+
+    const activeLeads = leads.filter(l => [1, 2, 3, 4].includes(l.pipeline_stage));
+    const activePipelineValue = activeLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
+    const activePipelineValueFormatted = activePipelineValue > 1000000 
+      ? `₦${(activePipelineValue/1000000).toFixed(1)}M` 
+      : `₦${activePipelineValue.toLocaleString()}`;
+
     res.render('advisor/pipeline', {
       layout: 'admin',
       user: req.user,
-      activePage: 'pipeline'
+      activePage: 'pipeline',
+      pipelineData,
+      activePipelineValueFormatted
     });
   } catch (err) {
     console.error('Error loading pipeline:', err);
@@ -359,10 +444,56 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
 
 router.get('/leaderboard', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const salesUsers = await all("SELECT id, name FROM users WHERE role IN ('sales', 'admin')");
+    const wonLeads = await all("SELECT advisor_id, estimated_premium FROM leads WHERE pipeline_stage = 6 AND advisor_id IS NOT NULL");
+    
+    let advisorsStats = salesUsers.map(user => {
+      const userLeads = wonLeads.filter(l => l.advisor_id === user.id);
+      const deals = userLeads.length;
+      const premium = userLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
+      const points = (deals * 10) + Math.floor(premium / 500000); // arbitrary point logic
+      
+      const premiumFormatted = premium > 1000000 
+        ? `₦${(premium/1000000).toFixed(1)}M` 
+        : `₦${premium.toLocaleString()}`;
+
+      return {
+        id: user.id,
+        name: user.name,
+        deals,
+        premium,
+        premiumFormatted,
+        points,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`
+      };
+    });
+
+    advisorsStats.sort((a, b) => b.points - a.points);
+    
+    advisorsStats = advisorsStats.map((adv, index) => ({
+      ...adv,
+      rank: index + 1,
+      isCurrentUser: adv.id === req.user.id
+    }));
+
+    const currentUserStats = advisorsStats.find(a => a.id === req.user.id) || { rank: '-', premiumFormatted: '₦0', deals: 0, points: 0 };
+    
+    const podium = advisorsStats.slice(0, 3);
+    const restList = advisorsStats.slice(3);
+
     res.render('advisor/leaderboard', {
       layout: 'admin',
       user: req.user,
-      activePage: 'leaderboard'
+      activePage: 'leaderboard',
+      currentUserStats,
+      podium,
+      restList,
+      hasFirst: podium.length > 0,
+      firstPlace: podium[0],
+      hasSecond: podium.length > 1,
+      secondPlace: podium[1],
+      hasThird: podium.length > 2,
+      thirdPlace: podium[2]
     });
   } catch (err) {
     console.error('Error loading leaderboard:', err);
@@ -372,10 +503,35 @@ router.get('/leaderboard', authenticatePage, requireSalesOrAdmin, async (req, re
 
 router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const levels = await all("SELECT * FROM academy_levels ORDER BY level_number ASC");
+    const modules = await all("SELECT * FROM academy_modules ORDER BY order_index ASC");
+    const progress = await all("SELECT * FROM academy_progress WHERE user_id = ?", [req.user.id]);
+    
+    // Process levels and attach modules and progress
+    let totalModules = 0;
+    let completedModules = 0;
+
+    const processedLevels = levels.map(level => {
+      const levelModules = modules.filter(m => m.level_id === level.id).map(m => {
+        totalModules++;
+        const p = progress.find(pr => pr.module_id === m.id);
+        const status = p ? p.status : 'pending';
+        if (status === 'completed') completedModules++;
+        return { ...m, status };
+      });
+      return { ...level, modules: levelModules };
+    });
+
+    const progressPercentage = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+
     res.render('advisor/academy', {
       layout: 'admin',
       user: req.user,
-      activePage: 'academy'
+      activePage: 'academy',
+      levels: processedLevels,
+      progressPercentage,
+      completedModules,
+      totalModules
     });
   } catch (err) {
     console.error('Error loading academy:', err);
@@ -484,11 +640,10 @@ router.post('/api/leads/:id/assign', authenticatePage, requireSalesOrAdmin, asyn
 router.post('/api/leads/:id/stage', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const leadId = req.params.id;
-    const { stage } = req.body;
-    const validStages = ['New', 'Contacted', 'Meeting Set', 'Proposal Sent', 'Won', 'Lost'];
+    const stage = parseInt(req.body.stage);
     
-    if (!validStages.includes(stage)) {
-      return res.status(400).json({ error: 'Invalid stage' });
+    if (isNaN(stage) || stage < 1 || stage > 6) {
+      return res.status(400).json({ error: 'Invalid stage. Must be 1-6' });
     }
 
     const { run } = require('../config/database');

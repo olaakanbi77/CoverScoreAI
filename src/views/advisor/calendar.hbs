@@ -242,179 +242,40 @@
     </div>
 
     <div class="timeline">
-      <!-- Event 1: Blue -->
+      {{#each events}}
       <div class="tl-item">
         <div class="tl-time">
-          <span>10:00</span>
-          <span>AM</span>
+          <span>{{this.due_date}}</span>
         </div>
-        <div class="tl-card blue">
+        <div class="tl-card {{#if (eq this.type 'Call')}}green{{else if (eq this.type 'Meeting')}}purple{{else}}blue{{/if}}">
           <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
           <div class="tl-card-header">
             <div class="tl-icon-wrap">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
             <div class="tl-content">
               <div class="tl-title-row">
-                <h3 class="tl-title">Meeting with City Care Hospital</h3>
-                <span class="tl-type">Meeting</span>
+                <h3 class="tl-title">{{this.title}}</h3>
+                <span class="tl-type">{{this.type}}</span>
               </div>
-              <p class="tl-desc">Discuss insurance requirements</p>
-              <div class="tl-meta">
-                <div class="tl-loc">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  Lagos, Nigeria
-                </div>
-                <div class="tl-person">
-                  <div class="tl-avatar">AB</div>
-                  Dr. Ahmed Bello
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Event 2: Green -->
-      <div class="tl-item">
-        <div class="tl-time">
-          <span>11:30</span>
-          <span>AM</span>
-        </div>
-        <div class="tl-card green">
-          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          <div class="tl-card-header">
-            <div class="tl-icon-wrap">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-title-row">
-                <h3 class="tl-title">Call Greenfield Hospital</h3>
-                <span class="tl-type">Call</span>
-              </div>
-              <p class="tl-desc">Quote sent 2 days ago - No response yet</p>
+              <p class="tl-desc">{{this.description}}</p>
               <div class="tl-meta">
                 <div class="tl-loc">
                   <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                  Greenfield Hospital
-                </div>
-                <div class="tl-tag">Follow-Up</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Event 3: Purple -->
-      <div class="tl-item">
-        <div class="tl-time">
-          <span>02:00</span>
-          <span>PM</span>
-        </div>
-        <div class="tl-card purple">
-          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          <div class="tl-card-header">
-            <div class="tl-icon-wrap">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-title-row">
-                <h3 class="tl-title">Meeting with Sunrise Medical Center</h3>
-                <span class="tl-type">Meeting</span>
-              </div>
-              <p class="tl-desc">Policy review and renewal discussion</p>
-              <div class="tl-meta">
-                <div class="tl-loc">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  Abuja, Nigeria
-                </div>
-                <div class="tl-person">
-                  <div class="tl-avatar">KO</div>
-                  Mr. Kola Odunayo
+                  {{this.business_name}}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Event 4: Orange -->
-      <div class="tl-item">
-        <div class="tl-time">
-          <span>04:30</span>
-          <span>PM</span>
-        </div>
-        <div class="tl-card orange">
-          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          <div class="tl-card-header">
-            <div class="tl-icon-wrap">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-title-row">
-                <h3 class="tl-title">Send Proposal to HealthPlus Hospital</h3>
-                <span class="tl-type">Task</span>
-              </div>
-              <p class="tl-desc">Prepare and send updated proposal</p>
-              <div class="tl-meta">
-                <div class="tl-loc">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                  HealthPlus Hospital
-                </div>
-                <div class="tl-tag">Task</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {{else}}
+      <div style="padding: 16px; text-align: center; color: var(--c-gray); font-size: 12px; font-weight: 600;">No events found.</div>
+      {{/each}}
     </div>
   </div>
 
-  <!-- Friday Group (Compact) -->
-  <div class="day-group">
-    <div class="dg-header">
-      <h2 class="dg-title">Friday, May 16, 2024</h2>
-      <div class="dg-collapse">
-        3 Events
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-      </div>
-    </div>
-
-    <div class="compact-list">
-      <!-- Compact 1 -->
-      <a href="javascript:void(0)" class="cl-item">
-        <div class="cl-time">09:30 <span>AM</span></div>
-        <div class="cl-icon green">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        </div>
-        <div class="cl-title">Call Victory Hospital</div>
-        <div class="cl-type green">Call</div>
-        <svg class="cl-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-      </a>
-
-      <!-- Compact 2 -->
-      <a href="javascript:void(0)" class="cl-item">
-        <div class="cl-time">01:00 <span>PM</span></div>
-        <div class="cl-icon purple">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        </div>
-        <div class="cl-title">Meeting with Metro Hospital</div>
-        <div class="cl-type purple">Meeting</div>
-        <svg class="cl-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-      </a>
-
-      <!-- Compact 3 -->
-      <a href="javascript:void(0)" class="cl-item">
-        <div class="cl-time">03:30 <span>PM</span></div>
-        <div class="cl-icon orange">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        </div>
-        <div class="cl-title">Review Risk Report</div>
-        <div class="cl-type orange">Task</div>
-        <svg class="cl-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-      </a>
-    </div>
-  </div>
+  <!-- Reminders / Compact List removed to simplify, as calendar represents events -->
 
   <!-- Reminder Banner -->
   <div class="rem-banner">
