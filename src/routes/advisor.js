@@ -305,6 +305,19 @@ router.get('/notifications', authenticatePage, requireSalesOrAdmin, async (req, 
   }
 });
 
+router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/tasks', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'more'
+    });
+  } catch (err) {
+    console.error('Error loading tasks:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/copilot', {
