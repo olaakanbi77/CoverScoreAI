@@ -315,29 +315,37 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
       ORDER BY t.due_date ASC
     `, [req.user.id]);
     
-    // Group tasks into today, tomorrow, this week
+    // Group tasks into overdue, today, week, completed
     const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-    const tomorrowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59);
+    const weekEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7, 23, 59, 59);
     
-    const todayTasks = [];
-    const tomorrowTasks = [];
-    const laterTasks = [];
+    const tasksData = {
+      overdue: [],
+      today: [],
+      week: [],
+      completed: []
+    };
     
     tasks.forEach(t => {
       const due = new Date(t.due_date || now);
-      if (due <= todayEnd) todayTasks.push(t);
-      else if (due <= tomorrowEnd) tomorrowTasks.push(t);
-      else laterTasks.push(t);
+      if (t.status === 'completed') {
+        tasksData.completed.push(t);
+      } else if (due < todayStart) {
+        tasksData.overdue.push(t);
+      } else if (due <= todayEnd) {
+        tasksData.today.push(t);
+      } else if (due <= weekEnd) {
+        tasksData.week.push(t);
+      }
     });
 
     res.render('advisor/tasks', {
       layout: 'admin',
       user: req.user,
       activePage: 'more',
-      todayTasks,
-      tomorrowTasks,
-      laterTasks
+      tasksData
     });
   } catch (err) {
     console.error('Error loading tasks:', err);
@@ -401,8 +409,7 @@ router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) 
       layout: 'admin',
       user: req.user,
       activePage: 'calendar',
-      todayTasks,
-      upcomingTasks
+      events: tasks
     });
   } catch (err) {
     console.error('Error loading calendar:', err);

@@ -474,77 +474,45 @@
       </div>
     </div>
 
-    <!-- In Progress -->
+    <!-- Assessments List -->
     <div class="list-section">
       <div class="section-header">
-        <h2 class="section-title">In Progress</h2>
-        <a href="javascript:void(0)" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        <h2 class="section-title">All Assessments</h2>
+        <a href="/admin/assessments" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
       </div>
-      <div class="list-card">
-        <div class="c-avatar orange">GH</div>
-        <div class="c-body">
-          <h3 class="c-title">Greenfield Hospital</h3>
-          <p class="c-sub">Abuja, FCT • Hospital</p>
-          <p class="c-time">Last active 2 hours ago</p>
-        </div>
-        <div class="c-right">
-          <div class="c-progress-box">
-            <div class="c-prog-val">38%</div>
-            <div class="c-prog-lbl">Complete</div>
-            <div class="c-prog-bar-bg">
-              <div class="c-prog-bar-fill" style="width: 38%;"></div>
+      
+      {{#if assessments.length}}
+        {{#each assessments}}
+        <div class="list-card">
+          <div class="c-avatar {{#if (eq this.risk_level 'critical')}}red{{else if (eq this.risk_level 'high')}}orange{{else}}green{{/if}}">
+            <!-- First letter of name or business -->
+            {{#if this.business_name}}{{substring this.business_name 0 2}}{{else}}CS{{/if}}
+          </div>
+          <div class="c-body">
+            <h3 class="c-title">{{#if this.business_name}}{{this.business_name}}{{else}}Unknown Business{{/if}}</h3>
+            <p class="c-sub">{{#if this.industry}}{{this.industry}}{{else}}Assessment ID: {{this.id}}{{/if}}</p>
+            <p class="c-time">Added on <script>document.write(new Intl.DateTimeFormat('en-US',{dateStyle:'short'}).format(new Date('{{this.created_at}}')))</script></p>
+          </div>
+          <div class="c-right">
+            <div class="c-risk-box">
+              <div class="c-risk-lbl">Risk Score</div>
+              <div class="c-risk-val">{{this.score}}</div>
             </div>
+            <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </div>
-          <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
-      </div>
-    </div>
-
-    <!-- Recently Completed -->
-    <div class="list-section">
-      <div class="section-header">
-        <h2 class="section-title">Recently Completed</h2>
-        <a href="javascript:void(0)" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
-      </div>
-      <div class="list-card">
-        <div class="c-avatar green">PW</div>
-        <div class="c-body">
-          <h3 class="c-title">PrimeWorld Schools</h3>
-          <p class="c-sub">Lekki, Lagos • School</p>
-          <p class="c-time">Completed 1 day ago</p>
-        </div>
-        <div class="c-right">
-          <div class="c-risk-box">
-            <div class="c-risk-lbl">Risk Score</div>
-            <div class="c-risk-val">63</div>
+        {{/each}}
+      {{else}}
+        <div class="list-card" style="justify-content: center; padding: 40px 20px; border: none; box-shadow: none; background: transparent;">
+          <div style="text-align: center; color: var(--text-sec);">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 12px; opacity: 0.5;">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <p style="font-size: 14px; font-weight: 500;">No assessments found</p>
+            <p style="font-size: 12px; margin-top: 4px;">Share your assessment link to get started.</p>
           </div>
-          <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
-      </div>
-    </div>
-
-    <!-- Abandoned -->
-    <div class="list-section">
-      <div class="section-header">
-        <h2 class="section-title">Abandoned</h2>
-        <a href="javascript:void(0)" class="section-view-all">View all <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
-      </div>
-      <div class="list-card">
-        <div class="c-avatar red">RC</div>
-        <div class="c-body">
-          <h3 class="c-title">Rhema Chapel</h3>
-          <p class="c-sub">Ibadan, Oyo State • Church</p>
-          <p class="c-time red">Stopped at Question 3 of 10</p>
-          <p class="c-time">2 days ago</p>
-        </div>
-        <div class="c-right">
-          <button class="btn-reminder">
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            Send Reminder
-          </button>
-          <svg class="icon-md chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </div>
-      </div>
+      {{/if}}
     </div>
 
     <!-- Tip Card -->
