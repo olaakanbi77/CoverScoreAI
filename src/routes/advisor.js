@@ -344,6 +344,19 @@ router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) 
   }
 });
 
+router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/pipeline', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'pipeline'
+    });
+  } catch (err) {
+    console.error('Error loading pipeline:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/copilot', {

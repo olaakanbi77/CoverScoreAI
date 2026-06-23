@@ -1,0 +1,486 @@
+<style>
+  :root {
+    --c-purple: #7c3aed;
+    --c-purple-light: #f5f3ff;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f97316;
+    --c-orange-light: #fff7ed;
+    --c-red: #ef4444;
+    --c-red-light: #fef2f2;
+    --c-blue: #2563eb;
+    --c-blue-light: #eff6ff;
+    --bg-page: #f8fafc;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative; padding-bottom: 100px;
+  }
+
+  /* Topbar */
+  .p-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: white; position: sticky; top: 0; z-index: 20; }
+  .p-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; flex: 1; text-align: center; }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+  
+  /* Filters Row */
+  .filters-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: white; border-bottom: 1px solid #f1f5f9; }
+  .filter-btn { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--c-dark); text-decoration: none; }
+  .filter-btn svg { width: 14px; height: 14px; color: var(--c-gray); stroke-width: 2.5; }
+  .filter-btn.cal svg.icon { width: 16px; height: 16px; color: var(--c-dark); margin-right: 2px; }
+
+  /* Main Container */
+  .p-content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* Top Metric Card */
+  .metric-card { background: white; border-radius: 16px; padding: 20px 16px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .mc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  
+  .mc-left { display: flex; flex-direction: column; gap: 4px; }
+  .mc-title-row { display: flex; align-items: center; gap: 6px; }
+  .mc-title { font-size: 11px; font-weight: 700; color: var(--c-dark); margin: 0; }
+  .mc-info { width: 14px; height: 14px; color: var(--c-gray); }
+  
+  .mc-amount { font-size: 28px; font-weight: 800; color: var(--c-green-dark); margin: 4px 0; line-height: 1; }
+  
+  .mc-trend { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--c-gray); }
+  .mc-trend-up { display: flex; align-items: center; gap: 2px; color: var(--c-green-dark); font-weight: 800; }
+  .mc-trend-up svg { width: 12px; height: 12px; }
+
+  .mc-right-card { background: var(--c-green-light); border: 1px solid #d1fae5; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; min-width: 110px; position: relative; }
+  .mc-rc-title { font-size: 9px; font-weight: 700; color: var(--c-dark); text-align: right; }
+  .mc-rc-num-row { display: flex; align-items: center; justify-content: space-between; }
+  .mc-rc-icon { width: 24px; height: 24px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--c-green-dark); }
+  .mc-rc-icon svg { width: 14px; height: 14px; stroke-width: 2.5; }
+  .mc-rc-num { font-size: 22px; font-weight: 800; color: var(--c-dark); }
+  .mc-rc-sub { font-size: 8px; font-weight: 600; color: var(--c-gray); text-align: right; }
+
+  /* 4 Sub-metrics */
+  .mc-subs { display: flex; justify-content: space-between; padding-top: 16px; border-top: 1px solid #f1f5f9; gap: 8px; }
+  .mc-sub-item { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+  .mc-sub-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .mc-sub-icon.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .mc-sub-icon.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .mc-sub-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .mc-sub-icon.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .mc-sub-icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  
+  .mc-sub-val { font-size: 14px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1; }
+  .mc-sub-lbl-row { display: flex; align-items: center; gap: 2px; }
+  .mc-sub-lbl { font-size: 9px; font-weight: 600; color: var(--c-dark); margin: 0; }
+  .mc-sub-info { width: 10px; height: 10px; color: var(--c-gray); }
+
+  /* Pipeline by Stage Card */
+  .stage-card { background: white; border-radius: 16px; padding: 16px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .sc-title { font-size: 11px; font-weight: 800; color: var(--c-dark); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 16px 0; }
+  
+  /* Chevron Pipeline Graphic */
+  .chev-row { display: flex; height: 24px; margin-bottom: 12px; gap: 2px; }
+  .chev-item { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+  .chev-item.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .chev-item.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .chev-item.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .chev-item.red { background: var(--c-red-light); color: #d97706; } /* Mockup uses orange for quote, light red for neg */
+  .chev-item.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  
+  /* Fake Chevron Arrow Effect */
+  .chev-item:not(:first-child)::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: white; clip-path: polygon(0 0, 100% 50%, 0 100%); z-index: 1; }
+  .chev-item:not(:last-child)::after { content: ''; position: absolute; right: -8px; top: 0; bottom: 0; width: 8px; background: inherit; clip-path: polygon(0 0, 100% 50%, 0 100%); z-index: 2; }
+  
+  /* Stage Data Row */
+  .stage-data-row { display: flex; margin-bottom: 16px; }
+  .sd-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; border-right: 1px solid #f1f5f9; }
+  .sd-item:last-child { border-right: none; }
+  .sd-num { font-size: 14px; font-weight: 800; color: var(--c-dark); }
+  .sd-val { font-size: 9px; font-weight: 700; color: var(--c-gray); }
+  
+  .sc-bottom { background: #f8fafc; border-radius: 8px; padding: 10px; text-align: center; font-size: 11px; font-weight: 700; color: var(--c-dark); }
+  .sc-bottom span { color: var(--c-green-dark); font-weight: 800; }
+
+  /* Top Opportunities */
+  .opp-header { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; }
+  .opp-title { font-size: 11px; font-weight: 800; color: var(--c-dark); text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+  .opp-view-all { font-size: 11px; font-weight: 700; color: var(--c-green-dark); text-decoration: none; }
+
+  .opp-list { background: white; border-radius: 16px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); overflow: hidden; }
+  .opp-item { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid #f1f5f9; text-decoration: none; align-items: center; }
+  .opp-item:last-child { border-bottom: none; }
+  
+  .opp-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; flex-shrink: 0; }
+  .opp-avatar.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .opp-avatar.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .opp-avatar.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .opp-avatar.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  
+  .opp-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .opp-name-row { display: flex; align-items: center; justify-content: space-between; }
+  .opp-name { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .opp-tag { font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+  
+  .opp-tag.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .opp-tag.red { background: var(--c-red-light); color: var(--c-red); }
+  .opp-tag.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .opp-tag.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  
+  .opp-sub { font-size: 10px; color: var(--c-dark); font-weight: 500; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .opp-date { font-size: 10px; color: var(--c-gray); font-weight: 500; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  
+  .opp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+  .opp-val-row { display: flex; align-items: center; gap: 8px; }
+  .opp-val { font-size: 14px; font-weight: 800; color: var(--c-dark); }
+  .chevron { width: 14px; height: 14px; color: #cbd5e1; stroke-width: 2.5; }
+  
+  .opp-prob { font-size: 9px; font-weight: 700; color: var(--c-dark); }
+  .opp-prob span.green { color: var(--c-green-dark); }
+  .opp-prob span.orange { color: var(--c-orange); }
+  .opp-prob span.blue { color: var(--c-blue); }
+
+  /* Pipeline Insights */
+  .insights-card { background: var(--c-green-light); border: 1px solid #d1fae5; border-radius: 16px; padding: 16px; margin-bottom: 24px; }
+  .ic-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .ic-icon { width: 32px; height: 32px; background: #d1fae5; color: var(--c-green-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .ic-icon svg { width: 18px; height: 18px; stroke-width: 2; }
+  .ic-title { font-size: 11px; font-weight: 800; color: var(--c-green-dark); text-transform: uppercase; letter-spacing: 0.5px; margin: 0; }
+  
+  .ic-grid { display: flex; gap: 8px; }
+  .ic-item { flex: 1; background: white; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #d1fae5; }
+  .ic-item-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ic-item-icon.green { background: #d1fae5; color: var(--c-green-dark); }
+  .ic-item-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .ic-item-icon.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .ic-item-icon svg { width: 14px; height: 14px; stroke-width: 2.5; }
+  
+  .ic-text { font-size: 9px; font-weight: 600; color: var(--c-dark); line-height: 1.4; }
+  .ic-text span { font-weight: 800; }
+
+  /* Bottom Nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0 24px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--c-gray); text-decoration: none; font-size: 10px; font-weight: 600; position: relative; }
+  .nav-item.active { color: var(--c-green-dark); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+  .nav-dot { position: absolute; top: 0; right: 2px; width: 8px; height: 8px; background: var(--c-red); border-radius: 50%; border: 2px solid white; }
+</style>
+
+<div class="mobile-app-container">
+
+  <!-- Topbar -->
+  <div class="p-topbar">
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <h1 class="p-title">Premium Pipeline</h1>
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+    </button>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="filters-row">
+    <a href="javascript:void(0)" class="filter-btn">
+      This Month
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </a>
+    <a href="javascript:void(0)" class="filter-btn cal">
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      May 1 – May 31, 2024
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </a>
+  </div>
+
+  <div class="p-content">
+    
+    <!-- Top Metric Card -->
+    <div class="metric-card">
+      <div class="mc-top">
+        <div class="mc-left">
+          <div class="mc-title-row">
+            <h2 class="mc-title">Total Premium Pipeline</h2>
+            <svg class="mc-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h1 class="mc-amount">₦128,450,000</h1>
+          <div class="mc-trend">
+            <div class="mc-trend-up">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+              18.6%
+            </div>
+            vs Last Month
+          </div>
+        </div>
+        <div class="mc-right-card">
+          <div class="mc-rc-title">Deals in Pipeline</div>
+          <div class="mc-rc-num-row">
+            <div class="mc-rc-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <div class="mc-rc-num">32</div>
+          </div>
+          <div class="mc-rc-sub">Active Opportunities</div>
+        </div>
+      </div>
+      
+      <div class="mc-subs">
+        <div class="mc-sub-item">
+          <div class="mc-sub-icon green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="mc-sub-val">₦45.2M</h3>
+          <div class="mc-sub-lbl-row">
+            <p class="mc-sub-lbl">Weighted Premium</p>
+            <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+        <div class="mc-sub-item">
+          <div class="mc-sub-icon blue">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          </div>
+          <h3 class="mc-sub-val">₦28.7M</h3>
+          <div class="mc-sub-lbl-row">
+            <p class="mc-sub-lbl">Best Case</p>
+            <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+        <div class="mc-sub-item">
+          <div class="mc-sub-icon orange">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="mc-sub-val">₦16.5M</h3>
+          <div class="mc-sub-lbl-row">
+            <p class="mc-sub-lbl">Commit</p>
+            <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+        <div class="mc-sub-item">
+          <div class="mc-sub-icon purple">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          </div>
+          <h3 class="mc-sub-val">₦12.3M</h3>
+          <div class="mc-sub-lbl-row">
+            <p class="mc-sub-lbl">Closed Won</p>
+            <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pipeline By Stage Card -->
+    <div class="stage-card">
+      <h3 class="sc-title">PIPELINE BY STAGE</h3>
+      
+      <div class="chev-row">
+        <div class="chev-item blue">Lead</div>
+        <div class="chev-item purple">Assessment</div>
+        <div class="chev-item orange">Quote Sent</div>
+        <div class="chev-item red">Negotiation</div>
+        <div class="chev-item green">Closed Won</div>
+      </div>
+      
+      <div class="stage-data-row">
+        <div class="sd-item">
+          <span class="sd-num">8</span>
+          <span class="sd-val">₦18.5M</span>
+        </div>
+        <div class="sd-item">
+          <span class="sd-num">7</span>
+          <span class="sd-val">₦22.0M</span>
+        </div>
+        <div class="sd-item">
+          <span class="sd-num">9</span>
+          <span class="sd-val">₦38.6M</span>
+        </div>
+        <div class="sd-item">
+          <span class="sd-num">5</span>
+          <span class="sd-val">₦28.4M</span>
+        </div>
+        <div class="sd-item">
+          <span class="sd-num">3</span>
+          <span class="sd-val">₦12.3M</span>
+        </div>
+      </div>
+      
+      <div class="sc-bottom">
+        Conversion Rate: <span>26.2%</span>
+      </div>
+    </div>
+
+    <!-- Top Opportunities -->
+    <div class="opp-header">
+      <h3 class="opp-title">TOP OPPORTUNITIES</h3>
+      <a href="/admin/opportunities" class="opp-view-all">View All</a>
+    </div>
+
+    <div class="opp-list">
+      <!-- Opp 1 -->
+      <a href="javascript:void(0)" class="opp-item">
+        <div class="opp-avatar green">GH</div>
+        <div class="opp-content">
+          <div class="opp-name-row">
+            <h4 class="opp-name">Greenfield Hospital</h4>
+            <div class="opp-tag orange">Quote Sent</div>
+          </div>
+          <p class="opp-sub">Multi-line Coverage</p>
+          <p class="opp-date">Quote sent 2 days ago</p>
+        </div>
+        <div class="opp-right">
+          <div class="opp-val-row">
+            <span class="opp-val">₦22,500,000</span>
+            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="opp-prob">Prob. <span class="green">80%</span></div>
+        </div>
+      </a>
+
+      <!-- Opp 2 -->
+      <a href="javascript:void(0)" class="opp-item">
+        <div class="opp-avatar purple">VH</div>
+        <div class="opp-content">
+          <div class="opp-name-row">
+            <h4 class="opp-name">Victory Hospital</h4>
+            <div class="opp-tag red">Negotiation</div>
+          </div>
+          <p class="opp-sub">Medical Malpractice + GHS</p>
+          <p class="opp-date">In negotiation</p>
+        </div>
+        <div class="opp-right">
+          <div class="opp-val-row">
+            <span class="opp-val">₦18,750,000</span>
+            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="opp-prob">Prob. <span class="orange">65%</span></div>
+        </div>
+      </a>
+
+      <!-- Opp 3 -->
+      <a href="javascript:void(0)" class="opp-item">
+        <div class="opp-avatar blue">CH</div>
+        <div class="opp-content">
+          <div class="opp-name-row">
+            <h4 class="opp-name">City Care Hospital</h4>
+            <div class="opp-tag purple">Assessment</div>
+          </div>
+          <p class="opp-sub">Group Life + Health Insurance</p>
+          <p class="opp-date">Assessment completed</p>
+        </div>
+        <div class="opp-right">
+          <div class="opp-val-row">
+            <span class="opp-val">₦15,000,000</span>
+            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="opp-prob">Prob. <span class="blue">60%</span></div>
+        </div>
+      </a>
+
+      <!-- Opp 4 -->
+      <a href="javascript:void(0)" class="opp-item">
+        <div class="opp-avatar orange">MH</div>
+        <div class="opp-content">
+          <div class="opp-name-row">
+            <h4 class="opp-name">Metro Hospital</h4>
+            <div class="opp-tag orange">Quote Sent</div>
+          </div>
+          <p class="opp-sub">Property + Fire Insurance</p>
+          <p class="opp-date">Quote sent 5 days ago</p>
+        </div>
+        <div class="opp-right">
+          <div class="opp-val-row">
+            <span class="opp-val">₦12,800,000</span>
+            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="opp-prob">Prob. <span class="orange">55%</span></div>
+        </div>
+      </a>
+
+      <!-- Opp 5 -->
+      <a href="javascript:void(0)" class="opp-item">
+        <div class="opp-avatar green">SH</div>
+        <div class="opp-content">
+          <div class="opp-name-row">
+            <h4 class="opp-name">Sunrise Hospital</h4>
+            <div class="opp-tag blue">Lead</div>
+          </div>
+          <p class="opp-sub">Cyber + D&O Insurance</p>
+          <p class="opp-date">New lead</p>
+        </div>
+        <div class="opp-right">
+          <div class="opp-val-row">
+            <span class="opp-val">₦8,250,000</span>
+            <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <div class="opp-prob">Prob. <span class="blue">35%</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Pipeline Insights -->
+    <div class="insights-card">
+      <div class="ic-header">
+        <div class="ic-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        </div>
+        <h3 class="ic-title">PIPELINE INSIGHTS</h3>
+      </div>
+      
+      <div class="ic-grid">
+        <div class="ic-item">
+          <div class="ic-item-icon green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+          </div>
+          <div class="ic-text"><span>9</span> quotes sent awaiting response</div>
+        </div>
+        <div class="ic-item">
+          <div class="ic-item-icon orange">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </div>
+          <div class="ic-text"><span>₦38.6M</span> in quotes need follow-up</div>
+        </div>
+        <div class="ic-item">
+          <div class="ic-item-icon blue">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="ic-text"><span>3</span> deals in negotiation need attention</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Quotes
+  </a>
+  <a href="/advisor/pipeline" class="nav-item active">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+    Pipeline
+  </a>
+  <a href="/advisor/profile" class="nav-item">
+    <div class="nav-dot"></div>
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</div>
