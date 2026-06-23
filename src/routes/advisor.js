@@ -357,6 +357,19 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
   }
 });
 
+router.get('/leaderboard', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/leaderboard', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'leaderboard'
+    });
+  } catch (err) {
+    console.error('Error loading leaderboard:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/copilot', {

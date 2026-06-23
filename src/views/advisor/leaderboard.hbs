@@ -1,0 +1,392 @@
+<style>
+  :root {
+    --c-purple: #7c3aed;
+    --c-purple-light: #f5f3ff;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f97316;
+    --c-orange-light: #fff7ed;
+    --c-red: #ef4444;
+    --c-red-light: #fef2f2;
+    --c-blue: #2563eb;
+    --c-blue-light: #eff6ff;
+    --bg-page: #f8fafc;
+    
+    --gold: #f59e0b;
+    --silver: #94a3b8;
+    --bronze: #b45309;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative; padding-bottom: 100px;
+  }
+
+  /* Topbar */
+  .l-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--bg-page); position: sticky; top: 0; z-index: 20; }
+  .l-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; flex: 1; text-align: center; }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+  .filter-btn-top { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: var(--c-dark); text-decoration: none; }
+  .filter-btn-top svg { width: 18px; height: 18px; }
+
+  /* Content Padding */
+  .l-content { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Time Pills */
+  .time-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .time-pills::-webkit-scrollbar { display: none; }
+  .pill { flex: 1; min-width: 80px; padding: 10px 0; text-align: center; border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--c-gray); border: 1px solid #e2e8f0; background: white; text-decoration: none; white-space: nowrap; }
+  .pill.active { color: var(--c-green-dark); border-color: var(--c-green-dark); background: #f0fdf4; }
+
+  /* My Stats Card */
+  .stats-card { background: white; border-radius: 16px; padding: 20px 12px; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; justify-content: space-between; }
+  .stat-col { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+  .stat-col:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: #f1f5f9; }
+  
+  .sc-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .sc-icon.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .sc-icon.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .sc-icon.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .sc-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .sc-icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  
+  .sc-val { font-size: 16px; font-weight: 800; color: var(--c-dark); margin: 0 0 2px 0; line-height: 1.2; }
+  .sc-lbl { font-size: 9px; font-weight: 700; color: var(--c-dark); margin: 0 0 6px 0; }
+  .sc-trend { display: flex; align-items: center; gap: 2px; font-size: 8px; font-weight: 700; color: var(--c-green-dark); }
+  .sc-trend svg { width: 8px; height: 8px; stroke-width: 3; }
+  .sc-trend.gray { color: var(--c-gray); font-weight: 600; }
+
+  /* Filters Row */
+  .filter-toggles { display: flex; justify-content: space-between; align-items: center; }
+  .ft-left { display: flex; gap: 8px; }
+  .ft-btn { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; color: var(--c-gray); border: 1px solid #e2e8f0; background: white; text-decoration: none; }
+  .ft-btn.active { color: var(--c-green-dark); border-color: var(--c-green-dark); background: #f0fdf4; }
+  .ft-btn svg { width: 14px; height: 14px; stroke-width: 2; }
+
+  /* Podium */
+  .podium { display: flex; align-items: flex-end; justify-content: center; gap: 12px; margin-top: 10px; margin-bottom: 10px; }
+  .pod-card { flex: 1; background: white; border-radius: 12px; border: 1px solid #f1f5f9; padding: 24px 8px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .pod-card.first { border: 2px solid var(--gold); padding: 32px 8px 20px; z-index: 2; box-shadow: 0 8px 16px rgba(245, 158, 11, 0.1); margin-bottom: 16px; background: linear-gradient(to bottom, #fffbeb, #ffffff); }
+  
+  .avatar-wrap { position: relative; margin-bottom: 12px; }
+  .pod-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .pod-card.first .pod-avatar { width: 64px; height: 64px; border: 3px solid var(--gold); }
+  
+  /* Laurel Wreath for 1st */
+  .laurel { position: absolute; top: -10px; left: -14px; width: 92px; height: 92px; pointer-events: none; }
+  
+  .badge { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: white; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .badge.silver { background: var(--silver); }
+  .badge.gold { background: var(--gold); width: 24px; height: 24px; bottom: -10px; font-size: 11px; }
+  .badge.bronze { background: var(--bronze); }
+
+  .pod-name { font-size: 11px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; line-height: 1.2; }
+  .pod-prem { font-size: 14px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; }
+  .pod-deals { font-size: 9px; font-weight: 700; color: var(--c-dark); margin: 0 0 8px 0; }
+  .pod-pts { font-size: 10px; font-weight: 800; margin: 0; }
+  
+  .pod-card.second .pod-pts { color: var(--c-blue); }
+  .pod-card.first .pod-pts { color: var(--gold); }
+  .pod-card.third .pod-pts { color: var(--bronze); }
+
+  /* Leaderboard Table */
+  .lb-table { background: white; border-radius: 12px; overflow: hidden; }
+  .lb-header { display: grid; grid-template-columns: 40px 1fr 80px 50px 50px; padding: 12px 8px; border-bottom: 1px solid #f1f5f9; }
+  .lb-th { font-size: 9px; font-weight: 700; color: var(--c-gray); text-transform: capitalize; }
+  .lb-th:nth-child(3), .lb-th:nth-child(4), .lb-th:nth-child(5) { text-align: center; }
+
+  .lb-row { display: grid; grid-template-columns: 40px 1fr 80px 50px 50px; padding: 12px 8px; align-items: center; border-bottom: 1px solid #f1f5f9; }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row.highlight { background: var(--c-green-light); border-radius: 8px; border: none; margin: 4px 0; }
+  
+  .lb-rank { font-size: 12px; font-weight: 800; color: var(--c-dark); text-align: center; }
+  .lb-advisor { display: flex; align-items: center; gap: 8px; }
+  .lb-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  .lb-name { font-size: 11px; font-weight: 700; color: var(--c-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-row.highlight .lb-name { color: var(--c-green-dark); font-weight: 800; }
+  
+  .lb-val { font-size: 11px; font-weight: 800; color: var(--c-dark); text-align: center; }
+  .lb-pts { font-size: 11px; font-weight: 800; color: var(--c-green-dark); text-align: center; }
+
+  /* Motivation Card */
+  .mot-card { background: var(--c-green-light); border: 1px solid #d1fae5; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; position: relative; margin-top: 8px; margin-bottom: 24px; }
+  .mot-icon { width: 44px; height: 44px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--c-green-dark); flex-shrink: 0; }
+  .mot-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+  
+  .mot-content { flex: 1; }
+  .mot-title { font-size: 13px; font-weight: 800; color: var(--c-green-dark); margin: 0 0 4px 0; }
+  .mot-desc { font-size: 10px; color: var(--c-dark); font-weight: 500; margin: 0; line-height: 1.4; max-width: 170px; }
+  
+  .mot-btn { background: white; border: 1px solid var(--c-green-dark); color: var(--c-green-dark); padding: 8px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+  .mot-btn svg { width: 12px; height: 12px; }
+
+  /* Bottom Nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0 24px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--c-gray); text-decoration: none; font-size: 10px; font-weight: 600; }
+  .nav-item.active { color: var(--c-green-dark); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+</style>
+
+<div class="mobile-app-container">
+
+  <!-- Topbar -->
+  <div class="l-topbar">
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <h1 class="l-title">Leaderboard</h1>
+    <a href="#" class="filter-btn-top">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+      Filter
+    </a>
+  </div>
+
+  <div class="l-content">
+    
+    <!-- Time Pills -->
+    <div class="time-pills">
+      <a href="#" class="pill active">This Month</a>
+      <a href="#" class="pill">This Quarter</a>
+      <a href="#" class="pill">This Year</a>
+      <a href="#" class="pill">All Time</a>
+    </div>
+
+    <!-- My Stats Card -->
+    <div class="stats-card">
+      <div class="stat-col">
+        <div class="sc-icon green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        </div>
+        <h3 class="sc-val">5</h3>
+        <p class="sc-lbl">Your Rank</p>
+        <div class="sc-trend">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+          2 <span class="gray">from last month</span>
+        </div>
+      </div>
+      
+      <div class="stat-col">
+        <div class="sc-icon blue">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <h3 class="sc-val">₦38.6M</h3>
+        <p class="sc-lbl">Total Premium</p>
+        <div class="sc-trend">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+          18.5%
+        </div>
+      </div>
+      
+      <div class="stat-col">
+        <div class="sc-icon purple">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="sc-val">12</h3>
+        <p class="sc-lbl">Deals Closed</p>
+        <div class="sc-trend">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+          2
+        </div>
+      </div>
+      
+      <div class="stat-col">
+        <div class="sc-icon orange">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+        </div>
+        <h3 class="sc-val">85</h3>
+        <p class="sc-lbl">Points Earned</p>
+        <div class="sc-trend">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+          15
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggle Row -->
+    <div class="filter-toggles">
+      <div class="ft-left">
+        <a href="#" class="ft-btn active">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          By Premium
+        </a>
+        <a href="#" class="ft-btn">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          By Deals Closed
+        </a>
+      </div>
+      <a href="#" class="ft-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        My Team
+      </a>
+    </div>
+
+    <!-- Podium -->
+    <div class="podium">
+      <!-- 2nd Place -->
+      <div class="pod-card second">
+        <div class="avatar-wrap">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael" class="pod-avatar">
+          <div class="badge silver">2</div>
+        </div>
+        <h4 class="pod-name">Michael Okoro</h4>
+        <h3 class="pod-prem">₦45.2M</h3>
+        <p class="pod-deals">16 Deals</p>
+        <p class="pod-pts">120 Points</p>
+      </div>
+
+      <!-- 1st Place -->
+      <div class="pod-card first">
+        <div class="avatar-wrap">
+          <!-- Fake Laurel Wreath using SVG inline -->
+          <svg class="laurel" viewBox="0 0 100 100" fill="none">
+            <path d="M 20 50 A 30 30 0 0 1 50 10 A 30 30 0 0 1 80 50" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6" />
+          </svg>
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Aisha" class="pod-avatar">
+          <div class="badge gold">1</div>
+        </div>
+        <h4 class="pod-name">Aisha Bello</h4>
+        <h3 class="pod-prem">₦62.8M</h3>
+        <p class="pod-deals">20 Deals</p>
+        <p class="pod-pts">185 Points</p>
+      </div>
+
+      <!-- 3rd Place -->
+      <div class="pod-card third">
+        <div class="avatar-wrap">
+          <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Daniel" class="pod-avatar">
+          <div class="badge bronze">3</div>
+        </div>
+        <h4 class="pod-name">Daniel Adeyemi</h4>
+        <h3 class="pod-prem">₦36.4M</h3>
+        <p class="pod-deals">11 Deals</p>
+        <p class="pod-pts">110 Points</p>
+      </div>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="lb-table">
+      <div class="lb-header">
+        <div class="lb-th">Rank</div>
+        <div class="lb-th">Advisor</div>
+        <div class="lb-th">Premium (₦)</div>
+        <div class="lb-th">Deals</div>
+        <div class="lb-th">Points</div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="lb-row">
+        <div class="lb-rank">4</div>
+        <div class="lb-advisor">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" class="lb-avatar">
+          <span class="lb-name">Funmi Otieno</span>
+        </div>
+        <div class="lb-val">₦41.7M</div>
+        <div class="lb-val">14</div>
+        <div class="lb-pts">100</div>
+      </div>
+
+      <!-- Row 5 (You) -->
+      <div class="lb-row highlight">
+        <div class="lb-rank">5</div>
+        <div class="lb-advisor">
+          <img src="https://randomuser.me/api/portraits/men/75.jpg" class="lb-avatar">
+          <span class="lb-name">You</span>
+        </div>
+        <div class="lb-val">₦38.6M</div>
+        <div class="lb-val">12</div>
+        <div class="lb-pts">85</div>
+      </div>
+
+      <!-- Row 6 -->
+      <div class="lb-row">
+        <div class="lb-rank">6</div>
+        <div class="lb-advisor">
+          <img src="https://randomuser.me/api/portraits/men/22.jpg" class="lb-avatar">
+          <span class="lb-name">Kunle Johnson</span>
+        </div>
+        <div class="lb-val">₦32.1M</div>
+        <div class="lb-val">9</div>
+        <div class="lb-pts">70</div>
+      </div>
+
+      <!-- Row 7 -->
+      <div class="lb-row">
+        <div class="lb-rank">7</div>
+        <div class="lb-advisor">
+          <img src="https://randomuser.me/api/portraits/women/33.jpg" class="lb-avatar">
+          <span class="lb-name">Grace Mensah</span>
+        </div>
+        <div class="lb-val">₦28.9M</div>
+        <div class="lb-val">8</div>
+        <div class="lb-pts">60</div>
+      </div>
+
+      <!-- Row 8 -->
+      <div class="lb-row">
+        <div class="lb-rank">8</div>
+        <div class="lb-advisor">
+          <img src="https://randomuser.me/api/portraits/men/54.jpg" class="lb-avatar">
+          <span class="lb-name">Tunde Adebayo</span>
+        </div>
+        <div class="lb-val">₦24.3M</div>
+        <div class="lb-val">7</div>
+        <div class="lb-pts">50</div>
+      </div>
+    </div>
+
+    <!-- Motivation Card -->
+    <div class="mot-card">
+      <div class="mot-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+      </div>
+      <div class="mot-content">
+        <h3 class="mot-title">Keep Climbing! 🚀</h3>
+        <p class="mot-desc">You're in the top 10% of advisors. Keep closing to reach the top 3!</p>
+      </div>
+      <a href="#" class="mot-btn">
+        View Full Rankings
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Quotes
+  </a>
+  <a href="/advisor/leaderboard" class="nav-item active">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+    Leaderboard
+  </a>
+  <a href="/advisor/profile" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</div>
