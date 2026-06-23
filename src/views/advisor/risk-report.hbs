@@ -1,0 +1,459 @@
+<style>
+  :root {
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f59e0b;
+    --c-orange-dark: #ea580c;
+    --c-orange-light: #fff7ed;
+    --c-yellow: #eab308;
+    --c-yellow-light: #fefce8;
+    --c-red: #ef4444;
+    --c-red-dark: #dc2626;
+    --c-red-light: #fef2f2;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --bg-page: #f8fafc;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative; padding-bottom: 90px;
+  }
+
+  /* Topbar */
+  .rr-topbar { background: white; display: flex; align-items: center; justify-content: space-between; padding: 16px; position: sticky; top: 0; z-index: 10; }
+  .rr-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2.5; }
+
+  .rr-content { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* Cards */
+  .card { background: white; border-radius: 16px; padding: 16px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  
+  /* Header Card */
+  .header-card { display: flex; justify-content: space-between; align-items: center; padding: 20px 16px; }
+  .hc-left { display: flex; align-items: center; gap: 12px; }
+  .hc-avatar { width: 48px; height: 48px; background: var(--c-green-light); color: var(--c-green-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+  .hc-details h2 { font-size: 15px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; }
+  .hc-details p { font-size: 12px; color: var(--c-gray); margin: 0 0 6px 0; }
+  .badge-complete { display: inline-flex; align-items: center; gap: 4px; background: var(--c-green-light); color: var(--c-green-dark); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; }
+  
+  .hc-right { text-align: center; }
+  .score-circle { width: 44px; height: 44px; border: 2px solid var(--c-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0 auto 4px auto; }
+  .score-lbl { font-size: 9px; font-weight: 700; color: var(--c-dark); }
+
+  /* Overall Risk Score Card */
+  .overall-card { padding: 20px 16px; }
+  .card-header-lbl { font-size: 11px; font-weight: 800; color: var(--c-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+  
+  .overall-split { display: flex; align-items: stretch; gap: 16px; }
+  .os-left { flex: 1; }
+  .os-score-val { font-size: 42px; font-weight: 800; color: var(--c-green-dark); line-height: 1; margin-bottom: 8px; display: flex; align-items: baseline; }
+  .os-score-val span { font-size: 16px; color: var(--c-gray); font-weight: 600; margin-left: 4px; }
+  .os-risk-lbl { font-size: 14px; font-weight: 800; color: var(--c-red-dark); margin-bottom: 8px; }
+  .os-desc { font-size: 11px; color: var(--c-dark); line-height: 1.5; font-weight: 500; }
+  
+  .os-right { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; }
+  .gauge-svg { width: 100%; max-width: 140px; overflow: visible; margin-bottom: 4px; }
+  .os-right-lbl { font-size: 13px; font-weight: 800; color: var(--c-red-dark); text-align: center; }
+
+  /* Exposure Card */
+  .exp-card { display: flex; align-items: center; gap: 16px; padding: 16px; background: #f8fafc; border: 1px solid #dcfce7; border-radius: 12px; }
+  .exp-icon { width: 44px; height: 44px; background: white; border: 1px solid #dcfce7; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--c-green-dark); flex-shrink: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .exp-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+  .exp-vals { display: flex; justify-content: space-between; flex-grow: 1; }
+  .exp-col { display: flex; flex-direction: column; gap: 4px; }
+  .exp-lbl { font-size: 10px; font-weight: 600; color: var(--c-gray); display: flex; align-items: center; gap: 4px; }
+  .exp-lbl svg { width: 12px; height: 12px; }
+  .exp-val { font-size: 18px; font-weight: 800; color: var(--c-green-dark); }
+  .exp-col.right { text-align: right; }
+  .exp-col.right .exp-val { font-size: 14px; color: var(--c-gray); font-weight: 700; margin-top: 3px; }
+
+  /* Top Risk Areas */
+  .tra-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .tra-view-all { font-size: 11px; font-weight: 700; color: var(--c-green-dark); text-decoration: none; }
+  
+  .risk-item { display: flex; gap: 12px; margin-bottom: 16px; }
+  .risk-item:last-child { margin-bottom: 0; }
+  .ri-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ri-icon.r { background: var(--c-red-light); color: var(--c-red-dark); }
+  .ri-icon.o { background: var(--c-orange-light); color: var(--c-orange-dark); }
+  .ri-icon.y { background: var(--c-yellow-light); color: var(--c-yellow); }
+  .ri-icon.g { background: var(--c-green-light); color: var(--c-green-dark); }
+  .ri-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  
+  .ri-content { flex-grow: 1; }
+  .ri-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .ri-title { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0 0 2px 0; }
+  .ri-desc { font-size: 10px; color: var(--c-gray); margin: 0; }
+  .ri-score-wrap { display: flex; align-items: center; gap: 8px; }
+  .ri-pill { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+  .ri-pill.r { color: var(--c-red-dark); border: 1px solid var(--c-red-light); }
+  .ri-pill.o { color: var(--c-orange-dark); border: 1px solid var(--c-orange-light); }
+  .ri-pill.y { color: var(--c-yellow); border: 1px solid var(--c-yellow-light); }
+  .ri-pill.g { color: var(--c-green-dark); border: 1px solid var(--c-green-light); }
+  .ri-score { font-size: 13px; font-weight: 800; color: var(--c-dark); }
+  .ri-score span { font-size: 10px; color: var(--c-gray); font-weight: 600; }
+  
+  .ri-bar-bg { width: 100%; height: 4px; background: #f1f5f9; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .ri-bar-fill { height: 100%; border-radius: 2px; }
+  .ri-bar-fill.r { background: var(--c-red-dark); }
+  .ri-bar-fill.o { background: var(--c-orange); }
+  .ri-bar-fill.y { background: var(--c-yellow); }
+  .ri-bar-fill.g { background: var(--c-green-dark); }
+
+  /* Bento Row */
+  .bento-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  
+  /* Key Insights */
+  .insight-list { display: flex; flex-direction: column; gap: 12px; }
+  .insight-item { display: flex; gap: 8px; }
+  .insight-item svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; stroke-width: 2.5; }
+  .insight-item.r svg { color: var(--c-red-dark); }
+  .insight-item.o svg { color: var(--c-orange-dark); }
+  .insight-item.g svg { color: var(--c-green-dark); }
+  .insight-item p { font-size: 10px; font-weight: 600; color: var(--c-dark); margin: 0; line-height: 1.4; }
+
+  /* Risk Distribution */
+  .dist-wrap { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .donut-box { width: 64px; height: 64px; flex-shrink: 0; position: relative; }
+  .donut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .legend-list { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
+  .legend-item { display: flex; justify-content: space-between; align-items: center; font-size: 8px; font-weight: 700; color: var(--c-dark); }
+  .leg-left { display: flex; align-items: center; gap: 4px; }
+  .leg-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Recommended Next Step */
+  .rec-card { background: #f4fdf8; border: 1px solid #dcfce7; display: flex; flex-direction: column; gap: 16px; }
+  .rec-top { display: flex; gap: 12px; align-items: flex-start; }
+  .rec-icon { width: 40px; height: 40px; background: white; border: 1px solid #dcfce7; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--c-green-dark); flex-shrink: 0; }
+  .rec-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+  .rec-text { flex-grow: 1; padding-top: 2px; }
+  .rec-title { font-size: 11px; font-weight: 800; color: var(--c-green-dark); text-transform: uppercase; margin: 0 0 4px 0; }
+  .rec-desc { font-size: 11px; color: var(--c-dark); font-weight: 500; line-height: 1.4; margin: 0; }
+  .btn-quote { background: var(--c-green-dark); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 700; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; }
+
+  /* Footer */
+  .rr-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; padding: 0 4px; }
+  .rr-disclaimer { display: flex; gap: 8px; flex: 1; }
+  .rr-disclaimer svg { width: 16px; height: 16px; color: var(--c-gray); flex-shrink: 0; stroke-width: 2; }
+  .rr-disclaimer p { font-size: 9px; color: var(--c-gray); margin: 0; line-height: 1.3; font-weight: 500; }
+  .btn-share { display: inline-flex; align-items: center; gap: 4px; background: white; border: 1px solid #e2e8f0; color: var(--c-dark); font-size: 10px; font-weight: 700; padding: 6px 12px; border-radius: 6px; flex-shrink: 0; cursor: pointer; }
+
+  /* Bottom Nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0 24px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--c-gray); text-decoration: none; font-size: 10px; font-weight: 600; }
+  .nav-item.active { color: var(--c-green); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+</style>
+
+<div class="mobile-app-container">
+
+  <!-- Topbar -->
+  <div class="rr-topbar">
+    <button class="icon-btn" onclick="history.back()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <h1 class="rr-title">Risk Report</h1>
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    </button>
+  </div>
+
+  <div class="rr-content">
+    
+    <!-- Header Card -->
+    <div class="card header-card">
+      <div class="hc-left">
+        <div class="hc-avatar">GH</div>
+        <div class="hc-details">
+          <h2>{{or lead.name 'Greenfield Hospital'}}</h2>
+          <p>Abuja, FCT • Private Hospital</p>
+          <div class="badge-complete">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="10" height="10" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Assessment Completed
+          </div>
+        </div>
+      </div>
+      <div class="hc-right">
+        <div class="score-circle">72</div>
+        <div class="score-lbl">Overall Risk Score</div>
+      </div>
+    </div>
+
+    <!-- Overall Risk Score -->
+    <div class="card overall-card">
+      <div class="card-header-lbl">OVERALL RISK SCORE</div>
+      
+      <div class="overall-split">
+        <div class="os-left">
+          <div class="os-score-val">72<span>/100</span></div>
+          <div class="os-risk-lbl">High Risk</div>
+          <p class="os-desc">Your hospital has a higher risk exposure compared to similar hospitals.</p>
+        </div>
+        <div class="os-right">
+          <svg class="gauge-svg" viewBox="0 0 100 50">
+            <!-- Background track (semi-circle) -->
+            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f1f5f9" stroke-width="8" stroke-linecap="round"/>
+            
+            <!-- Colored segments -->
+            <!-- Red: 0-25 -->
+            <path d="M 10 50 A 40 40 0 0 1 21.7 21.7" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+            <!-- Orange/Yellow: 25-50 -->
+            <path d="M 21.7 21.7 A 40 40 0 0 1 50 10" fill="none" stroke="#eab308" stroke-width="8" />
+            <!-- Light Green: 50-75 -->
+            <path d="M 50 10 A 40 40 0 0 1 78.3 21.7" fill="none" stroke="#84cc16" stroke-width="8" />
+            <!-- Dark Green: 75-100 -->
+            <path d="M 78.3 21.7 A 40 40 0 0 1 90 50" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
+            
+            <!-- Labels -->
+            <text x="6" y="50" font-size="6" fill="#64748b" font-weight="600" text-anchor="end">0</text>
+            <text x="21" y="18" font-size="6" fill="#64748b" font-weight="600" text-anchor="end">25</text>
+            <text x="50" y="5" font-size="6" fill="#64748b" font-weight="600" text-anchor="middle">50</text>
+            <text x="79" y="18" font-size="6" fill="#64748b" font-weight="600" text-anchor="start">75</text>
+            <text x="94" y="50" font-size="6" fill="#64748b" font-weight="600" text-anchor="start">100</text>
+
+            <!-- Needle pointing to 72 (approx 129 degrees if 0 is 180 and 100 is 0) -->
+            <!-- Angle = 180 - (72/100)*180 = 50.4 degrees from positive X axis -->
+            <g transform="translate(50, 50) rotate(-50.4)">
+              <!-- Needle shape -->
+              <path d="M -2 0 L 0 -35 L 2 0 Z" fill="#1e293b" />
+              <!-- Center pivot -->
+              <circle cx="0" cy="0" r="4" fill="#1e293b" />
+            </g>
+          </svg>
+          <div class="os-right-lbl">High Risk</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exposure Card -->
+    <div class="exp-card">
+      <div class="exp-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      </div>
+      <div class="exp-vals">
+        <div class="exp-col">
+          <div class="exp-lbl">Potential Annual Exposure <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <div class="exp-val">₦85,000,000</div>
+        </div>
+        <div class="exp-col right">
+          <div class="exp-lbl">Industry Average</div>
+          <div class="exp-val">₦42,000,000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Risk Areas -->
+    <div class="card">
+      <div class="tra-header">
+        <div class="card-header-lbl" style="margin:0;">TOP RISK AREAS</div>
+        <a href="javascript:void(0)" class="tra-view-all">View All</a>
+      </div>
+
+      <!-- Item 1 -->
+      <div class="risk-item">
+        <div class="ri-icon r">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" transform="rotate(45 12 12)"/></svg>
+        </div>
+        <div class="ri-content">
+          <div class="ri-top">
+            <div>
+              <h4 class="ri-title">Medical Malpractice</h4>
+              <p class="ri-desc">High likelihood of claims due to clinical errors</p>
+            </div>
+            <div class="ri-score-wrap">
+              <span class="ri-pill r">High</span>
+              <div class="ri-score">85<span>/100</span></div>
+            </div>
+          </div>
+          <div class="ri-bar-bg"><div class="ri-bar-fill r" style="width: 85%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="risk-item">
+        <div class="ri-icon o">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div class="ri-content">
+          <div class="ri-top">
+            <div>
+              <h4 class="ri-title">Patient Injury</h4>
+              <p class="ri-desc">Risk of slips, falls and injury on hospital premises</p>
+            </div>
+            <div class="ri-score-wrap">
+              <span class="ri-pill o">High</span>
+              <div class="ri-score">72<span>/100</span></div>
+            </div>
+          </div>
+          <div class="ri-bar-bg"><div class="ri-bar-fill o" style="width: 72%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="risk-item">
+        <div class="ri-icon y">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" transform="scale(0.8) translate(3,3)"/></svg>
+        </div>
+        <div class="ri-content">
+          <div class="ri-top">
+            <div>
+              <h4 class="ri-title">Fire & Property Damage</h4>
+              <p class="ri-desc">Risk of fire, explosion and property loss</p>
+            </div>
+            <div class="ri-score-wrap">
+              <span class="ri-pill y">Medium</span>
+              <div class="ri-score">58<span>/100</span></div>
+            </div>
+          </div>
+          <div class="ri-bar-bg"><div class="ri-bar-fill y" style="width: 58%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="risk-item">
+        <div class="ri-icon g">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="ri-content">
+          <div class="ri-top">
+            <div>
+              <h4 class="ri-title">Cyber Liability</h4>
+              <p class="ri-desc">Risk of data breach and cyber attacks</p>
+            </div>
+            <div class="ri-score-wrap">
+              <span class="ri-pill g">Medium</span>
+              <div class="ri-score">45<span>/100</span></div>
+            </div>
+          </div>
+          <div class="ri-bar-bg"><div class="ri-bar-fill g" style="width: 45%;"></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bento Row -->
+    <div class="bento-row">
+      <!-- Key Insights -->
+      <div class="card">
+        <div class="card-header-lbl">KEY INSIGHTS</div>
+        <div class="insight-list">
+          <div class="insight-item r">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <p>Medical malpractice contributes to 40% of potential exposure.</p>
+          </div>
+          <div class="insight-item o">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p>Review patient safety protocols to reduce injury-related risks.</p>
+          </div>
+          <div class="insight-item g">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p>Property fire safety systems are in place but need periodic testing.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Distribution -->
+      <div class="card">
+        <div class="card-header-lbl">RISK DISTRIBUTION</div>
+        <div class="dist-wrap">
+          <div class="donut-box">
+            <svg class="donut-svg" viewBox="0 0 36 36">
+              <!-- Cyber Liability (10%) -->
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#10b981" stroke-width="8" stroke-dasharray="100 100" stroke-dashoffset="0"/>
+              <!-- Fire & Property (20%) -->
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#eab308" stroke-width="8" stroke-dasharray="20 100" stroke-dashoffset="-10"/>
+              <!-- Patient Injury (30%) -->
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#f97316" stroke-width="8" stroke-dasharray="30 100" stroke-dashoffset="-30"/>
+              <!-- Medical Malpractice (40%) -->
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#ef4444" stroke-width="8" stroke-dasharray="40 100" stroke-dashoffset="-60"/>
+            </svg>
+          </div>
+          <div class="legend-list">
+            <div class="legend-item">
+              <div class="leg-left"><div class="leg-dot" style="background:#ef4444;"></div> Medical Malpractice</div>
+              <div>40%</div>
+            </div>
+            <div class="legend-item">
+              <div class="leg-left"><div class="leg-dot" style="background:#f97316;"></div> Patient Injury</div>
+              <div>30%</div>
+            </div>
+            <div class="legend-item">
+              <div class="leg-left"><div class="leg-dot" style="background:#eab308;"></div> Fire & Property</div>
+              <div>20%</div>
+            </div>
+            <div class="legend-item">
+              <div class="leg-left"><div class="leg-dot" style="background:#10b981;"></div> Cyber Liability</div>
+              <div>10%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended Next Step -->
+    <div class="card rec-card">
+      <div class="rec-top">
+        <div class="rec-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="rec-text">
+          <h3 class="rec-title">Recommended Next Step</h3>
+          <p class="rec-desc">Protect your hospital with the right insurance covers. Generate a personalized quote in 2 minutes.</p>
+        </div>
+      </div>
+      <a href="/advisor/proposal-writer/{{lead.id}}" class="btn-quote">
+        Generate Quote 
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="rr-footer">
+      <div class="rr-disclaimer">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <p>This report is based on the information provided and is not a policy. For detailed terms and conditions, please refer to the policy documents.</p>
+      </div>
+      <button class="btn-share">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Share Report
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item active">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Quotes
+  </a>
+  <a href="/admin/more" class="nav-item ">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</div>

@@ -271,6 +271,27 @@ router.get('/follow-up/:leadId', authenticatePage, requireSalesOrAdmin, async (r
   }
 });
 
+router.get('/risk-report', authenticatePage, requireSalesOrAdmin, (req, res) => {
+  res.redirect('/advisor/risk-report/1');
+});
+
+router.get('/risk-report/:leadId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
+    if (!lead) return res.status(404).send('Lead not found');
+
+    res.render('advisor/risk-report', {
+      layout: 'admin',
+      user: req.user,
+      lead,
+      activePage: 'assessments'
+    });
+  } catch (err) {
+    console.error('Error loading risk report screen:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/notifications', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/notifications', {
