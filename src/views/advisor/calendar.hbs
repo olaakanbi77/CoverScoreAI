@@ -1,0 +1,463 @@
+<style>
+  :root {
+    --c-purple: #7c3aed;
+    --c-purple-light: #f5f3ff;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f97316;
+    --c-orange-light: #fff7ed;
+    --c-red: #ef4444;
+    --c-red-light: #fef2f2;
+    --c-blue: #2563eb;
+    --c-blue-light: #eff6ff;
+    --bg-page: #ffffff;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative; padding-bottom: 100px;
+  }
+
+  /* Topbar */
+  .c-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: white; position: sticky; top: 0; z-index: 20; }
+  .c-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .c-top-left, .c-top-right { display: flex; align-items: center; gap: 12px; }
+  .c-top-left { width: 64px; }
+  .c-top-right { width: 64px; justify-content: flex-end; }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+  
+  /* Month Picker */
+  .month-picker { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 12px; }
+  .mp-text { font-size: 13px; font-weight: 800; color: var(--c-dark); }
+  .mp-btn { color: var(--c-dark); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+  .mp-btn svg { width: 16px; height: 16px; stroke-width: 3; }
+
+  /* Week Days Scroller */
+  .week-scroller { display: flex; justify-content: space-between; padding: 8px 16px 20px; border-bottom: 1px solid #f1f5f9; }
+  .day-col { display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; width: 44px; padding: 8px 0; border-radius: 24px; }
+  .day-col.active { background: #f0fdf4; border: 1px solid #d1fae5; }
+  
+  .day-name { font-size: 11px; font-weight: 700; color: var(--c-gray); text-transform: capitalize; }
+  .day-col.sat .day-name { color: var(--c-blue); }
+  .day-col.sun .day-name { color: var(--c-red); }
+  .day-col.active .day-name { color: var(--c-green-dark); }
+
+  .day-num { font-size: 16px; font-weight: 800; color: var(--c-dark); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; }
+  .day-col.active .day-num { background: var(--c-green-dark); color: white; }
+
+  .day-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--c-green-dark); }
+  .day-dot.none { background: transparent; }
+
+  /* Daily Groups */
+  .day-group { padding: 24px 16px 0; }
+  .dg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .dg-title { font-size: 14px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  
+  .dg-today { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--c-green-dark); }
+  .dg-today svg { width: 16px; height: 16px; }
+
+  .dg-collapse { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--c-dark); cursor: pointer; }
+  .dg-collapse svg { width: 14px; height: 14px; stroke-width: 2.5; }
+
+  /* Events Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 16px; }
+  .tl-item { display: flex; gap: 12px; }
+  
+  .tl-time { width: 44px; display: flex; flex-direction: column; align-items: flex-end; padding-top: 4px; }
+  .tl-time span:first-child { font-size: 12px; font-weight: 800; color: var(--c-dark); line-height: 1.2; }
+  .tl-time span:last-child { font-size: 10px; font-weight: 600; color: var(--c-gray); }
+
+  .tl-card { flex: 1; background: white; border: 1px solid #f1f5f9; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .tl-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; }
+  
+  .tl-card.blue::before { background: var(--c-blue); }
+  .tl-card.green::before { background: var(--c-green-dark); }
+  .tl-card.purple::before { background: var(--c-purple); }
+  .tl-card.orange::before { background: var(--c-orange); }
+
+  .tl-card-header { display: flex; gap: 10px; align-items: flex-start; }
+  .tl-icon-wrap { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  
+  .tl-card.blue .tl-icon-wrap { background: var(--c-blue-light); color: var(--c-blue); }
+  .tl-card.green .tl-icon-wrap { background: var(--c-green-light); color: var(--c-green-dark); }
+  .tl-card.purple .tl-icon-wrap { background: var(--c-purple-light); color: var(--c-purple); }
+  .tl-card.orange .tl-icon-wrap { background: var(--c-orange-light); color: var(--c-orange); }
+  
+  .tl-icon-wrap svg { width: 18px; height: 18px; stroke-width: 2; }
+
+  .tl-content { flex: 1; min-width: 0; }
+  .tl-title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 2px; }
+  .tl-title { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.2; }
+  .tl-type { font-size: 9px; font-weight: 800; }
+  
+  .tl-card.blue .tl-type { color: var(--c-blue); }
+  .tl-card.green .tl-type { color: var(--c-green-dark); }
+  .tl-card.purple .tl-type { color: var(--c-purple); }
+  .tl-card.orange .tl-type { color: var(--c-orange); }
+
+  .tl-desc { font-size: 11px; color: var(--c-gray); font-weight: 500; margin: 0 0 8px 0; line-height: 1.3; }
+
+  .tl-meta { display: flex; flex-direction: column; gap: 6px; }
+  .tl-loc { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--c-dark); }
+  .tl-loc svg { width: 12px; height: 12px; color: var(--c-gray); }
+  
+  .tl-person { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: var(--c-gray); }
+  .tl-avatar { width: 20px; height: 20px; background: var(--c-green-light); color: var(--c-green-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; }
+  
+  .tl-tag { display: inline-flex; align-self: flex-start; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+  .tl-card.green .tl-tag { background: var(--c-green-light); color: var(--c-green-dark); }
+  .tl-card.orange .tl-tag { background: var(--c-orange-light); color: var(--c-orange); }
+  
+  .tl-card .chevron-right { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #cbd5e1; }
+
+  /* Compact List */
+  .compact-list { border: 1px solid #f1f5f9; border-radius: 12px; background: white; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .cl-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #f1f5f9; text-decoration: none; }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-time { font-size: 10px; font-weight: 800; color: var(--c-dark); width: 44px; flex-shrink: 0; }
+  .cl-time span { font-size: 9px; color: var(--c-gray); font-weight: 600; }
+  .cl-icon { width: 20px; height: 20px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cl-icon.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .cl-icon.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .cl-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .cl-icon svg { width: 12px; height: 12px; stroke-width: 2.5; }
+  
+  .cl-title { font-size: 11px; font-weight: 700; color: var(--c-dark); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cl-type { font-size: 9px; font-weight: 800; }
+  .cl-type.green { color: var(--c-green-dark); }
+  .cl-type.purple { color: var(--c-purple); }
+  .cl-type.orange { color: var(--c-orange); }
+  .cl-chevron { width: 14px; height: 14px; color: #cbd5e1; stroke-width: 2.5; flex-shrink: 0; }
+
+  /* Reminder Banner */
+  .rem-banner { margin: 24px 16px; background: var(--c-green-light); border: 1px solid #d1fae5; border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; position: relative; }
+  .rem-icon { width: 40px; height: 40px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--c-green-dark); flex-shrink: 0; }
+  .rem-icon svg { width: 20px; height: 20px; }
+  .rem-content { flex: 1; }
+  .rem-title { font-size: 12px; font-weight: 800; color: var(--c-green-dark); margin: 0 0 4px 0; }
+  .rem-desc { font-size: 10px; color: var(--c-gray); font-weight: 500; margin: 0; line-height: 1.4; max-width: 140px; }
+  .rem-btn { background: white; border: 1px solid var(--c-green-dark); color: var(--c-green-dark); padding: 8px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer; white-space: nowrap; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
+
+  /* Floating Action Button (FAB) */
+  .fab { position: fixed; bottom: 85px; right: 24px; width: 56px; height: 56px; background: var(--c-green-dark); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(4, 120, 87, 0.3); z-index: 90; cursor: pointer; border: none; }
+  .fab svg { width: 24px; height: 24px; stroke-width: 2.5; }
+
+  /* Bottom Nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0 24px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--c-gray); text-decoration: none; font-size: 10px; font-weight: 600; padding: 4px 0; border-bottom: 2px solid transparent; }
+  .nav-item.active { color: var(--c-green-dark); border-bottom-color: var(--c-green-dark); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+</style>
+
+<div class="mobile-app-container">
+
+  <!-- Topbar -->
+  <div class="c-topbar">
+    <div class="c-top-left">
+      <button class="icon-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <h1 class="c-title">Calendar</h1>
+    <div class="c-top-right">
+      <button class="icon-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+      </button>
+      <button class="icon-btn" style="color:var(--c-dark);">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Month Picker -->
+  <div class="month-picker">
+    <div class="mp-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </div>
+    <div class="mp-text">May 12 – May 18, 2024</div>
+    <div class="mp-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </div>
+  </div>
+
+  <!-- Week Scroller -->
+  <div class="week-scroller">
+    <div class="day-col">
+      <div class="day-name">Mon</div>
+      <div class="day-num">12</div>
+      <div class="day-dot"></div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Tue</div>
+      <div class="day-num">13</div>
+      <div class="day-dot"></div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Wed</div>
+      <div class="day-num">14</div>
+      <div class="day-dot"></div>
+    </div>
+    <div class="day-col active">
+      <div class="day-name">Thu</div>
+      <div class="day-num">15</div>
+      <div class="day-dot"></div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Fri</div>
+      <div class="day-num">16</div>
+      <div class="day-dot none"></div>
+    </div>
+    <div class="day-col sat">
+      <div class="day-name">Sat</div>
+      <div class="day-num">17</div>
+      <div class="day-dot none"></div>
+    </div>
+    <div class="day-col sun">
+      <div class="day-name">Sun</div>
+      <div class="day-num">18</div>
+      <div class="day-dot none"></div>
+    </div>
+  </div>
+
+  <!-- Thursday Group -->
+  <div class="day-group">
+    <div class="dg-header">
+      <h2 class="dg-title">Thursday, May 15, 2024</h2>
+      <div class="dg-today">
+        Today
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <!-- Event 1: Blue -->
+      <div class="tl-item">
+        <div class="tl-time">
+          <span>10:00</span>
+          <span>AM</span>
+        </div>
+        <div class="tl-card blue">
+          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          <div class="tl-card-header">
+            <div class="tl-icon-wrap">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="tl-content">
+              <div class="tl-title-row">
+                <h3 class="tl-title">Meeting with City Care Hospital</h3>
+                <span class="tl-type">Meeting</span>
+              </div>
+              <p class="tl-desc">Discuss insurance requirements</p>
+              <div class="tl-meta">
+                <div class="tl-loc">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  Lagos, Nigeria
+                </div>
+                <div class="tl-person">
+                  <div class="tl-avatar">AB</div>
+                  Dr. Ahmed Bello
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 2: Green -->
+      <div class="tl-item">
+        <div class="tl-time">
+          <span>11:30</span>
+          <span>AM</span>
+        </div>
+        <div class="tl-card green">
+          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          <div class="tl-card-header">
+            <div class="tl-icon-wrap">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <div class="tl-content">
+              <div class="tl-title-row">
+                <h3 class="tl-title">Call Greenfield Hospital</h3>
+                <span class="tl-type">Call</span>
+              </div>
+              <p class="tl-desc">Quote sent 2 days ago - No response yet</p>
+              <div class="tl-meta">
+                <div class="tl-loc">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  Greenfield Hospital
+                </div>
+                <div class="tl-tag">Follow-Up</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 3: Purple -->
+      <div class="tl-item">
+        <div class="tl-time">
+          <span>02:00</span>
+          <span>PM</span>
+        </div>
+        <div class="tl-card purple">
+          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          <div class="tl-card-header">
+            <div class="tl-icon-wrap">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div class="tl-content">
+              <div class="tl-title-row">
+                <h3 class="tl-title">Meeting with Sunrise Medical Center</h3>
+                <span class="tl-type">Meeting</span>
+              </div>
+              <p class="tl-desc">Policy review and renewal discussion</p>
+              <div class="tl-meta">
+                <div class="tl-loc">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  Abuja, Nigeria
+                </div>
+                <div class="tl-person">
+                  <div class="tl-avatar">KO</div>
+                  Mr. Kola Odunayo
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 4: Orange -->
+      <div class="tl-item">
+        <div class="tl-time">
+          <span>04:30</span>
+          <span>PM</span>
+        </div>
+        <div class="tl-card orange">
+          <svg class="chevron-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          <div class="tl-card-header">
+            <div class="tl-icon-wrap">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="tl-content">
+              <div class="tl-title-row">
+                <h3 class="tl-title">Send Proposal to HealthPlus Hospital</h3>
+                <span class="tl-type">Task</span>
+              </div>
+              <p class="tl-desc">Prepare and send updated proposal</p>
+              <div class="tl-meta">
+                <div class="tl-loc">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  HealthPlus Hospital
+                </div>
+                <div class="tl-tag">Task</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friday Group (Compact) -->
+  <div class="day-group">
+    <div class="dg-header">
+      <h2 class="dg-title">Friday, May 16, 2024</h2>
+      <div class="dg-collapse">
+        3 Events
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </div>
+
+    <div class="compact-list">
+      <!-- Compact 1 -->
+      <a href="javascript:void(0)" class="cl-item">
+        <div class="cl-time">09:30 <span>AM</span></div>
+        <div class="cl-icon green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        </div>
+        <div class="cl-title">Call Victory Hospital</div>
+        <div class="cl-type green">Call</div>
+        <svg class="cl-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Compact 2 -->
+      <a href="javascript:void(0)" class="cl-item">
+        <div class="cl-time">01:00 <span>PM</span></div>
+        <div class="cl-icon purple">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+        <div class="cl-title">Meeting with Metro Hospital</div>
+        <div class="cl-type purple">Meeting</div>
+        <svg class="cl-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Compact 3 -->
+      <a href="javascript:void(0)" class="cl-item">
+        <div class="cl-time">03:30 <span>PM</span></div>
+        <div class="cl-icon orange">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
+        <div class="cl-title">Review Risk Report</div>
+        <div class="cl-type orange">Task</div>
+        <svg class="cl-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Reminder Banner -->
+  <div class="rem-banner">
+    <div class="rem-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+    </div>
+    <div class="rem-content">
+      <h3 class="rem-title">Upcoming Reminder</h3>
+      <p class="rem-desc">You have 8 tasks and 3 meetings scheduled this week.</p>
+    </div>
+    <button class="rem-btn">View My Tasks</button>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+  </button>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Quotes
+  </a>
+  <a href="/advisor/calendar" class="nav-item active">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+    Calendar
+  </a>
+  <a href="/advisor/profile" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</div>

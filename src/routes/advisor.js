@@ -331,6 +331,19 @@ router.get('/profile', authenticatePage, requireSalesOrAdmin, async (req, res) =
   }
 });
 
+router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/calendar', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'calendar'
+    });
+  } catch (err) {
+    console.error('Error loading calendar:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/copilot', {
