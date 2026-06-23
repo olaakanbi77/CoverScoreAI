@@ -1,0 +1,459 @@
+<style>
+  :root {
+    --c-navy: #0b1120;
+    --c-navy-light: #1e293b;
+    --c-purple: #7c3aed;
+    --c-purple-light: #f5f3ff;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f97316;
+    --c-orange-light: #fff7ed;
+    --c-blue: #2563eb;
+    --c-blue-light: #eff6ff;
+    --bg-page: #ffffff;
+    --gold: #fbbf24;
+  }
+
+  /* Override Layout */
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative; padding-bottom: 100px;
+  }
+
+  /* Topbar */
+  .a-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: white; position: sticky; top: 0; z-index: 20; }
+  .a-title { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0; flex: 1; text-align: center; }
+  .icon-btn { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; justify-content: center; }
+  .icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+
+  /* Content Padding */
+  .a-content { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* Hero Card */
+  .hero-card { background: var(--c-navy); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 20px; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(11, 17, 32, 0.2); }
+  .hero-top { display: flex; gap: 16px; align-items: stretch; }
+  
+  .hero-left { flex: 1; display: flex; flex-direction: column; }
+  .hl-icon { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); margin-bottom: 12px; }
+  .hl-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  .hl-title { font-size: 16px; font-weight: 800; color: white; margin: 0 0 4px 0; line-height: 1.2; }
+  .hl-title span { color: var(--gold); }
+  .hl-desc { font-size: 10px; color: #cbd5e1; font-weight: 500; margin: 0; line-height: 1.4; }
+  
+  .hero-badge-card { background: var(--c-navy-light); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 110px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+  .hb-icon { position: relative; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .hb-icon svg { width: 48px; height: 48px; color: var(--gold); }
+  .hb-title { font-size: 10px; font-weight: 700; color: var(--gold); margin: 0 0 8px 0; line-height: 1.2; }
+  .hb-pill { font-size: 8px; font-weight: 600; color: #94a3b8; border: 1px solid #475569; padding: 4px 10px; border-radius: 12px; }
+
+  .hero-progress { display: flex; flex-direction: column; gap: 6px; }
+  .hp-text-row { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; }
+  .hp-text-row span:first-child { color: white; }
+  .hp-text-row span:last-child { color: var(--c-green); }
+  .hp-bar-bg { width: 100%; height: 6px; background: var(--c-navy-light); border-radius: 3px; overflow: hidden; }
+  .hp-bar-fill { height: 100%; background: var(--c-green); width: 65%; border-radius: 3px; }
+  .hp-sub { font-size: 9px; color: #94a3b8; font-weight: 500; }
+
+  /* Section Headers */
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .sec-title { font-size: 14px; font-weight: 800; color: var(--c-dark); margin: 0; }
+  .sec-link { font-size: 11px; font-weight: 700; color: var(--c-green-dark); text-decoration: none; }
+
+  /* Continue Learning */
+  .cl-card { display: flex; gap: 12px; }
+  .cl-img-wrap { width: 120px; height: 80px; border-radius: 8px; overflow: hidden; position: relative; flex-shrink: 0; }
+  .cl-img { width: 100%; height: 100%; object-fit: cover; }
+  .cl-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+  .cl-play { width: 28px; height: 28px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border: 1px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+  .cl-play svg { width: 12px; height: 12px; fill: white; margin-left: 2px; }
+  .cl-time { position: absolute; bottom: 4px; left: 4px; background: rgba(0,0,0,0.7); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+  
+  .cl-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .cl-pill { display: inline-block; align-self: flex-start; font-size: 8px; font-weight: 800; color: var(--c-blue); background: var(--c-blue-light); padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+  .cl-title { font-size: 12px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.2; }
+  .cl-desc { font-size: 10px; color: var(--c-gray); font-weight: 500; margin: 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cl-prog-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .cl-prog-bg { flex: 1; height: 4px; background: #f1f5f9; border-radius: 2px; }
+  .cl-prog-fill { height: 100%; background: var(--c-green-dark); width: 65%; border-radius: 2px; }
+  .cl-prog-txt { font-size: 9px; font-weight: 700; color: var(--c-green-dark); }
+
+  /* Learning Paths */
+  .paths-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-right: -16px; padding-right: 16px; scrollbar-width: none; }
+  .paths-scroll::-webkit-scrollbar { display: none; }
+  .path-card { min-width: 110px; border: 1px solid #f1f5f9; border-radius: 12px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  
+  .pc-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .pc-icon.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .pc-icon.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .pc-icon.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .pc-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .pc-icon svg { width: 18px; height: 18px; stroke-width: 2; }
+  
+  .pc-title { font-size: 10px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.2; height: 24px; display: flex; align-items: center; justify-content: center; }
+  .pc-sub { font-size: 9px; color: var(--c-gray); font-weight: 600; margin: 0; }
+  .pc-pct { font-size: 11px; font-weight: 800; margin: 4px 0 0 0; }
+  .pc-pct.green { color: var(--c-green-dark); }
+  .pc-pct.blue { color: var(--c-blue); }
+  .pc-pct.purple { color: var(--c-purple); }
+  .pc-pct.orange { color: var(--c-orange); }
+  
+  .pc-bar { width: 32px; height: 3px; border-radius: 2px; margin-top: 4px; }
+  .pc-bar.green { background: var(--c-green-dark); }
+  .pc-bar.blue { background: var(--c-blue); }
+  .pc-bar.purple { background: var(--c-purple); }
+  .pc-bar.orange { background: var(--c-orange); }
+
+  /* Featured Courses */
+  .fc-list { display: flex; flex-direction: column; gap: 16px; }
+  .fc-item { display: flex; gap: 12px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; }
+  .fc-item:last-child { border-bottom: none; padding-bottom: 0; }
+  
+  .fc-img-wrap { width: 90px; height: 60px; border-radius: 8px; overflow: hidden; position: relative; flex-shrink: 0; background: var(--c-navy); display: flex; align-items: center; justify-content: center; }
+  .fc-img-wrap img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+  .fc-img-text { position: absolute; inset: 0; padding: 8px; font-size: 8px; font-weight: 800; color: white; line-height: 1.2; text-transform: uppercase; z-index: 1; }
+  .fc-img-wrap .cl-play { width: 24px; height: 24px; border: none; background: rgba(0,0,0,0.5); z-index: 2; }
+  
+  .fc-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .fc-title { font-size: 11px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.2; }
+  .fc-desc { font-size: 9px; color: var(--c-gray); font-weight: 500; margin: 0; line-height: 1.3; }
+  
+  .fc-action { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; width: 75px; }
+  .fc-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 6px 0; border-radius: 6px; text-decoration: none; }
+  .fc-btn.start { background: var(--c-navy-light); color: white; }
+  .fc-btn.completed { background: white; color: var(--c-green-dark); border: 1px solid #d1fae5; }
+  .fc-btn svg { width: 12px; height: 12px; }
+  
+  .fc-time { font-size: 9px; font-weight: 600; color: var(--c-gray); }
+
+  /* Achievements */
+  .ach-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-right: -16px; padding-right: 16px; scrollbar-width: none; }
+  .ach-scroll::-webkit-scrollbar { display: none; }
+  .ach-item { min-width: 140px; border: 1px solid #f1f5f9; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  
+  .ach-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ach-icon.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .ach-icon.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .ach-icon.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .ach-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .ach-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  
+  .ach-text { display: flex; flex-direction: column; }
+  .ach-val { font-size: 16px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.1; }
+  .ach-lbl { font-size: 9px; font-weight: 600; color: var(--c-gray); margin: 0; line-height: 1.2; }
+
+  /* Bottom Nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; align-items: center; padding: 12px 0 24px 0; border-top: 1px solid #e2e8f0; z-index: 100; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--c-gray); text-decoration: none; font-size: 10px; font-weight: 600; }
+  .nav-item.active { color: var(--c-green-dark); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+</style>
+
+<div class="mobile-app-container">
+
+  <!-- Topbar -->
+  <div class="a-topbar">
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <h1 class="a-title">Training Academy</h1>
+    <button class="icon-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </button>
+  </div>
+
+  <div class="a-content">
+    
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div class="hero-top">
+        <div class="hero-left">
+          <div class="hl-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
+          </div>
+          <h2 class="hl-title">Level Up Your Skills.<br><span>Close More Deals.</span></h2>
+          <p class="hl-desc">Learn. Apply. Grow with CoverScore.</p>
+        </div>
+        
+        <div class="hero-badge-card">
+          <div class="hb-icon">
+            <!-- Laurel Vector -->
+            <svg viewBox="0 0 100 100" fill="none" style="position:absolute; width:64px; height:64px;">
+              <path d="M 20 50 A 30 30 0 0 1 50 10 A 30 30 0 0 1 80 50" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 4" />
+              <path d="M 15 40 A 35 35 0 0 0 50 85 A 35 35 0 0 0 85 40" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 4" />
+            </svg>
+            <svg fill="currentColor" viewBox="0 0 24 24" style="width:24px; height:24px; z-index:2;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+            <svg fill="white" viewBox="0 0 24 24" style="width:10px; height:10px; position:absolute; z-index:3; margin-top:2px; margin-left:1px;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+          <h3 class="hb-title">CoverScore Certified Advisor</h3>
+          <span class="hb-pill">In Progress</span>
+        </div>
+      </div>
+      
+      <div class="hero-progress">
+        <div class="hp-text-row">
+          <span>Your Progress</span>
+          <span>65% complete</span>
+        </div>
+        <div class="hp-bar-bg">
+          <div class="hp-bar-fill"></div>
+        </div>
+        <span class="hp-sub">12 of 18 lessons completed</span>
+      </div>
+    </div>
+
+    <!-- Continue Learning -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Continue Learning</h3>
+        <a href="#" class="sec-link">View All</a>
+      </div>
+      
+      <div class="cl-card">
+        <div class="cl-img-wrap">
+          <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=500&auto=format&fit=crop&q=60" alt="Hospital Building" class="cl-img">
+          <div class="cl-overlay">
+            <div class="cl-play">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <span class="cl-time">12:45</span>
+        </div>
+        
+        <div class="cl-info">
+          <span class="cl-pill">In Progress</span>
+          <h4 class="cl-title">Understanding Hospital Risks</h4>
+          <p class="cl-desc">Learn the key risks hospitals face and how CoverScore helps identify and mitigate them.</p>
+          <div class="cl-prog-row">
+            <div class="cl-prog-bg">
+              <div class="cl-prog-fill"></div>
+            </div>
+            <span class="cl-prog-txt">65% complete</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning Paths -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Learning Paths</h3>
+        <a href="#" class="sec-link">View All</a>
+      </div>
+      
+      <div class="paths-scroll">
+        <!-- Path 1 -->
+        <div class="path-card">
+          <div class="pc-icon green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h4 class="pc-title">Foundation Program</h4>
+          <p class="pc-sub">5 Lessons</p>
+          <div class="pc-pct green">100%</div>
+          <div class="pc-bar green"></div>
+        </div>
+
+        <!-- Path 2 -->
+        <div class="path-card">
+          <div class="pc-icon blue">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+          </div>
+          <h4 class="pc-title">Risk Assessment Mastery</h4>
+          <p class="pc-sub">6 Lessons</p>
+          <div class="pc-pct blue">67%</div>
+          <div class="pc-bar blue"></div>
+        </div>
+
+        <!-- Path 3 -->
+        <div class="path-card">
+          <div class="pc-icon purple">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <h4 class="pc-title">Quote & Proposal Excellence</h4>
+          <p class="pc-sub">5 Lessons</p>
+          <div class="pc-pct purple">40%</div>
+          <div class="pc-bar purple"></div>
+        </div>
+
+        <!-- Path 4 -->
+        <div class="path-card">
+          <div class="pc-icon orange">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+          <h4 class="pc-title">Advanced Sales Strategies</h4>
+          <p class="pc-sub">4 Lessons</p>
+          <div class="pc-pct orange">25%</div>
+          <div class="pc-bar orange"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Courses -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Featured Courses</h3>
+        <a href="#" class="sec-link">View All</a>
+      </div>
+      
+      <div class="fc-list">
+        <!-- Course 1 -->
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+            <div class="fc-img-text">COVERSCORE<br>OVERVIEW</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">CoverScore Platform Overview</h4>
+            <p class="fc-desc">Get started with the CoverScore platform and explore key features.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn completed">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              Completed
+            </a>
+            <span class="fc-time">15 min</span>
+          </div>
+        </div>
+
+        <!-- Course 2 -->
+        <div class="fc-item">
+          <div class="fc-img-wrap">
+            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&auto=format&fit=crop&q=60" alt="Cyber Risk">
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">Cyber Risk Essentials</h4>
+            <p class="fc-desc">Understand cyber threats facing hospitals and how to address them.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+            <span class="fc-time">18 min</span>
+          </div>
+        </div>
+
+        <!-- Course 3 -->
+        <div class="fc-item">
+          <div class="fc-img-wrap">
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=500&auto=format&fit=crop&q=60" alt="Client Meetings">
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">Winning Client Meetings</h4>
+            <p class="fc-desc">Best practices to engage decision makers and win more business.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+            <span class="fc-time">18 min</span>
+          </div>
+        </div>
+
+        <!-- Course 4 -->
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #1e293b, #3b82f6);">
+            <div class="fc-img-text" style="text-align:center;">MEDICAL<br>EQUIPMENT</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">Medical Equipment Breakdown Coverage</h4>
+            <p class="fc-desc">Learn how to uncover gaps and recommend the right protection.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+            <span class="fc-time">16 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Achievements</h3>
+        <a href="#" class="sec-link">View All</a>
+      </div>
+      
+      <div class="ach-scroll">
+        <!-- Ach 1 -->
+        <div class="ach-item">
+          <div class="ach-icon green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          </div>
+          <div class="ach-text">
+            <span class="ach-val">12</span>
+            <span class="ach-lbl">Courses<br>Completed</span>
+          </div>
+        </div>
+
+        <!-- Ach 2 -->
+        <div class="ach-item">
+          <div class="ach-icon blue">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+          </div>
+          <div class="ach-text">
+            <span class="ach-val">250</span>
+            <span class="ach-lbl">Points<br>Earned</span>
+          </div>
+        </div>
+
+        <!-- Ach 3 -->
+        <div class="ach-item">
+          <div class="ach-icon purple">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <div class="ach-text">
+            <span class="ach-val">5</span>
+            <span class="ach-lbl">Badges<br>Unlocked</span>
+          </div>
+        </div>
+
+        <!-- Ach 4 -->
+        <div class="ach-item">
+          <div class="ach-icon orange">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+          </div>
+          <div class="ach-text">
+            <span class="ach-val">10</span>
+            <span class="ach-lbl">Day Streak<br>Current</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/admin/leads" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    Leads
+  </a>
+  <a href="/admin/assessments" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+    Assessments
+  </a>
+  <a href="/admin/opportunities" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Quotes
+  </a>
+  <a href="/advisor/academy" class="nav-item active">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
+    Academy
+  </a>
+  <a href="/advisor/profile" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    More
+  </a>
+</div>

@@ -370,6 +370,19 @@ router.get('/leaderboard', authenticatePage, requireSalesOrAdmin, async (req, re
   }
 });
 
+router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    res.render('advisor/academy', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'academy'
+    });
+  } catch (err) {
+    console.error('Error loading academy:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     res.render('advisor/copilot', {
