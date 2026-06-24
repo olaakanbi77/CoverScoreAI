@@ -415,11 +415,11 @@
         <p>Track assessment activity<br>and lead progress</p>
       </div>
       <div class="header-right">
-        <a href="javascript:void(0)" class="btn-share">
+        <a href="javascript:void(0)" class="btn-share" onclick="alert('Assessment Link: ' + window.location.origin + '/assessment/start');">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
           Share Assessment Link
         </a>
-        <a href="javascript:void(0)" class="btn-templates">
+        <a href="/admin/templates" class="btn-templates">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           Templates
         </a>
@@ -483,7 +483,7 @@
       
       {{#if assessments.length}}
         {{#each assessments}}
-        <div class="list-card">
+        <div class="list-card" onclick="window.location.href='/assessment/{{this.id}}'" style="cursor: pointer;">
           <div class="c-avatar {{#if (eq this.risk_level 'critical')}}red{{else if (eq this.risk_level 'high')}}orange{{else}}green{{/if}}">
             <!-- First letter of name or business -->
             {{#if this.business_name}}{{substring this.business_name 0 2}}{{else}}CS{{/if}}
@@ -549,7 +549,7 @@
         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         Opportunities
       </a>
-      <a href="/advisor/profile" class="nav-item">
+      <a href="/admin/more" class="nav-item">
         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
         More
       </a>
