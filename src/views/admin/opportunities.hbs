@@ -62,6 +62,28 @@
     max-width: 180px;
     line-height: 1.4;
   }
+  .type-toggle {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px;
+    margin-top: 12px;
+    width: fit-content;
+  }
+  .type-toggle a {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--c-gray);
+    transition: all 0.2s;
+  }
+  .type-toggle a.active {
+    background: white;
+    color: var(--c-dark);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
   .header-right {
     display: flex;
     flex-direction: column;
@@ -434,7 +456,11 @@
     <div class="header-row">
       <div class="header-left">
         <h1>Opportunities</h1>
-        <p>Manage your sales pipeline and close more business.</p>
+        <p>Manage your active pipeline.</p>
+        <div class="type-toggle">
+          <a href="?type=business" class="{{#if (eq activeType 'business')}}active{{/if}}">Business</a>
+          <a href="?type=personal" class="{{#if (eq activeType 'personal')}}active{{/if}}">Personal</a>
+        </div>
       </div>
       <div class="header-right">
         <a href="/assessment/start" class="btn-new-opp">
@@ -455,14 +481,14 @@
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         </div>
         <div class="stat-val">{{pipelineData.stage1.length}}</div>
-        <div class="stat-lbl">New<br>Opportunities</div>
+        <div class="stat-lbl">New {{activeTypeTitle}}</div>
       </div>
       <div class="stat-card c-orange">
         <div class="stat-icon-wrap">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
         </div>
         <div class="stat-val">{{pipelineData.stage2.length}}</div>
-        <div class="stat-lbl">Contacted</div>
+        <div class="stat-label">Engaged</div>
       </div>
       <div class="stat-card c-blue">
         <div class="stat-icon-wrap">
@@ -475,8 +501,8 @@
         <div class="stat-icon-wrap">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
         </div>
-        <div class="stat-val">{{pipelineData.stage6.length}}</div>
-        <div class="stat-lbl">Closed Won</div>
+        <div class="stat-val">{{pipelineData.stage5.length}}</div>
+        <div class="stat-label">Negotiation</div>
       </div>
     </div>
 

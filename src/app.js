@@ -378,11 +378,13 @@ app.get('/admin/assessments', authenticatePage, async (req, res) => {
 
 app.get('/admin/opportunities', authenticatePage, async (req, res) => {
   try {
+    const activeType = req.query.type === 'personal' ? 'PERSONAL' : 'BUSINESS';
+    
     let rawLeads = [];
     if (req.user.role === 'admin') {
-      rawLeads = await all("SELECT * FROM leads ORDER BY updated_at DESC");
+      rawLeads = await all("SELECT * FROM leads WHERE opportunity_type = ? ORDER BY updated_at DESC", [activeType]);
     } else {
-      rawLeads = await all("SELECT * FROM leads WHERE advisor_id = ? ORDER BY updated_at DESC", [req.user.id]);
+      rawLeads = await all("SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ? ORDER BY updated_at DESC", [req.user.id, activeType]);
     }
     
     const pipelineData = {
@@ -398,7 +400,9 @@ app.get('/admin/opportunities', authenticatePage, async (req, res) => {
       title: 'Opportunities', 
       activePage: 'opportunities', 
       layout: 'admin',
-      pipelineData 
+      pipelineData,
+      activeType: activeType.toLowerCase(),
+      activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal' 
     });
   } catch (error) {
     res.status(500).send('Error loading opportunities');
@@ -432,7 +436,15 @@ app.get('/admin/calendar', authenticatePage, async (req, res) => {
 app.get('/admin/templates', authenticatePage, async (req, res) => {
   try {
     const templates = await all("SELECT * FROM templates ORDER BY id ASC");
-    res.render('admin/templates', { title: 'Templates', activePage: 'templates', layout: 'admin', templates });
+    const businessTemplates = templates.filter(t => t.category === 'BUSINESS' || !t.category);
+    const personalTemplates = templates.filter(t => t.category === 'PERSONAL');
+    res.render('admin/templates', { 
+      title: 'Templates', 
+      activePage: 'templates', 
+      layout: 'admin', 
+      businessTemplates,
+      personalTemplates
+    });
   } catch (error) {
     res.status(500).send('Error loading templates');
   }

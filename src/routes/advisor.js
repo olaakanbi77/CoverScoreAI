@@ -419,7 +419,8 @@ router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) 
 
 router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
-    const leads = await all("SELECT * FROM leads WHERE advisor_id = ? ORDER BY updated_at DESC", [req.user.id]);
+    const activeType = req.query.type === 'personal' ? 'PERSONAL' : 'BUSINESS';
+    const leads = await all("SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ? ORDER BY updated_at DESC", [req.user.id, activeType]);
     
     const pipelineData = {
       stage1: leads.filter(l => l.pipeline_stage === 1),
@@ -441,7 +442,9 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
       user: req.user,
       activePage: 'pipeline',
       pipelineData,
-      activePipelineValueFormatted
+      activePipelineValueFormatted,
+      activeType: activeType.toLowerCase(),
+      activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal'
     });
   } catch (err) {
     console.error('Error loading pipeline:', err);

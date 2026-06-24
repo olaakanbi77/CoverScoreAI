@@ -83,15 +83,15 @@ router.post('/policies', authenticate, requireAgent, async (req, res, next) => {
 // POST /api/crm/templates
 router.post('/templates', authenticate, requireAgent, async (req, res, next) => {
   try {
-    const { title, type, content } = req.body;
+    const { title, type, content, category } = req.body;
     if (!title || !type || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
     await run(`
-      INSERT INTO templates (title, type, content)
-      VALUES (?, ?, ?)
-    `, [title, type, content]);
+      INSERT INTO templates (title, type, content, category)
+      VALUES (?, ?, ?, ?)
+    `, [title, type, content, category || 'BUSINESS']);
     
     res.json({ success: true });
   } catch (err) { next(err); }
@@ -100,7 +100,7 @@ router.post('/templates', authenticate, requireAgent, async (req, res, next) => 
 // PUT /api/crm/templates/:id
 router.put('/templates/:id', authenticate, requireAgent, async (req, res, next) => {
   try {
-    const { title, type, content } = req.body;
+    const { title, type, content, category } = req.body;
     const { id } = req.params;
     
     if (!title || !type || !content) {
@@ -109,9 +109,9 @@ router.put('/templates/:id', authenticate, requireAgent, async (req, res, next) 
     
     await run(`
       UPDATE templates 
-      SET title = ?, type = ?, content = ?
+      SET title = ?, type = ?, content = ?, category = ?
       WHERE id = ?
-    `, [title, type, content, id]);
+    `, [title, type, content, category || 'BUSINESS', id]);
     
     res.json({ success: true });
   } catch (err) { next(err); }

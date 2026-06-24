@@ -42,6 +42,7 @@ const initDatabase = () => {
       answers JSON NOT NULL,
       score INTEGER NOT NULL,
       risk_level TEXT NOT NULL CHECK(risk_level IN ('low', 'moderate', 'high', 'critical')),
+      type TEXT DEFAULT 'BUSINESS' CHECK(type IN ('BUSINESS', 'PERSONAL')),
       ai_report TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
@@ -58,6 +59,7 @@ const initDatabase = () => {
       score INTEGER,
       risk_level TEXT,
       entity_type TEXT DEFAULT 'business',
+      opportunity_type TEXT DEFAULT 'BUSINESS' CHECK(opportunity_type IN ('BUSINESS', 'PERSONAL')),
       status TEXT DEFAULT 'New Lead',
       wa_state TEXT DEFAULT 'initial',
       primary_concern TEXT,
@@ -151,6 +153,7 @@ const initDatabase = () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       type TEXT NOT NULL,
+      category TEXT DEFAULT 'BUSINESS' CHECK(category IN ('BUSINESS', 'PERSONAL')),
       content TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -229,6 +232,7 @@ const initDatabase = () => {
           entity_type TEXT DEFAULT 'business',
           status TEXT DEFAULT 'New Lead',
           wa_state TEXT DEFAULT 'initial',
+          opportunity_type TEXT DEFAULT 'BUSINESS' CHECK(opportunity_type IN ('BUSINESS', 'PERSONAL')),
           primary_concern TEXT,
           consultation_preference TEXT,
           engagement_points INTEGER DEFAULT 0,
@@ -318,6 +322,21 @@ const initDatabase = () => {
   db.run("ALTER TABLE leads ADD COLUMN wa_state TEXT DEFAULT 'initial'", (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Migration error (wa_state):', err.message);
+    }
+  });
+  db.run("ALTER TABLE assessments ADD COLUMN type TEXT DEFAULT 'BUSINESS'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (assessments type):', err.message);
+    }
+  });
+  db.run("ALTER TABLE leads ADD COLUMN opportunity_type TEXT DEFAULT 'BUSINESS'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (leads opportunity_type):', err.message);
+    }
+  });
+  db.run("ALTER TABLE templates ADD COLUMN category TEXT DEFAULT 'BUSINESS'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (templates category):', err.message);
     }
   });
 };
