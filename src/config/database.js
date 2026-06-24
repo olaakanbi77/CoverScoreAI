@@ -202,12 +202,12 @@ const initDatabase = () => {
       (4, 'CoverScore Specialized Risk Advisor™ (CSRA™)', 'Expert Level', 4),
       (5, 'CoverScore Master Risk Advisor™ (CMRA™)', 'Mastery Level', 5);
 
-    INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index, video_url, content, track) VALUES 
-      (1, 1, 'Introduction to Insurance', 'Basics of insurance', 1, NULL, NULL, 'CORE'),
-      (2, 1, 'Principles of Risk Management', 'Core risk management principles', 2, NULL, NULL, 'CORE'),
-      (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3, NULL, NULL, 'CORE'),
-      (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4, NULL, NULL, 'CORE'),
-      (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5, NULL, NULL, 'CORE');
+    INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index) VALUES 
+      (1, 1, 'Introduction to Insurance', 'Basics of insurance', 1),
+      (2, 1, 'Principles of Risk Management', 'Core risk management principles', 2),
+      (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3),
+      (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4),
+      (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5);
 
   `);
 
