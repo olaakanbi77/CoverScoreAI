@@ -202,7 +202,7 @@ const initDatabase = () => {
       (4, 'CoverScore Specialized Risk Advisor™ (CSRA™)', 'Expert Level', 4),
       (5, 'CoverScore Master Risk Advisor™ (CMRA™)', 'Mastery Level', 5);
 
-    INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index) VALUES 
+    INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index, video_url, content, track) VALUES 
       (1, 1, 'Introduction to Insurance', 'Basics of insurance', 1, NULL, NULL, 'CORE'),
       (2, 1, 'Principles of Risk Management', 'Core risk management principles', 2, NULL, NULL, 'CORE'),
       (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3, NULL, NULL, 'CORE'),
@@ -212,12 +212,16 @@ const initDatabase = () => {
   `);
 
   // Academy Column Migration
-  try {
-    db.exec(`ALTER TABLE academy_modules ADD COLUMN track TEXT DEFAULT 'CORE'`);
-    console.log('Added track column to academy_modules');
-  } catch (err) {
-    // Column might already exist
-  }
+  db.all("PRAGMA table_info(academy_modules)", (err, columns) => {
+    if (!err && columns) {
+      const hasTrackColumn = columns.some(col => col.name === 'track');
+      if (!hasTrackColumn) {
+        db.exec(`ALTER TABLE academy_modules ADD COLUMN track TEXT DEFAULT 'CORE'`, (err) => {
+          if (!err) console.log('Added track column to academy_modules');
+        });
+      }
+    }
+  });
 
   // Academy Curriculum v2 Migration
   db.get("SELECT name FROM academy_levels WHERE name LIKE '%CCRA%'", (err, row) => {
