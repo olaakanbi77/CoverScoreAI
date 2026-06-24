@@ -513,7 +513,7 @@ router.get('/leaderboard', authenticatePage, requireSalesOrAdmin, async (req, re
 
 router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
-    const levels = await all("SELECT * FROM academy_levels ORDER BY level_number ASC");
+    const levels = await all("SELECT * FROM academy_levels ORDER BY order_index ASC");
     const modules = await all("SELECT * FROM academy_modules ORDER BY order_index ASC");
     const progress = await all("SELECT * FROM academy_progress WHERE user_id = ?", [req.user.id]);
     
@@ -529,7 +529,26 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
         if (status === 'completed') completedModules++;
         return { ...m, status };
       });
-      return { ...level, modules: levelModules };
+      
+      const isSplitTrack = level.order_index === 3;
+      let personalModules = [];
+      let businessModules = [];
+      let coreModules = [];
+      
+      if (isSplitTrack) {
+        personalModules = levelModules.filter(m => m.track === 'PERSONAL');
+        businessModules = levelModules.filter(m => m.track === 'BUSINESS');
+      } else {
+        coreModules = levelModules;
+      }
+
+      return { 
+        ...level, 
+        modules: coreModules,
+        isSplitTrack,
+        personalModules,
+        businessModules
+      };
     });
 
     const progressPercentage = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;

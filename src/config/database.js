@@ -174,6 +174,7 @@ const initDatabase = () => {
       order_index INTEGER NOT NULL,
       video_url TEXT,
       content TEXT,
+      track TEXT DEFAULT 'CORE',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (level_id) REFERENCES academy_levels(id)
     );
@@ -202,13 +203,96 @@ const initDatabase = () => {
       (5, 'CoverScore Master Risk Advisor™ (CMRA™)', 'Mastery Level', 5);
 
     INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index) VALUES 
-      (1, 1, 'Introduction to Insurance', 'Basics of insurance', 1),
-      (2, 1, 'Principles of Risk Management', 'Core risk management principles', 2),
-      (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3),
-      (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4),
-      (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5);
+      (1, 1, 'Introduction to Insurance', 'Basics of insurance', 1, NULL, NULL, 'CORE'),
+      (2, 1, 'Principles of Risk Management', 'Core risk management principles', 2, NULL, NULL, 'CORE'),
+      (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3, NULL, NULL, 'CORE'),
+      (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4, NULL, NULL, 'CORE'),
+      (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5, NULL, NULL, 'CORE');
 
   `);
+
+  // Academy Column Migration
+  try {
+    db.exec(`ALTER TABLE academy_modules ADD COLUMN track TEXT DEFAULT 'CORE'`);
+    console.log('Added track column to academy_modules');
+  } catch (err) {
+    // Column might already exist
+  }
+
+  // Academy Curriculum v2 Migration
+  db.get("SELECT name FROM academy_levels WHERE name LIKE '%CCRA%'", (err, row) => {
+    if (row) {
+      console.log('Migrating Academy Curriculum to v2...');
+      db.exec(`
+        DELETE FROM academy_progress;
+        DELETE FROM academy_modules;
+        DELETE FROM academy_levels;
+
+        INSERT INTO academy_levels (id, name, description, order_index) VALUES 
+          (1, 'CoverScore Certified Associate™ (CCA™)', 'Level 1: Foundation', 1),
+          (2, 'CoverScore Risk Assessment Specialist™ (CRAS™)', 'Level 2: Assessment', 2),
+          (3, 'Specialization Tracks™ (CPRA™ / CBRA™)', 'Level 3: Specialization', 3),
+          (4, 'CoverScore Risk Consultant™ (CRC™)', 'Level 4: Consulting', 4),
+          (5, 'CoverScore Intelligent Solutions Advisor™ (CISA™)', 'Level 5: AI & Data', 5),
+          (6, 'CoverScore Master Risk Advisor™ (CMRA™)', 'Level 6: Mastery', 6);
+
+        INSERT INTO academy_modules (level_id, title, description, order_index, track) VALUES 
+          (1, 'Introduction to Risk', 'Basic risk concepts', 1, 'CORE'),
+          (1, 'Introduction to Insurance', 'Basics of insurance', 2, 'CORE'),
+          (1, 'Risk Management Principles', 'Core risk management principles', 3, 'CORE'),
+          (1, 'CoverScore Philosophy™', 'Understanding our approach', 4, 'CORE'),
+          (1, 'Professional Ethics', 'Ethical advisory', 5, 'CORE'),
+          (1, 'Customer Communication', 'Effective client interaction', 6, 'CORE'),
+          (1, 'Digital Advisory Skills', 'Using digital tools', 7, 'CORE'),
+
+          (2, 'Assessment Fundamentals™', 'How to assess risk', 1, 'CORE'),
+          (2, 'CoverScore Risk Score™', 'Understanding the score', 2, 'CORE'),
+          (2, 'Risk Fingerprint™', 'Individual risk profiles', 3, 'CORE'),
+          (2, 'Exposure Index™', 'Calculating exposure', 4, 'CORE'),
+          (2, 'Protection Gap™', 'Identifying gaps', 5, 'CORE'),
+          (2, 'Risk DNA™', 'Deep dive into risk elements', 6, 'CORE'),
+          (2, 'AI Assessment Interpretation™', 'Using AI for insights', 7, 'CORE'),
+
+          (3, 'Family Protection Planning™', 'Planning for families', 1, 'PERSONAL'),
+          (3, 'Health Protection Planning™', 'Health risk advisory', 2, 'PERSONAL'),
+          (3, 'Income Protection Planning™', 'Securing income', 3, 'PERSONAL'),
+          (3, 'Retirement Readiness Planning™', 'Retirement risks', 4, 'PERSONAL'),
+          (3, 'Education Funding Planning™', 'Education risks', 5, 'PERSONAL'),
+          (3, 'Estate & Legacy Awareness™', 'Legacy planning', 6, 'PERSONAL'),
+          (3, 'Personal Risk Reviews™', 'Conducting reviews', 7, 'PERSONAL'),
+
+          (3, 'SME Risk Advisory™', 'Advising small businesses', 8, 'BUSINESS'),
+          (3, 'School Risk Advisory™', 'Advising schools', 9, 'BUSINESS'),
+          (3, 'Church Risk Advisory™', 'Advising churches', 10, 'BUSINESS'),
+          (3, 'Hospital Risk Advisory™', 'Advising hospitals', 11, 'BUSINESS'),
+          (3, 'Manufacturing Risk Advisory™', 'Advising manufacturers', 12, 'BUSINESS'),
+          (3, 'Construction Risk Advisory™', 'Advising construction firms', 13, 'BUSINESS'),
+
+          (4, 'Consultative Selling™', 'Advanced selling techniques', 1, 'CORE'),
+          (4, 'Risk Advisory Framework™', 'Structured advisory', 2, 'CORE'),
+          (4, 'Risk Improvement Roadmaps™', 'Creating roadmaps', 3, 'CORE'),
+          (4, 'Business Continuity™', 'Ensuring continuity', 4, 'CORE'),
+          (4, 'Enterprise Risk Concepts™', 'ERM basics', 5, 'CORE'),
+          (4, 'Strategic Protection Planning™', 'Strategic planning', 6, 'CORE'),
+          (4, 'Executive Presentation Skills™', 'Presenting to executives', 7, 'CORE'),
+
+          (5, 'AI Risk Intelligence™', 'Leveraging AI', 1, 'CORE'),
+          (5, 'Industry Benchmarking™', 'Benchmarking risks', 2, 'CORE'),
+          (5, 'Predictive Risk Thinking™', 'Anticipating risks', 3, 'CORE'),
+          (5, 'CoverScore Copilot™', 'Using the copilot', 4, 'CORE'),
+          (5, 'Risk Analytics™', 'Data analysis', 5, 'CORE'),
+          (5, 'Data-Driven Advisory™', 'Data-driven insights', 6, 'CORE'),
+
+          (6, 'Strategic Risk Leadership™', 'Leading in risk', 1, 'CORE'),
+          (6, 'Risk Transformation™', 'Transforming risk management', 2, 'CORE'),
+          (6, 'Risk Culture Development™', 'Building culture', 3, 'CORE'),
+          (6, 'Advanced Advisory™', 'Master-level advisory', 4, 'CORE'),
+          (6, 'Thought Leadership™', 'Becoming a thought leader', 5, 'CORE'),
+          (6, 'Coaching & Mentorship™', 'Mentoring others', 6, 'CORE'),
+          (6, 'Academy Facilitation™', 'Teaching the academy', 7, 'CORE');
+      `);
+    }
+  });
 
   // CRM Schema Migration (Option B)
   // Drop the old leads table constraint by recreating the table if the old constraint exists,
