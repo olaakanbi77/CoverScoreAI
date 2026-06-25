@@ -616,4 +616,312 @@ input::placeholder {
 /* Make sure inner rows match */
 .hiw-step-content .wyg-title-row {
   justify-content: flex-start; /* Keep row items left aligned */
+/* Real Risk Stories Carousel */
+.rrs-section {
+  background-color: #ffffff;
+  padding: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.rrs-header {
+  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.rrs-progress-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.rrs-progress-bar {
+  height: 4px;
+  flex: 1;
+  background-color: #E2E8F0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.rrs-progress-fill {
+  height: 100%;
+  background-color: var(--green-color);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.rrs-progress-fill.active {
+  width: 100%;
+}
+
+.rrs-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.rrs-header-text {
+  flex: 1;
+  text-align: center;
+}
+
+.rrs-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.rrs-step {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--green-color);
+  margin-bottom: 0.25rem;
+}
+
+.rrs-subtitle {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+}
+
+.rrs-pause-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #E2E8F0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+.rrs-carousel-container {
+  position: relative;
+  width: 100%;
+}
+
+.rrs-carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  -webkit-overflow-scrolling: touch;
+}
+
+.rrs-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.rrs-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Nav Buttons */
+.rrs-nav-btn {
+  position: absolute;
+  top: 150px;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-color);
+  cursor: pointer;
+  z-index: 10;
+}
+.rrs-nav-btn.prev { left: -10px; }
+.rrs-nav-btn.next { right: -10px; }
+
+/* Slide Top Grid */
+.rrs-top-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rrs-top-left {
+  flex: 1;
+}
+
+.rrs-top-right {
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.rrs-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.rrs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.rrs-badge.blue { background-color: #EFF6FF; color: #2563EB; }
+.rrs-badge.red { background-color: #FEF2F2; color: #DC2626; }
+.rrs-badge.purple { background-color: #F5F3FF; color: #7C3AED; }
+
+.rrs-slide-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.rrs-location {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.rrs-slide-desc {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  line-height: 1.5;
+}
+
+/* Info Boxes */
+.rrs-box {
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.rrs-impact-box {
+  align-items: flex-start;
+}
+
+.rrs-impact-box.blue { background-color: #EFF6FF; }
+.rrs-impact-box.red { background-color: #FEF2F2; }
+.rrs-impact-box.purple { background-color: #F5F3FF; }
+
+.rrs-impact-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid currentColor;
+}
+.rrs-impact-box.blue .rrs-impact-icon { color: #2563EB; background: white; }
+.rrs-impact-box.red .rrs-impact-icon { color: #DC2626; background: white; }
+.rrs-impact-box.purple .rrs-impact-icon { color: #7C3AED; background: white; }
+
+.rrs-impact-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rrs-impact-amount {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #DC2626; /* Red amount for all */
+  margin-bottom: 0.25rem;
+}
+
+.rrs-impact-desc {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  line-height: 1.4;
+}
+
+.rrs-lesson-box {
+  background-color: #FFFBEB;
+  align-items: center;
+}
+.rrs-lesson-icon { color: #D97706; }
+.rrs-lesson-label { font-size: 0.7rem; font-weight: 700; color: #D97706; text-transform: uppercase; margin-bottom: 0.25rem; }
+.rrs-lesson-text { font-size: 0.75rem; color: var(--primary-color); font-weight: 500; }
+
+.rrs-risk-box {
+  background-color: #F0FDF4;
+  align-items: center;
+}
+.rrs-risk-icon { color: #16A34A; }
+.rrs-risk-title { font-size: 0.75rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.15rem; }
+.rrs-risk-desc { font-size: 0.75rem; color: var(--primary-color); }
+
+/* CTA Box */
+.rrs-cta-box {
+  background-color: var(--green-color);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.rrs-cta-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rrs-cta-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+
+.rrs-cta-desc {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+/* Trust Row */
+.rrs-trust-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.65rem;
+  color: var(--primary-color);
+  padding: 0 0.5rem;
+}
+
+.rrs-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
