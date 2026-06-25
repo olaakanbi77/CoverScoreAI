@@ -336,20 +336,12 @@ input::placeholder {
   gap: 0.75rem;
 }
 
-.wyg-icon-circle {
-  width: 44px;
-  height: 44px;
+.wyg-custom-icon {
+  width: 72px;
+  height: auto;
   border-radius: 50%;
-  background-color: var(--light-green);
-  color: var(--primary-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-}
-
-.wyg-icon-circle svg {
-  color: var(--green-color);
+  object-fit: contain;
 }
 
 .wyg-content {
