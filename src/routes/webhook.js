@@ -154,7 +154,6 @@ router.post('/evolution', async (req, res) => {
       let evalState = currentState;
 
       const templateId = flowMap[resolvedIndustry] || 'sme_risk';
-      const { getFlow } = require('../services/conversationEngine');
       const flow = getFlow(templateId);
 
       // Send initial welcome message instantly without advancing state
