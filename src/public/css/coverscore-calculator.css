@@ -1295,3 +1295,120 @@ input::placeholder {
   align-items: center;
   gap: 0.5rem;
 }
+
+/* --- TRUST & PRIVACY SCREEN --- */
+.tp-section {
+  padding: 2rem 1.5rem;
+  background-color: var(--bg-light);
+  text-align: center;
+}
+
+.tp-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F1F9F4;
+  color: var(--green-color);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  gap: 0.5rem;
+}
+
+.tp-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.tp-subtitle {
+  font-size: 0.95rem;
+  color: var(--primary-color);
+  opacity: 0.8;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.tp-graphic-container {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto 2rem auto;
+  position: relative;
+}
+
+.tp-graphic-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.tp-card {
+  background-color: var(--white-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.tp-card-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.tp-card-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.tp-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #F1F9F4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-color);
+  flex-shrink: 0;
+}
+
+.tp-row-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+}
+
+.tp-row-desc {
+  font-size: 0.85rem;
+  color: var(--primary-color);
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.tp-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--green-color);
+  color: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-decoration: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+}
