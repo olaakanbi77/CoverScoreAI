@@ -1211,13 +1211,16 @@ input::placeholder {
 .rp-feature-icon {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  border: 1.5px solid var(--green-color);
-  color: var(--green-color);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 0.5rem;
+}
+
+.rp-feature-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .rp-feature-text {
