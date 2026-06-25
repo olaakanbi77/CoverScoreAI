@@ -148,6 +148,14 @@ app.get('/personal', (req, res) => {
   });
 });
 
+app.get('/personal/calculator', (req, res) => {
+  res.render('coverscore-personal-calculator', { 
+    title: 'Family Exposure Calculator | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
 app.get('/assessment/start', optionalAuth, (req, res) => {
   res.redirect('/start-whatsapp');
 });
