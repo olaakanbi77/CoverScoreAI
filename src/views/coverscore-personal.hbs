@@ -411,16 +411,9 @@
   const startAssessment = (position) => {
     trackEvent('family_protection_cta_clicked', { cta_position: position });
     
-    // Redirect to WhatsApp
-    const params = getQueryParams();
-    const campaignCode = params.campaign_code;
-    const text = encodeURIComponent(`FAMILY ${campaignCode}`);
-    const botNumber = '{{whatsappNumber}}';
-    
-    trackEvent('whatsapp_redirect_started', { destination: botNumber, campaign: campaignCode });
-    
+    // Redirect to the new Exposure Calculator instead of going straight to WhatsApp
     setTimeout(() => {
-      window.location.href = `https://wa.me/${botNumber}?text=${text}`;
+      window.location.href = '/personal/calculator';
     }, 200);
   };
 
