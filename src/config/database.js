@@ -1,25 +1,39 @@
 const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
-const DB_PATH = process.env.DB_PATH || './data/coverscore.db';
-const dbDir = path.dirname(path.resolve(DB_PATH));
+const usePostgres = !!process.env.DATABASE_URL;
+let db = null;
+let pgPool = null;
 
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+if (usePostgres) {
+  pgPool = new Pool({
+    connectionString: process.env.DATABASE_URL
+  });
+  pgPool.on('error', (err) => {
+    console.error('PostgreSQL Pool Error:', err.message);
+  });
+  console.log('PostgreSQL Pool initialized');
+} else {
+  const DB_PATH = process.env.DB_PATH || './data/coverscore.db';
+  const dbDir = path.dirname(path.resolve(DB_PATH));
+  if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+
+  db = new sqlite3.Database(path.resolve(DB_PATH), (err) => {
+    if (err) console.error('Database connection error:', err.message);
+    else console.log('SQLite Database connected');
+  });
+  db.run('PRAGMA journal_mode = WAL');
+  db.run('PRAGMA foreign_keys = ON');
 }
 
-const db = new sqlite3.Database(path.resolve(DB_PATH), (err) => {
-  if (err) {
-    console.error('Database connection error:', err.message);
-  } else {
-    console.log('Database connected');
-  }
-});
-
-db.run('PRAGMA journal_mode = WAL');
-db.run('PRAGMA foreign_keys = ON');
+// Convert SQLite '?' to Postgres '$1, $2'
+const convertSqliteToPg = (sql) => {
+  let paramIndex = 1;
+  return sql.replace(/\?/g, () => `$${paramIndex++}`);
+};
 
 const initDatabase = () => {
   db.exec(`
@@ -191,6 +205,33 @@ const initDatabase = () => {
       UNIQUE(user_id, module_id)
     );
 
+    CREATE TABLE IF NOT EXISTS assessment_templates (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      track TEXT NOT NULL,
+      description TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS assessment_questions (
+      id TEXT PRIMARY KEY,
+      template_id TEXT NOT NULL,
+      track TEXT NOT NULL,
+      category TEXT NOT NULL,
+      question_text TEXT NOT NULL,
+      help_text TEXT,
+      answer_type TEXT NOT NULL,
+      is_required BOOLEAN DEFAULT 1,
+      weight INTEGER NOT NULL,
+      risk_impact_rules TEXT,
+      recommendation_trigger TEXT,
+      story_trigger TEXT,
+      academy_trigger TEXT,
+      version TEXT DEFAULT '1.0',
+      status TEXT DEFAULT 'active',
+      FOREIGN KEY (template_id) REFERENCES assessment_templates(id)
+    );
+
     CREATE TABLE IF NOT EXISTS risk_stories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       story_id TEXT UNIQUE NOT NULL,
@@ -217,6 +258,83 @@ const initDatabase = () => {
       updated_at DATETIME
     );
 
+    CREATE TABLE IF NOT EXISTS assessment_sessions (
+      id TEXT PRIMARY KEY,
+      lead_id INTEGER,
+      template_code TEXT NOT NULL,
+      status TEXT DEFAULT 'new',
+      current_step TEXT,
+      answers JSON DEFAULT '{}',
+      score_payload JSON,
+      reminder_stage INTEGER DEFAULT 0,
+      stopped_at DATETIME,
+      completed_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS conversation_messages (
+      id TEXT PRIMARY KEY,
+      lead_id INTEGER,
+      session_id TEXT,
+      evolution_message_id TEXT NOT NULL,
+      evolution_instance TEXT NOT NULL,
+      direction TEXT NOT NULL,
+      message_type TEXT,
+      text_content TEXT,
+      delivery_status TEXT DEFAULT 'received',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE (evolution_message_id, evolution_instance),
+      FOREIGN KEY (lead_id) REFERENCES leads(id),
+      FOREIGN KEY (session_id) REFERENCES assessment_sessions(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id TEXT PRIMARY KEY,
+      event_type TEXT NOT NULL,
+      entity_type TEXT,
+      entity_id TEXT,
+      actor_type TEXT,
+      actor_id TEXT,
+      metadata JSON,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS opportunities (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER,
+      session_id TEXT,
+      advisor_id INTEGER,
+      score INTEGER,
+      score_band TEXT,
+      risk_dna JSON,
+      top_priorities JSON,
+      opportunity_priority TEXT,
+      contact_preference TEXT,
+      stage TEXT DEFAULT 'unassigned',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id),
+      FOREIGN KEY (session_id) REFERENCES assessment_sessions(id),
+      FOREIGN KEY (advisor_id) REFERENCES users(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_sessions_lead_id ON assessment_sessions(lead_id);
+    CREATE INDEX IF NOT EXISTS idx_sessions_status ON assessment_sessions(status);
+    CREATE INDEX IF NOT EXISTS idx_opportunities_stage ON opportunities(stage);
+
+    CREATE TABLE IF NOT EXISTS reports (
+      id TEXT PRIMARY KEY,
+      lead_id INTEGER NOT NULL,
+      template_code TEXT NOT NULL,
+      payload TEXT NOT NULL,
+      token TEXT UNIQUE NOT NULL,
+      expires_at DATETIME NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
     INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
       (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
       (2, 'Proposal Sent', 'email', 'Dear {{name}},\n\nPlease find attached the insurance proposal based on our recent consultation for {{business_name}}.\n\nLet me know if you have any questions.\n\nBest regards,\nCoverScore AI Advisor');
@@ -234,6 +352,23 @@ const initDatabase = () => {
       (3, 1, 'Understanding Business Risks', 'Identifying key business risks', 3),
       (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4),
       (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5);
+
+    INSERT OR IGNORE INTO assessment_templates (id, title, track, description) VALUES 
+      ('family_protection', 'Family Protection Score™', 'Personal', 'Family protection readiness'),
+      ('sme_risk', 'SME Risk Score™', 'Business', 'Overall small-business risk posture'),
+      ('school_risk', 'School Risk Score™', 'Business', 'Student safety, property, fleet, and liability readiness'),
+      ('church_risk', 'Church Risk Score™', 'Business', 'Premises, crowd, property, and liability readiness'),
+      ('hospital_risk', 'Hospital Risk Score™', 'Business', 'Clinical, property, equipment, liability, and compliance readiness'),
+      ('manufacturing_risk', 'Manufacturing Risk Score™', 'Business', 'Fire, machinery, people, continuity, and liability readiness');
+
+    INSERT OR IGNORE INTO assessment_questions (id, template_id, track, category, question_text, answer_type, weight, risk_impact_rules, recommendation_trigger, story_trigger, academy_trigger) VALUES 
+      ('PER-FAM-001', 'family_protection', 'Personal', 'Family Protection Risk™', 'Do you currently have life assurance that would support your dependents if you were unable to provide income?', 'yes_no_notsure', 10, '{"no": 100, "notsure": 50, "yes": 0}', 'No or Not sure', 'PER-FAM-002', 'Family Protection Planning™'),
+      ('PER-FAM-002', 'family_protection', 'Personal', 'Income Protection Risk™', 'How many months could your household survive on savings if your income stopped today?', 'months_survival', 10, '{"less_3": 100, "3_6": 75, "6_12": 50, "12_24": 25, "over_24": 0}', 'less_3', 'PER-FAM-001', 'Income Protection Planning™'),
+      ('BUS-SCH-001', 'school_risk', 'Business', 'Fire & Property Risk™', 'Are all school buildings equipped with functional fire extinguishers and smoke detectors?', 'yes_no', 10, '{"no": 100, "yes": 0}', 'no', 'BUS-SCH-001', 'School Risk Advisory™'),
+      ('BUS-SCH-014', 'school_risk', 'Business', 'Fleet & Liability Risk™', 'Does the school maintain a documented servicing schedule for all student transport vehicles?', 'yes_no_na', 8, '{"no": 100, "yes": 0, "na": -1}', 'no', 'BUS-SCH-002', 'School Risk Advisory™'),
+      ('BUS-MFG-001', 'manufacturing_risk', 'Business', 'Fire & Property Risk™', 'Are combustible materials safely segregated from active machinery?', 'yes_no', 10, '{"no": 100, "yes": 0}', 'no', 'BUS-MFG-002', 'Manufacturing Risk Advisory™'),
+      ('BUS-SME-001', 'sme_risk', 'Business', 'Cyber & Data Risk™', 'Do you regularly backup customer and financial data securely offsite or in the cloud?', 'yes_no', 8, '{"no": 100, "yes": 0}', 'no', 'BUS-SME-003', 'Cyber Risk Specialist™');
+
 
     INSERT OR IGNORE INTO risk_stories (
       story_id, title, track, industry, category, subcategory, scenario, trigger_cause, impact, lesson, warning_signs, preventive_controls, protection_solutions, assessment_link, advisor_talking_point, funnel_use, academy_use, priority
@@ -482,31 +617,61 @@ const initDatabase = () => {
   });
 };
 
-const run = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function(err) {
-      if (err) reject(err);
-      else resolve({ lastInsertRowid: this.lastID, changes: this.changes });
+const run = async (sql, params = []) => {
+  if (usePostgres) {
+    const pgSql = convertSqliteToPg(sql);
+    try {
+      const res = await pgPool.query(pgSql, params);
+      return { lastInsertRowid: res.rows[0]?.id || null, changes: res.rowCount };
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    return new Promise((resolve, reject) => {
+      db.run(sql, params, function(err) {
+        if (err) reject(err);
+        else resolve({ lastInsertRowid: this.lastID, changes: this.changes });
+      });
     });
-  });
+  }
 };
 
-const get = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
+const get = async (sql, params = []) => {
+  if (usePostgres) {
+    const pgSql = convertSqliteToPg(sql);
+    try {
+      const res = await pgPool.query(pgSql, params);
+      return res.rows[0];
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    return new Promise((resolve, reject) => {
+      db.get(sql, params, (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
     });
-  });
+  }
 };
 
-const all = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows);
+const all = async (sql, params = []) => {
+  if (usePostgres) {
+    const pgSql = convertSqliteToPg(sql);
+    try {
+      const res = await pgPool.query(pgSql, params);
+      return res.rows;
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    return new Promise((resolve, reject) => {
+      db.all(sql, params, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
     });
-  });
+  }
 };
 
-module.exports = { db, initDatabase, run, get, all };
+module.exports = { db, pgPool, initDatabase, run, get, all };

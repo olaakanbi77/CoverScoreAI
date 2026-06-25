@@ -1,0 +1,1339 @@
+[
+  {
+    "id": "0587a244d81ea831",
+    "type": "postgresdb",
+    "hostname": "postgres",
+    "port": "5432",
+    "db": "coverscore",
+    "ssl": false
+  },
+  {
+    "id": "39471b42a58de682",
+    "type": "tab",
+    "label": "TAB 01 — Webhook Gateway",
+    "disabled": false
+  },
+  {
+    "id": "8e0bb4417ea6b3c1",
+    "type": "tab",
+    "label": "TAB 02 — Message Router",
+    "disabled": false
+  },
+  {
+    "id": "c9b477cba2502c2f",
+    "type": "tab",
+    "label": "TAB 03 — Family Protection Assessment",
+    "disabled": false
+  },
+  {
+    "id": "c2697912e972caf2",
+    "type": "subflow",
+    "name": "SUBFLOW 01 — Normalize Evolution Event",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "01f36f1f7757a4e6"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "f19127927f576690"
+      }
+    ]
+  },
+  {
+    "id": "01f36f1f7757a4e6",
+    "z": "c2697912e972caf2",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "1b43677b1dae3b0a"
+      ]
+    ]
+  },
+  {
+    "id": "f19127927f576690",
+    "z": "c2697912e972caf2",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "b428dc2326fb2ec3",
+    "type": "subflow",
+    "name": "SUBFLOW 02 — Duplicate Message Guard",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "f8ae7f1836691ca9"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "f715085f2693067e"
+      }
+    ]
+  },
+  {
+    "id": "f8ae7f1836691ca9",
+    "z": "b428dc2326fb2ec3",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "626b0d826adfde15"
+      ]
+    ]
+  },
+  {
+    "id": "f715085f2693067e",
+    "z": "b428dc2326fb2ec3",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "687186f786641348",
+    "type": "subflow",
+    "name": "SUBFLOW 03 — Resolve Lead",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "80e7ce29509a0e9f"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "ae2fca47b0cfb779"
+      }
+    ]
+  },
+  {
+    "id": "80e7ce29509a0e9f",
+    "z": "687186f786641348",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "2f426edc622f78b3"
+      ]
+    ]
+  },
+  {
+    "id": "ae2fca47b0cfb779",
+    "z": "687186f786641348",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "12412ea8bb7723c8",
+    "type": "subflow",
+    "name": "SUBFLOW 04 — Resolve Assessment Session",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "096b2c65d81c1fc8"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "c30310e99ddbfe8c"
+      }
+    ]
+  },
+  {
+    "id": "096b2c65d81c1fc8",
+    "z": "12412ea8bb7723c8",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "8a93f1f0df64c40d"
+      ]
+    ]
+  },
+  {
+    "id": "c30310e99ddbfe8c",
+    "z": "12412ea8bb7723c8",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "f81dc4deb426f09c",
+    "type": "subflow",
+    "name": "SUBFLOW 05 — Send WhatsApp Message",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "d7639c697c534b1e"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "ae3d04481409bdfe"
+      }
+    ]
+  },
+  {
+    "id": "d7639c697c534b1e",
+    "z": "f81dc4deb426f09c",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "c9e35179a23769fb"
+      ]
+    ]
+  },
+  {
+    "id": "ae3d04481409bdfe",
+    "z": "f81dc4deb426f09c",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "5aea4f0f9aec6ccf",
+    "type": "subflow",
+    "name": "SUBFLOW 06 — Write Conversation Message",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "131d5104aa144d59"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "60b4768c670bce76"
+      }
+    ]
+  },
+  {
+    "id": "131d5104aa144d59",
+    "z": "5aea4f0f9aec6ccf",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "d5c30885722d0d87"
+      ]
+    ]
+  },
+  {
+    "id": "60b4768c670bce76",
+    "z": "5aea4f0f9aec6ccf",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "efc480d72d363fe4",
+    "type": "subflow",
+    "name": "SUBFLOW 07 — Save Assessment Answer",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "3bd239c5062d9520"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "0c1f97f206c00362"
+      }
+    ]
+  },
+  {
+    "id": "3bd239c5062d9520",
+    "z": "efc480d72d363fe4",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "fbe3b80b529b4ed5"
+      ]
+    ]
+  },
+  {
+    "id": "0c1f97f206c00362",
+    "z": "efc480d72d363fe4",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "82dca4051f8455df",
+    "type": "subflow",
+    "name": "SUBFLOW 08 — Resolve Next Assessment State",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "a1cfa6f7a1b2ae23"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "49fa91cebc0a2fd3"
+      }
+    ]
+  },
+  {
+    "id": "a1cfa6f7a1b2ae23",
+    "z": "82dca4051f8455df",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "ec063aa1050f71c5"
+      ]
+    ]
+  },
+  {
+    "id": "49fa91cebc0a2fd3",
+    "z": "82dca4051f8455df",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "f0b8feec318171e1",
+    "type": "subflow",
+    "name": "SUBFLOW 09 — Render Assessment Message",
+    "info": "",
+    "in": [
+      {
+        "x": 50,
+        "y": 50,
+        "wires": [],
+        "id": "350a765b101d8781"
+      }
+    ],
+    "out": [
+      {
+        "x": 500,
+        "y": 50,
+        "wires": [],
+        "id": "f2960c87d73111b5"
+      }
+    ]
+  },
+  {
+    "id": "350a765b101d8781",
+    "z": "f0b8feec318171e1",
+    "type": "subflow",
+    "name": "",
+    "direction": "in",
+    "x": 50,
+    "y": 50,
+    "wires": [
+      [
+        "1983ff1ddea9643e"
+      ]
+    ]
+  },
+  {
+    "id": "f2960c87d73111b5",
+    "z": "f0b8feec318171e1",
+    "type": "subflow",
+    "name": "",
+    "direction": "out",
+    "x": 500,
+    "y": 50,
+    "wires": []
+  },
+  {
+    "id": "a2b34304180ffbcf",
+    "z": "39471b42a58de682",
+    "type": "http in",
+    "name": "Incoming Webhook",
+    "url": "/webhooks/evolution/messages",
+    "method": "post",
+    "x": 150,
+    "y": 100,
+    "wires": [
+      [
+        "766ed73144f30370",
+        "349364cf4d64a6f0"
+      ]
+    ]
+  },
+  {
+    "id": "766ed73144f30370",
+    "z": "39471b42a58de682",
+    "type": "http response",
+    "name": "HTTP 200",
+    "statusCode": "200",
+    "x": 550,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "349364cf4d64a6f0",
+    "z": "39471b42a58de682",
+    "type": "link out",
+    "name": "To Router",
+    "links": [
+      "ba6c0ea0cc837820"
+    ],
+    "x": 550,
+    "y": 150,
+    "wires": []
+  },
+  {
+    "id": "ba6c0ea0cc837820",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link in",
+    "name": "From Webhook",
+    "links": [
+      "349364cf4d64a6f0"
+    ],
+    "x": 100,
+    "y": 100,
+    "wires": [
+      [
+        "415dac333983ba2e"
+      ]
+    ]
+  },
+  {
+    "id": "415dac333983ba2e",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "subflow:c2697912e972caf2",
+    "name": "Normalize Event",
+    "x": 250,
+    "y": 100,
+    "wires": [
+      [
+        "f6d63f3786726699"
+      ]
+    ]
+  },
+  {
+    "id": "f6d63f3786726699",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "subflow:b428dc2326fb2ec3",
+    "name": "Duplicate Guard",
+    "x": 450,
+    "y": 100,
+    "wires": [
+      [
+        "bf458b9966c2a260"
+      ]
+    ]
+  },
+  {
+    "id": "bf458b9966c2a260",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "subflow:5aea4f0f9aec6ccf",
+    "name": "Write Message",
+    "x": 650,
+    "y": 100,
+    "wires": [
+      [
+        "af68b138607f8cd9"
+      ]
+    ]
+  },
+  {
+    "id": "af68b138607f8cd9",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "subflow:687186f786641348",
+    "name": "Resolve Lead",
+    "x": 250,
+    "y": 200,
+    "wires": [
+      [
+        "6817c4b0418e9cde"
+      ]
+    ]
+  },
+  {
+    "id": "6817c4b0418e9cde",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "subflow:12412ea8bb7723c8",
+    "name": "Resolve Session",
+    "x": 450,
+    "y": 200,
+    "wires": [
+      [
+        "c17076f93c0ff56d"
+      ]
+    ]
+  },
+  {
+    "id": "c17076f93c0ff56d",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "function",
+    "name": "Determine Route",
+    "func": "let text = msg.coverscore.text_normalized;\nconst hasSession = Boolean(msg.coverscore.session_id);\nlet route = 'unknown_message';\n\nconst familyMatch = text.match(/^FAMILY(?:\\s+([A-Z0-9_:-]+))?$/);\nif (familyMatch) {\n  route = 'command_start';\n  msg.coverscore.campaign_code = familyMatch[1] || 'ORGANIC';\n} else {\n  const commands = { START: 'command_start', CONTINUE: 'command_continue', PAUSE: 'command_pause', RESTART: 'command_restart', STOP: 'command_stop', HELP: 'command_help', REPORT: 'command_report', ADVISOR: 'command_advisor' };\n  route = commands[text] || (hasSession ? 'assessment_answer' : 'unknown_message');\n}\n\nmsg.coverscore.route = route;\nreturn msg;",
+    "outputs": 1,
+    "x": 650,
+    "y": 200,
+    "wires": [
+      [
+        "e0e9cfbf3330ea84"
+      ]
+    ]
+  },
+  {
+    "id": "e0e9cfbf3330ea84",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "switch",
+    "name": "Route Switch",
+    "property": "coverscore.route",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "command_start",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "command_continue",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "command_pause",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "command_stop",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "command_help",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "assessment_answer",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "unknown_message",
+        "vt": "str"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 7,
+    "x": 850,
+    "y": 200,
+    "wires": [
+      [
+        "432de8e1d0c6b430"
+      ],
+      [
+        "eb6d9a7ee412972a"
+      ],
+      [
+        "bc34ec57b5340932"
+      ],
+      [
+        "5aa9c79940bf741d"
+      ],
+      [
+        "9a43f940335ce360"
+      ],
+      [
+        "299c3d61e04caf6b"
+      ],
+      [
+        "1ec40091b13de17d"
+      ]
+    ]
+  },
+  {
+    "id": "432de8e1d0c6b430",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "command_start",
+    "links": [
+      "56d49102723ee445"
+    ],
+    "x": 1050,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "eb6d9a7ee412972a",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "command_continue",
+    "links": [],
+    "x": 1050,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "bc34ec57b5340932",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "command_pause",
+    "links": [],
+    "x": 1050,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "5aa9c79940bf741d",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "command_stop",
+    "links": [
+      "e1f06269233dcbf1"
+    ],
+    "x": 1050,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "9a43f940335ce360",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "command_help",
+    "links": [],
+    "x": 1050,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "299c3d61e04caf6b",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "assessment_answer",
+    "links": [
+      "4c840cb64359200e"
+    ],
+    "x": 1050,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "1ec40091b13de17d",
+    "z": "8e0bb4417ea6b3c1",
+    "type": "link out",
+    "name": "unknown_message",
+    "links": [],
+    "x": 1050,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "1b43677b1dae3b0a",
+    "z": "c2697912e972caf2",
+    "type": "function",
+    "name": "Normalize Logic",
+    "func": "const body = msg.payload;\nconst data = body.data || body;\nconst key = data.key || {};\nconst message = data.message || {};\nconst text = message.conversation || message.extendedTextMessage?.text || message.imageMessage?.caption || '';\nconst messageType = message.conversation ? 'text' : message.extendedTextMessage ? 'text' : 'unsupported';\nconst remoteJid = key.remoteJid || '';\nconst fromNumber = remoteJid.replace('@s.whatsapp.net', '').replace('@g.us', '');\nmsg.coverscore = {\n  request_id: body.id || 'req-id',\n  event_type: 'incoming_message',\n  organization_code: env.get('COVERSCORE_ORGANIZATION_CODE') || 'coverscore',\n  instance_name: body.instance || 'coverscore-main',\n  message_id: key.id || data.id,\n  from_number: fromNumber,\n  text_original: text,\n  text_normalized: String(text).trim().toUpperCase(),\n  message_type: messageType,\n  timestamp: new Date().toISOString()\n};\nmsg.payload = msg.coverscore;\nreturn msg;",
+    "outputs": 1,
+    "x": 250,
+    "y": 50,
+    "wires": [
+      [
+        "f19127927f576690"
+      ]
+    ]
+  },
+  {
+    "id": "626b0d826adfde15",
+    "z": "b428dc2326fb2ec3",
+    "type": "function",
+    "name": "Set Params",
+    "func": "msg.payload = [msg.coverscore.message_id, msg.coverscore.instance_name];\nreturn msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "3dd2b1332dceabcb"
+      ]
+    ]
+  },
+  {
+    "id": "3dd2b1332dceabcb",
+    "z": "b428dc2326fb2ec3",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Check Duplicates",
+    "query": "SELECT id FROM conversation_messages WHERE evolution_message_id = $1 AND evolution_instance_name = $2 LIMIT 1;",
+    "output": true,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "f715085f2693067e"
+      ]
+    ]
+  },
+  {
+    "id": "2f426edc622f78b3",
+    "z": "687186f786641348",
+    "type": "function",
+    "name": "Set Find Params",
+    "func": "msg.payload = [msg.coverscore.organization_code, msg.coverscore.from_number];\nreturn msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "0dca4696eb0407e9"
+      ]
+    ]
+  },
+  {
+    "id": "0dca4696eb0407e9",
+    "z": "687186f786641348",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Find Lead",
+    "query": "SELECT * FROM leads WHERE organization_id = (SELECT id FROM organizations WHERE code = $1) AND whatsapp_number = $2 AND deleted_at IS NULL LIMIT 1;",
+    "output": true,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "ae2fca47b0cfb779"
+      ]
+    ]
+  },
+  {
+    "id": "8a93f1f0df64c40d",
+    "z": "12412ea8bb7723c8",
+    "type": "function",
+    "name": "Set Params",
+    "func": "msg.payload = [msg.coverscore.lead_id];\nreturn msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "7ea320a3afa92222"
+      ]
+    ]
+  },
+  {
+    "id": "7ea320a3afa92222",
+    "z": "12412ea8bb7723c8",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Find Session",
+    "query": "SELECT s.* FROM assessment_sessions s JOIN assessment_templates t ON t.id = s.assessment_template_id WHERE s.lead_id = $1 AND t.code = 'family_protection_score' AND t.version = 1 AND s.status IN ('new', 'in_progress', 'paused', 'processing') ORDER BY s.created_at DESC LIMIT 1;",
+    "output": true,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "c30310e99ddbfe8c"
+      ]
+    ]
+  },
+  {
+    "id": "c9e35179a23769fb",
+    "z": "f81dc4deb426f09c",
+    "type": "function",
+    "name": "Prepare Payload",
+    "func": "msg.payload = { number: msg.coverscore.to_number || msg.coverscore.from_number, text: msg.coverscore.outbound_text };\nreturn msg;",
+    "outputs": 1,
+    "x": 250,
+    "y": 50,
+    "wires": [
+      [
+        "41b6f0b284cd62e5"
+      ]
+    ]
+  },
+  {
+    "id": "41b6f0b284cd62e5",
+    "z": "f81dc4deb426f09c",
+    "type": "http request",
+    "name": "Evolution API",
+    "method": "POST",
+    "ret": "obj",
+    "url": "http://evolution:8080/message/sendText/${EVOLUTION_INSTANCE_NAME}",
+    "x": 450,
+    "y": 50,
+    "wires": [
+      [
+        "ae3d04481409bdfe"
+      ]
+    ]
+  },
+  {
+    "id": "d5c30885722d0d87",
+    "z": "5aea4f0f9aec6ccf",
+    "type": "function",
+    "name": "Set Params",
+    "func": "msg.payload = [\n  msg.coverscore.instance_name,\n  msg.coverscore.message_id,\n  msg.coverscore.message_type,\n  msg.coverscore.text_original,\n  JSON.stringify(msg.coverscore.raw_payload),\n  msg.coverscore.organization_code\n];\nreturn msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "de72c49c81e2ff5c"
+      ]
+    ]
+  },
+  {
+    "id": "de72c49c81e2ff5c",
+    "z": "5aea4f0f9aec6ccf",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Insert Message",
+    "query": "INSERT INTO conversation_messages (organization_id, evolution_instance_name, evolution_message_id, direction, message_type, content, raw_payload, delivery_status, created_at) SELECT id, $1, $2, 'inbound', $3, $4, $5::jsonb, 'received', now() FROM organizations WHERE code = $6 RETURNING id;",
+    "output": false,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "60b4768c670bce76"
+      ]
+    ]
+  },
+  {
+    "id": "fbe3b80b529b4ed5",
+    "z": "efc480d72d363fe4",
+    "type": "function",
+    "name": "Set Answer Params",
+    "func": "msg.payload = [msg.coverscore.session_id, 'todo_qcode', msg.coverscore.answer_key, msg.coverscore.answer_value, msg.coverscore.answer_label, msg.coverscore.risk_value, msg.coverscore.text_original]; return msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "28d3de7b5bbb8247"
+      ]
+    ]
+  },
+  {
+    "id": "28d3de7b5bbb8247",
+    "z": "efc480d72d363fe4",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Save Answer",
+    "query": "INSERT INTO assessment_answers (assessment_session_id, question_code, answer_key, answer_value, answer_label, risk_value, raw_reply, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, now()) ON CONFLICT (assessment_session_id, question_code) DO UPDATE SET answer_key = EXCLUDED.answer_key RETURNING *;",
+    "output": false,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "0c1f97f206c00362"
+      ]
+    ]
+  },
+  {
+    "id": "ec063aa1050f71c5",
+    "z": "82dca4051f8455df",
+    "type": "function",
+    "name": "Set Resolve Params",
+    "func": "msg.payload = [msg.coverscore.session_id, msg.coverscore.current_state_code]; return msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "3974e955786bb086"
+      ]
+    ]
+  },
+  {
+    "id": "3974e955786bb086",
+    "z": "82dca4051f8455df",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Fetch State Config",
+    "query": "SELECT st.transition_config, st.state_type FROM assessment_sessions s JOIN assessment_states st ON st.assessment_template_id = s.assessment_template_id AND st.state_code = $2 WHERE s.id = $1 LIMIT 1;",
+    "output": true,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "f3902291d8fc6af5"
+      ]
+    ]
+  },
+  {
+    "id": "f3902291d8fc6af5",
+    "z": "82dca4051f8455df",
+    "type": "function",
+    "name": "Compute Next State",
+    "func": "msg.coverscore.next_state_code = 'FAM_EDU_RESPONSIBILITY'; // MVP Hardcoded fallback\nreturn msg;",
+    "outputs": 1,
+    "x": 600,
+    "y": 50,
+    "wires": [
+      [
+        "49fa91cebc0a2fd3"
+      ]
+    ]
+  },
+  {
+    "id": "1983ff1ddea9643e",
+    "z": "f0b8feec318171e1",
+    "type": "function",
+    "name": "Set Params",
+    "func": "msg.payload = [msg.coverscore.current_state_code];\nreturn msg;",
+    "outputs": 1,
+    "x": 200,
+    "y": 50,
+    "wires": [
+      [
+        "79e4c7b0168b80cd"
+      ]
+    ]
+  },
+  {
+    "id": "79e4c7b0168b80cd",
+    "z": "f0b8feec318171e1",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Load Template",
+    "query": "SELECT message_template FROM assessment_states WHERE state_code = $1 AND is_active = true LIMIT 1;",
+    "output": true,
+    "outputs": 1,
+    "x": 400,
+    "y": 50,
+    "wires": [
+      [
+        "fe20f08bfc2f465a"
+      ]
+    ]
+  },
+  {
+    "id": "fe20f08bfc2f465a",
+    "z": "f0b8feec318171e1",
+    "type": "function",
+    "name": "Render",
+    "func": "if (msg.payload && msg.payload.length > 0) {\n  let text = msg.payload[0].message_template;\n  text = text.replace('{{first_name}}', msg.coverscore.display_name || 'there');\n  msg.coverscore.outbound_text = text;\n}\nreturn msg;",
+    "outputs": 1,
+    "x": 600,
+    "y": 50,
+    "wires": [
+      [
+        "f2960c87d73111b5"
+      ]
+    ]
+  },
+  {
+    "id": "56d49102723ee445",
+    "z": "c9b477cba2502c2f",
+    "type": "link in",
+    "name": "command_start",
+    "links": [
+      "432de8e1d0c6b430"
+    ],
+    "x": 100,
+    "y": 100,
+    "wires": [
+      [
+        "0f3c510880ac13c8"
+      ]
+    ]
+  },
+  {
+    "id": "0f3c510880ac13c8",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Set Create Params",
+    "func": "msg.payload = [msg.coverscore.lead_id, msg.coverscore.instance_name];\nreturn msg;",
+    "outputs": 1,
+    "x": 300,
+    "y": 100,
+    "wires": [
+      [
+        "a8b0d122a3ae3199"
+      ]
+    ]
+  },
+  {
+    "id": "a8b0d122a3ae3199",
+    "z": "c9b477cba2502c2f",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Create Session",
+    "query": "INSERT INTO assessment_sessions (organization_id, lead_id, assessment_template_id, evolution_instance_name, status, current_state_code, started_at, last_activity_at) SELECT o.id, $1, t.id, $2, 'in_progress', t.initial_state_code, now(), now() FROM organizations o JOIN assessment_templates t ON t.organization_id = o.id WHERE o.code = 'coverscore' AND t.code = 'family_protection_score' AND t.version = 1 ON CONFLICT DO NOTHING RETURNING *;",
+    "output": true,
+    "outputs": 1,
+    "x": 500,
+    "y": 100,
+    "wires": [
+      [
+        "94dc52628f2fd7a2"
+      ]
+    ]
+  },
+  {
+    "id": "94dc52628f2fd7a2",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Welcome Message",
+    "func": "msg.coverscore.outbound_text = \"Welcome to CoverScore Personal™.\\n\\nThis short Family Protection Score™ helps you reflect on how prepared your household may be for unexpected changes involving income, health, family responsibilities, and education expenses.\\n\\nIt takes about 3 minutes.\\n\\nReply 1 to begin.\\nReply PAUSE at any time to continue later.\\nReply STOP to end.\\n\\nYour answers are used to generate your private protection report. Please do not send passwords, bank details, BVN, NIN, or card information.\";\nreturn msg;",
+    "outputs": 1,
+    "x": 700,
+    "y": 100,
+    "wires": [
+      [
+        "ebc6b04b2befcb77"
+      ]
+    ]
+  },
+  {
+    "id": "ebc6b04b2befcb77",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:f81dc4deb426f09c",
+    "name": "Send WhatsApp",
+    "x": 900,
+    "y": 100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "e1f06269233dcbf1",
+    "z": "c9b477cba2502c2f",
+    "type": "link in",
+    "name": "command_stop",
+    "links": [
+      "5aa9c79940bf741d"
+    ],
+    "x": 100,
+    "y": 200,
+    "wires": [
+      [
+        "20918c7149b5a1f4"
+      ]
+    ]
+  },
+  {
+    "id": "20918c7149b5a1f4",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Set Stop Params",
+    "func": "msg.payload = [msg.coverscore.session_id, msg.coverscore.lead_id];\nreturn msg;",
+    "outputs": 1,
+    "x": 300,
+    "y": 200,
+    "wires": [
+      [
+        "47bc9d52ad1262b5"
+      ]
+    ]
+  },
+  {
+    "id": "47bc9d52ad1262b5",
+    "z": "c9b477cba2502c2f",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Stop Session & Opt-Out",
+    "query": "UPDATE assessment_sessions SET status = 'stopped', stopped_at = now(), last_activity_at = now() WHERE id = $1; UPDATE leads SET whatsapp_opt_out = true, status = 'opted_out', updated_at = now() WHERE id = $2;",
+    "output": false,
+    "outputs": 1,
+    "x": 500,
+    "y": 200,
+    "wires": [
+      [
+        "acc38b2835389bfd"
+      ]
+    ]
+  },
+  {
+    "id": "acc38b2835389bfd",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Stop Message",
+    "func": "msg.coverscore.outbound_text = \"Your CoverScore assessment has been stopped.\\n\\nYou will not receive further assessment reminders.\\n\\nIf you choose to return later, reply START.\";\nreturn msg;",
+    "outputs": 1,
+    "x": 700,
+    "y": 200,
+    "wires": [
+      [
+        "32c93cdf7c61698d"
+      ]
+    ]
+  },
+  {
+    "id": "32c93cdf7c61698d",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:f81dc4deb426f09c",
+    "name": "Send WhatsApp",
+    "x": 900,
+    "y": 200,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "4c840cb64359200e",
+    "z": "c9b477cba2502c2f",
+    "type": "link in",
+    "name": "assessment_answer",
+    "links": [
+      "299c3d61e04caf6b"
+    ],
+    "x": 100,
+    "y": 300,
+    "wires": [
+      [
+        "0a65ca60c61643b4"
+      ]
+    ]
+  },
+  {
+    "id": "0a65ca60c61643b4",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Set Load Params",
+    "func": "msg.payload = [msg.coverscore.session_id];\nreturn msg;",
+    "outputs": 1,
+    "x": 250,
+    "y": 300,
+    "wires": [
+      [
+        "53a0a4f81e414f9a"
+      ]
+    ]
+  },
+  {
+    "id": "53a0a4f81e414f9a",
+    "z": "c9b477cba2502c2f",
+    "type": "postgres",
+    "postgresdb": "0587a244d81ea831",
+    "name": "Load Current State",
+    "query": "SELECT s.id AS session_id, s.current_state_code, st.question_code, st.message_template, st.input_type, st.accepted_inputs, st.validation_config, st.transition_config, st.invalid_message_template FROM assessment_sessions s JOIN assessment_states st ON st.state_code = s.current_state_code JOIN assessment_templates t ON t.id = s.assessment_template_id WHERE s.id = $1 AND st.assessment_template_id = t.id LIMIT 1;",
+    "output": true,
+    "outputs": 1,
+    "x": 450,
+    "y": 300,
+    "wires": [
+      [
+        "617695ef545d4f8b"
+      ]
+    ]
+  },
+  {
+    "id": "617695ef545d4f8b",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Validate Reply",
+    "func": "const state = msg.payload[0];\nconst reply = msg.coverscore.text_normalized;\nconst accepted = Array.isArray(state.accepted_inputs) ? state.accepted_inputs : JSON.parse(state.accepted_inputs || '[]');\nlet valid = false; let answerKey = null;\nif (state.input_type === 'single_select') { valid = accepted.includes(reply); answerKey = reply; }\nmsg.coverscore.answer_valid = valid;\nmsg.coverscore.answer_key = answerKey;\nreturn msg;",
+    "outputs": 1,
+    "x": 650,
+    "y": 300,
+    "wires": [
+      [
+        "ae06479ac19c74c7"
+      ]
+    ]
+  },
+  {
+    "id": "ae06479ac19c74c7",
+    "z": "c9b477cba2502c2f",
+    "type": "switch",
+    "name": "Valid?",
+    "property": "coverscore.answer_valid",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "true"
+      },
+      {
+        "t": "false"
+      }
+    ],
+    "outputs": 2,
+    "x": 800,
+    "y": 300,
+    "wires": [
+      [
+        "630068522968be72"
+      ],
+      [
+        "413c2af5ab97f4e3"
+      ]
+    ]
+  },
+  {
+    "id": "630068522968be72",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:efc480d72d363fe4",
+    "name": "Save Answer",
+    "x": 950,
+    "y": 280,
+    "wires": [
+      [
+        "9a73d031f50d9fa9"
+      ]
+    ]
+  },
+  {
+    "id": "9a73d031f50d9fa9",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:82dca4051f8455df",
+    "name": "Resolve Next",
+    "x": 1100,
+    "y": 280,
+    "wires": [
+      [
+        "94438918be75a0a4"
+      ]
+    ]
+  },
+  {
+    "id": "94438918be75a0a4",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:f0b8feec318171e1",
+    "name": "Render State",
+    "x": 1250,
+    "y": 280,
+    "wires": [
+      [
+        "b54826145dc0f711"
+      ]
+    ]
+  },
+  {
+    "id": "b54826145dc0f711",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:f81dc4deb426f09c",
+    "name": "Send WhatsApp",
+    "x": 1400,
+    "y": 280,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "413c2af5ab97f4e3",
+    "z": "c9b477cba2502c2f",
+    "type": "function",
+    "name": "Invalid Msg",
+    "func": "msg.coverscore.outbound_text = \"Please reply with one of the listed options.\\n\\nFor example, reply:\\n\\n1\";\nreturn msg;",
+    "outputs": 1,
+    "x": 950,
+    "y": 320,
+    "wires": [
+      [
+        "b4e98501bf6187e7"
+      ]
+    ]
+  },
+  {
+    "id": "b4e98501bf6187e7",
+    "z": "c9b477cba2502c2f",
+    "type": "subflow:f81dc4deb426f09c",
+    "name": "Send WhatsApp",
+    "x": 1100,
+    "y": 320,
+    "wires": [
+      []
+    ]
+  }
+]

@@ -1,0 +1,354 @@
+{
+  "engine_version": "coverscore_whatsapp_conversation_engine_v1",
+  "assessment_template": {
+    "code": "family_protection",
+    "name": "Family Protection Score™",
+    "channel": "whatsapp",
+    "estimated_duration_minutes": 3,
+    "initial_state": "FAM_WELCOME"
+  },
+  "states": [
+    {
+      "state": "FAM_WELCOME",
+      "message_code": "BOT_FAM_001",
+      "message": "Welcome to CoverScore Personal™.\n\nThis short Family Protection Score™ helps you reflect on how prepared your household may be for income, health, and family emergencies.\n\nIt takes about 3 minutes.\n\nReply START to begin.",
+      "input_type": "command",
+      "accepted_inputs": ["START", "FAMILY", "FAMILY SCORE", "1"],
+      "next_state": "FAM_CONSENT",
+      "invalid_message": "To begin your Family Protection Score™, please reply:\n\nSTART"
+    },
+    {
+      "state": "FAM_CONSENT",
+      "message_code": "BOT_FAM_002",
+      "message": "Before we begin:\n\nCoverScore will use your answers to prepare your private score and practical next steps.\n\nWe do not ask for bank details, passwords, PINs, BVN, NIN, or card information.\n\nReply:\n\n1 — I agree and want to continue\n2 — Show me the privacy summary\n3 — Exit",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3"],
+      "transitions": {
+        "1": {
+          "action": "record_assessment_consent",
+          "next_state": "FAM_NAME"
+        },
+        "2": {
+          "action": "send_privacy_summary",
+          "next_state": "FAM_CONSENT"
+        },
+        "3": {
+          "action": "close_session",
+          "next_state": "FAM_EXIT"
+        }
+      },
+      "invalid_message": "Please reply with:\n\n1 — I agree and want to continue\n2 — Show privacy summary\n3 — Exit"
+    },
+    {
+      "state": "FAM_NAME",
+      "message_code": "BOT_FAM_003",
+      "message": "Thank you.\n\nWhat should I call you?",
+      "input_type": "name",
+      "save_to": "lead.first_name",
+      "validation": {
+        "min_length": 2,
+        "max_length": 50,
+        "allow_pattern": "^[A-Za-zÀ-ÿ' -]+$"
+      },
+      "next_state": "FAM_STATE",
+      "invalid_message": "Please enter your first name only.\n\nFor example:\n\nAyo"
+    },
+    {
+      "state": "FAM_STATE",
+      "message_code": "BOT_FAM_004",
+      "message": "Thanks, {{lead.first_name}}.\n\nWhich state do you currently live in?\n\nYou can type the state name.\n\nFor example:\n\nLagos",
+      "input_type": "nigerian_state",
+      "save_to": "lead.state",
+      "next_state": "FAM_Q01_DEPENDENTS",
+      "invalid_message": "Please type the name of your state.\n\nFor example:\n\nLagos\nOgun\nAbuja"
+    },
+    {
+      "state": "FAM_Q01_DEPENDENTS",
+      "message_code": "BOT_FAM_005",
+      "question_code": "PER_FAM_001",
+      "message": "How many people depend on your income or financial support?\n\n1 — None\n2 — One person\n3 — Two to three people\n4 — Four to five people\n5 — More than five people",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5"],
+      "answer_map": {
+        "1": { "label": "None", "value": 0, "risk_value": 10 },
+        "2": { "label": "One person", "value": 1, "risk_value": 35 },
+        "3": { "label": "Two to three people", "value": "2_3", "risk_value": 60 },
+        "4": { "label": "Four to five people", "value": "4_5", "risk_value": 75 },
+        "5": { "label": "More than five people", "value": "6_plus", "risk_value": 90 }
+      },
+      "next_state": "FAM_Q02_HOUSEHOLD_DEPENDENCE",
+      "invalid_message": "Please reply with a number from 1 to 5.\n\nFor example:\n\n3 — Two to three people"
+    },
+    {
+      "state": "FAM_Q02_HOUSEHOLD_DEPENDENCE",
+      "message_code": "BOT_FAM_006",
+      "question_code": "PER_FAM_004",
+      "message": "How much does your household depend on your income?\n\n1 — My income is not essential to household expenses\n2 — Others can cover most expenses\n3 — I cover about half of household expenses\n4 — I cover most household expenses\n5 — I am the main or only income source",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5"],
+      "answer_map": {
+        "1": { "label": "Not essential", "risk_value": 15 },
+        "2": { "label": "Others can cover most expenses", "risk_value": 35 },
+        "3": { "label": "Covers about half", "risk_value": 55 },
+        "4": { "label": "Covers most expenses", "risk_value": 75 },
+        "5": { "label": "Main or only income source", "risk_value": 90 }
+      },
+      "next_state": "FAM_Q03_INCOME_CONTINUITY",
+      "invalid_message": "Please reply with a number from 1 to 5."
+    },
+    {
+      "state": "FAM_Q03_INCOME_CONTINUITY",
+      "message_code": "BOT_FAM_007",
+      "question_code": "PER_INC_001",
+      "message": "If you were unable to work or earn income unexpectedly, how long could your household continue meeting normal expenses?\n\n1 — Less than one month\n2 — One to three months\n3 — Four to six months\n4 — Seven to twelve months\n5 — More than one year\n6 — Not sure",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5", "6"],
+      "answer_map": {
+        "1": { "label": "Less than one month", "risk_value": 95 },
+        "2": { "label": "One to three months", "risk_value": 75 },
+        "3": { "label": "Four to six months", "risk_value": 45 },
+        "4": { "label": "Seven to twelve months", "risk_value": 25 },
+        "5": { "label": "More than one year", "risk_value": 10 },
+        "6": { "label": "Not sure", "risk_value": 70 }
+      },
+      "next_state": "FAM_Q04_LIFE_PROTECTION",
+      "invalid_message": "Please reply with a number from 1 to 6.\n\nFor example:\n\n2 — One to three months"
+    },
+    {
+      "state": "FAM_Q04_LIFE_PROTECTION",
+      "message_code": "BOT_FAM_008",
+      "question_code": "PER_LIF_001",
+      "message": "Do you currently have life assurance or a protection plan that could support your dependents if you were no longer able to provide income?\n\n1 — Yes, and I believe it is adequate\n2 — Yes, but I am not sure it is enough\n3 — Yes, but it is limited\n4 — No\n5 — Not sure",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5"],
+      "answer_map": {
+        "1": { "label": "Adequate cover", "risk_value": 15 },
+        "2": { "label": "Not sure it is enough", "risk_value": 50 },
+        "3": { "label": "Limited cover", "risk_value": 65 },
+        "4": { "label": "No cover", "risk_value": 95 },
+        "5": { "label": "Not sure", "risk_value": 70 }
+      },
+      "next_state": "FAM_Q05_HEALTH_PROTECTION",
+      "invalid_message": "Please reply with a number from 1 to 5.\n\nIf you are unsure, reply:\n\n5 — Not sure"
+    },
+    {
+      "state": "FAM_Q05_HEALTH_PROTECTION",
+      "message_code": "BOT_FAM_009",
+      "question_code": "PER_HLT_001",
+      "message": "Do you currently have health insurance or an HMO plan for yourself?\n\n1 — Yes, with broad cover\n2 — Yes, but limited cover\n3 — Yes, through work, but I am not sure of the benefits\n4 — No\n5 — Not sure",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5"],
+      "answer_map": {
+        "1": { "label": "Broad cover", "risk_value": 15 },
+        "2": { "label": "Limited cover", "risk_value": 45 },
+        "3": { "label": "Work cover, benefits unknown", "risk_value": 55 },
+        "4": { "label": "No health cover", "risk_value": 95 },
+        "5": { "label": "Not sure", "risk_value": 70 }
+      },
+      "branch_rules": [
+        {
+          "if": "answers.PER_FAM_001.value != 0",
+          "next_state": "FAM_Q06_FAMILY_HEALTH_COVER"
+        },
+        {
+          "else": true,
+          "next_state": "FAM_Q07_EMERGENCY_FUND"
+        }
+      ],
+      "invalid_message": "Please reply with a number from 1 to 5."
+    },
+    {
+      "state": "FAM_Q06_FAMILY_HEALTH_COVER",
+      "message_code": "BOT_FAM_010",
+      "question_code": "PER_HLT_002",
+      "message": "Are your spouse, children, or other dependents covered by a health plan?\n\n1 — Yes, all are covered\n2 — Some are covered\n3 — No\n4 — Not sure",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4"],
+      "answer_map": {
+        "1": { "label": "All covered", "risk_value": 15 },
+        "2": { "label": "Some covered", "risk_value": 55 },
+        "3": { "label": "No", "risk_value": 95 },
+        "4": { "label": "Not sure", "risk_value": 70 }
+      },
+      "next_state": "FAM_Q07_EMERGENCY_FUND",
+      "invalid_message": "Please reply with a number from 1 to 4."
+    },
+    {
+      "state": "FAM_Q07_EMERGENCY_FUND",
+      "message_code": "BOT_FAM_011",
+      "question_code": "PER_FIN_001",
+      "message": "Do you have savings set aside specifically for unexpected expenses?\n\n1 — Yes, enough for more than six months of expenses\n2 — Yes, enough for three to six months\n3 — Yes, but less than three months\n4 — No\n5 — Not sure",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5"],
+      "answer_map": {
+        "1": { "label": "More than six months", "risk_value": 10 },
+        "2": { "label": "Three to six months", "risk_value": 30 },
+        "3": { "label": "Less than three months", "risk_value": 65 },
+        "4": { "label": "No emergency fund", "risk_value": 95 },
+        "5": { "label": "Not sure", "risk_value": 70 }
+      },
+      "branch_rules": [
+        {
+          "if": "answers.PER_FAM_001.value != 0",
+          "next_state": "FAM_Q08_EDUCATION_RESPONSIBILITY"
+        },
+        {
+          "else": true,
+          "next_state": "FAM_REPORT_EMAIL_OPTION"
+        }
+      ],
+      "invalid_message": "Please reply with a number from 1 to 5."
+    },
+    {
+      "state": "FAM_Q08_EDUCATION_RESPONSIBILITY",
+      "message_code": "BOT_FAM_012",
+      "question_code": "PER_FAM_003",
+      "message": "Do you currently pay school fees or education-related expenses for anyone?\n\n1 — No\n2 — Yes, for one person\n3 — Yes, for two or more people\n4 — Not currently, but I expect to within three years",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4"],
+      "answer_map": {
+        "1": { "label": "No", "risk_value": 10 },
+        "2": { "label": "One person", "risk_value": 45 },
+        "3": { "label": "Two or more people", "risk_value": 70 },
+        "4": { "label": "Expected within three years", "risk_value": 40 }
+      },
+      "branch_rules": [
+        {
+          "if": "input in ['2','3','4']",
+          "next_state": "FAM_Q09_EDUCATION_CONTINUITY"
+        },
+        {
+          "else": true,
+          "next_state": "FAM_REPORT_EMAIL_OPTION"
+        }
+      ],
+      "invalid_message": "Please reply with a number from 1 to 4."
+    },
+    {
+      "state": "FAM_Q09_EDUCATION_CONTINUITY",
+      "message_code": "BOT_FAM_013",
+      "question_code": "PER_EDU_002",
+      "message": "If your income stopped for six months, would those education expenses remain manageable?\n\n1 — Yes, comfortably\n2 — Yes, but with some difficulty\n3 — Probably not\n4 — No\n5 — Not sure",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3", "4", "5"],
+      "answer_map": {
+        "1": { "label": "Yes, comfortably", "risk_value": 10 },
+        "2": { "label": "Yes, with some difficulty", "risk_value": 45 },
+        "3": { "label": "Probably not", "risk_value": 80 },
+        "4": { "label": "No", "risk_value": 95 },
+        "5": { "label": "Not sure", "risk_value": 70 }
+      },
+      "next_state": "FAM_REPORT_EMAIL_OPTION",
+      "invalid_message": "Please reply with a number from 1 to 5."
+    },
+    {
+      "state": "FAM_REPORT_EMAIL_OPTION",
+      "message_code": "BOT_FAM_014",
+      "message": "Your score is almost ready.\n\nWould you like a copy of your detailed Family Protection Report™ sent to your email as well?\n\n1 — Yes\n2 — No, WhatsApp is enough",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2"],
+      "transitions": {
+        "1": {
+          "next_state": "FAM_EMAIL_CAPTURE"
+        },
+        "2": {
+          "next_state": "FAM_PROCESSING"
+        }
+      },
+      "invalid_message": "Please reply:\n\n1 — Yes\n2 — No, WhatsApp is enough"
+    },
+    {
+      "state": "FAM_EMAIL_CAPTURE",
+      "message_code": "BOT_FAM_015",
+      "message": "Please type the email address where you would like to receive your report.",
+      "input_type": "email",
+      "save_to": "lead.email",
+      "next_state": "FAM_PROCESSING",
+      "invalid_message": "That email address does not look complete.\n\nPlease type it again, for example:\n\nname@example.com\n\nOr reply SKIP to receive your report only on WhatsApp.",
+      "allow_skip": true,
+      "skip_state": "FAM_PROCESSING"
+    },
+    {
+      "state": "FAM_PROCESSING",
+      "message_code": "BOT_FAM_016",
+      "message": "Thank you, {{lead.first_name}}.\n\nI am preparing your Family Protection Score™ and practical next steps now.\n\nThis will take a moment.",
+      "input_type": "system",
+      "action": "calculate_score_and_send_result",
+      "next_state": "FAM_REPORT_DELIVERY"
+    },
+    {
+      "state": "FAM_REPORT_DELIVERY",
+      "message_code": "BOT_FAM_017",
+      "message": "Hello, {{lead.first_name}}.\n\nYour Family Protection Report™ is ready.\n\nIt includes your score breakdown, priority areas, practical next steps, and a recommended learning resource.\n\nView your private report here:\n\n{{report_url}}\n\nIf you would like help understanding your result, reply ADVISOR.",
+      "input_type": "command",
+      "accepted_inputs": ["ADVISOR", "YES", "1"],
+      "transitions": {
+        "ADVISOR": {
+          "next_state": "FAM_CONTACT_PREFERENCE"
+        },
+        "YES": {
+          "next_state": "FAM_CONTACT_PREFERENCE"
+        },
+        "1": {
+          "next_state": "FAM_CONTACT_PREFERENCE"
+        }
+      },
+      "invalid_message": "To speak with a Risk Advisor, please reply ADVISOR. Otherwise, you can simply click the link above to view your report."
+    },
+    {
+      "state": "FAM_ADVISOR_CONSENT",
+      "message_code": "BOT_FAM_018",
+      "message": "Would you like a qualified CoverScore Risk Advisor to explain your result and help you explore suitable protection options?\n\n1 — Yes, I would like support\n2 — Not now\n3 — I only want educational tips",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3"],
+      "transitions": {
+        "1": {
+          "next_state": "FAM_CONTACT_PREFERENCE"
+        },
+        "2": {
+          "action": "close_no_advisor",
+          "next_state": "FAM_COMPLETE"
+        },
+        "3": {
+          "action": "close_educational_only",
+          "next_state": "FAM_COMPLETE"
+        }
+      },
+      "invalid_message": "Please reply:\n\n1 — I would like advisor support\n2 — Not now\n3 — Educational tips only"
+    },
+    {
+      "state": "FAM_CONTACT_PREFERENCE",
+      "message_code": "BOT_FAM_019",
+      "message": "Thank you.\n\nA CoverScore Risk Advisor may contact you using this WhatsApp number or by phone to discuss your result.\n\nReply:\n\n1 — WhatsApp is preferred\n2 — Phone call is preferred\n3 — Either is fine",
+      "input_type": "single_select",
+      "accepted_inputs": ["1", "2", "3"],
+      "transitions": {
+        "1": {
+          "action": "create_opportunity_whatsapp",
+          "next_state": "FAM_COMPLETE"
+        },
+        "2": {
+          "action": "create_opportunity_phone",
+          "next_state": "FAM_COMPLETE"
+        },
+        "3": {
+          "action": "create_opportunity_any",
+          "next_state": "FAM_COMPLETE"
+        }
+      },
+      "invalid_message": "Please reply with 1, 2, or 3."
+    },
+    {
+      "state": "FAM_COMPLETE",
+      "message_code": "BOT_FAM_020",
+      "message": "Thank you.\n\nYour request has been received.\n\nA CoverScore Risk Advisor will contact you through your preferred channel to help you understand your result and discuss practical options.\n\nYou can reply STOP at any time if you no longer want follow-up.",
+      "input_type": "end"
+    },
+    {
+      "state": "FAM_EXIT",
+      "message_code": "BOT_FAM_EXIT",
+      "message": "Your CoverScore assessment has been closed.\n\nYou will not receive further assessment reminders.\n\nIf you want to start again later, send START.",
+      "input_type": "end"
+    }
+  ]
+}

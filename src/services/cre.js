@@ -1,139 +1,61 @@
 /**
- * CoverScore Recommendation Engine™ (CRE)
- * Combines PME, IRL, and Assessment Data to generate prioritized recommendations
+ * CoverScore Recommendation Engine™ (CRE) v1
+ * Combines dynamically evaluated rules and Category Scores to generate prioritized recommendations
  */
 
 const { getRiskByCategory } = require('./pme');
 const { getIndustryProfile } = require('./irl');
 
-// Predefined rules that map triggers to specific risks
-const creRules = [
-  // ---------------------------------------------------------
-  // PERSONAL RULES
-  // ---------------------------------------------------------
-  {
-    id: 'rule_p1',
-    type: 'personal',
-    evaluate: (data) => {
-      // Dependents > 3 + Life Cover = None
-      const depMap = { '1_2': 2, '3_5': 4, 'over_5': 6 };
-      const dependentsCount = data.answers?.dependents ? depMap[data.answers.dependents] : 0;
-      return dependentsCount >= 3 && data.answers?.has_life_insurance === 'no';
-    },
-    risk_category: 'Life Risk',
-    severity: 'High',
-    recommendation: 'Life Protection Strategy',
-    advisor_prompt: 'If your income stopped tomorrow, how would your family manage financially?'
-  },
-  {
-    id: 'rule_p2',
-    type: 'personal',
-    evaluate: (data) => {
-      // Savings < 1 month + Dependents > 0
-      return data.answers?.savings_buffer === 'less_1m' && data.answers?.has_dependents === 'yes';
-    },
-    risk_category: 'Life Risk',
-    severity: 'Critical',
-    recommendation: 'Immediate Income Protection',
-    advisor_prompt: 'With less than 1 month of savings, a sudden disruption to your income would be catastrophic. What is your contingency plan?'
-  },
-  {
-    id: 'rule_p3',
-    type: 'personal',
-    evaluate: (data) => {
-      // Owns vehicle + Not insured or third party only
-      return data.answers?.owns_vehicle === 'yes' && ['none', 'third_party'].includes(data.answers?.vehicle_insurance);
-    },
-    risk_category: 'Vehicle Risk',
-    severity: 'Medium',
-    recommendation: 'Comprehensive Motor Protection',
-    advisor_prompt: 'If your vehicle is written off tomorrow, do you have the liquidity to replace it immediately?'
-  },
-
-  // ---------------------------------------------------------
-  // BUSINESS RULES
-  // ---------------------------------------------------------
-  {
-    id: 'rule_b1',
-    type: 'business',
-    evaluate: (data) => {
-      // Employees > 10 (or 6_20+)
-      const empBrackets = ['6_20', '21_50', '51_100', 'over_100'];
-      return empBrackets.includes(data.answers?.business?.employee_bracket);
-    },
-    risk_category: 'Employee Welfare Risk',
-    severity: 'High',
-    recommendation: 'Group Life & ECA Compliance',
-    advisor_prompt: 'What provisions currently exist for employees\' families in the event of death in service? Are you compliant with the Pension Reform Act?'
-  },
-  {
-    id: 'rule_b2',
-    type: 'business',
-    evaluate: (data) => {
-      // Has physical location + No protection or high impact of fire
-      return data.answers?.business?.has_location === 'yes';
-    },
-    risk_category: 'Property Fire Risk',
-    severity: 'Critical',
-    recommendation: 'Comprehensive Fire & Special Perils',
-    advisor_prompt: 'If a fire destroyed your primary facility tonight, how long could you survive without revenue?'
-  },
-  {
-    id: 'rule_b3',
-    type: 'business',
-    evaluate: (data) => {
-      // Public visitors = yes
-      return data.answers?.business?.public_visitors === 'yes';
-    },
-    risk_category: 'Public Liability Risk',
-    severity: 'High',
-    recommendation: 'Public & Occupiers Liability',
-    advisor_prompt: 'If a customer or visitor is severely injured on your premises, how would you fund the legal and compensation costs?'
-  }
-];
-
 /**
  * Generate Intelligence using CRE
  * @param {Object} assessmentData 
- * @returns {Object} { topRisks, recommendations, advisorTalkingPoints }
+ * @returns {Object} { topRisks, recommendations, advisorTalkingPoints, industryData }
  */
 const generateRecommendations = (assessmentData) => {
-  const { answers, score, entityType = 'business' } = assessmentData;
+  const { answers, score, entityType = 'business', risk_categories, identified_gaps, recommendations: dynamicRecs } = assessmentData;
   const isBusiness = entityType === 'business';
-  
-  const activeRules = creRules.filter(r => r.type === (isBusiness ? 'business' : 'personal'));
   
   let triggeredResults = [];
 
-  // 1. Evaluate CRE Rules
-  activeRules.forEach(rule => {
-    if (rule.evaluate(assessmentData)) {
-      const pmeData = getRiskByCategory(rule.risk_category);
-      
-      // Calculate impact/likelihood score for sorting (simplified)
-      const severityScore = rule.severity === 'Critical' ? 3 : (rule.severity === 'High' ? 2 : 1);
-      
+  // 1. Process Dynamic Triggers from Scoring Engine
+  if (dynamicRecs && Array.isArray(dynamicRecs)) {
+    dynamicRecs.forEach((rec, index) => {
+      // In a full implementation, we'd query `recommendation_rules` DB. For MVP, we map strings.
       triggeredResults.push({
-        risk_category: rule.risk_category,
-        severity: rule.severity,
-        recommendation: rule.recommendation,
-        advisor_prompt: rule.advisor_prompt,
-        priorityScore: severityScore, // In full CRE: Severity x Impact x Likelihood x Gap
-        pme_context: pmeData
+        risk_category: 'Triggered Risk',
+        severity: 'High',
+        recommendation: rec,
+        advisor_prompt: identified_gaps[index] ? `Regarding: ${identified_gaps[index]}` : 'Let\'s discuss your protection options.',
+        priorityScore: 2
       });
+    });
+  }
+
+  // 2. Evaluate Category Risks (Dynamic replacement for hardcoded CRE Rules)
+  if (risk_categories) {
+    for (const [category, categoryScore] of Object.entries(risk_categories)) {
+      if (categoryScore >= 50) {
+        triggeredResults.push({
+          risk_category: category,
+          severity: categoryScore >= 80 ? 'Critical' : 'High',
+          recommendation: `Review ${category} Protection Strategy`,
+          advisor_prompt: `Your ${category} profile indicates a high exposure level. What controls are currently in place?`,
+          priorityScore: categoryScore >= 80 ? 3 : 2
+        });
+      }
     }
-  });
+  }
 
   // Sort by priority score
   triggeredResults.sort((a, b) => b.priorityScore - a.priorityScore);
 
-  // 2. Add Industry Context if Business
+  // 3. Add Industry Context if Business
   let industryData = null;
   if (isBusiness && answers?.business?.industry) {
     industryData = getIndustryProfile(answers.business.industry);
   }
 
-  // 3. Format Output
+  // 4. Format Output
   const topRisks = triggeredResults.map(tr => tr.risk_category);
   const recommendations = triggeredResults.map(tr => ({
     risk: tr.risk_category,
@@ -171,6 +93,5 @@ const generateRecommendations = (assessmentData) => {
 };
 
 module.exports = {
-  generateRecommendations,
-  creRules
+  generateRecommendations
 };

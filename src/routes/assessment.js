@@ -90,9 +90,29 @@ router.get('/start', optionalAuth, async (req, res, next) => {
   }
 });
 
+// --- NEW V1 API ENDPOINTS ---
+router.get('/templates', async (req, res, next) => {
+  try {
+    const templates = await all('SELECT * FROM assessment_templates ORDER BY track, id');
+    res.json(templates);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/template/:id/questions', async (req, res, next) => {
+  try {
+    const questions = await all('SELECT * FROM assessment_questions WHERE template_id = ? ORDER BY id', [req.params.id]);
+    res.json(questions);
+  } catch (error) {
+    next(error);
+  }
+});
+// -----------------------------
+
 router.post('/section',
   optionalAuth,
-  body('section').isIn(allValidSections),
+  body('section').isString(),
   body('data').isObject(),
   async (req, res, next) => {
     try {
@@ -167,8 +187,8 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
 
     // Validation removed: some sections might be empty if the user answered conditionally (e.g., no car)
 
-    const riskData = calculateScore(answers);
-    const { score, riskLevel, recommendations, min_loss, max_loss, identified_gaps, risk_categories } = riskData;
+    const riskData = await calculateScore(answers);
+    const { score, riskLevel, recommendations, min_loss, max_loss, identified_gaps, risk_categories, exposure_index, protection_gap, risk_dna } = riskData;
 
     let aiReport = null;
     let copilotData = null;
@@ -185,9 +205,13 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
         min_loss,
         max_loss,
         identified_gaps,
+        recommendations,
         risk_categories,
         entityType,
-        user: aiUserObj
+        user: aiUserObj,
+        exposure_index,
+        protection_gap,
+        risk_dna
       };
 
       // 1. Run CRE Rules

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunity Detail | CoverScore Advisor OS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script>
+    function toggleModal(modalID) {
+      document.getElementById(modalID).classList.toggle("hidden");
+      document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
+    }
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans pb-6">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="px-4 py-3 flex items-center">
+      <a href="/advisor/opportunities" class="text-gray-500 hover:text-gray-700 mr-4">
+        <i class="fas fa-arrow-left text-lg"></i>
+      </a>
+      <h1 class="text-xl font-bold text-gray-900 truncate">Opportunity Detail</h1>
+    </div>
+  </header>
+
+  <main class="px-4 mt-4 space-y-4 max-w-3xl mx-auto">
+    <!-- 1. Lead Summary -->
+    <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">{{opp.lead_initial}} <span class="text-gray-400 text-sm font-normal">#{{opp.id}}</span></h2>
+          <p class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt w-4"></i> {{opp.lead_state}}</p>
+        </div>
+        <div class="text-right">
+          <div class="text-3xl font-bold text-blue-600">{{opp.score}}<span class="text-sm text-gray-400">/100</span></div>
+          <p class="text-xs font-semibold text-gray-500 uppercase">{{opp.score_band}}</p>
+        </div>
+      </div>
+      <div class="mt-4 p-3 bg-red-50 border-l-4 border-red-500 rounded text-red-800 text-sm font-medium">
+        {{opp.status_label}}
+      </div>
+    </section>
+
+    <!-- 2. Immediate Next Action -->
+    <section class="bg-blue-600 rounded-lg shadow-md p-4 text-white">
+      <h3 class="text-blue-100 text-sm font-bold uppercase tracking-wider mb-2">Next Action</h3>
+      <p class="text-xl font-bold mb-4">{{opp.nextAction.label}}</p>
+      
+      {{#if (eq opp.nextAction.type 'message')}}
+        <a href="https://wa.me/{{opp.lead_phone}}?text=Hello%20{{opp.lead_name}}.%20My%20name%20is%20your%20CoverScore%20Advisor." target="_blank" class="block w-full bg-white text-blue-700 text-center font-bold py-3 rounded-lg shadow hover:bg-gray-50 transition-colors">
+          <i class="fab fa-whatsapp mr-2"></i> Message on WhatsApp
+        </a>
+      {{else if (eq opp.nextAction.type 'log')}}
+        <button onclick="toggleModal('stage-modal')" class="block w-full bg-white text-blue-700 text-center font-bold py-3 rounded-lg shadow hover:bg-gray-50 transition-colors">
+          <i class="fas fa-clipboard-check mr-2"></i> Log Contact Outcome
+        </button>
+      {{else}}
+        <button onclick="toggleModal('stage-modal')" class="block w-full bg-white text-blue-700 text-center font-bold py-3 rounded-lg shadow hover:bg-gray-50 transition-colors">
+          <i class="fas fa-calendar-alt mr-2"></i> Update Stage
+        </button>
+      {{/if}}
+    </section>
+
+    <!-- 3. Protection Profile -->
+    <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <h3 class="text-gray-900 font-bold mb-3 border-b pb-2">Protection Profile™ / Risk DNA</h3>
+      <div class="flex flex-wrap gap-2">
+        {{#each opp.risk_dna}}
+          <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium border border-gray-200">
+            <i class="fas fa-fingerprint text-gray-400 mr-1"></i> {{this.name}}
+          </span>
+        {{/each}}
+      </div>
+    </section>
+
+    <!-- 4. Priority Areas -->
+    <section class="space-y-3">
+      <h3 class="text-gray-900 font-bold px-1">Your Lead's Priority Areas</h3>
+      {{#each opp.top_priorities}}
+        <details class="bg-white rounded-lg shadow-sm border border-gray-200 group">
+          <summary class="p-4 cursor-pointer font-bold text-gray-900 flex justify-between items-center list-none">
+            <div class="flex items-center">
+              <span class="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded mr-3 uppercase">{{this.gap_level}} Gap</span>
+              {{this.name}}
+            </div>
+            <i class="fas fa-chevron-down text-gray-400 transition-transform group-open:rotate-180"></i>
+          </summary>
+          <div class="p-4 pt-0 border-t border-gray-100 mt-2 text-sm text-gray-600 space-y-3">
+            <div>
+              <strong class="text-gray-800 block mb-1">Suggested conversation starter:</strong>
+              <p class="italic border-l-2 border-blue-200 pl-3">"{{this.conversation_starter}}"</p>
+            </div>
+          </div>
+        </details>
+      {{/each}}
+    </section>
+
+    <!-- 5 & 6. Report & Contact Preferences -->
+    <div class="grid grid-cols-2 gap-4">
+      <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+        <div class="w-10 h-10 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-2">
+          <i class="fab fa-whatsapp text-xl"></i>
+        </div>
+        <h4 class="font-bold text-gray-900 text-sm">WhatsApp</h4>
+        <p class="text-xs text-gray-500">Contact Preference</p>
+      </section>
+      <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+        <div class="w-10 h-10 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-2">
+          <i class="fas fa-file-pdf text-xl"></i>
+        </div>
+        <h4 class="font-bold text-gray-900 text-sm">View Report</h4>
+        <p class="text-xs text-gray-500">Family Protection</p>
+      </section>
+    </div>
+
+    <!-- 7. Pipeline Progress -->
+    <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-gray-900 font-bold">Pipeline Stage</h3>
+        <button onclick="toggleModal('stage-modal')" class="text-sm font-semibold text-blue-600 hover:underline">Update Stage</button>
+      </div>
+      <div class="relative pt-1">
+        <div class="flex mb-2 items-center justify-between">
+          <div><span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">{{opp.stage}}</span></div>
+        </div>
+        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-100">
+          <div style="width: 30%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 8. Activity Timeline -->
+    <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <h3 class="text-gray-900 font-bold mb-4">Activity Timeline</h3>
+      <div class="relative border-l-2 border-gray-200 ml-3 space-y-6">
+        {{#each timeline}}
+          <div class="relative pl-6">
+            <div class="absolute w-4 h-4 bg-blue-500 rounded-full -left-[9px] top-1 border-2 border-white"></div>
+            <p class="text-sm font-bold text-gray-900">{{this.event_type}}</p>
+            <p class="text-xs text-gray-500 mt-1">{{this.created_at}}</p>
+          </div>
+        {{/each}}
+      </div>
+    </section>
+  </main>
+
+  <!-- Stage Update Modal (Screen 3) -->
+  <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="stage-modal-backdrop"></div>
+  <div id="stage-modal" class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-end flex">
+    <div class="relative w-full max-w-md my-0 mx-auto">
+      <div class="border-0 rounded-t-xl shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+        <div class="flex items-start justify-between p-5 border-b border-solid border-gray-200 rounded-t">
+          <h3 class="text-xl font-semibold">Update Opportunity Stage</h3>
+          <button class="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('stage-modal')">
+            <span class="text-gray-400 h-6 w-6 text-2xl block outline-none focus:outline-none">&times;</span>
+          </button>
+        </div>
+        <div class="relative p-6 flex-auto">
+          <form id="stageForm">
+            <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2">What happened next?</label>
+              <select id="newStage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="Contact Attempted">Contact Attempted</option>
+                <option value="Conversation Started">Conversation Started</option>
+                <option value="Protection Review Booked">Booked Protection Review</option>
+                <option value="Quote Requested">Requested Quote</option>
+                <option value="Nurture">Move to Nurture</option>
+                <option value="Closed Lost">Close Opportunity</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Reason / Outcome (Optional)</label>
+              <input type="text" id="reason" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="E.g., No response, left message">
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Next Follow-up Date</label>
+              <input type="datetime-local" id="nextDate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+          </form>
+        </div>
+        <div class="flex items-center justify-end p-6 border-t border-solid border-gray-200 rounded-b">
+          <button class="text-gray-500 bg-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('stage-modal')">Cancel</button>
+          <button class="bg-blue-600 text-white active:bg-blue-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="submitStage()">Save Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function submitStage() {
+      const stage = document.getElementById('newStage').value;
+      const reason = document.getElementById('reason').value;
+      const nextDate = document.getElementById('nextDate').value;
+      
+      try {
+        const res = await fetch(`/api/advisor/opportunities/{{opp.id}}/stage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stage, reason, nextDate })
+        });
+        
+        if (res.ok) {
+          window.location.reload();
+        } else {
+          alert('Failed to update stage');
+        }
+      } catch (e) {
+        alert('Error updating stage');
+      }
+    }
+  </script>
+</body>
+</html>

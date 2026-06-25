@@ -6,7 +6,7 @@ const { get, run } = require('../config/database');
 const { generateRiskReport, getLeadQualifier, getWhatsappAdvisor } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
-const { getNextStateAndReply } = require('../services/whatsappFlow');
+const { getNextStateAndReply, getInitialWelcome } = require('../services/whatsappFlow');
 
 // Evolution API webhook endpoint
 router.post('/evolution', async (req, res) => {
@@ -66,14 +66,24 @@ router.post('/evolution', async (req, res) => {
       console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
 
       const flowMap = {
-        'school': 'SCH_001',
-        'manufacturing': 'MFG_001',
-        'hospital': 'HOS_001',
-        'healthcare': 'HOS_001',
-        'church': 'CHR_001',
-        'sme': 'SME_001'
+        'school': 'school_risk',
+        'manufacturing': 'manufacturing_risk',
+        'hospital': 'hospital_risk',
+        'healthcare': 'hospital_risk',
+        'church': 'church_risk',
+        'sme': 'sme_risk',
+        'family': 'family_protection',
+        'personal': 'family_protection'
       };
-      const getInitState = (ind) => flowMap[ind] || 'welcome_name';
+      const { getFlow } = require('../services/conversationEngine');
+      const getInitState = (ind) => {
+        const tId = flowMap[ind] || 'sme_risk';
+        const flow = getFlow(tId);
+        if (flow && flow.assessment_template && flow.assessment_template.initial_state) {
+          return flow.assessment_template.initial_state;
+        }
+        return 'welcome_name';
+      };
 
       let currentState, chatHistory, assessmentData;
       const resolvedIndustry = detectedIndustry || (lead ? lead.industry : null);
@@ -143,27 +153,20 @@ router.post('/evolution', async (req, res) => {
       let processText = incomingTextRaw;
       let evalState = currentState;
 
+      const templateId = flowMap[resolvedIndustry] || 'sme_risk';
+      const { getFlow } = require('../services/conversationEngine');
+      const flow = getFlow(templateId);
+
       // Send initial welcome message instantly without advancing state
-      if ((evalState === 'welcome_name' || evalState.endsWith('_001')) && (isStartTrigger || isRestartTrigger)) {
-        let initialWelcome = "";
-        if (evalState !== 'welcome_name') {
-          const qb = require('../data/question_bank.json');
-          const firstQ = qb.find(q => q.id === evalState);
-          if (firstQ) {
-            initialWelcome = firstQ.question + "\n\n";
-            if (firstQ.question_type === 'single_choice' && firstQ.answers) {
-              const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-              firstQ.answers.forEach((ans, idx) => {
-                initialWelcome += `${letters[idx]}. ${ans}\n`;
-              });
-            }
-            initialWelcome = initialWelcome.trim();
-          }
+      if ((isStartTrigger || isRestartTrigger) && (!flow || evalState === flow.assessment_template.initial_state || evalState === 'welcome_name')) {
+        let initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
+
+        if (flow) {
+          const initConfig = flow.states.find(s => s.state === flow.assessment_template.initial_state);
+          if (initConfig) initialWelcome = initConfig.message;
+          evalState = flow.assessment_template.initial_state;
         }
-        
-        if (!initialWelcome) {
-          initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
-        }
+
         console.log(`   Sending welcome message to ${phoneNumber}...`);
         const welcomeResult = await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
         console.log(`   Welcome message result: ${JSON.stringify(welcomeResult)}`);
@@ -178,17 +181,17 @@ router.post('/evolution', async (req, res) => {
           content: initialWelcome,
           timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
         });
-        await run('UPDATE leads SET chat_history = ? WHERE id = ?', [JSON.stringify(chatHistory), lead.id]);
+        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [evalState, JSON.stringify(chatHistory), lead.id]);
         
-        return; // wait for them to answer name
+        return; // wait for them to answer
       }
 
       if (!evalState) {
-        evalState = 'welcome_name';
+        evalState = flow ? flow.assessment_template.initial_state : 'welcome_name';
       }
 
       // 1. Process Message through State Machine
-      let { nextState, replyText, updatedData, isComplete } = getNextStateAndReply(evalState, processText, assessmentData, lead.industry);
+      let { nextState, replyText, updatedData, isComplete } = await getNextStateAndReply(evalState, processText, assessmentData, templateId);
       console.log(`   State transition: ${evalState} -> ${nextState}, isComplete: ${isComplete}`);
 
       let finalReplyText = replyText;
@@ -236,27 +239,15 @@ router.post('/evolution', async (req, res) => {
 
         // Process final risk score if complete
         if (isComplete && !updatedData._scored) {
-          const { processAssessment } = require('../services/riskEngine');
-          
-          // Pass the business name for the entity
-          if (lead.industry !== 'individual') {
-            updatedData.business_name = lead.business_name || lead.name;
-          }
-          
-          const riResults = processAssessment(updatedData);
           updatedData._scored = true;
           
-          // Save the results
-          updatedData.final_risk_score = riResults.risk_score;
-          updatedData.final_risk_level = riResults.risk_level;
-          updatedData.final_resilience_score = riResults.resilience_score;
-          
-          const indName = lead.industry ? lead.industry.charAt(0).toUpperCase() + lead.industry.slice(1) : 'organization';
-          const consultationOffer = `\n\nBased on your assessment, several opportunities exist to strengthen your ${indName}'s protection strategy.\n\nWould you like a complimentary 30-minute consultation with a CoverScore Certified Risk Advisor?\n\nA. Yes\nB. Maybe Later\nC. No`;
-          
-          // Only send the text report + consultation question now. 
-          // Do NOT process the web report yet.
-          await sendWhatsApp(phoneNumber, null, { _message: riResults.ai_report + consultationOffer });
+          if (!flow) {
+            const indName = lead.industry ? lead.industry.charAt(0).toUpperCase() + lead.industry.slice(1) : 'organization';
+            const consultationOffer = `\n\nBased on your assessment, several opportunities exist to strengthen your protection strategy.\n\nWould you like a complimentary 30-minute consultation with a CoverScore Certified Risk Advisor?\n\nA. Yes\nB. Maybe Later\nC. No`;
+            
+            // Only send the text report + consultation question now. 
+            await sendWhatsApp(phoneNumber, null, { _message: "Thank you for completing the assessment." + consultationOffer });
+          }
         }
 
         // Update lead state (only if message was sent successfully)
@@ -335,100 +326,19 @@ router.post('/evolution', async (req, res) => {
           try {
             updatedData._report_sent = true;
             // Map the collected data to the scoring engine format
-            const entityType = lead.industry === 'individual' ? 'individual' : 'business';
-            let mockAnswers = { type: { entity_type: entityType } };
+            const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
+            
+            // Build Final Answers for V1 scoringEngine
+            const finalAnswers = { 
+                ...updatedData.answers, 
+                template_selection: { template_id: templateId } 
+            };
 
-            if (entityType === 'business') {
-              // Dynamically determine turnover from new flow data
-              const rawRev = updatedData.annual_revenue || updatedData.tuition_fees || updatedData.weekly_offering || updatedData.turnover_bracket || '10m_50m';
-              
-              mockAnswers.business = {
-                business_name: updatedData.business_name || updatedData.name || 'Your Business',
-                industry: updatedData.industry || 'General Business',
-                turnover: rawRev,
-                employees: updatedData.employees || updatedData.employee_bracket || '1_5'
-              };
-              mockAnswers.employee_risk = {
-                employ_staff: 'yes',
-                death_benefits: updatedData.has_employee_benefits === 'yes' ? 'yes' : 'no',
-                accidents: 'none'
-              };
-              if (updatedData.has_location === 'yes') {
-                mockAnswers.property = { 
-                  own_building: updatedData.location_ownership === 'own' ? 'yes' : 'no', 
-                  building_value: updatedData.asset_value || 'under_5m', 
-                  equipment_value: updatedData.asset_value || 'under_5m',
-                  fire_extinguishers: 'some',
-                  fire_incident: 'no'
-                };
-              }
-              if (updatedData.has_vehicles === 'yes') {
-                mockAnswers.vehicle = {
-                  own_vehicles: 'yes',
-                  num_vehicles: '1_3',
-                  transport_goods: (updatedData.vehicle_type === 'both' || updatedData.vehicle_type === 'goods_only') ? 'daily' : 'never',
-                  transit_value: '1m_10m'
-                };
-              } else {
-                mockAnswers.vehicle = { own_vehicles: 'no' };
-              }
-              if (updatedData.business_interruption_risk) {
-                const impactMap = {
-                  'minor': 'minor',
-                  'significant': 'significantly',
-                  'severe': 'catastrophically',
-                  'survival_threatened': 'catastrophically'
-                };
-                mockAnswers.business_interruption = {
-                  revenue_impact: impactMap[updatedData.business_interruption_risk] || 'significantly',
-                  alt_location: 'no'
-                };
-              }
-              if (updatedData.public_liability_risk) {
-                mockAnswers.liability = {
-                  customer_interaction: updatedData.public_liability_risk === 'yes' ? 'frequently' : 'never',
-                  premises_injury: updatedData.public_liability_risk === 'yes' ? 'high' : 'low',
-                  product_liability: 'no'
-                };
-              }
-            } else {
-              mockAnswers.personal = {
-                name: updatedData.name || 'User',
-                dependents: updatedData.dependents === '1_2' ? '1_2' : 
-                            updatedData.dependents === '3_5' ? '3_5' : 
-                            updatedData.dependents === 'over_5' ? 'more_than_5' : 'none'
-              };
-              mockAnswers.family_protection = {
-                life_insurance: updatedData.has_life_insurance || 'no',
-                lifestyle_maintenance: 'less_than_3m'
-              };
-              mockAnswers.health_protection = {
-                health_insurance: updatedData.has_health_insurance || 'no',
-                medical_emergency: 'borrowing'
-              };
-              mockAnswers.home_risk = {
-                household_contents_value: updatedData.home_value === 'under_5m' ? '1m_5m' :
-                                          updatedData.home_value === '5m_20m' ? '5m_20m' : 'above_20m',
-                burglary_fire_experience: 'no'
-              };
-              mockAnswers.motor_risk = {
-                own_vehicle: updatedData.owns_vehicle || 'no',
-                motor_insurance_status: updatedData.vehicle_insurance === 'none' ? 'uninsured' :
-                                        updatedData.vehicle_insurance === 'third_party' ? 'third_party' : 'comprehensive',
-                accident_history: 'no'
-              };
-              mockAnswers.financial_resilience = {
-                survival_months: updatedData.savings_buffer === 'less_1m' ? 'less_than_1m' :
-                                 updatedData.savings_buffer === '1_3m' ? '1_3m' :
-                                 updatedData.savings_buffer === '3_6m' ? '3_6m' : 'more_than_6m'
-              };
-            }
-
-            // Calculate score
-            const scoreResult = calculateScore(mockAnswers);
+            // Calculate score using dynamic V1 engine
+            const scoreResult = await calculateScore(finalAnswers);
 
             const assessmentDataObj = {
-              answers: mockAnswers,
+              answers: finalAnswers,
               score: scoreResult.score,
               riskLevel: scoreResult.riskLevel,
               min_loss: scoreResult.min_loss,
@@ -440,7 +350,7 @@ router.post('/evolution', async (req, res) => {
             };
 
             // Run CRE Rules
-            const creIntelligence = generateRecommendations(assessmentDataObj);
+            const creIntelligence = await generateRecommendations(assessmentDataObj);
 
             // Generate AI Report
             const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
@@ -458,7 +368,7 @@ router.post('/evolution', async (req, res) => {
             const assessRes = await run(`
               INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
               VALUES (NULL, ?, ?, ?, ?)
-            `, [JSON.stringify(mockAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
+            `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
 
             const assessmentId = assessRes.lastInsertRowid;
             

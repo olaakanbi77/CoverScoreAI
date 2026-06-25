@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{title}}</title>
+  <meta name="description" content="Take the free 3-minute Family Protection Score™ on WhatsApp and receive a private report showing your household protection priorities.">
+  <meta property="og:title" content="How Prepared Is Your Family for Life’s Unexpected Changes?">
+  <meta property="og:description" content="Take the free Family Protection Score™ on WhatsApp and receive a private household protection report.">
+  <meta property="og:image" content="/images/coverscore-personal-og.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/coverscore-personal.css">
+</head>
+<body>
+
+<div class="container" id="main-container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-container">
+      <div class="logo-text">Cover<span>Score</span></div>
+      <div class="logo-sub">Personal</div>
+    </div>
+    <div class="hamburger">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="section hero" id="hero">
+    <div class="eyebrow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <polyline points="9 12 11 14 15 10"/>
+      </svg>
+      FREE FAMILY PROTECTION CHECK
+    </div>
+    
+    <h1>How prepared is your family for <span class="text-green">life's unexpected changes?</span></h1>
+    <p>Get your private <strong>Family Protection Score™</strong> in about 3 minutes on WhatsApp and know the areas that need attention.</p>
+    
+    <div class="hero-badges">
+      <div class="hero-badge">
+        <div class="hero-badge-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="hero-badge-text">Takes about<br><strong>3 minutes</strong></div>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="hero-badge-text">Private<br><span class="green-strong">WhatsApp</span><br>assessment</div>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <div class="hero-badge-text">No payment<br><span class="green-strong">required</span></div>
+      </div>
+    </div>
+    
+    <button class="btn-whatsapp" onclick="startAssessment('hero')">
+      <div class="btn-whatsapp-content">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+        </svg>
+        Calculate My Family Exposure
+      </div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </button>
+    
+    <div class="handwriting-section">
+      <div class="handwriting-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5l-4 4 4 4"/>
+          <path d="M5 9c6 0 10 4 10 10"/>
+        </svg>
+      </div>
+      <div class="handwriting-text">
+        See your estimated financial exposure in <span class="underline-green">30 seconds</span>
+      </div>
+    </div>
+    
+    <div class="hero-visual">
+      <!-- High quality family image placeholder -->
+      <img src="https://images.unsplash.com/photo-1543269664-76b420f3299c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Family protection" loading="lazy">
+      <div class="hero-visual-gradient"></div>
+    </div>
+    
+    <div class="hero-footer-trust">
+      <div class="hero-footer-trust-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        For awareness and planning only. Not an insurance quote or offer.
+      </div>
+      <div class="hero-footer-trust-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Your data is private and secure. No phone number required.
+      </div>
+    </div>
+  </section>
+
+  <!-- 03. Trust Strip -->
+  <section class="trust-strip observer-target" data-event="trust_strip_viewed">
+    <div class="trust-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      Free to take
+    </div>
+    <div class="trust-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      Takes about 3 minutes
+    </div>
+    <div class="trust-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      Private report delivered on WhatsApp
+    </div>
+    <div class="trust-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      Advisor support is optional
+    </div>
+  </section>
+
+  <!-- 04. What You Will Discover -->
+  <section class="section section-bg-light">
+    <h2>In About 3 Minutes, You Will Discover:</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Your Family Protection Score™</h3>
+        <p>A simple score showing how prepared your household may be for unexpected changes.</p>
+      </div>
+      <div class="card">
+        <h3>Your Main Protection Gaps</h3>
+        <p>See the areas that may need more attention, such as income continuity, health readiness, or family protection.</p>
+      </div>
+      <div class="card">
+        <h3>Practical Next Steps</h3>
+        <p>Receive clear actions you can consider to strengthen your household’s protection.</p>
+      </div>
+      <div class="card">
+        <h3>Optional Advisor Support</h3>
+        <p>If you want help, you can choose to speak with a CoverScore Risk Advisor. There is no obligation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05. How It Works -->
+  <section class="section observer-target" data-event="how_it_works_viewed">
+    <h2>How Your Free Family Protection Score™ Works</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>1. Start on WhatsApp</h3>
+        <p>Answer a few simple questions about your household readiness.</p>
+      </div>
+      <div class="card">
+        <h3>2. Get Your Private Score</h3>
+        <p>Your Family Protection Score™ is calculated automatically.</p>
+      </div>
+      <div class="card">
+        <h3>3. Receive Your Report</h3>
+        <p>Get a clear report showing your priority protection areas.</p>
+      </div>
+      <div class="card">
+        <h3>4. Choose Your Next Step</h3>
+        <p>Read the report privately or request optional advisor support.</p>
+      </div>
+    </div>
+    <p style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem;">You can pause and continue later at any time.</p>
+  </section>
+
+  <!-- 06. Protection Areas Assessed -->
+  <section class="section section-bg-light">
+    <h2>What Your Family Protection Score™ Looks At</h2>
+    <div class="carousel">
+      <div class="card carousel-card">
+        <h3>Income Continuity</h3>
+        <p>How prepared your household may be if income pauses unexpectedly.</p>
+      </div>
+      <div class="card carousel-card">
+        <h3>Family Life Protection</h3>
+        <p>How key family responsibilities may continue if circumstances change.</p>
+      </div>
+      <div class="card carousel-card">
+        <h3>Health Readiness</h3>
+        <p>How prepared you may be for unexpected medical expenses.</p>
+      </div>
+      <div class="card carousel-card">
+        <h3>Emergency Readiness</h3>
+        <p>How well your household can handle sudden financial pressure.</p>
+      </div>
+      <div class="card carousel-card">
+        <h3>Education Continuity</h3>
+        <p>How education expenses may continue if household income is disrupted.</p>
+      </div>
+      <div class="card carousel-card">
+        <h3>Personal Asset Protection</h3>
+        <p>How important personal assets and responsibilities may be protected.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07. Real-Life Risk Stories -->
+  <section class="section">
+    <h2>Life Can Change Quickly. Preparation Changes the Outcome.</h2>
+    <div class="card-grid">
+      <div class="card" onclick="trackEvent('risk_story_opened', { story: 'income' })">
+        <span class="eyebrow" style="background:#FEF3C7;color:#D97706;">Income Continuity</span>
+        <h3>Income Interrupted</h3>
+        <p>A household provider had to stop working unexpectedly. Monthly expenses continued, but income did not.</p>
+      </div>
+      <div class="card" onclick="trackEvent('risk_story_opened', { story: 'health' })">
+        <span class="eyebrow" style="background:#FEE2E2;color:#DC2626;">Health Readiness</span>
+        <h3>Unexpected Medical Bills</h3>
+        <p>A medical emergency created sudden costs that disrupted savings and household plans.</p>
+      </div>
+      <div class="card" onclick="trackEvent('risk_story_opened', { story: 'education' })">
+        <span class="eyebrow" style="background:#E0E7FF;color:#4F46E5;">Education Continuity</span>
+        <h3>School Fees Pressure</h3>
+        <p>A change in family income made it difficult to keep education expenses on track.</p>
+      </div>
+    </div>
+    <div style="margin-top: 1.5rem;">
+      <button class="btn-outline" onclick="startAssessment('stories')">See What Your Family Protection Score™ May Reveal</button>
+    </div>
+  </section>
+
+  <!-- 08. Sample Report Preview -->
+  <section class="section section-bg-light observer-target" data-event="sample_report_viewed">
+    <h2>Your Private Report Is Clear, Simple, and Actionable</h2>
+    <div class="report-preview">
+      <p style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;color:#94A3B8;">Sample report only</p>
+      <h3>Family Protection Score™</h3>
+      <div class="report-score">74/100</div>
+      <div class="report-badge">Significant Protection Gap</div>
+      <p style="font-weight:600;">Your Priority Areas</p>
+      <ol>
+        <li>Income Continuity</li>
+        <li>Family Life Protection</li>
+        <li>Emergency Readiness</li>
+      </ol>
+      <button class="btn-primary" style="background:#38BDF8;color:#0F172A;" onclick="startAssessment('sample_report')">View What Your Score Could Reveal</button>
+    </div>
+  </section>
+
+  <!-- 09. Why CoverScore Is Different -->
+  <section class="section">
+    <h2>Start With Understanding, Not Pressure</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Risk First</h3>
+        <p>CoverScore begins by helping you understand your household protection priorities.</p>
+      </div>
+      <div class="card">
+        <h3>Simple and Private</h3>
+        <p>The assessment happens on WhatsApp and your report is delivered privately.</p>
+      </div>
+      <div class="card">
+        <h3>No Obligation</h3>
+        <p>You can read your report without speaking to an advisor.</p>
+      </div>
+      <div class="card">
+        <h3>Support When You Want It</h3>
+        <p>If you choose, a CoverScore Risk Advisor can help you understand suitable next steps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. FAQ -->
+  <section class="section section-bg-light">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          Is the Family Protection Score™ free?
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="faq-answer">Yes. The assessment and your private report are free.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          How long does it take?
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="faq-answer">Most people complete it in about 3 minutes on WhatsApp.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          Will I be forced to buy insurance?
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="faq-answer">No. The assessment helps you understand your protection priorities. Advisor support is optional.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          Is my information private?
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="faq-answer">Your answers are used to prepare your private report. Do not send passwords, bank details, BVN, NIN, or card information through the assessment.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          What happens after I receive my report?
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="faq-answer">You can review your report privately. If you want support, you can choose to request contact from a CoverScore Risk Advisor.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-question">
+          Can I stop or continue later?
+          <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="faq-answer">Yes. You can reply PAUSE to continue later or STOP to end assessment messages.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Final Conversion Section -->
+  <section class="section" id="final-cta">
+    <h2>Know Your Family’s Protection Priorities Before Life Tests Them</h2>
+    <p>Take your free Family Protection Score™ today and receive a private report on WhatsApp.</p>
+    <button class="btn-primary" onclick="startAssessment('final')">Start My Free Family Protection Score™</button>
+    <div class="trust-text">
+      Free · Private · About 3 minutes · No obligation
+    </div>
+  </section>
+
+  <!-- 12. Privacy, Consent, and Footer -->
+  <footer class="footer">
+    <p style="text-align:left; font-size:0.8rem; margin-bottom:1rem;">
+      <strong>Privacy Notice:</strong> CoverScore uses your assessment responses to generate your Family Protection Report™ and provide the support you request. You may choose whether or not to speak with a CoverScore Risk Advisor. Do not send passwords, bank details, BVN, NIN, card details, or other highly sensitive information through WhatsApp.
+    </p>
+    <div class="footer-links">
+      <a href="/privacy">Privacy Notice</a>
+      <a href="/terms">Terms of Use</a>
+      <a href="/contact">Contact Support</a>
+    </div>
+    <div class="footer-brand">
+      CoverScore Personal™<br>
+      <span style="font-weight:400;font-size:0.8rem;">Smart Risk. Stronger Decisions.</span>
+    </div>
+  </footer>
+
+  <!-- 01. Sticky Mobile CTA -->
+  <div class="sticky-cta" id="sticky-cta">
+    <button class="btn-primary" onclick="startAssessment('sticky_mobile')">Start My Free Score</button>
+    <div class="meta">Takes about 3 minutes</div>
+  </div>
+
+</div>
+
+<script>
+  // 1. Session and Attribution Generation
+  const generateSessionKey = () => {
+    return 'sess_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+  };
+
+  let sessionKey = localStorage.getItem('cs_session_key');
+  if (!sessionKey) {
+    sessionKey = generateSessionKey();
+    localStorage.setItem('cs_session_key', sessionKey);
+  }
+
+  const getQueryParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      utm_source: params.get('utm_source'),
+      utm_medium: params.get('utm_medium'),
+      utm_campaign: params.get('utm_campaign'),
+      utm_content: params.get('utm_content'),
+      utm_term: params.get('utm_term'),
+      campaign_code: params.get('campaign_code') || 'WEB_FAMILY_2026',
+      referral_code: params.get('ref')
+    };
+  };
+
+  const getDeviceType = () => {
+    const ua = navigator.userAgent;
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return 'tablet';
+    if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) return 'mobile';
+    return 'desktop';
+  };
+
+  // 2. Tracking Engine
+  const trackEvent = (eventName, extraMetadata = {}) => {
+    const params = getQueryParams();
+    const payload = {
+      event_name: eventName,
+      landing_page: 'coverscore_personal',
+      cta_position: extraMetadata.cta_position || null,
+      session_key: sessionKey,
+      device_type: getDeviceType(),
+      ...params,
+      metadata: extraMetadata
+    };
+
+    // Fire and forget POST request
+    fetch('/api/public/landing-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(console.error);
+  };
+
+  // 3. CTA Action
+  const startAssessment = (position) => {
+    trackEvent('family_protection_cta_clicked', { cta_position: position });
+    
+    // Redirect to WhatsApp
+    const params = getQueryParams();
+    const campaignCode = params.campaign_code;
+    const text = encodeURIComponent(`FAMILY ${campaignCode}`);
+    const botNumber = '{{whatsappNumber}}';
+    
+    trackEvent('whatsapp_redirect_started', { destination: botNumber, campaign: campaignCode });
+    
+    setTimeout(() => {
+      window.location.href = `https://wa.me/${botNumber}?text=${text}`;
+    }, 200);
+  };
+
+  // 4. Viewport Observers
+  document.addEventListener('DOMContentLoaded', () => {
+    trackEvent('landing_page_viewed');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const eventName = entry.target.getAttribute('data-event');
+          if (eventName) {
+            trackEvent(eventName);
+            observer.unobserve(entry.target); // Only track once per page load
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.observer-target').forEach(el => observer.observe(el));
+    
+    // Sticky CTA logic - hide when final CTA is in view
+    const stickyCta = document.getElementById('sticky-cta');
+    const finalCta = document.getElementById('final-cta');
+    
+    const finalObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          stickyCta.style.display = 'none';
+        } else {
+          stickyCta.style.display = 'flex';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    if (finalCta && stickyCta) {
+      finalObserver.observe(finalCta);
+    }
+  });
+
+  // 5. FAQ Toggle
+  window.toggleFaq = function(element) {
+    const isActive = element.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
+    if (!isActive) {
+      element.classList.add('active');
+      trackEvent('faq_opened', { question: element.querySelector('.faq-question').innerText });
+    }
+  };
+</script>
+
+</body>
+</html>

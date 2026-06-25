@@ -1,0 +1,12 @@
+{
+  "event": "messages.upsert",
+  "data": {
+    "key": {
+      "remoteJid": "1234567890@s.whatsapp.net",
+      "fromMe": false
+    },
+    "message": {
+      "conversation": "START SCHOOL ASSESSMENT"
+    }
+  }
+}

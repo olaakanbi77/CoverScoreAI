@@ -37,3 +37,42 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: coverscore_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: coverscore_admin
+      POSTGRES_PASSWORD: coverscore_password
+      POSTGRES_DB: coverscore_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_schema.sql:/docker-entrypoint-initdb.d/init.sql
+
+  node-red:
+    image: nodered/node-red:latest
+    container_name: coverscore_nodered
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red:/data
+    environment:
+      - TZ=Africa/Lagos
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=coverscore_db
+      - POSTGRES_USER=coverscore_admin
+      - POSTGRES_PASSWORD=coverscore_password
+      - EVOLUTION_API_BASE_URL=http://evolution-api:8080
+      - EVOLUTION_API_KEY=coverscore-evo-secret
+      - EVOLUTION_INSTANCE_NAME=coverscore-main
+      - REPORT_BASE_URL=http://app:3016
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

@@ -170,583 +170,7 @@
       ]
     };
 
-    const businessSections = [
-      {
-        id: 'business',
-        title: 'Business Profile',
-        subtitle: 'Tell us about your business',
-        fields: [
-          {
-            name: 'contact_name',
-            label: '1. What is your Full Name?',
-            type: 'text'
-          },
-          {
-            name: 'name',
-            label: '2. What is your Business Name?',
-            type: 'text'
-          },
-          {
-            name: 'industry',
-            label: '3. What industry best describes your business?',
-            type: 'select',
-            options: [
-              { value: 'manufacturing', label: 'Manufacturing' },
-              { value: 'logistics', label: 'Logistics/Transportation' },
-              { value: 'retail', label: 'Retail' },
-              { value: 'wholesale', label: 'Wholesale' },
-              { value: 'construction', label: 'Construction' },
-              { value: 'agriculture', label: 'Agriculture' },
-              { value: 'education', label: 'Education' },
-              { value: 'healthcare', label: 'Healthcare' },
-              { value: 'hospitality', label: 'Hospitality' },
-              { value: 'religious', label: 'Religious Organization' },
-              { value: 'professional_services', label: 'Professional Services' },
-              { value: 'technology', label: 'Technology' },
-              { value: 'other', label: 'Other' }
-            ]
-          },
-          {
-            name: 'employees',
-            label: '2. How many employees do you have?',
-            type: 'radio',
-            options: [
-              { value: '1_5', title: '1–5', desc: '' },
-              { value: '6_20', title: '6–20', desc: '' },
-              { value: '21_50', title: '21–50', desc: '' },
-              { value: '51_100', title: '51–100', desc: '' },
-              { value: '101_500', title: '101–500', desc: '' },
-              { value: '500plus', title: '500+', desc: '' }
-            ]
-          },
-          {
-            name: 'turnover',
-            label: '3. Annual turnover',
-            type: 'radio',
-            options: [
-              { value: 'under_10m', title: 'Under ₦10M', desc: '' },
-              { value: '10m_50m', title: '₦10M–₦50M', desc: '' },
-              { value: '50m_250m', title: '₦50M–₦250M', desc: '' },
-              { value: '250m_1b', title: '₦250M–₦1B', desc: '' },
-              { value: 'above_1b', title: 'Above ₦1B', desc: '' }
-            ]
-          },
-          {
-            name: 'location',
-            label: '4. Business location',
-            type: 'radio',
-            options: [
-              { value: 'owned', title: 'Owned property', desc: '' },
-              { value: 'leased', title: 'Leased property', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'property',
-        title: 'Property & Fire Risk',
-        subtitle: 'Assessing your physical assets and vulnerabilities',
-        fields: [
-          {
-            name: 'own_building',
-            label: '5. Does your business own or occupy a building?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'building_value',
-            label: '6. Estimated value of building',
-            type: 'radio',
-            options: [
-              { value: 'under_10m', title: 'Under ₦10M', desc: '' },
-              { value: '10m_50m', title: '₦10M–₦50M', desc: '' },
-              { value: '50m_250m', title: '₦50M–₦250M', desc: '' },
-              { value: 'above_250m', title: 'Above ₦250M', desc: '' }
-            ]
-          },
-          {
-            name: 'equipment_value',
-            label: '7. Estimated value of equipment and contents',
-            type: 'radio',
-            options: [
-              { value: 'under_5m', title: 'Under ₦5M', desc: '' },
-              { value: '5m_20m', title: '₦5M–₦20M', desc: '' },
-              { value: '20m_100m', title: '₦20M–₦100M', desc: '' },
-              { value: 'above_100m', title: 'Above ₦100M', desc: '' }
-            ]
-          },
-          {
-            name: 'fire_extinguishers',
-            label: '8. Do you have fire extinguishers?',
-            type: 'radio',
-            options: [
-              { value: 'all', title: 'All areas', desc: '' },
-              { value: 'some', title: 'Some areas', desc: '' },
-              { value: 'none', title: 'None', desc: '' }
-            ]
-          },
-          {
-            name: 'fire_incident',
-            label: '9. Have you experienced a fire incident in the last 5 years?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'business_interruption',
-        title: 'Business Interruption',
-        subtitle: 'Can your business survive a temporary shutdown?',
-        fields: [
-          {
-            name: 'revenue_impact',
-            label: '10. If your business stopped operating for 3 months, would revenue be affected?',
-            type: 'radio',
-            options: [
-              { value: 'slightly', title: 'Slightly', desc: '' },
-              { value: 'moderately', title: 'Moderately', desc: '' },
-              { value: 'significantly', title: 'Significantly', desc: '' },
-              { value: 'catastrophically', title: 'Catastrophically', desc: '' }
-            ]
-          },
-          {
-            name: 'alt_location',
-            label: '11. Do you have alternative operating locations?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'employee_risk',
-        title: 'Employee Risk',
-        subtitle: 'Risks related to your workforce',
-        fields: [
-          {
-            name: 'employ_staff',
-            label: '12. Do you employ staff?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'death_benefits',
-            label: '13. Do staff receive death benefits?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'accidents',
-            label: '14. Have workplace accidents occurred in the last 3 years?',
-            type: 'radio',
-            options: [
-              { value: 'none', title: 'None', desc: '' },
-              { value: '1_2', title: '1–2', desc: '' },
-              { value: '3_5', title: '3–5', desc: '' },
-              { value: 'above_5', title: 'More than 5', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'liability',
-        title: 'Liability Risk',
-        subtitle: 'Your exposure to third-party claims',
-        fields: [
-          {
-            name: 'customer_interaction',
-            label: '15. Does your business interact directly with customers?',
-            type: 'radio',
-            options: [
-              { value: 'frequently', title: 'Frequently', desc: '' },
-              { value: 'occasionally', title: 'Occasionally', desc: '' },
-              { value: 'rarely', title: 'Rarely', desc: '' }
-            ]
-          },
-          {
-            name: 'premises_injury',
-            label: '16. Could a customer be injured on your premises?',
-            type: 'radio',
-            options: [
-              { value: 'high', title: 'High possibility', desc: '' },
-              { value: 'moderate', title: 'Moderate possibility', desc: '' },
-              { value: 'low', title: 'Low possibility', desc: '' }
-            ]
-          },
-          {
-            name: 'product_liability',
-            label: '17. Could your products/services cause financial loss or injury?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'vehicle',
-        title: 'Vehicle & Transit Risk',
-        subtitle: 'Risks related to transportation',
-        fields: [
-          {
-            name: 'own_vehicles',
-            label: '18. Does the business own vehicles?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'num_vehicles',
-            label: '19. Number of vehicles',
-            type: 'radio',
-            options: [
-              { value: '1_3', title: '1–3', desc: '' },
-              { value: '4_10', title: '4–10', desc: '' },
-              { value: '11_50', title: '11–50', desc: '' },
-              { value: 'above_50', title: '50+', desc: '' }
-            ]
-          },
-          {
-            name: 'transport_goods',
-            label: '20. Are goods transported regularly?',
-            type: 'radio',
-            options: [
-              { value: 'daily', title: 'Daily', desc: '' },
-              { value: 'weekly', title: 'Weekly', desc: '' },
-              { value: 'occasionally', title: 'Occasionally', desc: '' },
-              { value: 'never', title: 'Never', desc: '' }
-            ]
-          },
-          {
-            name: 'transit_value',
-            label: '21. Value of goods in transit per month',
-            type: 'radio',
-            options: [
-              { value: 'under_1m', title: 'Under ₦1M', desc: '' },
-              { value: '1m_10m', title: '₦1M–₦10M', desc: '' },
-              { value: '10m_100m', title: '₦10M–₦100M', desc: '' },
-              { value: 'above_100m', title: 'Above ₦100M', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'cyber',
-        title: 'Cyber Risk',
-        subtitle: 'Digital and data protection',
-        fields: [
-          {
-            name: 'store_data',
-            label: '22. Does your business store customer information electronically?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'incidents',
-            label: '23. Have you experienced:',
-            type: 'radio',
-            options: [
-              { value: 'hacking', title: 'Hacking', desc: '' },
-              { value: 'ransomware', title: 'Ransomware', desc: '' },
-              { value: 'data_loss', title: 'Data loss', desc: '' },
-              { value: 'none', title: 'None', desc: '' }
-            ]
-          },
-          {
-            name: 'backups',
-            label: '24. Do you back up data regularly?',
-            type: 'radio',
-            options: [
-              { value: 'daily', title: 'Daily', desc: '' },
-              { value: 'weekly', title: 'Weekly', desc: '' },
-              { value: 'occasionally', title: 'Occasionally', desc: '' },
-              { value: 'never', title: 'Never', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'claims',
-        title: 'Claims History',
-        subtitle: 'Past losses and incidents',
-        fields: [
-          {
-            name: 'past_losses',
-            label: '25. Have you suffered any major losses in the last 5 years?',
-            type: 'select',
-            options: [
-              { value: 'fire', label: 'Fire' },
-              { value: 'theft', label: 'Theft' },
-              { value: 'accident', label: 'Accident' },
-              { value: 'flood', label: 'Flood' },
-              { value: 'liability', label: 'Liability claim' },
-              { value: 'none', label: 'None' }
-            ]
-          },
-          {
-            name: 'loss_value',
-            label: '26. Estimated value of losses',
-            type: 'radio',
-            options: [
-              { value: 'under_1m', title: 'Under ₦1M', desc: '' },
-              { value: '1m_10m', title: '₦1M–₦10M', desc: '' },
-              { value: '10m_50m', title: '₦10M–₦50M', desc: '' },
-              { value: 'above_50m', title: 'Above ₦50M', desc: '' }
-            ]
-          },
-          {
-            name: 'primary_concern',
-            label: '27. Which area concerns you most?',
-            type: 'checkbox',
-            options: [
-              { value: 'Fire & Property Damage', title: 'Fire & Property Damage', desc: '' },
-              { value: 'Employee Welfare', title: 'Employee Welfare', desc: '' },
-              { value: 'Liability Claims', title: 'Liability Claims', desc: '' },
-              { value: 'Business Interruption', title: 'Business Interruption', desc: '' },
-              { value: 'Vehicle & Transit Risks', title: 'Vehicle & Transit Risks', desc: '' },
-              { value: 'Cyber Risk', title: 'Cyber Risk', desc: '' }
-            ]
-          }
-        ]
-      }
-    ];
-
-
-    const individualSections = [
-      {
-        id: 'personal',
-        title: 'Personal Profile',
-        subtitle: 'Basic demographic and financial details',
-        fields: [
-          {
-            name: 'name',
-            label: '1. What is your Full Name?',
-            type: 'text'
-          },
-          {
-            name: 'age_group',
-            label: '2. Age Group',
-            type: 'radio',
-            options: [
-              { value: 'under_25', title: 'Under 25', desc: '' },
-              { value: '25_35', title: '25–35', desc: '' },
-              { value: '36_50', title: '36–50', desc: '' },
-              { value: '51_60', title: '51–60', desc: '' },
-              { value: 'above_60', title: '60+', desc: '' }
-            ]
-          },
-          {
-            name: 'employment_status',
-            label: '2. Employment Status',
-            type: 'radio',
-            options: [
-              { value: 'employed', title: 'Employed', desc: '' },
-              { value: 'self_employed', title: 'Self-employed', desc: '' },
-              { value: 'business_owner', title: 'Business owner', desc: '' },
-              { value: 'retired', title: 'Retired', desc: '' }
-            ]
-          },
-          {
-            name: 'monthly_income',
-            label: '3. Monthly Income',
-            type: 'radio',
-            options: [
-              { value: 'under_100k', title: 'Under ₦100,000', desc: '' },
-              { value: '100k_500k', title: '₦100,000–₦500,000', desc: '' },
-              { value: '500k_1m', title: '₦500,000–₦1M', desc: '' },
-              { value: 'above_1m', title: 'Above ₦1M', desc: '' }
-            ]
-          },
-          {
-            name: 'dependents',
-            label: '4. Number of Dependents',
-            type: 'radio',
-            options: [
-              { value: 'none', title: 'None', desc: '' },
-              { value: '1_2', title: '1–2', desc: '' },
-              { value: '3_5', title: '3–5', desc: '' },
-              { value: 'more_than_5', title: 'More than 5', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'family_protection',
-        title: 'Family Protection',
-        subtitle: 'Life and dependent coverage',
-        fields: [
-          {
-            name: 'lifestyle_maintenance',
-            label: '5. If you died today, how long could your family maintain their lifestyle?',
-            type: 'radio',
-            options: [
-              { value: 'less_than_3m', title: 'Less than 3 months', desc: '' },
-              { value: '3_6m', title: '3–6 months', desc: '' },
-              { value: '6_12m', title: '6–12 months', desc: '' },
-              { value: 'more_than_12m', title: 'More than 12 months', desc: '' }
-            ]
-          },
-          {
-            name: 'life_insurance',
-            label: '6. Do you currently have life insurance?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'health_protection',
-        title: 'Health Protection',
-        subtitle: 'Medical emergencies and coverage',
-        fields: [
-          {
-            name: 'health_insurance',
-            label: '7. Do you have health insurance?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'medical_emergency',
-            label: '8. How would you pay for a ₦2 million medical emergency?',
-            type: 'radio',
-            options: [
-              { value: 'savings', title: 'Savings', desc: '' },
-              { value: 'borrowing', title: 'Borrowing', desc: '' },
-              { value: 'family', title: 'Family support', desc: '' },
-              { value: 'insurance', title: 'Insurance', desc: '' },
-              { value: 'not_sure', title: 'Not sure', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'home_risk',
-        title: 'Home Risk',
-        subtitle: 'Property and belongings',
-        fields: [
-          {
-            name: 'residence_status',
-            label: '9. Do you own or rent your residence?',
-            type: 'radio',
-            options: [
-              { value: 'own', title: 'Own', desc: '' },
-              { value: 'rent', title: 'Rent', desc: '' }
-            ]
-          },
-          {
-            name: 'household_contents_value',
-            label: '10. Estimated value of household contents',
-            type: 'radio',
-            options: [
-              { value: 'under_1m', title: 'Under ₦1M', desc: '' },
-              { value: '1m_5m', title: '₦1M–₦5M', desc: '' },
-              { value: '5m_20m', title: '₦5M–₦20M', desc: '' },
-              { value: 'above_20m', title: 'Above ₦20M', desc: '' }
-            ]
-          },
-          {
-            name: 'burglary_fire_experience',
-            label: '11. Have you experienced burglary or fire before?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'motor_risk',
-        title: 'Motor Risk',
-        subtitle: 'Vehicle ownership and history',
-        fields: [
-          {
-            name: 'own_vehicle',
-            label: '12. Do you own a vehicle?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          },
-          {
-            name: 'motor_insurance_status',
-            label: '13. Current insurance status',
-            type: 'radio',
-            options: [
-              { value: 'comprehensive', title: 'Comprehensive', desc: '' },
-              { value: 'third_party', title: 'Third Party', desc: '' },
-              { value: 'uninsured', title: 'Uninsured', desc: '' }
-            ]
-          },
-          {
-            name: 'accident_history',
-            label: '14. Have you had an accident in the last 3 years?',
-            type: 'radio',
-            options: [
-              { value: 'yes', title: 'Yes', desc: '' },
-              { value: 'no', title: 'No', desc: '' }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'financial_resilience',
-        title: 'Financial Resilience',
-        subtitle: 'Income protection',
-        fields: [
-          {
-            name: 'survival_months',
-            label: '15. If your income stopped today, how many months could you survive?',
-            type: 'radio',
-            options: [
-              { value: 'less_than_1m', title: 'Less than 1 month', desc: '' },
-              { value: '1_3m', title: '1–3 months', desc: '' },
-              { value: '3_6m', title: '3–6 months', desc: '' },
-              { value: 'more_than_6m', title: 'More than 6 months', desc: '' }
-            ]
-          },
-          {
-            name: 'primary_concern',
-            label: '16. Which of these concerns you most?',
-            type: 'checkbox',
-            options: [
-              { value: 'Medical Expenses', title: 'Medical Expenses', desc: '' },
-              { value: 'Loss of Income', title: 'Loss of Income', desc: '' },
-              { value: 'Family Financial Security', title: 'Family Financial Security', desc: '' },
-              { value: 'Vehicle Damage', title: 'Vehicle Damage', desc: '' },
-              { value: 'Property Loss', title: 'Property Loss', desc: '' }
-            ]
-          }
-        ]
-      }
-    ];
+    let allTemplates = [];
 
     // ── State ──────────────────────────────────────────────────────
     let sections = [typeSection]; // Start with only the type selector
@@ -754,24 +178,35 @@
     let answers = {};
     let assessmentId = null;
     let entityType = null;
+    let selectedTemplateId = null;
 
-    function setEntityType(type) {
+    async function setEntityType(type) {
       entityType = type;
       answers.type = { entity_type: type };
-
-      if (type === 'business') {
-        sections = [typeSection, ...businessSections];
-        document.getElementById('wizardTitle').textContent = 'Business Risk Assessment';
-      } else {
-        sections = [typeSection, ...individualSections];
-        document.getElementById('wizardTitle').textContent = 'Personal Risk Assessment';
-      }
-
-      // Rebuild stepper
-      buildStepper();
-
-      // Save the type section immediately
       saveField('type', 'entity_type', type);
+
+      const trackName = type === 'business' ? 'Business' : 'Personal';
+      const available = allTemplates.filter(t => t.track === trackName);
+      
+      const templateSection = {
+        id: 'template_selection',
+        title: 'Select Assessment Template',
+        subtitle: `Choose the specific risk profile for your ${type} assessment.`,
+        fields: [
+          {
+            name: 'template_id',
+            label: '',
+            type: 'template_picker',
+            options: available.map(t => ({ value: t.id, title: t.title, desc: t.description }))
+          }
+        ]
+      };
+
+      sections = [typeSection, templateSection];
+      document.getElementById('wizardTitle').textContent = trackName + ' Risk Assessment';
+      buildStepper();
+      currentStep = 1;
+      renderStep(currentStep);
     }
 
     function buildStepper() {
@@ -799,15 +234,19 @@
         const headers = {};
         if (token) headers.Authorization = `Bearer ${token}`;
 
-        const res = await fetch(url, { headers });
+        const [startRes, templatesRes] = await Promise.all([
+          fetch(url, { headers }),
+          fetch('/api/assessment/templates', { headers })
+        ]);
 
-        if (!res.ok) {
-          throw new Error('Failed to load assessment');
+        if (!startRes.ok || !templatesRes.ok) {
+          throw new Error('Failed to load assessment data');
         }
 
-        const data = await res.json();
-        assessmentId = data.assessmentId;
+        const data = await startRes.json();
+        allTemplates = await templatesRes.json();
         
+        assessmentId = data.assessmentId;
         if (assessmentId && !token) {
           localStorage.setItem('guestAssessmentId', assessmentId);
         }
@@ -875,6 +314,16 @@
             </div>`;
           });
           html += `</div>`;
+        } else if (field.type === 'template_picker') {
+          html += `<div class="persona-cards">`;
+          field.options.forEach(opt => {
+            const isSelected = savedValue === opt.value || selectedTemplateId === opt.value;
+            html += `<div class="persona-card ${isSelected ? 'selected' : ''}" onclick="selectTemplate('${opt.value}')">
+              <div class="persona-title">${opt.title}</div>
+              <div class="persona-desc">${opt.desc}</div>
+            </div>`;
+          });
+          html += `</div>`;
         } else if (field.type === 'select') {
           html += `<label for="${field.name}" style="display: block; margin-bottom: 8px; font-weight: 500;">${field.label}</label>`;
           html += `<select id="${field.name}" name="${field.name}" onchange="saveField('${section.id}', '${field.name}', this.value)" style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white;">`;
@@ -910,9 +359,80 @@
     // ── Interactions ───────────────────────────────────────────────
     function selectPersona(type) {
       setEntityType(type);
-      document.getElementById('nextBtn').style.display = '';
-      // Re-render to show selection
-      renderStep(currentStep);
+    }
+
+    async function selectTemplate(templateId) {
+      selectedTemplateId = templateId;
+      saveField('template_selection', 'template_id', templateId);
+      
+      showLoading(true);
+      try {
+        const token = localStorage.getItem('accessToken');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await fetch(`/api/assessment/template/${templateId}/questions`, { headers });
+        const questions = await res.json();
+        
+        const grouped = {};
+        questions.forEach(q => {
+          if (!grouped[q.category]) {
+            grouped[q.category] = {
+              id: q.category.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase(),
+              title: q.category,
+              subtitle: '',
+              fields: []
+            };
+          }
+          
+          let fieldType = 'text';
+          let options = [];
+          if (q.answer_type === 'yes_no') {
+            fieldType = 'radio';
+            options = [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' }
+            ];
+          } else if (q.answer_type === 'yes_no_notsure') {
+            fieldType = 'radio';
+            options = [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' },
+              { value: 'notsure', title: 'Not sure', desc: '' }
+            ];
+          } else if (q.answer_type === 'yes_no_na') {
+            fieldType = 'radio';
+            options = [
+              { value: 'yes', title: 'Yes', desc: '' },
+              { value: 'no', title: 'No', desc: '' },
+              { value: 'na', title: 'N/A', desc: '' }
+            ];
+          } else if (q.answer_type === 'months_survival') {
+            fieldType = 'radio';
+            options = [
+              { value: 'less_3', title: 'Less than 3 months', desc: '' },
+              { value: '3_6', title: '3-6 months', desc: '' },
+              { value: '6_12', title: '6-12 months', desc: '' },
+              { value: '12_24', title: '12-24 months', desc: '' },
+              { value: 'over_24', title: 'Over 24 months', desc: '' }
+            ];
+          }
+          
+          grouped[q.category].fields.push({
+            name: q.id, // Store answers by question ID
+            label: q.question_text,
+            type: fieldType,
+            options: options
+          });
+        });
+        
+        const dynamicSections = Object.values(grouped);
+        sections = [typeSection, sections[1], ...dynamicSections];
+        buildStepper();
+        document.getElementById('nextBtn').style.display = '';
+        renderStep(currentStep);
+      } catch (err) {
+        console.error(err);
+      }
+      showLoading(false);
     }
 
     function selectRadio(el, sectionId, fieldName, value) {

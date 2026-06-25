@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Queue | CoverScore Advisor OS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans pb-20">
+
+  <!-- Mobile Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="px-4 py-3 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-gray-900">Team Queue</h1>
+    </div>
+  </header>
+
+  <!-- Summary Strip -->
+  <div class="bg-gray-800 text-white px-4 py-3 shadow-md flex justify-around text-sm font-medium">
+    <div class="text-center">
+      <span class="block text-xl font-bold">{{queue.length}}</span>
+      <span class="text-gray-300">Unassigned</span>
+    </div>
+  </div>
+
+  <!-- Queue List -->
+  <main class="px-4 mt-4 space-y-3 pb-6 max-w-3xl mx-auto">
+    {{#if queue.length}}
+      {{#each queue}}
+        <div class="block bg-white rounded-lg shadow-sm border border-gray-200 p-4 relative overflow-hidden">
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <h2 class="text-lg font-bold text-gray-900">{{this.lead_name}}</h2>
+              <p class="text-sm text-gray-600">Score: {{this.score}}/100</p>
+            </div>
+            <span class="text-xs font-semibold px-2 py-1 rounded {{#if (eq this.opportunity_priority 'Urgent')}}bg-red-100 text-red-700{{else}}bg-blue-100 text-blue-700{{/if}}">
+              {{this.opportunity_priority}}
+            </span>
+          </div>
+          
+          <div class="mt-2 space-y-1">
+            <p class="text-sm text-gray-600">Created: {{this.created_at}}</p>
+            <p class="text-sm text-gray-600 font-medium">Stage: <span class="uppercase">{{this.stage}}</span></p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-gray-100">
+            <button class="w-full bg-blue-50 text-blue-600 font-bold py-2 rounded border border-blue-200 hover:bg-blue-100 transition-colors text-sm">
+              <i class="fas fa-user-plus mr-1"></i> Assign Advisor
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+        <h3 class="text-lg font-medium text-gray-900 mb-1">Queue is empty</h3>
+        <p class="text-gray-500 text-sm">All high-priority opportunities are currently assigned.</p>
+      </div>
+    {{/if}}
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around pb-safe">
+    <a href="/advisor/dashboard" class="flex flex-col items-center py-3 px-2 text-gray-500 hover:text-blue-600 w-1/4">
+      <i class="fas fa-home text-xl mb-1"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider">Home</span>
+    </a>
+    <a href="/advisor/opportunities" class="flex flex-col items-center py-3 px-2 text-gray-500 hover:text-blue-600 w-1/4">
+      <i class="fas fa-briefcase text-xl mb-1"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider">Opps</span>
+    </a>
+    <a href="/advisor/tasks" class="flex flex-col items-center py-3 px-2 text-gray-500 hover:text-blue-600 w-1/4">
+      <i class="fas fa-check-square text-xl mb-1"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider">Tasks</span>
+    </a>
+    <a href="/advisor/team-queue" class="flex flex-col items-center py-3 px-2 text-blue-600 border-t-2 border-blue-600 -mt-[1px] w-1/4">
+      <i class="fas fa-users text-xl mb-1"></i>
+      <span class="text-[10px] font-medium uppercase tracking-wider">Team</span>
+    </a>
+  </nav>
+
+</body>
+</html>

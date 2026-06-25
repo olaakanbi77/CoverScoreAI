@@ -19,6 +19,7 @@ const crmRoutes = require('./routes/crm');
 const advisorRoutes = require('./routes/advisor');
 const proposalsRoutes = require('./routes/proposals');
 const documentsRoutes = require('./routes/documents');
+const reportsRoutes = require('./routes/reports');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
 
@@ -93,7 +94,7 @@ app.get('/:industry', (req, res, next) => {
   const industryKey = req.params.industry.toLowerCase();
   
   // Ignore reserved routes so they fall through
-  const reserved = ['login', 'api', 'webhook', 'whatsapp', 'admin', 'advisor', 'dashboard', 'wipe-db-xyz123', 'quote-request', 'consultation-request'];
+  const reserved = ['login', 'api', 'webhook', 'whatsapp', 'admin', 'advisor', 'dashboard', 'wipe-db-xyz123', 'quote-request', 'consultation-request', 'personal'];
   if (reserved.includes(industryKey)) return next();
 
   if (industryContent[industryKey]) {
@@ -137,6 +138,14 @@ app.get('/start-whatsapp', (req, res) => {
   const textMsg = req.query.text || 'START ASSESSMENT';
   const text = encodeURIComponent(textMsg);
   res.redirect(`https://wa.me/${botNumber}?text=${text}`);
+});
+
+app.get('/personal', (req, res) => {
+  res.render('coverscore-personal', { 
+    title: 'Free Family Protection Score™ | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
 });
 
 app.get('/assessment/start', optionalAuth, (req, res) => {
@@ -534,6 +543,7 @@ app.use('/api/crm', crmRoutes);
 app.use('/api/proposals', proposalsRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/advisor', advisorRoutes);
+app.use('/reports', reportsRoutes);
 
 // Serve QR code page for WhatsApp linking
 app.get('/whatsapp-link', (req, res) => {

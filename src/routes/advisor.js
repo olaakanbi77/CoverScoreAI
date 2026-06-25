@@ -684,4 +684,165 @@ router.post('/api/leads/:id/stage', authenticatePage, requireSalesOrAdmin, async
   }
 });
 
+// --- PERSONAL OPPORTUNITIES MODULE ---
+
+router.get('/opportunities', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { all } = require('../config/database');
+    const filter = req.query.filter || 'all';
+    let query = `
+      SELECT o.*, l.name as lead_name, l.phone as lead_phone 
+      FROM opportunities o
+      LEFT JOIN leads l ON o.lead_id = l.id
+      WHERE o.advisor_id = ? AND o.stage != 'Closed Lost'
+    `;
+    let params = [req.user.id];
+
+    if (filter === 'new') {
+      query += ` AND o.stage = 'unassigned'`;
+    } else if (filter === 'nurture') {
+      query += ` AND o.stage = 'Nurture'`;
+    }
+
+    query += ` ORDER BY 
+      CASE WHEN o.opportunity_priority = 'Urgent' THEN 1
+           WHEN o.opportunity_priority = 'High' THEN 2
+           WHEN o.opportunity_priority = 'Standard' THEN 3
+           ELSE 4 END, o.updated_at DESC`;
+
+    const rawOpps = await all(query, params);
+    
+    // Process opportunities for view
+    const opportunities = rawOpps.map(o => {
+      let topPriorities = [];
+      try { topPriorities = JSON.parse(o.top_priorities || '[]'); } catch(e) {}
+      
+      const badgeClass = o.opportunity_priority === 'Urgent' ? 'bg-red-500' : 
+                         o.opportunity_priority === 'High' ? 'bg-orange-500' : 'bg-blue-500';
+
+      let nextAction = 'Review Assessment';
+      if (o.stage === 'unassigned') nextAction = 'Assign to self';
+      else if (o.stage === 'assigned') nextAction = 'Send first message';
+      else if (o.stage === 'Contact Attempted') nextAction = 'Record outcome';
+      else if (o.stage === 'Conversation Started') nextAction = 'Book Review';
+
+      return {
+        ...o,
+        lead_initial: o.lead_name ? o.lead_name.charAt(0) : 'U',
+        top_priority: topPriorities[0]?.name || 'General Protection',
+        badgeClass,
+        nextAction
+      };
+    });
+
+    const counts = {
+      active: opportunities.length,
+      high_priority: opportunities.filter(o => o.opportunity_priority === 'High' || o.opportunity_priority === 'Urgent').length,
+      due_today: 0 // Mock for now until tasks are linked
+    };
+
+    res.render('advisor/opportunities', {
+      title: 'My Opportunities',
+      activePage: 'opportunities',
+      layout: false,
+      opportunities,
+      counts,
+      activeFilter: filter
+    });
+  } catch (err) {
+    console.error('Opportunities Error:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.get('/opportunities/:id', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { get, all } = require('../config/database');
+    const opp = await get(`
+      SELECT o.*, l.name as lead_name, l.phone as lead_phone, l.state as lead_state 
+      FROM opportunities o
+      LEFT JOIN leads l ON o.lead_id = l.id
+      WHERE o.id = ? AND (o.advisor_id = ? OR o.advisor_id IS NULL)
+    `, [req.params.id, req.user.id]);
+
+    if (!opp) return res.status(404).send('Opportunity not found');
+
+    const timeline = await all(`SELECT * FROM audit_logs WHERE entity_id = ? AND entity_type = 'opportunity' ORDER BY created_at DESC`, [opp.id]);
+    
+    let riskDna = [];
+    let topPriorities = [];
+    try { riskDna = JSON.parse(opp.risk_dna || '[]'); } catch(e) {}
+    try { topPriorities = JSON.parse(opp.top_priorities || '[]'); } catch(e) {}
+
+    let nextAction = { label: 'Send first WhatsApp message', type: 'message' };
+    if (opp.stage === 'Contact Attempted') nextAction = { label: 'Log Contact Outcome', type: 'log' };
+    else if (opp.stage === 'Conversation Started') nextAction = { label: 'Book Protection Review', type: 'book' };
+
+    res.render('advisor/opportunity-detail', {
+      title: 'Opportunity Detail',
+      layout: false,
+      opp: {
+        ...opp,
+        lead_initial: opp.lead_name ? opp.lead_name.charAt(0) : 'U',
+        risk_dna: riskDna,
+        top_priorities: topPriorities,
+        nextAction
+      },
+      timeline
+    });
+  } catch (err) {
+    console.error('Opportunity Detail Error:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.post('/api/opportunities/:id/stage', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { run } = require('../config/database');
+    const oppId = req.params.id;
+    const { stage, reason, nextDate } = req.body;
+    
+    await run('UPDATE opportunities SET stage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [stage, oppId]);
+    await run('INSERT INTO audit_logs (id, event_type, entity_type, entity_id, actor_id, metadata) VALUES (?, ?, ?, ?, ?, ?)', [
+      Date.now().toString(), 'STAGE_CHANGE', 'opportunity', oppId, req.user.id, JSON.stringify({ new_stage: stage, reason })
+    ]);
+    
+    // Auto-create task if necessary
+    if (stage === 'Contact Attempted') {
+      await run('INSERT INTO tasks (title, description, status, due_date, created_by) VALUES (?, ?, ?, ?, ?)', [
+        'Follow up after contact attempt', reason || '', 'pending', nextDate || new Date().toISOString(), req.user.id
+      ]);
+    }
+    
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Stage Update Error:', err);
+    res.status(500).json({ error: 'Failed to update stage' });
+  }
+});
+
+router.get('/team-queue', authenticatePage, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).send('Forbidden');
+  try {
+    const { all } = require('../config/database');
+    const queue = await all(`
+      SELECT o.*, l.name as lead_name
+      FROM opportunities o
+      LEFT JOIN leads l ON o.lead_id = l.id
+      WHERE o.stage = 'unassigned' OR o.opportunity_priority = 'Urgent'
+      ORDER BY o.created_at DESC
+    `);
+    
+    res.render('advisor/team-queue', {
+      title: 'Team Queue',
+      layout: false,
+      activePage: 'team-queue',
+      queue
+    });
+  } catch (err) {
+    console.error('Team Queue Error:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

@@ -92,4 +92,37 @@ router.post('/consultation-request', async (req, res, next) => {
   }
 });
 
+// Track landing page events
+router.post('/landing-event', async (req, res, next) => {
+  try {
+    const { 
+      event_name, landing_page, cta_position, session_key, 
+      utm_source, utm_medium, utm_campaign, utm_content, utm_term, 
+      campaign_code, referral_code, device_type, metadata 
+    } = req.body;
+
+    if (!event_name || !landing_page) {
+      return res.status(400).json({ error: 'Validation Error', message: 'event_name and landing_page are required' });
+    }
+
+    const payload = JSON.stringify(metadata || {});
+
+    await run(`
+      INSERT INTO landing_page_events 
+      (session_key, event_name, landing_page, cta_position, utm_source, utm_medium, utm_campaign, utm_content, utm_term, campaign_code, referral_code, device_type, metadata)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb)
+    `, [
+      session_key, event_name, landing_page, cta_position,
+      utm_source, utm_medium, utm_campaign, utm_content, utm_term,
+      campaign_code, referral_code, device_type, payload
+    ]);
+
+    res.status(201).json({ message: 'Event logged successfully' });
+  } catch (error) {
+    console.error('Landing event error:', error);
+    // Don't fail the client request if tracking fails
+    res.status(200).json({ message: 'Event tracked (with internal error)' });
+  }
+});
+
 module.exports = router;
