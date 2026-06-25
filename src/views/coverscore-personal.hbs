@@ -604,8 +604,7 @@
       <div class="rrs-header-top">
         <div style="width: 32px;"></div> <!-- Spacer for center alignment -->
         <div class="rrs-header-text">
-          <div class="rrs-title">REAL RISK STORIES™</div>
-          <div class="rrs-step" id="rrs-step-text">1 OF 3</div>
+          <div class="rrs-step" id="rrs-step-text">REAL RISK STORY</div>
           <div class="rrs-subtitle">Real incidents. Real losses. Real lessons.</div>
         </div>
         <button class="rrs-pause-btn" id="rrs-pause-btn" onclick="toggleRrsPause()">
@@ -1006,9 +1005,6 @@
     }
 
     function updateRrsUi() {
-      // Update step text
-      document.getElementById('rrs-step-text').innerText = (rrsCurrentSlide + 1) + ' OF ' + rrsTotalSlides;
-      
       // Update progress bars
       for(let i=1; i<=rrsTotalSlides; i++) {
         const fill = document.getElementById('rrs-prog-' + i);
