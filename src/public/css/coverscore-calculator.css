@@ -428,4 +428,115 @@ input::placeholder {
   color: var(--primary-color);
 }
 
+/* How It Works Section */
+.hiw-section {
+  background-color: var(--card-bg);
+  padding: 1.5rem 1rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
 
+.hiw-header-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.hiw-divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.hiw-heart-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--light-green);
+  color: var(--green-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1rem;
+}
+
+/* Timeline specific styles */
+.hiw-timeline {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto 2rem auto; /* Centers the whole timeline! */
+  position: relative;
+  z-index: 1;
+}
+
+.hiw-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem; /* well spaced between icons and text */
+  position: relative;
+}
+
+.hiw-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px; /* matched to circle size */
+  position: relative;
+}
+
+.hiw-step-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--light-green);
+  color: var(--green-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+}
+
+.hiw-step-circle svg {
+  color: var(--green-color);
+}
+
+.hiw-dotted-line {
+  width: 2px;
+  height: 100%;
+  background-image: linear-gradient(to bottom, var(--green-color) 33%, rgba(255,255,255,0) 0%);
+  background-position: left;
+  background-size: 2px 8px;
+  background-repeat: repeat-y;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Remove line for the last step */
+.hiw-step:last-child .hiw-dotted-line {
+  display: none;
+}
+
+.hiw-step-content {
+  padding-top: 0.25rem;
+  padding-bottom: 2rem;
+  flex: 1;
+  text-align: left; /* Keep text left aligned inside the centered block */
+}
+
+.hiw-step:last-child .hiw-step-content {
+  padding-bottom: 0;
+}
+
+/* Make sure inner rows match */
+.hiw-step-content .wyg-title-row {
+  justify-content: flex-start; /* Keep row items left aligned */
+}
