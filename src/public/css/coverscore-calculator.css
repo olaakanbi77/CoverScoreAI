@@ -452,8 +452,8 @@ input::placeholder {
 }
 
 .hiw-heart-circle {
-  width: 72px;
-  height: 72px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   background-color: var(--light-green);
   color: var(--green-color);
