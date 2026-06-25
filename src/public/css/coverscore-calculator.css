@@ -616,6 +616,8 @@ input::placeholder {
 /* Make sure inner rows match */
 .hiw-step-content .wyg-title-row {
   justify-content: flex-start; /* Keep row items left aligned */
+}
+
 /* Real Risk Stories Carousel */
 .rrs-section {
   background-color: #ffffff;
