@@ -172,6 +172,10 @@ app.get('/assessment/email-capture', optionalAuth, (req, res) => {
   res.render('assessment/email-capture', { title: 'Get Your Report', activePage: 'assessment', layout: false });
 });
 
+app.get('/assessment/final-cta', optionalAuth, (req, res) => {
+  res.render('assessment/final-cta', { title: 'Final Step - Get Your Report', activePage: 'assessment', layout: false });
+});
+
 app.get('/dashboard', authenticatePage, (req, res) => {
   if (req.user && req.user.role === 'admin') {
     return res.redirect('/admin/dashboard');

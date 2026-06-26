@@ -518,7 +518,7 @@
         // Always store the assessment ID for the email capture flow
         localStorage.setItem('lastAssessmentId', data.assessmentId);
 
-        window.location.href = data.redirectTo || '/assessment/email-capture';
+        window.location.href = data.redirectTo || '/assessment/final-cta';
       } catch (err) {
         alert(err.message);
         showLoading(false);

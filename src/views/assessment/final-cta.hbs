@@ -1,0 +1,584 @@
+<style>
+  /* Final CTA Custom Styles */
+  .cta-page {
+    background-color: #f9fbfd;
+    min-height: 100vh;
+    padding: 1rem;
+    font-family: var(--font-sans), sans-serif;
+  }
+  .cta-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    padding: 2rem 1.5rem;
+    position: relative;
+  }
+  
+  /* Header Area */
+  .cta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+  .cta-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .cta-logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0b1d3d;
+    line-height: 1.1;
+  }
+  .cta-logo-text span {
+    color: #107541;
+  }
+  .cta-logo-sub {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0b1d3d;
+  }
+  .cta-step-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    background: #f1f7f4;
+    border-radius: 50%;
+  }
+  .cta-step-circle .step-text {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #107541;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .cta-step-circle svg {
+    width: 24px;
+    height: 24px;
+    color: #107541;
+  }
+
+  /* Badge */
+  .cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: #f1f7f4;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin: 0 auto 1.5rem;
+  }
+  .cta-badge svg {
+    width: 16px;
+    height: 16px;
+    color: #107541;
+  }
+  .cta-badge span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #107541;
+    letter-spacing: 0.5px;
+  }
+
+  /* Titles */
+  .cta-hero-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0b1d3d;
+    line-height: 1.15;
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+  }
+  .cta-hero-title .text-green {
+    color: #107541;
+  }
+  .cta-hero-subtitle {
+    font-size: 1rem;
+    color: #475569;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  /* Image Area */
+  .cta-image-container {
+    position: relative;
+    margin: 0 -1.5rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 220px;
+    background: radial-gradient(circle at center, #f0fdf4 0%, #ffffff 70%);
+  }
+  .cta-image-container img {
+    max-height: 100%;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+  }
+  .cta-image-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .cta-image-backdrop svg {
+    width: 180px;
+    height: 180px;
+    color: #dcfce7;
+    opacity: 0.8;
+  }
+
+  /* Features Box */
+  .cta-features {
+    display: flex;
+    background: #f9fbfd;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  }
+  .cta-feature {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .cta-feature:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background: #e2e8f0;
+  }
+  .cta-feature svg {
+    width: 20px;
+    height: 20px;
+    color: #107541;
+    margin-bottom: 2px;
+  }
+  .cta-feature-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #0b1d3d;
+  }
+  .cta-feature-desc {
+    font-size: 0.65rem;
+    color: #475569;
+  }
+
+  /* Button */
+  .cta-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: #118c4f;
+    color: white;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 20px -5px rgba(17, 140, 79, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 1rem;
+    text-decoration: none;
+  }
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px -5px rgba(17, 140, 79, 0.5);
+    color: white;
+  }
+  .cta-button-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .cta-button-left svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Trust markers */
+  .cta-trust {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.85rem;
+    color: #475569;
+  }
+  .cta-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .cta-trust-item svg {
+    width: 14px;
+    height: 14px;
+    color: #64748B;
+  }
+  .cta-trust-dot {
+    color: #cbd5e1;
+    font-size: 1rem;
+  }
+
+  /* FAQ */
+  .cta-faq {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 2rem;
+  }
+  .cta-faq-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .cta-faq-header svg {
+    width: 18px;
+    height: 18px;
+    color: #107541;
+  }
+  .cta-faq-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0b1d3d;
+    letter-spacing: 0.5px;
+  }
+  
+  .faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .faq-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .faq-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0b1d3d;
+    text-align: left;
+  }
+  .faq-trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .faq-trigger-left svg {
+    width: 20px;
+    height: 20px;
+    color: #107541;
+  }
+  .faq-chevron {
+    width: 16px;
+    height: 16px;
+    color: #64748B;
+    transition: transform 0.2s;
+  }
+  .faq-item.active .faq-chevron {
+    transform: rotate(180deg);
+  }
+  .faq-content {
+    display: none;
+    padding: 0 1rem 1rem 2.75rem;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .faq-item.active .faq-content {
+    display: block;
+  }
+
+  /* Footer Card */
+  .cta-footer-card {
+    margin-top: 2rem;
+    background: #f1f7f4;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .cta-footer-icon {
+    width: 48px;
+    height: 48px;
+    background: #107541;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .cta-footer-icon svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+  }
+  .cta-footer-text {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0b1d3d;
+    line-height: 1.4;
+  }
+  .cta-footer-text span {
+    color: #107541;
+  }
+  .cta-footer-img {
+    width: 80px;
+    height: auto;
+  }
+  
+  .text-center-box {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+
+<div class="cta-page">
+  <div class="cta-wrapper">
+    
+    <!-- Header -->
+    <div class="cta-header">
+      <div class="cta-logo">
+        <div>
+          <div class="cta-logo-text">Cover<span>Score</span></div>
+          <div class="cta-logo-sub">Family Protection</div>
+        </div>
+      </div>
+      <div class="cta-step-circle">
+        <span class="step-text">Step 9 of 9</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Badge -->
+    <div class="text-center-box">
+      <div class="cta-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+        <span>YOU'RE ALMOST DONE</span>
+      </div>
+    </div>
+
+    <!-- Hero Title -->
+    <h1 class="cta-hero-title">
+      Give your family<br>
+      <span class="text-green">the protection</span><br>
+      <span class="text-green">they deserve.</span>
+    </h1>
+    <p class="cta-hero-subtitle">
+      Get your personalized Family Protection<br>Report in just a few minutes.
+    </p>
+
+    <!-- Image Area Placeholder -->
+    <div class="cta-image-container">
+      <div class="cta-image-backdrop">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=800&auto=format&fit=crop" alt="Family looking at phone" style="border-radius: 12px; max-height: 180px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);" />
+    </div>
+
+    <!-- Features -->
+    <div class="cta-features">
+      <div class="cta-feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="cta-feature-title">3 MINUTES</div>
+        <div class="cta-feature-desc">Quick & easy</div>
+      </div>
+      <div class="cta-feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
+        <div class="cta-feature-title">ON WHATSAPP</div>
+        <div class="cta-feature-desc">Instant delivery</div>
+      </div>
+      <div class="cta-feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div class="cta-feature-title">100% PRIVATE</div>
+        <div class="cta-feature-desc">No spam. Ever.</div>
+      </div>
+    </div>
+
+    <!-- CTA Button -->
+    <a href="#" class="cta-button" onclick="submitFinalCta(event)">
+      <div class="cta-button-left">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
+        <span>Get My Private Report</span>
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+
+    <!-- Trust Markers -->
+    <div class="cta-trust">
+      <div class="cta-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Free</span>
+      </div>
+      <span class="cta-trust-dot">•</span>
+      <div class="cta-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Private</span>
+      </div>
+      <span class="cta-trust-dot">•</span>
+      <div class="cta-trust-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>No Obligation</span>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="cta-faq">
+      <div class="cta-faq-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span class="cta-faq-title">QUESTIONS BEFORE YOU BEGIN?</span>
+      </div>
+      
+      <div class="faq-accordion">
+        <!-- Item 1 -->
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <div class="faq-trigger-left">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+              <span>Is this really free?</span>
+            </div>
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-content">
+            Yes! Your personalized Family Protection Report is completely free of charge. There are no hidden fees.
+          </div>
+        </div>
+        
+        <!-- Item 2 -->
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <div class="faq-trigger-left">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>How long does it take?</span>
+            </div>
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-content">
+            The assessment takes about 3 minutes to complete. Your report is generated instantly.
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <div class="faq-trigger-left">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>Will someone call me after?</span>
+            </div>
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-content">
+            No. We only reach out via WhatsApp to deliver your report. You control if and when you want to speak with an advisor.
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFaq(this)">
+            <div class="faq-trigger-left">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Is my information private?</span>
+            </div>
+            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="faq-content">
+            100% private. We use bank-level encryption and never share or sell your data to third parties.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Card -->
+    <div class="cta-footer-card">
+      <div class="cta-footer-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="cta-footer-text">
+        Because your family's future<br>
+        <span>deserves complete peace of mind.</span>
+      </div>
+      <!-- SVG House illustration placeholder -->
+      <svg class="cta-footer-img" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 70 L90 70 L90 40 L50 10 L10 40 Z" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <rect x="40" y="45" width="20" height="25" fill="#16a34a"/>
+        <rect x="25" y="45" width="10" height="10" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+        <rect x="65" y="45" width="10" height="10" fill="#ffffff" stroke="#16a34a" stroke-width="1"/>
+        <path d="M50 10 L8 45 M50 10 L92 45" stroke="#16a34a" stroke-width="2" fill="none"/>
+        <rect x="70" y="20" width="8" height="15" fill="#16a34a"/>
+        <!-- clouds -->
+        <circle cx="20" cy="15" r="8" fill="#f0fdf4" opacity="0.8"/>
+        <circle cx="30" cy="12" r="10" fill="#f0fdf4" opacity="0.8"/>
+        <circle cx="40" cy="15" r="8" fill="#f0fdf4" opacity="0.8"/>
+        <!-- bush -->
+        <circle cx="15" cy="65" r="8" fill="#86efac"/>
+        <circle cx="25" cy="65" r="10" fill="#4ade80"/>
+        <circle cx="85" cy="65" r="8" fill="#86efac"/>
+        <circle cx="75" cy="65" r="10" fill="#4ade80"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    // Close others
+    document.querySelectorAll('.faq-item').forEach(el => {
+      if (el !== item) el.classList.remove('active');
+    });
+    // Toggle current
+    item.classList.toggle('active');
+  }
+
+  function submitFinalCta(e) {
+    e.preventDefault();
+    // Assuming this integrates with the wizard flow or navigates to the whatsapp handoff
+    // For now we can navigate to the email capture or report generation endpoint
+    window.location.href = '/assessment/email-capture';
+  }
+</script>

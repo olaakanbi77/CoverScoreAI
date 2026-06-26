@@ -343,7 +343,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       riskLevel,
       min_loss,
       max_loss,
-      redirectTo: '/assessment/email-capture'
+      redirectTo: '/assessment/final-cta'
     });
   } catch (error) {
     next(error);
