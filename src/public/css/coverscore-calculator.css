@@ -299,16 +299,22 @@ input::placeholder {
   display: flex;
   align-items: center;
   gap: 0.3rem;
+  white-space: nowrap;
 }
 
 .trust-badge svg {
   color: var(--green-color);
+  flex-shrink: 0;
 }
 
 .trust-divider {
-  width: 1px;
-  height: 12px;
-  background-color: var(--border-color);
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  color: var(--border-color);
+}
+.trust-divider::before {
+  content: "•";
 }
 
 /* What You Get Section */
@@ -1711,4 +1717,9 @@ input::placeholder {
 .fc-banner-img {
   height: 44px;
   object-fit: contain;
+}
+
+
+.btn-whatsapp svg {
+  flex-shrink: 0;
 }
