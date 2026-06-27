@@ -292,6 +292,7 @@ input::placeholder {
   gap: 0.5rem;
   font-size: 0.65rem;
   color: var(--primary-color);
+  flex-wrap: wrap;
 }
 
 .trust-badge {
