@@ -156,6 +156,86 @@ app.get('/personal/calculator', (req, res) => {
   });
 });
 
+app.get('/personal/retirement', (req, res) => {
+  res.render('coverscore-personal-retirement', { 
+    title: 'Free Retirement Readiness Score™ | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/retirement/calculator', (req, res) => {
+  res.render('coverscore-personal-retirement-calculator', { 
+    title: 'Retirement Exposure Calculator | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/health', (req, res) => {
+  res.render('coverscore-personal-health', { 
+    title: 'Free Health Protection Score™ | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/health/calculator', (req, res) => {
+  res.render('coverscore-personal-health-calculator', { 
+    title: 'Health Exposure Calculator | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/income', (req, res) => {
+  res.render('coverscore-personal-income', { 
+    title: 'Free Income Protection Score™ | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/income/calculator', (req, res) => {
+  res.render('coverscore-personal-income-calculator', { 
+    title: 'Income Exposure Calculator | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/young-professional', (req, res) => {
+  res.render('coverscore-personal-young-professional', { 
+    title: 'Free Young Pro Score™ | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/young-professional/calculator', (req, res) => {
+  res.render('coverscore-personal-young-professional-calculator', { 
+    title: 'Wealth Gap Calculator | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/entrepreneur', (req, res) => {
+  res.render('coverscore-personal-entrepreneur', { 
+    title: 'Free Entrepreneur Score™ | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
+app.get('/personal/entrepreneur/calculator', (req, res) => {
+  res.render('coverscore-personal-entrepreneur-calculator', { 
+    title: 'Business Risk Calculator | CoverScore Personal', 
+    layout: false,
+    whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
+  });
+});
+
 app.get('/assessment/start', optionalAuth, (req, res) => {
   res.redirect('/start-whatsapp');
 });
