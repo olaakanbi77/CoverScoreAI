@@ -1822,7 +1822,7 @@
       utm_campaign: params.get('utm_campaign'),
       utm_content: params.get('utm_content'),
       utm_term: params.get('utm_term'),
-      campaign_code: params.get('campaign_code') || 'WEB_RETIREMENT_2026',
+      campaign_code: params.get('campaign_code') || 'START RETIREMENT READINESS ASSESSMENT',
       referral_code: params.get('ref')
     };
   };
@@ -1862,7 +1862,7 @@
     // Redirect to WhatsApp
     const params = getQueryParams();
     const campaignCode = params.campaign_code;
-    const text = encodeURIComponent(`RETIREMENT ${campaignCode}`);
+    const text = encodeURIComponent(campaignCode);
     const botNumber = '{{whatsappNumber}}';
     
     trackEvent('whatsapp_redirect_started', { destination: botNumber, campaign: campaignCode });
