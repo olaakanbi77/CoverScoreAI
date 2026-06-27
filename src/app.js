@@ -140,16 +140,16 @@ app.get('/start-whatsapp', (req, res) => {
   res.redirect(`https://wa.me/${botNumber}?text=${text}`);
 });
 
-app.get('/personal', (req, res) => {
-  res.render('coverscore-personal', { 
+app.get('/personal/family', (req, res) => {
+  res.render('coverscore-personal-family', { 
     title: 'Free Family Protection Score™ | CoverScore Personal', 
     layout: false,
     whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
   });
 });
 
-app.get('/personal/calculator', (req, res) => {
-  res.render('coverscore-personal-calculator', { 
+app.get('/personal/family/calculator', (req, res) => {
+  res.render('coverscore-personal-family-calculator', { 
     title: 'Family Exposure Calculator | CoverScore Personal', 
     layout: false,
     whatsappNumber: process.env.WHATSAPP_BOT_NUMBER || '2349165304629'
