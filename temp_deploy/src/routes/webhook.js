@@ -74,34 +74,18 @@ router.post('/evolution', async (req, res) => {
         'construction': 'CON',
         'transport': 'TRN',
         'logistics': 'TRN',
+        'sme': 'SME',
         'family': 'FAM',
         'personal': 'FAM',
-        'individual': 'FAM',
         'young': 'YPR',
         'retirement': 'RET',
         'income': 'INC',
         'health': 'HLT',
-        'entrepreneur': 'ENT',
-        'sme': 'SME',
-        'business': 'SME'
+        'entrepreneur': 'ENT'
       };
-      const resolvePrefix = (ind) => {
-        let prefix = 'SME'; // fallback
-        if (ind) {
-          const lowerInd = ind.toLowerCase();
-          // Find the first key in flowMap that is contained within the detected industry string
-          for (const [key, val] of Object.entries(flowMap)) {
-            if (lowerInd.includes(key)) {
-              prefix = val;
-              break;
-            }
-          }
-        }
-        return prefix;
-      };
-
       const getInitState = (ind) => {
-        return `${resolvePrefix(ind)}_001`;
+        const prefix = flowMap[ind] || 'SME';
+        return `${prefix}_001`;
       };
 
       let currentState, chatHistory, assessmentData;
@@ -172,7 +156,7 @@ router.post('/evolution', async (req, res) => {
       let processText = incomingTextRaw;
       let evalState = currentState;
 
-      const prefix = resolvePrefix(resolvedIndustry);
+      const prefix = flowMap[resolvedIndustry] || 'SME';
 
       // Send initial welcome message instantly without advancing state
       if ((isStartTrigger || isRestartTrigger) && evalState === `${prefix}_001`) {
