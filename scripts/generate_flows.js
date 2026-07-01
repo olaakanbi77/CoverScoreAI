@@ -59,7 +59,7 @@ class QuestionPackFactory {
       qs = [
         {
           id: `${p}_004`, industry: config.ind, pillar: 'General',
-          question: `Great.\n\nTo personalize your report, what is the name of your ${config.audience}?`,
+          question: `Great.\n\nLet's start with the name of your ${config.audience}.`,
           question_type: 'open_text', data_mapping: 'business_name',
           branching: { 'DEFAULT': `${p}_005` }
         },
@@ -77,60 +77,209 @@ class QuestionPackFactory {
         },
         {
           id: `${p}_007`, industry: config.ind, pillar: 'General',
-          question: `Finally, what is your email address?\n\n(We'll send your completed Risk Report here)`,
+          question: `What's your email address?\n\n(Used to send your Risk Intelligence Report.)`,
           question_type: 'open_text', data_mapping: 'email',
           branching: { 'DEFAULT': `${p}_008` }
+        },
+        {
+          id: `${p}_008`, industry: config.ind, pillar: 'General',
+          question: `Which city do you currently operate in?`,
+          question_type: 'open_text', data_mapping: 'city',
+          branching: { 'DEFAULT': `${p}_009` }
         }
       ];
     } else {
       qs = [
         {
           id: `${p}_004`, industry: config.ind, pillar: 'General',
-          question: `Great.\n\nTo personalize your report, what is your full name?`,
+          question: `Great!\n\nLet's start with your first name.`,
           question_type: 'open_text', data_mapping: 'name',
           branching: { 'DEFAULT': `${p}_005` }
         },
         {
           id: `${p}_005`, industry: config.ind, pillar: 'General',
-          question: `Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)`,
+          question: `Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)`,
           question_type: 'open_text', data_mapping: 'email',
           branching: { 'DEFAULT': `${p}_006` }
+        },
+        {
+          id: `${p}_006`, industry: config.ind, pillar: 'General',
+          question: `Which city do you currently live in?`,
+          question_type: 'open_text', data_mapping: 'city',
+          branching: { 'DEFAULT': `${p}_007` }
         }
       ];
     }
     return qs;
   }
 
-  // 3. Closing & Advisor Integration Engine
-  buildClosingEngine(config, startId) {
+  // 2a. Engagement Engine
+  buildEngagementEngine(config, startId) {
     const p = config.prefix;
-    const currentInsuranceAnswers = config.type === 'business' 
-      ? ['Fire & Property', 'Group Life / Health', 'Public Liability', 'Cyber Security', 'Motor / Fleet', 'None of the above']
-      : ['Life Insurance', 'Health Insurance (HMO)', 'Vehicle Insurance', 'Property / Home', 'None of the above'];
-
     return [
       {
         id: `${p}_${String(startId).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `Which of these insurances do you currently have? (Select all that apply, e.g., A, C)`,
-        question_type: 'multi_choice',
-        answers: currentInsuranceAnswers,
-        data_mapping: 'existing_insurance',
+        question: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany ${config.audience}s believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.`,
+        question_type: 'single_choice',
+        answers: ['✅ Continue'],
+        branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
+      }
+    ];
+  }
+
+  // 2b. Qualification Engine
+  buildQualificationEngine(config, startId) {
+    const p = config.prefix;
+    let qs = [];
+    if (config.type === 'business') {
+        qs = [
+            {
+                id: `${p}_${String(startId).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
+                question: `Which best describes your business stage?`,
+                question_type: 'single_choice',
+                answers: ['Just starting (0-1 yr)', 'Growing (1-3 yrs)', 'Established (3+ yrs)'],
+                data_mapping: 'business_stage',
+                branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
+            },
+            {
+                id: `${p}_${String(startId + 1).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
+                question: `Do you currently generate regular monthly revenue?`,
+                question_type: 'yes_no',
+                answers: ['Yes', 'No'],
+                data_mapping: 'regular_revenue',
+                branching: { 'DEFAULT': `${p}_${String(startId + 2).padStart(3, '0')}` }
+            }
+        ];
+    } else {
+        qs = [
+            {
+                id: `${p}_${String(startId).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
+                question: `Which best describes you?`,
+                question_type: 'single_choice',
+                answers: ['Employed Full-time', 'Self-employed', 'Freelancer', 'Business Owner', 'Currently Unemployed', 'Student'],
+                data_mapping: 'employment_status',
+                branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
+            },
+            {
+                id: `${p}_${String(startId + 1).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
+                question: `What is your age range?`,
+                question_type: 'single_choice',
+                answers: ['18-24', '25-30', '31-35', '36-40', '41+'],
+                data_mapping: 'age_range',
+                branching: { 'DEFAULT': `${p}_${String(startId + 2).padStart(3, '0')}` }
+            },
+            {
+                id: `${p}_${String(startId + 2).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
+                question: `Do you currently earn regular monthly income?`,
+                question_type: 'yes_no',
+                answers: ['Yes', 'No'],
+                data_mapping: 'regular_income',
+                branching: { 'DEFAULT': `${p}_${String(startId + 3).padStart(3, '0')}` }
+            }
+        ];
+    }
+    return qs;
+  }
+
+  // 2c. Assessment Intro Engine
+  buildAssessmentIntroEngine(config, startId) {
+    const p = config.prefix;
+    return [
+      {
+        id: `${p}_${String(startId).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%`,
+        question_type: 'single_choice',
+        answers: ['✅ Start Questions'],
+        branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
+      }
+    ];
+  }
+
+  // 3. Closing & Advisor Integration Engine
+  buildClosingEngine(config, startId) {
+    const p = config.prefix;
+    return [
+      {
+        id: `${p}_${String(startId).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `Congratulations, {{name}}! 🎉\n\nYou've completed your ${config.name} Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...`,
+        question_type: 'single_choice',
+        answers: ['✅ View My Results'],
         branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
       },
       {
         id: `${p}_${String(startId + 1).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?`,
+        question: `Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.`,
         question_type: 'single_choice',
-        answers: ['Yes, please', 'No, just send my report'],
-        data_mapping: 'consultation_preference',
-        branching: { 'Yes, please': `${p}_${String(startId + 2).padStart(3, '0')}`, 'No, just send my report': 'COMPLETE', 'DEFAULT': 'COMPLETE' }
+        answers: ['✅ View Strengths'],
+        branching: { 'DEFAULT': `${p}_${String(startId + 2).padStart(3, '0')}` }
       },
       {
         id: `${p}_${String(startId + 2).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.`,
+        question_type: 'single_choice',
+        answers: ['✅ View Top Risks'],
+        branching: { 'DEFAULT': `${p}_${String(startId + 3).padStart(3, '0')}` }
+      },
+      {
+        id: `${p}_${String(startId + 3).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.`,
+        question_type: 'single_choice',
+        answers: ['✅ View Recommendations'],
+        branching: { 'DEFAULT': `${p}_${String(startId + 4).padStart(3, '0')}` }
+      },
+      {
+        id: `${p}_${String(startId + 4).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.`,
+        question_type: 'single_choice',
+        answers: ['✅ Continue'],
+        branching: { 'DEFAULT': `${p}_${String(startId + 5).padStart(3, '0')}` }
+      },
+      {
+        id: `${p}_${String(startId + 5).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for ${config.name}s*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?`,
+        question_type: 'single_choice',
+        answers: ['Yes', 'Maybe Later'],
+        data_mapping: 'learning_preference',
+        branching: { 'DEFAULT': `${p}_${String(startId + 6).padStart(3, '0')}` }
+      },
+      {
+        id: `${p}_${String(startId + 6).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?`,
+        question_type: 'single_choice',
+        answers: ['Show Me', 'Not Now'],
+        data_mapping: 'protection_preference',
+        branching: { 'DEFAULT': `${p}_${String(startId + 7).padStart(3, '0')}` }
+      },
+      {
+        id: `${p}_${String(startId + 7).padStart(3, '0')}`,
+        industry: config.ind,
+        pillar: 'General',
+        question: `Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?`,
+        question_type: 'single_choice',
+        answers: ['Yes, please', 'Maybe Later', 'No Thanks'],
+        data_mapping: 'consultation_preference',
+        branching: { 'Yes, please': `${p}_${String(startId + 8).padStart(3, '0')}`, 'DEFAULT': 'COMPLETE' }
+      },
+      {
+        id: `${p}_${String(startId + 8).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
         question: `Great! What time of day works best for a brief call?`,
@@ -154,19 +303,42 @@ class QuestionPackFactory {
     const leadCapture = this.buildLeadCaptureEngine(config);
     qs.push(...leadCapture);
 
-    let nextId = config.type === 'business' ? 8 : 6;
+    let nextId = config.type === 'business' ? 9 : 7;
 
-    // 3. Apply Overrides (Risk Pillars & Question Library)
+    // 3. Load Engagement Engine
+    const engagement = this.buildEngagementEngine(config, nextId);
+    qs.push(...engagement);
+    nextId += engagement.length;
+
+    // 4. Load Qualification Engine
+    const qualification = this.buildQualificationEngine(config, nextId);
+    qs.push(...qualification);
+    nextId += qualification.length;
+
+    // 5. Load Assessment Intro Engine
+    const intro = this.buildAssessmentIntroEngine(config, nextId);
+    qs.push(...intro);
+    nextId += intro.length;
+
+    // 6. Apply Overrides (Risk Pillars & Question Library)
     if (config.overrides && config.overrides.specific_questions) {
-      config.overrides.specific_questions.forEach(q => {
+      const qCount = config.overrides.specific_questions.length;
+      config.overrides.specific_questions.forEach((q, index) => {
         const id = `${config.prefix}_${String(nextId).padStart(3, '0')}`;
         const nextIdStr = `${config.prefix}_${String(nextId + 1).padStart(3, '0')}`;
         
         q.id = id;
         q.industry = config.ind;
-        q.pillar = q.pillar || 'Exposure'; // Default pillar, can be overridden per question
+        q.pillar = q.pillar || 'Exposure'; 
         if (!q.branching) {
           q.branching = { 'DEFAULT': nextIdStr };
+        }
+        
+        // Micro-encouragement injection
+        if (index === 2 && qCount > 3) {
+          q.question = `Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\n${q.question}`;
+        } else if (index === qCount - 1 && qCount > 1) {
+          q.question = `You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\n${q.question}`;
         }
         
         qs.push(q);
@@ -174,7 +346,7 @@ class QuestionPackFactory {
       });
     }
 
-    // 4. Load Closing Engine
+    // 7. Load Closing Engine
     qs.push(...this.buildClosingEngine(config, nextId));
     
     this.questionBank.push(...qs);

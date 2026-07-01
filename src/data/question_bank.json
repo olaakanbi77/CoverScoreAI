@@ -49,7 +49,7 @@
     "id": "YPR_004",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -60,11 +60,100 @@
     "id": "YPR_005",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "YPR_006"
+    }
+  },
+  {
+    "id": "YPR_006",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "YPR_007"
+    }
+  },
+  {
+    "id": "YPR_007",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany young professionals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "YPR_008"
+    }
+  },
+  {
+    "id": "YPR_008",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "YPR_009"
+    }
+  },
+  {
+    "id": "YPR_009",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "YPR_010"
+    }
+  },
+  {
+    "id": "YPR_010",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "YPR_011"
+    }
+  },
+  {
+    "id": "YPR_011",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "YPR_012"
     }
   },
   {
@@ -76,10 +165,10 @@
       "2-5 years",
       "Over 5 years"
     ],
-    "id": "YPR_006",
+    "id": "YPR_012",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_007"
+      "DEFAULT": "YPR_013"
     }
   },
   {
@@ -99,15 +188,15 @@
         "vulnerability_points": 40
       }
     },
-    "id": "YPR_007",
+    "id": "YPR_013",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_008"
+      "DEFAULT": "YPR_014"
     }
   },
   {
     "pillar": "Financial Resilience",
-    "question": "Do you have an emergency fund covering at least 6 months of expenses?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have an emergency fund covering at least 6 months of expenses?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -118,10 +207,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "YPR_008",
+    "id": "YPR_014",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_009"
+      "DEFAULT": "YPR_015"
     }
   },
   {
@@ -137,63 +226,140 @@
         "vulnerability_points": 20
       }
     },
-    "id": "YPR_009",
+    "id": "YPR_015",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_010"
+      "DEFAULT": "YPR_016"
     }
   },
   {
     "pillar": "Future Planning",
-    "question": "Are you currently saving towards a major life goal (e.g. buying a house, marriage)?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nAre you currently saving towards a major life goal (e.g. buying a house, marriage)?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
       "No"
     ],
-    "id": "YPR_010",
+    "id": "YPR_016",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_011"
+      "DEFAULT": "YPR_017"
     }
   },
   {
-    "id": "YPR_011",
+    "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Young Professional Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "YPR_012"
+      "DEFAULT": "YPR_018"
     }
   },
   {
-    "id": "YPR_012",
+    "id": "YPR_018",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "YPR_019"
+    }
+  },
+  {
+    "id": "YPR_019",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "YPR_020"
+    }
+  },
+  {
+    "id": "YPR_020",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "YPR_021"
+    }
+  },
+  {
+    "id": "YPR_021",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "YPR_022"
+    }
+  },
+  {
+    "id": "YPR_022",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Young Professionals*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "YPR_023"
+    }
+  },
+  {
+    "id": "YPR_023",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "YPR_024"
+    }
+  },
+  {
+    "id": "YPR_024",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "YPR_013",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "YPR_025",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "YPR_013",
+    "id": "YPR_025",
     "industry": "young_professional",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -258,7 +424,7 @@
     "id": "ENT_004",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -269,11 +435,100 @@
     "id": "ENT_005",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "ENT_006"
+    }
+  },
+  {
+    "id": "ENT_006",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "ENT_007"
+    }
+  },
+  {
+    "id": "ENT_007",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany entrepreneurs believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "ENT_008"
+    }
+  },
+  {
+    "id": "ENT_008",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "ENT_009"
+    }
+  },
+  {
+    "id": "ENT_009",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "ENT_010"
+    }
+  },
+  {
+    "id": "ENT_010",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "ENT_011"
+    }
+  },
+  {
+    "id": "ENT_011",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "ENT_012"
     }
   },
   {
@@ -293,10 +548,10 @@
         "vulnerability_points": 15
       }
     },
-    "id": "ENT_006",
+    "id": "ENT_012",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_007"
+      "DEFAULT": "ENT_013"
     }
   },
   {
@@ -312,15 +567,15 @@
         "exposure_points": 25
       }
     },
-    "id": "ENT_007",
+    "id": "ENT_013",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_008"
+      "DEFAULT": "ENT_014"
     }
   },
   {
     "pillar": "Business Continuity",
-    "question": "If you were hospitalized for 3 months, would your business survive?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nIf you were hospitalized for 3 months, would your business survive?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -335,10 +590,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "ENT_008",
+    "id": "ENT_014",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_009"
+      "DEFAULT": "ENT_015"
     }
   },
   {
@@ -354,15 +609,15 @@
         "vulnerability_points": 25
       }
     },
-    "id": "ENT_009",
+    "id": "ENT_015",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_010"
+      "DEFAULT": "ENT_016"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Are your personal assets properly separated and protected from business liabilities?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nAre your personal assets properly separated and protected from business liabilities?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -377,49 +632,126 @@
         "exposure_points": 15
       }
     },
-    "id": "ENT_010",
+    "id": "ENT_016",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_011"
+      "DEFAULT": "ENT_017"
     }
   },
   {
-    "id": "ENT_011",
+    "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Entrepreneur Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "ENT_012"
+      "DEFAULT": "ENT_018"
     }
   },
   {
-    "id": "ENT_012",
+    "id": "ENT_018",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "ENT_019"
+    }
+  },
+  {
+    "id": "ENT_019",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "ENT_020"
+    }
+  },
+  {
+    "id": "ENT_020",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "ENT_021"
+    }
+  },
+  {
+    "id": "ENT_021",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "ENT_022"
+    }
+  },
+  {
+    "id": "ENT_022",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Entrepreneurs*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "ENT_023"
+    }
+  },
+  {
+    "id": "ENT_023",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "ENT_024"
+    }
+  },
+  {
+    "id": "ENT_024",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "ENT_013",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "ENT_025",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "ENT_013",
+    "id": "ENT_025",
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -484,7 +816,7 @@
     "id": "FAM_004",
     "industry": "family",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -495,11 +827,100 @@
     "id": "FAM_005",
     "industry": "family",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "FAM_006"
+    }
+  },
+  {
+    "id": "FAM_006",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "FAM_007"
+    }
+  },
+  {
+    "id": "FAM_007",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany family members believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "FAM_008"
+    }
+  },
+  {
+    "id": "FAM_008",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "FAM_009"
+    }
+  },
+  {
+    "id": "FAM_009",
+    "industry": "family",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "FAM_010"
+    }
+  },
+  {
+    "id": "FAM_010",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "FAM_011"
+    }
+  },
+  {
+    "id": "FAM_011",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "FAM_012"
     }
   },
   {
@@ -522,10 +943,10 @@
         "exposure_points": 35
       }
     },
-    "id": "FAM_006",
+    "id": "FAM_012",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_007"
+      "DEFAULT": "FAM_013"
     }
   },
   {
@@ -545,15 +966,15 @@
         "vulnerability_points": 15
       }
     },
-    "id": "FAM_007",
+    "id": "FAM_013",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_008"
+      "DEFAULT": "FAM_014"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you currently have a Life Insurance policy?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you currently have a Life Insurance policy?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -568,10 +989,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "FAM_008",
+    "id": "FAM_014",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_009"
+      "DEFAULT": "FAM_015"
     }
   },
   {
@@ -588,15 +1009,15 @@
         "vulnerability_points": 25
       }
     },
-    "id": "FAM_009",
+    "id": "FAM_015",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_010"
+      "DEFAULT": "FAM_016"
     }
   },
   {
     "pillar": "Health & Wellbeing",
-    "question": "Does your family have comprehensive Health Insurance?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDoes your family have comprehensive Health Insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -607,49 +1028,126 @@
         "vulnerability_points": 25
       }
     },
-    "id": "FAM_010",
+    "id": "FAM_016",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_011"
+      "DEFAULT": "FAM_017"
     }
   },
   {
-    "id": "FAM_011",
+    "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Family Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "FAM_012"
+      "DEFAULT": "FAM_018"
     }
   },
   {
-    "id": "FAM_012",
+    "id": "FAM_018",
     "industry": "family",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "FAM_019"
+    }
+  },
+  {
+    "id": "FAM_019",
+    "industry": "family",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "FAM_020"
+    }
+  },
+  {
+    "id": "FAM_020",
+    "industry": "family",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "FAM_021"
+    }
+  },
+  {
+    "id": "FAM_021",
+    "industry": "family",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "FAM_022"
+    }
+  },
+  {
+    "id": "FAM_022",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Family Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "FAM_023"
+    }
+  },
+  {
+    "id": "FAM_023",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "FAM_024"
+    }
+  },
+  {
+    "id": "FAM_024",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "FAM_013",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "FAM_025",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "FAM_013",
+    "id": "FAM_025",
     "industry": "family",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -714,7 +1212,7 @@
     "id": "INC_004",
     "industry": "income",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -725,11 +1223,100 @@
     "id": "INC_005",
     "industry": "income",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "INC_006"
+    }
+  },
+  {
+    "id": "INC_006",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "INC_007"
+    }
+  },
+  {
+    "id": "INC_007",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany income earners believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "INC_008"
+    }
+  },
+  {
+    "id": "INC_008",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "INC_009"
+    }
+  },
+  {
+    "id": "INC_009",
+    "industry": "income",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "INC_010"
+    }
+  },
+  {
+    "id": "INC_010",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "INC_011"
+    }
+  },
+  {
+    "id": "INC_011",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "INC_012"
     }
   },
   {
@@ -741,10 +1328,10 @@
       "Freelance/Contract",
       "Business owner"
     ],
-    "id": "INC_006",
+    "id": "INC_012",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_007"
+      "DEFAULT": "INC_013"
     }
   },
   {
@@ -764,15 +1351,15 @@
         "vulnerability_points": 20
       }
     },
-    "id": "INC_007",
+    "id": "INC_013",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_008"
+      "DEFAULT": "INC_014"
     }
   },
   {
     "pillar": "Career & Income Security",
-    "question": "Do you have secondary sources of income (e.g. investments, real estate)?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have secondary sources of income (e.g. investments, real estate)?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -783,10 +1370,10 @@
         "vulnerability_points": 10
       }
     },
-    "id": "INC_008",
+    "id": "INC_014",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_009"
+      "DEFAULT": "INC_015"
     }
   },
   {
@@ -802,15 +1389,15 @@
         "vulnerability_points": 25
       }
     },
-    "id": "INC_009",
+    "id": "INC_015",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_010"
+      "DEFAULT": "INC_016"
     }
   },
   {
     "pillar": "Financial Resilience",
-    "question": "Do you have significant debts (mortgage, personal loans) that require monthly repayments?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you have significant debts (mortgage, personal loans) that require monthly repayments?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -821,49 +1408,126 @@
         "exposure_points": 25
       }
     },
-    "id": "INC_010",
+    "id": "INC_016",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_011"
+      "DEFAULT": "INC_017"
     }
   },
   {
-    "id": "INC_011",
+    "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Income Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "INC_012"
+      "DEFAULT": "INC_018"
     }
   },
   {
-    "id": "INC_012",
+    "id": "INC_018",
     "industry": "income",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "INC_019"
+    }
+  },
+  {
+    "id": "INC_019",
+    "industry": "income",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "INC_020"
+    }
+  },
+  {
+    "id": "INC_020",
+    "industry": "income",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "INC_021"
+    }
+  },
+  {
+    "id": "INC_021",
+    "industry": "income",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "INC_022"
+    }
+  },
+  {
+    "id": "INC_022",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Income Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "INC_023"
+    }
+  },
+  {
+    "id": "INC_023",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "INC_024"
+    }
+  },
+  {
+    "id": "INC_024",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "INC_013",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "INC_025",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "INC_013",
+    "id": "INC_025",
     "industry": "income",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -928,7 +1592,7 @@
     "id": "HLT_004",
     "industry": "health",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -939,11 +1603,100 @@
     "id": "HLT_005",
     "industry": "health",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "HLT_006"
+    }
+  },
+  {
+    "id": "HLT_006",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "HLT_007"
+    }
+  },
+  {
+    "id": "HLT_007",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany individuals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_008"
+    }
+  },
+  {
+    "id": "HLT_008",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "HLT_009"
+    }
+  },
+  {
+    "id": "HLT_009",
+    "industry": "health",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "HLT_010"
+    }
+  },
+  {
+    "id": "HLT_010",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "HLT_011"
+    }
+  },
+  {
+    "id": "HLT_011",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_012"
     }
   },
   {
@@ -959,10 +1712,10 @@
         "vulnerability_points": 35
       }
     },
-    "id": "HLT_006",
+    "id": "HLT_012",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_007"
+      "DEFAULT": "HLT_013"
     }
   },
   {
@@ -974,24 +1727,24 @@
       "No",
       "I don't have one"
     ],
-    "id": "HLT_007",
+    "id": "HLT_013",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_008"
+      "DEFAULT": "HLT_014"
     }
   },
   {
     "pillar": "Financial Resilience",
-    "question": "Have you or a close family member ever had to pay out-of-pocket for a major medical emergency?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nHave you or a close family member ever had to pay out-of-pocket for a major medical emergency?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
       "No"
     ],
-    "id": "HLT_008",
+    "id": "HLT_014",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_009"
+      "DEFAULT": "HLT_015"
     }
   },
   {
@@ -1007,15 +1760,15 @@
         "exposure_points": 30
       }
     },
-    "id": "HLT_009",
+    "id": "HLT_015",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_010"
+      "DEFAULT": "HLT_016"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you have a Critical Illness insurance policy that pays a lump sum upon diagnosis?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you have a Critical Illness insurance policy that pays a lump sum upon diagnosis?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1026,49 +1779,126 @@
         "vulnerability_points": 25
       }
     },
-    "id": "HLT_010",
+    "id": "HLT_016",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_011"
+      "DEFAULT": "HLT_017"
     }
   },
   {
-    "id": "HLT_011",
+    "id": "HLT_017",
     "industry": "health",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Health Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "HLT_012"
+      "DEFAULT": "HLT_018"
     }
   },
   {
-    "id": "HLT_012",
+    "id": "HLT_018",
     "industry": "health",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_019"
+    }
+  },
+  {
+    "id": "HLT_019",
+    "industry": "health",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_020"
+    }
+  },
+  {
+    "id": "HLT_020",
+    "industry": "health",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_021"
+    }
+  },
+  {
+    "id": "HLT_021",
+    "industry": "health",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_022"
+    }
+  },
+  {
+    "id": "HLT_022",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Health Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "HLT_023"
+    }
+  },
+  {
+    "id": "HLT_023",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "HLT_024"
+    }
+  },
+  {
+    "id": "HLT_024",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "HLT_013",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "HLT_025",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "HLT_013",
+    "id": "HLT_025",
     "industry": "health",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1133,7 +1963,7 @@
     "id": "RET_004",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1144,11 +1974,100 @@
     "id": "RET_005",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "RET_006"
+    }
+  },
+  {
+    "id": "RET_006",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "RET_007"
+    }
+  },
+  {
+    "id": "RET_007",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany future retirees believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "RET_008"
+    }
+  },
+  {
+    "id": "RET_008",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "RET_009"
+    }
+  },
+  {
+    "id": "RET_009",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "RET_010"
+    }
+  },
+  {
+    "id": "RET_010",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "RET_011"
+    }
+  },
+  {
+    "id": "RET_011",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "RET_012"
     }
   },
   {
@@ -1168,10 +2087,10 @@
         "exposure_points": 15
       }
     },
-    "id": "RET_006",
+    "id": "RET_012",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_007"
+      "DEFAULT": "RET_013"
     }
   },
   {
@@ -1187,25 +2106,25 @@
         "vulnerability_points": 40
       }
     },
-    "id": "RET_007",
+    "id": "RET_013",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_008"
+      "DEFAULT": "RET_014"
     }
   },
   {
     "pillar": "Health & Wellbeing",
-    "question": "Are you concerned that escalating medical costs might deplete your retirement savings?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nAre you concerned that escalating medical costs might deplete your retirement savings?",
     "question_type": "single_choice",
     "answers": [
       "Very concerned",
       "Somewhat concerned",
       "Not concerned"
     ],
-    "id": "RET_008",
+    "id": "RET_014",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_009"
+      "DEFAULT": "RET_015"
     }
   },
   {
@@ -1221,15 +2140,15 @@
         "vulnerability_points": 25
       }
     },
-    "id": "RET_009",
+    "id": "RET_015",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_010"
+      "DEFAULT": "RET_016"
     }
   },
   {
     "pillar": "Future Planning",
-    "question": "If you pass away, will your spouse or dependents have enough income to maintain their lifestyle?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf you pass away, will your spouse or dependents have enough income to maintain their lifestyle?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -1241,49 +2160,126 @@
         "vulnerability_points": 30
       }
     },
-    "id": "RET_010",
+    "id": "RET_016",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_011"
+      "DEFAULT": "RET_017"
     }
   },
   {
-    "id": "RET_011",
+    "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Retirement Planning Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "RET_012"
+      "DEFAULT": "RET_018"
     }
   },
   {
-    "id": "RET_012",
+    "id": "RET_018",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "RET_019"
+    }
+  },
+  {
+    "id": "RET_019",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "RET_020"
+    }
+  },
+  {
+    "id": "RET_020",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "RET_021"
+    }
+  },
+  {
+    "id": "RET_021",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "RET_022"
+    }
+  },
+  {
+    "id": "RET_022",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Retirement Plannings*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "RET_023"
+    }
+  },
+  {
+    "id": "RET_023",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "RET_024"
+    }
+  },
+  {
+    "id": "RET_024",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "RET_013",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "RET_025",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "RET_013",
+    "id": "RET_025",
     "industry": "retirement",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1348,7 +2344,7 @@
     "id": "HOM_004",
     "industry": "home",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1359,11 +2355,100 @@
     "id": "HOM_005",
     "industry": "home",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "HOM_006"
+    }
+  },
+  {
+    "id": "HOM_006",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "HOM_007"
+    }
+  },
+  {
+    "id": "HOM_007",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany homeowners believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "HOM_008"
+    }
+  },
+  {
+    "id": "HOM_008",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "HOM_009"
+    }
+  },
+  {
+    "id": "HOM_009",
+    "industry": "home",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "HOM_010"
+    }
+  },
+  {
+    "id": "HOM_010",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "HOM_011"
+    }
+  },
+  {
+    "id": "HOM_011",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "HOM_012"
     }
   },
   {
@@ -1375,15 +2460,15 @@
       "Rent",
       "Neither"
     ],
-    "id": "HOM_006",
+    "id": "HOM_012",
     "industry": "home",
     "branching": {
-      "DEFAULT": "HOM_007"
+      "DEFAULT": "HOM_013"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you have Homeowner's or Renter's Insurance covering your personal property?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you have Homeowner's or Renter's Insurance covering your personal property?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1394,49 +2479,126 @@
         "vulnerability_points": 30
       }
     },
-    "id": "HOM_007",
+    "id": "HOM_013",
     "industry": "home",
     "branching": {
-      "DEFAULT": "HOM_008"
+      "DEFAULT": "HOM_014"
     }
   },
   {
-    "id": "HOM_008",
+    "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Home Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "HOM_009"
+      "DEFAULT": "HOM_015"
     }
   },
   {
-    "id": "HOM_009",
+    "id": "HOM_015",
     "industry": "home",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "HOM_016"
+    }
+  },
+  {
+    "id": "HOM_016",
+    "industry": "home",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "HOM_017"
+    }
+  },
+  {
+    "id": "HOM_017",
+    "industry": "home",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "HOM_018"
+    }
+  },
+  {
+    "id": "HOM_018",
+    "industry": "home",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "HOM_019"
+    }
+  },
+  {
+    "id": "HOM_019",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Home Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "HOM_020"
+    }
+  },
+  {
+    "id": "HOM_020",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "HOM_021"
+    }
+  },
+  {
+    "id": "HOM_021",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "HOM_010",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "HOM_022",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "HOM_010",
+    "id": "HOM_022",
     "industry": "home",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1501,7 +2663,7 @@
     "id": "MOT_004",
     "industry": "motor",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question": "Great!\n\nLet's start with your first name.",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1512,11 +2674,100 @@
     "id": "MOT_005",
     "industry": "motor",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "MOT_006"
+    }
+  },
+  {
+    "id": "MOT_006",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Which city do you currently live in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "MOT_007"
+    }
+  },
+  {
+    "id": "MOT_007",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany vehicle owners believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "MOT_008"
+    }
+  },
+  {
+    "id": "MOT_008",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Which best describes you?",
+    "question_type": "single_choice",
+    "answers": [
+      "Employed Full-time",
+      "Self-employed",
+      "Freelancer",
+      "Business Owner",
+      "Currently Unemployed",
+      "Student"
+    ],
+    "data_mapping": "employment_status",
+    "branching": {
+      "DEFAULT": "MOT_009"
+    }
+  },
+  {
+    "id": "MOT_009",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "What is your age range?",
+    "question_type": "single_choice",
+    "answers": [
+      "18-24",
+      "25-30",
+      "31-35",
+      "36-40",
+      "41+"
+    ],
+    "data_mapping": "age_range",
+    "branching": {
+      "DEFAULT": "MOT_010"
+    }
+  },
+  {
+    "id": "MOT_010",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Do you currently earn regular monthly income?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_income",
+    "branching": {
+      "DEFAULT": "MOT_011"
+    }
+  },
+  {
+    "id": "MOT_011",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "MOT_012"
     }
   },
   {
@@ -1528,15 +2779,15 @@
       "2",
       "3 or more"
     ],
-    "id": "MOT_006",
+    "id": "MOT_012",
     "industry": "motor",
     "branching": {
-      "DEFAULT": "MOT_007"
+      "DEFAULT": "MOT_013"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Is your primary vehicle covered by Comprehensive Motor Insurance?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIs your primary vehicle covered by Comprehensive Motor Insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1547,49 +2798,126 @@
         "vulnerability_points": 40
       }
     },
-    "id": "MOT_007",
+    "id": "MOT_013",
     "industry": "motor",
     "branching": {
-      "DEFAULT": "MOT_008"
+      "DEFAULT": "MOT_014"
     }
   },
   {
-    "id": "MOT_008",
+    "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Motor Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Life Insurance",
-      "Health Insurance (HMO)",
-      "Vehicle Insurance",
-      "Property / Home",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "MOT_009"
+      "DEFAULT": "MOT_015"
     }
   },
   {
-    "id": "MOT_009",
+    "id": "MOT_015",
     "industry": "motor",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "MOT_016"
+    }
+  },
+  {
+    "id": "MOT_016",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "MOT_017"
+    }
+  },
+  {
+    "id": "MOT_017",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "MOT_018"
+    }
+  },
+  {
+    "id": "MOT_018",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "MOT_019"
+    }
+  },
+  {
+    "id": "MOT_019",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Motor Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "MOT_020"
+    }
+  },
+  {
+    "id": "MOT_020",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "MOT_021"
+    }
+  },
+  {
+    "id": "MOT_021",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "MOT_010",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "MOT_022",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "MOT_010",
+    "id": "MOT_022",
     "industry": "motor",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1654,7 +2982,7 @@
     "id": "SME_004",
     "industry": "sme",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your business?",
+    "question": "Great.\n\nLet's start with the name of your business.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -1687,11 +3015,79 @@
     "id": "SME_007",
     "industry": "sme",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "SME_008"
+    }
+  },
+  {
+    "id": "SME_008",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "SME_009"
+    }
+  },
+  {
+    "id": "SME_009",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany businesss believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "SME_010"
+    }
+  },
+  {
+    "id": "SME_010",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "SME_011"
+    }
+  },
+  {
+    "id": "SME_011",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "SME_012"
+    }
+  },
+  {
+    "id": "SME_012",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "SME_013"
     }
   },
   {
@@ -1714,10 +3110,10 @@
         "exposure_points": 25
       }
     },
-    "id": "SME_008",
+    "id": "SME_013",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_009"
+      "DEFAULT": "SME_014"
     }
   },
   {
@@ -1740,24 +3136,24 @@
         "exposure_points": 30
       }
     },
-    "id": "SME_009",
+    "id": "SME_014",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_010"
+      "DEFAULT": "SME_015"
     }
   },
   {
     "pillar": "Facilities",
-    "question": "Do you operate from a physical shop or office?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you operate from a physical shop or office?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
       "No"
     ],
-    "id": "SME_010",
+    "id": "SME_015",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_011"
+      "DEFAULT": "SME_016"
     }
   },
   {
@@ -1773,15 +3169,15 @@
         "vulnerability_points": 25
       }
     },
-    "id": "SME_011",
+    "id": "SME_016",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_012"
+      "DEFAULT": "SME_017"
     }
   },
   {
     "pillar": "Business Continuity",
-    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a major disaster forced you to close for 3 months, could you survive without revenue?",
     "question_type": "single_choice",
     "answers": [
       "Yes easily",
@@ -1796,50 +3192,126 @@
         "impact_points": 40
       }
     },
-    "id": "SME_012",
+    "id": "SME_017",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_013"
+      "DEFAULT": "SME_018"
     }
   },
   {
-    "id": "SME_013",
+    "id": "SME_018",
     "industry": "sme",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your SME Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "SME_014"
+      "DEFAULT": "SME_019"
     }
   },
   {
-    "id": "SME_014",
+    "id": "SME_019",
     "industry": "sme",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "SME_020"
+    }
+  },
+  {
+    "id": "SME_020",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "SME_021"
+    }
+  },
+  {
+    "id": "SME_021",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "SME_022"
+    }
+  },
+  {
+    "id": "SME_022",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "SME_023"
+    }
+  },
+  {
+    "id": "SME_023",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for SMEs*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "SME_024"
+    }
+  },
+  {
+    "id": "SME_024",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "SME_025"
+    }
+  },
+  {
+    "id": "SME_025",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "SME_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "SME_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "SME_015",
+    "id": "SME_026",
     "industry": "sme",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1904,7 +3376,7 @@
     "id": "MFG_004",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your manufacturing plant?",
+    "question": "Great.\n\nLet's start with the name of your manufacturing plant.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -1937,11 +3409,79 @@
     "id": "MFG_007",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "MFG_008"
+    }
+  },
+  {
+    "id": "MFG_008",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "MFG_009"
+    }
+  },
+  {
+    "id": "MFG_009",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany manufacturing plants believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_010"
+    }
+  },
+  {
+    "id": "MFG_010",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "MFG_011"
+    }
+  },
+  {
+    "id": "MFG_011",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "MFG_012"
+    }
+  },
+  {
+    "id": "MFG_012",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_013"
     }
   },
   {
@@ -1964,10 +3504,10 @@
         "exposure_points": 30
       }
     },
-    "id": "MFG_008",
+    "id": "MFG_013",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_009"
+      "DEFAULT": "MFG_014"
     }
   },
   {
@@ -1987,15 +3527,15 @@
         "vulnerability_points": 15
       }
     },
-    "id": "MFG_009",
+    "id": "MFG_014",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_010"
+      "DEFAULT": "MFG_015"
     }
   },
   {
     "pillar": "Logistics",
-    "question": "Do you import raw materials or export finished goods?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you import raw materials or export finished goods?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2005,10 +3545,10 @@
       "condition": "Yes",
       "recommendation": "Marine/Goods In Transit Insurance required"
     },
-    "id": "MFG_010",
+    "id": "MFG_015",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_011"
+      "DEFAULT": "MFG_016"
     }
   },
   {
@@ -2024,15 +3564,15 @@
         "vulnerability_points": 30
       }
     },
-    "id": "MFG_011",
+    "id": "MFG_016",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_012"
+      "DEFAULT": "MFG_017"
     }
   },
   {
     "pillar": "Business Continuity",
-    "question": "If a major fire forced you to close for 3 months, could you survive without revenue?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a major fire forced you to close for 3 months, could you survive without revenue?",
     "question_type": "single_choice",
     "answers": [
       "Yes easily",
@@ -2047,50 +3587,126 @@
         "impact_points": 40
       }
     },
-    "id": "MFG_012",
+    "id": "MFG_017",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_013"
+      "DEFAULT": "MFG_018"
     }
   },
   {
-    "id": "MFG_013",
+    "id": "MFG_018",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Manufacturing Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "MFG_014"
+      "DEFAULT": "MFG_019"
     }
   },
   {
-    "id": "MFG_014",
+    "id": "MFG_019",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_020"
+    }
+  },
+  {
+    "id": "MFG_020",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_021"
+    }
+  },
+  {
+    "id": "MFG_021",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_022"
+    }
+  },
+  {
+    "id": "MFG_022",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "MFG_023"
+    }
+  },
+  {
+    "id": "MFG_023",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Manufacturings*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "MFG_024"
+    }
+  },
+  {
+    "id": "MFG_024",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "MFG_025"
+    }
+  },
+  {
+    "id": "MFG_025",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "MFG_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "MFG_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "MFG_015",
+    "id": "MFG_026",
     "industry": "manufacturing",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2155,7 +3771,7 @@
     "id": "HOS_004",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your hospital?",
+    "question": "Great.\n\nLet's start with the name of your hospital.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -2188,11 +3804,79 @@
     "id": "HOS_007",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "HOS_008"
+    }
+  },
+  {
+    "id": "HOS_008",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "HOS_009"
+    }
+  },
+  {
+    "id": "HOS_009",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany hospitals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_010"
+    }
+  },
+  {
+    "id": "HOS_010",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "HOS_011"
+    }
+  },
+  {
+    "id": "HOS_011",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "HOS_012"
+    }
+  },
+  {
+    "id": "HOS_012",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_013"
     }
   },
   {
@@ -2215,10 +3899,10 @@
         "exposure_points": 30
       }
     },
-    "id": "HOS_008",
+    "id": "HOS_013",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_009"
+      "DEFAULT": "HOS_014"
     }
   },
   {
@@ -2233,15 +3917,15 @@
       "condition": "Yes",
       "recommendation": "Cyber Liability Insurance required"
     },
-    "id": "HOS_009",
+    "id": "HOS_014",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_010"
+      "DEFAULT": "HOS_015"
     }
   },
   {
     "pillar": "Legal & Liability",
-    "question": "Do you have Medical Malpractice/Professional Indemnity insurance for your doctors and staff?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have Medical Malpractice/Professional Indemnity insurance for your doctors and staff?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2252,10 +3936,10 @@
         "vulnerability_points": 35
       }
     },
-    "id": "HOS_010",
+    "id": "HOS_015",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_011"
+      "DEFAULT": "HOS_016"
     }
   },
   {
@@ -2271,15 +3955,15 @@
         "exposure_points": 15
       }
     },
-    "id": "HOS_011",
+    "id": "HOS_016",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_012"
+      "DEFAULT": "HOS_017"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "If a power surge destroyed critical life-support equipment, do you have Machinery Breakdown insurance?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a power surge destroyed critical life-support equipment, do you have Machinery Breakdown insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2290,50 +3974,126 @@
         "vulnerability_points": 25
       }
     },
-    "id": "HOS_012",
+    "id": "HOS_017",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_013"
+      "DEFAULT": "HOS_018"
     }
   },
   {
-    "id": "HOS_013",
+    "id": "HOS_018",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Hospital Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "HOS_014"
+      "DEFAULT": "HOS_019"
     }
   },
   {
-    "id": "HOS_014",
+    "id": "HOS_019",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_020"
+    }
+  },
+  {
+    "id": "HOS_020",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_021"
+    }
+  },
+  {
+    "id": "HOS_021",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_022"
+    }
+  },
+  {
+    "id": "HOS_022",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "HOS_023"
+    }
+  },
+  {
+    "id": "HOS_023",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Hospitals*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "HOS_024"
+    }
+  },
+  {
+    "id": "HOS_024",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "HOS_025"
+    }
+  },
+  {
+    "id": "HOS_025",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "HOS_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "HOS_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "HOS_015",
+    "id": "HOS_026",
     "industry": "hospital",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2398,7 +4158,7 @@
     "id": "SCH_004",
     "industry": "school",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your school?",
+    "question": "Great.\n\nLet's start with the name of your school.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -2431,11 +4191,79 @@
     "id": "SCH_007",
     "industry": "school",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "SCH_008"
+    }
+  },
+  {
+    "id": "SCH_008",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "SCH_009"
+    }
+  },
+  {
+    "id": "SCH_009",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany schools believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_010"
+    }
+  },
+  {
+    "id": "SCH_010",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "SCH_011"
+    }
+  },
+  {
+    "id": "SCH_011",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "SCH_012"
+    }
+  },
+  {
+    "id": "SCH_012",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_013"
     }
   },
   {
@@ -2458,10 +4286,10 @@
         "exposure_points": 30
       }
     },
-    "id": "SCH_008",
+    "id": "SCH_013",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_009"
+      "DEFAULT": "SCH_014"
     }
   },
   {
@@ -2474,15 +4302,15 @@
       "Over ₦500,000"
     ],
     "data_mapping": "tuition_fees",
-    "id": "SCH_009",
+    "id": "SCH_014",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_010"
+      "DEFAULT": "SCH_015"
     }
   },
   {
     "pillar": "Logistics",
-    "question": "Do you operate school buses to transport students?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you operate school buses to transport students?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2492,10 +4320,10 @@
       "condition": "Yes",
       "recommendation": "Comprehensive Motor Fleet Insurance required"
     },
-    "id": "SCH_010",
+    "id": "SCH_015",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_011"
+      "DEFAULT": "SCH_016"
     }
   },
   {
@@ -2511,15 +4339,15 @@
         "vulnerability_points": 30
       }
     },
-    "id": "SCH_011",
+    "id": "SCH_016",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_012"
+      "DEFAULT": "SCH_017"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you currently have a comprehensive Fire Insurance policy for your school buildings?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you currently have a comprehensive Fire Insurance policy for your school buildings?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2530,50 +4358,126 @@
         "vulnerability_points": 25
       }
     },
-    "id": "SCH_012",
+    "id": "SCH_017",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_013"
+      "DEFAULT": "SCH_018"
     }
   },
   {
-    "id": "SCH_013",
+    "id": "SCH_018",
     "industry": "school",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your School Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "SCH_014"
+      "DEFAULT": "SCH_019"
     }
   },
   {
-    "id": "SCH_014",
+    "id": "SCH_019",
     "industry": "school",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_020"
+    }
+  },
+  {
+    "id": "SCH_020",
+    "industry": "school",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_021"
+    }
+  },
+  {
+    "id": "SCH_021",
+    "industry": "school",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_022"
+    }
+  },
+  {
+    "id": "SCH_022",
+    "industry": "school",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "SCH_023"
+    }
+  },
+  {
+    "id": "SCH_023",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Schools*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "SCH_024"
+    }
+  },
+  {
+    "id": "SCH_024",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "SCH_025"
+    }
+  },
+  {
+    "id": "SCH_025",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "SCH_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "SCH_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "SCH_015",
+    "id": "SCH_026",
     "industry": "school",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2638,7 +4542,7 @@
     "id": "CHR_004",
     "industry": "church",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your church?",
+    "question": "Great.\n\nLet's start with the name of your church.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -2671,11 +4575,79 @@
     "id": "CHR_007",
     "industry": "church",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "CHR_008"
+    }
+  },
+  {
+    "id": "CHR_008",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "CHR_009"
+    }
+  },
+  {
+    "id": "CHR_009",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany churchs believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_010"
+    }
+  },
+  {
+    "id": "CHR_010",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "CHR_011"
+    }
+  },
+  {
+    "id": "CHR_011",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "CHR_012"
+    }
+  },
+  {
+    "id": "CHR_012",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_013"
     }
   },
   {
@@ -2698,10 +4670,10 @@
         "exposure_points": 40
       }
     },
-    "id": "CHR_008",
+    "id": "CHR_013",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_009"
+      "DEFAULT": "CHR_014"
     }
   },
   {
@@ -2717,15 +4689,15 @@
         "exposure_points": 15
       }
     },
-    "id": "CHR_009",
+    "id": "CHR_014",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_010"
+      "DEFAULT": "CHR_015"
     }
   },
   {
     "pillar": "Legal & Liability",
-    "question": "If a visitor was injured during a service and sued, do you have Public Liability Insurance?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nIf a visitor was injured during a service and sued, do you have Public Liability Insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2736,10 +4708,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "CHR_010",
+    "id": "CHR_015",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_011"
+      "DEFAULT": "CHR_016"
     }
   },
   {
@@ -2750,15 +4722,15 @@
       "Yes",
       "No"
     ],
-    "id": "CHR_011",
+    "id": "CHR_016",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_012"
+      "DEFAULT": "CHR_017"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you currently have Fire Insurance for the building and its contents?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you currently have Fire Insurance for the building and its contents?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2769,50 +4741,126 @@
         "vulnerability_points": 30
       }
     },
-    "id": "CHR_012",
+    "id": "CHR_017",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_013"
+      "DEFAULT": "CHR_018"
     }
   },
   {
-    "id": "CHR_013",
+    "id": "CHR_018",
     "industry": "church",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Church Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "CHR_014"
+      "DEFAULT": "CHR_019"
     }
   },
   {
-    "id": "CHR_014",
+    "id": "CHR_019",
     "industry": "church",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_020"
+    }
+  },
+  {
+    "id": "CHR_020",
+    "industry": "church",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_021"
+    }
+  },
+  {
+    "id": "CHR_021",
+    "industry": "church",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_022"
+    }
+  },
+  {
+    "id": "CHR_022",
+    "industry": "church",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "CHR_023"
+    }
+  },
+  {
+    "id": "CHR_023",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Churchs*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "CHR_024"
+    }
+  },
+  {
+    "id": "CHR_024",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "CHR_025"
+    }
+  },
+  {
+    "id": "CHR_025",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "CHR_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "CHR_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "CHR_015",
+    "id": "CHR_026",
     "industry": "church",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2877,7 +4925,7 @@
     "id": "CON_004",
     "industry": "construction",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your construction firm?",
+    "question": "Great.\n\nLet's start with the name of your construction firm.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -2910,11 +4958,79 @@
     "id": "CON_007",
     "industry": "construction",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "CON_008"
+    }
+  },
+  {
+    "id": "CON_008",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "CON_009"
+    }
+  },
+  {
+    "id": "CON_009",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany construction firms believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "CON_010"
+    }
+  },
+  {
+    "id": "CON_010",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "CON_011"
+    }
+  },
+  {
+    "id": "CON_011",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "CON_012"
+    }
+  },
+  {
+    "id": "CON_012",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "CON_013"
     }
   },
   {
@@ -2937,10 +5053,10 @@
         "exposure_points": 30
       }
     },
-    "id": "CON_008",
+    "id": "CON_013",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_009"
+      "DEFAULT": "CON_014"
     }
   },
   {
@@ -2956,15 +5072,15 @@
         "exposure_points": 20
       }
     },
-    "id": "CON_009",
+    "id": "CON_014",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_010"
+      "DEFAULT": "CON_015"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you currently have Contractors All Risk (CAR) insurance for your sites?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you currently have Contractors All Risk (CAR) insurance for your sites?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2975,10 +5091,10 @@
         "vulnerability_points": 30
       }
     },
-    "id": "CON_010",
+    "id": "CON_015",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_011"
+      "DEFAULT": "CON_016"
     }
   },
   {
@@ -2994,15 +5110,15 @@
         "vulnerability_points": 25
       }
     },
-    "id": "CON_011",
+    "id": "CON_016",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_012"
+      "DEFAULT": "CON_017"
     }
   },
   {
     "pillar": "Business Continuity",
-    "question": "If a project is delayed due to an unforeseen accident, do you have cover for the resulting financial loss?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a project is delayed due to an unforeseen accident, do you have cover for the resulting financial loss?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3013,50 +5129,126 @@
         "vulnerability_points": 15
       }
     },
-    "id": "CON_012",
+    "id": "CON_017",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_013"
+      "DEFAULT": "CON_018"
     }
   },
   {
-    "id": "CON_013",
+    "id": "CON_018",
     "industry": "construction",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Construction Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "CON_014"
+      "DEFAULT": "CON_019"
     }
   },
   {
-    "id": "CON_014",
+    "id": "CON_019",
     "industry": "construction",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "CON_020"
+    }
+  },
+  {
+    "id": "CON_020",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "CON_021"
+    }
+  },
+  {
+    "id": "CON_021",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "CON_022"
+    }
+  },
+  {
+    "id": "CON_022",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "CON_023"
+    }
+  },
+  {
+    "id": "CON_023",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Constructions*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "CON_024"
+    }
+  },
+  {
+    "id": "CON_024",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "CON_025"
+    }
+  },
+  {
+    "id": "CON_025",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "CON_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "CON_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "CON_015",
+    "id": "CON_026",
     "industry": "construction",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -3121,7 +5313,7 @@
     "id": "TRN_004",
     "industry": "transport",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your logistics company?",
+    "question": "Great.\n\nLet's start with the name of your logistics company.",
     "question_type": "open_text",
     "data_mapping": "business_name",
     "branching": {
@@ -3154,11 +5346,79 @@
     "id": "TRN_007",
     "industry": "transport",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "What's your email address?\n\n(Used to send your Risk Intelligence Report.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
       "DEFAULT": "TRN_008"
+    }
+  },
+  {
+    "id": "TRN_008",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Which city do you currently operate in?",
+    "question_type": "open_text",
+    "data_mapping": "city",
+    "branching": {
+      "DEFAULT": "TRN_009"
+    }
+  },
+  {
+    "id": "TRN_009",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany logistics companys believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "TRN_010"
+    }
+  },
+  {
+    "id": "TRN_010",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Which best describes your business stage?",
+    "question_type": "single_choice",
+    "answers": [
+      "Just starting (0-1 yr)",
+      "Growing (1-3 yrs)",
+      "Established (3+ yrs)"
+    ],
+    "data_mapping": "business_stage",
+    "branching": {
+      "DEFAULT": "TRN_011"
+    }
+  },
+  {
+    "id": "TRN_011",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Do you currently generate regular monthly revenue?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "data_mapping": "regular_revenue",
+    "branching": {
+      "DEFAULT": "TRN_012"
+    }
+  },
+  {
+    "id": "TRN_012",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Questions"
+    ],
+    "branching": {
+      "DEFAULT": "TRN_013"
     }
   },
   {
@@ -3181,10 +5441,10 @@
         "exposure_points": 30
       }
     },
-    "id": "TRN_008",
+    "id": "TRN_013",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_009"
+      "DEFAULT": "TRN_014"
     }
   },
   {
@@ -3196,15 +5456,15 @@
       "Passengers",
       "Both"
     ],
-    "id": "TRN_009",
+    "id": "TRN_014",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_010"
+      "DEFAULT": "TRN_015"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Do you have Goods In Transit (GIT) insurance for the cargo you carry?",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have Goods In Transit (GIT) insurance for the cargo you carry?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -3216,10 +5476,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "TRN_010",
+    "id": "TRN_015",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_011"
+      "DEFAULT": "TRN_016"
     }
   },
   {
@@ -3235,15 +5495,15 @@
         "vulnerability_points": 20
       }
     },
-    "id": "TRN_011",
+    "id": "TRN_016",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_012"
+      "DEFAULT": "TRN_017"
     }
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Are your vehicles covered by Comprehensive Motor Insurance?",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nAre your vehicles covered by Comprehensive Motor Insurance?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -3258,50 +5518,126 @@
         "vulnerability_points": 15
       }
     },
-    "id": "TRN_012",
+    "id": "TRN_017",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_013"
+      "DEFAULT": "TRN_018"
     }
   },
   {
-    "id": "TRN_013",
+    "id": "TRN_018",
     "industry": "transport",
     "pillar": "General",
-    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
-    "question_type": "multi_choice",
+    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Transport & Logistics Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question_type": "single_choice",
     "answers": [
-      "Fire & Property",
-      "Group Life / Health",
-      "Public Liability",
-      "Cyber Security",
-      "Motor / Fleet",
-      "None of the above"
+      "✅ View My Results"
     ],
-    "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "TRN_014"
+      "DEFAULT": "TRN_019"
     }
   },
   {
-    "id": "TRN_014",
+    "id": "TRN_019",
     "industry": "transport",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Strengths"
+    ],
+    "branching": {
+      "DEFAULT": "TRN_020"
+    }
+  },
+  {
+    "id": "TRN_020",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Top Risks"
+    ],
+    "branching": {
+      "DEFAULT": "TRN_021"
+    }
+  },
+  {
+    "id": "TRN_021",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View Recommendations"
+    ],
+    "branching": {
+      "DEFAULT": "TRN_022"
+    }
+  },
+  {
+    "id": "TRN_022",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Continue"
+    ],
+    "branching": {
+      "DEFAULT": "TRN_023"
+    }
+  },
+  {
+    "id": "TRN_023",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Transport & Logisticss*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "Maybe Later"
+    ],
+    "data_mapping": "learning_preference",
+    "branching": {
+      "DEFAULT": "TRN_024"
+    }
+  },
+  {
+    "id": "TRN_024",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
+    "question_type": "single_choice",
+    "answers": [
+      "Show Me",
+      "Not Now"
+    ],
+    "data_mapping": "protection_preference",
+    "branching": {
+      "DEFAULT": "TRN_025"
+    }
+  },
+  {
+    "id": "TRN_025",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
-      "No, just send my report"
+      "Maybe Later",
+      "No Thanks"
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "TRN_015",
-      "No, just send my report": "COMPLETE",
+      "Yes, please": "TRN_026",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "TRN_015",
+    "id": "TRN_026",
     "industry": "transport",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",

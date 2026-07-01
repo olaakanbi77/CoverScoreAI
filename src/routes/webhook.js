@@ -219,6 +219,48 @@ router.post('/evolution', async (req, res) => {
         nextState = 'finished';
       }
 
+      // ── DYNAMIC SCORE INJECTION ──
+      if (finalReplyText) {
+          if (finalReplyText.includes('{{score}}') && !updatedData._scored) {
+             console.log(`   [MID-FLIGHT SCORING] Calculating CoverScore for ${phoneNumber}`);
+             const finalAnswers = { ...updatedData.answers, template_selection: { template_id: prefix } };
+             try {
+               const scoreResult = await calculateScore(finalAnswers);
+               updatedData.score = scoreResult.score;
+               updatedData.riskLevel = scoreResult.riskLevel;
+               
+               let strengthsText = '• Career Stability\n• Digital Safety\n• Personal Responsibility';
+               if (scoreResult.risk_categories) {
+                   const strongCats = Object.entries(scoreResult.risk_categories).filter(([k,v])=>v>60).map(([k,v])=>'• ' + k.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+                   if (strongCats.length > 0) strengthsText = strongCats.join('\n');
+               }
+               updatedData.strengths = strengthsText;
+               
+               updatedData.top_risks = scoreResult.identified_gaps && scoreResult.identified_gaps.length > 0 
+                  ? scoreResult.identified_gaps.slice(0,3).map(g => '• ' + g).join('\n')
+                  : '• Limited emergency savings\n• Inadequate income protection\n• No long-term financial protection strategy';
+                  
+               updatedData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
+                  ? scoreResult.recommendations.slice(0,3).map(r => '• ' + r).join('\n')
+                  : '• Build an emergency fund\n• Review income protection\n• Begin a structured long-term financial plan';
+                  
+               updatedData.min_loss = scoreResult.min_loss;
+               updatedData.max_loss = scoreResult.max_loss;
+               updatedData._scored = true;
+             } catch (e) {
+               console.error('Scoring error:', e);
+             }
+          }
+          
+          if (updatedData._scored) {
+              finalReplyText = finalReplyText.replace(/{{score}}/g, updatedData.score || '0')
+                                             .replace(/{{riskLevel}}/g, (updatedData.riskLevel || 'Moderate').toUpperCase())
+                                             .replace(/{{strengths}}/g, updatedData.strengths || '')
+                                             .replace(/{{top_risks}}/g, updatedData.top_risks || '')
+                                             .replace(/{{recommendations}}/g, updatedData.recommendations || '');
+          }
+      }
+
       // 2. Update Database & Send Next Message
       if (finalReplyText) {
         // Send WhatsApp reply
@@ -397,7 +439,7 @@ router.post('/evolution', async (req, res) => {
             }
 
             // Send Final Web Report Link with Financial Exposure AFTER consultation response
-            const finalReportMsg = `🧾 *Your Official CoverScore Risk Report is Ready*\n\nThank you for your response.\n\nWe've processed your full assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View and download your full report:\n${reportUrl}\n\nIf you requested a consultation, our Certified Risk Advisor will contact you shortly!`;
+            const finalReportMsg = `Thank you for completing your CoverScore Risk Assessment™.\nYou've taken an important step toward protecting your future.\n\n🧾 *Your Official Report is Ready*\nWe've processed your full assessment and identified areas that could expose you to financial loss.\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View and download your full report:\n${reportUrl}\n\nRemember:\nThe goal isn't to achieve a perfect score today.\nThe goal is to improve your resilience over time.\nWe'll continue supporting you with practical insights and recommendations whenever you need them.\n\nHave a wonderful day!`;
             
             await sendWhatsApp(phoneNumber, null, { _message: finalReportMsg });
             
