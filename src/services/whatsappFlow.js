@@ -180,12 +180,13 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
 // Helper to format a JSON question for WhatsApp
 const formatDynamicQuestion = (q) => {
-  // If it's the welcome message, it probably doesn't need a pillar
   let text = '';
-  if (q.id && q.id.endsWith('_001')) {
-    text = `${q.question}\n\n`;
+  const hiddenPillars = ['General', 'Exposure'];
+  
+  if (q.pillar && !hiddenPillars.includes(q.pillar)) {
+    text = `*${q.pillar}*\n\n${q.question}\n\n`;
   } else {
-    text = q.pillar ? `*${q.pillar}*\n\n${q.question}\n\n` : `${q.question}\n\n`;
+    text = `${q.question}\n\n`;
   }
   
   if (q.question_type === 'yes_no') {
