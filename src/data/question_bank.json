@@ -60,7 +60,7 @@
     "id": "YPR_005",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -179,7 +179,7 @@
     "id": "YPR_012",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -269,7 +269,7 @@
     "id": "ENT_005",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -405,7 +405,7 @@
     "id": "ENT_012",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -495,7 +495,7 @@
     "id": "FAM_005",
     "industry": "family",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -635,7 +635,7 @@
     "id": "FAM_012",
     "industry": "family",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -725,7 +725,7 @@
     "id": "INC_005",
     "industry": "income",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -849,7 +849,7 @@
     "id": "INC_012",
     "industry": "income",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -939,7 +939,7 @@
     "id": "HLT_005",
     "industry": "health",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1054,7 +1054,7 @@
     "id": "HLT_012",
     "industry": "health",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -1144,7 +1144,7 @@
     "id": "RET_005",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1269,7 +1269,7 @@
     "id": "RET_012",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -1359,7 +1359,7 @@
     "id": "HOM_005",
     "industry": "home",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1422,7 +1422,7 @@
     "id": "HOM_009",
     "industry": "home",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -1512,7 +1512,7 @@
     "id": "MOT_005",
     "industry": "motor",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question": "Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1575,7 +1575,7 @@
     "id": "MOT_009",
     "industry": "motor",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -1676,7 +1676,7 @@
     "id": "SME_006",
     "industry": "sme",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -1825,7 +1825,7 @@
     "id": "SME_014",
     "industry": "sme",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -1926,7 +1926,7 @@
     "id": "MFG_006",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -2076,7 +2076,7 @@
     "id": "MFG_014",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -2177,7 +2177,7 @@
     "id": "HOS_006",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -2319,7 +2319,7 @@
     "id": "HOS_014",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -2420,7 +2420,7 @@
     "id": "SCH_006",
     "industry": "school",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -2559,7 +2559,7 @@
     "id": "SCH_014",
     "industry": "school",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -2660,7 +2660,7 @@
     "id": "CHR_006",
     "industry": "church",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -2798,7 +2798,7 @@
     "id": "CHR_014",
     "industry": "church",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -2899,7 +2899,7 @@
     "id": "CON_006",
     "industry": "construction",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -3042,7 +3042,7 @@
     "id": "CON_014",
     "industry": "construction",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
@@ -3143,7 +3143,7 @@
     "id": "TRN_006",
     "industry": "transport",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Nice to meet you, {{name}}.\n\nWhat is your role?",
     "question_type": "open_text",
     "data_mapping": "role",
     "branching": {
@@ -3287,7 +3287,7 @@
     "id": "TRN_014",
     "industry": "transport",
     "pillar": "General",
-    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question": "Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",

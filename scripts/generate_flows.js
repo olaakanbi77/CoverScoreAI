@@ -71,7 +71,7 @@ class QuestionPackFactory {
         },
         {
           id: `${p}_006`, industry: config.ind, pillar: 'General',
-          question: `Nice to meet you.\n\nWhat is your role?`,
+          question: `Nice to meet you, {{name}}.\n\nWhat is your role?`,
           question_type: 'open_text', data_mapping: 'role',
           branching: { 'DEFAULT': `${p}_007` }
         },
@@ -92,7 +92,7 @@ class QuestionPackFactory {
         },
         {
           id: `${p}_005`, industry: config.ind, pillar: 'General',
-          question: `Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)`,
+          question: `Nice to meet you, {{name}}.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)`,
           question_type: 'open_text', data_mapping: 'email',
           branching: { 'DEFAULT': `${p}_006` }
         }
@@ -123,7 +123,7 @@ class QuestionPackFactory {
         id: `${p}_${String(startId + 1).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?`,
+        question: `Thank you for completing the core assessment, {{name}}!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?`,
         question_type: 'single_choice',
         answers: ['Yes, please', 'No, just send my report'],
         data_mapping: 'consultation_preference',

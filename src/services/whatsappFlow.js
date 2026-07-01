@@ -171,7 +171,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       isComplete = true;
       nextState = 'awaiting_consultation';
     } else {
-      replyText = formatDynamicQuestion(nextQ);
+      replyText = formatDynamicQuestion(nextQ, updatedData);
     }
   }
 
@@ -179,14 +179,20 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 };
 
 // Helper to format a JSON question for WhatsApp
-const formatDynamicQuestion = (q) => {
+const formatDynamicQuestion = (q, data = {}) => {
   let text = '';
   const hiddenPillars = ['General', 'Exposure'];
   
+  let rawQuestion = q.question;
+  if (rawQuestion.includes('{{name}}')) {
+    const userName = data.name ? data.name.split(' ')[0] : 'there';
+    rawQuestion = rawQuestion.replace(/{{name}}/g, userName);
+  }
+
   if (q.pillar && !hiddenPillars.includes(q.pillar)) {
-    text = `*${q.pillar}*\n\n${q.question}\n\n`;
+    text = `*${q.pillar}*\n\n${rawQuestion}\n\n`;
   } else {
-    text = `${q.question}\n\n`;
+    text = `${rawQuestion}\n\n`;
   }
   
   if (q.question_type === 'yes_no') {
