@@ -3,15 +3,15 @@
     "id": "YPR_001",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "YPR_003",
-      "Tell Me More": "YPR_002",
+      "✅ Yes, let's begin": "YPR_003",
+      "❓ Tell me more": "YPR_002",
       "DEFAULT": "YPR_002"
     }
   },
@@ -19,15 +19,13 @@
     "id": "YPR_002",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "YPR_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "YPR_003",
       "DEFAULT": "YPR_003"
     }
   },
@@ -35,22 +33,38 @@
     "id": "YPR_003",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "YPR_004"
+      "✅ I Agree": "YPR_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "YPR_004",
     "industry": "young_professional",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "YPR_005"
+    }
+  },
+  {
+    "id": "YPR_005",
+    "industry": "young_professional",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "YPR_005"
+      "DEFAULT": "YPR_006"
     }
   },
   {
@@ -62,10 +76,10 @@
       "2-5 years",
       "Over 5 years"
     ],
-    "id": "YPR_005",
+    "id": "YPR_006",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_006"
+      "DEFAULT": "YPR_007"
     }
   },
   {
@@ -85,10 +99,10 @@
         "vulnerability_points": 40
       }
     },
-    "id": "YPR_006",
+    "id": "YPR_007",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_007"
+      "DEFAULT": "YPR_008"
     }
   },
   {
@@ -104,10 +118,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "YPR_007",
+    "id": "YPR_008",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_008"
+      "DEFAULT": "YPR_009"
     }
   },
   {
@@ -123,10 +137,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "YPR_008",
+    "id": "YPR_009",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_009"
+      "DEFAULT": "YPR_010"
     }
   },
   {
@@ -137,14 +151,14 @@
       "Yes",
       "No"
     ],
-    "id": "YPR_009",
+    "id": "YPR_010",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_010"
+      "DEFAULT": "YPR_011"
     }
   },
   {
-    "id": "YPR_010",
+    "id": "YPR_011",
     "industry": "young_professional",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -158,11 +172,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "YPR_011"
+      "DEFAULT": "YPR_012"
     }
   },
   {
-    "id": "YPR_011",
+    "id": "YPR_012",
     "industry": "young_professional",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -173,13 +187,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "YPR_012",
+      "Yes, please": "YPR_013",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "YPR_012",
+    "id": "YPR_013",
     "industry": "young_professional",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -198,15 +212,15 @@
     "id": "ENT_001",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "ENT_003",
-      "Tell Me More": "ENT_002",
+      "✅ Yes, let's begin": "ENT_003",
+      "❓ Tell me more": "ENT_002",
       "DEFAULT": "ENT_002"
     }
   },
@@ -214,15 +228,13 @@
     "id": "ENT_002",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "ENT_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "ENT_003",
       "DEFAULT": "ENT_003"
     }
   },
@@ -230,22 +242,38 @@
     "id": "ENT_003",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "ENT_004"
+      "✅ I Agree": "ENT_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "ENT_004",
     "industry": "entrepreneur",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "ENT_005"
+    }
+  },
+  {
+    "id": "ENT_005",
+    "industry": "entrepreneur",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "ENT_005"
+      "DEFAULT": "ENT_006"
     }
   },
   {
@@ -265,10 +293,10 @@
         "vulnerability_points": 15
       }
     },
-    "id": "ENT_005",
+    "id": "ENT_006",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_006"
+      "DEFAULT": "ENT_007"
     }
   },
   {
@@ -284,10 +312,10 @@
         "exposure_points": 25
       }
     },
-    "id": "ENT_006",
+    "id": "ENT_007",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_007"
+      "DEFAULT": "ENT_008"
     }
   },
   {
@@ -307,10 +335,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "ENT_007",
+    "id": "ENT_008",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_008"
+      "DEFAULT": "ENT_009"
     }
   },
   {
@@ -326,10 +354,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "ENT_008",
+    "id": "ENT_009",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_009"
+      "DEFAULT": "ENT_010"
     }
   },
   {
@@ -349,14 +377,14 @@
         "exposure_points": 15
       }
     },
-    "id": "ENT_009",
+    "id": "ENT_010",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_010"
+      "DEFAULT": "ENT_011"
     }
   },
   {
-    "id": "ENT_010",
+    "id": "ENT_011",
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -370,11 +398,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "ENT_011"
+      "DEFAULT": "ENT_012"
     }
   },
   {
-    "id": "ENT_011",
+    "id": "ENT_012",
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -385,13 +413,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "ENT_012",
+      "Yes, please": "ENT_013",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "ENT_012",
+    "id": "ENT_013",
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -410,15 +438,15 @@
     "id": "FAM_001",
     "industry": "family",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "FAM_003",
-      "Tell Me More": "FAM_002",
+      "✅ Yes, let's begin": "FAM_003",
+      "❓ Tell me more": "FAM_002",
       "DEFAULT": "FAM_002"
     }
   },
@@ -426,15 +454,13 @@
     "id": "FAM_002",
     "industry": "family",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "FAM_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "FAM_003",
       "DEFAULT": "FAM_003"
     }
   },
@@ -442,22 +468,38 @@
     "id": "FAM_003",
     "industry": "family",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "FAM_004"
+      "✅ I Agree": "FAM_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "FAM_004",
     "industry": "family",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "FAM_005"
+    }
+  },
+  {
+    "id": "FAM_005",
+    "industry": "family",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "FAM_005"
+      "DEFAULT": "FAM_006"
     }
   },
   {
@@ -480,10 +522,10 @@
         "exposure_points": 35
       }
     },
-    "id": "FAM_005",
+    "id": "FAM_006",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_006"
+      "DEFAULT": "FAM_007"
     }
   },
   {
@@ -503,10 +545,10 @@
         "vulnerability_points": 15
       }
     },
-    "id": "FAM_006",
+    "id": "FAM_007",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_007"
+      "DEFAULT": "FAM_008"
     }
   },
   {
@@ -526,10 +568,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "FAM_007",
+    "id": "FAM_008",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_008"
+      "DEFAULT": "FAM_009"
     }
   },
   {
@@ -546,10 +588,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "FAM_008",
+    "id": "FAM_009",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_009"
+      "DEFAULT": "FAM_010"
     }
   },
   {
@@ -565,14 +607,14 @@
         "vulnerability_points": 25
       }
     },
-    "id": "FAM_009",
+    "id": "FAM_010",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_010"
+      "DEFAULT": "FAM_011"
     }
   },
   {
-    "id": "FAM_010",
+    "id": "FAM_011",
     "industry": "family",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -586,11 +628,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "FAM_011"
+      "DEFAULT": "FAM_012"
     }
   },
   {
-    "id": "FAM_011",
+    "id": "FAM_012",
     "industry": "family",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -601,13 +643,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "FAM_012",
+      "Yes, please": "FAM_013",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "FAM_012",
+    "id": "FAM_013",
     "industry": "family",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -626,15 +668,15 @@
     "id": "INC_001",
     "industry": "income",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "INC_003",
-      "Tell Me More": "INC_002",
+      "✅ Yes, let's begin": "INC_003",
+      "❓ Tell me more": "INC_002",
       "DEFAULT": "INC_002"
     }
   },
@@ -642,15 +684,13 @@
     "id": "INC_002",
     "industry": "income",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "INC_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "INC_003",
       "DEFAULT": "INC_003"
     }
   },
@@ -658,22 +698,38 @@
     "id": "INC_003",
     "industry": "income",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "INC_004"
+      "✅ I Agree": "INC_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "INC_004",
     "industry": "income",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "INC_005"
+    }
+  },
+  {
+    "id": "INC_005",
+    "industry": "income",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "INC_005"
+      "DEFAULT": "INC_006"
     }
   },
   {
@@ -685,10 +741,10 @@
       "Freelance/Contract",
       "Business owner"
     ],
-    "id": "INC_005",
+    "id": "INC_006",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_006"
+      "DEFAULT": "INC_007"
     }
   },
   {
@@ -708,10 +764,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "INC_006",
+    "id": "INC_007",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_007"
+      "DEFAULT": "INC_008"
     }
   },
   {
@@ -727,10 +783,10 @@
         "vulnerability_points": 10
       }
     },
-    "id": "INC_007",
+    "id": "INC_008",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_008"
+      "DEFAULT": "INC_009"
     }
   },
   {
@@ -746,10 +802,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "INC_008",
+    "id": "INC_009",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_009"
+      "DEFAULT": "INC_010"
     }
   },
   {
@@ -765,14 +821,14 @@
         "exposure_points": 25
       }
     },
-    "id": "INC_009",
+    "id": "INC_010",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_010"
+      "DEFAULT": "INC_011"
     }
   },
   {
-    "id": "INC_010",
+    "id": "INC_011",
     "industry": "income",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -786,11 +842,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "INC_011"
+      "DEFAULT": "INC_012"
     }
   },
   {
-    "id": "INC_011",
+    "id": "INC_012",
     "industry": "income",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -801,13 +857,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "INC_012",
+      "Yes, please": "INC_013",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "INC_012",
+    "id": "INC_013",
     "industry": "income",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -826,15 +882,15 @@
     "id": "HLT_001",
     "industry": "health",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "HLT_003",
-      "Tell Me More": "HLT_002",
+      "✅ Yes, let's begin": "HLT_003",
+      "❓ Tell me more": "HLT_002",
       "DEFAULT": "HLT_002"
     }
   },
@@ -842,15 +898,13 @@
     "id": "HLT_002",
     "industry": "health",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "HLT_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "HLT_003",
       "DEFAULT": "HLT_003"
     }
   },
@@ -858,22 +912,38 @@
     "id": "HLT_003",
     "industry": "health",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "HLT_004"
+      "✅ I Agree": "HLT_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "HLT_004",
     "industry": "health",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "HLT_005"
+    }
+  },
+  {
+    "id": "HLT_005",
+    "industry": "health",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "HLT_005"
+      "DEFAULT": "HLT_006"
     }
   },
   {
@@ -889,10 +959,10 @@
         "vulnerability_points": 35
       }
     },
-    "id": "HLT_005",
+    "id": "HLT_006",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_006"
+      "DEFAULT": "HLT_007"
     }
   },
   {
@@ -904,10 +974,10 @@
       "No",
       "I don't have one"
     ],
-    "id": "HLT_006",
+    "id": "HLT_007",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_007"
+      "DEFAULT": "HLT_008"
     }
   },
   {
@@ -918,10 +988,10 @@
       "Yes",
       "No"
     ],
-    "id": "HLT_007",
+    "id": "HLT_008",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_008"
+      "DEFAULT": "HLT_009"
     }
   },
   {
@@ -937,10 +1007,10 @@
         "exposure_points": 30
       }
     },
-    "id": "HLT_008",
+    "id": "HLT_009",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_009"
+      "DEFAULT": "HLT_010"
     }
   },
   {
@@ -956,14 +1026,14 @@
         "vulnerability_points": 25
       }
     },
-    "id": "HLT_009",
+    "id": "HLT_010",
     "industry": "health",
     "branching": {
-      "DEFAULT": "HLT_010"
+      "DEFAULT": "HLT_011"
     }
   },
   {
-    "id": "HLT_010",
+    "id": "HLT_011",
     "industry": "health",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -977,11 +1047,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "HLT_011"
+      "DEFAULT": "HLT_012"
     }
   },
   {
-    "id": "HLT_011",
+    "id": "HLT_012",
     "industry": "health",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -992,13 +1062,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "HLT_012",
+      "Yes, please": "HLT_013",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "HLT_012",
+    "id": "HLT_013",
     "industry": "health",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1017,15 +1087,15 @@
     "id": "RET_001",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "RET_003",
-      "Tell Me More": "RET_002",
+      "✅ Yes, let's begin": "RET_003",
+      "❓ Tell me more": "RET_002",
       "DEFAULT": "RET_002"
     }
   },
@@ -1033,15 +1103,13 @@
     "id": "RET_002",
     "industry": "retirement",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "RET_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "RET_003",
       "DEFAULT": "RET_003"
     }
   },
@@ -1049,22 +1117,38 @@
     "id": "RET_003",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "RET_004"
+      "✅ I Agree": "RET_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "RET_004",
     "industry": "retirement",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "RET_005"
+    }
+  },
+  {
+    "id": "RET_005",
+    "industry": "retirement",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "RET_005"
+      "DEFAULT": "RET_006"
     }
   },
   {
@@ -1084,10 +1168,10 @@
         "exposure_points": 15
       }
     },
-    "id": "RET_005",
+    "id": "RET_006",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_006"
+      "DEFAULT": "RET_007"
     }
   },
   {
@@ -1103,10 +1187,10 @@
         "vulnerability_points": 40
       }
     },
-    "id": "RET_006",
+    "id": "RET_007",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_007"
+      "DEFAULT": "RET_008"
     }
   },
   {
@@ -1118,10 +1202,10 @@
       "Somewhat concerned",
       "Not concerned"
     ],
-    "id": "RET_007",
+    "id": "RET_008",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_008"
+      "DEFAULT": "RET_009"
     }
   },
   {
@@ -1137,10 +1221,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "RET_008",
+    "id": "RET_009",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_009"
+      "DEFAULT": "RET_010"
     }
   },
   {
@@ -1157,14 +1241,14 @@
         "vulnerability_points": 30
       }
     },
-    "id": "RET_009",
+    "id": "RET_010",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_010"
+      "DEFAULT": "RET_011"
     }
   },
   {
-    "id": "RET_010",
+    "id": "RET_011",
     "industry": "retirement",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -1178,11 +1262,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "RET_011"
+      "DEFAULT": "RET_012"
     }
   },
   {
-    "id": "RET_011",
+    "id": "RET_012",
     "industry": "retirement",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -1193,13 +1277,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "RET_012",
+      "Yes, please": "RET_013",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "RET_012",
+    "id": "RET_013",
     "industry": "retirement",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1218,15 +1302,15 @@
     "id": "HOM_001",
     "industry": "home",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "HOM_003",
-      "Tell Me More": "HOM_002",
+      "✅ Yes, let's begin": "HOM_003",
+      "❓ Tell me more": "HOM_002",
       "DEFAULT": "HOM_002"
     }
   },
@@ -1234,15 +1318,13 @@
     "id": "HOM_002",
     "industry": "home",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "HOM_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "HOM_003",
       "DEFAULT": "HOM_003"
     }
   },
@@ -1250,22 +1332,38 @@
     "id": "HOM_003",
     "industry": "home",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "HOM_004"
+      "✅ I Agree": "HOM_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "HOM_004",
     "industry": "home",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "HOM_005"
+    }
+  },
+  {
+    "id": "HOM_005",
+    "industry": "home",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "HOM_005"
+      "DEFAULT": "HOM_006"
     }
   },
   {
@@ -1277,10 +1375,10 @@
       "Rent",
       "Neither"
     ],
-    "id": "HOM_005",
+    "id": "HOM_006",
     "industry": "home",
     "branching": {
-      "DEFAULT": "HOM_006"
+      "DEFAULT": "HOM_007"
     }
   },
   {
@@ -1296,14 +1394,14 @@
         "vulnerability_points": 30
       }
     },
-    "id": "HOM_006",
+    "id": "HOM_007",
     "industry": "home",
     "branching": {
-      "DEFAULT": "HOM_007"
+      "DEFAULT": "HOM_008"
     }
   },
   {
-    "id": "HOM_007",
+    "id": "HOM_008",
     "industry": "home",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -1317,11 +1415,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "HOM_008"
+      "DEFAULT": "HOM_009"
     }
   },
   {
-    "id": "HOM_008",
+    "id": "HOM_009",
     "industry": "home",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -1332,13 +1430,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "HOM_009",
+      "Yes, please": "HOM_010",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "HOM_009",
+    "id": "HOM_010",
     "industry": "home",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1357,15 +1455,15 @@
     "id": "MOT_001",
     "industry": "motor",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your financial future, family, and wellbeing.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "MOT_003",
-      "Tell Me More": "MOT_002",
+      "✅ Yes, let's begin": "MOT_003",
+      "❓ Tell me more": "MOT_002",
       "DEFAULT": "MOT_002"
     }
   },
@@ -1373,15 +1471,13 @@
     "id": "MOT_002",
     "industry": "motor",
     "pillar": "General",
-    "question": "CoverScore helps individuals identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "MOT_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "MOT_003",
       "DEFAULT": "MOT_003"
     }
   },
@@ -1389,22 +1485,38 @@
     "id": "MOT_003",
     "industry": "motor",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is your full name?",
-    "question_type": "open_text",
-    "data_mapping": "name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "MOT_004"
+      "✅ I Agree": "MOT_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "MOT_004",
     "industry": "motor",
     "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "MOT_005"
+    }
+  },
+  {
+    "id": "MOT_005",
+    "industry": "motor",
+    "pillar": "General",
     "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "MOT_005"
+      "DEFAULT": "MOT_006"
     }
   },
   {
@@ -1416,10 +1528,10 @@
       "2",
       "3 or more"
     ],
-    "id": "MOT_005",
+    "id": "MOT_006",
     "industry": "motor",
     "branching": {
-      "DEFAULT": "MOT_006"
+      "DEFAULT": "MOT_007"
     }
   },
   {
@@ -1435,14 +1547,14 @@
         "vulnerability_points": 40
       }
     },
-    "id": "MOT_006",
+    "id": "MOT_007",
     "industry": "motor",
     "branching": {
-      "DEFAULT": "MOT_007"
+      "DEFAULT": "MOT_008"
     }
   },
   {
-    "id": "MOT_007",
+    "id": "MOT_008",
     "industry": "motor",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -1456,11 +1568,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "MOT_008"
+      "DEFAULT": "MOT_009"
     }
   },
   {
-    "id": "MOT_008",
+    "id": "MOT_009",
     "industry": "motor",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -1471,13 +1583,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "MOT_009",
+      "Yes, please": "MOT_010",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "MOT_009",
+    "id": "MOT_010",
     "industry": "motor",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1496,15 +1608,15 @@
     "id": "SME_001",
     "industry": "sme",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your business, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "SME_003",
-      "Tell Me More": "SME_002",
+      "✅ Yes, let's begin": "SME_003",
+      "❓ Tell me more": "SME_002",
       "DEFAULT": "SME_002"
     }
   },
@@ -1512,15 +1624,13 @@
     "id": "SME_002",
     "industry": "sme",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "SME_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "SME_003",
       "DEFAULT": "SME_003"
     }
   },
@@ -1528,20 +1638,25 @@
     "id": "SME_003",
     "industry": "sme",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your business?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "SME_004"
+      "✅ I Agree": "SME_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "SME_004",
     "industry": "sme",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your business?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "SME_005"
     }
@@ -1550,9 +1665,9 @@
     "id": "SME_005",
     "industry": "sme",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "SME_006"
     }
@@ -1561,11 +1676,22 @@
     "id": "SME_006",
     "industry": "sme",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "SME_007"
+    }
+  },
+  {
+    "id": "SME_007",
+    "industry": "sme",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "SME_007"
+      "DEFAULT": "SME_008"
     }
   },
   {
@@ -1588,10 +1714,10 @@
         "exposure_points": 25
       }
     },
-    "id": "SME_007",
+    "id": "SME_008",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_008"
+      "DEFAULT": "SME_009"
     }
   },
   {
@@ -1614,10 +1740,10 @@
         "exposure_points": 30
       }
     },
-    "id": "SME_008",
+    "id": "SME_009",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_009"
+      "DEFAULT": "SME_010"
     }
   },
   {
@@ -1628,10 +1754,10 @@
       "Yes",
       "No"
     ],
-    "id": "SME_009",
+    "id": "SME_010",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_010"
+      "DEFAULT": "SME_011"
     }
   },
   {
@@ -1647,10 +1773,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "SME_010",
+    "id": "SME_011",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_011"
+      "DEFAULT": "SME_012"
     }
   },
   {
@@ -1670,14 +1796,14 @@
         "impact_points": 40
       }
     },
-    "id": "SME_011",
+    "id": "SME_012",
     "industry": "sme",
     "branching": {
-      "DEFAULT": "SME_012"
+      "DEFAULT": "SME_013"
     }
   },
   {
-    "id": "SME_012",
+    "id": "SME_013",
     "industry": "sme",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -1692,11 +1818,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "SME_013"
+      "DEFAULT": "SME_014"
     }
   },
   {
-    "id": "SME_013",
+    "id": "SME_014",
     "industry": "sme",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -1707,13 +1833,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "SME_014",
+      "Yes, please": "SME_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "SME_014",
+    "id": "SME_015",
     "industry": "sme",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1732,15 +1858,15 @@
     "id": "MFG_001",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your manufacturing plant, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "MFG_003",
-      "Tell Me More": "MFG_002",
+      "✅ Yes, let's begin": "MFG_003",
+      "❓ Tell me more": "MFG_002",
       "DEFAULT": "MFG_002"
     }
   },
@@ -1748,15 +1874,13 @@
     "id": "MFG_002",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "MFG_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "MFG_003",
       "DEFAULT": "MFG_003"
     }
   },
@@ -1764,20 +1888,25 @@
     "id": "MFG_003",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your manufacturing plant?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "MFG_004"
+      "✅ I Agree": "MFG_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "MFG_004",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your manufacturing plant?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "MFG_005"
     }
@@ -1786,9 +1915,9 @@
     "id": "MFG_005",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "MFG_006"
     }
@@ -1797,11 +1926,22 @@
     "id": "MFG_006",
     "industry": "manufacturing",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "MFG_007"
+    }
+  },
+  {
+    "id": "MFG_007",
+    "industry": "manufacturing",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "MFG_007"
+      "DEFAULT": "MFG_008"
     }
   },
   {
@@ -1824,10 +1964,10 @@
         "exposure_points": 30
       }
     },
-    "id": "MFG_007",
+    "id": "MFG_008",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_008"
+      "DEFAULT": "MFG_009"
     }
   },
   {
@@ -1847,10 +1987,10 @@
         "vulnerability_points": 15
       }
     },
-    "id": "MFG_008",
+    "id": "MFG_009",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_009"
+      "DEFAULT": "MFG_010"
     }
   },
   {
@@ -1865,10 +2005,10 @@
       "condition": "Yes",
       "recommendation": "Marine/Goods In Transit Insurance required"
     },
-    "id": "MFG_009",
+    "id": "MFG_010",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_010"
+      "DEFAULT": "MFG_011"
     }
   },
   {
@@ -1884,10 +2024,10 @@
         "vulnerability_points": 30
       }
     },
-    "id": "MFG_010",
+    "id": "MFG_011",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_011"
+      "DEFAULT": "MFG_012"
     }
   },
   {
@@ -1907,14 +2047,14 @@
         "impact_points": 40
       }
     },
-    "id": "MFG_011",
+    "id": "MFG_012",
     "industry": "manufacturing",
     "branching": {
-      "DEFAULT": "MFG_012"
+      "DEFAULT": "MFG_013"
     }
   },
   {
-    "id": "MFG_012",
+    "id": "MFG_013",
     "industry": "manufacturing",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -1929,11 +2069,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "MFG_013"
+      "DEFAULT": "MFG_014"
     }
   },
   {
-    "id": "MFG_013",
+    "id": "MFG_014",
     "industry": "manufacturing",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -1944,13 +2084,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "MFG_014",
+      "Yes, please": "MFG_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "MFG_014",
+    "id": "MFG_015",
     "industry": "manufacturing",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -1969,15 +2109,15 @@
     "id": "HOS_001",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your hospital, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "HOS_003",
-      "Tell Me More": "HOS_002",
+      "✅ Yes, let's begin": "HOS_003",
+      "❓ Tell me more": "HOS_002",
       "DEFAULT": "HOS_002"
     }
   },
@@ -1985,15 +2125,13 @@
     "id": "HOS_002",
     "industry": "hospital",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "HOS_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "HOS_003",
       "DEFAULT": "HOS_003"
     }
   },
@@ -2001,20 +2139,25 @@
     "id": "HOS_003",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your hospital?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "HOS_004"
+      "✅ I Agree": "HOS_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "HOS_004",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your hospital?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "HOS_005"
     }
@@ -2023,9 +2166,9 @@
     "id": "HOS_005",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "HOS_006"
     }
@@ -2034,11 +2177,22 @@
     "id": "HOS_006",
     "industry": "hospital",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "HOS_007"
+    }
+  },
+  {
+    "id": "HOS_007",
+    "industry": "hospital",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "HOS_007"
+      "DEFAULT": "HOS_008"
     }
   },
   {
@@ -2061,10 +2215,10 @@
         "exposure_points": 30
       }
     },
-    "id": "HOS_007",
+    "id": "HOS_008",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_008"
+      "DEFAULT": "HOS_009"
     }
   },
   {
@@ -2079,10 +2233,10 @@
       "condition": "Yes",
       "recommendation": "Cyber Liability Insurance required"
     },
-    "id": "HOS_008",
+    "id": "HOS_009",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_009"
+      "DEFAULT": "HOS_010"
     }
   },
   {
@@ -2098,10 +2252,10 @@
         "vulnerability_points": 35
       }
     },
-    "id": "HOS_009",
+    "id": "HOS_010",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_010"
+      "DEFAULT": "HOS_011"
     }
   },
   {
@@ -2117,10 +2271,10 @@
         "exposure_points": 15
       }
     },
-    "id": "HOS_010",
+    "id": "HOS_011",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_011"
+      "DEFAULT": "HOS_012"
     }
   },
   {
@@ -2136,14 +2290,14 @@
         "vulnerability_points": 25
       }
     },
-    "id": "HOS_011",
+    "id": "HOS_012",
     "industry": "hospital",
     "branching": {
-      "DEFAULT": "HOS_012"
+      "DEFAULT": "HOS_013"
     }
   },
   {
-    "id": "HOS_012",
+    "id": "HOS_013",
     "industry": "hospital",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -2158,11 +2312,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "HOS_013"
+      "DEFAULT": "HOS_014"
     }
   },
   {
-    "id": "HOS_013",
+    "id": "HOS_014",
     "industry": "hospital",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -2173,13 +2327,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "HOS_014",
+      "Yes, please": "HOS_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "HOS_014",
+    "id": "HOS_015",
     "industry": "hospital",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2198,15 +2352,15 @@
     "id": "SCH_001",
     "industry": "school",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your school, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "SCH_003",
-      "Tell Me More": "SCH_002",
+      "✅ Yes, let's begin": "SCH_003",
+      "❓ Tell me more": "SCH_002",
       "DEFAULT": "SCH_002"
     }
   },
@@ -2214,15 +2368,13 @@
     "id": "SCH_002",
     "industry": "school",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "SCH_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "SCH_003",
       "DEFAULT": "SCH_003"
     }
   },
@@ -2230,20 +2382,25 @@
     "id": "SCH_003",
     "industry": "school",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your school?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "SCH_004"
+      "✅ I Agree": "SCH_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "SCH_004",
     "industry": "school",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your school?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "SCH_005"
     }
@@ -2252,9 +2409,9 @@
     "id": "SCH_005",
     "industry": "school",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "SCH_006"
     }
@@ -2263,11 +2420,22 @@
     "id": "SCH_006",
     "industry": "school",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "SCH_007"
+    }
+  },
+  {
+    "id": "SCH_007",
+    "industry": "school",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "SCH_007"
+      "DEFAULT": "SCH_008"
     }
   },
   {
@@ -2290,10 +2458,10 @@
         "exposure_points": 30
       }
     },
-    "id": "SCH_007",
+    "id": "SCH_008",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_008"
+      "DEFAULT": "SCH_009"
     }
   },
   {
@@ -2306,10 +2474,10 @@
       "Over ₦500,000"
     ],
     "data_mapping": "tuition_fees",
-    "id": "SCH_008",
+    "id": "SCH_009",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_009"
+      "DEFAULT": "SCH_010"
     }
   },
   {
@@ -2324,10 +2492,10 @@
       "condition": "Yes",
       "recommendation": "Comprehensive Motor Fleet Insurance required"
     },
-    "id": "SCH_009",
+    "id": "SCH_010",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_010"
+      "DEFAULT": "SCH_011"
     }
   },
   {
@@ -2343,10 +2511,10 @@
         "vulnerability_points": 30
       }
     },
-    "id": "SCH_010",
+    "id": "SCH_011",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_011"
+      "DEFAULT": "SCH_012"
     }
   },
   {
@@ -2362,14 +2530,14 @@
         "vulnerability_points": 25
       }
     },
-    "id": "SCH_011",
+    "id": "SCH_012",
     "industry": "school",
     "branching": {
-      "DEFAULT": "SCH_012"
+      "DEFAULT": "SCH_013"
     }
   },
   {
-    "id": "SCH_012",
+    "id": "SCH_013",
     "industry": "school",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -2384,11 +2552,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "SCH_013"
+      "DEFAULT": "SCH_014"
     }
   },
   {
-    "id": "SCH_013",
+    "id": "SCH_014",
     "industry": "school",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -2399,13 +2567,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "SCH_014",
+      "Yes, please": "SCH_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "SCH_014",
+    "id": "SCH_015",
     "industry": "school",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2424,15 +2592,15 @@
     "id": "CHR_001",
     "industry": "church",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your church, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "CHR_003",
-      "Tell Me More": "CHR_002",
+      "✅ Yes, let's begin": "CHR_003",
+      "❓ Tell me more": "CHR_002",
       "DEFAULT": "CHR_002"
     }
   },
@@ -2440,15 +2608,13 @@
     "id": "CHR_002",
     "industry": "church",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "CHR_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "CHR_003",
       "DEFAULT": "CHR_003"
     }
   },
@@ -2456,20 +2622,25 @@
     "id": "CHR_003",
     "industry": "church",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your church?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "CHR_004"
+      "✅ I Agree": "CHR_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "CHR_004",
     "industry": "church",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your church?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "CHR_005"
     }
@@ -2478,9 +2649,9 @@
     "id": "CHR_005",
     "industry": "church",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "CHR_006"
     }
@@ -2489,11 +2660,22 @@
     "id": "CHR_006",
     "industry": "church",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "CHR_007"
+    }
+  },
+  {
+    "id": "CHR_007",
+    "industry": "church",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "CHR_007"
+      "DEFAULT": "CHR_008"
     }
   },
   {
@@ -2516,10 +2698,10 @@
         "exposure_points": 40
       }
     },
-    "id": "CHR_007",
+    "id": "CHR_008",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_008"
+      "DEFAULT": "CHR_009"
     }
   },
   {
@@ -2535,10 +2717,10 @@
         "exposure_points": 15
       }
     },
-    "id": "CHR_008",
+    "id": "CHR_009",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_009"
+      "DEFAULT": "CHR_010"
     }
   },
   {
@@ -2554,10 +2736,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "CHR_009",
+    "id": "CHR_010",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_010"
+      "DEFAULT": "CHR_011"
     }
   },
   {
@@ -2568,10 +2750,10 @@
       "Yes",
       "No"
     ],
-    "id": "CHR_010",
+    "id": "CHR_011",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_011"
+      "DEFAULT": "CHR_012"
     }
   },
   {
@@ -2587,14 +2769,14 @@
         "vulnerability_points": 30
       }
     },
-    "id": "CHR_011",
+    "id": "CHR_012",
     "industry": "church",
     "branching": {
-      "DEFAULT": "CHR_012"
+      "DEFAULT": "CHR_013"
     }
   },
   {
-    "id": "CHR_012",
+    "id": "CHR_013",
     "industry": "church",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -2609,11 +2791,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "CHR_013"
+      "DEFAULT": "CHR_014"
     }
   },
   {
-    "id": "CHR_013",
+    "id": "CHR_014",
     "industry": "church",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -2624,13 +2806,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "CHR_014",
+      "Yes, please": "CHR_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "CHR_014",
+    "id": "CHR_015",
     "industry": "church",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2649,15 +2831,15 @@
     "id": "CON_001",
     "industry": "construction",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your construction firm, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "CON_003",
-      "Tell Me More": "CON_002",
+      "✅ Yes, let's begin": "CON_003",
+      "❓ Tell me more": "CON_002",
       "DEFAULT": "CON_002"
     }
   },
@@ -2665,15 +2847,13 @@
     "id": "CON_002",
     "industry": "construction",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "CON_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "CON_003",
       "DEFAULT": "CON_003"
     }
   },
@@ -2681,20 +2861,25 @@
     "id": "CON_003",
     "industry": "construction",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your construction firm?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "CON_004"
+      "✅ I Agree": "CON_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "CON_004",
     "industry": "construction",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your construction firm?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "CON_005"
     }
@@ -2703,9 +2888,9 @@
     "id": "CON_005",
     "industry": "construction",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "CON_006"
     }
@@ -2714,11 +2899,22 @@
     "id": "CON_006",
     "industry": "construction",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "CON_007"
+    }
+  },
+  {
+    "id": "CON_007",
+    "industry": "construction",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "CON_007"
+      "DEFAULT": "CON_008"
     }
   },
   {
@@ -2741,10 +2937,10 @@
         "exposure_points": 30
       }
     },
-    "id": "CON_007",
+    "id": "CON_008",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_008"
+      "DEFAULT": "CON_009"
     }
   },
   {
@@ -2760,10 +2956,10 @@
         "exposure_points": 20
       }
     },
-    "id": "CON_008",
+    "id": "CON_009",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_009"
+      "DEFAULT": "CON_010"
     }
   },
   {
@@ -2779,10 +2975,10 @@
         "vulnerability_points": 30
       }
     },
-    "id": "CON_009",
+    "id": "CON_010",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_010"
+      "DEFAULT": "CON_011"
     }
   },
   {
@@ -2798,10 +2994,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "CON_010",
+    "id": "CON_011",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_011"
+      "DEFAULT": "CON_012"
     }
   },
   {
@@ -2817,14 +3013,14 @@
         "vulnerability_points": 15
       }
     },
-    "id": "CON_011",
+    "id": "CON_012",
     "industry": "construction",
     "branching": {
-      "DEFAULT": "CON_012"
+      "DEFAULT": "CON_013"
     }
   },
   {
-    "id": "CON_012",
+    "id": "CON_013",
     "industry": "construction",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -2839,11 +3035,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "CON_013"
+      "DEFAULT": "CON_014"
     }
   },
   {
-    "id": "CON_013",
+    "id": "CON_014",
     "industry": "construction",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -2854,13 +3050,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "CON_014",
+      "Yes, please": "CON_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "CON_014",
+    "id": "CON_015",
     "industry": "construction",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
@@ -2879,15 +3075,15 @@
     "id": "TRN_001",
     "industry": "transport",
     "pillar": "General",
-    "question": "Hello 👋\n\nWelcome to CoverScore AI.\n\nI'll help identify risks that may affect your logistics company, employees, facilities, and operations.\n\nAt the end of this assessment, you'll receive:\n\n✓ Risk Score™\n✓ Protection Gap Analysis\n✓ Priority Risk Areas\n✓ Personalized Risk Report\n\nThe assessment takes approximately 3-5 minutes.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "Tell Me More"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "Yes": "TRN_003",
-      "Tell Me More": "TRN_002",
+      "✅ Yes, let's begin": "TRN_003",
+      "❓ Tell me more": "TRN_002",
       "DEFAULT": "TRN_002"
     }
   },
@@ -2895,15 +3091,13 @@
     "id": "TRN_002",
     "industry": "transport",
     "pillar": "General",
-    "question": "CoverScore helps business owners identify hidden risks before they become costly incidents.\n\nWould you like to continue?",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "Start Assessment",
-      "Not Now"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "Start Assessment": "TRN_003",
-      "Not Now": "COMPLETE",
+      "✅ Start Assessment": "TRN_003",
       "DEFAULT": "TRN_003"
     }
   },
@@ -2911,20 +3105,25 @@
     "id": "TRN_003",
     "industry": "transport",
     "pillar": "General",
-    "question": "Great.\n\nTo personalize your report, what is the name of your logistics company?",
-    "question_type": "open_text",
-    "data_mapping": "business_name",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
     "branching": {
-      "DEFAULT": "TRN_004"
+      "✅ I Agree": "TRN_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "TRN_004",
     "industry": "transport",
     "pillar": "General",
-    "question": "Thanks!\n\nAnd what is your name?",
+    "question": "Great.\n\nTo personalize your report, what is the name of your logistics company?",
     "question_type": "open_text",
-    "data_mapping": "name",
+    "data_mapping": "business_name",
     "branching": {
       "DEFAULT": "TRN_005"
     }
@@ -2933,9 +3132,9 @@
     "id": "TRN_005",
     "industry": "transport",
     "pillar": "General",
-    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question": "Thanks!\n\nAnd what is your name?",
     "question_type": "open_text",
-    "data_mapping": "role",
+    "data_mapping": "name",
     "branching": {
       "DEFAULT": "TRN_006"
     }
@@ -2944,11 +3143,22 @@
     "id": "TRN_006",
     "industry": "transport",
     "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "TRN_007"
+    }
+  },
+  {
+    "id": "TRN_007",
+    "industry": "transport",
+    "pillar": "General",
     "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
-      "DEFAULT": "TRN_007"
+      "DEFAULT": "TRN_008"
     }
   },
   {
@@ -2971,10 +3181,10 @@
         "exposure_points": 30
       }
     },
-    "id": "TRN_007",
+    "id": "TRN_008",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_008"
+      "DEFAULT": "TRN_009"
     }
   },
   {
@@ -2986,10 +3196,10 @@
       "Passengers",
       "Both"
     ],
-    "id": "TRN_008",
+    "id": "TRN_009",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_009"
+      "DEFAULT": "TRN_010"
     }
   },
   {
@@ -3006,10 +3216,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "TRN_009",
+    "id": "TRN_010",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_010"
+      "DEFAULT": "TRN_011"
     }
   },
   {
@@ -3025,10 +3235,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "TRN_010",
+    "id": "TRN_011",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_011"
+      "DEFAULT": "TRN_012"
     }
   },
   {
@@ -3048,14 +3258,14 @@
         "vulnerability_points": 15
       }
     },
-    "id": "TRN_011",
+    "id": "TRN_012",
     "industry": "transport",
     "branching": {
-      "DEFAULT": "TRN_012"
+      "DEFAULT": "TRN_013"
     }
   },
   {
-    "id": "TRN_012",
+    "id": "TRN_013",
     "industry": "transport",
     "pillar": "General",
     "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
@@ -3070,11 +3280,11 @@
     ],
     "data_mapping": "existing_insurance",
     "branching": {
-      "DEFAULT": "TRN_013"
+      "DEFAULT": "TRN_014"
     }
   },
   {
-    "id": "TRN_013",
+    "id": "TRN_014",
     "industry": "transport",
     "pillar": "General",
     "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
@@ -3085,13 +3295,13 @@
     ],
     "data_mapping": "consultation_preference",
     "branching": {
-      "Yes, please": "TRN_014",
+      "Yes, please": "TRN_015",
       "No, just send my report": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
   {
-    "id": "TRN_014",
+    "id": "TRN_015",
     "industry": "transport",
     "pillar": "General",
     "question": "Great! What time of day works best for a brief call?",
