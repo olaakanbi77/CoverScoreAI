@@ -1,4 +1,14 @@
-const { all } = require('../config/database');
+const fs = require('fs');
+const path = require('path');
+
+// Load JSON Question Bank
+const qbPath = path.join(__dirname, '..', 'data', 'question_bank.json');
+let questionBank = [];
+try {
+  questionBank = JSON.parse(fs.readFileSync(qbPath, 'utf8'));
+} catch(e) {
+  console.error("Failed to load question_bank.json", e);
+}
 
 const getRiskLevel = (score) => {
   if (score <= 20) return 'Very Low Risk';
@@ -16,92 +26,78 @@ const getExposureIndex = (score) => {
 };
 
 const calculateScore = async (answers) => {
-  const templateId = answers?.template_selection?.template_id;
-  if (!templateId) {
-    // Fallback if somehow old data or missing template
-    return {
-      score: 50,
-      resilience_score: 50,
-      risk_level: 'Moderate Risk',
-      recommendations: [],
-      identified_gaps: [],
-      risk_categories: {},
-      min_loss: 0,
-      max_loss: 0,
-      exposure_index: 'Moderate',
-      protection_gap: 50,
-      risk_dna: 'Unknown'
-    };
-  }
-
-  // Fetch all questions for this template
-  const questions = await all('SELECT * FROM assessment_questions WHERE template_id = ?', [templateId]);
-  
-  let totalCategoryScores = 0;
-  let categoryCount = 0;
+  let totalScorePoints = 0;
+  let totalMaxPoints = 0;
   const risk_categories = {};
   const recommendations = [];
   const identified_gaps = [];
   
-  // Group questions by category
-  const categories = {};
-  questions.forEach(q => {
-    if (!categories[q.category]) {
-      categories[q.category] = {
-        totalWeightedRisk: 0,
-        totalWeight: 0,
-        questions: []
-      };
+  // Group questions by pillar
+  const pillars = {};
+
+  // For each answer, find the question in questionBank
+  for (const [qId, ans] of Object.entries(answers)) {
+    if (qId === 'template_selection') continue;
+    
+    const q = questionBank.find(x => x.id === qId);
+    if (!q) continue;
+
+    const pillar = q.pillar || 'General';
+    if (!pillars[pillar]) {
+      pillars[pillar] = { riskPoints: 0, maxPoints: 100 };
     }
-    categories[q.category].questions.push(q);
-  });
 
-  // Calculate scores per category based on answers
-  for (const [categoryName, categoryData] of Object.entries(categories)) {
-    // The frontend sends answers grouped by the sanitized category id
-    const categoryId = categoryName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-    const categoryAnswers = answers[categoryId] || {};
-
-    for (const q of categoryData.questions) {
-      const answerVal = categoryAnswers[q.id];
-      if (answerVal) {
-        let riskValue = 0;
-        try {
-          const rules = JSON.parse(q.risk_impact_rules);
-          if (rules[answerVal] !== undefined) {
-            riskValue = rules[answerVal];
-          }
-        } catch(e) {
-          console.error('Invalid risk_impact_rules JSON for question', q.id);
-        }
-        
-        categoryData.totalWeightedRisk += (riskValue * q.weight);
-        categoryData.totalWeight += q.weight;
-
-        // Check recommendation trigger
-        if (q.recommendation_trigger === answerVal) {
-          recommendations.push(q.academy_trigger || q.category);
-          identified_gaps.push(q.question_text);
-        }
+    // Determine risk value
+    let riskPoints = 0;
+    if (q.risk_logic) {
+      // Find the rule for the answer
+      const ansArray = Array.isArray(ans) ? ans : [ans];
+      for (const a of ansArray) {
+         const rule = q.risk_logic[a];
+         if (rule) {
+           riskPoints += (rule.exposure_points || 0) + (rule.vulnerability_points || 0) + (rule.impact_points || 0);
+         }
+      }
+    } else {
+      // Default fallback logic
+      if (typeof ans === 'string' && (ans.toLowerCase() === 'no' || ans.toLowerCase() === 'none' || ans.toLowerCase() === 'none of the above')) {
+        riskPoints = 15;
+      } else if (typeof ans === 'string' && (ans.toLowerCase() === 'yes')) {
+        riskPoints = 0;
       }
     }
 
-    if (categoryData.totalWeight > 0) {
-      const catScore = Math.round(categoryData.totalWeightedRisk / categoryData.totalWeight);
-      risk_categories[categoryName] = catScore;
-      totalCategoryScores += catScore;
-      categoryCount++;
-    } else {
-      risk_categories[categoryName] = 0;
+    pillars[pillar].riskPoints += riskPoints;
+    
+    // Recommendation trigger
+    if (q.recommendation_trigger) {
+      if (q.recommendation_trigger.condition === ans) {
+         recommendations.push(q.recommendation_trigger.recommendation);
+         identified_gaps.push(q.question);
+      }
     }
   }
 
-  const finalScore = categoryCount > 0 ? Math.round(totalCategoryScores / categoryCount) : 50;
+  let finalScore = 50; // default
+  let categoryCount = 0;
+  let totalCategoryScores = 0;
+
+  for (const [pillarName, pData] of Object.entries(pillars)) {
+    const catScore = Math.min(100, Math.max(0, pData.riskPoints));
+    risk_categories[pillarName] = catScore;
+    totalCategoryScores += catScore;
+    categoryCount++;
+  }
+
+  if (categoryCount > 0) {
+    finalScore = Math.round(totalCategoryScores / categoryCount);
+  }
+
   const resilience_score = Math.max(0, 100 - finalScore);
   const exposure_index = getExposureIndex(finalScore);
-  const protection_gap = finalScore; // Simplified for MVP: Protection gap equals risk score.
+  const protection_gap = finalScore;
 
-  // Determine Risk DNA (the highest risk category)
+  // Determine Risk DNA
   let risk_dna = 'Balanced Profile';
   let maxCatScore = -1;
   for (const [catName, score] of Object.entries(risk_categories)) {
@@ -111,8 +107,7 @@ const calculateScore = async (answers) => {
     }
   }
 
-  // Simplified Loss Estimates
-  let baseValue = 10000000; // Base 10m
+  let baseValue = 10000000;
   const effectiveRisk = Math.max((finalScore / 100), 0.05);
   const maxLoss = Math.round(baseValue * effectiveRisk);
   const minLoss = Math.round(maxLoss * 0.4);

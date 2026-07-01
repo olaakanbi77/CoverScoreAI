@@ -1,11 +1,16 @@
-/**
- * Conversation Flow Engine (CFE) V2
- * Dynamically parses the SQLite assessment_questions table to drive the CoverScore Assessment.
- */
+const fs = require('fs');
+const path = require('path');
 
-const { all } = require('../config/database');
+// Load JSON Question Bank
+const qbPath = path.join(__dirname, '..', 'data', 'question_bank.json');
+let questionBank = [];
+try {
+  questionBank = JSON.parse(fs.readFileSync(qbPath, 'utf8'));
+} catch(e) {
+  console.error("Failed to load question_bank.json", e);
+}
 
-const getNextStateAndReply = async (currentState, incomingText, currentData, templateId) => {
+const getNextStateAndReply = async (currentState, incomingText, currentData, prefix) => {
   let nextState = currentState;
   let replyText = '';
   let updatedData = { ...currentData };
@@ -43,171 +48,162 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, tem
   }
 
   // Handle finished state explicitly
-  if (currentState === 'finished') {
-    return { nextState: currentState, replyText: "Your assessment and review request are complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
+  if (currentState === 'finished' || currentState === 'COMPLETE') {
+    return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
 
-  // Welcome States
-  if (currentState === 'welcome_name') {
-    updatedData.name = incomingText;
-    replyText = `Thank you, ${updatedData.name}.\n\nWhat's your email address?\nWe'll send your detailed report there after the assessment.`;
-    nextState = 'welcome_email';
-    return { nextState, replyText, updatedData, isComplete };
-  }
-
-  // --- DYNAMIC JSON STATE MACHINE EXECUTION (V1) ---
-  const { getFlow, processState } = require('./conversationEngine');
-  const flow = getFlow(templateId);
-  if (flow) {
-    return await processState(flow, currentState, incomingText, currentData);
-  }
-
-  // --- LEGACY DATABASE DYNAMIC CFE EXECUTION ---
-  const questions = await all('SELECT * FROM assessment_questions WHERE template_id = ? ORDER BY id ASC', [templateId]);
-  
-  if (!questions || questions.length === 0) {
-    replyText = "I'm sorry, this assessment template is currently empty. Please type RESTART to begin a different assessment.";
-    return { nextState: 'finished', replyText, updatedData, isComplete: false };
-  }
-
-  if (currentState === 'welcome_email') {
-    if (!input.includes('@')) {
-      replyText = "Please enter a valid email address.";
-    } else {
-      updatedData.email = incomingText.toLowerCase().trim();
-      // Start dynamic flow!
-      const firstQ = questions[0];
-      nextState = firstQ.id;
-      replyText = formatDynamicQuestion(firstQ);
-    }
-    return { nextState, replyText, updatedData, isComplete };
-  }
-
-  // --- DYNAMIC CFE EXECUTION ---
-  const currentIndex = questions.findIndex(q => q.id === currentState);
-  const currentQ = questions[currentIndex];
+  // DYNAMIC CFE EXECUTION FROM JSON
+  const currentQ = questionBank.find(q => q.id === currentState);
   
   if (!currentQ) {
+    // If state is not found, maybe they are somehow lost.
     replyText = "I'm sorry, I didn't understand that. Please type START ASSESSMENT to begin.";
     return { nextState, replyText, updatedData, isComplete };
   }
 
-  // 1. Validate Input based on DB answer_type
+  // 1. Validate Input based on JSON question_type
   let parsedAnswer = null;
-  const answerType = currentQ.answer_type;
+  const answerType = currentQ.question_type;
   
   if (answerType === 'yes_no') {
-    if (input === 'A' || input === 'YES') parsedAnswer = 'yes';
-    else if (input === 'B' || input === 'NO') parsedAnswer = 'no';
+    if (input === 'A' || input === 'YES') parsedAnswer = 'Yes';
+    else if (input === 'B' || input === 'NO') parsedAnswer = 'No';
     else {
       replyText = "Please reply with A (Yes) or B (No).";
       return { nextState, replyText, updatedData, isComplete };
     }
-  } else if (answerType === 'yes_no_notsure') {
-    if (input === 'A' || input === 'YES') parsedAnswer = 'yes';
-    else if (input === 'B' || input === 'NO') parsedAnswer = 'no';
-    else if (input === 'C' || input === 'NOT SURE') parsedAnswer = 'notsure';
-    else {
-      replyText = "Please reply with A, B, or C.";
-      return { nextState, replyText, updatedData, isComplete };
-    }
   } else if (answerType === 'yes_no_na') {
-    if (input === 'A' || input === 'YES') parsedAnswer = 'yes';
-    else if (input === 'B' || input === 'NO') parsedAnswer = 'no';
-    else if (input === 'C' || input === 'N/A' || input === 'NA') parsedAnswer = 'na';
+    if (input === 'A' || input === 'YES') parsedAnswer = 'Yes';
+    else if (input === 'B' || input === 'NO') parsedAnswer = 'No';
+    else if (input === 'C' || input === 'N/A' || input === 'NA') parsedAnswer = 'N/A';
     else {
       replyText = "Please reply with A, B, or C.";
       return { nextState, replyText, updatedData, isComplete };
     }
-  } else if (answerType === 'months_survival') {
-    const opts = ['less_3', '3_6', '6_12', '12_24', 'over_24'];
-    const letterIdx = 'ABCDE'.indexOf(input);
+  } else if (answerType === 'single_choice') {
+    const opts = currentQ.answers || [];
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const letterIdx = alphabet.indexOf(input);
     if (letterIdx !== -1 && letterIdx < opts.length) {
       parsedAnswer = opts[letterIdx];
     } else {
-      replyText = "Please reply with a valid option (A, B, C, D, or E).";
-      return { nextState, replyText, updatedData, isComplete };
-    }
-  } else if (answerType === 'dynamic_multiple_choice') {
-    let rules = {};
-    try { rules = JSON.parse(currentQ.risk_impact_rules || '{}'); } catch(e){}
-    const opts = Object.keys(rules);
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    
-    // Check if user replied with a letter
-    const letterIdx = alphabet.indexOf(input);
-    if (letterIdx !== -1 && letterIdx < opts.length) {
-      parsedAnswer = opts[letterIdx]; // Store the key text directly
-    } else {
-      // Check if user typed the exact option
       const exactMatch = opts.find(o => o.toUpperCase() === incomingText.trim().toUpperCase());
       if (exactMatch) {
         parsedAnswer = exactMatch;
       } else {
-        replyText = `Please reply with a valid option letter (e.g. A, B, C).`;
+        replyText = "Please reply with a valid option letter (e.g. A, B, C).";
         return { nextState, replyText, updatedData, isComplete };
       }
     }
-  } else {
-    // Default text or number (fallback)
+  } else if (answerType === 'multi_choice') {
+    const opts = currentQ.answers || [];
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let selected = [];
+    let valid = true;
+    
+    // Support "A, C" or "A,C"
+    const parts = input.split(/[, \n]+/).filter(Boolean);
+    for (const p of parts) {
+      // p could be 'A' or 'A.' or 'C'
+      const cleanP = p.replace(/[^A-Z]/g, '');
+      const letterIdx = alphabet.indexOf(cleanP);
+      if (letterIdx !== -1 && letterIdx < opts.length) {
+        selected.push(opts[letterIdx]);
+      } else {
+        valid = false;
+        break;
+      }
+    }
+    
+    if (valid && selected.length > 0) {
+      parsedAnswer = selected;
+    } else {
+      replyText = "Please reply with valid letters separated by commas (e.g. A, C).";
+      return { nextState, replyText, updatedData, isComplete };
+    }
+  } else if (answerType === 'open_text') {
+    if (!incomingText || incomingText.trim().length < 2) {
+       replyText = "Please provide a valid answer.";
+       return { nextState, replyText, updatedData, isComplete };
+    }
     parsedAnswer = incomingText.trim();
   }
 
   // 2. Store Answer
-  // Ensure we group the answers exactly how the V1 web wizard groups them: by sanitized category id
-  const categoryId = currentQ.category.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-  
   if (!updatedData.answers) {
     updatedData.answers = {};
   }
-  if (!updatedData.answers[categoryId]) {
-    updatedData.answers[categoryId] = {};
+  
+  updatedData.answers[currentQ.id] = parsedAnswer;
+  
+  if (currentQ.data_mapping) {
+    updatedData[currentQ.data_mapping] = parsedAnswer;
   }
-  
-  updatedData.answers[categoryId][currentQ.id] = parsedAnswer;
 
-  // 3. Determine Next Step (Sequential)
-  const nextQ = questions[currentIndex + 1];
-  
+  // 3. Determine Next Step based on branching
+  nextState = 'COMPLETE'; // default
+  if (currentQ.branching) {
+    let rawAnswerKey = Array.isArray(parsedAnswer) ? parsedAnswer[0] : parsedAnswer;
+    if (currentQ.branching[rawAnswerKey]) {
+      nextState = currentQ.branching[rawAnswerKey];
+    } else if (currentQ.branching['DEFAULT']) {
+      nextState = currentQ.branching['DEFAULT'];
+    }
+  } else {
+    // If no branching, try to find next sequential ID by parsing ID numbers (e.g. SCH_001 -> SCH_002)
+    const match = currentQ.id.match(/^([A-Z]+)_(\d+)$/);
+    if (match) {
+       const pref = match[1];
+       const num = parseInt(match[2], 10);
+       nextState = `${pref}_${String(num+1).padStart(3, '0')}`;
+    }
+  }
+
   // 4. Format Reply
-  if (!nextQ) {
-    replyText = `Thank you.\n\nWe are now analyzing your responses and calculating your CoverScore™.\n\nPlease wait a moment.`;
+  if (nextState === 'COMPLETE' || nextState === 'finished') {
+    replyText = "Thank you.\n\nWe are now analyzing your responses and calculating your CoverScore™.\n\nPlease wait a moment.";
     isComplete = true;
     nextState = 'awaiting_consultation';
   } else {
-    nextState = nextQ.id;
-    replyText = formatDynamicQuestion(nextQ);
+    const nextQ = questionBank.find(q => q.id === nextState);
+    if (!nextQ) {
+      replyText = "Thank you.\n\nWe are now analyzing your responses and calculating your CoverScore™.\n\nPlease wait a moment.";
+      isComplete = true;
+      nextState = 'awaiting_consultation';
+    } else {
+      replyText = formatDynamicQuestion(nextQ);
+    }
   }
 
   return { nextState, replyText, updatedData, isComplete };
 };
 
-// Helper to format a DB question for WhatsApp
+// Helper to format a JSON question for WhatsApp
 const formatDynamicQuestion = (q) => {
-  let text = `*${q.category}*\n\n${q.question_text}\n\n`;
+  // If it's the welcome message, it probably doesn't need a pillar
+  let text = '';
+  if (q.id && q.id.endsWith('_001')) {
+    text = `${q.question}\n\n`;
+  } else {
+    text = q.pillar ? `*${q.pillar}*\n\n${q.question}\n\n` : `${q.question}\n\n`;
+  }
   
-  if (q.answer_type === 'yes_no') {
+  if (q.question_type === 'yes_no') {
     text += "A. Yes\nB. No";
-  } else if (q.answer_type === 'yes_no_notsure') {
-    text += "A. Yes\nB. No\nC. Not sure";
-  } else if (q.answer_type === 'yes_no_na') {
+  } else if (q.question_type === 'yes_no_na') {
     text += "A. Yes\nB. No\nC. N/A";
-  } else if (q.answer_type === 'months_survival') {
-    text += "A. Less than 3 months\nB. 3-6 months\nC. 6-12 months\nD. 12-24 months\nE. Over 24 months";
-  } else if (q.answer_type === 'dynamic_multiple_choice') {
-    let rules = {};
-    try { rules = JSON.parse(q.risk_impact_rules || '{}'); } catch(e){}
-    const opts = Object.keys(rules);
+  } else if (q.question_type === 'single_choice' || q.question_type === 'multi_choice') {
+    const opts = q.answers || [];
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     text += opts.map((opt, i) => `${alphabet[i]}. ${opt}`).join('\n');
   }
   return text.trim();
 };
 
-const getInitialWelcome = async (templateId) => {
-    const questions = await all('SELECT * FROM assessment_questions WHERE template_id = ? ORDER BY id ASC LIMIT 1', [templateId]);
-    if (questions.length > 0) {
-        return formatDynamicQuestion(questions[0]);
+const getInitialWelcome = async (prefix) => {
+    const firstQ = questionBank.find(q => q.id === `${prefix}_001`);
+    if (firstQ) {
+        return formatDynamicQuestion(firstQ);
     }
     return null;
 }

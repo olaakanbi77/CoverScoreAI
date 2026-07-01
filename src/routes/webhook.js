@@ -66,23 +66,26 @@ router.post('/evolution', async (req, res) => {
       console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
 
       const flowMap = {
-        'school': 'school_risk',
-        'manufacturing': 'manufacturing_risk',
-        'hospital': 'hospital_risk',
-        'healthcare': 'hospital_risk',
-        'church': 'church_risk',
-        'sme': 'sme_risk',
-        'family': 'family_protection',
-        'personal': 'family_protection'
+        'school': 'SCH',
+        'manufacturing': 'MFG',
+        'hospital': 'HOS',
+        'healthcare': 'HOS',
+        'church': 'CHR',
+        'construction': 'CON',
+        'transport': 'TRN',
+        'logistics': 'TRN',
+        'sme': 'SME',
+        'family': 'FAM',
+        'personal': 'FAM',
+        'young': 'YPR',
+        'retirement': 'RET',
+        'income': 'INC',
+        'health': 'HLT',
+        'entrepreneur': 'ENT'
       };
-      const { getFlow } = require('../services/conversationEngine');
       const getInitState = (ind) => {
-        const tId = flowMap[ind] || 'sme_risk';
-        const flow = getFlow(tId);
-        if (flow && flow.assessment_template && flow.assessment_template.initial_state) {
-          return flow.assessment_template.initial_state;
-        }
-        return 'welcome_name';
+        const prefix = flowMap[ind] || 'SME';
+        return `${prefix}_001`;
       };
 
       let currentState, chatHistory, assessmentData;
@@ -153,17 +156,13 @@ router.post('/evolution', async (req, res) => {
       let processText = incomingTextRaw;
       let evalState = currentState;
 
-      const templateId = flowMap[resolvedIndustry] || 'sme_risk';
-      const flow = getFlow(templateId);
+      const prefix = flowMap[resolvedIndustry] || 'SME';
 
       // Send initial welcome message instantly without advancing state
-      if ((isStartTrigger || isRestartTrigger) && (!flow || evalState === flow.assessment_template.initial_state || evalState === 'welcome_name')) {
-        let initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
-
-        if (flow) {
-          const initConfig = flow.states.find(s => s.state === flow.assessment_template.initial_state);
-          if (initConfig) initialWelcome = initConfig.message;
-          evalState = flow.assessment_template.initial_state;
+      if ((isStartTrigger || isRestartTrigger) && evalState === `${prefix}_001`) {
+        let initialWelcome = await getInitialWelcome(prefix);
+        if (!initialWelcome) {
+            initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
         }
 
         console.log(`   Sending welcome message to ${phoneNumber}...`);
@@ -186,11 +185,11 @@ router.post('/evolution', async (req, res) => {
       }
 
       if (!evalState) {
-        evalState = flow ? flow.assessment_template.initial_state : 'welcome_name';
+        evalState = `${prefix}_001`;
       }
 
       // 1. Process Message through State Machine
-      let { nextState, replyText, updatedData, isComplete } = await getNextStateAndReply(evalState, processText, assessmentData, templateId);
+      let { nextState, replyText, updatedData, isComplete } = await getNextStateAndReply(evalState, processText, assessmentData, prefix);
       console.log(`   State transition: ${evalState} -> ${nextState}, isComplete: ${isComplete}`);
 
       let finalReplyText = replyText;
@@ -239,14 +238,6 @@ router.post('/evolution', async (req, res) => {
         // Process final risk score if complete
         if (isComplete && !updatedData._scored) {
           updatedData._scored = true;
-          
-          if (!flow) {
-            const indName = lead.industry ? lead.industry.charAt(0).toUpperCase() + lead.industry.slice(1) : 'organization';
-            const consultationOffer = `\n\nBased on your assessment, several opportunities exist to strengthen your protection strategy.\n\nWould you like a complimentary 30-minute consultation with a CoverScore Certified Risk Advisor?\n\nA. Yes\nB. Maybe Later\nC. No`;
-            
-            // Only send the text report + consultation question now. 
-            await sendWhatsApp(phoneNumber, null, { _message: "Thank you for completing the assessment." + consultationOffer });
-          }
         }
 
         // Update lead state (only if message was sent successfully)
@@ -330,7 +321,7 @@ router.post('/evolution', async (req, res) => {
             // Build Final Answers for V1 scoringEngine
             const finalAnswers = { 
                 ...updatedData.answers, 
-                template_selection: { template_id: templateId } 
+                template_selection: { template_id: prefix } 
             };
 
             // Calculate score using dynamic V1 engine
