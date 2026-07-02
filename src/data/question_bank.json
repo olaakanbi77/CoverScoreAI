@@ -216,7 +216,7 @@
   },
   {
     "pillar": "Future Planning",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nAre you currently saving towards a major life goal (e.g. buying a house, marriage)?",
+    "question": "Are you currently saving towards a major life goal (e.g. buying a house, marriage)?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -481,7 +481,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nAre your personal assets properly separated and protected from business liabilities?",
+    "question": "Are your personal assets properly separated and protected from business liabilities?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -763,7 +763,7 @@
   },
   {
     "pillar": "Health & Wellbeing",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDoes your family have comprehensive Health Insurance?",
+    "question": "Does your family have comprehensive Health Insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1025,7 +1025,7 @@
   },
   {
     "pillar": "Financial Resilience",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you have significant debts (mortgage, personal loans) that require monthly repayments?",
+    "question": "Do you have significant debts (mortgage, personal loans) that require monthly repayments?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1365,7 +1365,7 @@
   },
   {
     "pillar": "Recovery & Resilience",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf illness prevented you from working for three months, would your household still be financially stable?",
+    "question": "If illness prevented you from working for three months, would your household still be financially stable?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1631,7 +1631,7 @@
   },
   {
     "pillar": "Future Planning",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf you pass away, will your spouse or dependents have enough income to maintain their lifestyle?",
+    "question": "If you pass away, will your spouse or dependents have enough income to maintain their lifestyle?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -1833,7 +1833,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you have Homeowner's or Renter's Insurance covering your personal property?",
+    "question": "Do you have Homeowner's or Renter's Insurance covering your personal property?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2034,7 +2034,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIs your primary vehicle covered by Comprehensive Motor Insurance?",
+    "question": "Is your primary vehicle covered by Comprehensive Motor Insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2324,7 +2324,7 @@
   },
   {
     "pillar": "Business Continuity",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
     "question_type": "single_choice",
     "answers": [
       "Yes easily",
@@ -2619,7 +2619,7 @@
   },
   {
     "pillar": "Business Continuity",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a major fire forced you to close for 3 months, could you survive without revenue?",
+    "question": "If a major fire forced you to close for 3 months, could you survive without revenue?",
     "question_type": "single_choice",
     "answers": [
       "Yes easily",
@@ -2910,7 +2910,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a power surge destroyed critical life-support equipment, do you have Machinery Breakdown insurance?",
+    "question": "If a power surge destroyed critical life-support equipment, do you have Machinery Breakdown insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3194,7 +3194,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you currently have a comprehensive Fire Insurance policy for your school buildings?",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your school buildings?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3477,7 +3477,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you currently have Fire Insurance for the building and its contents?",
+    "question": "Do you currently have Fire Insurance for the building and its contents?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3765,7 +3765,7 @@
   },
   {
     "pillar": "Business Continuity",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf a project is delayed due to an unforeseen accident, do you have cover for the resulting financial loss?",
+    "question": "If a project is delayed due to an unforeseen accident, do you have cover for the resulting financial loss?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -4050,7 +4050,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nAre your vehicles covered by Comprehensive Motor Insurance?",
+    "question": "Are your vehicles covered by Comprehensive Motor Insurance?",
     "question_type": "single_choice",
     "answers": [
       "Yes",

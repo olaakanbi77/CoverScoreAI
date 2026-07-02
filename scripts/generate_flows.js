@@ -297,8 +297,6 @@ class QuestionPackFactory {
         // Micro-encouragement injection
         if (index === 2 && qCount > 3) {
           q.question = `Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\n${q.question}`;
-        } else if (index === qCount - 1 && qCount > 1) {
-          q.question = `You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\n${q.question}`;
         }
         
         qs.push(q);
