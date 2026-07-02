@@ -95,15 +95,12 @@
     "id": "YPR_008",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -117,11 +114,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -132,28 +129,13 @@
     "id": "YPR_010",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "YPR_011"
-    }
-  },
-  {
-    "id": "YPR_011",
-    "industry": "young_professional",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "YPR_012"
+      "DEFAULT": "YPR_011"
     }
   },
   {
@@ -165,10 +147,10 @@
       "2-5 years",
       "Over 5 years"
     ],
-    "id": "YPR_012",
+    "id": "YPR_011",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_013"
+      "DEFAULT": "YPR_012"
     }
   },
   {
@@ -188,10 +170,10 @@
         "vulnerability_points": 40
       }
     },
-    "id": "YPR_013",
+    "id": "YPR_012",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_014"
+      "DEFAULT": "YPR_013"
     }
   },
   {
@@ -207,10 +189,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "YPR_014",
+    "id": "YPR_013",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_015"
+      "DEFAULT": "YPR_014"
     }
   },
   {
@@ -226,10 +208,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "YPR_015",
+    "id": "YPR_014",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_016"
+      "DEFAULT": "YPR_015"
     }
   },
   {
@@ -240,14 +222,14 @@
       "Yes",
       "No"
     ],
-    "id": "YPR_016",
+    "id": "YPR_015",
     "industry": "young_professional",
     "branching": {
-      "DEFAULT": "YPR_017"
+      "DEFAULT": "YPR_016"
     }
   },
   {
-    "id": "YPR_017",
+    "id": "YPR_016",
     "industry": "young_professional",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -256,11 +238,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "YPR_018"
+      "DEFAULT": "YPR_017"
     }
   },
   {
-    "id": "YPR_018",
+    "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
@@ -370,15 +352,12 @@
     "id": "ENT_008",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -392,11 +371,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -407,28 +386,13 @@
     "id": "ENT_010",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "ENT_011"
-    }
-  },
-  {
-    "id": "ENT_011",
-    "industry": "entrepreneur",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "ENT_012"
+      "DEFAULT": "ENT_011"
     }
   },
   {
@@ -448,10 +412,10 @@
         "vulnerability_points": 15
       }
     },
-    "id": "ENT_012",
+    "id": "ENT_011",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_013"
+      "DEFAULT": "ENT_012"
     }
   },
   {
@@ -467,10 +431,10 @@
         "exposure_points": 25
       }
     },
-    "id": "ENT_013",
+    "id": "ENT_012",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_014"
+      "DEFAULT": "ENT_013"
     }
   },
   {
@@ -490,10 +454,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "ENT_014",
+    "id": "ENT_013",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_015"
+      "DEFAULT": "ENT_014"
     }
   },
   {
@@ -509,10 +473,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "ENT_015",
+    "id": "ENT_014",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_016"
+      "DEFAULT": "ENT_015"
     }
   },
   {
@@ -532,14 +496,14 @@
         "exposure_points": 15
       }
     },
-    "id": "ENT_016",
+    "id": "ENT_015",
     "industry": "entrepreneur",
     "branching": {
-      "DEFAULT": "ENT_017"
+      "DEFAULT": "ENT_016"
     }
   },
   {
-    "id": "ENT_017",
+    "id": "ENT_016",
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -548,11 +512,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "ENT_018"
+      "DEFAULT": "ENT_017"
     }
   },
   {
-    "id": "ENT_018",
+    "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
@@ -662,15 +626,12 @@
     "id": "FAM_008",
     "industry": "family",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -684,11 +645,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -699,28 +660,13 @@
     "id": "FAM_010",
     "industry": "family",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "FAM_011"
-    }
-  },
-  {
-    "id": "FAM_011",
-    "industry": "family",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "FAM_012"
+      "DEFAULT": "FAM_011"
     }
   },
   {
@@ -743,10 +689,10 @@
         "exposure_points": 35
       }
     },
-    "id": "FAM_012",
+    "id": "FAM_011",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_013"
+      "DEFAULT": "FAM_012"
     }
   },
   {
@@ -766,10 +712,10 @@
         "vulnerability_points": 15
       }
     },
-    "id": "FAM_013",
+    "id": "FAM_012",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_014"
+      "DEFAULT": "FAM_013"
     }
   },
   {
@@ -789,10 +735,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "FAM_014",
+    "id": "FAM_013",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_015"
+      "DEFAULT": "FAM_014"
     }
   },
   {
@@ -809,10 +755,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "FAM_015",
+    "id": "FAM_014",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_016"
+      "DEFAULT": "FAM_015"
     }
   },
   {
@@ -828,14 +774,14 @@
         "vulnerability_points": 25
       }
     },
-    "id": "FAM_016",
+    "id": "FAM_015",
     "industry": "family",
     "branching": {
-      "DEFAULT": "FAM_017"
+      "DEFAULT": "FAM_016"
     }
   },
   {
-    "id": "FAM_017",
+    "id": "FAM_016",
     "industry": "family",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -844,11 +790,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "FAM_018"
+      "DEFAULT": "FAM_017"
     }
   },
   {
-    "id": "FAM_018",
+    "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
@@ -958,15 +904,12 @@
     "id": "INC_008",
     "industry": "income",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -980,11 +923,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -995,28 +938,13 @@
     "id": "INC_010",
     "industry": "income",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "INC_011"
-    }
-  },
-  {
-    "id": "INC_011",
-    "industry": "income",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "INC_012"
+      "DEFAULT": "INC_011"
     }
   },
   {
@@ -1028,10 +956,10 @@
       "Freelance/Contract",
       "Business owner"
     ],
-    "id": "INC_012",
+    "id": "INC_011",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_013"
+      "DEFAULT": "INC_012"
     }
   },
   {
@@ -1051,10 +979,10 @@
         "vulnerability_points": 20
       }
     },
-    "id": "INC_013",
+    "id": "INC_012",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_014"
+      "DEFAULT": "INC_013"
     }
   },
   {
@@ -1070,10 +998,10 @@
         "vulnerability_points": 10
       }
     },
-    "id": "INC_014",
+    "id": "INC_013",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_015"
+      "DEFAULT": "INC_014"
     }
   },
   {
@@ -1089,10 +1017,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "INC_015",
+    "id": "INC_014",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_016"
+      "DEFAULT": "INC_015"
     }
   },
   {
@@ -1108,14 +1036,14 @@
         "exposure_points": 25
       }
     },
-    "id": "INC_016",
+    "id": "INC_015",
     "industry": "income",
     "branching": {
-      "DEFAULT": "INC_017"
+      "DEFAULT": "INC_016"
     }
   },
   {
-    "id": "INC_017",
+    "id": "INC_016",
     "industry": "income",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -1124,11 +1052,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "INC_018"
+      "DEFAULT": "INC_017"
     }
   },
   {
-    "id": "INC_018",
+    "id": "INC_017",
     "industry": "income",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
@@ -1146,7 +1074,7 @@
     "id": "HLT_001",
     "industry": "health",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Health Protection Assessment.\n\nYour health is one of your greatest assets, but unexpected illness or medical emergencies can place enormous emotional and financial strain on you and your family.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for health-related risks and provide a personalized Health Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -1225,7 +1153,7 @@
     "id": "HLT_007",
     "industry": "health",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany individuals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA single serious illness can affect not only your health but also your income, savings, and long-term financial goals.\n\nOur goal today is to help you identify health protection gaps before they become costly problems.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -1238,15 +1166,12 @@
     "id": "HLT_008",
     "industry": "health",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1260,11 +1185,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -1275,13 +1200,13 @@
     "id": "HLT_010",
     "industry": "health",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
+    "question": "Do you currently have any dependants who rely on you for healthcare decisions or financial support?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
       "No"
     ],
-    "data_mapping": "regular_income",
+    "data_mapping": "has_dependants",
     "branching": {
       "DEFAULT": "HLT_011"
     }
@@ -1300,8 +1225,147 @@
     }
   },
   {
+    "pillar": "Healthcare Access",
+    "question": "Do you currently have:",
+    "question_type": "single_choice",
+    "answers": [
+      "Employer HMO",
+      "Private Health Insurance",
+      "Government Health Scheme",
+      "None"
+    ],
+    "risk_logic": {
+      "None": {
+        "vulnerability_points": 40
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "None",
+      "recommendation": "Compare health plans that provide wider hospital coverage."
+    },
+    "id": "HLT_012",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_013"
+    }
+  },
+  {
+    "pillar": "Financial Preparedness",
+    "question": "If you had to pay ₦2,000,000 for emergency treatment tomorrow, how would you most likely pay?",
+    "question_type": "single_choice",
+    "answers": [
+      "Savings",
+      "Insurance",
+      "Loan",
+      "Family/Friends",
+      "I don't know"
+    ],
+    "risk_logic": {
+      "I don't know": {
+        "vulnerability_points": 30
+      },
+      "Loan": {
+        "vulnerability_points": 25
+      },
+      "Family/Friends": {
+        "vulnerability_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "Loan",
+      "recommendation": "Build a medical emergency fund."
+    },
+    "id": "HLT_013",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_014"
+    }
+  },
+  {
+    "pillar": "Medical History",
+    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nHave you ever been diagnosed with:",
+    "question_type": "single_choice",
+    "answers": [
+      "Hypertension",
+      "Diabetes",
+      "Asthma",
+      "None"
+    ],
+    "risk_logic": {
+      "Hypertension": {
+        "exposure_points": 20
+      },
+      "Diabetes": {
+        "exposure_points": 20
+      },
+      "Asthma": {
+        "exposure_points": 15
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "Hypertension",
+      "recommendation": "Review your HMO benefits to ensure chronic care is covered."
+    },
+    "id": "HLT_014",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_015"
+    }
+  },
+  {
+    "pillar": "Lifestyle",
+    "question": "How often do you have routine medical check-ups?",
+    "question_type": "single_choice",
+    "answers": [
+      "Every 6 months",
+      "Annually",
+      "Rarely/Only when sick"
+    ],
+    "risk_logic": {
+      "Rarely/Only when sick": {
+        "vulnerability_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "Rarely/Only when sick",
+      "recommendation": "Schedule an annual preventive health screening."
+    },
+    "id": "HLT_015",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_016"
+    }
+  },
+  {
     "pillar": "Protection & Insurance",
-    "question": "Do you currently have a Health Maintenance Organization (HMO) or health insurance plan?",
+    "question": "If your doctor recommended surgery tomorrow, would your current health cover pay for most of the cost?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 35
+      },
+      "Not sure": {
+        "vulnerability_points": 20
+      }
+    },
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Consider Critical Illness Insurance if appropriate for your circumstances."
+    },
+    "id": "HLT_016",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_017"
+    }
+  },
+  {
+    "pillar": "Recovery & Resilience",
+    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nIf illness prevented you from working for three months, would your household still be financially stable?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1312,88 +1376,12 @@
         "vulnerability_points": 35
       }
     },
-    "id": "HLT_012",
-    "industry": "health",
-    "branching": {
-      "DEFAULT": "HLT_013"
-    }
-  },
-  {
-    "pillar": "Protection & Insurance",
-    "question": "If yes, are you satisfied with the limits and coverage of your current health plan?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes",
-      "No",
-      "I don't have one"
-    ],
-    "id": "HLT_013",
-    "industry": "health",
-    "branching": {
-      "DEFAULT": "HLT_014"
-    }
-  },
-  {
-    "pillar": "Financial Resilience",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nHave you or a close family member ever had to pay out-of-pocket for a major medical emergency?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "id": "HLT_014",
-    "industry": "health",
-    "branching": {
-      "DEFAULT": "HLT_015"
-    }
-  },
-  {
-    "pillar": "Health & Wellbeing",
-    "question": "Is there a history of critical illnesses (e.g., heart disease, cancer) in your family?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "risk_logic": {
-      "Yes": {
-        "exposure_points": 30
-      }
+    "recommendation_trigger": {
+      "condition": "No",
+      "recommendation": "Explore income protection options."
     },
-    "id": "HLT_015",
-    "industry": "health",
-    "branching": {
-      "DEFAULT": "HLT_016"
-    }
-  },
-  {
-    "pillar": "Protection & Insurance",
-    "question": "You're almost done!\n\nYour personalized Risk Intelligence Report is being prepared.\n\nProgress\n█████████░\n90%\n\n---\n\nDo you have a Critical Illness insurance policy that pays a lump sum upon diagnosis?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "risk_logic": {
-      "No": {
-        "vulnerability_points": 25
-      }
-    },
-    "id": "HLT_016",
-    "industry": "health",
-    "branching": {
-      "DEFAULT": "HLT_017"
-    }
-  },
-  {
     "id": "HLT_017",
     "industry": "health",
-    "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View My Results"
-    ],
     "branching": {
       "DEFAULT": "HLT_018"
     }
@@ -1402,7 +1390,20 @@
     "id": "HLT_018",
     "industry": "health",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ View My Results"
+    ],
+    "branching": {
+      "DEFAULT": "HLT_019"
+    }
+  },
+  {
+    "id": "HLT_019",
+    "industry": "health",
+    "pillar": "General",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Health Protection Advisor could help you understand your options and answer any questions about your health protection strategy.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1509,15 +1510,12 @@
     "id": "RET_008",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1531,11 +1529,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -1546,28 +1544,13 @@
     "id": "RET_010",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "RET_011"
-    }
-  },
-  {
-    "id": "RET_011",
-    "industry": "retirement",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "RET_012"
+      "DEFAULT": "RET_011"
     }
   },
   {
@@ -1587,10 +1570,10 @@
         "exposure_points": 15
       }
     },
-    "id": "RET_012",
+    "id": "RET_011",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_013"
+      "DEFAULT": "RET_012"
     }
   },
   {
@@ -1606,10 +1589,10 @@
         "vulnerability_points": 40
       }
     },
-    "id": "RET_013",
+    "id": "RET_012",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_014"
+      "DEFAULT": "RET_013"
     }
   },
   {
@@ -1621,10 +1604,10 @@
       "Somewhat concerned",
       "Not concerned"
     ],
-    "id": "RET_014",
+    "id": "RET_013",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_015"
+      "DEFAULT": "RET_014"
     }
   },
   {
@@ -1640,10 +1623,10 @@
         "vulnerability_points": 25
       }
     },
-    "id": "RET_015",
+    "id": "RET_014",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_016"
+      "DEFAULT": "RET_015"
     }
   },
   {
@@ -1660,14 +1643,14 @@
         "vulnerability_points": 30
       }
     },
-    "id": "RET_016",
+    "id": "RET_015",
     "industry": "retirement",
     "branching": {
-      "DEFAULT": "RET_017"
+      "DEFAULT": "RET_016"
     }
   },
   {
-    "id": "RET_017",
+    "id": "RET_016",
     "industry": "retirement",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -1676,11 +1659,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "RET_018"
+      "DEFAULT": "RET_017"
     }
   },
   {
-    "id": "RET_018",
+    "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
@@ -1790,15 +1773,12 @@
     "id": "HOM_008",
     "industry": "home",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1812,11 +1792,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -1827,28 +1807,13 @@
     "id": "HOM_010",
     "industry": "home",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "HOM_011"
-    }
-  },
-  {
-    "id": "HOM_011",
-    "industry": "home",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "HOM_012"
+      "DEFAULT": "HOM_011"
     }
   },
   {
@@ -1860,10 +1825,10 @@
       "Rent",
       "Neither"
     ],
-    "id": "HOM_012",
+    "id": "HOM_011",
     "industry": "home",
     "branching": {
-      "DEFAULT": "HOM_013"
+      "DEFAULT": "HOM_012"
     }
   },
   {
@@ -1879,14 +1844,14 @@
         "vulnerability_points": 30
       }
     },
-    "id": "HOM_013",
+    "id": "HOM_012",
     "industry": "home",
     "branching": {
-      "DEFAULT": "HOM_014"
+      "DEFAULT": "HOM_013"
     }
   },
   {
-    "id": "HOM_014",
+    "id": "HOM_013",
     "industry": "home",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -1895,11 +1860,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "HOM_015"
+      "DEFAULT": "HOM_014"
     }
   },
   {
-    "id": "HOM_015",
+    "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
@@ -2009,15 +1974,12 @@
     "id": "MOT_008",
     "industry": "motor",
     "pillar": "General",
-    "question": "Which best describes you?",
+    "question": "What is your primary employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Employed Full-time",
-      "Self-employed",
-      "Freelancer",
-      "Business Owner",
-      "Currently Unemployed",
-      "Student"
+      "Full-time employed",
+      "Self-employed/Freelance",
+      "Unemployed/Student"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -2031,11 +1993,11 @@
     "question": "What is your age range?",
     "question_type": "single_choice",
     "answers": [
-      "18-24",
-      "25-30",
-      "31-35",
-      "36-40",
-      "41+"
+      "18-25",
+      "26-35",
+      "36-45",
+      "46-55",
+      "56+"
     ],
     "data_mapping": "age_range",
     "branching": {
@@ -2046,28 +2008,13 @@
     "id": "MOT_010",
     "industry": "motor",
     "pillar": "General",
-    "question": "Do you currently earn regular monthly income?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "regular_income",
-    "branching": {
-      "DEFAULT": "MOT_011"
-    }
-  },
-  {
-    "id": "MOT_011",
-    "industry": "motor",
-    "pillar": "General",
     "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
     "question_type": "single_choice",
     "answers": [
       "✅ Start Questions"
     ],
     "branching": {
-      "DEFAULT": "MOT_012"
+      "DEFAULT": "MOT_011"
     }
   },
   {
@@ -2079,10 +2026,10 @@
       "2",
       "3 or more"
     ],
-    "id": "MOT_012",
+    "id": "MOT_011",
     "industry": "motor",
     "branching": {
-      "DEFAULT": "MOT_013"
+      "DEFAULT": "MOT_012"
     }
   },
   {
@@ -2098,14 +2045,14 @@
         "vulnerability_points": 40
       }
     },
-    "id": "MOT_013",
+    "id": "MOT_012",
     "industry": "motor",
     "branching": {
-      "DEFAULT": "MOT_014"
+      "DEFAULT": "MOT_013"
     }
   },
   {
-    "id": "MOT_014",
+    "id": "MOT_013",
     "industry": "motor",
     "pillar": "General",
     "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
@@ -2114,11 +2061,11 @@
       "✅ View My Results"
     ],
     "branching": {
-      "DEFAULT": "MOT_015"
+      "DEFAULT": "MOT_014"
     }
   },
   {
-    "id": "MOT_015",
+    "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
     "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",

@@ -20,12 +20,16 @@ class QuestionPackFactory {
     const p = config.prefix;
     const isBiz = config.type === 'business';
 
+    const introText = (config.overrides && config.overrides.intro_text) 
+      ? config.overrides.intro_text 
+      : `👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how ${isBiz ? 'prepared your business is' : 'financially and personally prepared you are'} for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`;
+
     return [
       {
         id: `${p}_001`,
         industry: config.ind,
         pillar: 'General',
-        question: `👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how ${isBiz ? 'prepared your business is' : 'financially and personally prepared you are'} for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+        question: introText,
         question_type: 'single_choice',
         answers: ["✅ Yes, let's begin", '❓ Tell me more'],
         branching: { "✅ Yes, let's begin": `${p}_003`, '❓ Tell me more': `${p}_002`, 'DEFAULT': `${p}_002` }
@@ -116,12 +120,16 @@ class QuestionPackFactory {
   // 2a. Engagement Engine
   buildEngagementEngine(config, startId) {
     const p = config.prefix;
+    const didYouKnow = (config.overrides && config.overrides.did_you_know_text)
+      ? config.overrides.did_you_know_text
+      : `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany ${config.audience}s believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.`;
+
     return [
       {
         id: `${p}_${String(startId).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany ${config.audience}s believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.`,
+        question: didYouKnow,
         question_type: 'single_choice',
         answers: ['✅ Continue'],
         branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
@@ -156,9 +164,9 @@ class QuestionPackFactory {
         qs = [
             {
                 id: `${p}_${String(startId).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
-                question: `Which best describes you?`,
+                question: `What is your primary employment status?`,
                 question_type: 'single_choice',
-                answers: ['Employed Full-time', 'Self-employed', 'Freelancer', 'Business Owner', 'Currently Unemployed', 'Student'],
+                answers: ['Full-time employed', 'Self-employed/Freelance', 'Unemployed/Student'],
                 data_mapping: 'employment_status',
                 branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
             },
@@ -166,20 +174,34 @@ class QuestionPackFactory {
                 id: `${p}_${String(startId + 1).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
                 question: `What is your age range?`,
                 question_type: 'single_choice',
-                answers: ['18-24', '25-30', '31-35', '36-40', '41+'],
+                answers: ['18-25', '26-35', '36-45', '46-55', '56+'],
                 data_mapping: 'age_range',
-                branching: { 'DEFAULT': `${p}_${String(startId + 2).padStart(3, '0')}` }
-            },
-            {
-                id: `${p}_${String(startId + 2).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
-                question: `Do you currently earn regular monthly income?`,
-                question_type: 'yes_no',
-                answers: ['Yes', 'No'],
-                data_mapping: 'regular_income',
-                branching: { 'DEFAULT': `${p}_${String(startId + 3).padStart(3, '0')}` }
+                branching: { 'DEFAULT': (config.overrides && config.overrides.extra_qual_questions) ? `${p}_${String(startId + 2).padStart(3, '0')}` : `${p}_${String(startId + 2).padStart(3, '0')}` }
             }
         ];
+        
+        if (config.overrides && config.overrides.extra_qual_questions) {
+            config.overrides.extra_qual_questions.forEach((q, idx) => {
+                const qId = startId + 2 + idx;
+                const nextQId = startId + 2 + idx + 1;
+                const isLast = idx === config.overrides.extra_qual_questions.length - 1;
+                qs.push({
+                    id: `${p}_${String(qId).padStart(3, '0')}`, industry: config.ind, pillar: 'General',
+                    question: q.question,
+                    question_type: q.question_type,
+                    answers: q.answers,
+                    data_mapping: q.data_mapping || `qual_extra_${idx}`,
+                    branching: { 'DEFAULT': isLast ? `${p}_${String(nextQId).padStart(3, '0')}` : `${p}_${String(nextQId).padStart(3, '0')}` } // Wait, Assessment Intro Engine starts immediately after Qualification Engine returns. The Assessment Intro engine expects to start at startId + qs.length. So we don't branch to 'ASSESSMENT_CORE'. We branch to the next ID!
+                });
+            });
+        }
     }
+    
+    // IMPORTANT FIX: ensure the last question in the qualification engine correctly points to the NEXT engine's start ID!
+    // Since the main builder loop does `startId += qs.length`, the next engine will start at `startId + qs.length`.
+    const totalLength = qs.length;
+    qs[qs.length - 1].branching['DEFAULT'] = `${p}_${String(startId + totalLength).padStart(3, '0')}`;
+    
     return qs;
   }
 
@@ -202,6 +224,10 @@ class QuestionPackFactory {
   // 3. Closing & Advisor Integration Engine
   buildClosingEngine(config, startId) {
     const p = config.prefix;
+    const advisorOffer = (config.overrides && config.overrides.advisor_offer_text)
+      ? config.overrides.advisor_offer_text
+      : `Would you like to schedule a free consultation with a Certified Risk Advisor?`;
+
     return [
       {
         id: `${p}_${String(startId).padStart(3, '0')}`,
@@ -216,7 +242,7 @@ class QuestionPackFactory {
         id: `${p}_${String(startId + 1).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?`,
+        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\n${advisorOffer}`,
         question_type: 'yes_no',
         answers: ['Yes', 'No'],
         data_mapping: 'request_consultation',
@@ -353,12 +379,24 @@ const questionPacks = [
   {
     id: 'QP-140', parent: 'QP-100', prefix: 'HLT', name: 'Health Protection', ind: 'health', type: 'personal', audience: 'individual',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Health Protection Assessment.\n\nYour health is one of your greatest assets, but unexpected illness or medical emergencies can place enormous emotional and financial strain on you and your family.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for health-related risks and provide a personalized Health Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA single serious illness can affect not only your health but also your income, savings, and long-term financial goals.\n\nOur goal today is to help you identify health protection gaps before they become costly problems.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Health Protection Advisor could help you understand your options and answer any questions about your health protection strategy.\n\nWould you like to schedule a free consultation?`,
+      extra_qual_questions: [
+        {
+          question: `Do you currently have any dependants who rely on you for healthcare decisions or financial support?`,
+          question_type: 'yes_no',
+          answers: ['Yes', 'No'],
+          data_mapping: 'has_dependants'
+        }
+      ],
       specific_questions: [
-        { pillar: 'Protection & Insurance', question: `Do you currently have a Health Maintenance Organization (HMO) or health insurance plan?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'No': { vulnerability_points: 35 } } },
-        { pillar: 'Protection & Insurance', question: `If yes, are you satisfied with the limits and coverage of your current health plan?`, question_type: 'single_choice', answers: ['Yes', 'No', "I don't have one"] },
-        { pillar: 'Financial Resilience', question: `Have you or a close family member ever had to pay out-of-pocket for a major medical emergency?`, question_type: 'yes_no', answers: ['Yes', 'No'] },
-        { pillar: 'Health & Wellbeing', question: `Is there a history of critical illnesses (e.g., heart disease, cancer) in your family?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'Yes': { exposure_points: 30 } } },
-        { pillar: 'Protection & Insurance', question: `Do you have a Critical Illness insurance policy that pays a lump sum upon diagnosis?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'No': { vulnerability_points: 25 } } }
+        { pillar: 'Healthcare Access', question: `Do you currently have:`, question_type: 'single_choice', answers: ['Employer HMO', 'Private Health Insurance', 'Government Health Scheme', 'None'], risk_logic: { 'None': { vulnerability_points: 40 } }, recommendation_trigger: { condition: 'None', recommendation: 'Compare health plans that provide wider hospital coverage.' } },
+        { pillar: 'Financial Preparedness', question: `If you had to pay ₦2,000,000 for emergency treatment tomorrow, how would you most likely pay?`, question_type: 'single_choice', answers: ['Savings', 'Insurance', 'Loan', 'Family/Friends', "I don't know"], risk_logic: { "I don't know": { vulnerability_points: 30 }, 'Loan': { vulnerability_points: 25 }, 'Family/Friends': { vulnerability_points: 20 } }, recommendation_trigger: { condition: 'Loan', recommendation: 'Build a medical emergency fund.' } },
+        { pillar: 'Medical History', question: `Have you ever been diagnosed with:`, question_type: 'single_choice', answers: ['Hypertension', 'Diabetes', 'Asthma', 'None'], risk_logic: { 'Hypertension': { exposure_points: 20 }, 'Diabetes': { exposure_points: 20 }, 'Asthma': { exposure_points: 15 } }, recommendation_trigger: { condition: 'Hypertension', recommendation: 'Review your HMO benefits to ensure chronic care is covered.' } },
+        { pillar: 'Lifestyle', question: `How often do you have routine medical check-ups?`, question_type: 'single_choice', answers: ['Every 6 months', 'Annually', 'Rarely/Only when sick'], risk_logic: { 'Rarely/Only when sick': { vulnerability_points: 20 } }, recommendation_trigger: { condition: 'Rarely/Only when sick', recommendation: 'Schedule an annual preventive health screening.' } },
+        { pillar: 'Protection & Insurance', question: `If your doctor recommended surgery tomorrow, would your current health cover pay for most of the cost?`, question_type: 'single_choice', answers: ['Yes', 'No', 'Not sure'], risk_logic: { 'No': { vulnerability_points: 35 }, 'Not sure': { vulnerability_points: 20 } }, recommendation_trigger: { condition: 'No', recommendation: 'Consider Critical Illness Insurance if appropriate for your circumstances.' } },
+        { pillar: 'Recovery & Resilience', question: `If illness prevented you from working for three months, would your household still be financially stable?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'No': { vulnerability_points: 35 } }, recommendation_trigger: { condition: 'No', recommendation: 'Explore income protection options.' } }
       ]
     }
   },

@@ -229,20 +229,44 @@ router.post('/evolution', async (req, res) => {
                updatedData.score = scoreResult.score;
                updatedData.riskLevel = scoreResult.riskLevel;
                
-               let strengthsText = '• Career Stability\n• Digital Safety\n• Personal Responsibility';
+               const defaultFallbacks = {
+                 'HLT': {
+                   strengths: "✓ You already have a health insurance plan.\n✓ You are aware of your family's medical history.",
+                   risks: "⚠ Your current health plan may not provide sufficient coverage for major illnesses.\n⚠ You rely heavily on out-of-pocket payments.\n⚠ You do not have Critical Illness protection.",
+                   recommendations: "• Review your HMO benefits.\n• Compare health plans that provide wider hospital coverage.\n• Schedule an annual preventive health screening."
+                 },
+                 'ENT': {
+                   strengths: "✓ Strong business vision\n✓ Market awareness",
+                   risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection",
+                   recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets."
+                 },
+                 'FAM': {
+                   strengths: "✓ Clear long-term goals\n✓ Strong familial support",
+                   risks: "⚠ Inadequate life cover\n⚠ Education funding gap",
+                   recommendations: "• Review Life Insurance policy.\n• Set up an education trust."
+                 },
+                 'DEFAULT': {
+                   strengths: "✓ Career Stability\n✓ Digital Safety\n✓ Personal Responsibility",
+                   risks: "⚠ Limited emergency savings\n⚠ Inadequate income protection\n⚠ No long-term financial protection strategy",
+                   recommendations: "• Build an emergency fund\n• Review income protection\n• Begin a structured long-term financial plan"
+                 }
+               };
+               const fallbacks = defaultFallbacks[prefix] || defaultFallbacks['DEFAULT'];
+
+               let strengthsText = fallbacks.strengths;
                if (scoreResult.risk_categories) {
-                   const strongCats = Object.entries(scoreResult.risk_categories).filter(([k,v])=>v>60).map(([k,v])=>'• ' + k.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+                   const strongCats = Object.entries(scoreResult.risk_categories).filter(([k,v])=>v>60).map(([k,v])=>'✓ ' + k.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
                    if (strongCats.length > 0) strengthsText = strongCats.join('\n');
                }
                updatedData.strengths = strengthsText;
                
                updatedData.top_risks = scoreResult.identified_gaps && scoreResult.identified_gaps.length > 0 
-                  ? scoreResult.identified_gaps.slice(0,3).map(g => '• ' + g).join('\n')
-                  : '• Limited emergency savings\n• Inadequate income protection\n• No long-term financial protection strategy';
+                  ? scoreResult.identified_gaps.slice(0,3).map(g => '⚠ ' + g).join('\n')
+                  : fallbacks.risks;
                   
                updatedData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
                   ? scoreResult.recommendations.slice(0,3).map(r => '• ' + r).join('\n')
-                  : '• Build an emergency fund\n• Review income protection\n• Begin a structured long-term financial plan';
+                  : fallbacks.recommendations;
                   
                updatedData.min_loss = scoreResult.min_loss;
                updatedData.max_loss = scoreResult.max_loss;

@@ -20,20 +20,6 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   const input = normalizeInput(incomingText);
 
   // Structured Qualification States (V2 Flow Post-Assessment)
-  if (currentState === 'awaiting_consultation') {
-    if (input === 'A' || input === 'YES') {
-      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
-      nextState = 'awaiting_consultation_day';
-      updatedData.is_qualified = true;
-    } else if (input === 'B' || input === 'MAYBE LATER' || input === 'C' || input === 'NO') {
-      replyText = "Noted. Your personalized report will still be sent to your email. We are always here if you change your mind. Have a great day!";
-      nextState = 'finished';
-      updatedData.is_qualified = false;
-    } else {
-      replyText = "Please reply with A, B, or C.";
-    }
-    return { nextState, replyText, updatedData, isComplete };
-  }
 
   if (currentState === 'awaiting_consultation_day') {
     const dayMap = { A: 'Monday', B: 'Tuesday', C: 'Wednesday', D: 'Thursday', E: 'Friday' };
@@ -161,15 +147,26 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
   // 4. Format Reply
   if (nextState === 'COMPLETE' || nextState === 'finished') {
-    replyText = "Thank you.\n\nWe are now analyzing your responses and calculating your CoverScore™.\n\nPlease wait a moment.";
+    replyText = "Your assessment is complete. If you wish to start over, type RESTART.";
     isComplete = true;
-    nextState = 'awaiting_consultation';
+    nextState = 'finished';
+  } else if (nextState === 'awaiting_consultation') {
+    // The user just answered the Advisor Offer question from the JSON.
+    if (parsedAnswer === 'Yes') {
+      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
+      nextState = 'awaiting_consultation_day';
+      updatedData.is_qualified = true;
+    } else {
+      replyText = "Noted. Your personalized report has been generated. We are always here if you change your mind. Have a great day!";
+      nextState = 'finished';
+      updatedData.is_qualified = false;
+    }
   } else {
     const nextQ = questionBank.find(q => q.id === nextState);
     if (!nextQ) {
-      replyText = "Thank you.\n\nWe are now analyzing your responses and calculating your CoverScore™.\n\nPlease wait a moment.";
+      replyText = "Your assessment is complete. Thank you.";
       isComplete = true;
-      nextState = 'awaiting_consultation';
+      nextState = 'finished';
     } else {
       replyText = formatDynamicQuestion(nextQ, updatedData);
     }
