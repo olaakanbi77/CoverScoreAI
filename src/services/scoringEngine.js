@@ -44,13 +44,21 @@ const calculateScore = async (answers) => {
 
     const pillar = q.pillar || 'General';
     if (!pillars[pillar]) {
-      pillars[pillar] = { riskPoints: 0, maxPoints: 100 };
+      pillars[pillar] = { riskPoints: 0, maxPoints: 0 };
     }
 
-    // Determine risk value
+    // Determine risk value and max possible value for this question
     let riskPoints = 0;
+    let maxQuestionPoints = 0;
+    
     if (q.risk_logic) {
-      // Find the rule for the answer
+      // Calculate max possible points for this question
+      for (const rule of Object.values(q.risk_logic)) {
+         const pts = (rule.exposure_points || 0) + (rule.vulnerability_points || 0) + (rule.impact_points || 0);
+         if (pts > maxQuestionPoints) maxQuestionPoints = pts;
+      }
+      
+      // Find the rule for the actual answer
       const ansArray = Array.isArray(ans) ? ans : [ans];
       for (const a of ansArray) {
          const rule = q.risk_logic[a];
@@ -60,6 +68,7 @@ const calculateScore = async (answers) => {
       }
     } else {
       // Default fallback logic
+      maxQuestionPoints = 15;
       if (typeof ans === 'string' && (ans.toLowerCase() === 'no' || ans.toLowerCase() === 'none' || ans.toLowerCase() === 'none of the above')) {
         riskPoints = 15;
       } else if (typeof ans === 'string' && (ans.toLowerCase() === 'yes')) {
@@ -68,6 +77,7 @@ const calculateScore = async (answers) => {
     }
 
     pillars[pillar].riskPoints += riskPoints;
+    pillars[pillar].maxPoints += maxQuestionPoints;
     
     // Recommendation trigger
     if (q.recommendation_trigger) {
@@ -83,7 +93,11 @@ const calculateScore = async (answers) => {
   let totalCategoryScores = 0;
 
   for (const [pillarName, pData] of Object.entries(pillars)) {
-    const catScore = Math.min(100, Math.max(0, pData.riskPoints));
+    // Avoid division by zero
+    const pMax = pData.maxPoints > 0 ? pData.maxPoints : 1;
+    // Scale risk points to a percentage (0-100) based on max possible points for this category
+    const scaledPoints = Math.round((pData.riskPoints / pMax) * 100);
+    const catScore = Math.min(100, Math.max(0, scaledPoints));
     risk_categories[pillarName] = catScore;
     totalCategoryScores += catScore;
     categoryCount++;
