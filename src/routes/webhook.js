@@ -255,8 +255,12 @@ router.post('/evolution', async (req, res) => {
 
                let strengthsText = fallbacks.strengths;
                if (scoreResult.risk_categories) {
-                   const strongCats = Object.entries(scoreResult.risk_categories).filter(([k,v])=>v>60).map(([k,v])=>'✓ ' + k.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
-                   if (strongCats.length > 0) strengthsText = strongCats.join('\n');
+                   const strongCats = Object.entries(scoreResult.risk_categories).filter(([k,v])=>v<40).map(([k,v])=>'✓ ' + k.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+                   if (strongCats.length > 0) {
+                       strengthsText = strongCats.join('\n');
+                   } else {
+                       strengthsText = "✓ Strong potential for risk reduction\n✓ High opportunity for coverage optimization";
+                   }
                }
                updatedData.strengths = strengthsText;
                
