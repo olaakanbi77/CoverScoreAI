@@ -73,7 +73,7 @@ const calculateScore = async (answers) => {
     if (q.recommendation_trigger) {
       if (q.recommendation_trigger.condition === ans) {
          recommendations.push(q.recommendation_trigger.recommendation);
-         identified_gaps.push(q.question);
+         identified_gaps.push(q.recommendation_trigger.gap || q.question);
       }
     }
   }

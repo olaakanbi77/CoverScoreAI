@@ -1241,7 +1241,8 @@
     },
     "recommendation_trigger": {
       "condition": "None",
-      "recommendation": "Compare health plans that provide wider hospital coverage."
+      "recommendation": "Compare health plans that provide wider hospital coverage.",
+      "gap": "You do not have active health insurance coverage."
     },
     "id": "HLT_012",
     "industry": "health",
@@ -1273,7 +1274,8 @@
     },
     "recommendation_trigger": {
       "condition": "Loan",
-      "recommendation": "Build a medical emergency fund."
+      "recommendation": "Build a medical emergency fund.",
+      "gap": "You rely on loans or borrowing for emergency medical expenses."
     },
     "id": "HLT_013",
     "industry": "health",
@@ -1304,7 +1306,8 @@
     },
     "recommendation_trigger": {
       "condition": "Hypertension",
-      "recommendation": "Review your HMO benefits to ensure chronic care is covered."
+      "recommendation": "Review your HMO benefits to ensure chronic care is covered.",
+      "gap": "You have a chronic condition that requires specialized coverage."
     },
     "id": "HLT_014",
     "industry": "health",
@@ -1328,7 +1331,8 @@
     },
     "recommendation_trigger": {
       "condition": "Rarely/Only when sick",
-      "recommendation": "Schedule an annual preventive health screening."
+      "recommendation": "Schedule an annual preventive health screening.",
+      "gap": "You are missing out on early detection through routine check-ups."
     },
     "id": "HLT_015",
     "industry": "health",
@@ -1355,7 +1359,8 @@
     },
     "recommendation_trigger": {
       "condition": "No",
-      "recommendation": "Consider Critical Illness Insurance if appropriate for your circumstances."
+      "recommendation": "Consider Critical Illness Insurance if appropriate for your circumstances.",
+      "gap": "Your current cover is inadequate for major surgical procedures."
     },
     "id": "HLT_016",
     "industry": "health",
@@ -1378,7 +1383,8 @@
     },
     "recommendation_trigger": {
       "condition": "No",
-      "recommendation": "Explore income protection options."
+      "recommendation": "Explore income protection options.",
+      "gap": "Your household is highly vulnerable to loss of income due to illness."
     },
     "id": "HLT_017",
     "industry": "health",

@@ -469,7 +469,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     const aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
     
     // Recompute to get the dynamic min_loss, max_loss, recommendations
-    const { min_loss, max_loss, recommendations } = calculateScore(answers);
+    const { min_loss, max_loss, recommendations } = await calculateScore(answers);
 
     const industry = answers.business?.industry || 'General Business';
     const industryRisks = getIndustryRisks(industry);
