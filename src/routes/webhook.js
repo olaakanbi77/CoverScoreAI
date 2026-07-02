@@ -247,6 +247,112 @@ router.post('/evolution', async (req, res) => {
                updatedData.min_loss = scoreResult.min_loss;
                updatedData.max_loss = scoreResult.max_loss;
                updatedData._scored = true;
+               
+               // === IMMEDIATE REPORT GENERATION ===
+               const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
+               const assessmentDataObj = {
+                 answers: finalAnswers,
+                 score: scoreResult.score,
+                 riskLevel: scoreResult.riskLevel,
+                 min_loss: scoreResult.min_loss,
+                 max_loss: scoreResult.max_loss,
+                 recommendations: scoreResult.recommendations,
+                 identified_gaps: scoreResult.identified_gaps,
+                 risk_categories: scoreResult.risk_categories,
+                 entityType
+               };
+
+               const creIntelligence = await generateRecommendations(assessmentDataObj);
+               const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
+
+               const dbRiskLevelMap = {
+                 'Very Low Risk': 'low',
+                 'Low Risk': 'low',
+                 'Moderate Risk': 'moderate',
+                 'High Risk': 'high',
+                 'Critical Risk': 'critical'
+               };
+               const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
+
+               const assessRes = await run(`
+                 INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
+                 VALUES (NULL, ?, ?, ?, ?)
+               `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
+
+               const assessmentId = assessRes.lastInsertRowid;
+               updatedData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
+
+               if (updatedData.email) {
+                 emailService.sendAssessmentReport(updatedData.email, {
+                   score: scoreResult.score,
+                   riskLevel: dbRiskLevel,
+                   aiReport: aiReportData,
+                   businessName: updatedData.business_name || updatedData.name,
+                   assessmentId: assessmentId
+                 }).then(() => console.log(`✅ Assessment report emailed successfully to ${updatedData.email}`))
+                   .catch(err => console.error(`❌ Failed to email assessment report to ${updatedData.email}:`, err));
+               }
+
+               // Calculate estimated premium
+               const PREMIUM_RATES = {
+                 'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
+                 'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
+                 'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
+                 'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
+                 'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
+                 'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
+                 'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
+                 'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
+                 'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
+                 'Travel Insurance': 0.01
+               };
+               
+               let estimatedPremium = 0;
+               if (scoreResult.min_loss) {
+                 let annualPremium = 0;
+                 let monthlyPremium = 0;
+                 const recs = scoreResult.recommendations || [];
+                 if (recs.length > 0) {
+                   recs.forEach(rec => { 
+                     const rate = PREMIUM_RATES[rec] || 0.01;
+                     if (rec.toLowerCase().includes('life')) {
+                       monthlyPremium += (scoreResult.min_loss * rate) / 12;
+                     } else {
+                       annualPremium += (scoreResult.min_loss * rate);
+                     }
+                   });
+                   estimatedPremium = Math.round(annualPremium + monthlyPremium);
+                 } else { 
+                   estimatedPremium = Math.round(scoreResult.min_loss * 0.013); 
+                 }
+               }
+
+               // Update lead with assessment data
+               await run(`
+                 UPDATE leads 
+                 SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, 
+                     name = ?, email = ?, wa_state = 'qualification', 
+                     status = 'Report Sent', pipeline_stage = 2,
+                     engagement_points = engagement_points + 20, sales_score = sales_score + 20,
+                     estimated_premium = ?,
+                     chat_history = ?,
+                     birth_date = ?,
+                     anniversary_date = ?,
+                     contact_person = ?
+                 WHERE id = ?
+               `, [
+                 assessmentId, scoreResult.score, dbRiskLevel, entityType, 
+                 (entityType === 'business' && updatedData.business_name) ? updatedData.business_name : (updatedData.name || 'WhatsApp User'), 
+                 updatedData.email || 'whatsapp@coverscore.site',
+                 estimatedPremium, JSON.stringify(updatedData), 
+                 updatedData.birth_date || null,
+                 updatedData.anniversary_date || null,
+                 updatedData.name || 'WhatsApp User',
+                 lead.id
+               ]);
+               console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
+               // ====================================
+
              } catch (e) {
                console.error('Scoring error:', e);
              }
@@ -257,7 +363,8 @@ router.post('/evolution', async (req, res) => {
                                              .replace(/{{riskLevel}}/g, (updatedData.riskLevel || 'Moderate').toUpperCase())
                                              .replace(/{{strengths}}/g, updatedData.strengths || '')
                                              .replace(/{{top_risks}}/g, updatedData.top_risks || '')
-                                             .replace(/{{recommendations}}/g, updatedData.recommendations || '');
+                                             .replace(/{{recommendations}}/g, updatedData.recommendations || '')
+                                             .replace(/{{reportUrl}}/g, updatedData.reportUrl || 'https://coverscore.site');
           }
       }
 
@@ -368,167 +475,10 @@ router.post('/evolution', async (req, res) => {
             WHERE id = ?
           `, [lead.id]);
         }
-
-        // If the user just answered the consultation question, process and send the final report!
-        if ((evalState === 'awaiting_consultation' || evalState === 'awaiting_consultation_day') && nextState === 'finished' && !updatedData._report_sent) {
-          try {
-            updatedData._report_sent = true;
-            // Map the collected data to the scoring engine format
-            const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
-            
-            // Build Final Answers for V1 scoringEngine
-            const finalAnswers = { 
-                ...updatedData.answers, 
-                template_selection: { template_id: prefix } 
-            };
-
-            // Calculate score using dynamic V1 engine
-            const scoreResult = await calculateScore(finalAnswers);
-
-            const assessmentDataObj = {
-              answers: finalAnswers,
-              score: scoreResult.score,
-              riskLevel: scoreResult.riskLevel,
-              min_loss: scoreResult.min_loss,
-              max_loss: scoreResult.max_loss,
-              recommendations: scoreResult.recommendations,
-              identified_gaps: scoreResult.identified_gaps,
-              risk_categories: scoreResult.risk_categories,
-              entityType
-            };
-
-            // Run CRE Rules
-            const creIntelligence = await generateRecommendations(assessmentDataObj);
-
-            // Generate AI Report
-            const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
-
-            const dbRiskLevelMap = {
-              'Very Low Risk': 'low',
-              'Low Risk': 'low',
-              'Moderate Risk': 'moderate',
-              'High Risk': 'high',
-              'Critical Risk': 'critical'
-            };
-            const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
-
-            // Save to DB
-            const assessRes = await run(`
-              INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
-              VALUES (NULL, ?, ?, ?, ?)
-            `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
-
-            const assessmentId = assessRes.lastInsertRowid;
-            
-            // Build report URL
-            const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
-            
-            // Format currency values
-            const formatNaira = (val) => new Intl.NumberFormat('en-NG').format(val);
-            const minLossStr = formatNaira(scoreResult.min_loss);
-            const maxLossStr = formatNaira(scoreResult.max_loss);
-            
-            let riskBreakdownMsg = '';
-            if (scoreResult.risk_categories) {
-              const formattedCategories = Object.entries(scoreResult.risk_categories)
-                .map(([key, val]) => {
-                  const title = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                  return `• ${title}: ${val}/100`;
-                }).join('\n');
-              riskBreakdownMsg = `\n\n📈 *Risk Breakdown:*\n${formattedCategories}`;
-            }
-
-            // Send Final Web Report Link with Financial Exposure AFTER consultation response
-            const finalReportMsg = `Thank you for completing your CoverScore Risk Assessment™.\nYou've taken an important step toward protecting your future.\n\n🧾 *Your Official Report is Ready*\nWe've processed your full assessment and identified areas that could expose you to financial loss.\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View and download your full report:\n${reportUrl}\n\nRemember:\nThe goal isn't to achieve a perfect score today.\nThe goal is to improve your resilience over time.\nWe'll continue supporting you with practical insights and recommendations whenever you need them.\n\nHave a wonderful day!`;
-            
-            await sendWhatsApp(phoneNumber, null, { _message: finalReportMsg });
-            
-            updatedData.__messages = updatedData.__messages || [];
-            updatedData.__messages.push({
-              role: 'assistant',
-              content: finalReportMsg,
-              timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-            });
-            
-            // Send email report
-            if (updatedData.email) {
-              try {
-                await emailService.sendAssessmentReport(updatedData.email, {
-                  score: scoreResult.score,
-                  riskLevel: dbRiskLevel,
-                  aiReport: aiReportData,
-                  businessName: updatedData.business_name || updatedData.name,
-                  assessmentId: assessmentId
-                });
-                console.log(`✅ Assessment report emailed successfully to ${updatedData.email}`);
-              } catch (emailErr) {
-                console.error(`❌ Failed to email assessment report to ${updatedData.email}:`, emailErr);
-              }
-            }
-
-            // Calculate estimated premium
-            const PREMIUM_RATES = {
-              'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
-              'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
-              'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
-              'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
-              'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
-              'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
-              'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
-              'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
-              'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
-              'Travel Insurance': 0.01
-            };
-            
-            let estimatedPremium = 0;
-            if (scoreResult.min_loss) {
-              let annualPremium = 0;
-              let monthlyPremium = 0;
-              const recs = scoreResult.recommendations || [];
-              if (recs.length > 0) {
-                recs.forEach(rec => { 
-                  const rate = PREMIUM_RATES[rec] || 0.01;
-                  if (rec.toLowerCase().includes('life')) {
-                    monthlyPremium += (scoreResult.min_loss * rate) / 12;
-                  } else {
-                    annualPremium += (scoreResult.min_loss * rate);
-                  }
-                });
-                estimatedPremium = Math.round(annualPremium + monthlyPremium);
-              } else { 
-                estimatedPremium = Math.round(scoreResult.min_loss * 0.013); 
-              }
-            }
-
-            // Update lead with assessment data, set state to qualification, +20 engagement for completing assessment
-            await run(`
-              UPDATE leads 
-              SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, 
-                  name = ?, email = ?, wa_state = 'qualification', 
-                  status = 'Report Sent', pipeline_stage = 2,
-                  engagement_points = engagement_points + 20, sales_score = sales_score + 20,
-                  estimated_premium = ?,
-                  chat_history = ?,
-                  birth_date = ?,
-                  anniversary_date = ?,
-                  contact_person = ?
-              WHERE id = ?
-            `, [
-              assessmentId, scoreResult.score, dbRiskLevel, entityType, 
-              (entityType === 'business' && updatedData.business_name) ? updatedData.business_name : (updatedData.name || 'WhatsApp User'), 
-              updatedData.email || 'whatsapp@coverscore.site',
-              estimatedPremium, JSON.stringify(updatedData), 
-              updatedData.birth_date || null,
-              updatedData.anniversary_date || null,
-              updatedData.name || 'WhatsApp User',
-              lead.id
-            ]);
-            console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
-
-          } catch(err) {
-            console.error("Error generating report after completion:", err);
-            await sendWhatsApp(phoneNumber, null, { _message: "I'm sorry, I encountered an error generating your report. Error details: " + err.message + ". Please contact support." });
-          }
+        // ── FINAL COMPLETION ACTIONS ──
+        // If the user just finished consultation scheduling, we no longer send the report here, because it was already sent midway.
+        if ((evalState === 'awaiting_consultation' || evalState === 'awaiting_consultation_day') && nextState === 'finished') {
+           console.log(`   Consultation sequence complete for ${lead.id}.`);
         }
       }
 

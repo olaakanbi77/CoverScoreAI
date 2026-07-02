@@ -207,7 +207,7 @@ class QuestionPackFactory {
         id: `${p}_${String(startId).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `Congratulations, {{name}}! 🎉\n\nYou've completed your ${config.name} Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...`,
+        question: `Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████`,
         question_type: 'single_choice',
         answers: ['✅ View My Results'],
         branching: { 'DEFAULT': `${p}_${String(startId + 1).padStart(3, '0')}` }
@@ -216,77 +216,11 @@ class QuestionPackFactory {
         id: `${p}_${String(startId + 1).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.`,
-        question_type: 'single_choice',
-        answers: ['✅ View Strengths'],
-        branching: { 'DEFAULT': `${p}_${String(startId + 2).padStart(3, '0')}` }
-      },
-      {
-        id: `${p}_${String(startId + 2).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.`,
-        question_type: 'single_choice',
-        answers: ['✅ View Top Risks'],
-        branching: { 'DEFAULT': `${p}_${String(startId + 3).padStart(3, '0')}` }
-      },
-      {
-        id: `${p}_${String(startId + 3).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.`,
-        question_type: 'single_choice',
-        answers: ['✅ View Recommendations'],
-        branching: { 'DEFAULT': `${p}_${String(startId + 4).padStart(3, '0')}` }
-      },
-      {
-        id: `${p}_${String(startId + 4).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.`,
-        question_type: 'single_choice',
-        answers: ['✅ Continue'],
-        branching: { 'DEFAULT': `${p}_${String(startId + 5).padStart(3, '0')}` }
-      },
-      {
-        id: `${p}_${String(startId + 5).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for ${config.name}s*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?`,
-        question_type: 'single_choice',
-        answers: ['Yes', 'Maybe Later'],
-        data_mapping: 'learning_preference',
-        branching: { 'DEFAULT': `${p}_${String(startId + 6).padStart(3, '0')}` }
-      },
-      {
-        id: `${p}_${String(startId + 6).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?`,
-        question_type: 'single_choice',
-        answers: ['Show Me', 'Not Now'],
-        data_mapping: 'protection_preference',
-        branching: { 'DEFAULT': `${p}_${String(startId + 7).padStart(3, '0')}` }
-      },
-      {
-        id: `${p}_${String(startId + 7).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?`,
-        question_type: 'single_choice',
-        answers: ['Yes, please', 'Maybe Later', 'No Thanks'],
-        data_mapping: 'consultation_preference',
-        branching: { 'Yes, please': `${p}_${String(startId + 8).padStart(3, '0')}`, 'DEFAULT': 'COMPLETE' }
-      },
-      {
-        id: `${p}_${String(startId + 8).padStart(3, '0')}`,
-        industry: config.ind,
-        pillar: 'General',
-        question: `Great! What time of day works best for a brief call?`,
-        question_type: 'single_choice',
-        answers: ['Morning', 'Afternoon', 'Evening'],
-        data_mapping: 'consultation_time',
-        branching: { 'DEFAULT': 'COMPLETE' }
+        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?`,
+        question_type: 'yes_no',
+        answers: ['Yes', 'No'],
+        data_mapping: 'request_consultation',
+        branching: { 'DEFAULT': 'awaiting_consultation' }
       }
     ];
   }

@@ -189,11 +189,7 @@ const formatDynamicQuestion = (q, data = {}) => {
     rawQuestion = rawQuestion.replace(/{{name}}/g, userName);
   }
 
-  if (q.pillar && !hiddenPillars.includes(q.pillar)) {
-    text = `*${q.pillar}*\n\n${rawQuestion}\n\n`;
-  } else {
-    text = `${rawQuestion}\n\n`;
-  }
+  text = `${rawQuestion}\n\n`;
   
   if (q.question_type === 'yes_no') {
     text += "A. Yes\nB. No";

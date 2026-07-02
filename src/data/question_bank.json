@@ -250,7 +250,7 @@
     "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Young Professional Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -263,115 +263,15 @@
     "id": "YPR_018",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "YPR_019"
-    }
-  },
-  {
-    "id": "YPR_019",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "YPR_020"
-    }
-  },
-  {
-    "id": "YPR_020",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "YPR_021"
-    }
-  },
-  {
-    "id": "YPR_021",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "YPR_022"
-    }
-  },
-  {
-    "id": "YPR_022",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Young Professionals*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "YPR_023"
-    }
-  },
-  {
-    "id": "YPR_023",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "YPR_024"
-    }
-  },
-  {
-    "id": "YPR_024",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "YPR_025",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "YPR_025",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -642,7 +542,7 @@
     "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Entrepreneur Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -655,115 +555,15 @@
     "id": "ENT_018",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "ENT_019"
-    }
-  },
-  {
-    "id": "ENT_019",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "ENT_020"
-    }
-  },
-  {
-    "id": "ENT_020",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "ENT_021"
-    }
-  },
-  {
-    "id": "ENT_021",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "ENT_022"
-    }
-  },
-  {
-    "id": "ENT_022",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Entrepreneurs*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "ENT_023"
-    }
-  },
-  {
-    "id": "ENT_023",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "ENT_024"
-    }
-  },
-  {
-    "id": "ENT_024",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "ENT_025",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "ENT_025",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -1038,7 +838,7 @@
     "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Family Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1051,115 +851,15 @@
     "id": "FAM_018",
     "industry": "family",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "FAM_019"
-    }
-  },
-  {
-    "id": "FAM_019",
-    "industry": "family",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "FAM_020"
-    }
-  },
-  {
-    "id": "FAM_020",
-    "industry": "family",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "FAM_021"
-    }
-  },
-  {
-    "id": "FAM_021",
-    "industry": "family",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "FAM_022"
-    }
-  },
-  {
-    "id": "FAM_022",
-    "industry": "family",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Family Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "FAM_023"
-    }
-  },
-  {
-    "id": "FAM_023",
-    "industry": "family",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "FAM_024"
-    }
-  },
-  {
-    "id": "FAM_024",
-    "industry": "family",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "FAM_025",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "FAM_025",
-    "industry": "family",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -1418,7 +1118,7 @@
     "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Income Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1431,115 +1131,15 @@
     "id": "INC_018",
     "industry": "income",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "INC_019"
-    }
-  },
-  {
-    "id": "INC_019",
-    "industry": "income",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "INC_020"
-    }
-  },
-  {
-    "id": "INC_020",
-    "industry": "income",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "INC_021"
-    }
-  },
-  {
-    "id": "INC_021",
-    "industry": "income",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "INC_022"
-    }
-  },
-  {
-    "id": "INC_022",
-    "industry": "income",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Income Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "INC_023"
-    }
-  },
-  {
-    "id": "INC_023",
-    "industry": "income",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "INC_024"
-    }
-  },
-  {
-    "id": "INC_024",
-    "industry": "income",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "INC_025",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "INC_025",
-    "industry": "income",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -1789,7 +1389,7 @@
     "id": "HLT_017",
     "industry": "health",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Health Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1802,115 +1402,15 @@
     "id": "HLT_018",
     "industry": "health",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "HLT_019"
-    }
-  },
-  {
-    "id": "HLT_019",
-    "industry": "health",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "HLT_020"
-    }
-  },
-  {
-    "id": "HLT_020",
-    "industry": "health",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "HLT_021"
-    }
-  },
-  {
-    "id": "HLT_021",
-    "industry": "health",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "HLT_022"
-    }
-  },
-  {
-    "id": "HLT_022",
-    "industry": "health",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Health Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "HLT_023"
-    }
-  },
-  {
-    "id": "HLT_023",
-    "industry": "health",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "HLT_024"
-    }
-  },
-  {
-    "id": "HLT_024",
-    "industry": "health",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "HLT_025",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "HLT_025",
-    "industry": "health",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -2170,7 +1670,7 @@
     "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Retirement Planning Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2183,115 +1683,15 @@
     "id": "RET_018",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "RET_019"
-    }
-  },
-  {
-    "id": "RET_019",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "RET_020"
-    }
-  },
-  {
-    "id": "RET_020",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "RET_021"
-    }
-  },
-  {
-    "id": "RET_021",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "RET_022"
-    }
-  },
-  {
-    "id": "RET_022",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Retirement Plannings*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "RET_023"
-    }
-  },
-  {
-    "id": "RET_023",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "RET_024"
-    }
-  },
-  {
-    "id": "RET_024",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "RET_025",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "RET_025",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -2489,7 +1889,7 @@
     "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Home Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2502,115 +1902,15 @@
     "id": "HOM_015",
     "industry": "home",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "HOM_016"
-    }
-  },
-  {
-    "id": "HOM_016",
-    "industry": "home",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "HOM_017"
-    }
-  },
-  {
-    "id": "HOM_017",
-    "industry": "home",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "HOM_018"
-    }
-  },
-  {
-    "id": "HOM_018",
-    "industry": "home",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "HOM_019"
-    }
-  },
-  {
-    "id": "HOM_019",
-    "industry": "home",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Home Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "HOM_020"
-    }
-  },
-  {
-    "id": "HOM_020",
-    "industry": "home",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "HOM_021"
-    }
-  },
-  {
-    "id": "HOM_021",
-    "industry": "home",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "HOM_022",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "HOM_022",
-    "industry": "home",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -2808,7 +2108,7 @@
     "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Motor Protection Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2821,115 +2121,15 @@
     "id": "MOT_015",
     "industry": "motor",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "MOT_016"
-    }
-  },
-  {
-    "id": "MOT_016",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "MOT_017"
-    }
-  },
-  {
-    "id": "MOT_017",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "MOT_018"
-    }
-  },
-  {
-    "id": "MOT_018",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "MOT_019"
-    }
-  },
-  {
-    "id": "MOT_019",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Motor Protections*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "MOT_020"
-    }
-  },
-  {
-    "id": "MOT_020",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "MOT_021"
-    }
-  },
-  {
-    "id": "MOT_021",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "MOT_022",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "MOT_022",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -3202,7 +2402,7 @@
     "id": "SME_018",
     "industry": "sme",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your SME Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -3215,115 +2415,15 @@
     "id": "SME_019",
     "industry": "sme",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "SME_020"
-    }
-  },
-  {
-    "id": "SME_020",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "SME_021"
-    }
-  },
-  {
-    "id": "SME_021",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "SME_022"
-    }
-  },
-  {
-    "id": "SME_022",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "SME_023"
-    }
-  },
-  {
-    "id": "SME_023",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for SMEs*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "SME_024"
-    }
-  },
-  {
-    "id": "SME_024",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "SME_025"
-    }
-  },
-  {
-    "id": "SME_025",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "SME_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "SME_026",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -3597,7 +2697,7 @@
     "id": "MFG_018",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Manufacturing Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -3610,115 +2710,15 @@
     "id": "MFG_019",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "MFG_020"
-    }
-  },
-  {
-    "id": "MFG_020",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "MFG_021"
-    }
-  },
-  {
-    "id": "MFG_021",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "MFG_022"
-    }
-  },
-  {
-    "id": "MFG_022",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "MFG_023"
-    }
-  },
-  {
-    "id": "MFG_023",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Manufacturings*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "MFG_024"
-    }
-  },
-  {
-    "id": "MFG_024",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "MFG_025"
-    }
-  },
-  {
-    "id": "MFG_025",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "MFG_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "MFG_026",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -3984,7 +2984,7 @@
     "id": "HOS_018",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Hospital Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -3997,115 +2997,15 @@
     "id": "HOS_019",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "HOS_020"
-    }
-  },
-  {
-    "id": "HOS_020",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "HOS_021"
-    }
-  },
-  {
-    "id": "HOS_021",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "HOS_022"
-    }
-  },
-  {
-    "id": "HOS_022",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "HOS_023"
-    }
-  },
-  {
-    "id": "HOS_023",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Hospitals*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "HOS_024"
-    }
-  },
-  {
-    "id": "HOS_024",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "HOS_025"
-    }
-  },
-  {
-    "id": "HOS_025",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "HOS_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "HOS_026",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -4368,7 +3268,7 @@
     "id": "SCH_018",
     "industry": "school",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your School Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -4381,115 +3281,15 @@
     "id": "SCH_019",
     "industry": "school",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "SCH_020"
-    }
-  },
-  {
-    "id": "SCH_020",
-    "industry": "school",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "SCH_021"
-    }
-  },
-  {
-    "id": "SCH_021",
-    "industry": "school",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "SCH_022"
-    }
-  },
-  {
-    "id": "SCH_022",
-    "industry": "school",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "SCH_023"
-    }
-  },
-  {
-    "id": "SCH_023",
-    "industry": "school",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Schools*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "SCH_024"
-    }
-  },
-  {
-    "id": "SCH_024",
-    "industry": "school",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "SCH_025"
-    }
-  },
-  {
-    "id": "SCH_025",
-    "industry": "school",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "SCH_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "SCH_026",
-    "industry": "school",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -4751,7 +3551,7 @@
     "id": "CHR_018",
     "industry": "church",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Church Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -4764,115 +3564,15 @@
     "id": "CHR_019",
     "industry": "church",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "CHR_020"
-    }
-  },
-  {
-    "id": "CHR_020",
-    "industry": "church",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "CHR_021"
-    }
-  },
-  {
-    "id": "CHR_021",
-    "industry": "church",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "CHR_022"
-    }
-  },
-  {
-    "id": "CHR_022",
-    "industry": "church",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "CHR_023"
-    }
-  },
-  {
-    "id": "CHR_023",
-    "industry": "church",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Churchs*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "CHR_024"
-    }
-  },
-  {
-    "id": "CHR_024",
-    "industry": "church",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "CHR_025"
-    }
-  },
-  {
-    "id": "CHR_025",
-    "industry": "church",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "CHR_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "CHR_026",
-    "industry": "church",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -5139,7 +3839,7 @@
     "id": "CON_018",
     "industry": "construction",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Construction Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -5152,115 +3852,15 @@
     "id": "CON_019",
     "industry": "construction",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "CON_020"
-    }
-  },
-  {
-    "id": "CON_020",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "CON_021"
-    }
-  },
-  {
-    "id": "CON_021",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "CON_022"
-    }
-  },
-  {
-    "id": "CON_022",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "CON_023"
-    }
-  },
-  {
-    "id": "CON_023",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Constructions*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "CON_024"
-    }
-  },
-  {
-    "id": "CON_024",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "CON_025"
-    }
-  },
-  {
-    "id": "CON_025",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "CON_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "CON_026",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   },
   {
@@ -5528,7 +4128,7 @@
     "id": "TRN_018",
     "industry": "transport",
     "pillar": "General",
-    "question": "Congratulations, {{name}}! 🎉\n\nYou've completed your Transport & Logistics Risk Assessment.\n\nWe're now analyzing your responses.\n\nPlease wait a few seconds...",
+    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -5541,115 +4141,15 @@
     "id": "TRN_019",
     "industry": "transport",
     "pillar": "General",
-    "question": "Analyzing...\n✓ Financial Resilience\n✓ Protection Gaps\n✓ Overall CoverScore™\n\nYour report is ready.\n\nHere's a quick summary.\n\n*Overall CoverScore™*\n{{score}} / 100\n\n*Resilience Level*\n{{riskLevel}}\n\nYou have several strengths, but there are a few important areas that deserve attention.\n\nLet's look at them.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Strengths"
-    ],
-    "branching": {
-      "DEFAULT": "TRN_020"
-    }
-  },
-  {
-    "id": "TRN_020",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "You're doing well in:\n\n{{strengths}}\n\nThese provide a solid foundation.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Top Risks"
-    ],
-    "branching": {
-      "DEFAULT": "TRN_021"
-    }
-  },
-  {
-    "id": "TRN_021",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "The assessment identified priority areas:\n\n{{top_risks}}\n\nThese don't necessarily mean you're in danger—they simply highlight opportunities to strengthen your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ View Recommendations"
-    ],
-    "branching": {
-      "DEFAULT": "TRN_022"
-    }
-  },
-  {
-    "id": "TRN_022",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "We recommend you:\n\n{{recommendations}}\n\nThese steps can significantly improve your resilience.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
-    "branching": {
-      "DEFAULT": "TRN_023"
-    }
-  },
-  {
-    "id": "TRN_023",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "Based on your assessment, we've selected a short learning path for you.\n\n*Financial Resilience for Transport & Logisticss*\nEstimated reading time: 8 minutes.\n\nWould you like to receive it?",
-    "question_type": "single_choice",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question_type": "yes_no",
     "answers": [
       "Yes",
-      "Maybe Later"
+      "No"
     ],
-    "data_mapping": "learning_preference",
+    "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "TRN_024"
-    }
-  },
-  {
-    "id": "TRN_024",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "Based on your responses, you may benefit from exploring:\n\n• Income Protection\n• Health Insurance\n• Personal Accident Cover\n\nThese are suggestions—not obligations.\n\nWould you like to learn more?",
-    "question_type": "single_choice",
-    "answers": [
-      "Show Me",
-      "Not Now"
-    ],
-    "data_mapping": "protection_preference",
-    "branching": {
-      "DEFAULT": "TRN_025"
-    }
-  },
-  {
-    "id": "TRN_025",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "Your CoverScore indicates that a brief conversation with a Risk Advisor could help you improve your resilience more quickly.\n\nWould you like a free consultation?",
-    "question_type": "single_choice",
-    "answers": [
-      "Yes, please",
-      "Maybe Later",
-      "No Thanks"
-    ],
-    "data_mapping": "consultation_preference",
-    "branching": {
-      "Yes, please": "TRN_026",
-      "DEFAULT": "COMPLETE"
-    }
-  },
-  {
-    "id": "TRN_026",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "Great! What time of day works best for a brief call?",
-    "question_type": "single_choice",
-    "answers": [
-      "Morning",
-      "Afternoon",
-      "Evening"
-    ],
-    "data_mapping": "consultation_time",
-    "branching": {
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "awaiting_consultation"
     }
   }
 ]
