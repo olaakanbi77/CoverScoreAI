@@ -1,147 +1,64 @@
-const fs = require('fs');
-const path = require('path');
+const coverscoreEngine = require('./coverscoreEngine');
 
-// Load JSON Question Bank
-const qbPath = path.join(__dirname, '..', 'data', 'question_bank.json');
-let questionBank = [];
-try {
-  questionBank = JSON.parse(fs.readFileSync(qbPath, 'utf8'));
-} catch(e) {
-  console.error("Failed to load question_bank.json", e);
-}
-
-const getRiskLevel = (score) => {
-  if (score <= 20) return 'Very Low Risk';
-  if (score <= 40) return 'Low Risk';
-  if (score <= 60) return 'Moderate Risk';
-  if (score <= 80) return 'High Risk';
-  return 'Critical Risk';
-};
-
-const getExposureIndex = (score) => {
-  if (score <= 25) return 'Low';
-  if (score <= 50) return 'Moderate';
-  if (score <= 75) return 'High';
-  return 'Critical';
+const getPrefixFromAnswers = (answers) => {
+  for (const key of Object.keys(answers)) {
+    const match = key.match(/^([A-Z]+)_\d+$/);
+    if (match) return match[1];
+    if (key === 'template_selection' && answers[key] && answers[key].template_id) {
+      return answers[key].template_id;
+    }
+  }
+  return null;
 };
 
 const calculateScore = async (answers) => {
-  let totalScorePoints = 0;
-  let totalMaxPoints = 0;
-  const risk_categories = {};
-  const recommendations = [];
-  const identified_gaps = [];
-  
-  // Group questions by pillar
-  const pillars = {};
-
-  // For each answer, find the question in questionBank
-  for (const [qId, ans] of Object.entries(answers)) {
-    if (qId === 'template_selection') continue;
-    
-    const q = questionBank.find(x => x.id === qId);
-    if (!q) continue;
-
-    const pillar = q.pillar || 'General';
-    if (!pillars[pillar]) {
-      pillars[pillar] = { riskPoints: 0, maxPoints: 0 };
-    }
-
-    // Determine risk value and max possible value for this question
-    let riskPoints = 0;
-    let maxQuestionPoints = 0;
-    
-    if (q.risk_logic) {
-      // Calculate max possible points for this question
-      for (const rule of Object.values(q.risk_logic)) {
-         const pts = (rule.exposure_points || 0) + (rule.vulnerability_points || 0) + (rule.impact_points || 0);
-         if (pts > maxQuestionPoints) maxQuestionPoints = pts;
-      }
-      
-      // Find the rule for the actual answer
-      const ansArray = Array.isArray(ans) ? ans : [ans];
-      for (const a of ansArray) {
-         const rule = q.risk_logic[a];
-         if (rule) {
-           riskPoints += (rule.exposure_points || 0) + (rule.vulnerability_points || 0) + (rule.impact_points || 0);
-         }
-      }
-    } else {
-      // Default fallback logic
-      maxQuestionPoints = 15;
-      if (typeof ans === 'string' && (ans.toLowerCase() === 'no' || ans.toLowerCase() === 'none' || ans.toLowerCase() === 'none of the above')) {
-        riskPoints = 15;
-      } else if (typeof ans === 'string' && (ans.toLowerCase() === 'yes')) {
-        riskPoints = 0;
-      }
-    }
-
-    pillars[pillar].riskPoints += riskPoints;
-    pillars[pillar].maxPoints += maxQuestionPoints;
-    
-    // Recommendation trigger
-    if (q.recommendation_trigger) {
-      if (q.recommendation_trigger.condition === ans) {
-         recommendations.push(q.recommendation_trigger.recommendation);
-         identified_gaps.push(q.recommendation_trigger.gap || q.question);
-      }
-    }
+  const prefix = getPrefixFromAnswers(answers);
+  if (!prefix) {
+    return {
+      score: 50,
+      resilience_score: 50,
+      risk_level: 'Moderate',
+      risk_categories: { General: 50 },
+      recommendations: [],
+      identified_gaps: [],
+      min_loss: 200000,
+      max_loss: 500000,
+      exposure_index: 'Moderate',
+      protection_gap: 50,
+      risk_dna: 'Balanced Profile'
+    };
   }
 
-  let finalScore = 50; // default
-  let categoryCount = 0;
-  let totalCategoryScores = 0;
-
-  for (const [pillarName, pData] of Object.entries(pillars)) {
-    // Avoid division by zero
-    const pMax = pData.maxPoints > 0 ? pData.maxPoints : 1;
-    // Scale risk points to a percentage (0-100) based on max possible points for this category
-    const scaledPoints = Math.round((pData.riskPoints / pMax) * 100);
-    const catScore = Math.min(100, Math.max(0, scaledPoints));
-    risk_categories[pillarName] = catScore;
-    totalCategoryScores += catScore;
-    categoryCount++;
-  }
-
-  if (categoryCount > 0) {
-    finalScore = Math.round(totalCategoryScores / categoryCount);
-  }
-
-  const resilience_score = Math.max(0, 100 - finalScore);
-  const exposure_index = getExposureIndex(finalScore);
-  const protection_gap = finalScore;
-
-  // Determine Risk DNA
-  let risk_dna = 'Balanced Profile';
-  let maxCatScore = -1;
-  for (const [catName, score] of Object.entries(risk_categories)) {
-    if (score > maxCatScore) {
-      maxCatScore = score;
-      risk_dna = catName + ' Dominant™';
-    }
-  }
-
-  let baseValue = 10000000;
-  const effectiveRisk = Math.max((finalScore / 100), 0.05);
-  const maxLoss = Math.round(baseValue * effectiveRisk);
-  const minLoss = Math.round(maxLoss * 0.4);
-
+  const result = coverscoreEngine.calculate(prefix, answers);
   return {
-    score: Math.min(finalScore, 100),
-    resilience_score,
-    risk_level: getRiskLevel(finalScore),
-    recommendations: [...new Set(recommendations)],
-    identified_gaps: [...new Set(identified_gaps)],
-    risk_categories,
-    min_loss: minLoss,
-    max_loss: maxLoss,
-    exposure_index,
-    protection_gap,
-    risk_dna
+    score: result.score,
+    resilience_score: result.resilience_score,
+    risk_level: result.risk_level,
+    recommendations: result.recommendations,
+    identified_gaps: result.identified_gaps,
+    risk_categories: result.risk_categories,
+    min_loss: result.min_loss,
+    max_loss: result.max_loss,
+    exposure_index: result.exposure_index,
+    protection_gap: result.protection_gap,
+    risk_dna: result.risk_dna,
+    confidence: result.confidence,
+    priority_risks: result.priority_risks,
+    improvement_potential: result.improvement_potential,
+    question_scores: result.question_scores,
+    category_scores: result.category_scores,
+    pillar_scores: result.pillar_scores,
+    modifiers_applied: result.modifiers_applied
   };
 };
 
 module.exports = {
   calculateScore,
-  getRiskLevel
+  getRiskLevel: (score) => {
+    if (score >= 85) return 'Excellent';
+    if (score >= 70) return 'Good';
+    if (score >= 55) return 'Moderate';
+    if (score >= 40) return 'Vulnerable';
+    return 'Critical';
+  }
 };

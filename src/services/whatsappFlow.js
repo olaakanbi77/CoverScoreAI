@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Load JSON Question Bank
 const qbPath = path.join(__dirname, '..', 'data', 'question_bank.json');
 let questionBank = [];
 try {
@@ -9,6 +8,46 @@ try {
 } catch(e) {
   console.error("Failed to load question_bank.json", e);
 }
+
+const CCIE_PHASES = {
+  WELCOME: { label: 'Welcome', minQuestion: 1, maxQuestion: 2 },
+  CONSENT: { label: 'Consent', minQuestion: 3, maxQuestion: 3 },
+  PROFILE: { label: 'Profile', minQuestion: 4, maxQuestion: 6 },
+  DISCOVERY: { label: 'Discovery', minQuestion: 7, maxQuestion: 16 },
+  ANALYSIS: { label: 'Analysis' },
+  REPORT_READY: { label: 'Report Ready', minQuestion: 17, maxQuestion: 18 },
+  RESULTS: { label: 'Results', minQuestion: 19, maxQuestion: 19 },
+  NEXT_BEST_ACTION: { label: 'Next Best Action' },
+  COMPLETED: { label: 'Completed' }
+};
+
+const determinePhase = (questionId) => {
+  if (!questionId) return 'WELCOME';
+  if (questionId === 'finished' || questionId === 'COMPLETE') return 'COMPLETED';
+  if (questionId === 'awaiting_consultation' || questionId === 'awaiting_consultation_day') return 'NEXT_BEST_ACTION';
+  const match = questionId.match(/_(\d+)$/);
+  if (!match) return 'WELCOME';
+  const num = parseInt(match[1], 10);
+  if (num <= 2) return 'WELCOME';
+  if (num === 3) return 'CONSENT';
+  if (num <= 6) return 'PROFILE';
+  if (num <= 16) return 'DISCOVERY';
+  if (num === 17) return 'ANALYSIS';
+  if (num === 18) return 'REPORT_READY';
+  if (num >= 19) return 'RESULTS';
+  return 'DISCOVERY';
+};
+
+const splitLongText = (text, maxWords) => {
+  if (!text) return [text];
+  const words = text.split(/\s+/);
+  if (words.length <= maxWords) return [text];
+  const parts = [];
+  for (let i = 0; i < words.length; i += maxWords) {
+    parts.push(words.slice(i, i + maxWords).join(' '));
+  }
+  return parts;
+};
 
 const getNextStateAndReply = async (currentState, incomingText, currentData, prefix) => {
   let nextState = currentState;
@@ -18,8 +57,6 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
-
-  // Structured Qualification States (V2 Flow Post-Assessment)
 
   if (currentState === 'awaiting_consultation_day') {
     const dayMap = { A: 'Monday', B: 'Tuesday', C: 'Wednesday', D: 'Thursday', E: 'Friday' };
@@ -33,21 +70,17 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     return { nextState, replyText, updatedData, isComplete };
   }
 
-  // Handle finished state explicitly
   if (currentState === 'finished' || currentState === 'COMPLETE') {
     return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
 
-  // DYNAMIC CFE EXECUTION FROM JSON
   const currentQ = questionBank.find(q => q.id === currentState);
   
   if (!currentQ) {
-    // If state is not found, maybe they are somehow lost.
     replyText = "I'm sorry, I didn't understand that. Please type START ASSESSMENT to begin.";
     return { nextState, replyText, updatedData, isComplete };
   }
 
-  // 1. Validate Input based on JSON question_type
   let parsedAnswer = null;
   const answerType = currentQ.question_type;
   
@@ -86,11 +119,8 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let selected = [];
     let valid = true;
-    
-    // Support "A, C" or "A,C"
     const parts = input.split(/[, \n]+/).filter(Boolean);
     for (const p of parts) {
-      // p could be 'A' or 'A.' or 'C'
       const cleanP = p.replace(/[^A-Z]/g, '');
       const letterIdx = alphabet.indexOf(cleanP);
       if (letterIdx !== -1 && letterIdx < opts.length) {
@@ -100,7 +130,6 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
         break;
       }
     }
-    
     if (valid && selected.length > 0) {
       parsedAnswer = selected;
     } else {
@@ -115,19 +144,15 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     parsedAnswer = incomingText.trim();
   }
 
-  // 2. Store Answer
   if (!updatedData.answers) {
     updatedData.answers = {};
   }
-  
   updatedData.answers[currentQ.id] = parsedAnswer;
-  
   if (currentQ.data_mapping) {
     updatedData[currentQ.data_mapping] = parsedAnswer;
   }
 
-  // 3. Determine Next Step based on branching
-  nextState = 'COMPLETE'; // default
+  nextState = 'COMPLETE';
   if (currentQ.branching) {
     let rawAnswerKey = Array.isArray(parsedAnswer) ? parsedAnswer[0] : parsedAnswer;
     if (currentQ.branching[rawAnswerKey]) {
@@ -136,7 +161,6 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       nextState = currentQ.branching['DEFAULT'];
     }
   } else {
-    // If no branching, try to find next sequential ID by parsing ID numbers (e.g. SCH_001 -> SCH_002)
     const match = currentQ.id.match(/^([A-Z]+)_(\d+)$/);
     if (match) {
        const pref = match[1];
@@ -145,13 +169,11 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     }
   }
 
-  // 4. Format Reply
   if (nextState === 'COMPLETE' || nextState === 'finished') {
     replyText = "Your assessment is complete. If you wish to start over, type RESTART.";
     isComplete = true;
     nextState = 'finished';
   } else if (nextState === 'awaiting_consultation') {
-    // The user just answered the Advisor Offer question from the JSON.
     if (parsedAnswer === 'Yes') {
       replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
       nextState = 'awaiting_consultation_day';
@@ -175,18 +197,25 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   return { nextState, replyText, updatedData, isComplete };
 };
 
-// Helper to format a JSON question for WhatsApp
 const formatDynamicQuestion = (q, data = {}) => {
-  let text = '';
-  const hiddenPillars = ['General', 'Exposure'];
-  
   let rawQuestion = q.question;
   if (rawQuestion.includes('{{name}}')) {
     const userName = data.name ? data.name.split(' ')[0] : 'there';
     rawQuestion = rawQuestion.replace(/{{name}}/g, userName);
   }
 
-  text = `${rawQuestion}\n\n`;
+  let text = rawQuestion;
+  const qNum = parseInt((q.id || '').match(/_(\d+)$/)?.[1] || '0', 10);
+  const isWelcomeOrConsent = qNum <= 3;
+
+  if (!isWelcomeOrConsent && text.length > 0) {
+    const lines = text.split('\n').filter(l => l.trim());
+    if (lines.length > 4) {
+      text = lines.slice(0, 4).join('\n');
+    }
+  }
+
+  text += '\n\n';
   
   if (q.question_type === 'yes_no') {
     text += "A. Yes\nB. No";
@@ -206,6 +235,6 @@ const getInitialWelcome = async (prefix) => {
         return formatDynamicQuestion(firstQ);
     }
     return null;
-}
+};
 
-module.exports = { getNextStateAndReply, getInitialWelcome };
+module.exports = { getNextStateAndReply, getInitialWelcome, determinePhase, formatDynamicQuestion };

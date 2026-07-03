@@ -241,6 +241,11 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     };
 
     const dbRiskLevelMap = {
+      'Excellent': 'low',
+      'Good': 'low',
+      'Moderate': 'moderate',
+      'Vulnerable': 'high',
+      'Critical': 'critical',
       'Very Low Risk': 'low',
       'Low Risk': 'low',
       'Moderate Risk': 'moderate',
