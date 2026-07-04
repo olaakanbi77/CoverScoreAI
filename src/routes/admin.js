@@ -259,4 +259,77 @@ router.put('/settings', authenticate, requireAdmin, async (req, res, next) => {
   }
 });
 
+const { graph: knowledgeGraph, ruleEngine } = require('../services/knowledgeGraphService');
+
+router.get('/knowledge/stats', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    res.json(knowledgeGraph.getStatistics());
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/questions/:questionId', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const result = knowledgeGraph.getQuestionGraph(req.params.questionId);
+    if (!result) return res.status(404).json({ error: 'Question not found' });
+    res.json(result);
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/risks/:riskId', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const result = knowledgeGraph.getRiskGraph(req.params.riskId);
+    if (!result) return res.status(404).json({ error: 'Risk not found' });
+    res.json(result);
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/assessments/:prefix', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const result = knowledgeGraph.getAssessmentGraph(req.params.prefix.toUpperCase());
+    if (!result) return res.status(404).json({ error: 'Assessment type not found' });
+    res.json(result);
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/domains/:domain', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const result = knowledgeGraph.getDomainGraph(req.params.domain);
+    res.json(result);
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/risks', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const allRisks = require('../knowledge/riskObjects');
+    allRisks.initialize();
+    res.json(allRisks.getAllRiskObjects());
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/recommendations', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const allRecs = require('../knowledge/recommendations');
+    allRecs.initialize();
+    res.json(allRecs.getAllRecommendations());
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/rules/evaluate', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const { prefix, ...answers } = req.query;
+    if (!prefix) return res.status(400).json({ error: 'prefix query parameter required' });
+    const result = ruleEngine.evaluate(prefix.toUpperCase(), answers);
+    res.json(result);
+  } catch (error) { next(error); }
+});
+
+router.get('/knowledge/path/:fromType/:fromId/:toType', authenticate, requireAdmin, (req, res, next) => {
+  try {
+    const { fromType, fromId, toType } = req.params;
+    const path = knowledgeGraph.findPath(fromType, fromId, toType);
+    if (!path) return res.status(404).json({ error: 'No path found' });
+    res.json({ path });
+  } catch (error) { next(error); }
+});
+
 module.exports = router;
