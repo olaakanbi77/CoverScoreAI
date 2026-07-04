@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 const MISTRAL_MODEL = process.env.MISTRAL_MODEL || 'mistral-large-latest';
+const aiContext = require('./aiContextProvider');
 
 /**
  * Call Mistral API helper
@@ -61,6 +62,15 @@ const generateRiskReport = async (assessmentData, creIntelligence) => {
   const { topRisks, recommendations, industryData } = creIntelligence;
   
   const systemPrompt = getIndustryConsultantPrompt(industryData);
+  const prefix = assessmentData?.answers?.template_selection?.template_id
+    || (assessmentData?.answers ? Object.keys(assessmentData.answers).find(k => k.match(/^[A-Z]+_\d+$/))?.split('_')[0] : null)
+    || null;
+  const knowledgeContext = prefix ? aiContext.buildReportContext(prefix, assessmentData.answers || {}, {
+    score: assessmentData.score,
+    risk_level: assessmentData.riskLevel,
+    risk_categories: assessmentData.risk_categories,
+    risk_profile: assessmentData.risk_profile
+  }) : null;
   
   const userPrompt = `Generate a P.R.O.T.E.C.T™ Report for the following assessment data.
 
@@ -72,6 +82,14 @@ ${JSON.stringify(topRisks)}
 
 CRE Intelligence (Recommendations):
 ${JSON.stringify(recommendations)}
+
+${knowledgeContext ? `Knowledge Context (from CoverScore Knowledge Graph):
+${JSON.stringify({
+  risks: knowledgeContext.riskDetails,
+  recommendations: knowledgeContext.recommendations,
+  impactSummary: knowledgeContext.impactSummary,
+  advisorBriefing: knowledgeContext.advisorBriefing
+}, null, 2)}` : ''}
 
 Required Output (JSON ONLY):
 {
@@ -96,14 +114,14 @@ Rules:
 - Focus on resilience.
 - Explain consequences clearly.
 - Prioritize actions.
-- Use Nigerian Naira (₦) formatting where appropriate.`;
+- Use Nigerian Naira (₦) formatting where appropriate.
+${knowledgeContext ? '- Reference specific risks from the knowledge context where relevant.' : ''}`;
 
   try {
     return await callMistral(systemPrompt, userPrompt, true);
   } catch (error) {
     console.error('Report Generator Error:', error);
-    // Fallback if API fails
-    return getFallbackReport(assessmentData);
+    return getFallbackReport(assessmentData, prefix);
   }
 };
 
@@ -113,6 +131,15 @@ Rules:
 const getAdvisorCopilot = async (assessmentData, creIntelligence) => {
   const { advisorTalkingPoints, industryData } = creIntelligence;
   const systemPrompt = getIndustryConsultantPrompt(industryData);
+  const prefix = assessmentData?.answers?.template_selection?.template_id
+    || (assessmentData?.answers ? Object.keys(assessmentData.answers).find(k => k.match(/^[A-Z]+_\d+$/))?.split('_')[0] : null)
+    || null;
+  const briefContext = prefix ? aiContext.buildAssessmentContext(prefix, assessmentData.answers || {}, {
+    score: assessmentData.score,
+    risk_level: assessmentData.riskLevel,
+    risk_categories: assessmentData.risk_categories,
+    risk_profile: assessmentData.risk_profile
+  }) : null;
 
   const userPrompt = `You are the Advisor Copilot. Your job is to help the human advisor prepare for a consultation with this client.
 
@@ -121,6 +148,12 @@ ${JSON.stringify(assessmentData, null, 2)}
 
 Recommended Talking Points from CRE:
 ${JSON.stringify(advisorTalkingPoints)}
+
+${briefContext ? `Knowledge Briefing (from CoverScore Knowledge Graph):
+${JSON.stringify(briefContext.advisorBriefing, null, 2)}
+
+Risk Breakdown:
+${JSON.stringify(briefContext.domainBreakdown, null, 2)}` : ''}
 
 Required Output (JSON ONLY):
 {
@@ -135,7 +168,8 @@ Required Output (JSON ONLY):
 Rules:
 - Make questions open-ended and diagnostic.
 - Anticipate realistic objections based on the client's profile.
-- Provide actionable advice for the advisor.`;
+- Provide actionable advice for the advisor.
+${briefContext ? `- ${briefContext.criticalRisks.length} critical risks identified — prioritize these.` : ''}`;
 
   try {
     return await callMistral(systemPrompt, userPrompt, true);
@@ -143,7 +177,7 @@ Rules:
     console.error('Advisor Copilot Error:', error);
     return {
       recommended_questions: advisorTalkingPoints || ['Can you tell me more about your business operations?'],
-      potential_risks_to_highlight: ['General Liability', 'Property Risk'],
+      potential_risks_to_highlight: briefContext ? briefContext.criticalRisks.slice(0, 3) : ['General Liability', 'Property Risk'],
       likely_objections: [{ objection: 'Budget constraints', suggested_response: 'Prioritize critical statutory covers first.' }],
       next_actions: ['Schedule consultation call']
     };
@@ -190,7 +224,33 @@ Return ONLY a valid HTML string (no markdown, no json wrappers) with this exact 
 };
 
 // Fallback logic in case API fails
-function getFallbackReport(assessmentData) {
+function getFallbackReport(assessmentData, prefix) {
+  if (prefix && assessmentData?.answers) {
+    try {
+      const localReport = aiContext.generateLocalReport(prefix, assessmentData.answers, {
+        score: assessmentData.score,
+        risk_level: assessmentData.riskLevel,
+        risk_categories: assessmentData.risk_categories,
+        risk_profile: assessmentData.risk_profile
+      });
+      return {
+        executiveSummary: localReport.executiveSummary || localReport.riskNarrative || "Risk assessment completed.",
+        topExposures: localReport.riskRegister.slice(0, 5).map(r => r.name),
+        topFinancialThreats: localReport.riskRegister.filter(r => r.severity === 'Critical').slice(0, 3).map(r => r.name),
+        topProtectionGaps: localReport.allRisks.filter(r => r.severity !== 'Low').map(r => r.category),
+        topRecommendations: localReport.prioritizedRecommendations.slice(0, 5).map(r => ({
+          timeframe: r.priority === 'Immediate' ? 'Immediate' : r.priority === 'High' ? 'Short-term' : 'Medium-term',
+          exposure: r.name,
+          consequence: `Unaddressed ${r.name.toLowerCase()} increases vulnerability.`,
+          protectionGap: `Current ${r.effort.toLowerCase()} gap identified.`,
+          action: r.steps.join('; ')
+        })),
+        professionalRecommendation: `${localReport.criticalRisks?.length || 0} critical risk${localReport.criticalRisks?.length !== 1 ? 's' : ''} identified. ${localReport.recommendations?.length || 0} prioritized actions available. Schedule an advisor consultation.`
+      };
+    } catch (e) {
+      // fall through to default fallback
+    }
+  }
   return {
     executiveSummary: "This is an automated fallback report due to AI generation timeout. Your risk profile requires attention.",
     topExposures: ["General Liability", "Property Damage", "Financial Loss"],
