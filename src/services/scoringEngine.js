@@ -35,6 +35,7 @@ const calculateScore = async (answers) => {
     resilience_score: result.resilience_score,
     risk_level: result.risk_level,
     recommendations: result.recommendations,
+    structured_recommendations: result.structured_recommendations || [],
     identified_gaps: result.identified_gaps,
     identified_risks: result.identified_risks,
     risk_profile: result.risk_profile,

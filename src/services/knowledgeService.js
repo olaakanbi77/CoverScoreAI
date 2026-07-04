@@ -1,9 +1,11 @@
 const riskRegistry = require('../knowledge/riskObjects');
 const scoringConfigs = require('../config/scoring');
+const urecosRegistry = require('../knowledge/recommendations');
 
 class KnowledgeService {
   constructor() {
     riskRegistry.initialize();
+    urecosRegistry.initialize();
   }
 
   getRisk(riskId) {
@@ -84,25 +86,54 @@ class KnowledgeService {
 
   getRecommendationPath(riskIds) {
     if (!riskIds || riskIds.length === 0) return [];
-
-    const allRecs = [];
-    for (const id of riskIds) {
-      const risk = this.getRisk(id);
-      if (risk && risk.recommendations) {
-        for (const rec of risk.recommendations) {
-          allRecs.push({
-            riskId: id,
-            riskName: risk.name,
-            ...rec
-          });
-        }
-      }
-    }
-
+    const recs = urecosRegistry.getDeduplicatedByRisk(riskIds);
     const priorityOrder = { Immediate: 0, High: 1, Medium: 2, Low: 3 };
-    allRecs.sort((a, b) => (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99));
+    recs.sort((a, b) => (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99));
+    return recs.slice(0, 5);
+  }
 
-    return deduplicate(allRecs, 'name').slice(0, 5);
+  getRecommendation(recId) {
+    urecosRegistry.initialize();
+    return urecosRegistry.getRecommendation(recId);
+  }
+
+  getRecommendationsByPrefix(prefix) {
+    urecosRegistry.initialize();
+    return urecosRegistry.getRecommendationsByPrefix(prefix);
+  }
+
+  getRecommendationsByRisk(riskId) {
+    urecosRegistry.initialize();
+    return urecosRegistry.getRecommendationsByRisk(riskId);
+  }
+
+  getRecommendationsByTrigger(prefix, answers) {
+    urecosRegistry.initialize();
+    return urecosRegistry.getRecommendationsByTrigger(prefix, answers);
+  }
+
+  getAllRecommendations() {
+    urecosRegistry.initialize();
+    return urecosRegistry.getAllRecommendations();
+  }
+
+  getActionPlan(recId) {
+    urecosRegistry.initialize();
+    const rec = urecosRegistry.getRecommendation(recId);
+    if (!rec) return null;
+    return {
+      recId: rec.recId,
+      name: rec.name,
+      effort: rec.actionPlan.effort,
+      timeline: rec.actionPlan.timeline,
+      steps: rec.actionPlan.steps.map(s => s.action),
+      successCriteria: rec.successCriteria
+    };
+  }
+
+  getStructuredRecommendations(prefix, answers) {
+    urecosRegistry.initialize();
+    return urecosRegistry.getRecommendationsByTrigger(prefix, answers);
   }
 
   getRiskSummaryForReport(prefix, answers) {

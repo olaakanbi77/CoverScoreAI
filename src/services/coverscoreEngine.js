@@ -81,6 +81,7 @@ class CoverScoreEngine {
       improvement_potential: improvement,
       identified_gaps: [...new Set(priorityRisks.filter(p => p.gap).map(p => p.gap))],
       recommendations: [...new Set(priorityRisks.filter(p => p.recommendation).map(p => p.recommendation))],
+      structured_recommendations: knowledgeService.getStructuredRecommendations(prefix, resolved),
       identified_risks: identifiedRisks,
       risk_profile: riskProfile,
       min_loss: loss.min_loss,
