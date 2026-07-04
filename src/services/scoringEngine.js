@@ -36,6 +36,8 @@ const calculateScore = async (answers) => {
     risk_level: result.risk_level,
     recommendations: result.recommendations,
     identified_gaps: result.identified_gaps,
+    identified_risks: result.identified_risks,
+    risk_profile: result.risk_profile,
     risk_categories: result.risk_categories,
     min_loss: result.min_loss,
     max_loss: result.max_loss,

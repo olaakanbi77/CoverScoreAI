@@ -1,4 +1,5 @@
 const scoringConfigs = require('../config/scoring');
+const knowledgeService = require('./knowledgeService');
 
 const getRiskLevel = (score) => {
   if (score >= 85) return 'Excellent';
@@ -58,6 +59,8 @@ class CoverScoreEngine {
     const confidence = this._calculateConfidence(config, resolved);
     const priorityRisks = this._priorityRiskIndex(config, questionScores, resolved);
     const improvement = this._improvementPotential(config, questionScores, resolved);
+    const identifiedRisks = knowledgeService.getIdentifiedRisks(prefix, resolved);
+    const riskProfile = knowledgeService.getAssessmentRiskProfile(prefix, resolved);
     const loss = estimateLoss(overall.score);
 
     const level = getRiskLevel(overall.score);
@@ -78,6 +81,8 @@ class CoverScoreEngine {
       improvement_potential: improvement,
       identified_gaps: [...new Set(priorityRisks.filter(p => p.gap).map(p => p.gap))],
       recommendations: [...new Set(priorityRisks.filter(p => p.recommendation).map(p => p.recommendation))],
+      identified_risks: identifiedRisks,
+      risk_profile: riskProfile,
       min_loss: loss.min_loss,
       max_loss: loss.max_loss,
       exposure_index: getExposureIndex(overall.score),
