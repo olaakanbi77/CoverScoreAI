@@ -110,7 +110,7 @@ router.post('/landing-event', async (req, res, next) => {
     await run(`
       INSERT INTO landing_page_events 
       (session_key, event_name, landing_page, cta_position, utm_source, utm_medium, utm_campaign, utm_content, utm_term, campaign_code, referral_code, device_type, metadata)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
       session_key, event_name, landing_page, cta_position,
       utm_source, utm_medium, utm_campaign, utm_content, utm_term,

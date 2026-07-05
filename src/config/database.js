@@ -83,6 +83,9 @@ const initDatabase = () => {
       notes TEXT,
       chat_history TEXT DEFAULT '[]',
       assessment_data TEXT DEFAULT '{}',
+      ccie_context TEXT,
+      birth_date TEXT,
+      anniversary_date TEXT,
       sales_score INTEGER DEFAULT 0,
       pipeline_stage INTEGER DEFAULT 1,
       estimated_premium INTEGER DEFAULT 0,
@@ -335,6 +338,27 @@ const initDatabase = () => {
       FOREIGN KEY (lead_id) REFERENCES leads(id)
     );
 
+    CREATE TABLE IF NOT EXISTS landing_page_events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_key TEXT,
+      event_name TEXT NOT NULL,
+      landing_page TEXT NOT NULL,
+      cta_position TEXT,
+      utm_source TEXT,
+      utm_medium TEXT,
+      utm_campaign TEXT,
+      utm_content TEXT,
+      utm_term TEXT,
+      campaign_code TEXT,
+      referral_code TEXT,
+      device_type TEXT,
+      metadata TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_landing_events_campaign ON landing_page_events (utm_campaign, event_name, created_at);
+    CREATE INDEX IF NOT EXISTS idx_landing_events_session ON landing_page_events (session_key, created_at);
+
     INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
       (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
       (2, 'Proposal Sent', 'email', 'Dear {{name}},\n\nPlease find attached the insurance proposal based on our recent consultation for {{business_name}}.\n\nLet me know if you have any questions.\n\nBest regards,\nCoverScore AI Advisor');
@@ -515,6 +539,10 @@ const initDatabase = () => {
           is_qualified BOOLEAN DEFAULT 0,
           notes TEXT,
           chat_history TEXT DEFAULT '[]',
+          assessment_data TEXT DEFAULT '{}',
+          ccie_context TEXT,
+          birth_date TEXT,
+          anniversary_date TEXT,
           sales_score INTEGER DEFAULT 0,
           pipeline_stage INTEGER DEFAULT 1,
           estimated_premium INTEGER DEFAULT 0,
@@ -527,10 +555,10 @@ const initDatabase = () => {
           updated_at DATETIME,
           FOREIGN KEY (assessment_id) REFERENCES assessments(id)
         );
-        INSERT INTO leads_new (id, name, email, phone, business_name, contact_person, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at)
+        INSERT INTO leads_new (id, name, email, phone, business_name, contact_person, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, assessment_data, ccie_context, birth_date, anniversary_date, created_at, updated_at)
         SELECT id, name, email, phone, business_name, NULL, assessment_id, score, risk_level, entity_type, 
                CASE WHEN status = 'new' THEN 'New Lead' WHEN status = 'contacted' THEN 'WhatsApp Engaged' WHEN status = 'converted' THEN 'Won' WHEN status = 'lost' THEN 'Lost' ELSE 'New Lead' END,
-               wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, created_at, updated_at 
+               wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, assessment_data, ccie_context, birth_date, anniversary_date, created_at, updated_at 
         FROM leads;
         DROP TABLE leads;
         ALTER TABLE leads_new RENAME TO leads;
@@ -545,6 +573,10 @@ const initDatabase = () => {
     } else {
       // If table exists but doesn't have the old constraint, just ensure the new columns exist
       const columnsToAdd = [
+        "ALTER TABLE leads ADD COLUMN assessment_data TEXT DEFAULT '{}'",
+        "ALTER TABLE leads ADD COLUMN ccie_context TEXT",
+        "ALTER TABLE leads ADD COLUMN birth_date TEXT",
+        "ALTER TABLE leads ADD COLUMN anniversary_date TEXT",
         "ALTER TABLE leads ADD COLUMN sales_score INTEGER DEFAULT 0",
         "ALTER TABLE leads ADD COLUMN pipeline_stage INTEGER DEFAULT 1",
         "ALTER TABLE leads ADD COLUMN estimated_premium INTEGER DEFAULT 0",
