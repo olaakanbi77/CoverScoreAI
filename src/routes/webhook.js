@@ -134,9 +134,10 @@ router.post('/evolution', async (req, res) => {
       currentQuestion: currentState, questionCount: 0
     });
 
-    if (isStartTrigger && (currentState === 'initial' || currentState === null)) {
+    if (isStartTrigger && (currentState === 'initial' || currentState === null || assessmentData._scored || currentState === 'qualification')) {
       currentState = `${prefix}_001`;
-      await run('UPDATE leads SET wa_state = ? WHERE id = ?', [currentState, lead.id]);
+      assessmentData = {};
+      await run('UPDATE leads SET wa_state = ?, assessment_data = ? WHERE id = ?', [currentState, '{}', lead.id]);
     }
 
     if (isStartTrigger && currentState === `${prefix}_001`) {
