@@ -265,7 +265,7 @@ router.get('/qr', async (req, res, next) => {
     }
 
     // Step 2: Not connected — try to get QR code
-    if (instanceState === 'closed' || instanceState === '') {
+    if (instanceState === 'closed' || instanceState === '' || instanceState === 'connecting') {
       const connectRes = await fetch(`${apiUrl}/instance/connect/${instanceName}`, {
         headers: { 'apikey': apiKey }, timeout: 15000
       });
@@ -314,8 +314,8 @@ router.get('/qr', async (req, res, next) => {
       });
     }
 
-    // State is "connecting" — still in progress
-    res.json({ success: false, qr: null, connected: false, message: 'WhatsApp is connecting. Please wait...' });
+    // Unknown state
+    res.json({ success: false, qr: null, connected: false, message: `Unexpected state: ${instanceState}` });
   } catch (error) {
     const message = error.code === 'ECONNREFUSED'
       ? 'WhatsApp API server is not running'
