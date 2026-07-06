@@ -3,7 +3,7 @@
     "id": "YPR_001",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Young Professional Assessment.\n\nAs you build your career, unexpected life events can quickly derail your financial momentum.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for financial risks and provide a personalized Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -82,7 +82,7 @@
     "id": "YPR_007",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany young professionals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMost young professionals believe they're financially prepared until a single unexpected emergency wipes out their savings.\n\nOur goal today is to help you identify these hidden gaps before they become real problems.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -245,7 +245,7 @@
     "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Financial Advisor could help you prioritize your financial protection strategy as you advance in your career.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -260,7 +260,7 @@
     "id": "ENT_001",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Entrepreneur Assessment.\n\nYour business relies on your drive and vision, but personal and operational risks can threaten everything you've built.\n\nIn the next 3–5 minutes, we'll help you understand how protected you are and provide a personalized Risk Intelligence Report™ with actionable recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -339,7 +339,7 @@
     "id": "ENT_007",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany entrepreneurs believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany entrepreneurs intertwine their personal assets with business liabilities, leaving their families exposed to commercial risks.\n\nOur goal today is to help you build an airtight firewall around your hard work.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -519,7 +519,7 @@
     "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Commercial Advisor could help you safeguard your business continuity and personal assets.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -534,7 +534,7 @@
     "id": "FAM_001",
     "industry": "family",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Family Protection Assessment.\n\nYour family relies on you, and ensuring their long-term stability in the face of unexpected events is your most important job.\n\nIn the next 3–5 minutes, we'll help you understand how well-protected your loved ones are and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -613,7 +613,7 @@
     "id": "FAM_007",
     "industry": "family",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany family members believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThe sudden loss of a primary income earner can disrupt a family's lifestyle, education plans, and home stability within months.\n\nOur goal today is to help you secure your family's future, no matter what happens.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -797,7 +797,7 @@
     "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Family Protection Advisor could help you structure a safety net that guarantees your family's peace of mind.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -812,7 +812,7 @@
     "id": "INC_001",
     "industry": "income",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Income Protection Assessment.\n\nYour ability to earn an income is your most valuable asset, yet it's often the least protected.\n\nIn the next 3–5 minutes, we'll help you understand how vulnerable your cash flow is to unexpected disruptions and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -891,7 +891,7 @@
     "id": "INC_007",
     "industry": "income",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany income earners believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA severe injury or illness can halt your income stream immediately, while your living expenses continue to accumulate.\n\nOur goal today is to help you identify income vulnerabilities so you can protect your livelihood.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -1059,7 +1059,7 @@
     "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Income Protection Advisor could help you guarantee that your lifestyle remains funded, even if you can't work.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1424,7 +1424,7 @@
     "id": "RET_001",
     "industry": "retirement",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Retirement Planning Assessment.\n\nYou've worked hard to build your nest egg, but medical inflation and longevity risks can threaten your golden years.\n\nIn the next 3–5 minutes, we'll evaluate the resilience of your retirement strategy and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -1503,7 +1503,7 @@
     "id": "RET_007",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany future retirees believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nUnexpected healthcare costs and long-term care needs are the leading causes of retirement savings depletion.\n\nOur goal today is to help you identify and mitigate the risks that could outlive your savings.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -1672,7 +1672,7 @@
     "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Retirement Advisor could help you preserve your wealth and secure your independence.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1687,7 +1687,7 @@
     "id": "HOM_001",
     "industry": "home",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Home Protection Assessment.\n\nYour home is likely your biggest financial investment, but natural disasters, theft, and liability risks are unpredictable.\n\nIn the next 3–5 minutes, we'll help you understand how protected your property is and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -1766,7 +1766,7 @@
     "id": "HOM_007",
     "industry": "home",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany homeowners believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany homeowners and renters realize their insurance coverage is inadequate only after a catastrophic loss has occurred.\n\nOur goal today is to ensure your sanctuary and possessions are fully secured.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -1873,7 +1873,7 @@
     "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Property Advisor could help you optimize your home insurance to avoid costly out-of-pocket repairs.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1888,7 +1888,7 @@
     "id": "MOT_001",
     "industry": "motor",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Motor Protection Assessment.\n\nYour vehicle keeps your life moving, but accidents, theft, and third-party liabilities can strike at any moment.\n\nIn the next 3–5 minutes, we'll evaluate your exposure on the road and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
       "✅ Yes, let's begin",
@@ -1967,7 +1967,7 @@
     "id": "MOT_007",
     "industry": "motor",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany vehicle owners believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThird-party liability claims from a serious road accident can easily exceed the value of the vehicle itself.\n\nOur goal today is to ensure you're comprehensively protected behind the wheel.\n\nLet's begin.",
     "question_type": "single_choice",
     "answers": [
       "✅ Continue"
@@ -2074,7 +2074,7 @@
     "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Motor Advisor could help you structure a policy that truly protects you and your assets on the road.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",

@@ -1,0 +1,17 @@
+{
+  "name": "coverscore-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "migrate": "node database/migrate.js",
+    "seed": "node database/seed.js",
+    "dev:api": "node apps/api/src/server.js",
+    "dev:assessment": "node services/assessment-engine/src/index.js",
+    "dev:scoring": "node services/scoring-engine/src/index.js"
+  }
+}

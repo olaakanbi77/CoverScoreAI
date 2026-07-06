@@ -1,0 +1,63 @@
+[
+  {
+    "id": "assessment-complete",
+    "type": "tab",
+    "label": "Assessment Complete",
+    "disabled": false,
+    "info": "Handles scoring + report generation when all questions answered"
+  },
+  {
+    "id": "ac-subflow",
+    "type": "function",
+    "z": "assessment-complete",
+    "name": "Calculate score + generate report",
+    "func": "const { sessionId } = msg.req || msg.payload;\nif (!sessionId) {\n  msg.payload = { error: 'sessionId required' };\n  return msg;\n}\n\nconst scoringEngine = global.get('scoringEngine');\nconst reportEngine = global.get('reportEngine');\n\n// Calculate score\nconst scoreResult = scoringEngine.calculateScore(sessionId);\nconst savedScore = scoringEngine.saveScore(sessionId, scoreResult);\n\n// Generate report\nconst report = reportEngine.generateReport(sessionId);\nconst savedReport = reportEngine.saveReport(sessionId, report);\n\nmsg.payload = {\n  sessionId,\n  score: {\n    overall: scoreResult.score,\n    riskLevel: scoreResult.riskLevel\n  },\n  report: {\n    reportId: report.reportId,\n    summary: report.summary\n  },\n  status: 'complete'\n};\nreturn msg;",
+    "x": 200,
+    "y": 100,
+    "wires": [["ac-send-whatsapp"]]
+  },
+  {
+    "id": "ac-send-whatsapp",
+    "type": "function",
+    "z": "assessment-complete",
+    "name": "Format WhatsApp message",
+    "func": "const { score, report, sessionId } = msg.payload;\n\nlet message = '*Risk Assessment Complete*\\n\\n';\nmessage += '*CoverScore:* ' + score.overall + '/100\\n';\nmessage += '*Risk Level:* ' + score.riskLevel + '\\n\\n';\nmessage += '*Summary:*\\n' + report.summary + '\\n\\n';\nmessage += 'Reply with *REPORT* to get your full Risk Intelligence Report.';\n\nmsg.payload = {\n  messaging_product: 'whatsapp',\n  to: msg.req?.phone || msg.phone,\n  type: 'text',\n  text: { body: message }\n};\nreturn msg;",
+    "x": 400,
+    "y": 100,
+    "wires": [["ac-evolution-api"]]
+  },
+  {
+    "id": "ac-evolution-api",
+    "type": "http request",
+    "z": "assessment-complete",
+    "name": "Send via Evolution API",
+    "method": "POST",
+    "ret": "obj",
+    "url": "http://163.245.210.111:8081/message/sendText/Coverscore",
+    "tls": "",
+    "x": 620,
+    "y": 100,
+    "wires": [["ac-done"]]
+  },
+  {
+    "id": "ac-done",
+    "type": "function",
+    "z": "assessment-complete",
+    "name": "Complete session",
+    "func": "const stateEngine = global.get('stateEngine');\nstateEngine.transition(msg.req?.sessionId || msg.payload.sessionId, 'COMPLETE');\nmsg.statusCode = 200;\nreturn msg;",
+    "x": 820,
+    "y": 100,
+    "wires": [["ac-http-out"]]
+  },
+  {
+    "id": "ac-http-out",
+    "type": "http response",
+    "z": "assessment-complete",
+    "name": "200 OK",
+    "statusCode": "200",
+    "headers": {},
+    "x": 1000,
+    "y": 100,
+    "wires": []
+  }
+]

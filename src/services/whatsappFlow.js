@@ -85,18 +85,13 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   const answerType = currentQ.question_type;
   
   if (answerType === 'yes_no') {
+    const opts = currentQ.answers || [];
+    const hasThird = opts.length >= 3;
     if (input === 'A' || input === 'YES') parsedAnswer = 'Yes';
     else if (input === 'B' || input === 'NO') parsedAnswer = 'No';
+    else if (hasThird && (input === 'C' || input === opts[2].toUpperCase())) parsedAnswer = opts[2];
     else {
-      replyText = "Please reply with A (Yes) or B (No).";
-      return { nextState, replyText, updatedData, isComplete };
-    }
-  } else if (answerType === 'yes_no_na') {
-    if (input === 'A' || input === 'YES') parsedAnswer = 'Yes';
-    else if (input === 'B' || input === 'NO') parsedAnswer = 'No';
-    else if (input === 'C' || input === 'N/A' || input === 'NA') parsedAnswer = 'N/A';
-    else {
-      replyText = "Please reply with A, B, or C.";
+      replyText = hasThird ? "Please reply with A, B, or C." : "Please reply with A (Yes) or B (No).";
       return { nextState, replyText, updatedData, isComplete };
     }
   } else if (answerType === 'single_choice') {
@@ -218,7 +213,12 @@ const formatDynamicQuestion = (q, data = {}) => {
   text += '\n\n';
   
   if (q.question_type === 'yes_no') {
-    text += "A. Yes\nB. No";
+    const opts = q.answers || [];
+    if (opts.length >= 3) {
+      text += opts.map((opt, i) => `${'ABC'[i]}. ${opt}`).join('\n');
+    } else {
+      text += "A. Yes\nB. No";
+    }
   } else if (q.question_type === 'yes_no_na') {
     text += "A. Yes\nB. No\nC. N/A";
   } else if (q.question_type === 'single_choice' || q.question_type === 'multi_choice') {

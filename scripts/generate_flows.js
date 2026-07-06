@@ -329,6 +329,9 @@ const questionPacks = [
   {
     id: 'QP-100', parent: 'Master', prefix: 'YPR', name: 'Young Professional', ind: 'young_professional', type: 'personal', audience: 'young professional',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Young Professional Assessment.\n\nAs you build your career, unexpected life events can quickly derail your financial momentum.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for financial risks and provide a personalized Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMost young professionals believe they're financially prepared until a single unexpected emergency wipes out their savings.\n\nOur goal today is to help you identify these hidden gaps before they become real problems.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Financial Advisor could help you prioritize your financial protection strategy as you advance in your career.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Career & Income Security', question: `How long have you been in your current career?`, question_type: 'single_choice', answers: ['Under 2 years', '2-5 years', 'Over 5 years'] },
         { pillar: 'Financial Resilience', question: `If you suffered a critical illness (e.g. cancer, stroke) today, could you afford the medical bills without going into debt?`, question_type: 'single_choice', answers: ['Yes easily', 'With difficulty', 'No'], risk_logic: { 'With difficulty': { vulnerability_points: 20 }, 'No': { vulnerability_points: 40 } } },
@@ -341,6 +344,9 @@ const questionPacks = [
   {
     id: 'QP-110', parent: 'QP-100', prefix: 'ENT', name: 'Entrepreneur', ind: 'entrepreneur', type: 'personal', audience: 'entrepreneur',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Entrepreneur Assessment.\n\nYour business relies on your drive and vision, but personal and operational risks can threaten everything you've built.\n\nIn the next 3–5 minutes, we'll help you understand how protected you are and provide a personalized Risk Intelligence Report™ with actionable recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany entrepreneurs intertwine their personal assets with business liabilities, leaving their families exposed to commercial risks.\n\nOur goal today is to help you build an airtight firewall around your hard work.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Commercial Advisor could help you safeguard your business continuity and personal assets.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Business Continuity', question: `Does your business's revenue completely rely on your personal involvement?`, question_type: 'single_choice', answers: ['Yes completely', 'Partially', 'No it runs itself'], risk_logic: { 'Yes completely': { vulnerability_points: 30 }, 'Partially': { vulnerability_points: 15 } } },
         { pillar: 'Legal & Liability', question: `Have you provided personal guarantees for any business loans or debts?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'Yes': { exposure_points: 25 } } },
@@ -353,6 +359,9 @@ const questionPacks = [
   {
     id: 'QP-120', parent: 'QP-100', prefix: 'FAM', name: 'Family Protection', ind: 'family', type: 'personal', audience: 'family member',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Family Protection Assessment.\n\nYour family relies on you, and ensuring their long-term stability in the face of unexpected events is your most important job.\n\nIn the next 3–5 minutes, we'll help you understand how well-protected your loved ones are and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThe sudden loss of a primary income earner can disrupt a family's lifestyle, education plans, and home stability within months.\n\nOur goal today is to help you secure your family's future, no matter what happens.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Family Protection Advisor could help you structure a safety net that guarantees your family's peace of mind.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Personal Profile', question: `How many dependents (children or elderly relatives) rely on your income?`, question_type: 'single_choice', answers: ['None', '1-2', '3 or more'], risk_logic: { 'None': { exposure_points: 5 }, '1-2': { exposure_points: 20 }, '3 or more': { exposure_points: 35 } } },
         { pillar: 'Career & Income Security', question: `If you were suddenly unable to work due to illness, how long would your savings last?`, question_type: 'single_choice', answers: ['Less than 3 months', '3-6 months', 'Over 6 months'], risk_logic: { 'Less than 3 months': { vulnerability_points: 35 }, '3-6 months': { vulnerability_points: 15 } } },
@@ -365,6 +374,9 @@ const questionPacks = [
   {
     id: 'QP-130', parent: 'QP-100', prefix: 'INC', name: 'Income Protection', ind: 'income', type: 'personal', audience: 'income earner',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Income Protection Assessment.\n\nYour ability to earn an income is your most valuable asset, yet it's often the least protected.\n\nIn the next 3–5 minutes, we'll help you understand how vulnerable your cash flow is to unexpected disruptions and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA severe injury or illness can halt your income stream immediately, while your living expenses continue to accumulate.\n\nOur goal today is to help you identify income vulnerabilities so you can protect your livelihood.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Income Protection Advisor could help you guarantee that your lifestyle remains funded, even if you can't work.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Career & Income Security', question: `What is your primary source of income?`, question_type: 'single_choice', answers: ['Salary from employment', 'Freelance/Contract', 'Business owner'] },
         { pillar: 'Financial Resilience', question: `If you lost your primary income tomorrow, how long would your emergency funds last?`, question_type: 'single_choice', answers: ['Less than 1 month', '1-3 months', 'Over 3 months'], risk_logic: { 'Less than 1 month': { vulnerability_points: 40 }, '1-3 months': { vulnerability_points: 20 } } },
@@ -401,6 +413,9 @@ const questionPacks = [
   {
     id: 'QP-150', parent: 'QP-100', prefix: 'RET', name: 'Retirement Planning', ind: 'retirement', type: 'personal', audience: 'future retiree',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Retirement Planning Assessment.\n\nYou've worked hard to build your nest egg, but medical inflation and longevity risks can threaten your golden years.\n\nIn the next 3–5 minutes, we'll evaluate the resilience of your retirement strategy and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nUnexpected healthcare costs and long-term care needs are the leading causes of retirement savings depletion.\n\nOur goal today is to help you identify and mitigate the risks that could outlive your savings.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Retirement Advisor could help you preserve your wealth and secure your independence.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Future Planning', question: `How soon do you plan to retire?`, question_type: 'single_choice', answers: ['Within 5 years', '5-15 years', 'Over 15 years'], risk_logic: { 'Within 5 years': { exposure_points: 30 }, '5-15 years': { exposure_points: 15 } } },
         { pillar: 'Financial Resilience', question: `Do you have a dedicated Pension or Retirement Savings Account (RSA)?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'No': { vulnerability_points: 40 } } },
@@ -414,6 +429,9 @@ const questionPacks = [
   {
     id: 'QP-160', parent: 'QP-100', prefix: 'HOM', name: 'Home Protection', ind: 'home', type: 'personal', audience: 'homeowner',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Home Protection Assessment.\n\nYour home is likely your biggest financial investment, but natural disasters, theft, and liability risks are unpredictable.\n\nIn the next 3–5 minutes, we'll help you understand how protected your property is and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany homeowners and renters realize their insurance coverage is inadequate only after a catastrophic loss has occurred.\n\nOur goal today is to ensure your sanctuary and possessions are fully secured.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Property Advisor could help you optimize your home insurance to avoid costly out-of-pocket repairs.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Property & Assets', question: `Do you currently own or rent your primary residence?`, question_type: 'single_choice', answers: ['Own', 'Rent', 'Neither'] },
         { pillar: 'Protection & Insurance', question: `Do you have Homeowner's or Renter's Insurance covering your personal property?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'No': { vulnerability_points: 30 } } }
@@ -423,6 +441,9 @@ const questionPacks = [
   {
     id: 'QP-170', parent: 'QP-100', prefix: 'MOT', name: 'Motor Protection', ind: 'motor', type: 'personal', audience: 'vehicle owner',
     overrides: {
+      intro_text: `👋 Welcome to CoverScore™ Motor Protection Assessment.\n\nYour vehicle keeps your life moving, but accidents, theft, and third-party liabilities can strike at any moment.\n\nIn the next 3–5 minutes, we'll evaluate your exposure on the road and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
+      did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThird-party liability claims from a serious road accident can easily exceed the value of the vehicle itself.\n\nOur goal today is to ensure you're comprehensively protected behind the wheel.\n\nLet's begin.`,
+      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Motor Advisor could help you structure a policy that truly protects you and your assets on the road.\n\nWould you like to schedule a free consultation?`,
       specific_questions: [
         { pillar: 'Property & Assets', question: `How many vehicles do you currently own or lease?`, question_type: 'single_choice', answers: ['1', '2', '3 or more'] },
         { pillar: 'Protection & Insurance', question: `Is your primary vehicle covered by Comprehensive Motor Insurance?`, question_type: 'yes_no', answers: ['Yes', 'No'], risk_logic: { 'No': { vulnerability_points: 40 } } }

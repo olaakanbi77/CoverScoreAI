@@ -1,0 +1,65 @@
+[
+  {
+    "id": "conversation-start",
+    "type": "tab",
+    "label": "Assessment Start",
+    "disabled": false,
+    "info": "Handles incoming /assessment/start requests from WhatsApp"
+  },
+  {
+    "id": "cs-http-in",
+    "type": "http in",
+    "z": "conversation-start",
+    "name": "POST /assessment/start",
+    "url": "/assessment/start",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 120,
+    "y": 100,
+    "wires": [["cs-validate"]]
+  },
+  {
+    "id": "cs-validate",
+    "type": "function",
+    "z": "conversation-start",
+    "name": "Validate input",
+    "func": "const { phone, name, packId } = msg.payload;\nif (!phone) {\n  msg.statusCode = 400;\n  msg.payload = { error: 'phone is required' };\n  return [null, msg];\n}\nmsg.req.phone = phone;\nmsg.req.name = name || null;\nmsg.req.packId = packId || 'QP-100';\nreturn [msg, null];",
+    "outputs": 2,
+    "x": 310,
+    "y": 100,
+    "wires": [["cs-engine"], ["cs-error"]]
+  },
+  {
+    "id": "cs-engine",
+    "type": "function",
+    "z": "conversation-start",
+    "name": "Call Assessment Engine",
+    "func": "const { phone, name, packId } = msg.req;\n// Call internal engine\nconst result = global.get('assessmentEngine').start({\n  phone, name, packId\n});\nmsg.payload = result;\nreturn msg;",
+    "x": 500,
+    "y": 100,
+    "wires": [["cs-http-out"]]
+  },
+  {
+    "id": "cs-http-out",
+    "type": "http response",
+    "z": "conversation-start",
+    "name": "200 OK",
+    "statusCode": "200",
+    "headers": {},
+    "x": 690,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "cs-error",
+    "type": "http response",
+    "z": "conversation-start",
+    "name": "400 Bad Request",
+    "statusCode": "400",
+    "headers": {},
+    "x": 690,
+    "y": 160,
+    "wires": []
+  }
+]

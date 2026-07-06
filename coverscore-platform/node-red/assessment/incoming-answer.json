@@ -1,0 +1,104 @@
+[
+  {
+    "id": "incoming-answer",
+    "type": "tab",
+    "label": "Incoming Answer",
+    "disabled": false,
+    "info": "Processes each answer through branch + state engines"
+  },
+  {
+    "id": "ia-http-in",
+    "type": "http in",
+    "z": "incoming-answer",
+    "name": "POST /assessment/reply",
+    "url": "/assessment/reply",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 120,
+    "y": 80,
+    "wires": [["ia-validate"]]
+  },
+  {
+    "id": "ia-validate",
+    "type": "function",
+    "z": "incoming-answer",
+    "name": "Validate reply input",
+    "func": "const { sessionId, questionId, answerValue } = msg.payload;\nif (!sessionId || !questionId || !answerValue) {\n  msg.statusCode = 400;\n  msg.payload = { error: 'sessionId, questionId, and answerValue are required' };\n  return [null, msg];\n}\nmsg.req = { sessionId, questionId, answerValue };\nreturn [msg, null];",
+    "outputs": 2,
+    "x": 310,
+    "y": 80,
+    "wires": [["ia-save-answer"], ["ia-error"]]
+  },
+  {
+    "id": "ia-save-answer",
+    "type": "function",
+    "z": "incoming-answer",
+    "name": "Save answer + evaluate branch",
+    "func": "const { sessionId, questionId, answerValue } = msg.req;\nconst engine = global.get('assessmentEngine');\nconst result = engine.processAnswer(sessionId, questionId, answerValue);\nif (result.error) {\n  msg.statusCode = 400;\n  msg.payload = result;\n  return [null, msg];\n}\nmsg.payload = result;\nreturn [msg, null];",
+    "outputs": 2,
+    "x": 500,
+    "y": 80,
+    "wires": [["ia-next-check"], ["ia-error"]]
+  },
+  {
+    "id": "ia-next-check",
+    "type": "switch",
+    "z": "incoming-answer",
+    "name": "More questions?",
+    "property": "payload.done",
+    "propertyType": "msg",
+    "rules": [
+      { "t": "false", "v": "false", "vt": "str" },
+      { "t": "true", "v": "true", "vt": "str" }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 680,
+    "y": 80,
+    "wires": [["ia-next-question"], ["ia-complete"]]
+  },
+  {
+    "id": "ia-next-question",
+    "type": "function",
+    "z": "incoming-answer",
+    "name": "Return next question",
+    "func": "msg.statusCode = 200;\nreturn msg;",
+    "x": 860,
+    "y": 50,
+    "wires": [["ia-http-out"]]
+  },
+  {
+    "id": "ia-complete",
+    "type": "function",
+    "z": "incoming-answer",
+    "name": "Trigger assessment complete",
+    "func": "msg.statusCode = 200;\nmsg.completeFlow = true;\nreturn msg;",
+    "x": 860,
+    "y": 110,
+    "wires": [["ia-http-out"]]
+  },
+  {
+    "id": "ia-http-out",
+    "type": "http response",
+    "z": "incoming-answer",
+    "name": "Response",
+    "statusCode": "200",
+    "headers": {},
+    "x": 1020,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "ia-error",
+    "type": "http response",
+    "z": "incoming-answer",
+    "name": "Error",
+    "statusCode": "400",
+    "headers": {},
+    "x": 1020,
+    "y": 160,
+    "wires": []
+  }
+]
