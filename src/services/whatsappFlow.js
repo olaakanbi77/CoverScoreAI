@@ -81,6 +81,63 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     return { nextState, replyText, updatedData, isComplete };
   }
 
+  // Auto-advance: skip user input, use first option
+  if (incomingText === 'AUTO_ADVANCE') {
+    const opts = currentQ.answers || [];
+    const answerType = currentQ.question_type;
+    if (answerType === 'yes_no') {
+      parsedAnswer = opts[0] || 'Yes';
+    } else if (answerType === 'single_choice' || answerType === 'multi_choice') {
+      parsedAnswer = opts[0] || '';
+    } else if (answerType === 'open_text') {
+      parsedAnswer = '';
+    }
+    if (parsedAnswer !== undefined && parsedAnswer !== null) {
+      // Skip normal validation, record answer and find next state
+      if (!updatedData.answers) updatedData.answers = {};
+      updatedData.answers[currentQ.id] = parsedAnswer;
+      if (currentQ.data_mapping) {
+        updatedData[currentQ.data_mapping] = parsedAnswer;
+      }
+      nextState = 'COMPLETE';
+      if (currentQ.branching) {
+        let rawAnswerKey = Array.isArray(parsedAnswer) ? parsedAnswer[0] : parsedAnswer;
+        if (currentQ.branching[rawAnswerKey]) {
+          nextState = currentQ.branching[rawAnswerKey];
+        } else if (currentQ.branching['DEFAULT']) {
+          nextState = currentQ.branching['DEFAULT'];
+        }
+      } else {
+        const match = currentQ.id.match(/^([A-Z]+)_(\d+)$/);
+        if (match) {
+          const pref = match[1];
+          const num = parseInt(match[2], 10);
+          nextState = `${pref}_${String(num+1).padStart(3, '0')}`;
+        }
+      }
+      // Handle awaiting_consultation from auto-advance
+      if (nextState === 'awaiting_consultation') {
+        if (parsedAnswer === 'Yes') {
+          replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
+          nextState = 'awaiting_consultation_day';
+          updatedData.is_qualified = true;
+        } else {
+          replyText = "Noted. Your personalized report has been generated. We are always here if you change your mind. Have a great day!";
+          nextState = 'finished';
+          updatedData.is_qualified = false;
+        }
+      } else {
+        const nextQ = questionBank.find(q => q.id === nextState);
+        if (nextQ) {
+          replyText = formatDynamicQuestion(nextQ, updatedData);
+        } else if (nextState !== 'finished' && nextState !== 'COMPLETE') {
+          replyText = '';
+        }
+      }
+      return { nextState, replyText, updatedData, isComplete: nextState === 'finished' || nextState === 'COMPLETE' };
+    }
+  }
+
   let parsedAnswer = null;
   const answerType = currentQ.question_type;
   

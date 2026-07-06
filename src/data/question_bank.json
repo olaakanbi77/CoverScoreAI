@@ -1399,6 +1399,7 @@
     "id": "HLT_018",
     "industry": "health",
     "pillar": "General",
+    "auto_advance": true,
     "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [

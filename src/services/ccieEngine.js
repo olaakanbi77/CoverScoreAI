@@ -88,19 +88,37 @@ class CCIEEngine {
     const result = await getNextStateAndReply(currentQuestion, incomingText, answers, questionPack);
     const { nextState, replyText, updatedData, isComplete } = result;
 
-    const nextPhase = determinePhase(nextState);
-    const newQuestionCount = questionCount + 1;
-
     let messages = [];
 
     if (replyText) {
       messages.push({ type: 'reply', text: formatMessage(replyText) });
     }
 
-    const milestone = getMilestoneMessage(nextState);
-    if (milestone) {
-      messages.push({ type: 'milestone', text: milestone });
+    // Auto-advance: send question text as plain message, then proceed immediately
+    if (nextState) {
+      const nextQ = questionBank.find(q => q.id === nextState);
+      if (nextQ && nextQ.auto_advance) {
+        messages.push({ type: 'auto_advance', text: formatMessage(nextQ.question) });
+        const autoResult = await getNextStateAndReply(nextState, 'AUTO_ADVANCE', updatedData.answers || {}, questionPack);
+        if (autoResult.replyText) {
+          messages.push({ type: 'reply', text: formatMessage(autoResult.replyText) });
+        }
+        const autoPhase = determinePhase(autoResult.nextState);
+        publishEvent(CCIE_EVENTS.PHASE_CHANGED, context, {
+          questionId: nextState, nextQuestionId: autoResult.nextState,
+          phase: autoPhase, questionCount: questionCount + 2, isComplete: autoResult.isComplete
+        });
+        context.currentPhase = autoPhase;
+        context.currentQuestion = autoResult.nextState;
+        context.questionCount = questionCount + 2;
+        context.answers = autoResult.updatedData.answers || context.answers;
+        context.isComplete = autoResult.isComplete || autoResult.nextState === 'finished' || autoResult.nextState === 'COMPLETE';
+        return { messages, nextState: autoResult.nextState, updatedData: autoResult.updatedData, isComplete: context.isComplete, context };
+      }
     }
+
+    const nextPhase = determinePhase(nextState);
+    const newQuestionCount = questionCount + 1;
 
     const event = nextPhase !== currentPhase ? {
       event: CCIE_EVENTS.PHASE_CHANGED,
