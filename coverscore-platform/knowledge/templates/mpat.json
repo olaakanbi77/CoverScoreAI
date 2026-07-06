@@ -1,0 +1,247 @@
+{
+  "id": "MPAT-001",
+  "code": "MPAT-001",
+  "name": "Master Personal Assessment Template",
+  "description": "The canonical conversational framework for every personal assessment on the CoverScore Platform. Question Packs inject domain-specific discovery questions, scoring rules, and report content into the RISK_DISCOVERY and FINAL_DISCOVERY stages.",
+  "version": "1.0",
+  "status": "active",
+  "type": "personal",
+  "master_template": null,
+  "sections": [
+    { "id": "SEC-MPAT-WELCOME",   "name": "Welcome",       "description": "Build trust, set expectations",            "sort_order": 0,  "entry_question": "MPAT-001", "stage": "WELCOME",         "type": "welcome" },
+    { "id": "SEC-MPAT-CONSENT",   "name": "Consent",        "description": "Obtain data processing consent",           "sort_order": 1,  "entry_question": "MPAT-010", "stage": "CONSENT",         "type": "consent" },
+    { "id": "SEC-MPAT-PROFILE",   "name": "Profile",        "description": "Collect name, email, location",            "sort_order": 2,  "entry_question": "MPAT-020", "stage": "PROFILE",         "type": "profile" },
+    { "id": "SEC-MPAT-CONTEXT",   "name": "Context",        "description": "Understand employment, age, dependants",   "sort_order": 3,  "entry_question": "MPAT-030", "stage": "CONTEXT",         "type": "context" },
+    { "id": "SEC-MPAT-DISCOVERY",  "name": "Risk Discovery", "description": "Domain-specific risk questions (injected by QP)", "sort_order": 4, "entry_question": null, "stage": "RISK_DISCOVERY",  "type": "discovery", "inject": true },
+    { "id": "SEC-MPAT-CHECKPOINT", "name": "Checkpoint",    "description": "Mid-assessment insight message",            "sort_order": 5,  "entry_question": "MPAT-040", "stage": "CHECKPOINT",      "type": "checkpoint" },
+    { "id": "SEC-MPAT-FINAL",      "name": "Final Discovery","description": "Last 2-3 risk questions (injected by QP)",  "sort_order": 6,  "entry_question": null, "stage": "FINAL_DISCOVERY", "type": "discovery", "inject": true },
+    { "id": "SEC-MPAT-REPORT",     "name": "Report Generation","description": "Analysing responses",                  "sort_order": 7,  "entry_question": "MPAT-050", "stage": "REPORT_GEN",     "type": "report_gen" },
+    { "id": "SEC-MPAT-RESULTS",    "name": "Results",        "description": "Score, strengths, risks, recommendations", "sort_order": 8,  "entry_question": "MPAT-060", "stage": "RESULTS",        "type": "results" },
+    { "id": "SEC-MPAT-NBA",        "name": "Next Best Action","description": "Advisor consultation offer",            "sort_order": 9,  "entry_question": "MPAT-070", "stage": "NBA",            "type": "nba" },
+    { "id": "SEC-MPAT-BOOKING",    "name": "Booking",        "description": "Schedule day and time",                  "sort_order": 10, "entry_question": "MPAT-080", "stage": "BOOKING",       "type": "booking" },
+    { "id": "SEC-MPAT-JOURNEY",    "name": "Journey",        "description": "Transition to Journey Engine",           "sort_order": 11, "entry_question": "MPAT-090", "stage": "JOURNEY",        "type": "journey" }
+  ],
+  "questions": [
+    {
+      "id": "MPAT-001",
+      "section_id": "SEC-MPAT-WELCOME",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor.\n\nOver the next few minutes, I'll help you understand how well you're protected against risks that matter most to you.\n\nAt the end of our conversation, you'll receive your personalized Risk Intelligence Report™ with practical recommendations.\n\nThis usually takes about 5 minutes.\n\nShall we begin?",
+      "options": [
+        { "text": "✅ Yes, let's begin", "value": "yes", "sort_order": 0, "next_question": "MPAT-010" },
+        { "text": "ℹ️ Tell me more", "value": "tell_me_more", "sort_order": 1, "next_question": "MPAT-005" }
+      ]
+    },
+    {
+      "id": "MPAT-005",
+      "section_id": "SEC-MPAT-WELCOME",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "CoverScore™ helps you identify hidden risks before they become costly problems.\n\nWe'll ask a few simple questions so we can prepare personalized recommendations based on your situation.\n\nYour responses remain private and confidential.\n\nReady to begin?",
+      "options": [
+        { "text": "✅ Start Assessment", "value": "yes", "sort_order": 0, "next_question": "MPAT-010" }
+      ]
+    },
+    {
+      "id": "MPAT-010",
+      "section_id": "SEC-MPAT-CONSENT",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "Before we continue...\n\nDo you consent to CoverScore securely processing your responses so we can prepare your personalized Risk Intelligence Report™?",
+      "options": [
+        { "text": "✅ I Agree", "value": "agree", "sort_order": 0, "next_question": "MPAT-020" },
+        { "text": "❌ Not Now", "value": "not_now", "sort_order": 1, "next_question": null }
+      ]
+    },
+    {
+      "id": "MPAT-020",
+      "section_id": "SEC-MPAT-PROFILE",
+      "sequence": 0,
+      "question_type": "text",
+      "text": "What's your first name?",
+      "category": "name",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MPAT-021" }
+      ]
+    },
+    {
+      "id": "MPAT-021",
+      "section_id": "SEC-MPAT-PROFILE",
+      "sequence": 1,
+      "question_type": "text",
+      "text": "What's the best email address for sending your report?",
+      "category": "email",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MPAT-022" }
+      ]
+    },
+    {
+      "id": "MPAT-022",
+      "section_id": "SEC-MPAT-PROFILE",
+      "sequence": 2,
+      "question_type": "text",
+      "text": "Which city do you currently live in?",
+      "category": "city",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MPAT-025" }
+      ]
+    },
+    {
+      "id": "MPAT-025",
+      "section_id": "SEC-MPAT-PROFILE",
+      "sequence": 3,
+      "question_type": "message",
+      "text": "Perfect.\n\nI've personalized your assessment.\n\nNow I'd like to understand your current situation.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MPAT-030" }
+      ]
+    },
+    {
+      "id": "MPAT-030",
+      "section_id": "SEC-MPAT-CONTEXT",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "What is your current employment status?",
+      "category": "employment",
+      "options": [
+        { "text": "Employed full-time", "value": "Employed full-time", "sort_order": 0, "next_question": "MPAT-031" },
+        { "text": "Self-employed", "value": "Self-employed", "sort_order": 1, "next_question": "MPAT-031" },
+        { "text": "Part-time / Freelance", "value": "Part-time / Freelance", "sort_order": 2, "next_question": "MPAT-031" },
+        { "text": "Student", "value": "Student", "sort_order": 3, "next_question": "MPAT-031" },
+        { "text": "Retired", "value": "Retired", "sort_order": 4, "next_question": "MPAT-031" },
+        { "text": "Prefer not to say", "value": "Prefer not to say", "sort_order": 5, "next_question": "MPAT-031" }
+      ]
+    },
+    {
+      "id": "MPAT-031",
+      "section_id": "SEC-MPAT-CONTEXT",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "What is your age range?",
+      "category": "age",
+      "options": [
+        { "text": "Under 18", "value": "Under 18", "sort_order": 0, "next_question": "MPAT-032" },
+        { "text": "18 - 25", "value": "18 - 25", "sort_order": 1, "next_question": "MPAT-032" },
+        { "text": "26 - 35", "value": "26 - 35", "sort_order": 2, "next_question": "MPAT-032" },
+        { "text": "36 - 45", "value": "36 - 45", "sort_order": 3, "next_question": "MPAT-032" },
+        { "text": "46 - 55", "value": "46 - 55", "sort_order": 4, "next_question": "MPAT-032" },
+        { "text": "56+", "value": "56+", "sort_order": 5, "next_question": "MPAT-032" }
+      ]
+    },
+    {
+      "id": "MPAT-032",
+      "section_id": "SEC-MPAT-CONTEXT",
+      "sequence": 2,
+      "question_type": "choice",
+      "text": "How many dependants do you have?",
+      "category": "dependants",
+      "options": [
+        { "text": "None", "value": "None", "sort_order": 0, "next_question": "MPAT-035" },
+        { "text": "1", "value": "1", "sort_order": 1, "next_question": "MPAT-035" },
+        { "text": "2", "value": "2", "sort_order": 2, "next_question": "MPAT-035" },
+        { "text": "3", "value": "3", "sort_order": 3, "next_question": "MPAT-035" },
+        { "text": "4+", "value": "4+", "sort_order": 4, "next_question": "MPAT-035" }
+      ]
+    },
+    {
+      "id": "MPAT-035",
+      "section_id": "SEC-MPAT-CONTEXT",
+      "sequence": 3,
+      "question_type": "message",
+      "text": "Thank you.\n\nI now have enough information to personalize the rest of our conversation.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "QP_INJECT_DISCOVERY" }
+      ]
+    },
+    {
+      "id": "MPAT-040",
+      "section_id": "SEC-MPAT-CHECKPOINT",
+      "sequence": 0,
+      "question_type": "message",
+      "text": "Thank you.\n\nI'm beginning to understand where you're already well protected and where there may be opportunities to strengthen your resilience.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "QP_INJECT_FINAL" }
+      ]
+    },
+    {
+      "id": "MPAT-050",
+      "section_id": "SEC-MPAT-REPORT",
+      "sequence": 0,
+      "question_type": "message",
+      "text": "Thank you.\n\nI now have everything I need to prepare your personalized Risk Intelligence Report™.\n\nGive me about 10 seconds while I analyse your responses.",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MPAT-060" }
+      ]
+    },
+    {
+      "id": "MPAT-060",
+      "section_id": "SEC-MPAT-RESULTS",
+      "sequence": 0,
+      "question_type": "report",
+      "text": "🎉 Your CoverScore™\n\n{{score}} / 100\n\n{{protectionLevel}}\n\nYour strengths\n\n{{strengths}}\n\nAreas to improve\n\n{{risks}}\n\nRecommended next steps\n\n{{recommendations}}\n\n📄 View Full Report: {{reportUrl}}",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MPAT-070" }
+      ]
+    },
+    {
+      "id": "MPAT-070",
+      "section_id": "SEC-MPAT-NBA",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "Based on today's assessment, I recommend a short conversation with one of our Certified Risk Advisors.\n\nThe consultation is free and focused on helping you understand your options.\n\nWould you like me to arrange one?",
+      "options": [
+        { "text": "✅ Yes", "value": "yes", "sort_order": 0, "next_question": "MPAT-080" },
+        { "text": "⏰ Maybe Later", "value": "maybe_later", "sort_order": 1, "next_question": "MPAT-085" }
+      ]
+    },
+    {
+      "id": "MPAT-080",
+      "section_id": "SEC-MPAT-BOOKING",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "What day works best for you?",
+      "category": "preferred_day",
+      "options": [
+        { "text": "Monday", "value": "Monday", "sort_order": 0, "next_question": "MPAT-081" },
+        { "text": "Tuesday", "value": "Tuesday", "sort_order": 1, "next_question": "MPAT-081" },
+        { "text": "Wednesday", "value": "Wednesday", "sort_order": 2, "next_question": "MPAT-081" },
+        { "text": "Thursday", "value": "Thursday", "sort_order": 3, "next_question": "MPAT-081" },
+        { "text": "Friday", "value": "Friday", "sort_order": 4, "next_question": "MPAT-081" }
+      ]
+    },
+    {
+      "id": "MPAT-081",
+      "section_id": "SEC-MPAT-BOOKING",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "What time works best for you?",
+      "category": "preferred_time",
+      "options": [
+        { "text": "Morning (9am - 12pm)", "value": "Morning", "sort_order": 0, "next_question": "MPAT-090" },
+        { "text": "Afternoon (12pm - 4pm)", "value": "Afternoon", "sort_order": 1, "next_question": "MPAT-090" },
+        { "text": "Evening (4pm - 7pm)", "value": "Evening", "sort_order": 2, "next_question": "MPAT-090" }
+      ]
+    },
+    {
+      "id": "MPAT-085",
+      "section_id": "SEC-MPAT-NBA",
+      "sequence": 1,
+      "question_type": "message",
+      "text": "No problem at all.\n\nYour report will remain available, and you can request a consultation whenever you're ready.\n\nI'll also share practical tips from time to time to help you improve your protection.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MPAT-090" }
+      ]
+    },
+    {
+      "id": "MPAT-090",
+      "section_id": "SEC-MPAT-JOURNEY",
+      "sequence": 0,
+      "question_type": "message",
+      "text": "Thank you for completing your CoverScore™ assessment.\n\nI'll occasionally share practical tips to help you strengthen your protection.",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": null }
+      ]
+    }
+  ]
+}

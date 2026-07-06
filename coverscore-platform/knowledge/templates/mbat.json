@@ -1,0 +1,333 @@
+{
+  "id": "MBAT-001",
+  "code": "MBAT-001",
+  "name": "Master Business Assessment Template",
+  "description": "The canonical conversational framework for every business assessment on the CoverScore Platform. Question Packs inject industry-specific discovery questions, scoring rules, and report content into the OPERATIONAL_DISCOVERY and INDUSTRY_DISCOVERY stages.",
+  "version": "1.0",
+  "status": "active",
+  "type": "business",
+  "master_template": null,
+  "sections": [
+    { "id": "SEC-MBAT-WELCOME",    "name": "Welcome",                "description": "Build executive trust",                  "sort_order": 0,  "entry_question": "MBAT-001", "stage": "WELCOME",               "type": "welcome" },
+    { "id": "SEC-MBAT-CONSENT",    "name": "Consent",                "description": "Obtain data processing consent",         "sort_order": 1,  "entry_question": "MBAT-010", "stage": "CONSENT",               "type": "consent" },
+    { "id": "SEC-MBAT-IDENTITY",   "name": "Business Identity",      "description": "Collect business name, contact, email",  "sort_order": 2,  "entry_question": "MBAT-020", "stage": "IDENTITY",              "type": "identity" },
+    { "id": "SEC-MBAT-CONTEXT",    "name": "Business Context",       "description": "Understand industry, size, tenure",      "sort_order": 3,  "entry_question": "MBAT-030", "stage": "CONTEXT",               "type": "context" },
+    { "id": "SEC-MBAT-OP_DISCOVERY","name": "Operational Discovery", "description": "General operational risk questions",     "sort_order": 4,  "entry_question": "MBAT-040", "stage": "OPERATIONAL_DISCOVERY", "type": "discovery" },
+    { "id": "SEC-MBAT-CHECKPOINT",  "name": "Checkpoint",            "description": "Mid-assessment insight message",        "sort_order": 5,  "entry_question": "MBAT-050", "stage": "CHECKPOINT",            "type": "checkpoint" },
+    { "id": "SEC-MBAT-IND_DISCOVERY","name": "Industry Discovery",   "description": "Industry-specific questions (injected by QP)", "sort_order": 6, "entry_question": null, "stage": "INDUSTRY_DISCOVERY", "type": "discovery", "inject": true },
+    { "id": "SEC-MBAT-REPORT",     "name": "Report Generation",      "description": "Analysing business responses",          "sort_order": 7,  "entry_question": "MBAT-060", "stage": "REPORT_GEN",           "type": "report_gen" },
+    { "id": "SEC-MBAT-RESULTS",    "name": "Business Results",       "description": "Score, strengths, risks, actions",      "sort_order": 8,  "entry_question": "MBAT-070", "stage": "RESULTS",              "type": "results" },
+    { "id": "SEC-MBAT-NBA",        "name": "Executive Recommendation","description": "Advisor consultation offer",           "sort_order": 9,  "entry_question": "MBAT-080", "stage": "NBA",                  "type": "nba" },
+    { "id": "SEC-MBAT-BOOKING",    "name": "Booking",                "description": "Schedule day and time",                "sort_order": 10, "entry_question": "MBAT-090", "stage": "BOOKING",             "type": "booking" },
+    { "id": "SEC-MBAT-JOURNEY",    "name": "Journey",                "description": "Transition to Journey Engine",         "sort_order": 11, "entry_question": "MBAT-100", "stage": "JOURNEY",              "type": "journey" }
+  ],
+  "questions": [
+    {
+      "id": "MBAT-001",
+      "section_id": "SEC-MBAT-WELCOME",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "👋 Welcome to CoverScore™ Business Risk Intelligence.\n\nI'm your AI Risk Advisor.\n\nOver the next few minutes, I'll help identify the key operational, financial, and protection risks that could affect your business.\n\nAt the end of our conversation, you'll receive a personalized Business Risk Intelligence Report™ with practical recommendations to strengthen your resilience.\n\nThis usually takes about 5 minutes.\n\nShall we begin?",
+      "options": [
+        { "text": "✅ Yes, let's begin", "value": "yes", "sort_order": 0, "next_question": "MBAT-010" },
+        { "text": "ℹ️ Tell me more", "value": "tell_me_more", "sort_order": 1, "next_question": "MBAT-005" }
+      ]
+    },
+    {
+      "id": "MBAT-005",
+      "section_id": "SEC-MBAT-WELCOME",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "CoverScore™ helps businesses identify hidden risks before they become costly incidents.\n\nWe'll ask a few simple questions about your business so we can prepare practical recommendations tailored to your operations.\n\nYour responses remain confidential and are used only to generate your report.\n\nReady to begin?",
+      "options": [
+        { "text": "✅ Start Assessment", "value": "yes", "sort_order": 0, "next_question": "MBAT-010" }
+      ]
+    },
+    {
+      "id": "MBAT-010",
+      "section_id": "SEC-MBAT-CONSENT",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "Before we continue...\n\nDo you consent to CoverScore securely processing your responses to generate your personalized Business Risk Intelligence Report™?",
+      "options": [
+        { "text": "✅ I Agree", "value": "agree", "sort_order": 0, "next_question": "MBAT-020" },
+        { "text": "❌ Not Now", "value": "not_now", "sort_order": 1, "next_question": null }
+      ]
+    },
+    {
+      "id": "MBAT-020",
+      "section_id": "SEC-MBAT-IDENTITY",
+      "sequence": 0,
+      "question_type": "text",
+      "text": "What is the name of your business?",
+      "category": "business_name",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MBAT-021" }
+      ]
+    },
+    {
+      "id": "MBAT-021",
+      "section_id": "SEC-MBAT-IDENTITY",
+      "sequence": 1,
+      "question_type": "text",
+      "text": "What is your name and role in the business?",
+      "category": "contact_person",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MBAT-022" }
+      ]
+    },
+    {
+      "id": "MBAT-022",
+      "section_id": "SEC-MBAT-IDENTITY",
+      "sequence": 2,
+      "question_type": "text",
+      "text": "What's the best email address for sending your report?",
+      "category": "email",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MBAT-025" }
+      ]
+    },
+    {
+      "id": "MBAT-025",
+      "section_id": "SEC-MBAT-IDENTITY",
+      "sequence": 3,
+      "question_type": "message",
+      "text": "Thank you.\n\nI've personalized your business assessment.\n\nNow I'd like to understand how your business operates.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MBAT-030" }
+      ]
+    },
+    {
+      "id": "MBAT-030",
+      "section_id": "SEC-MBAT-CONTEXT",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "Which industry best describes your business?",
+      "category": "industry",
+      "options": [
+        { "text": "Manufacturing", "value": "Manufacturing", "sort_order": 0, "next_question": "MBAT-031" },
+        { "text": "Healthcare / Hospital", "value": "Healthcare", "sort_order": 1, "next_question": "MBAT-031" },
+        { "text": "Education / School", "value": "Education", "sort_order": 2, "next_question": "MBAT-031" },
+        { "text": "Hospitality / Hotel", "value": "Hospitality", "sort_order": 3, "next_question": "MBAT-031" },
+        { "text": "Construction", "value": "Construction", "sort_order": 4, "next_question": "MBAT-031" },
+        { "text": "Agriculture", "value": "Agriculture", "sort_order": 5, "next_question": "MBAT-031" },
+        { "text": "Logistics / Transport", "value": "Logistics", "sort_order": 6, "next_question": "MBAT-031" },
+        { "text": "Professional Services", "value": "Professional Services", "sort_order": 7, "next_question": "MBAT-031" },
+        { "text": "Retail / Supermarket", "value": "Retail", "sort_order": 8, "next_question": "MBAT-031" },
+        { "text": "Church / Religious", "value": "Church", "sort_order": 9, "next_question": "MBAT-031" },
+        { "text": "Other", "value": "Other", "sort_order": 10, "next_question": "MBAT-031" }
+      ]
+    },
+    {
+      "id": "MBAT-031",
+      "section_id": "SEC-MBAT-CONTEXT",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "Approximately how many employees does your business have?",
+      "category": "employees",
+      "options": [
+        { "text": "1 (Sole proprietor)", "value": "1", "sort_order": 0, "next_question": "MBAT-032" },
+        { "text": "2 - 10", "value": "2-10", "sort_order": 1, "next_question": "MBAT-032" },
+        { "text": "11 - 50", "value": "11-50", "sort_order": 2, "next_question": "MBAT-032" },
+        { "text": "51 - 200", "value": "51-200", "sort_order": 3, "next_question": "MBAT-032" },
+        { "text": "200+", "value": "200+", "sort_order": 4, "next_question": "MBAT-032" }
+      ]
+    },
+    {
+      "id": "MBAT-032",
+      "section_id": "SEC-MBAT-CONTEXT",
+      "sequence": 2,
+      "question_type": "choice",
+      "text": "How long has the business been operating?",
+      "category": "years_operating",
+      "options": [
+        { "text": "Less than 1 year", "value": "<1", "sort_order": 0, "next_question": "MBAT-035" },
+        { "text": "1 - 3 years", "value": "1-3", "sort_order": 1, "next_question": "MBAT-035" },
+        { "text": "4 - 7 years", "value": "4-7", "sort_order": 2, "next_question": "MBAT-035" },
+        { "text": "8 - 15 years", "value": "8-15", "sort_order": 3, "next_question": "MBAT-035" },
+        { "text": "15+ years", "value": "15+", "sort_order": 4, "next_question": "MBAT-035" }
+      ]
+    },
+    {
+      "id": "MBAT-035",
+      "section_id": "SEC-MBAT-CONTEXT",
+      "sequence": 3,
+      "question_type": "message",
+      "text": "That's helpful.\n\nI now have enough information to tailor the rest of our conversation to your business.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MBAT-040" }
+      ]
+    },
+    {
+      "id": "MBAT-040",
+      "section_id": "SEC-MBAT-OP_DISCOVERY",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "Do you operate from owned or rented premises?",
+      "category": "premises",
+      "options": [
+        { "text": "Owned premises", "value": "Owned", "sort_order": 0, "next_question": "MBAT-041" },
+        { "text": "Rented premises", "value": "Rented", "sort_order": 1, "next_question": "MBAT-041" },
+        { "text": "Home-based", "value": "Home-based", "sort_order": 2, "next_question": "MBAT-041" },
+        { "text": "No fixed premises", "value": "No fixed premises", "sort_order": 3, "next_question": "MBAT-041" }
+      ]
+    },
+    {
+      "id": "MBAT-041",
+      "section_id": "SEC-MBAT-OP_DISCOVERY",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "Would your business continue operating if your main location became unavailable tomorrow?",
+      "category": "business_continuity",
+      "options": [
+        { "text": "Yes, fully", "value": "Yes fully", "sort_order": 0, "next_question": "MBAT-042" },
+        { "text": "Partially", "value": "Partially", "sort_order": 1, "next_question": "MBAT-042" },
+        { "text": "No", "value": "No", "sort_order": 2, "next_question": "MBAT-042" },
+        { "text": "Not sure", "value": "Not sure", "sort_order": 3, "next_question": "MBAT-042" }
+      ]
+    },
+    {
+      "id": "MBAT-042",
+      "section_id": "SEC-MBAT-OP_DISCOVERY",
+      "sequence": 2,
+      "question_type": "choice",
+      "text": "Which asset is most critical to your daily operations?",
+      "category": "critical_asset",
+      "options": [
+        { "text": "Equipment / Machinery", "value": "Equipment/Machinery", "sort_order": 0, "next_question": "MBAT-043" },
+        { "text": "Inventory / Stock", "value": "Inventory/Stock", "sort_order": 1, "next_question": "MBAT-043" },
+        { "text": "Vehicles", "value": "Vehicles", "sort_order": 2, "next_question": "MBAT-043" },
+        { "text": "Technology / Data", "value": "Technology/Data", "sort_order": 3, "next_question": "MBAT-043" },
+        { "text": "People / Staff", "value": "People/Staff", "sort_order": 4, "next_question": "MBAT-043" }
+      ]
+    },
+    {
+      "id": "MBAT-043",
+      "section_id": "SEC-MBAT-OP_DISCOVERY",
+      "sequence": 3,
+      "question_type": "choice",
+      "text": "Have you experienced a major business disruption within the last three years?",
+      "category": "past_disruption",
+      "options": [
+        { "text": "Yes", "value": "Yes", "sort_order": 0, "next_question": "MBAT-044" },
+        { "text": "No", "value": "No", "sort_order": 1, "next_question": "MBAT-044" }
+      ]
+    },
+    {
+      "id": "MBAT-044",
+      "section_id": "SEC-MBAT-OP_DISCOVERY",
+      "sequence": 4,
+      "question_type": "choice",
+      "text": "Do you have documented procedures for responding to emergencies?",
+      "category": "emergency_procedures",
+      "options": [
+        { "text": "Yes, fully documented", "value": "Fully documented", "sort_order": 0, "next_question": "MBAT-045" },
+        { "text": "Partially documented", "value": "Partially documented", "sort_order": 1, "next_question": "MBAT-045" },
+        { "text": "No", "value": "No", "sort_order": 2, "next_question": "MBAT-045" }
+      ]
+    },
+    {
+      "id": "MBAT-045",
+      "section_id": "SEC-MBAT-OP_DISCOVERY",
+      "sequence": 5,
+      "question_type": "choice",
+      "text": "Who is responsible for managing business risks in your organization?",
+      "category": "risk_owner",
+      "options": [
+        { "text": "Owner / CEO", "value": "Owner/CEO", "sort_order": 0, "next_question": "QP_INJECT_DISCOVERY" },
+        { "text": "Dedicated risk manager", "value": "Dedicated risk manager", "sort_order": 1, "next_question": "QP_INJECT_DISCOVERY" },
+        { "text": "Finance / Admin team", "value": "Finance/Admin", "sort_order": 2, "next_question": "QP_INJECT_DISCOVERY" },
+        { "text": "No one specifically", "value": "No one specifically", "sort_order": 3, "next_question": "QP_INJECT_DISCOVERY" }
+      ]
+    },
+    {
+      "id": "MBAT-050",
+      "section_id": "SEC-MBAT-CHECKPOINT",
+      "sequence": 0,
+      "question_type": "message",
+      "text": "Thank you.\n\nI'm beginning to understand how your business operates and where your greatest strengths and potential vulnerabilities may lie.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "QP_INJECT_DISCOVERY" }
+      ]
+    },
+    {
+      "id": "MBAT-060",
+      "section_id": "SEC-MBAT-REPORT",
+      "sequence": 0,
+      "question_type": "message",
+      "text": "Thank you.\n\nI now have everything I need to prepare your Business Risk Intelligence Report™.\n\nGive me about 10 seconds while I analyse your responses.",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": "MBAT-070" }
+      ]
+    },
+    {
+      "id": "MBAT-070",
+      "section_id": "SEC-MBAT-RESULTS",
+      "sequence": 0,
+      "question_type": "report",
+      "text": "Business CoverScore™\n\n{{score}} / 100\n\nBusiness Resilience Level: {{level}}\n\nBusiness Strengths\n\n{{strengths}}\n\nPriority Risks\n\n{{risks}}\n\nRecommended Actions\n\n{{recommendations}}\n\n📄 View Full Business Report: {{reportUrl}}",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MBAT-080" }
+      ]
+    },
+    {
+      "id": "MBAT-080",
+      "section_id": "SEC-MBAT-NBA",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "Based on today's assessment, I recommend a business risk review with one of our Certified Risk Advisors.\n\nThe session is free and focused on helping you strengthen your business resilience.\n\nWould you like me to arrange one?",
+      "options": [
+        { "text": "✅ Yes", "value": "yes", "sort_order": 0, "next_question": "MBAT-090" },
+        { "text": "⏰ Maybe Later", "value": "maybe_later", "sort_order": 1, "next_question": "MBAT-095" }
+      ]
+    },
+    {
+      "id": "MBAT-090",
+      "section_id": "SEC-MBAT-BOOKING",
+      "sequence": 0,
+      "question_type": "choice",
+      "text": "What day works best for you?",
+      "category": "preferred_day",
+      "options": [
+        { "text": "Monday", "value": "Monday", "sort_order": 0, "next_question": "MBAT-091" },
+        { "text": "Tuesday", "value": "Tuesday", "sort_order": 1, "next_question": "MBAT-091" },
+        { "text": "Wednesday", "value": "Wednesday", "sort_order": 2, "next_question": "MBAT-091" },
+        { "text": "Thursday", "value": "Thursday", "sort_order": 3, "next_question": "MBAT-091" },
+        { "text": "Friday", "value": "Friday", "sort_order": 4, "next_question": "MBAT-091" }
+      ]
+    },
+    {
+      "id": "MBAT-091",
+      "section_id": "SEC-MBAT-BOOKING",
+      "sequence": 1,
+      "question_type": "choice",
+      "text": "What time works best for you?",
+      "category": "preferred_time",
+      "options": [
+        { "text": "Morning (9am - 12pm)", "value": "Morning", "sort_order": 0, "next_question": "MBAT-100" },
+        { "text": "Afternoon (12pm - 4pm)", "value": "Afternoon", "sort_order": 1, "next_question": "MBAT-100" },
+        { "text": "Evening (4pm - 7pm)", "value": "Evening", "sort_order": 2, "next_question": "MBAT-100" }
+      ]
+    },
+    {
+      "id": "MBAT-095",
+      "section_id": "SEC-MBAT-NBA",
+      "sequence": 1,
+      "question_type": "message",
+      "text": "No problem.\n\nYour report will remain available, and you can request a consultation whenever you're ready.\n\nWe'll also share practical business risk insights from time to time.",
+      "options": [
+        { "text": "Continue", "value": "continue", "sort_order": 0, "next_question": "MBAT-100" }
+      ]
+    },
+    {
+      "id": "MBAT-100",
+      "section_id": "SEC-MBAT-JOURNEY",
+      "sequence": 0,
+      "question_type": "message",
+      "text": "Thank you for completing your CoverScore™ Business Risk Intelligence assessment.\n\nYour personalized business success journey is now active.",
+      "options": [
+        { "text": "", "value": "", "sort_order": 0, "next_question": null }
+      ]
+    }
+  ]
+}
