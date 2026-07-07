@@ -245,7 +245,7 @@
     "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Financial Advisor could help you prioritize your financial protection strategy as you advance in your career.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Financial Advisor could help you prioritize your financial protection strategy as you advance in your career.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -519,7 +519,7 @@
     "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Commercial Advisor could help you safeguard your business continuity and personal assets.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Commercial Advisor could help you safeguard your business continuity and personal assets.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -797,7 +797,7 @@
     "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Family Protection Advisor could help you structure a safety net that guarantees your family's peace of mind.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Family Protection Advisor could help you structure a safety net that guarantees your family's peace of mind.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1059,7 +1059,7 @@
     "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Income Protection Advisor could help you guarantee that your lifestyle remains funded, even if you can't work.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Income Protection Advisor could help you guarantee that your lifestyle remains funded, even if you can't work.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1074,53 +1074,45 @@
     "id": "HLT_001",
     "industry": "health",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Health Protection Assessment.\n\nYour health is one of your greatest assets, but unexpected illness or medical emergencies can place enormous emotional and financial strain on you and your family.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for health-related risks and provide a personalized Health Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how well you're protected against health risks.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "HLT_003",
-      "❓ Tell me more": "HLT_002",
-      "DEFAULT": "HLT_002"
+      "✅ I agree — let's begin": "HLT_004",
+      "❌ Not now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
     }
   },
   {
     "id": "HLT_002",
     "industry": "health",
     "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
+    "question": "You're already in progress. Let's continue.\n\nWhat's your first name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
     "branching": {
-      "✅ Start Assessment": "HLT_003",
-      "DEFAULT": "HLT_003"
+      "DEFAULT": "HLT_005"
     }
   },
   {
     "id": "HLT_003",
     "industry": "health",
     "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
+    "question": "What's the best email to send your report to?",
+    "question_type": "open_text",
+    "data_mapping": "email",
     "branching": {
-      "✅ I Agree": "HLT_004",
-      "❌ Not Now": "COMPLETE",
-      "DEFAULT": "COMPLETE"
+      "DEFAULT": "HLT_006"
     }
   },
   {
     "id": "HLT_004",
     "industry": "health",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1131,7 +1123,7 @@
     "id": "HLT_005",
     "industry": "health",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1142,7 +1134,7 @@
     "id": "HLT_006",
     "industry": "health",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -1153,10 +1145,10 @@
     "id": "HLT_007",
     "industry": "health",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA single serious illness can affect not only your health but also your income, savings, and long-term financial goals.\n\nOur goal today is to help you identify health protection gaps before they become costly problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "single_choice",
     "answers": [
-      "✅ Continue"
+      "Continue"
     ],
     "branching": {
       "DEFAULT": "HLT_008"
@@ -1166,12 +1158,14 @@
     "id": "HLT_008",
     "industry": "health",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "What's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1182,13 +1176,13 @@
     "id": "HLT_009",
     "industry": "health",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -1200,37 +1194,29 @@
     "id": "HLT_010",
     "industry": "health",
     "pillar": "General",
-    "question": "Do you currently have any dependants who rely on you for healthcare decisions or financial support?",
-    "question_type": "yes_no",
-    "answers": [
-      "Yes",
-      "No"
-    ],
-    "data_mapping": "has_dependants",
-    "branching": {
-      "DEFAULT": "HLT_011"
-    }
-  },
-  {
-    "id": "HLT_011",
-    "industry": "health",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
+    "question": "How many dependants do you have?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Start Questions"
+      "None",
+      "1",
+      "2",
+      "3",
+      "4+"
     ],
+    "data_mapping": "dependants",
     "branching": {
       "DEFAULT": "HLT_012"
     }
   },
   {
+    "id": "HLT_012",
+    "industry": "health",
     "pillar": "Healthcare Access",
-    "question": "Do you currently have:",
+    "question": "What type of health insurance coverage do you currently have?",
     "question_type": "single_choice",
     "answers": [
-      "Employer HMO",
       "Private Health Insurance",
+      "Employer HMO",
       "Government Health Scheme",
       "None"
     ],
@@ -1244,13 +1230,14 @@
       "recommendation": "Compare health plans that provide wider hospital coverage.",
       "gap": "You do not have active health insurance coverage."
     },
-    "id": "HLT_012",
-    "industry": "health",
+    "data_mapping": "health_insurance",
     "branching": {
       "DEFAULT": "HLT_013"
     }
   },
   {
+    "id": "HLT_013",
+    "industry": "health",
     "pillar": "Financial Preparedness",
     "question": "If you had to pay ₦2,000,000 for emergency treatment tomorrow, how would you most likely pay?",
     "question_type": "single_choice",
@@ -1277,15 +1264,16 @@
       "recommendation": "Build a medical emergency fund.",
       "gap": "You rely on loans or borrowing for emergency medical expenses."
     },
-    "id": "HLT_013",
-    "industry": "health",
+    "data_mapping": "emergency_payment",
     "branching": {
       "DEFAULT": "HLT_014"
     }
   },
   {
+    "id": "HLT_014",
+    "industry": "health",
     "pillar": "Medical History",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nHave you ever been diagnosed with:",
+    "question": "Have you been diagnosed with any of the following chronic conditions?",
     "question_type": "single_choice",
     "answers": [
       "Hypertension",
@@ -1309,15 +1297,16 @@
       "recommendation": "Review your HMO benefits to ensure chronic care is covered.",
       "gap": "You have a chronic condition that requires specialized coverage."
     },
-    "id": "HLT_014",
-    "industry": "health",
+    "data_mapping": "diagnosed_conditions",
     "branching": {
       "DEFAULT": "HLT_015"
     }
   },
   {
+    "id": "HLT_015",
+    "industry": "health",
     "pillar": "Lifestyle",
-    "question": "How often do you have routine medical check-ups?",
+    "question": "How often do you go for medical check-ups?",
     "question_type": "single_choice",
     "answers": [
       "Every 6 months",
@@ -1334,13 +1323,14 @@
       "recommendation": "Schedule an annual preventive health screening.",
       "gap": "You are missing out on early detection through routine check-ups."
     },
-    "id": "HLT_015",
-    "industry": "health",
+    "data_mapping": "checkup_frequency",
     "branching": {
       "DEFAULT": "HLT_016"
     }
   },
   {
+    "id": "HLT_016",
+    "industry": "health",
     "pillar": "Protection & Insurance",
     "question": "If your doctor recommended surgery tomorrow, would your current health cover pay for most of the cost?",
     "question_type": "single_choice",
@@ -1362,13 +1352,14 @@
       "recommendation": "Consider Critical Illness Insurance if appropriate for your circumstances.",
       "gap": "Your current cover is inadequate for major surgical procedures."
     },
-    "id": "HLT_016",
-    "industry": "health",
+    "data_mapping": "surgery_coverage",
     "branching": {
       "DEFAULT": "HLT_017"
     }
   },
   {
+    "id": "HLT_017",
+    "industry": "health",
     "pillar": "Recovery & Resilience",
     "question": "If illness prevented you from working for three months, would your household still be financially stable?",
     "question_type": "yes_no",
@@ -1386,8 +1377,7 @@
       "recommendation": "Explore income protection options.",
       "gap": "Your household is highly vulnerable to loss of income due to illness."
     },
-    "id": "HLT_017",
-    "industry": "health",
+    "data_mapping": "illness_resilience",
     "branching": {
       "DEFAULT": "HLT_018"
     }
@@ -1396,7 +1386,8 @@
     "id": "HLT_018",
     "industry": "health",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "auto_advance": true,
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1672,7 +1663,7 @@
     "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Retirement Advisor could help you preserve your wealth and secure your independence.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Retirement Advisor could help you preserve your wealth and secure your independence.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1873,7 +1864,7 @@
     "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Property Advisor could help you optimize your home insurance to avoid costly out-of-pocket repairs.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Property Advisor could help you optimize your home insurance to avoid costly out-of-pocket repairs.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2074,7 +2065,7 @@
     "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Motor Advisor could help you structure a policy that truly protects you and your assets on the road.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Motor Advisor could help you structure a policy that truly protects you and your assets on the road.\n\nWould you like to schedule a free consultation?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2368,7 +2359,7 @@
     "id": "SME_019",
     "industry": "sme",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2663,7 +2654,7 @@
     "id": "MFG_019",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2950,7 +2941,7 @@
     "id": "HOS_019",
     "industry": "hospital",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3234,7 +3225,7 @@
     "id": "SCH_019",
     "industry": "school",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3517,7 +3508,7 @@
     "id": "CHR_019",
     "industry": "church",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3805,7 +3796,7 @@
     "id": "CON_019",
     "industry": "construction",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -4094,7 +4085,7 @@
     "id": "TRN_019",
     "industry": "transport",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
