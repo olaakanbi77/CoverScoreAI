@@ -242,7 +242,7 @@ class QuestionPackFactory {
         id: `${p}_${String(startId + 1).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\n${advisorOffer}`,
+        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\n${advisorOffer}`,
         question_type: 'yes_no',
         answers: ['Yes', 'No'],
         data_mapping: 'request_consultation',
@@ -391,7 +391,7 @@ const questionPacks = [
     overrides: {
       intro_text: `👋 Welcome to CoverScore™ Health Protection Assessment.\n\nYour health is one of your greatest assets, but unexpected illness or medical emergencies can place enormous emotional and financial strain on you and your family.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for health-related risks and provide a personalized Health Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?`,
       did_you_know_text: `Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA single serious illness can affect not only your health but also your income, savings, and long-term financial goals.\n\nOur goal today is to help you identify health protection gaps before they become costly problems.\n\nLet's begin.`,
-      advisor_offer_text: `Based on your assessment, a short conversation with a CoverScore Health Protection Advisor could help you understand your options and answer any questions about your health protection strategy.\n\nWould you like to schedule a free consultation?`,
+      advisor_offer_text: `If you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?`,
       extra_qual_questions: [
         {
           question: `Do you currently have any dependants who rely on you for healthcare decisions or financial support?`,

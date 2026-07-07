@@ -1413,7 +1413,7 @@
     "id": "HLT_019",
     "industry": "health",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, I think a short conversation with a CoverScore Advisor could help you understand the options available to you.\n\nWould you like to schedule one?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",

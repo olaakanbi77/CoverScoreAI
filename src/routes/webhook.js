@@ -3,7 +3,7 @@ const router = express.Router();
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { get, run } = require('../config/database');
-const { generateRiskReport, getLeadQualifier, getWhatsappAdvisor } = require('../services/aiService');
+const { generateRiskReport, getLeadQualifier } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
 const ccieEngine = require('../services/ccieEngine');
@@ -24,6 +24,76 @@ const resolvePrefix = (ind) => {
     if (lowerInd.includes(key)) return val;
   }
   return 'SME';
+};
+
+const generateCoverScoreInsight = (pillarScores, answers, name) => {
+  const entries = Object.entries(pillarScores || {}).sort(([, a], [, b]) => a - b);
+  if (entries.length === 0) return null;
+  const weakest = entries[0];
+  const weakestName = weakest[0];
+  const weakestScore = weakest[1];
+
+  let body = '';
+  if (weakestName === 'Healthcare Access') {
+    body = `Your assessment suggests that the most significant gap in your health resilience is your access to healthcare coverage.`;
+    const ins = answers['HLT_012'];
+    if (ins === 'None') {
+      body += ` Without active health insurance, a serious medical event could result in significant out-of-pocket costs that may be difficult to manage.`;
+    } else if (ins === 'Government Health Scheme') {
+      body += ` While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care.`;
+    } else if (ins === 'Employer HMO') {
+      body += ` Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care.`;
+    }
+    body += ` Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection.`;
+  } else if (weakestName === 'Preventive Health') {
+    body = `Your assessment shows that the biggest opportunity to strengthen your health resilience isn't about what you have\u2014it's about what you do.`;
+    const chk = answers['HLT_015'];
+    if (chk === 'Rarely/Only when sick') {
+      body += ` By only seeking medical attention when you're already unwell, you miss the chance to detect potential health issues early, when they are most treatable.`;
+    }
+    body += ` Making preventive health a regular habit\u2014starting with an annual check-up\u2014is a simple but powerful step toward long-term wellbeing.`;
+  } else if (weakestName === 'Medical Risk Profile') {
+    body = `Your assessment highlights that your medical history and age profile are important factors in your overall health risk.`;
+    const cond = answers['HLT_014'];
+    if (cond && cond !== 'None') {
+      body += ` Managing ${cond} requires consistent medical attention and appropriate insurance coverage.`;
+    }
+    const age = answers['HLT_009'];
+    if (age && (age === '56+' || age === '46 - 55')) {
+      body += ` As you get older, health risks naturally increase, making comprehensive coverage more important.`;
+    }
+    body += ` Ensuring your health plan is designed to address your specific circumstances is the most impactful step you can take.`;
+  } else if (weakestName === 'Financial Health Protection') {
+    body = `Your assessment suggests that your greatest health risk isn't access to healthcare\u2014it's the financial impact that a serious illness could have on you and your family.`;
+    const pay = answers['HLT_013'];
+    if (pay === "I don't know" || pay === 'Loan') {
+      body += ` Without dedicated savings for medical emergencies, a major health event could create significant debt.`;
+    }
+    const surg = answers['HLT_016'];
+    if (surg === 'No' || surg === 'Not sure') {
+      body += ` Your current health cover may not be sufficient for major procedures such as surgery.`;
+    }
+    const ill = answers['HLT_017'];
+    if (ill === 'No') {
+      body += ` A serious illness could put financial pressure on your household.`;
+    }
+    body += ` Strengthening your financial health protection is the most impactful step you can take.`;
+  } else if (weakestName === 'Household Resilience') {
+    body = `Your assessment shows that your household's overall resilience is an area to strengthen.`;
+    const dep = answers['HLT_010'];
+    if (dep === '3' || dep === '4+') {
+      body += ` With multiple dependants relying on you, any health-related income disruption affects more than just yourself.`;
+    }
+    const emp = answers['HLT_008'];
+    if (emp === 'Part-time / Freelance' || emp === 'Student') {
+      body += ` Your current employment situation means there is less of a financial buffer if a health emergency arises.`;
+    }
+    body += ` Building a stronger household safety net through appropriate coverage is your most practical next step.`;
+  } else {
+    body = `Your assessment provides a clear picture of your current health resilience. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact.`;
+  }
+
+  return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
 };
 
 router.post('/evolution', async (req, res) => {
@@ -260,6 +330,8 @@ router.post('/evolution', async (req, res) => {
         }
         assessmentData.strengths = strengthsText;
         assessmentData.top_risks = risksText;
+        assessmentData.risk_categories = scoreResult.risk_categories;
+        assessmentData.pillar_scores = scoreResult.pillar_scores;
         assessmentData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
           ? scoreResult.recommendations.slice(0, 3).map(r => '• ' + r).join('\n') : fallbacks.recommendations;
         assessmentData._scored = true;
@@ -356,30 +428,44 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    // Phase 3: Build report message (after scoring so _scored is true)
-    let reportMessage = null;
+    // Phase 3: Build ending sequence — Results → Insight → Actions → Report → Advisor
     if (needsScoring && assessmentData._scored) {
-      try {
-        const advisorMsg = await getWhatsappAdvisor([], 'finished', '');
-        if (advisorMsg) {
-          reportMessage = advisorMsg
-            .replace(/{{score}}/g, assessmentData.score || '0')
-            .replace(/{{riskLevel}}/g, (assessmentData.riskLevel || 'Moderate').toUpperCase())
-            .replace(/{{strengths}}/g, assessmentData.strengths || '')
-            .replace(/{{top_risks}}/g, assessmentData.top_risks || '')
-            .replace(/{{recommendations}}/g, assessmentData.recommendations || '')
-            .replace(/{{reportUrl}}/g, assessmentData.reportUrl || 'https://coverscore.site');
-        }
-      } catch (e) {
-        console.error('WhatsApp advisor error:', e);
-      }
-      if (!reportMessage) {
-        reportMessage = `🛡️ *Your CoverScore Report*\n\n📊 Score: *${assessmentData.score || 'N/A'}*/100\n📋 Risk Level: *${(assessmentData.riskLevel || 'Moderate').toUpperCase()}*\n\n${assessmentData.strengths ? '*Strengths:*\n' + assessmentData.strengths + '\n\n' : ''}${assessmentData.top_risks ? '*Top Risks:*\n' + assessmentData.top_risks + '\n\n' : ''}${assessmentData.recommendations ? '*Recommendations:*\n' + assessmentData.recommendations : ''}\n\n📄 Full Report: ${assessmentData.reportUrl || 'N/A'}`;
-      }
-    }
+      const name = assessmentData.name || 'Customer';
+      const email = assessmentData.email || (lead ? lead.email : null);
+      const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
+      const riskCats = assessmentData.risk_categories || {};
+      const answers = assessmentData.answers || {};
+      const recommendations = scoreResult.recommendations || [];
 
-    if (reportMessage) {
-      postMessages.push({ type: 'report', text: reportMessage });
+      // Message 1: CoverScore + Risk Pillars
+      const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${userRiskLabel.toUpperCase()} Resilience\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
+      postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
+
+      // Message 2: CoverScore Insight™
+      const insightText = generateCoverScoreInsight(riskCats, answers, name);
+      if (insightText) {
+        postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
+      }
+
+      // Message 3: Top 3 Priorities
+      const actionItems = recommendations.length > 0
+        ? recommendations.slice(0, 3).map((r, i) => `${i + 1}. ${r}`).join('\n')
+        : '1. Review your current health coverage for gaps\n2. Build an emergency medical fund\n3. Schedule a preventive health screening';
+      postMessages.push({ type: 'actions', text: `*Your Top 3 Priorities*\n\n${actionItems}`, _delay: 3000 });
+
+      // Message 4: Report delivery info
+      postMessages.push({
+        type: 'report_link',
+        text: `\uD83D\uDCC4 Your complete Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nYou can also view it here:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
+        _delay: 3000
+      });
+
+      // Message 5: Advisor invitation
+      postMessages.push({
+        type: 'advisor',
+        text: `If you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?\n\nA. Yes\nB. Not now`,
+        _delay: 0
+      });
     }
 
     // Phase 4: Send remaining messages with real data and typing indicator
@@ -388,9 +474,8 @@ router.post('/evolution', async (req, res) => {
       if (!msg.text) continue;
       msg.text = fillTemplate(msg.text);
 
-      // 12s typing indicator for results after auto_advance (simulates report generation)
-      const isAfterAutoAdvance = !!(preMessages.length > 0);
-      const msgDelay = isAfterAutoAdvance ? 12000 : undefined;
+      // Use per-message delay if set, otherwise fallback to 12s for first post-message
+      const msgDelay = msg._delay != null ? msg._delay : (i === 0 && preMessages.length > 0 ? 12000 : undefined);
 
       const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text, delay: msgDelay });
       if (!sendResult.success) {
@@ -411,7 +496,7 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    const finalState = assessmentData._scored ? (nextState.includes('awaiting') ? nextState : 'qualification') : nextState;
+    const finalState = assessmentData._scored ? 'awaiting_consultation' : nextState;
     await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
       [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
 

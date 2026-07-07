@@ -74,8 +74,21 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
 
+  if (currentState === 'awaiting_consultation') {
+    if (input === 'A' || input === 'YES') {
+      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
+      nextState = 'awaiting_consultation_day';
+      updatedData.is_qualified = true;
+    } else {
+      replyText = "Noted. Your personalized report has been generated. We are always here if you change your mind. Have a great day!";
+      nextState = 'finished';
+      updatedData.is_qualified = false;
+    }
+    return { nextState, replyText, updatedData, isComplete };
+  }
+
   const currentQ = questionBank.find(q => q.id === currentState);
-  
+
   if (!currentQ) {
     replyText = "I'm sorry, I didn't understand that. Please type START ASSESSMENT to begin.";
     return { nextState, replyText, updatedData, isComplete };
