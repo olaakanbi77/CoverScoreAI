@@ -246,7 +246,7 @@ class QuestionPackFactory {
         question_type: 'yes_no',
         answers: ['Yes', 'No'],
         data_mapping: 'request_consultation',
-        branching: { 'DEFAULT': 'awaiting_commitment' }
+        branching: { 'DEFAULT': 'awaiting_consultation' }
       }
     ];
   }

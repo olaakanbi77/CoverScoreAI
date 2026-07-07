@@ -19,36 +19,46 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
 
-  // Structured Qualification States (V2 Flow Post-Assessment)
+  // Simplified ending: Yes routes to advisor, No closes gracefully, any day name closes
   if (currentState === 'awaiting_consultation') {
+    const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
     if (input === 'A' || input === 'YES') {
-      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
-      nextState = 'awaiting_consultation_day';
+      updatedData.next_action = 'Speak with a Risk Advisor';
+      replyText = "Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and help you implement your recommendation.\n\nThank you for choosing CoverScore\u2122.";
+      nextState = 'finished';
       updatedData.is_qualified = true;
-    } else if (input === 'B' || input === 'MAYBE LATER' || input === 'C' || input === 'NO') {
-      replyText = "Noted. Your personalized report will still be sent to your email. We are always here if you change your mind. Have a great day!";
+    } else if (knownDays.includes(input)) {
+      updatedData.next_action = 'Speak with a Risk Advisor';
+      updatedData.consultation_day = incomingText.trim().charAt(0).toUpperCase() + incomingText.trim().slice(1).toLowerCase();
+      replyText = `Noted.\n\nOne of our Certified Risk Advisors will contact you on ${updatedData.consultation_day} to walk through your report and help you implement your recommendation.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
+      updatedData.is_qualified = true;
+    } else {
       updatedData.is_qualified = false;
-    } else {
-      replyText = "Please reply with A, B, or C.";
-    }
-    return { nextState, replyText, updatedData, isComplete };
-  }
-
-  if (currentState === 'awaiting_consultation_day') {
-    const dayMap = { A: 'Monday', B: 'Tuesday', C: 'Wednesday', D: 'Thursday', E: 'Friday' };
-    if (['A', 'B', 'C', 'D', 'E'].includes(input)) {
-      updatedData.consultation_preference = dayMap[input];
-      replyText = "A Risk Advisor will contact you shortly to schedule your consultation.\n\nThank you for using CoverScore AI.";
+      replyText = "No problem.\n\nYour report will remain available whenever you need it.\n\nOver the coming weeks, I'll also share practical health protection tips that match your assessment.\n\nIf you ever decide you'd like a personal review, simply reply:\n\nADVISOR\n\nWe'll arrange it for you.\n\nThank you for choosing CoverScore\u2122.";
       nextState = 'finished';
-    } else {
-      replyText = "Please reply with A, B, C, D, or E.";
     }
     return { nextState, replyText, updatedData, isComplete };
   }
 
-  // Handle finished state explicitly
+  // Handle finished state explicitly — also accept ADVISOR keyword or day name
   if (currentState === 'finished' || currentState === 'COMPLETE') {
+    const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+    if (input === 'ADVISOR') {
+      updatedData.next_action = 'Speak with a Risk Advisor';
+      replyText = "Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and help you implement your recommendation.\n\nThank you for choosing CoverScore\u2122.";
+      nextState = 'finished';
+      updatedData.is_qualified = true;
+      return { nextState, replyText, updatedData, isComplete };
+    }
+    if (knownDays.includes(input)) {
+      updatedData.next_action = 'Speak with a Risk Advisor';
+      updatedData.consultation_day = incomingText.trim().charAt(0).toUpperCase() + incomingText.trim().slice(1).toLowerCase();
+      replyText = `Noted.\n\nOne of our Certified Risk Advisors will contact you on ${updatedData.consultation_day} to walk through your report and help you implement your recommendation.\n\nThank you for choosing CoverScore\u2122.`;
+      nextState = 'finished';
+      updatedData.is_qualified = true;
+      return { nextState, replyText, updatedData, isComplete };
+    }
     return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
 
@@ -180,12 +190,13 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
 // Helper to format a JSON question for WhatsApp
 const formatDynamicQuestion = (q) => {
-  // If it's the welcome message, it probably doesn't need a pillar
   let text = '';
-  if (q.id && q.id.endsWith('_001')) {
-    text = `${q.question}\n\n`;
+  const hiddenPillars = ['General', 'Exposure'];
+  
+  if (q.pillar && !hiddenPillars.includes(q.pillar)) {
+    text = `*${q.pillar}*\n\n${q.question}\n\n`;
   } else {
-    text = q.pillar ? `*${q.pillar}*\n\n${q.question}\n\n` : `${q.question}\n\n`;
+    text = `${q.question}\n\n`;
   }
   
   if (q.question_type === 'yes_no') {

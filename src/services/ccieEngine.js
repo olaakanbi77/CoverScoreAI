@@ -19,7 +19,7 @@ const PHASE_ORDER = ['WELCOME', 'CONSENT', 'PROFILE', 'DISCOVERY', 'ANALYSIS', '
 const determinePhase = (questionId) => {
   if (!questionId) return 'WELCOME';
   if (questionId === 'finished' || questionId === 'COMPLETE') return 'COMPLETED';
-  if (questionId === 'awaiting_commitment' || questionId === 'awaiting_day' || questionId === 'awaiting_time') return 'NEXT_BEST_ACTION';
+  if (questionId === 'awaiting_consultation') return 'NEXT_BEST_ACTION';
   const match = questionId.match(/_(\d+)$/);
   if (!match) return 'WELCOME';
   const num = parseInt(match[1], 10);

@@ -432,7 +432,7 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    // Phase 3: Build ending sequence — Results → Insight → Actions → Report → Advisor
+    // Phase 3: Build ending sequence — Score → Report → Insight → Recommendation → Advisor
     if (needsScoring && assessmentData._scored) {
       const name = assessmentData.name || 'Customer';
       const email = assessmentData.email || (lead ? lead.email : null);
@@ -441,34 +441,70 @@ router.post('/evolution', async (req, res) => {
       const answers = assessmentData.answers || {};
       const recommendations = assessmentData.recommendations || [];
 
-      // Message 1: CoverScore + Risk Pillars
+      // Resilience labels instead of risk labels
+      const resilienceLabels = {
+        'low': 'Strong Resilience',
+        'moderate': 'Building Resilience',
+        'high': 'Needs Attention',
+        'critical': 'Priority Improvement'
+      };
       const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
-      const displayRiskLabel = dbLevel.charAt(0).toUpperCase() + dbLevel.slice(1) + ' Risk';
-      const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayRiskLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
+      const displayLabel = resilienceLabels[dbLevel] || 'Building Resilience';
+
+      // Message 1: CoverScore + Risk Pillars
+      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
-      // Message 2: CoverScore Insight™
-      const insightText = generateCoverScoreInsight(riskCats, answers, name);
-      if (insightText) {
-        postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
-      }
-
-      // Message 3: Top 3 Priorities
-      const actionItems = recommendations || '1. Review your current health coverage for gaps\n2. Build an emergency medical fund\n3. Schedule a preventive health screening';
-      postMessages.push({ type: 'actions', text: `*Your Top 3 Priorities*\n\n${actionItems}`, _delay: 3000 });
-
-      // Message 4: Report delivery info
+      // Message 2: Report delivery info
       postMessages.push({
         type: 'report_link',
         text: `\uD83D\uDCC4 Your complete Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nYou can also view it here:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
         _delay: 3000
       });
 
-      // Message 5: Advisor invitation
+      // Message 3: CoverScore Insight\u2122
+      const insightText = generateCoverScoreInsight(riskCats, answers, name);
+      if (insightText) {
+        postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
+      }
+
+      // Message 4: One Primary Recommendation (AI-chosen from weakest pillar)
+      const getPrimaryRecommendation = (riskCats, recs) => {
+        const entries = Object.entries(riskCats || {});
+        if (entries.length === 0) return null;
+        const sorted = entries.sort(([, a], [, b]) => a - b);
+        const weakest = sorted[0];
+        const weakestName = weakest[0];
+        const weakArea = weakestName.toLowerCase();
+
+        let action;
+        if (recs && recs.length > 0) {
+          action = recs[0].toLowerCase().replace(/^[\u2022\-]\s*/, '');
+        } else {
+          action = `reviewing your ${weakArea}`;
+        }
+
+        const strongEntries = sorted.filter(([, s]) => s >= 60);
+        const strengthsText = strongEntries.length > 0
+          ? `\n\nYour ${strongEntries.map(([n]) => n.toLowerCase()).join(' and ')} ${strongEntries.length === 1 ? 'is' : 'are'} relatively strong \u2014 that\u2019s good progress.`
+          : '';
+
+        return {
+          area: weakestName,
+          text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your overall resilience.${strengthsText}`
+        };
+      };
+
+      const primaryRec = getPrimaryRecommendation(riskCats, recommendations);
+      if (primaryRec) {
+        postMessages.push({ type: 'recommendation', text: primaryRec.text, _delay: 3000 });
+      }
+
+      // Message 5: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
-        text: `If you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?\n\nA. Yes\nB. Not now`,
-        _delay: 0
+        text: `Your complete report explains why this is a priority.\n\nIf you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
+        _delay: 3000
       });
     }
 
