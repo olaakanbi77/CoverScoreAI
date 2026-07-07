@@ -268,7 +268,10 @@ router.post('/evolution', async (req, res) => {
     // Phase 1: Send auto_advance messages immediately (before scoring takes time)
     let allMessages = [...messages];
     const preMessages = needsScoring ? allMessages.filter(m => m.type === 'auto_advance') : [];
-    const postMessages = needsScoring ? allMessages.filter(m => m.type !== 'auto_advance') : allMessages;
+    // When scoring, Phase 3 replaces the results template entirely; discard old reply text
+    const postMessages = needsScoring
+      ? allMessages.filter(m => m.type !== 'auto_advance' && m.type !== 'reply')
+      : allMessages;
 
     for (const msg of preMessages) {
       if (!msg.text) continue;
