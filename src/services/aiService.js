@@ -12,22 +12,31 @@ async function callMistral(systemPrompt, userPrompt, jsonMode = true) {
     throw new Error('MISTRAL_API_KEY is not configured.');
   }
 
-  const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${MISTRAL_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: MISTRAL_MODEL,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      response_format: jsonMode ? { type: "json_object" } : { type: "text" },
-      temperature: 0.3
-    })
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+  let response;
+  try {
+    response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${MISTRAL_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: MISTRAL_MODEL,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        response_format: jsonMode ? { type: "json_object" } : { type: "text" },
+        temperature: 0.3
+      }),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   if (!response.ok) {
     const errText = await response.text();
