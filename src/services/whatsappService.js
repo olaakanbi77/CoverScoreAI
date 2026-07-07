@@ -318,7 +318,7 @@ const sendWhatsApp = async (to, templateKey, data = {}) => {
       body: JSON.stringify({
         number: phone,
         text: message,
-        delay: 1200,
+        delay: data.delay || 1200,
         presence: 'composing',
         linkPreview: true
       })

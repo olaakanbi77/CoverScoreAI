@@ -322,11 +322,30 @@ router.post('/evolution', async (req, res) => {
     }
 
     if (allMessages.length > 0) {
+      // Replace template placeholders in all messages with actual assessment data
+      const fillTemplate = (text) => {
+        return text
+          .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
+          .replace(/\{\{score\}\}/g, assessmentData.score || '0')
+          .replace(/\{\{riskLevel\}\}/g, (assessmentData.riskLevel || 'Moderate').toUpperCase())
+          .replace(/\{\{protectionLevel\}\}/g, (assessmentData.riskLevel || 'Moderate').toUpperCase())
+          .replace(/\{\{strengths\}\}/g, assessmentData.strengths || '')
+          .replace(/\{\{top_risks\}\}/g, assessmentData.top_risks || '')
+          .replace(/\{\{risks\}\}/g, assessmentData.top_risks || '')
+          .replace(/\{\{recommendations\}\}/g, assessmentData.recommendations || '')
+          .replace(/\{\{reportUrl\}\}/g, assessmentData.reportUrl || 'https://coverscore.site');
+      };
+
       for (let i = 0; i < allMessages.length; i++) {
         const msg = allMessages[i];
         if (!msg.text) continue;
+        msg.text = fillTemplate(msg.text);
 
-        const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text });
+        // Simulate typing/processing delay for results after auto-advance
+        const isAfterAutoAdvance = i > 0 && allMessages[i - 1].type === 'auto_advance';
+        const msgDelay = isAfterAutoAdvance ? 4000 : undefined;
+
+        const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text, delay: msgDelay });
         if (!sendResult.success) {
           console.error(`   ❌ Failed to send message ${i}: ${sendResult.error}. Aborting.`);
           return;
