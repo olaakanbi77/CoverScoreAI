@@ -251,7 +251,7 @@ router.post('/evolution', async (req, res) => {
       'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
       'High Risk': 'High', 'Critical Risk': 'Critical'
     };
-    const userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
+    let userRiskLabel = 'Moderate';
     const fillTemplate = (text) => {
       return text
         .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
@@ -295,6 +295,7 @@ router.post('/evolution', async (req, res) => {
         const scoreResult = await calculateScore(finalAnswers);
         assessmentData.score = scoreResult.score;
         assessmentData.riskLevel = scoreResult.riskLevel;
+        userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
         assessmentData.identified_gaps = scoreResult.identified_gaps || [];
         assessmentData.min_loss = scoreResult.min_loss;
         assessmentData.max_loss = scoreResult.max_loss;

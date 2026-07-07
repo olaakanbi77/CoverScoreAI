@@ -94,9 +94,9 @@ ${JSON.stringify({
 Required Output (JSON ONLY):
 {
   "executiveSummary": "A calm, professional summary explaining overall risk exposure and resilience.",
-  "topExposures": ["Exposure 1", "Exposure 2", "Exposure 3"],
-  "topFinancialThreats": ["Threat 1", "Threat 2", "Threat 3"],
-  "topProtectionGaps": ["Gap 1", "Gap 2", "Gap 3"],
+  "topExposures": ["Exposure 1", "Exposure 2", "Exposure 3", "Exposure 4", "Exposure 5"],
+  "topFinancialThreats": ["Threat 1", "Threat 2", "Threat 3", "Threat 4", "Threat 5"],
+  "topProtectionGaps": ["Gap 1", "Gap 2", "Gap 3", "Gap 4", "Gap 5"],
   "topRecommendations": [
     {
       "timeframe": "Immediate / Short-term / Long-term",
@@ -236,7 +236,7 @@ function getFallbackReport(assessmentData, prefix) {
       return {
         executiveSummary: localReport.executiveSummary || localReport.riskNarrative || "Risk assessment completed.",
         topExposures: localReport.riskRegister.slice(0, 5).map(r => r.name),
-        topFinancialThreats: localReport.riskRegister.filter(r => r.severity === 'Critical').slice(0, 3).map(r => r.name),
+        topFinancialThreats: localReport.riskRegister.filter(r => r.severity === 'Critical').slice(0, 5).map(r => r.name),
         topProtectionGaps: localReport.allRisks.filter(r => r.severity !== 'Low').map(r => r.category),
         topRecommendations: localReport.prioritizedRecommendations.slice(0, 5).map(r => ({
           timeframe: r.priority === 'Immediate' ? 'Immediate' : r.priority === 'High' ? 'Short-term' : 'Medium-term',
@@ -253,11 +253,15 @@ function getFallbackReport(assessmentData, prefix) {
   }
   return {
     executiveSummary: "This is an automated fallback report due to AI generation timeout. Your risk profile requires attention.",
-    topExposures: ["General Liability", "Property Damage", "Financial Loss"],
-    topFinancialThreats: ["Out of pocket expenses", "Business interruption"],
-    topProtectionGaps: ["Uninsured assets", "Lack of income protection"],
+    topExposures: ["General Liability", "Property Damage", "Financial Loss", "Business Interruption", "Cyber Liability"],
+    topFinancialThreats: ["Out of pocket expenses", "Business interruption", "Loss of income", "Medical emergencies", "Legal liability"],
+    topProtectionGaps: ["Uninsured assets", "Lack of income protection", "No critical illness cover", "Inadequate liability cover", "No business continuity plan"],
     topRecommendations: [
-      { timeframe: "Immediate", exposure: "Property", consequence: "Total loss", protectionGap: "No cover", action: "Obtain basic protection" }
+      { timeframe: "Immediate", exposure: "Property", consequence: "Total loss", protectionGap: "No cover", action: "Obtain basic protection" },
+      { timeframe: "Immediate", exposure: "Health", consequence: "Out of pocket medical costs", protectionGap: "Limited health cover", action: "Review health insurance options" },
+      { timeframe: "Short-term", exposure: "Income", consequence: "Loss of earnings", protectionGap: "No income protection", action: "Set up income protection" },
+      { timeframe: "Short-term", exposure: "Liability", consequence: "Legal claims", protectionGap: "Inadequate liability cover", action: "Review liability insurance" },
+      { timeframe: "Long-term", exposure: "Business continuity", consequence: "Extended downtime", protectionGap: "No continuity plan", action: "Develop business continuity plan" }
     ],
     professionalRecommendation: "Please speak with an advisor for a comprehensive review."
   };
