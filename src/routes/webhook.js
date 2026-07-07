@@ -194,7 +194,23 @@ router.post('/evolution', async (req, res) => {
 
         let strengthsText = fallbacks.strengths;
         if (scoreResult.risk_categories) {
-          const strongCats = Object.entries(scoreResult.risk_categories).filter(([k, v]) => v >= 80).map(([k, v]) => '✓ ' + k);
+          const strengthLabels = {
+            'Medical Risk': 'Health Management',
+            'Financial Risk': 'Financial Planning',
+            'Property Risk': 'Property Protection',
+            'Liability Risk': 'Liability Management',
+            'Cyber Risk': 'Cybersecurity',
+            'Income Risk': 'Income Protection',
+            'Business Risk': 'Business Resilience',
+            'Family Risk': 'Family Protection',
+            'Retirement Risk': 'Retirement Readiness',
+            'Motor Risk': 'Motor Coverage',
+            'Travel Risk': 'Travel Protection',
+            'Education Risk': 'Education Planning',
+          };
+          const strongCats = Object.entries(scoreResult.risk_categories)
+            .filter(([k, v]) => v >= 80)
+            .map(([k, v]) => '✓ ' + (strengthLabels[k] || k));
           strengthsText = strongCats.length > 0 ? strongCats.join('\n') : "✓ Strong potential for risk reduction\n✓ High opportunity for coverage optimization";
         }
         assessmentData.strengths = strengthsText;
@@ -324,12 +340,19 @@ router.post('/evolution', async (req, res) => {
 
     if (allMessages.length > 0) {
       // Replace template placeholders in all messages with actual assessment data
+      const riskLabelMap = {
+        'Excellent': 'Excellent', 'Good': 'Good', 'Moderate': 'Moderate',
+        'Vulnerable': 'Vulnerable', 'Critical': 'Critical',
+        'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
+        'High Risk': 'High', 'Critical Risk': 'Critical'
+      };
+      const userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
       const fillTemplate = (text) => {
         return text
           .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
           .replace(/\{\{score\}\}/g, assessmentData.score || '0')
-          .replace(/\{\{riskLevel\}\}/g, (assessmentData.riskLevel || 'Moderate').toUpperCase())
-          .replace(/\{\{protectionLevel\}\}/g, (assessmentData.riskLevel || 'Moderate').toUpperCase())
+          .replace(/\{\{riskLevel\}\}/g, userRiskLabel.toUpperCase())
+          .replace(/\{\{protectionLevel\}\}/g, userRiskLabel.toUpperCase())
           .replace(/\{\{strengths\}\}/g, assessmentData.strengths || '')
           .replace(/\{\{top_risks\}\}/g, assessmentData.top_risks || '')
           .replace(/\{\{risks\}\}/g, assessmentData.top_risks || '')
