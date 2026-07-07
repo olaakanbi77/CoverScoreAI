@@ -242,7 +242,7 @@ class QuestionPackFactory {
         id: `${p}_${String(startId + 1).padStart(3, '0')}`,
         industry: config.ind,
         pillar: 'General',
-        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\n${advisorOffer}`,
+        question: `🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\n${advisorOffer}`,
         question_type: 'yes_no',
         answers: ['Yes', 'No'],
         data_mapping: 'request_consultation',

@@ -227,7 +227,7 @@ router.post('/evolution', async (req, res) => {
         assessmentData.max_loss = scoreResult.max_loss;
 
         const fb = {
-          HLT: { strengths: "✓ You already have a health insurance plan.\n✓ You are aware of your family's medical history.", risks: "⚠ Your current health plan may not provide sufficient coverage for major illnesses.\n⚠ You rely heavily on out-of-pocket payments.\n⚠ You do not have Critical Illness protection.", recommendations: "• Review your HMO benefits.\n• Compare health plans that provide wider hospital coverage.\n• Schedule an annual preventive health screening." },
+          HLT: { strengths: '', risks: "⚠ Your health protection gaps need attention.", recommendations: "• Review your health coverage.\n• Build an emergency medical fund.\n• Schedule preventive health screenings." },
           ENT: { strengths: "✓ Strong business vision\n✓ Market awareness", risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection", recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets." },
           FAM: { strengths: "✓ Clear long-term goals\n✓ Strong familial support", risks: "⚠ Inadequate life cover\n⚠ Education funding gap", recommendations: "• Review Life Insurance policy.\n• Set up an education trust." },
           DEFAULT: { strengths: "✓ Career Stability\n✓ Digital Safety\n✓ Personal Responsibility", risks: "⚠ Limited emergency savings\n⚠ Inadequate income protection\n⚠ No long-term financial protection strategy", recommendations: "• Build an emergency fund\n• Review income protection\n• Begin a structured long-term financial plan" }
@@ -235,29 +235,31 @@ router.post('/evolution', async (req, res) => {
         const fallbacks = fb[prefix] || fb.DEFAULT;
 
         let strengthsText = fallbacks.strengths;
-        if (scoreResult.risk_categories) {
-          const strengthLabels = {
-            'Medical Risk': 'Health Management',
-            'Financial Risk': 'Financial Planning',
-            'Property Risk': 'Property Protection',
-            'Liability Risk': 'Liability Management',
-            'Cyber Risk': 'Cybersecurity',
-            'Income Risk': 'Income Protection',
-            'Business Risk': 'Business Resilience',
-            'Family Risk': 'Family Protection',
-            'Retirement Risk': 'Retirement Readiness',
-            'Motor Risk': 'Motor Coverage',
-            'Travel Risk': 'Travel Protection',
-            'Education Risk': 'Education Planning',
+        let risksText = fallbacks.risks;
+        if (scoreResult.risk_categories && Object.keys(scoreResult.risk_categories).length > 0) {
+          const makeBar = (s) => {
+            const filled = Math.round(Math.min(s, 100) / 10);
+            return '\u2588'.repeat(filled) + '\u2591'.repeat(10 - filled);
           };
-          const strongCats = Object.entries(scoreResult.risk_categories)
-            .filter(([k, v]) => v >= 80)
-            .map(([k, v]) => '✓ ' + (strengthLabels[k] || k));
-          strengthsText = strongCats.length > 0 ? strongCats.join('\n') : "✓ Strong potential for risk reduction\n✓ High opportunity for coverage optimization";
+          const pillarNames = Object.keys(scoreResult.risk_categories);
+          const maxLen = Math.max(...pillarNames.map(n => n.length), 20);
+          const lines = Object.entries(scoreResult.risk_categories)
+            .sort(([, a], [, b]) => b - a)
+            .map(([name, score]) => {
+              const paddedName = name.padEnd(maxLen);
+              return `${paddedName} ${makeBar(score)} ${score}%`;
+            });
+          strengthsText = lines.join('\n');
+
+          const weak = Object.entries(scoreResult.risk_categories)
+            .filter(([, v]) => v < 50)
+            .sort(([, a], [, b]) => a - b);
+          risksText = weak.length > 0
+            ? weak.map(([name]) => '\u26A0 ' + name + ' needs attention').join('\n')
+            : "Your overall profile is reasonably balanced. Targeted recommendations below.";
         }
         assessmentData.strengths = strengthsText;
-        assessmentData.top_risks = scoreResult.identified_gaps && scoreResult.identified_gaps.length > 0
-          ? scoreResult.identified_gaps.slice(0, 3).map(g => '⚠ ' + g).join('\n') : fallbacks.risks;
+        assessmentData.top_risks = risksText;
         assessmentData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
           ? scoreResult.recommendations.slice(0, 3).map(r => '• ' + r).join('\n') : fallbacks.recommendations;
         assessmentData._scored = true;

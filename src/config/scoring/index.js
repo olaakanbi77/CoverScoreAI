@@ -2,21 +2,42 @@ const scoringConfigs = {
   HLT: {
     name: 'Health Protection',
     pillars: [
-      { id: 'healthcare_access', name: 'Healthcare Access', weight: 0.20 },
-      { id: 'medical_risk', name: 'Medical Risk', weight: 0.20 },
-      { id: 'lifestyle', name: 'Lifestyle', weight: 0.20 },
-      { id: 'financial_preparedness', name: 'Financial Preparedness', weight: 0.20 },
-      { id: 'protection_recovery', name: 'Protection & Recovery', weight: 0.20 }
+      { id: 'healthcare_access', name: 'Healthcare Access', weight: 0.25 },
+      { id: 'preventive_health', name: 'Preventive Health', weight: 0.20 },
+      { id: 'medical_risk_profile', name: 'Medical Risk Profile', weight: 0.20 },
+      { id: 'financial_health_protection', name: 'Financial Health Protection', weight: 0.20 },
+      { id: 'household_resilience', name: 'Household Resilience', weight: 0.15 }
     ],
     categories: {
       insurance_coverage: { name: 'Insurance Coverage', pillar: 'healthcare_access' },
-      diagnosed_conditions: { name: 'Diagnosed Conditions', pillar: 'medical_risk' },
-      checkup_frequency: { name: 'Check-up Frequency', pillar: 'lifestyle' },
-      emergency_fund: { name: 'Emergency Fund', pillar: 'financial_preparedness' },
-      surgery_coverage: { name: 'Surgery Coverage', pillar: 'protection_recovery' },
-      illness_resilience: { name: 'Illness Resilience', pillar: 'protection_recovery' }
+      checkup_frequency: { name: 'Check-up Frequency', pillar: 'preventive_health' },
+      diagnosed_conditions: { name: 'Diagnosed Conditions', pillar: 'medical_risk_profile' },
+      age_factor: { name: 'Age Factor', pillar: 'medical_risk_profile' },
+      emergency_fund: { name: 'Emergency Fund', pillar: 'financial_health_protection' },
+      surgery_coverage: { name: 'Surgery Coverage', pillar: 'financial_health_protection' },
+      illness_resilience: { name: 'Illness Resilience', pillar: 'financial_health_protection' },
+      employment_stability: { name: 'Employment Stability', pillar: 'household_resilience' },
+      dependant_burden: { name: 'Dependant Burden', pillar: 'household_resilience' }
     },
     questions: {
+      HLT_008: {
+        category: 'employment_stability',
+        scores: { 'Employed full-time': 100, 'Self-employed': 60, 'Part-time / Freelance': 40, 'Student': 30, 'Retired': 70 },
+        gaps: { 'Student': 'No steady income stream creates vulnerability during health emergencies.', 'Part-time / Freelance': 'Variable income makes it harder to absorb unexpected medical costs.' },
+        recommendations: { 'Student': 'Build a basic emergency fund and explore health insurance options.', 'Part-time / Freelance': 'Consider a health plan that provides consistent coverage regardless of income fluctuations.' }
+      },
+      HLT_009: {
+        category: 'age_factor',
+        scores: { '18 - 25': 100, '26 - 35': 80, '36 - 45': 60, '46 - 55': 40, '56+': 20 },
+        gaps: { '56+': 'Your age increases the risk profile for health-related complications.', '46 - 55': 'Age-related health risks are increasing and may need specialized coverage.' },
+        recommendations: { '56+': 'Review your health coverage with a focus on age-related care needs.', '46 - 55': 'Consider comprehensive health coverage that addresses age-related risks.' }
+      },
+      HLT_010: {
+        category: 'dependant_burden',
+        scores: { 'None': 100, '1': 80, '2': 60, '3': 40, '4+': 20 },
+        gaps: { '3': 'Multiple dependants amplify household vulnerability to health-related income shocks.', '4+': 'A large number of dependants creates significant household exposure to health emergencies.' },
+        recommendations: { '3': 'Ensure your health and income protection coverage accounts for all dependants.', '4+': 'Review family health insurance and income protection to cover all dependants.' }
+      },
       HLT_012: {
         category: 'insurance_coverage',
         scores: { 'Private Health Insurance': 100, 'Employer HMO': 60, 'Government Health Scheme': 50, 'None': 0 },
@@ -77,6 +98,13 @@ const scoringConfigs = {
         description: 'Infrequent check-ups combined with no insurance increases late-detection risk'
       },
       {
+        id: 'precarious_employment_no_protection',
+        name: 'Unstable Employment + No Income Protection',
+        conditions: [['HLT_008', ['Student', 'Part-time / Freelance']], ['HLT_017', 'No']],
+        penalty: 8,
+        description: 'Unstable income combined with no illness resilience creates high vulnerability'
+      },
+      {
         id: 'no_income_protection',
         name: 'No Income Protection During Illness',
         conditions: [['HLT_017', 'No']],
@@ -92,6 +120,8 @@ const scoringConfigs = {
       }
     ],
     improvements: {
+      HLT_008: { 'Student': { target: 'Employed full-time', gain: 8, action: 'Build income stability through full-time employment or consistent freelance income' }, 'Part-time / Freelance': { target: 'Employed full-time', gain: 6, action: 'Strengthen income consistency for better financial resilience' } },
+      HLT_010: { '4+': { target: '3', gain: 4, action: 'Ensure dependants have their own health coverage where possible' } },
       HLT_012: { 'None': { target: 'Employer HMO', gain: 8, action: 'Obtain basic health insurance coverage' }, 'Employer HMO': { target: 'Private Health Insurance', gain: 5, action: 'Upgrade to comprehensive private health insurance' } },
       HLT_013: { "I don't know": { target: 'Savings', gain: 10, action: 'Build a dedicated medical emergency fund' }, 'Loan': { target: 'Savings', gain: 8, action: 'Replace loan dependency with emergency savings' } },
       HLT_015: { 'Rarely/Only when sick': { target: 'Annually', gain: 6, action: 'Schedule annual preventive health screenings' } },
