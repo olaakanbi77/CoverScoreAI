@@ -172,8 +172,50 @@ router.post('/evolution', async (req, res) => {
 
     const isFinished = isComplete || nextState === 'finished' || nextState === 'COMPLETE';
     const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS';
+    const needsScoring = (isFinished || reachedResults) && !assessmentData._scored;
 
-    if ((isFinished || reachedResults) && !assessmentData._scored) {
+    // Template fill helper (uses assessmentData which scoring populates)
+    const riskLabelMap = {
+      'Excellent': 'Excellent', 'Good': 'Good', 'Moderate': 'Moderate',
+      'Vulnerable': 'Vulnerable', 'Critical': 'Critical',
+      'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
+      'High Risk': 'High', 'Critical Risk': 'Critical'
+    };
+    const userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
+    const fillTemplate = (text) => {
+      return text
+        .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
+        .replace(/\{\{score\}\}/g, assessmentData.score || '0')
+        .replace(/\{\{riskLevel\}\}/g, userRiskLabel.toUpperCase())
+        .replace(/\{\{protectionLevel\}\}/g, userRiskLabel.toUpperCase())
+        .replace(/\{\{strengths\}\}/g, assessmentData.strengths || '')
+        .replace(/\{\{top_risks\}\}/g, assessmentData.top_risks || '')
+        .replace(/\{\{risks\}\}/g, assessmentData.top_risks || '')
+        .replace(/\{\{recommendations\}\}/g, assessmentData.recommendations || '')
+        .replace(/\{\{reportUrl\}\}/g, assessmentData.reportUrl || 'https://coverscore.site');
+    };
+
+    // Phase 1: Send auto_advance messages immediately (before scoring takes time)
+    let allMessages = [...messages];
+    const preMessages = needsScoring ? allMessages.filter(m => m.type === 'auto_advance') : [];
+    const postMessages = needsScoring ? allMessages.filter(m => m.type !== 'auto_advance') : allMessages;
+
+    for (const msg of preMessages) {
+      if (!msg.text) continue;
+      msg.text = fillTemplate(msg.text);
+      const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text });
+      if (!sendResult.success) {
+        console.error(`   ❌ Failed to send auto_advance message: ${sendResult.error}. Aborting.`);
+        return;
+      }
+      chatHistory.push({
+        role: 'assistant', content: msg.text,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+    }
+
+    // Phase 2: Run scoring (takes time — AI calls)
+    if (needsScoring) {
       console.log(`   [CCIE SCORING] Calculating CoverScore for ${phoneNumber}`);
       const finalAnswers = { ...(assessmentData.answers || {}), template_selection: { template_id: prefix } };
       try {
@@ -312,8 +354,9 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
+    // Phase 3: Build report message (after scoring so _scored is true)
     let reportMessage = null;
-    if (isFinished && assessmentData._scored) {
+    if (needsScoring && assessmentData._scored) {
       try {
         const advisorMsg = await getWhatsappAdvisor([], 'finished', '');
         if (advisorMsg) {
@@ -333,59 +376,36 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    let allMessages = [...messages];
     if (reportMessage) {
-      allMessages.push({ type: 'report', text: reportMessage });
+      postMessages.push({ type: 'report', text: reportMessage });
     }
 
-    if (allMessages.length > 0) {
-      // Replace template placeholders in all messages with actual assessment data
-      const riskLabelMap = {
-        'Excellent': 'Excellent', 'Good': 'Good', 'Moderate': 'Moderate',
-        'Vulnerable': 'Vulnerable', 'Critical': 'Critical',
-        'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
-        'High Risk': 'High', 'Critical Risk': 'Critical'
-      };
-      const userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
-      const fillTemplate = (text) => {
-        return text
-          .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
-          .replace(/\{\{score\}\}/g, assessmentData.score || '0')
-          .replace(/\{\{riskLevel\}\}/g, userRiskLabel.toUpperCase())
-          .replace(/\{\{protectionLevel\}\}/g, userRiskLabel.toUpperCase())
-          .replace(/\{\{strengths\}\}/g, assessmentData.strengths || '')
-          .replace(/\{\{top_risks\}\}/g, assessmentData.top_risks || '')
-          .replace(/\{\{risks\}\}/g, assessmentData.top_risks || '')
-          .replace(/\{\{recommendations\}\}/g, assessmentData.recommendations || '')
-          .replace(/\{\{reportUrl\}\}/g, assessmentData.reportUrl || 'https://coverscore.site');
-      };
+    // Phase 4: Send remaining messages with real data and typing indicator
+    for (let i = 0; i < postMessages.length; i++) {
+      const msg = postMessages[i];
+      if (!msg.text) continue;
+      msg.text = fillTemplate(msg.text);
 
-      for (let i = 0; i < allMessages.length; i++) {
-        const msg = allMessages[i];
-        if (!msg.text) continue;
-        msg.text = fillTemplate(msg.text);
+      // 12s typing indicator for results after auto_advance (simulates report generation)
+      const isAfterAutoAdvance = !!(preMessages.length > 0);
+      const msgDelay = isAfterAutoAdvance ? 12000 : undefined;
 
-        // Simulate typing/processing delay for results after auto-advance
-        const isAfterAutoAdvance = i > 0 && allMessages[i - 1].type === 'auto_advance';
-        const msgDelay = isAfterAutoAdvance ? 4000 : undefined;
+      const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text, delay: msgDelay });
+      if (!sendResult.success) {
+        console.error(`   ❌ Failed to send message ${i}: ${sendResult.error}. Aborting.`);
+        return;
+      }
 
-        const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text, delay: msgDelay });
-        if (!sendResult.success) {
-          console.error(`   ❌ Failed to send message ${i}: ${sendResult.error}. Aborting.`);
-          return;
-        }
+      chatHistory.push({
+        role: 'assistant',
+        content: msg.text,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
 
-        chatHistory.push({
-          role: 'assistant',
-          content: msg.text,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      if (msg.type === 'milestone' || msg.type === 'insight' || msg.type === 'trust') {
+        publishEvent(CCIE_EVENTS.MICRO_INSIGHT_DISPLAYED, ccieContext, {
+          messageType: msg.type, text: msg.text.substring(0, 60)
         });
-
-        if (msg.type === 'milestone' || msg.type === 'insight' || msg.type === 'trust') {
-          publishEvent(CCIE_EVENTS.MICRO_INSIGHT_DISPLAYED, ccieContext, {
-            messageType: msg.type, text: msg.text.substring(0, 60)
-          });
-        }
       }
     }
 
