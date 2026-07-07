@@ -578,7 +578,8 @@ router.post('/evolution', async (req, res) => {
     }
 
     // Acknowledge webhook immediately so Evolution API doesn't timeout
-    res.sendStatus(200);
+    // (line 100 already sends 200 OK immediately; this is a safety net)
+    if (!res.headersSent) res.sendStatus(200);
 
     // Phase 4: Send remaining messages with real data and typing indicator
     for (let i = 0; i < postMessages.length; i++) {
