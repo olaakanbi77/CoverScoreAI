@@ -252,6 +252,12 @@ router.post('/evolution', async (req, res) => {
       'High Risk': 'High', 'Critical Risk': 'Critical'
     };
     let userRiskLabel = 'Moderate';
+    const dbRiskLevelMap = {
+      'Excellent': 'low', 'Good': 'low', 'Moderate': 'moderate',
+      'Vulnerable': 'high', 'Critical': 'critical',
+      'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
+      'High Risk': 'high', 'Critical Risk': 'critical'
+    };
     const fillTemplate = (text) => {
       return text
         .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
@@ -351,12 +357,6 @@ router.post('/evolution', async (req, res) => {
         const creIntelligence = await generateRecommendations(assessmentDataObj);
         const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
 
-        const dbRiskLevelMap = {
-          'Excellent': 'low', 'Good': 'low', 'Moderate': 'moderate',
-          'Vulnerable': 'high', 'Critical': 'critical',
-          'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
-          'High Risk': 'high', 'Critical Risk': 'critical'
-        };
         const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
 
         publishEvent(CCIE_EVENTS.SCORE_CALCULATED, ccieContext, {
@@ -442,7 +442,9 @@ router.post('/evolution', async (req, res) => {
       const recommendations = assessmentData.recommendations || [];
 
       // Message 1: CoverScore + Risk Pillars
-      const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${userRiskLabel.toUpperCase()} Resilience\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
+      const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
+      const displayRiskLabel = dbLevel.charAt(0).toUpperCase() + dbLevel.slice(1) + ' Risk';
+      const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayRiskLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
       // Message 2: CoverScore Insight™
