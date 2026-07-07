@@ -111,6 +111,10 @@ router.post('/evolution', async (req, res) => {
       incomingTextRaw =
         messageData.message.conversation ||
         (messageData.message.extendedTextMessage && messageData.message.extendedTextMessage.text) ||
+        (messageData.message.buttonsResponseMessage && messageData.message.buttonsResponseMessage.selectedDisplayText) ||
+        (messageData.message.interactiveResponseMessage && messageData.message.interactiveResponseMessage.buttonReply && messageData.message.interactiveResponseMessage.buttonReply.title) ||
+        (messageData.message.interactiveResponseMessage && messageData.message.interactiveResponseMessage.listReply && messageData.message.interactiveResponseMessage.listReply.title) ||
+        (messageData.message.listResponseMessage && messageData.message.listResponseMessage.singleSelectReply && messageData.message.listResponseMessage.singleSelectReply.selectedRowId) ||
         '';
     }
 
@@ -664,6 +668,15 @@ router.post('/evolution', async (req, res) => {
 
   } catch (error) {
     console.error('Webhook processing error:', error);
+    try {
+      const errJid = req.body?.data?.key?.remoteJid;
+      if (errJid) {
+        const errPhone = errJid.split('@')[0];
+        await sendWhatsApp(errPhone, null, { _message: "I ran into an issue processing your response. No worries — your progress is saved. Please type START ASSESSMENT to continue." });
+      }
+    } catch (notifErr) {
+      console.error('Failed to send error notification:', notifErr);
+    }
   }
 
   if (!res.headersSent) {
