@@ -11,6 +11,13 @@ const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY;
 const EVOLUTION_API_INSTANCE = process.env.EVOLUTION_API_INSTANCE || 'CoverScore';
 const APP_URL = process.env.APP_URL || 'http://localhost:3016';
 
+const dbRiskLevelMap = {
+  'Excellent': 'low', 'Good': 'low', 'Moderate': 'moderate',
+  'Vulnerable': 'high', 'Critical': 'critical',
+  'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
+  'High Risk': 'high', 'Critical Risk': 'critical'
+};
+
 // WhatsApp message templates
 const templates = {
   assessmentComplete: {
@@ -354,7 +361,7 @@ const formatCurrency = (amount) => {
 
 // Send assessment completion notification
 const sendAssessmentComplete = async (lead, assessment) => {
-  const riskLevel = assessment.risk_level || 'moderate';
+  const riskLevel = dbRiskLevelMap[assessment.risk_level] || assessment.risk_level || 'moderate';
   
   // Use min/max loss from assessment if available, otherwise fallback to score-based formula
   const baseAmount = 500000 + (assessment.score || 50) * 100000;
@@ -406,7 +413,7 @@ const sendHighRiskAlert = async (lead, assessment) => {
     return sendWhatsApp(lead.phone, 'highRiskAlert', {
       name: lead.name || 'Customer',
       score: assessment.score || '--',
-      riskLevel: assessment.risk_level || 'high',
+      riskLevel: dbRiskLevelMap[assessment.risk_level] || assessment.risk_level || 'high',
       keyRisks: 'Multiple areas of concern identified in your assessment require prompt attention.',
       assessmentId: assessment.id
     });

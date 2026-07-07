@@ -376,9 +376,15 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
     let emailError = null;
 
     try {
+      const riskLevelMap = {
+        'Excellent': 'low', 'Good': 'low', 'Moderate': 'moderate',
+        'Vulnerable': 'high', 'Critical': 'critical',
+        'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
+        'High Risk': 'high', 'Critical Risk': 'critical'
+      };
       await sendAssessmentReport(email, {
         score: assessment.score,
-        riskLevel: assessment.risk_level,
+        riskLevel: riskLevelMap[assessment.risk_level] || assessment.risk_level || 'low',
         aiReport,
         businessName: businessName || 'Your Business',
         assessmentId: assessment.id
