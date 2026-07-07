@@ -438,7 +438,7 @@ router.post('/evolution', async (req, res) => {
       const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
-      const recommendations = scoreResult.recommendations || [];
+      const recommendations = assessmentData.recommendations || [];
 
       // Message 1: CoverScore + Risk Pillars
       const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${userRiskLabel.toUpperCase()} Resilience\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
@@ -451,9 +451,7 @@ router.post('/evolution', async (req, res) => {
       }
 
       // Message 3: Top 3 Priorities
-      const actionItems = recommendations.length > 0
-        ? recommendations.slice(0, 3).map((r, i) => `${i + 1}. ${r}`).join('\n')
-        : '1. Review your current health coverage for gaps\n2. Build an emergency medical fund\n3. Schedule a preventive health screening';
+      const actionItems = recommendations || '1. Review your current health coverage for gaps\n2. Build an emergency medical fund\n3. Schedule a preventive health screening';
       postMessages.push({ type: 'actions', text: `*Your Top 3 Priorities*\n\n${actionItems}`, _delay: 3000 });
 
       // Message 4: Report delivery info
