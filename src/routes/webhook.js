@@ -464,11 +464,18 @@ router.post('/evolution', async (req, res) => {
         _delay: 3000
       });
 
-      // Message 5: Advisor invitation
+      // Message 5: Transition — every gap can be improved
       postMessages.push({
-        type: 'advisor',
-        text: `If you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?\n\nA. Yes\nB. Not now`,
-        _delay: 0
+        type: 'transition',
+        text: `The good news is that every area we've identified can be improved with the right plan.`,
+        _delay: 3000
+      });
+
+      // Message 6: Choose Your First Step (commitment)
+      postMessages.push({
+        type: 'commitment',
+        text: `Before we finish\u2026\n\nWhich of these will you do first?\n\nA. Book a health screening\nB. Review my health cover\nC. Build a medical emergency fund\nD. Speak with a Risk Advisor`,
+        _delay: 2000
       });
     }
 
@@ -500,7 +507,7 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    const finalState = assessmentData._scored ? 'awaiting_consultation' : nextState;
+    const finalState = assessmentData._scored ? 'awaiting_commitment' : nextState;
     await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
       [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
 

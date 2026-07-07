@@ -24,7 +24,7 @@ const CCIE_PHASES = {
 const determinePhase = (questionId) => {
   if (!questionId) return 'WELCOME';
   if (questionId === 'finished' || questionId === 'COMPLETE') return 'COMPLETED';
-  if (questionId === 'awaiting_consultation' || questionId === 'awaiting_consultation_day') return 'NEXT_BEST_ACTION';
+  if (questionId === 'awaiting_commitment' || questionId === 'awaiting_day' || questionId === 'awaiting_time') return 'NEXT_BEST_ACTION';
   const match = questionId.match(/_(\d+)$/);
   if (!match) return 'WELCOME';
   const num = parseInt(match[1], 10);
@@ -58,33 +58,59 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
 
-  if (currentState === 'awaiting_consultation_day') {
+  if (currentState === 'awaiting_commitment') {
+    const actions = { A: 'Book a health screening', B: 'Review my health cover', C: 'Build a medical emergency fund' };
+    if (['A', 'B', 'C'].includes(input)) {
+      updatedData.next_action = actions[input];
+      replyText = "No problem.\n\nYour report will remain available whenever you need it.\n\nOver the coming weeks, I'll also share practical health protection tips that match your assessment.\n\nIf you ever decide you'd like a personal review, simply reply:\n\nADVISOR\n\nWe'll arrange it for you.\n\nThank you for choosing CoverScore\u2122.";
+      nextState = 'finished';
+      updatedData.is_qualified = false;
+    } else if (input === 'D') {
+      updatedData.next_action = 'Speak with a Risk Advisor';
+      replyText = "Great.\n\nLet's arrange that.\n\nWhich day works best?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
+      nextState = 'awaiting_day';
+      updatedData.is_qualified = true;
+    } else {
+      replyText = "Please reply with A, B, C, or D.";
+    }
+    return { nextState, replyText, updatedData, isComplete };
+  }
+
+  if (currentState === 'awaiting_day') {
     const dayMap = { A: 'Monday', B: 'Tuesday', C: 'Wednesday', D: 'Thursday', E: 'Friday' };
     if (['A', 'B', 'C', 'D', 'E'].includes(input)) {
+      updatedData.consultation_day = dayMap[input];
       updatedData.consultation_preference = dayMap[input];
-      replyText = "A Risk Advisor will contact you shortly to schedule your consultation.\n\nThank you for using CoverScore AI.";
-      nextState = 'finished';
+      replyText = "What time suits you best?\n\nA. Morning\nB. Afternoon\nC. Evening";
+      nextState = 'awaiting_time';
     } else {
       replyText = "Please reply with A, B, C, D, or E.";
     }
     return { nextState, replyText, updatedData, isComplete };
   }
 
-  if (currentState === 'finished' || currentState === 'COMPLETE') {
-    return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
-  }
-
-  if (currentState === 'awaiting_consultation') {
-    if (input === 'A' || input === 'YES') {
-      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
-      nextState = 'awaiting_consultation_day';
-      updatedData.is_qualified = true;
-    } else {
-      replyText = "Noted. Your personalized report has been generated. We are always here if you change your mind. Have a great day!";
+  if (currentState === 'awaiting_time') {
+    const timeMap = { A: 'Morning', B: 'Afternoon', C: 'Evening' };
+    if (['A', 'B', 'C'].includes(input)) {
+      updatedData.consultation_time = timeMap[input];
+      const day = updatedData.consultation_day || 'your preferred day';
+      replyText = `Perfect.\n\nI've noted your preference:\n\n${day}\n${timeMap[input]}\n\nOne of our Certified Risk Advisors will contact you to confirm the appointment.\n\nBefore the meeting, you may want to have your Health Risk Intelligence Report\u2122 open so you can discuss the recommendations together.\n\nThank you for choosing CoverScore\u2122.\n\nWe're looking forward to helping you strengthen your health protection.`;
       nextState = 'finished';
-      updatedData.is_qualified = false;
+    } else {
+      replyText = "Please reply with A (Morning), B (Afternoon), or C (Evening).";
     }
     return { nextState, replyText, updatedData, isComplete };
+  }
+
+  if (currentState === 'finished' || currentState === 'COMPLETE') {
+    if (input === 'ADVISOR') {
+      updatedData.next_action = 'Speak with a Risk Advisor';
+      replyText = "Great.\n\nLet's arrange that.\n\nWhich day works best?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
+      nextState = 'awaiting_day';
+      updatedData.is_qualified = true;
+      return { nextState, replyText, updatedData, isComplete };
+    }
+    return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
 
   const currentQ = questionBank.find(q => q.id === currentState);
@@ -130,22 +156,15 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
           nextState = `${pref}_${String(num+1).padStart(3, '0')}`;
         }
       }
-      // Handle awaiting_consultation from auto-advance
+      // Handle awaiting_commitment from auto-advance (legacy fallback)
       if (nextState === 'awaiting_consultation') {
-        if (parsedAnswer === 'Yes') {
-          replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
-          nextState = 'awaiting_consultation_day';
-          updatedData.is_qualified = true;
-        } else {
-          replyText = "Noted. Your personalized report has been generated. We are always here if you change your mind. Have a great day!";
-          nextState = 'finished';
-          updatedData.is_qualified = false;
-        }
+        nextState = 'awaiting_commitment';
+        replyText = '';
       } else {
         const nextQ = questionBank.find(q => q.id === nextState);
         if (nextQ) {
           replyText = formatDynamicQuestion(nextQ, updatedData);
-        } else if (nextState !== 'finished' && nextState !== 'COMPLETE') {
+        } else         if (nextState !== 'finished' && nextState !== 'COMPLETE' && nextState !== 'awaiting_commitment') {
           replyText = '';
         }
       }
@@ -241,15 +260,9 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     isComplete = true;
     nextState = 'finished';
   } else if (nextState === 'awaiting_consultation') {
-    if (parsedAnswer === 'Yes') {
-      replyText = "Excellent.\n\nWhat day works best for a consultation?\n\nA. Monday\nB. Tuesday\nC. Wednesday\nD. Thursday\nE. Friday";
-      nextState = 'awaiting_consultation_day';
-      updatedData.is_qualified = true;
-    } else {
-      replyText = "Noted. Your personalized report has been generated. We are always here if you change your mind. Have a great day!";
-      nextState = 'finished';
-      updatedData.is_qualified = false;
-    }
+    // Legacy fallback — route through commitment flow
+    nextState = 'awaiting_commitment';
+    replyText = '';
   } else {
     const nextQ = questionBank.find(q => q.id === nextState);
     if (!nextQ) {

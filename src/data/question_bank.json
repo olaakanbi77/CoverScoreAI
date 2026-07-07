@@ -253,7 +253,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -527,7 +527,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -805,7 +805,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -1067,7 +1067,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -1204,19 +1204,6 @@
       "4+"
     ],
     "data_mapping": "dependants",
-    "branching": {
-      "DEFAULT": "HLT_011"
-    }
-  },
-  {
-    "id": "HLT_011",
-    "industry": "health",
-    "pillar": "General",
-    "question": "Great. We're about halfway through.",
-    "question_type": "single_choice",
-    "answers": [
-      "Continue"
-    ],
     "branching": {
       "DEFAULT": "HLT_012"
     }
@@ -1421,7 +1408,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -1684,7 +1671,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -1885,7 +1872,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -2086,7 +2073,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -2380,7 +2367,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -2675,7 +2662,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -2962,7 +2949,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -3246,7 +3233,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -3529,7 +3516,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -3817,7 +3804,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   },
   {
@@ -4106,7 +4093,7 @@
     ],
     "data_mapping": "request_consultation",
     "branching": {
-      "DEFAULT": "awaiting_consultation"
+      "DEFAULT": "awaiting_commitment"
     }
   }
 ]
