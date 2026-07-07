@@ -442,8 +442,10 @@ router.post('/evolution', async (req, res) => {
       const recommendations = assessmentData.recommendations || [];
 
       // Message 1: CoverScore + Risk Pillars
+      console.log(`[PHASE3] score=${assessmentData.score}, riskLevel="${assessmentData.riskLevel}", dbRiskLevelMap entry="${dbRiskLevelMap[assessmentData.riskLevel]}"`);
       const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
       const displayRiskLabel = dbLevel.charAt(0).toUpperCase() + dbLevel.slice(1) + ' Risk';
+      console.log(`[PHASE3] dbLevel="${dbLevel}", displayRiskLabel="${displayRiskLabel}"`);
       const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayRiskLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
