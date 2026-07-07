@@ -573,6 +573,9 @@ router.post('/evolution', async (req, res) => {
       });
     }
 
+    // Acknowledge webhook immediately so Evolution API doesn't timeout
+    res.sendStatus(200);
+
     // Phase 4: Send remaining messages with real data and typing indicator
     for (let i = 0; i < postMessages.length; i++) {
       const msg = postMessages[i];
@@ -661,6 +664,10 @@ router.post('/evolution', async (req, res) => {
 
   } catch (error) {
     console.error('Webhook processing error:', error);
+  }
+
+  if (!res.headersSent) {
+    res.sendStatus(200);
   }
 });
 
