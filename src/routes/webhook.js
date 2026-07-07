@@ -429,6 +429,12 @@ router.post('/evolution', async (req, res) => {
 
       } catch (e) {
         console.error('Scoring error:', e);
+        assessmentData.score = assessmentData.score || 50;
+        assessmentData.riskLevel = assessmentData.riskLevel || 'Moderate';
+        assessmentData.risk_categories = assessmentData.risk_categories || {};
+        assessmentData.strengths = assessmentData.strengths || '';
+        assessmentData.top_risks = assessmentData.top_risks || '';
+        assessmentData._scored = true; // Ensure Phase 3 still runs with fallback data
       }
     }
 
