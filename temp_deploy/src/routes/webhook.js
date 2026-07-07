@@ -3,478 +3,561 @@ const router = express.Router();
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { get, run } = require('../config/database');
-const { generateRiskReport, getLeadQualifier, getWhatsappAdvisor } = require('../services/aiService');
+const { generateRiskReport, getLeadQualifier } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
-const { getNextStateAndReply, getInitialWelcome } = require('../services/whatsappFlow');
+const ccieEngine = require('../services/ccieEngine');
+const { CCIE_EVENTS, publishEvent } = require('../services/ccieEvents');
 
-// Evolution API webhook endpoint
+const flowMap = {
+  'school': 'SCH', 'manufacturing': 'MFG', 'hospital': 'HOS', 'healthcare': 'HOS',
+  'church': 'CHR', 'construction': 'CON', 'transport': 'TRN', 'logistics': 'TRN',
+  'family': 'FAM', 'personal': 'FAM', 'individual': 'FAM',
+  'young': 'YPR', 'retirement': 'RET', 'income': 'INC', 'health': 'HLT',
+  'entrepreneur': 'ENT', 'sme': 'SME', 'business': 'SME'
+};
+
+const resolvePrefix = (ind) => {
+  if (!ind) return 'SME';
+  const lowerInd = ind.toLowerCase();
+  for (const [key, val] of Object.entries(flowMap)) {
+    if (lowerInd.includes(key)) return val;
+  }
+  return 'SME';
+};
+
+const generateCoverScoreInsight = (pillarScores, answers, name) => {
+  const entries = Object.entries(pillarScores || {}).sort(([, a], [, b]) => a - b);
+  if (entries.length === 0) return null;
+  const weakest = entries[0];
+  const weakestName = weakest[0];
+  const weakestScore = weakest[1];
+
+  let body = '';
+  if (weakestName === 'Healthcare Access') {
+    body = `Your assessment suggests that the most significant gap in your health resilience is your access to healthcare coverage.`;
+    const ins = answers['HLT_012'];
+    if (ins === 'None') {
+      body += ` Without active health insurance, a serious medical event could result in significant out-of-pocket costs that may be difficult to manage.`;
+    } else if (ins === 'Government Health Scheme') {
+      body += ` While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care.`;
+    } else if (ins === 'Employer HMO') {
+      body += ` Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care.`;
+    }
+    body += ` Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection.`;
+  } else if (weakestName === 'Preventive Health') {
+    body = `Your assessment shows that the biggest opportunity to strengthen your health resilience isn't about what you have\u2014it's about what you do.`;
+    const chk = answers['HLT_015'];
+    if (chk === 'Rarely/Only when sick') {
+      body += ` By only seeking medical attention when you're already unwell, you miss the chance to detect potential health issues early, when they are most treatable.`;
+    }
+    body += ` Making preventive health a regular habit\u2014starting with an annual check-up\u2014is a simple but powerful step toward long-term wellbeing.`;
+  } else if (weakestName === 'Medical Risk Profile') {
+    body = `Your assessment highlights that your medical history and age profile are important factors in your overall health risk.`;
+    const cond = answers['HLT_014'];
+    if (cond && cond !== 'None') {
+      body += ` Managing ${cond} requires consistent medical attention and appropriate insurance coverage.`;
+    }
+    const age = answers['HLT_009'];
+    if (age && (age === '56+' || age === '46 - 55')) {
+      body += ` As you get older, health risks naturally increase, making comprehensive coverage more important.`;
+    }
+    body += ` Ensuring your health plan is designed to address your specific circumstances is the most impactful step you can take.`;
+  } else if (weakestName === 'Financial Health Protection') {
+    body = `Your assessment suggests that your greatest health risk isn't access to healthcare\u2014it's the financial impact that a serious illness could have on you and your family.`;
+    const pay = answers['HLT_013'];
+    if (pay === "I don't know" || pay === 'Loan') {
+      body += ` Without dedicated savings for medical emergencies, a major health event could create significant debt.`;
+    }
+    const surg = answers['HLT_016'];
+    if (surg === 'No' || surg === 'Not sure') {
+      body += ` Your current health cover may not be sufficient for major procedures such as surgery.`;
+    }
+    const ill = answers['HLT_017'];
+    if (ill === 'No') {
+      body += ` A serious illness could put financial pressure on your household.`;
+    }
+    body += ` Strengthening your financial health protection is the most impactful step you can take.`;
+  } else if (weakestName === 'Household Resilience') {
+    body = `Your assessment shows that your household's overall resilience is an area to strengthen.`;
+    const dep = answers['HLT_010'];
+    if (dep === '3' || dep === '4+') {
+      body += ` With multiple dependants relying on you, any health-related income disruption affects more than just yourself.`;
+    }
+    const emp = answers['HLT_008'];
+    if (emp === 'Part-time / Freelance' || emp === 'Student') {
+      body += ` Your current employment situation means there is less of a financial buffer if a health emergency arises.`;
+    }
+    body += ` Building a stronger household safety net through appropriate coverage is your most practical next step.`;
+  } else {
+    body = `Your assessment provides a clear picture of your current health resilience. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact.`;
+  }
+
+  return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
+};
+
 router.post('/evolution', async (req, res) => {
-  // Always respond 200 OK immediately to acknowledge receipt
   res.status(200).send('OK');
 
   try {
     const payload = req.body;
+    if (!(payload && payload.event === 'messages.upsert')) return;
 
-    // Check if this is a message upsert event
-    if (payload && payload.event === 'messages.upsert') {
-      const messageData = payload.data;
-      
-      // Ignore messages sent by the bot itself
-      if (messageData.key && messageData.key.fromMe) {
+    const messageData = payload.data;
+    if (messageData.key && messageData.key.fromMe) return;
+
+    let incomingTextRaw = '';
+    if (messageData.message) {
+      incomingTextRaw =
+        messageData.message.conversation ||
+        (messageData.message.extendedTextMessage && messageData.message.extendedTextMessage.text) ||
+        '';
+    }
+
+    const incomingText = incomingTextRaw.trim().toUpperCase();
+    if (!incomingText) return;
+
+    const remoteJid = messageData.key.remoteJid;
+    if (!remoteJid) return;
+    const phoneNumber = remoteJid.split('@')[0];
+
+    console.log(`📩 Received WhatsApp reply from ${phoneNumber}: "${incomingText}"`);
+
+    let searchPhone = phoneNumber.length > 10 ? phoneNumber.slice(-10) : phoneNumber;
+    let lead = await get('SELECT * FROM leads WHERE phone LIKE ? ORDER BY id DESC LIMIT 1', ['%' + searchPhone]);
+
+    const words = incomingText.split(/\s+/);
+    const isStartTrigger = words.some(w => w === 'START' || w === 'ASSESSMENT' || w === 'HELLO' || w === 'HI' || w === 'BEGIN');
+    const isRestartTrigger = (incomingText.includes('START ') && incomingText.includes(' ASSESSMENT')) || incomingText.includes('RESTART') || incomingText.includes('START OVER');
+
+    let detectedIndustry = null;
+    if (incomingText.includes('START ') && incomingText.includes(' ASSESSMENT')) {
+      const match = incomingText.match(/START\s+(.+)\s+ASSESSMENT/);
+      if (match && match[1]) detectedIndustry = match[1].trim().toLowerCase();
+    }
+
+    console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
+
+    const resolvedIndustry = detectedIndustry || (lead ? lead.industry : null);
+    const prefix = resolvePrefix(resolvedIndustry);
+
+    let currentState, chatHistory, assessmentData, ccieContext;
+
+    if (lead && (isRestartTrigger || incomingText === 'RESTART')) {
+      currentState = `${prefix}_001`;
+      chatHistory = [];
+      assessmentData = {};
+      ccieContext = ccieEngine.buildContext({
+        questionPack: prefix, channel: 'whatsapp',
+        customer: { phone: phoneNumber, name: lead.name, email: lead.email },
+        currentPhase: 'WELCOME', currentQuestion: `${prefix}_001`, questionCount: 0
+      });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(assessmentData), JSON.stringify(ccieContext), lead.id]);
+      console.log(`   Lead ${lead.id} restarting -> ${currentState}`);
+
+      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
+      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
+      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
+      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieStart.context), lead.id]);
+      return;
+    }
+
+    if (!lead && !isStartTrigger) {
+      console.log(`   Lead not found and no start trigger.`);
+      return;
+    }
+
+    if (!lead && isStartTrigger) {
+      currentState = `${prefix}_001`;
+      chatHistory = [];
+      assessmentData = {};
+      console.log(`   Creating NEW lead for phone ${phoneNumber}`);
+      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
+      ccieContext = ccieStart.context;
+      const insertResult = await run(`
+        INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, ccie_context)
+        VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?, ?)
+      `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, currentState, 'WhatsApp User', resolvedIndustry, JSON.stringify(ccieContext)]);
+      lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
+      console.log(`   Created new lead ID: ${lead.id}`);
+
+      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
+      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
+      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieContext), lead.id]);
+      return;
+    }
+
+    currentState = lead.wa_state || 'initial';
+    chatHistory = JSON.parse(lead.chat_history || '[]');
+    assessmentData = JSON.parse(lead.assessment_data || '{}');
+    ccieContext = (() => {
+      try { return JSON.parse(lead.ccie_context || 'null'); } catch(e) { return null; }
+    })() || ccieEngine.buildContext({
+      questionPack: prefix, channel: 'whatsapp',
+      customer: { phone: phoneNumber, name: lead.name, email: lead.email },
+      currentPhase: ccieEngine.determinePhase(currentState),
+      currentQuestion: currentState, questionCount: 0
+    });
+
+    if (isStartTrigger && (currentState === 'initial' || currentState === null || assessmentData._scored || currentState === 'qualification')) {
+      currentState = `${prefix}_001`;
+      assessmentData = {};
+      await run('UPDATE leads SET wa_state = ?, assessment_data = ? WHERE id = ?', [currentState, '{}', lead.id]);
+    }
+
+    if (isStartTrigger && currentState === `${prefix}_001`) {
+      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
+      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
+      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
+      chatHistory.push({ role: 'user', content: incomingTextRaw.trim(), timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieStart.context), lead.id]);
+      return;
+    }
+
+    if (!currentState) currentState = `${prefix}_001`;
+
+    ccieContext.currentQuestion = currentState;
+    ccieContext.currentPhase = ccieEngine.determinePhase(currentState);
+    ccieContext.answers = assessmentData;
+
+    const { messages, nextState, updatedData, isComplete, context: updatedCcieContext } = await ccieEngine.processReply(
+      ccieContext, incomingTextRaw.trim()
+    );
+
+    console.log(`   CCIE transition: ${currentState} -> ${nextState}, complete: ${isComplete}, messages: ${messages.length}`);
+
+    let newAssessmentData = updatedData ? { ...assessmentData, ...updatedData } : { ...assessmentData };
+    if (updatedData && updatedData.answers) {
+      newAssessmentData.answers = { ...(assessmentData.answers || {}), ...updatedData.answers };
+    }
+
+    assessmentData = newAssessmentData;
+
+    const isFinished = isComplete || nextState === 'finished' || nextState === 'COMPLETE';
+    const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS';
+    const needsScoring = (isFinished || reachedResults) && !assessmentData._scored;
+
+    // Template fill helper (uses assessmentData which scoring populates)
+    const riskLabelMap = {
+      'Excellent': 'Excellent', 'Good': 'Good', 'Moderate': 'Moderate',
+      'Vulnerable': 'Vulnerable', 'Critical': 'Critical',
+      'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
+      'High Risk': 'High', 'Critical Risk': 'Critical'
+    };
+    let userRiskLabel = 'Moderate';
+    const dbRiskLevelMap = {
+      'Excellent': 'low', 'Good': 'low', 'Moderate': 'moderate',
+      'Vulnerable': 'high', 'Critical': 'critical',
+      'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
+      'High Risk': 'high', 'Critical Risk': 'critical'
+    };
+    const fillTemplate = (text) => {
+      return text
+        .replace(/\{\{name\}\}/g, assessmentData.name || 'Customer')
+        .replace(/\{\{score\}\}/g, assessmentData.score || '0')
+        .replace(/\{\{riskLevel\}\}/g, userRiskLabel.toUpperCase())
+        .replace(/\{\{protectionLevel\}\}/g, userRiskLabel.toUpperCase())
+        .replace(/\{\{strengths\}\}/g, assessmentData.strengths || '')
+        .replace(/\{\{top_risks\}\}/g, assessmentData.top_risks || '')
+        .replace(/\{\{risks\}\}/g, assessmentData.top_risks || '')
+        .replace(/\{\{recommendations\}\}/g, assessmentData.recommendations || '')
+        .replace(/\{\{reportUrl\}\}/g, assessmentData.reportUrl || 'https://coverscore.site');
+    };
+
+    // Phase 1: Send auto_advance messages immediately (before scoring takes time)
+    let allMessages = [...messages];
+    const preMessages = needsScoring ? allMessages.filter(m => m.type === 'auto_advance') : [];
+    // When scoring, Phase 3 replaces the results template entirely; discard old reply text
+    const postMessages = needsScoring
+      ? allMessages.filter(m => m.type !== 'auto_advance' && m.type !== 'reply')
+      : allMessages;
+
+    for (const msg of preMessages) {
+      if (!msg.text) continue;
+      msg.text = fillTemplate(msg.text);
+      const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text });
+      if (!sendResult.success) {
+        console.error(`   ❌ Failed to send auto_advance message: ${sendResult.error}. Aborting.`);
         return;
       }
+      chatHistory.push({
+        role: 'assistant', content: msg.text,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+    }
 
-      // Extract text content
-      let incomingTextRaw = '';
-      if (messageData.message) {
-        incomingTextRaw = 
-          messageData.message.conversation || 
-          (messageData.message.extendedTextMessage && messageData.message.extendedTextMessage.text) ||
-          '';
-      }
+    // Phase 2: Run scoring (takes time — AI calls)
+    if (needsScoring) {
+      console.log(`   [CCIE SCORING] Calculating CoverScore for ${phoneNumber}`);
+      const finalAnswers = { ...(assessmentData.answers || {}), template_selection: { template_id: prefix } };
+      try {
+        const scoreResult = await calculateScore(finalAnswers);
+        assessmentData.score = scoreResult.score;
+        assessmentData.riskLevel = scoreResult.riskLevel;
+        userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
+        assessmentData.identified_gaps = scoreResult.identified_gaps || [];
+        assessmentData.min_loss = scoreResult.min_loss;
+        assessmentData.max_loss = scoreResult.max_loss;
 
-      const incomingText = incomingTextRaw.trim().toUpperCase();
-      if (!incomingText) return;
+        const fb = {
+          HLT: { strengths: '', risks: "⚠ Your health protection gaps need attention.", recommendations: "• Review your health coverage.\n• Build an emergency medical fund.\n• Schedule preventive health screenings." },
+          ENT: { strengths: "✓ Strong business vision\n✓ Market awareness", risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection", recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets." },
+          FAM: { strengths: "✓ Clear long-term goals\n✓ Strong familial support", risks: "⚠ Inadequate life cover\n⚠ Education funding gap", recommendations: "• Review Life Insurance policy.\n• Set up an education trust." },
+          DEFAULT: { strengths: "✓ Career Stability\n✓ Digital Safety\n✓ Personal Responsibility", risks: "⚠ Limited emergency savings\n⚠ Inadequate income protection\n⚠ No long-term financial protection strategy", recommendations: "• Build an emergency fund\n• Review income protection\n• Begin a structured long-term financial plan" }
+        };
+        const fallbacks = fb[prefix] || fb.DEFAULT;
 
-      // Extract sender's phone number
-      const remoteJid = messageData.key.remoteJid;
-      if (!remoteJid) return;
-      const phoneNumber = remoteJid.split('@')[0];
-
-      console.log(`📩 Received WhatsApp reply from ${phoneNumber}: "${incomingText}"`);
-
-      // 1. Load lead state from DB
-      let searchPhone = phoneNumber.length > 10 ? phoneNumber.slice(-10) : phoneNumber;
-      let lead = await get('SELECT * FROM leads WHERE phone LIKE ? ORDER BY id DESC LIMIT 1', ['%' + searchPhone]);
-      
-      // Use word-boundary matching to avoid false positives on names like "Chidinma", "Ibrahim", etc.
-      const words = incomingText.split(/\s+/);
-      const isStartTrigger = words.some(w => w === 'START' || w === 'ASSESSMENT' || w === 'HELLO' || w === 'HI' || w === 'BEGIN');
-      // Explicit restart requires specific phrases
-      const isRestartTrigger = incomingText.includes('START ') && incomingText.includes(' ASSESSMENT') || incomingText.includes('RESTART') || incomingText.includes('START OVER');
-
-      // Detect Industry if they used dynamic link
-      let detectedIndustry = null;
-      if (incomingText.includes('START ') && incomingText.includes(' ASSESSMENT')) {
-        const match = incomingText.match(/START\s+(.+)\s+ASSESSMENT/);
-        if (match && match[1]) {
-          detectedIndustry = match[1].trim().toLowerCase();
-        }
-      }
-
-      console.log(`   Lead found: ${!!lead}, isStartTrigger: ${isStartTrigger}, isRestartTrigger: ${isRestartTrigger}, detectedIndustry: ${detectedIndustry}`);
-
-      const flowMap = {
-        'school': 'SCH',
-        'manufacturing': 'MFG',
-        'hospital': 'HOS',
-        'healthcare': 'HOS',
-        'church': 'CHR',
-        'construction': 'CON',
-        'transport': 'TRN',
-        'logistics': 'TRN',
-        'sme': 'SME',
-        'family': 'FAM',
-        'personal': 'FAM',
-        'young': 'YPR',
-        'retirement': 'RET',
-        'income': 'INC',
-        'health': 'HLT',
-        'entrepreneur': 'ENT'
-      };
-      const getInitState = (ind) => {
-        const prefix = flowMap[ind] || 'SME';
-        return `${prefix}_001`;
-      };
-
-      let currentState, chatHistory, assessmentData;
-      const resolvedIndustry = detectedIndustry || (lead ? lead.industry : null);
-
-      if (lead) {
-        if (isRestartTrigger) {
-          const initState = getInitState(resolvedIndustry);
-          console.log(`   Lead ${lead.id} requesting restart mid-flow`);
-          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', [initState, '{}', '{}', lead.id]);
-          lead.wa_state = initState;
-          lead.chat_history = '{}';
-          lead.assessment_data = '{}';
-          currentState = initState;
-          chatHistory = [];
-          assessmentData = {};
-        } else {
-          currentState = lead.wa_state || 'initial';
-          chatHistory = JSON.parse(lead.chat_history || '[]');
-          assessmentData = JSON.parse(lead.assessment_data || '{}');
-        }
-      } else if (isStartTrigger || isRestartTrigger) {
-        const initState = getInitState(resolvedIndustry);
-        console.log(`   Creating NEW lead for phone ${phoneNumber} (implicit start trigger)`);
-        const insertResult = await run(`
-          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry)
-          VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?)
-        `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, initState, 'WhatsApp User', resolvedIndustry]);
-        
-        lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
-        console.log(`   Created new lead ID: ${lead.id}`);
-        currentState = initState;
-        chatHistory = [];
-        assessmentData = {};
-      } else {
-        console.log(`   Lead not found for phone ending in ${searchPhone} and message didn't trigger start.`);
-        return;
-      }
-
-      // Handle leads in 'initial' state (from web form) or 'finished' state receiving a start trigger
-      if ((lead.wa_state === 'initial' || lead.wa_state === null) && isStartTrigger) {
-        const initState = getInitState(resolvedIndustry);
-        console.log(`   Lead ${lead.id} in '${lead.wa_state}' state, transitioning to ${initState}`);
-        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [initState, '{}', lead.id]);
-        lead.wa_state = initState;
-        lead.chat_history = '{}';
-        currentState = initState;
-      }
-
-      if (!currentState) {
-        currentState = getInitState(resolvedIndustry);
-      }
-      
-      if (currentState === 'finished' || currentState === 'awaiting_consultation' || currentState === 'awaiting_consultation_day') {
-        if (isRestartTrigger) {
-          const initState = getInitState(resolvedIndustry);
-          console.log(`   Lead ${lead.id} finished but requesting restart`);
-          await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?', [initState, '{}', '{}', lead.id]);
-          lead.wa_state = initState;
-          currentState = initState;
-        } else if (currentState === 'finished') {
-          console.log(`   Lead ${lead.id} is in finished state, passing to AI Advisor`);
-        }
-      }
-
-      // ── NEW STRUCTURED FLOW STATE MACHINE ──
-      
-      let processText = incomingTextRaw;
-      let evalState = currentState;
-
-      const prefix = flowMap[resolvedIndustry] || 'SME';
-
-      // Send initial welcome message instantly without advancing state
-      if ((isStartTrigger || isRestartTrigger) && evalState === `${prefix}_001`) {
-        let initialWelcome = await getInitialWelcome(prefix);
-        if (!initialWelcome) {
-            initialWelcome = "👋 Welcome to CoverScore AI\n\nWe help individuals and businesses identify hidden financial risks and protection gaps.\n\nIn about 3 minutes, you'll receive:\n✅ Your CoverScore\n✅ Risk Level\n✅ Potential Financial Exposure\n✅ Personalized Recommendations\n\nBefore we begin, what is your first name?";
-        }
-
-        console.log(`   Sending welcome message to ${phoneNumber}...`);
-        const welcomeResult = await sendWhatsApp(phoneNumber, null, { _message: initialWelcome });
-        console.log(`   Welcome message result: ${JSON.stringify(welcomeResult)}`);
-        
-        chatHistory.push({
-          role: 'user',
-          content: processText,
-          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-        });
-        chatHistory.push({
-          role: 'assistant',
-          content: initialWelcome,
-          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-        });
-        await run('UPDATE leads SET wa_state = ?, chat_history = ? WHERE id = ?', [evalState, JSON.stringify(chatHistory), lead.id]);
-        
-        return; // wait for them to answer
-      }
-
-      if (!evalState) {
-        evalState = `${prefix}_001`;
-      }
-
-      // 1. Process Message through State Machine
-      let { nextState, replyText, updatedData, isComplete } = await getNextStateAndReply(evalState, processText, assessmentData, prefix);
-      console.log(`   State transition: ${evalState} -> ${nextState}, isComplete: ${isComplete}`);
-
-      let finalReplyText = replyText;
-
-      // PROMPT 3: WHATSAPP ADVISOR INTELLIGENCE
-      // If the static flow doesn't know what to say (e.g. post-assessment), trigger AI
-      if (!finalReplyText && (evalState === 'finished' || evalState === 'qualification')) {
-        console.log(`   Triggering WhatsApp Advisor AI for state ${evalState}...`);
-        finalReplyText = await getWhatsappAdvisor(updatedData.__messages || [], evalState, processText);
-        // Ensure state remains finished so we don't restart flow
-        nextState = 'finished';
-      }
-
-      // 2. Update Database & Send Next Message
-      if (finalReplyText) {
-        // Send WhatsApp reply
-        console.log(`   Sending reply to ${phoneNumber}: "${finalReplyText.substring(0, 80)}..."`);
-        const sendResult = await sendWhatsApp(phoneNumber, null, { _message: finalReplyText });
-        
-        if (!sendResult.success) {
-          console.error(`   ❌ Failed to send reply: ${sendResult.error}. State NOT advanced.`);
-          return; // Don't advance state if message failed to send
-        }
-        console.log(`   ✅ Reply sent successfully. Advancing state to: ${nextState}`);
-        
-        chatHistory.push({
-          role: 'user',
-          content: processText,
-          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-        });
-        chatHistory.push({
-          role: 'assistant',
-          content: finalReplyText,
-          timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-        });
-        
-        // ── ENGAGEMENT SCORING ──
-        let engagementBonus = 0;
-        
-        if (evalState === 'welcome_name' && nextState === 'welcome_email') engagementBonus = 20;
-
-        if (engagementBonus > 0) {
-          await run('UPDATE leads SET engagement_points = engagement_points + ?, sales_score = sales_score + ? WHERE id = ?', [engagementBonus, engagementBonus, lead.id]);
-        }
-
-        // Process final risk score if complete
-        if (isComplete && !updatedData._scored) {
-          updatedData._scored = true;
-        }
-
-        // Update lead state (only if message was sent successfully)
-        await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ? WHERE id = ?', [nextState, JSON.stringify(updatedData), JSON.stringify(chatHistory), lead.id]);
-        
-        if (updatedData.name || updatedData.email) {
-          await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email) WHERE id = ?', [updatedData.name || null, updatedData.email || null, lead.id]);
-        }
-        
-        // 🚀 CHECK IF LEAD IS NOW QUALIFIED 🚀
-        if (nextState === 'finished') {
-          console.log(`   🧠 Running Lead Qualifier AI for Lead ${lead.id}...`);
-          
-          let assessmentData = {};
-          try {
-            if (lead.assessment_id) {
-              const assessRecord = await get('SELECT answers FROM assessments WHERE id = ?', [lead.assessment_id]);
-              if (assessRecord && assessRecord.answers) {
-                assessmentData = JSON.parse(assessRecord.answers);
-              }
-            }
-          } catch(e) {}
-          
-          const qualifierOutput = await getLeadQualifier(updatedData.__messages || [], assessmentData);
-          console.log(`   ✅ Qualifier output: ${JSON.stringify(qualifierOutput)}`);
-          
-          // Update CRM status with AI insights
-          await run(`
-            UPDATE leads 
-            SET status = ?, 
-                pipeline_stage = ?, 
-                is_qualified = ?, 
-                consultation_preference = ?,
-                primary_concern = ?,
-                notes = ?,
-                updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
-          `, [
-            qualifierOutput.lead_status || 'Qualified',
-            (qualifierOutput.lead_status || '').toLowerCase().includes('hot') ? 4 : 3,
-            updatedData.is_qualified ? 1 : 0,
-            updatedData.consultation_preference || null,
-            updatedData.primary_concern || null,
-            qualifierOutput.next_best_action + " - " + qualifierOutput.qualification_reasoning,
-            lead.id
-          ]);
-          
-          // Send Admin Notification if Hot or Qualified
-          if (process.env.ADMIN_PHONE && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || updatedData.is_qualified)) {
-            const qualDetails = [];
-            if (updatedData.primary_concern) qualDetails.push(`Primary Concern: ${updatedData.primary_concern}`);
-            if (updatedData.consultation_preference) qualDetails.push(`Preferred Contact: ${updatedData.consultation_preference}`);
-            if (qualifierOutput.next_best_action) qualDetails.push(`Suggested Action: ${qualifierOutput.next_best_action}`);
-            
-            const displayName = (updatedData.entity_type === 'business' && updatedData.business_name) ? updatedData.business_name : (updatedData.name || lead.name);
-            const notifMsg = `🔥 *NEW QUALIFIED LEAD* 🔥\n\n👤 *Name:* ${displayName}\n📞 *Phone:* ${phoneNumber}\n🛡️ *CoverScore:* ${lead.score || 'N/A'}\n📊 *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📝 *CRM Insight:*\n${qualifierOutput.lead_status} - ${qualifierOutput.qualification_reasoning}\n\n🔍 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
-            await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
-            console.log(`   📱 Admin notification sent for qualified lead ${lead.id}`);
-          }
-        }
-        
-        // ── HANDLE DECLINED USERS (finished but not qualified) ──
-        if (nextState === 'finished' && !updatedData.is_qualified) {
-          console.log(`   Lead ${lead.id} declined qualification, updating status`);
-          await run(`
-            UPDATE leads 
-            SET status = 'WhatsApp Engaged', 
-                pipeline_stage = 3, 
-                updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
-          `, [lead.id]);
-        }
-
-        // If the user just answered the consultation question, process and send the final report!
-        if ((evalState === 'awaiting_consultation' || evalState === 'awaiting_consultation_day') && nextState === 'finished' && !updatedData._report_sent) {
-          try {
-            updatedData._report_sent = true;
-            // Map the collected data to the scoring engine format
-            const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
-            
-            // Build Final Answers for V1 scoringEngine
-            const finalAnswers = { 
-                ...updatedData.answers, 
-                template_selection: { template_id: prefix } 
-            };
-
-            // Calculate score using dynamic V1 engine
-            const scoreResult = await calculateScore(finalAnswers);
-
-            const assessmentDataObj = {
-              answers: finalAnswers,
-              score: scoreResult.score,
-              riskLevel: scoreResult.riskLevel,
-              min_loss: scoreResult.min_loss,
-              max_loss: scoreResult.max_loss,
-              recommendations: scoreResult.recommendations,
-              identified_gaps: scoreResult.identified_gaps,
-              risk_categories: scoreResult.risk_categories,
-              entityType
-            };
-
-            // Run CRE Rules
-            const creIntelligence = await generateRecommendations(assessmentDataObj);
-
-            // Generate AI Report
-            const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
-
-            const dbRiskLevelMap = {
-              'Very Low Risk': 'low',
-              'Low Risk': 'low',
-              'Moderate Risk': 'moderate',
-              'High Risk': 'high',
-              'Critical Risk': 'critical'
-            };
-            const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
-
-            // Save to DB
-            const assessRes = await run(`
-              INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
-              VALUES (NULL, ?, ?, ?, ?)
-            `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
-
-            const assessmentId = assessRes.lastInsertRowid;
-            
-            // Build report URL
-            const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
-            
-            // Format currency values
-            const formatNaira = (val) => new Intl.NumberFormat('en-NG').format(val);
-            const minLossStr = formatNaira(scoreResult.min_loss);
-            const maxLossStr = formatNaira(scoreResult.max_loss);
-            
-            let riskBreakdownMsg = '';
-            if (scoreResult.risk_categories) {
-              const formattedCategories = Object.entries(scoreResult.risk_categories)
-                .map(([key, val]) => {
-                  const title = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                  return `• ${title}: ${val}/100`;
-                }).join('\n');
-              riskBreakdownMsg = `\n\n📈 *Risk Breakdown:*\n${formattedCategories}`;
-            }
-
-            // Send Final Web Report Link with Financial Exposure AFTER consultation response
-            const finalReportMsg = `🧾 *Your Official CoverScore Risk Report is Ready*\n\nThank you for your response.\n\nWe've processed your full assessment and identified areas that could expose you to significant financial loss if left unaddressed.\n\n💰 *Potential Financial Exposure:*\n₦${minLossStr} – ₦${maxLossStr}\n\n🔗 View and download your full report:\n${reportUrl}\n\nIf you requested a consultation, our Certified Risk Advisor will contact you shortly!`;
-            
-            await sendWhatsApp(phoneNumber, null, { _message: finalReportMsg });
-            
-            updatedData.__messages = updatedData.__messages || [];
-            updatedData.__messages.push({
-              role: 'assistant',
-              content: finalReportMsg,
-              timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        let strengthsText = fallbacks.strengths;
+        let risksText = fallbacks.risks;
+        if (scoreResult.risk_categories && Object.keys(scoreResult.risk_categories).length > 0) {
+          const makeBar = (s) => {
+            const filled = Math.round(Math.min(s, 100) / 10);
+            return '\u2588'.repeat(filled) + '\u2591'.repeat(10 - filled);
+          };
+          const pillarNames = Object.keys(scoreResult.risk_categories);
+          const maxLen = Math.max(...pillarNames.map(n => n.length), 20);
+          const lines = Object.entries(scoreResult.risk_categories)
+            .sort(([, a], [, b]) => b - a)
+            .map(([name, score]) => {
+              const paddedName = name.padEnd(maxLen);
+              return `${paddedName} ${makeBar(score)} ${score}%`;
             });
-            
-            // Send email report
-            if (updatedData.email) {
-              try {
-                await emailService.sendAssessmentReport(updatedData.email, {
-                  score: scoreResult.score,
-                  riskLevel: dbRiskLevel,
-                  aiReport: aiReportData,
-                  businessName: updatedData.business_name || updatedData.name,
-                  assessmentId: assessmentId
-                });
-                console.log(`✅ Assessment report emailed successfully to ${updatedData.email}`);
-              } catch (emailErr) {
-                console.error(`❌ Failed to email assessment report to ${updatedData.email}:`, emailErr);
-              }
-            }
+          strengthsText = lines.join('\n');
 
-            // Calculate estimated premium
-            const PREMIUM_RATES = {
-              'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
-              'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
-              'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
-              'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
-              'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
-              'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
-              'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
-              'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
-              'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
-              'Travel Insurance': 0.01
-            };
-            
-            let estimatedPremium = 0;
-            if (scoreResult.min_loss) {
-              let annualPremium = 0;
-              let monthlyPremium = 0;
-              const recs = scoreResult.recommendations || [];
-              if (recs.length > 0) {
-                recs.forEach(rec => { 
-                  const rate = PREMIUM_RATES[rec] || 0.01;
-                  if (rec.toLowerCase().includes('life')) {
-                    monthlyPremium += (scoreResult.min_loss * rate) / 12;
-                  } else {
-                    annualPremium += (scoreResult.min_loss * rate);
-                  }
-                });
-                estimatedPremium = Math.round(annualPremium + monthlyPremium);
-              } else { 
-                estimatedPremium = Math.round(scoreResult.min_loss * 0.013); 
-              }
-            }
-
-            // Update lead with assessment data, set state to qualification, +20 engagement for completing assessment
-            await run(`
-              UPDATE leads 
-              SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, 
-                  name = ?, email = ?, wa_state = 'qualification', 
-                  status = 'Report Sent', pipeline_stage = 2,
-                  engagement_points = engagement_points + 20, sales_score = sales_score + 20,
-                  estimated_premium = ?,
-                  chat_history = ?,
-                  birth_date = ?,
-                  anniversary_date = ?,
-                  contact_person = ?
-              WHERE id = ?
-            `, [
-              assessmentId, scoreResult.score, dbRiskLevel, entityType, 
-              (entityType === 'business' && updatedData.business_name) ? updatedData.business_name : (updatedData.name || 'WhatsApp User'), 
-              updatedData.email || 'whatsapp@coverscore.site',
-              estimatedPremium, JSON.stringify(updatedData), 
-              updatedData.birth_date || null,
-              updatedData.anniversary_date || null,
-              updatedData.name || 'WhatsApp User',
-              lead.id
-            ]);
-            console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state (+20 engagement)`);
-
-          } catch(err) {
-            console.error("Error generating report after completion:", err);
-            await sendWhatsApp(phoneNumber, null, { _message: "I'm sorry, I encountered an error generating your report. Error details: " + err.message + ". Please contact support." });
-          }
+          const weak = Object.entries(scoreResult.risk_categories)
+            .filter(([, v]) => v < 50)
+            .sort(([, a], [, b]) => a - b);
+          risksText = weak.length > 0
+            ? weak.map(([name]) => '\u26A0 ' + name + ' needs attention').join('\n')
+            : "Your overall profile is reasonably balanced. Targeted recommendations below.";
         }
+        assessmentData.strengths = strengthsText;
+        assessmentData.top_risks = risksText;
+        assessmentData.risk_categories = scoreResult.risk_categories;
+        assessmentData.pillar_scores = scoreResult.pillar_scores;
+        assessmentData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
+          ? scoreResult.recommendations.slice(0, 3).map(r => '• ' + r).join('\n') : fallbacks.recommendations;
+        assessmentData._scored = true;
+
+        const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
+        const assessmentDataObj = {
+          answers: finalAnswers, score: scoreResult.score, riskLevel: scoreResult.riskLevel,
+          min_loss: scoreResult.min_loss, max_loss: scoreResult.max_loss,
+          recommendations: scoreResult.recommendations, identified_gaps: scoreResult.identified_gaps,
+          risk_categories: scoreResult.risk_categories, entityType
+        };
+
+        const creIntelligence = await generateRecommendations(assessmentDataObj);
+        const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
+
+        const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
+
+        publishEvent(CCIE_EVENTS.SCORE_CALCULATED, ccieContext, {
+          score: scoreResult.score, riskLevel: scoreResult.riskLevel, entityType
+        });
+
+        const assessRes = await run(`
+          INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
+          VALUES (NULL, ?, ?, ?, ?)
+        `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
+
+        const assessmentId = assessRes.lastInsertRowid;
+        assessmentData.assessmentId = assessmentId;
+        assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
+        publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
+
+        if (assessmentData.email) {
+          emailService.sendAssessmentReport(assessmentData.email, {
+            score: scoreResult.score, riskLevel: dbRiskLevel, aiReport: aiReportData,
+            businessName: assessmentData.business_name || assessmentData.name, assessmentId
+          }).then(() => {
+            publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: assessmentData.email, assessmentId });
+            console.log(`✅ Assessment report emailed to ${assessmentData.email}`);
+          }).catch(err => console.error(`❌ Failed to email report:`, err));
+        }
+
+        const PREMIUM_RATES = {
+          'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
+          'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
+          'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
+          'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
+          'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
+          'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
+          'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
+          'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
+          'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
+          'Travel Insurance': 0.01
+        };
+        let estimatedPremium = 0;
+        if (scoreResult.min_loss) {
+          let annualPremium = 0, monthlyPremium = 0;
+          const recs = scoreResult.recommendations || [];
+          if (recs.length > 0) {
+            recs.forEach(rec => {
+              const rate = PREMIUM_RATES[rec] || 0.01;
+              if (rec.toLowerCase().includes('life')) monthlyPremium += (scoreResult.min_loss * rate) / 12;
+              else annualPremium += (scoreResult.min_loss * rate);
+            });
+            estimatedPremium = Math.round(annualPremium + monthlyPremium);
+          } else { estimatedPremium = Math.round(scoreResult.min_loss * 0.013); }
+        }
+
+        await run(`
+          UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?,
+            name = ?, email = ?, wa_state = 'qualification',
+            status = 'Report Sent', pipeline_stage = 2,
+            engagement_points = engagement_points + 20, sales_score = sales_score + 20,
+            estimated_premium = ?, chat_history = ?,
+            birth_date = ?, anniversary_date = ?, contact_person = ?
+          WHERE id = ?
+        `, [
+          assessmentId, scoreResult.score, dbRiskLevel, entityType,
+          (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
+          assessmentData.email || 'whatsapp@coverscore.site',
+          estimatedPremium, JSON.stringify(assessmentData),
+          assessmentData.birth_date || null, assessmentData.anniversary_date || null,
+          assessmentData.name || 'WhatsApp User', lead.id
+        ]);
+        console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
+
+      } catch (e) {
+        console.error('Scoring error:', e);
+      }
+    }
+
+    // Phase 3: Build ending sequence — Results → Insight → Actions → Report → Advisor
+    if (needsScoring && assessmentData._scored) {
+      const name = assessmentData.name || 'Customer';
+      const email = assessmentData.email || (lead ? lead.email : null);
+      const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
+      const riskCats = assessmentData.risk_categories || {};
+      const answers = assessmentData.answers || {};
+      const recommendations = assessmentData.recommendations || [];
+
+      // Message 1: CoverScore + Risk Pillars
+      const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
+      const displayRiskLabel = dbLevel.charAt(0).toUpperCase() + dbLevel.slice(1) + ' Risk';
+      const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayRiskLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
+      postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
+
+      // Message 2: CoverScore Insight™
+      const insightText = generateCoverScoreInsight(riskCats, answers, name);
+      if (insightText) {
+        postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
       }
 
-    } // end messages.upsert
+      // Message 3: Top 3 Priorities
+      const actionItems = recommendations || '1. Review your current health coverage for gaps\n2. Build an emergency medical fund\n3. Schedule a preventive health screening';
+      postMessages.push({ type: 'actions', text: `*Your Top 3 Priorities*\n\n${actionItems}`, _delay: 3000 });
+
+      // Message 4: Report delivery info
+      postMessages.push({
+        type: 'report_link',
+        text: `\uD83D\uDCC4 Your complete Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nYou can also view it here:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
+        _delay: 3000
+      });
+
+      // Message 5: Advisor invitation
+      postMessages.push({
+        type: 'advisor',
+        text: `If you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?\n\nA. Yes\nB. Not now`,
+        _delay: 0
+      });
+    }
+
+    // Phase 4: Send remaining messages with real data and typing indicator
+    for (let i = 0; i < postMessages.length; i++) {
+      const msg = postMessages[i];
+      if (!msg.text) continue;
+      msg.text = fillTemplate(msg.text);
+
+      // Use per-message delay if set, otherwise fallback to 12s for first post-message
+      const msgDelay = msg._delay != null ? msg._delay : (i === 0 && preMessages.length > 0 ? 12000 : undefined);
+
+      const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text, delay: msgDelay });
+      if (!sendResult.success) {
+        console.error(`   ❌ Failed to send message ${i}: ${sendResult.error}. Aborting.`);
+        return;
+      }
+
+      chatHistory.push({
+        role: 'assistant',
+        content: msg.text,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+
+      if (msg.type === 'milestone' || msg.type === 'insight' || msg.type === 'trust') {
+        publishEvent(CCIE_EVENTS.MICRO_INSIGHT_DISPLAYED, ccieContext, {
+          messageType: msg.type, text: msg.text.substring(0, 60)
+        });
+      }
+    }
+
+    const finalState = assessmentData._scored ? 'awaiting_consultation' : nextState;
+    await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+      [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
+
+    if (assessmentData.name || assessmentData.email) {
+      await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email) WHERE id = ?',
+        [assessmentData.name || null, assessmentData.email || null, lead.id]);
+    }
+
+    if (isFinished) {
+      publishEvent(CCIE_EVENTS.ASSESSMENT_COMPLETED, ccieContext, {
+        leadId: lead.id, score: assessmentData.score, isQualified: !!assessmentData.is_qualified
+      });
+
+      console.log(`   🧠 Running Lead Qualifier AI for Lead ${lead.id}...`);
+      let assessData = {};
+      try {
+        if (lead.assessment_id) {
+          const rec = await get('SELECT answers FROM assessments WHERE id = ?', [lead.assessment_id]);
+          if (rec && rec.answers) assessData = JSON.parse(rec.answers);
+        }
+      } catch (e) { }
+
+      const qualifierOutput = await getLeadQualifier([], assessData);
+      console.log(`   ✅ Qualifier output: ${JSON.stringify(qualifierOutput)}`);
+
+      await run(`
+        UPDATE leads SET status = ?, pipeline_stage = ?, is_qualified = ?,
+          consultation_preference = ?, primary_concern = ?, notes = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `, [
+        qualifierOutput.lead_status || 'Qualified',
+        (qualifierOutput.lead_status || '').toLowerCase().includes('hot') ? 4 : 3,
+        assessmentData.is_qualified ? 1 : 0,
+        assessmentData.consultation_preference || null,
+        assessmentData.primary_concern || null,
+        qualifierOutput.next_best_action + " - " + qualifierOutput.qualification_reasoning,
+        lead.id
+      ]);
+
+      if (process.env.ADMIN_PHONE && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || assessmentData.is_qualified)) {
+        const qualDetails = [];
+        if (assessmentData.primary_concern) qualDetails.push(`Primary Concern: ${assessmentData.primary_concern}`);
+        if (assessmentData.consultation_preference) qualDetails.push(`Preferred Contact: ${assessmentData.consultation_preference}`);
+        if (qualifierOutput.next_best_action) qualDetails.push(`Suggested Action: ${qualifierOutput.next_best_action}`);
+        const displayName = (assessmentData.entity_type === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || lead.name);
+        const notifMsg = `🔥 *NEW QUALIFIED LEAD* 🔥\n\n👤 *Name:* ${displayName}\n📞 *Phone:* ${phoneNumber}\n🛡️ *CoverScore:* ${lead.score || 'N/A'}\n📊 *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📝 *CRM Insight:*\n${qualifierOutput.lead_status} - ${qualifierOutput.qualification_reasoning}\n\n🔍 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
+        await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
+        publishEvent(CCIE_EVENTS.ADVISOR_REQUESTED, ccieContext, { adminPhone: process.env.ADMIN_PHONE, leadId: lead.id });
+      }
+
+      if (!assessmentData.is_qualified) {
+        await run(`UPDATE leads SET status = 'WhatsApp Engaged', pipeline_stage = 3, updated_at = CURRENT_TIMESTAMP WHERE id = ?`, [lead.id]);
+      }
+
+      publishEvent(CCIE_EVENTS.CONVERSATION_COMPLETED, ccieContext, { leadId: lead.id });
+    }
+
   } catch (error) {
     console.error('Webhook processing error:', error);
   }
