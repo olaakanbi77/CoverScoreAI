@@ -300,7 +300,7 @@ router.post('/evolution', async (req, res) => {
       try {
         const scoreResult = await calculateScore(finalAnswers);
         assessmentData.score = scoreResult.score;
-        assessmentData.riskLevel = scoreResult.riskLevel;
+        assessmentData.riskLevel = scoreResult.risk_level;
         userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
         assessmentData.identified_gaps = scoreResult.identified_gaps || [];
         assessmentData.min_loss = scoreResult.min_loss;
@@ -348,7 +348,7 @@ router.post('/evolution', async (req, res) => {
 
         const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
         const assessmentDataObj = {
-          answers: finalAnswers, score: scoreResult.score, riskLevel: scoreResult.riskLevel,
+          answers: finalAnswers, score: scoreResult.score, riskLevel: scoreResult.risk_level,
           min_loss: scoreResult.min_loss, max_loss: scoreResult.max_loss,
           recommendations: scoreResult.recommendations, identified_gaps: scoreResult.identified_gaps,
           risk_categories: scoreResult.risk_categories, entityType
@@ -357,10 +357,10 @@ router.post('/evolution', async (req, res) => {
         const creIntelligence = await generateRecommendations(assessmentDataObj);
         const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
 
-        const dbRiskLevel = dbRiskLevelMap[scoreResult.riskLevel] || 'low';
+        const dbRiskLevel = dbRiskLevelMap[scoreResult.risk_level] || 'low';
 
         publishEvent(CCIE_EVENTS.SCORE_CALCULATED, ccieContext, {
-          score: scoreResult.score, riskLevel: scoreResult.riskLevel, entityType
+          score: scoreResult.score, riskLevel: scoreResult.risk_level, entityType
         });
 
         const assessRes = await run(`
@@ -442,10 +442,8 @@ router.post('/evolution', async (req, res) => {
       const recommendations = assessmentData.recommendations || [];
 
       // Message 1: CoverScore + Risk Pillars
-      console.log(`[PHASE3] score=${assessmentData.score}, riskLevel="${assessmentData.riskLevel}", dbRiskLevelMap entry="${dbRiskLevelMap[assessmentData.riskLevel]}"`);
       const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
       const displayRiskLabel = dbLevel.charAt(0).toUpperCase() + dbLevel.slice(1) + ' Risk';
-      console.log(`[PHASE3] dbLevel="${dbLevel}", displayRiskLabel="${displayRiskLabel}"`);
       const resultsText = `🎉 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayRiskLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
