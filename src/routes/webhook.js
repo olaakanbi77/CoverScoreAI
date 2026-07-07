@@ -171,8 +171,9 @@ router.post('/evolution', async (req, res) => {
     assessmentData = newAssessmentData;
 
     const isFinished = isComplete || nextState === 'finished' || nextState === 'COMPLETE';
+    const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS';
 
-    if (isFinished && !assessmentData._scored) {
+    if ((isFinished || reachedResults) && !assessmentData._scored) {
       console.log(`   [CCIE SCORING] Calculating CoverScore for ${phoneNumber}`);
       const finalAnswers = { ...(assessmentData.answers || {}), template_selection: { template_id: prefix } };
       try {
