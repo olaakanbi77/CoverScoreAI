@@ -432,16 +432,17 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    // Phase 3: Build ending sequence — Score → Report → Insight → Recommendation → Advisor
+    // Phase 3: Build ending sequence — Score → Summary → Insight → Recommendation → Report → Advisor
     if (needsScoring && assessmentData._scored) {
       const name = assessmentData.name || 'Customer';
       const email = assessmentData.email || (lead ? lead.email : null);
       const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
-      const recommendations = assessmentData.recommendations || [];
+      const scoreRecs = (scoreResult && scoreResult.recommendations) || [];
+      const aiTopRecs = (aiReportData && aiReportData.topRecommendations) || [];
 
-      // Resilience labels instead of risk labels
+      // Resilience labels
       const resilienceLabels = {
         'low': 'Strong Resilience',
         'moderate': 'Building Resilience',
@@ -451,16 +452,46 @@ router.post('/evolution', async (req, res) => {
       const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
       const displayLabel = resilienceLabels[dbLevel] || 'Building Resilience';
 
-      // Message 1: CoverScore + Risk Pillars
-      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
+      // Derive sorted pillar lists once
+      const sortedAsc = Object.entries(riskCats).sort(([, a], [, b]) => a - b);
+      const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);
+
+      // Score-improvement sentence based on lowest two pillars
+      const lowestTwo = sortedAsc.slice(0, 2);
+      const improvementNote = lowestTwo.length === 2
+        ? `\n\nIf you improve your ${lowestTwo[0][0].toLowerCase()} and ${lowestTwo[1][0].toLowerCase()}, your CoverScore\u2122 could increase significantly over time.`
+        : '';
+
+      // Message 1: CoverScore + Risk Pillars + improvement note
+      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\n${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}${improvementNote}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
-      // Message 2: Report delivery info
-      postMessages.push({
-        type: 'report_link',
-        text: `\uD83D\uDCC4 Your complete Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nYou can also view it here:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
-        _delay: 3000
-      });
+      // Message 2: Summary of Findings — 1-2 sentence bridge between numbers and insight
+      const generateSummaryOfFindings = (cats) => {
+        const entries = Object.entries(cats);
+        if (entries.length === 0) return null;
+        const strong = entries.filter(([, s]) => s >= 60);
+        const weak = entries.filter(([, s]) => s < 50);
+        const sortedWeak = weak.sort(([, a], [, b]) => a - b);
+        let parts = [];
+        if (strong.length > 0) {
+          const strongNames = strong.map(([n]) => n.toLowerCase());
+          parts.push(`Overall, you already have ${strong.length === 1 ? 'good' : 'reasonable'} ${strongNames.join(' and ')}`);
+        }
+        if (sortedWeak.length > 0) {
+          const weakNames = sortedWeak.map(([n]) => n.toLowerCase());
+          const prefix = strong.length > 0 ? 'but your assessment highlights' : 'Your assessment highlights';
+          parts.push(`${prefix} ${sortedWeak.length === 1 ? 'one priority area' : 'two priority areas'}: ${weakNames.slice(0, 2).join(' and ')}`);
+        }
+        if (parts.length === 0) {
+          return 'Your overall resilience profile is well-balanced across all areas.';
+        }
+        return parts.join(', ') + '.';
+      };
+      const summaryText = generateSummaryOfFindings(riskCats);
+      if (summaryText) {
+        postMessages.push({ type: 'summary', text: summaryText, _delay: 3000 });
+      }
 
       // Message 3: CoverScore Insight\u2122
       const insightText = generateCoverScoreInsight(riskCats, answers, name);
@@ -468,39 +499,67 @@ router.post('/evolution', async (req, res) => {
         postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
       }
 
-      // Message 4: One Primary Recommendation (AI-chosen from weakest pillar)
-      const getPrimaryRecommendation = (riskCats, recs) => {
-        const entries = Object.entries(riskCats || {});
+      // Message 4: One Primary Recommendation (dynamically generated)
+      const getPrimaryRecommendation = (cats, sRecs, aiRecs) => {
+        const entries = Object.entries(cats);
         if (entries.length === 0) return null;
         const sorted = entries.sort(([, a], [, b]) => a - b);
-        const weakest = sorted[0];
-        const weakestName = weakest[0];
+        const weakestName = sorted[0][0];
         const weakArea = weakestName.toLowerCase();
 
-        let action;
-        if (recs && recs.length > 0) {
-          action = recs[0].toLowerCase().replace(/^[\u2022\-]\s*/, '');
-        } else {
-          action = `reviewing your ${weakArea}`;
+        // Preferred: AI-generated top recommendation from Mistral
+        if (aiRecs && aiRecs.length > 0 && aiRecs[0].action) {
+          const action = aiRecs[0].action.charAt(0).toLowerCase() + aiRecs[0].action.slice(1);
+          return {
+            text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your overall resilience.`
+          };
         }
 
-        const strongEntries = sorted.filter(([, s]) => s >= 60);
-        const strengthsText = strongEntries.length > 0
-          ? `\n\nYour ${strongEntries.map(([n]) => n.toLowerCase()).join(' and ')} ${strongEntries.length === 1 ? 'is' : 'are'} relatively strong \u2014 that\u2019s good progress.`
-          : '';
+        // Fallback 1: rule-based scoring recommendations
+        if (sRecs && sRecs.length > 0) {
+          const raw = sRecs[0];
+          if (raw && raw.length > 3) {
+            const action = raw.charAt(0).toLowerCase() + raw.slice(1);
+            return {
+              text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your overall resilience.`
+            };
+          }
+        }
+
+        // Fallback 2: derive a contextual sentence from the weakest pillar name
+        const pillarActions = {
+          'healthcare access': 'reviewing your healthcare access to ensure you have adequate coverage for medical needs',
+          'preventive health': 'scheduling a comprehensive preventive health screening within the next month',
+          'medical risk profile': 'reviewing your medical risk profile to address potential health vulnerabilities',
+          'financial health protection': 'reviewing your financial health protection to ensure you can cope with a major illness without placing your family under financial pressure',
+          'household resilience': 'strengthening your household resilience plan to protect your family against unexpected events',
+          'business continuity': 'developing a business continuity plan to keep your operations running through disruptions',
+          'property risk': 'reviewing your property insurance coverage to protect your assets',
+          'liability risk': 'reviewing your liability protection to safeguard against potential claims',
+          'cyber risk': 'strengthening your cyber security measures and reviewing your cyber insurance coverage',
+          'key person risk': 'reviewing key-person protection to ensure your business survives losing a critical team member',
+          'income protection': 'reviewing your income protection to maintain financial stability if you are unable to work'
+        };
+        const action = pillarActions[weakArea] || `reviewing your ${weakArea} to strengthen your overall resilience`;
 
         return {
-          area: weakestName,
-          text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your overall resilience.${strengthsText}`
+          text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your overall resilience.`
         };
       };
 
-      const primaryRec = getPrimaryRecommendation(riskCats, recommendations);
+      const primaryRec = getPrimaryRecommendation(riskCats, scoreRecs, aiTopRecs);
       if (primaryRec) {
         postMessages.push({ type: 'recommendation', text: primaryRec.text, _delay: 3000 });
       }
 
-      // Message 5: Advisor CTA — framed as support for the recommendation
+      // Message 5: Report delivery (personalized, after recommendation)
+      postMessages.push({
+        type: 'report_link',
+        text: `\uD83D\uDCC4 Your personalized Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
+        _delay: 3000
+      });
+
+      // Message 6: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
         text: `Your complete report explains why this is a priority.\n\nIf you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
