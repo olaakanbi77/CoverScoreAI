@@ -82,16 +82,18 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   }
 
   // Auto-advance: skip user input, use first option
+  let autoAnswer;
   if (incomingText === 'AUTO_ADVANCE') {
     const opts = currentQ.answers || [];
     const answerType = currentQ.question_type;
     if (answerType === 'yes_no') {
-      parsedAnswer = opts[0] || 'Yes';
+      autoAnswer = opts[0] || 'Yes';
     } else if (answerType === 'single_choice' || answerType === 'multi_choice') {
-      parsedAnswer = opts[0] || '';
+      autoAnswer = opts[0] || '';
     } else if (answerType === 'open_text') {
-      parsedAnswer = '';
+      autoAnswer = '';
     }
+    const parsedAnswer = autoAnswer;
     if (parsedAnswer !== undefined && parsedAnswer !== null) {
       // Skip normal validation, record answer and find next state
       if (!updatedData.answers) updatedData.answers = {};
@@ -262,8 +264,8 @@ const formatDynamicQuestion = (q, data = {}) => {
 
   if (!isWelcomeOrConsent && text.length > 0) {
     const lines = text.split('\n').filter(l => l.trim());
-    if (lines.length > 4) {
-      text = lines.slice(0, 4).join('\n');
+    if (lines.length > 12) {
+      text = lines.slice(0, 12).join('\n');
     }
   }
 
