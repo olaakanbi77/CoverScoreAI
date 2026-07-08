@@ -27,7 +27,7 @@ const resolvePrefix = (ind) => {
   return 'SME';
 };
 
-const generateCoverScoreInsight = (pillarScores, answers, name) => {
+const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
   const entries = Object.entries(pillarScores || {}).sort(([, a], [, b]) => a - b);
   if (entries.length === 0) return null;
   const weakest = entries[0];
@@ -35,63 +35,67 @@ const generateCoverScoreInsight = (pillarScores, answers, name) => {
   const weakestScore = weakest[1];
 
   let body = '';
-  if (weakestName === 'Healthcare Access') {
-    body = `Your assessment suggests that the most significant gap in your health resilience is your access to healthcare coverage.`;
-    const ins = answers['HLT_012'];
-    if (ins === 'None') {
-      body += ` Without active health insurance, a serious medical event could result in significant out-of-pocket costs that may be difficult to manage.`;
-    } else if (ins === 'Government Health Scheme') {
-      body += ` While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care.`;
-    } else if (ins === 'Employer HMO') {
-      body += ` Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care.`;
+  if (prefix === 'HLT') {
+    if (weakestName === 'Healthcare Access') {
+      body = `Your assessment suggests that the most significant gap in your health resilience is your access to healthcare coverage.`;
+      const ins = answers['HLT_012'];
+      if (ins === 'None') {
+        body += ` Without active health insurance, a serious medical event could result in significant out-of-pocket costs that may be difficult to manage.`;
+      } else if (ins === 'Government Health Scheme') {
+        body += ` While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care.`;
+      } else if (ins === 'Employer HMO') {
+        body += ` Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care.`;
+      }
+      body += ` Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection.`;
+    } else if (weakestName === 'Preventive Health') {
+      body = `Your assessment shows that the biggest opportunity to strengthen your health resilience isn't about what you have\u2014it's about what you do.`;
+      const chk = answers['HLT_015'];
+      if (chk === 'Rarely/Only when sick') {
+        body += ` By only seeking medical attention when you're already unwell, you miss the chance to detect potential health issues early, when they are most treatable.`;
+      }
+      body += ` Making preventive health a regular habit\u2014starting with an annual check-up\u2014is a simple but powerful step toward long-term wellbeing.`;
+    } else if (weakestName === 'Medical Risk Profile') {
+      body = `Your assessment highlights that your medical history and age profile are important factors in your overall health risk.`;
+      const cond = answers['HLT_014'];
+      if (cond && cond !== 'None') {
+        body += ` Managing ${cond} requires consistent medical attention and appropriate insurance coverage.`;
+      }
+      const age = answers['HLT_009'];
+      if (age && (age === '56+' || age === '46 - 55')) {
+        body += ` As you get older, health risks naturally increase, making comprehensive coverage more important.`;
+      }
+      body += ` Ensuring your health plan is designed to address your specific circumstances is the most impactful step you can take.`;
+    } else if (weakestName === 'Financial Health Protection') {
+      body = `Your assessment suggests that your greatest health risk isn't access to healthcare\u2014it's the financial impact that a serious illness could have on you and your family.`;
+      const pay = answers['HLT_013'];
+      if (pay === "I don't know" || pay === 'Loan') {
+        body += ` Without dedicated savings for medical emergencies, a major health event could create significant debt.`;
+      }
+      const surg = answers['HLT_016'];
+      if (surg === 'No' || surg === 'Not sure') {
+        body += ` Your current health cover may not be sufficient for major procedures such as surgery.`;
+      }
+      const ill = answers['HLT_017'];
+      if (ill === 'No') {
+        body += ` A serious illness could put financial pressure on your household.`;
+      }
+      body += ` Strengthening your financial health protection is the most impactful step you can take.`;
+    } else if (weakestName === 'Household Resilience') {
+      body = `Your assessment shows that your household's overall resilience is an area to strengthen.`;
+      const dep = answers['HLT_010'];
+      if (dep === '3' || dep === '4+') {
+        body += ` With multiple dependants relying on you, any health-related income disruption affects more than just yourself.`;
+      }
+      const emp = answers['HLT_008'];
+      if (emp === 'Part-time / Freelance' || emp === 'Student') {
+        body += ` Your current employment situation means there is less of a financial buffer if a health emergency arises.`;
+      }
+      body += ` Building a stronger household safety net through appropriate coverage is your most practical next step.`;
+    } else {
+      body = `Your assessment provides a clear picture of your current health resilience. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact.`;
     }
-    body += ` Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection.`;
-  } else if (weakestName === 'Preventive Health') {
-    body = `Your assessment shows that the biggest opportunity to strengthen your health resilience isn't about what you have\u2014it's about what you do.`;
-    const chk = answers['HLT_015'];
-    if (chk === 'Rarely/Only when sick') {
-      body += ` By only seeking medical attention when you're already unwell, you miss the chance to detect potential health issues early, when they are most treatable.`;
-    }
-    body += ` Making preventive health a regular habit\u2014starting with an annual check-up\u2014is a simple but powerful step toward long-term wellbeing.`;
-  } else if (weakestName === 'Medical Risk Profile') {
-    body = `Your assessment highlights that your medical history and age profile are important factors in your overall health risk.`;
-    const cond = answers['HLT_014'];
-    if (cond && cond !== 'None') {
-      body += ` Managing ${cond} requires consistent medical attention and appropriate insurance coverage.`;
-    }
-    const age = answers['HLT_009'];
-    if (age && (age === '56+' || age === '46 - 55')) {
-      body += ` As you get older, health risks naturally increase, making comprehensive coverage more important.`;
-    }
-    body += ` Ensuring your health plan is designed to address your specific circumstances is the most impactful step you can take.`;
-  } else if (weakestName === 'Financial Health Protection') {
-    body = `Your assessment suggests that your greatest health risk isn't access to healthcare\u2014it's the financial impact that a serious illness could have on you and your family.`;
-    const pay = answers['HLT_013'];
-    if (pay === "I don't know" || pay === 'Loan') {
-      body += ` Without dedicated savings for medical emergencies, a major health event could create significant debt.`;
-    }
-    const surg = answers['HLT_016'];
-    if (surg === 'No' || surg === 'Not sure') {
-      body += ` Your current health cover may not be sufficient for major procedures such as surgery.`;
-    }
-    const ill = answers['HLT_017'];
-    if (ill === 'No') {
-      body += ` A serious illness could put financial pressure on your household.`;
-    }
-    body += ` Strengthening your financial health protection is the most impactful step you can take.`;
-  } else if (weakestName === 'Household Resilience') {
-    body = `Your assessment shows that your household's overall resilience is an area to strengthen.`;
-    const dep = answers['HLT_010'];
-    if (dep === '3' || dep === '4+') {
-      body += ` With multiple dependants relying on you, any health-related income disruption affects more than just yourself.`;
-    }
-    const emp = answers['HLT_008'];
-    if (emp === 'Part-time / Freelance' || emp === 'Student') {
-      body += ` Your current employment situation means there is less of a financial buffer if a health emergency arises.`;
-    }
-    body += ` Building a stronger household safety net through appropriate coverage is your most practical next step.`;
   } else {
-    body = `Your assessment provides a clear picture of your current health resilience. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact.`;
+    body = `Your assessment highlights that your biggest opportunity to strengthen your overall resilience is your ${weakestName.toLowerCase()}. With a score of ${weakestScore}%, this is where focused attention would have the greatest impact on your overall protection profile.`;
   }
 
   return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
@@ -317,6 +321,11 @@ router.post('/evolution', async (req, res) => {
           HLT: { strengths: '', risks: "⚠ Your health protection gaps need attention.", recommendations: "• Review your health coverage.\n• Build an emergency medical fund.\n• Schedule preventive health screenings." },
           ENT: { strengths: "✓ Strong business vision\n✓ Market awareness", risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection", recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets." },
           FAM: { strengths: "✓ Clear long-term goals\n✓ Strong familial support", risks: "⚠ Inadequate life cover\n⚠ Education funding gap", recommendations: "• Review Life Insurance policy.\n• Set up an education trust." },
+          INC: { strengths: "✓ Income stability\n✓ Employment security", risks: "⚠ Limited emergency savings\n⚠ No income protection insurance", recommendations: "• Build an emergency fund.\n• Consider income protection insurance." },
+          RET: { strengths: "✓ Retirement planning awareness\n✓ Long-term thinking", risks: "⚠ Inadequate retirement savings\n⚠ No long-term care plan", recommendations: "• Open a pension or retirement savings account.\n• Consider long-term care insurance." },
+          YPR: { strengths: "✓ Early career financial awareness", risks: "⚠ Limited emergency savings\n⚠ No personal insurance", recommendations: "• Build an emergency fund.\n• Consider health and accident insurance." },
+          HOM: { strengths: "✓ Property ownership", risks: "⚠ No home contents insurance", recommendations: "• Consider homeowner's or renter's insurance." },
+          MOT: { strengths: "✓ Vehicle ownership", risks: "⚠ No comprehensive motor insurance", recommendations: "• Consider comprehensive motor insurance." },
           DEFAULT: { strengths: "✓ Career Stability\n✓ Digital Safety\n✓ Personal Responsibility", risks: "⚠ Limited emergency savings\n⚠ Inadequate income protection\n⚠ No long-term financial protection strategy", recommendations: "• Build an emergency fund\n• Review income protection\n• Begin a structured long-term financial plan" }
         };
         const fallbacks = fb[prefix] || fb.DEFAULT;
@@ -520,7 +529,7 @@ router.post('/evolution', async (req, res) => {
       }
 
       // Message 3: CoverScore Insight\u2122
-      const insightText = generateCoverScoreInsight(riskCats, answers, name);
+      const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
       if (insightText) {
         postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
       }
