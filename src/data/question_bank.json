@@ -1145,11 +1145,9 @@
     "id": "HLT_007",
     "industry": "health",
     "pillar": "General",
+    "auto_advance": true,
     "question": "Thanks, {{name}}. I've personalized your assessment.",
-    "question_type": "single_choice",
-    "answers": [
-      "Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "HLT_008"
     }
@@ -1158,7 +1156,7 @@
     "id": "HLT_008",
     "industry": "health",
     "pillar": "General",
-    "question": "What's your employment status?",
+    "question": "I'd now like to understand your current health protection.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
       "Employed full-time",
