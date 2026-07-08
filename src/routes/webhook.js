@@ -8,6 +8,7 @@ const { calculateScore } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
 const ccieEngine = require('../services/ccieEngine');
 const { CCIE_EVENTS, publishEvent } = require('../services/ccieEvents');
+const questionBank = require('../data/question_bank.json');
 
 const flowMap = {
   'school': 'SCH', 'manufacturing': 'MFG', 'hospital': 'HOS', 'healthcare': 'HOS',
@@ -245,7 +246,9 @@ router.post('/evolution', async (req, res) => {
     assessmentData = newAssessmentData;
 
     const isFinished = isComplete || nextState === 'finished' || nextState === 'COMPLETE';
-    const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS';
+    const nextQ = questionBank.find(q => q.id === nextState);
+    const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS'
+      || (nextQ && nextQ.data_mapping === 'request_consultation');
     const needsScoring = (isFinished || reachedResults) && !assessmentData._scored;
 
     // Template fill helper (uses assessmentData which scoring populates)
@@ -555,10 +558,28 @@ router.post('/evolution', async (req, res) => {
         postMessages.push({ type: 'recommendation', text: primaryRec.text, _delay: 3000 });
       }
 
-      // Message 5: Report link with bridge text merged
+      // Message 5: Report link with bridge text merged (dynamic report name per template)
+      const reportNames = {
+        HLT: 'Health Risk Intelligence Report\u2122',
+        YPR: 'Young Professional Risk Intelligence Report\u2122',
+        ENT: 'Entrepreneur Risk Intelligence Report\u2122',
+        FAM: 'Family Protection Risk Intelligence Report\u2122',
+        INC: 'Income Protection Risk Intelligence Report\u2122',
+        RET: 'Retirement Readiness Risk Intelligence Report\u2122',
+        HOM: 'Home Protection Risk Intelligence Report\u2122',
+        MOT: 'Motor Protection Risk Intelligence Report\u2122',
+        SME: 'Business Risk Intelligence Report\u2122',
+        MFG: 'Manufacturing Risk Intelligence Report\u2122',
+        HOS: 'Hospital Risk Intelligence Report\u2122',
+        SCH: 'School Risk Intelligence Report\u2122',
+        CHR: 'Church Risk Intelligence Report\u2122',
+        CON: 'Construction Risk Intelligence Report\u2122',
+        TRN: 'Transport Risk Intelligence Report\u2122'
+      };
+      const reportName = reportNames[prefix] || 'Risk Intelligence Report\u2122';
       postMessages.push({
         type: 'report_link',
-        text: `\uD83D\uDCC4 Your personalized Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nIt explains these findings in more detail and includes practical next steps tailored to your situation.\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
+        text: `\uD83D\uDCC4 Your personalized ${reportName} has been sent to:\n\n${email || 'your email'}\n\nIt explains these findings in more detail and includes practical next steps tailored to your situation.\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
         _delay: 3000
       });
 
