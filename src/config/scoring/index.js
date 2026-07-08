@@ -352,14 +352,14 @@ const scoringConfigs = {
         id: 'no_pension_no_care',
         name: 'No Pension + No Long-term Care Plan',
         conditions: [['RET_012', 'No'], ['RET_014', 'No']],
-        penalty: 15,
+        penalty: 8,
         description: 'No retirement savings and no care plan creates extreme vulnerability'
       },
       {
         id: 'soon_retire_no_pension',
         name: 'Soon to Retire + No Pension Savings',
         conditions: [['RET_011', 'Within 5 years'], ['RET_012', 'No']],
-        penalty: 12,
+        penalty: 6,
         description: 'Retiring without pension savings requires immediate action'
       },
       {
