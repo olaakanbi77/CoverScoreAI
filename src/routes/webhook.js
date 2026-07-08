@@ -555,24 +555,17 @@ router.post('/evolution', async (req, res) => {
         postMessages.push({ type: 'recommendation', text: primaryRec.text, _delay: 3000 });
       }
 
-      // Message 5: Bridge sentence linking recommendation to report
-      postMessages.push({
-        type: 'bridge',
-        text: `Your personalized report explains these findings in more detail and includes practical next steps tailored to your situation.`,
-        _delay: 3000
-      });
-
-      // Message 6: Report link (personalized, after bridge)
+      // Message 5: Report link with bridge text merged
       postMessages.push({
         type: 'report_link',
-        text: `\uD83D\uDCC4 Your personalized Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
+        text: `\uD83D\uDCC4 Your personalized Health Risk Intelligence Report\u2122 has been sent to:\n\n${email || 'your email'}\n\nIt explains these findings in more detail and includes practical next steps tailored to your situation.\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
         _delay: 3000
       });
 
-      // Message 7: Advisor CTA — framed as support for the recommendation
+      // Message 6: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
-        text: `Your complete report explains why this is a priority.\n\nIf you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
+        text: `If you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
         _delay: 3000
       });
     }
