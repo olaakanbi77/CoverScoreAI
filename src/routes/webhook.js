@@ -358,78 +358,88 @@ router.post('/evolution', async (req, res) => {
           risk_categories: scoreResult.risk_categories, entityType
         };
 
-        const creIntelligence = await generateRecommendations(assessmentDataObj);
-        const aiReportData = await generateRiskReport(assessmentDataObj, creIntelligence);
-
         const dbRiskLevel = dbRiskLevelMap[scoreResult.risk_level] || 'low';
 
         publishEvent(CCIE_EVENTS.SCORE_CALCULATED, ccieContext, {
           score: scoreResult.score, riskLevel: scoreResult.risk_level, entityType
         });
 
-        const assessRes = await run(`
-          INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
-          VALUES (NULL, ?, ?, ?, ?)
-        `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportData)]);
+        // Fire AI report generation + DB persistence in background (don't block user response)
+        setImmediate(async () => {
+          let aiReportFinal, assessmentId;
+          try {
+            const creIntel = generateRecommendations(assessmentDataObj);
+            aiReportFinal = await generateRiskReport(assessmentDataObj, creIntel);
+            const aRes = await run(`
+              INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
+              VALUES (NULL, ?, ?, ?, ?)
+            `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportFinal)]);
+            assessmentId = aRes.lastInsertRowid;
+            assessmentData.assessmentId = assessmentId;
+            assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
+            publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
+          } catch (err) {
+            console.error('Background AI/persistence error:', err);
+          }
 
-        const assessmentId = assessRes.lastInsertRowid;
-        assessmentData.assessmentId = assessmentId;
-        assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
-        publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
+          if (assessmentData.email) {
+            emailService.sendAssessmentReport(assessmentData.email, {
+              score: scoreResult.score, riskLevel: dbRiskLevel, aiReport: aiReportFinal || null,
+              businessName: assessmentData.business_name || assessmentData.name, assessmentId
+            }).then(() => {
+              publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: assessmentData.email, assessmentId });
+              console.log(`✅ Assessment report emailed to ${assessmentData.email}`);
+            }).catch(err => console.error(`❌ Failed to email report:`, err));
+          }
 
-        if (assessmentData.email) {
-          emailService.sendAssessmentReport(assessmentData.email, {
-            score: scoreResult.score, riskLevel: dbRiskLevel, aiReport: aiReportData,
-            businessName: assessmentData.business_name || assessmentData.name, assessmentId
-          }).then(() => {
-            publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: assessmentData.email, assessmentId });
-            console.log(`✅ Assessment report emailed to ${assessmentData.email}`);
-          }).catch(err => console.error(`❌ Failed to email report:`, err));
-        }
+          try {
+            const PREMIUM_RATES = {
+              'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
+              'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
+              'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
+              'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
+              'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
+              'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
+              'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
+              'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
+              'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
+              'Travel Insurance': 0.01
+            };
+            let estimatedPremium = 0;
+            if (scoreResult.min_loss) {
+              let annualPremium = 0, monthlyPremium = 0;
+              const recs = scoreResult.recommendations || [];
+              if (recs.length > 0) {
+                recs.forEach(rec => {
+                  const rate = PREMIUM_RATES[rec] || 0.01;
+                  if (rec.toLowerCase().includes('life')) monthlyPremium += (scoreResult.min_loss * rate) / 12;
+                  else annualPremium += (scoreResult.min_loss * rate);
+                });
+                estimatedPremium = Math.round(annualPremium + monthlyPremium);
+              } else { estimatedPremium = Math.round(scoreResult.min_loss * 0.013); }
+            }
 
-        const PREMIUM_RATES = {
-          'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
-          'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
-          'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
-          'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
-          'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
-          'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
-          'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
-          'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
-          'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
-          'Travel Insurance': 0.01
-        };
-        let estimatedPremium = 0;
-        if (scoreResult.min_loss) {
-          let annualPremium = 0, monthlyPremium = 0;
-          const recs = scoreResult.recommendations || [];
-          if (recs.length > 0) {
-            recs.forEach(rec => {
-              const rate = PREMIUM_RATES[rec] || 0.01;
-              if (rec.toLowerCase().includes('life')) monthlyPremium += (scoreResult.min_loss * rate) / 12;
-              else annualPremium += (scoreResult.min_loss * rate);
-            });
-            estimatedPremium = Math.round(annualPremium + monthlyPremium);
-          } else { estimatedPremium = Math.round(scoreResult.min_loss * 0.013); }
-        }
-
-        await run(`
-          UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?,
-            name = ?, email = ?, wa_state = 'qualification',
-            status = 'Report Sent', pipeline_stage = 2,
-            engagement_points = engagement_points + 20, sales_score = sales_score + 20,
-            estimated_premium = ?, chat_history = ?,
-            birth_date = ?, anniversary_date = ?, contact_person = ?
-          WHERE id = ?
-        `, [
-          assessmentId, scoreResult.score, dbRiskLevel, entityType,
-          (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
-          assessmentData.email || 'whatsapp@coverscore.site',
-          estimatedPremium, JSON.stringify(assessmentData),
-          assessmentData.birth_date || null, assessmentData.anniversary_date || null,
-          assessmentData.name || 'WhatsApp User', lead.id
-        ]);
-        console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
+            await run(`
+              UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?,
+                name = ?, email = ?, wa_state = 'qualification',
+                status = 'Report Sent', pipeline_stage = 2,
+                engagement_points = engagement_points + 20, sales_score = sales_score + 20,
+                estimated_premium = ?, chat_history = ?,
+                birth_date = ?, anniversary_date = ?, contact_person = ?
+              WHERE id = ?
+            `, [
+              assessmentId || null, scoreResult.score, dbRiskLevel, entityType,
+              (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
+              assessmentData.email || 'whatsapp@coverscore.site',
+              estimatedPremium, JSON.stringify(assessmentData),
+              assessmentData.birth_date || null, assessmentData.anniversary_date || null,
+              assessmentData.name || 'WhatsApp User', lead.id
+            ]);
+            console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
+          } catch (e) {
+            console.error('Background update-leads error:', e);
+          }
+        });
 
       } catch (e) {
         console.error('Scoring error:', e);
