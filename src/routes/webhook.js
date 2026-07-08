@@ -365,22 +365,25 @@ router.post('/evolution', async (req, res) => {
           score: scoreResult.score, riskLevel: scoreResult.risk_level, entityType
         });
 
-        // Fire AI report generation + DB persistence in background (don't block user response)
+        // Insert assessment record immediately (without AI report) so reportUrl is available in Phase 3
+        const assessRes = await run(`
+          INSERT INTO assessments (user_id, answers, score, risk_level)
+          VALUES (NULL, ?, ?, ?)
+        `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel]);
+        const assessmentId = assessRes.lastInsertRowid;
+        assessmentData.assessmentId = assessmentId;
+        assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
+        publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
+
+        // Fire AI report generation + remaining persistence in background (don't block user response)
         setImmediate(async () => {
-          let aiReportFinal, assessmentId;
+          let aiReportFinal;
           try {
             const creIntel = generateRecommendations(assessmentDataObj);
             aiReportFinal = await generateRiskReport(assessmentDataObj, creIntel);
-            const aRes = await run(`
-              INSERT INTO assessments (user_id, answers, score, risk_level, ai_report)
-              VALUES (NULL, ?, ?, ?, ?)
-            `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel, JSON.stringify(aiReportFinal)]);
-            assessmentId = aRes.lastInsertRowid;
-            assessmentData.assessmentId = assessmentId;
-            assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
-            publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
+            await run(`UPDATE assessments SET ai_report = ? WHERE id = ?`, [JSON.stringify(aiReportFinal), assessmentId]);
           } catch (err) {
-            console.error('Background AI/persistence error:', err);
+            console.error('Background AI error:', err);
           }
 
           if (assessmentData.email) {
@@ -429,7 +432,7 @@ router.post('/evolution', async (req, res) => {
                 birth_date = ?, anniversary_date = ?, contact_person = ?
               WHERE id = ?
             `, [
-              assessmentId || null, scoreResult.score, dbRiskLevel, entityType,
+              assessmentId, scoreResult.score, dbRiskLevel, entityType,
               (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
               assessmentData.email || 'whatsapp@coverscore.site',
               estimatedPremium, JSON.stringify(assessmentData),
