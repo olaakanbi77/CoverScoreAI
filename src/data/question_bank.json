@@ -1349,8 +1349,7 @@
     "branching": {
       "DEFAULT": "RET_011"
     },
-    "auto_advance": false,
-    "question_type": "text",
+    "question_type": "single_choice",
     "data_mapping": ""
   },
   {
