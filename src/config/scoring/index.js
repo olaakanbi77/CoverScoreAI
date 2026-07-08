@@ -296,19 +296,26 @@ const scoringConfigs = {
   RET: {
     name: 'Retirement Readiness',
     pillars: [
-      { id: 'retirement_timing', name: 'Retirement Timing', weight: 0.25 },
+      { id: 'retirement_readiness', name: 'Retirement Readiness', weight: 0.25 },
       { id: 'retirement_savings', name: 'Retirement Savings', weight: 0.30 },
       { id: 'protection', name: 'Protection & Insurance', weight: 0.25 },
       { id: 'legacy_planning', name: 'Legacy Planning', weight: 0.20 }
     ],
     categories: {
-      retirement_horizon: { name: 'Retirement Horizon', pillar: 'retirement_timing' },
+      retirement_preparedness: { name: 'Retirement Preparedness', pillar: 'retirement_readiness' },
+      retirement_horizon: { name: 'Retirement Horizon', pillar: 'retirement_readiness' },
       pension_savings: { name: 'Pension & Savings', pillar: 'retirement_savings' },
       long_term_care: { name: 'Long-term Care', pillar: 'protection' },
       medical_cost_impact: { name: 'Medical Cost Impact', pillar: 'protection', weight: 0.4 },
-      dependents_security: { name: 'Dependents Security', pillar: 'legacy_planning' }
+      legacy_documentation: { name: 'Legacy Documentation', pillar: 'legacy_planning' }
     },
     questions: {
+      RET_010: {
+        category: 'retirement_preparedness',
+        scores: { 'I already have a written retirement plan': 100, "I'm saving but don't have a clear plan": 60, 'I know I should start planning': 30, "I haven't thought seriously about retirement": 0 },
+        gaps: { "I haven't thought seriously about retirement": 'No retirement planning has been started.', 'I know I should start planning': 'Awareness of retirement needs exists but no concrete action taken.', "I'm saving but don't have a clear plan": 'Saving without a structured plan limits long-term effectiveness.' },
+        recommendations: { "I haven't thought seriously about retirement": 'Start with a retirement savings plan immediately.', 'I know I should start planning': 'Create a written retirement plan with specific savings targets.', "I'm saving but don't have a clear plan": 'Develop a structured retirement plan with clear goals and timelines.' }
+      },
       RET_011: {
         category: 'retirement_horizon',
         scores: { 'Over 15 years': 100, '5-15 years': 60, 'Within 5 years': 20 },
@@ -334,10 +341,10 @@ const scoringConfigs = {
         recommendations: { 'No': 'Consider long-term care insurance or critical illness cover.' }
       },
       RET_015: {
-        category: 'dependents_security',
-        scores: { 'Yes': 100, 'Not applicable': 80, 'No': 0 },
-        gaps: { 'No': 'Your spouse or dependents lack financial security after you.' },
-        recommendations: { 'No': 'Review life insurance and estate planning for dependents.' }
+        category: 'legacy_documentation',
+        scores: { 'Yes, I have a documented plan': 100, 'Partially - I have some documentation': 50, 'No, not yet': 0 },
+        gaps: { 'No, not yet': 'No documented plan for asset distribution or beneficiary nominations.', 'Partially - I have some documentation': 'Partial documentation leaves gaps in your legacy plan.' },
+        recommendations: { 'No, not yet': 'Document how your assets should be distributed and nominate beneficiaries for your retirement accounts.', 'Partially - I have some documentation': 'Complete your estate planning documentation and review beneficiary designations.' }
       }
     },
     modifiers: [
@@ -364,10 +371,11 @@ const scoringConfigs = {
       }
     ],
     improvements: {
+      RET_010: { "I'm saving but don't have a clear plan": { target: 'I already have a written retirement plan', gain: 5, action: 'Create a written retirement plan with specific savings targets' }, 'I know I should start planning': { target: "I'm saving but don't have a clear plan", gain: 4, action: 'Start saving regularly for retirement with a structured approach' }, "I haven't thought seriously about retirement": { target: 'I know I should start planning', gain: 10, action: 'Educate yourself on retirement planning basics and set a start date' } },
       RET_012: { 'No': { target: 'Yes', gain: 12, action: 'Open and contribute to a pension or retirement savings account' } },
       RET_013: { 'Very concerned': { target: 'Somewhat concerned', gain: 5, action: 'Research health insurance options and estimate medical costs in retirement' }, 'Somewhat concerned': { target: 'Not concerned', gain: 5, action: 'Build a medical cost buffer into your retirement savings' } },
       RET_014: { 'No': { target: 'Yes', gain: 8, action: 'Get long-term care or critical illness cover' } },
-      RET_015: { 'No': { target: 'Yes', gain: 6, action: 'Review life insurance and estate planning' } }
+      RET_015: { 'No, not yet': { target: 'Partially - I have some documentation', gain: 6, action: 'Document your asset distribution wishes and nominate beneficiaries' }, 'Partially - I have some documentation': { target: 'Yes, I have a documented plan', gain: 4, action: 'Complete your estate planning documentation and review all beneficiary designations' } }
     }
   },
 

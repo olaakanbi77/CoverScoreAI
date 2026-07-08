@@ -203,7 +203,7 @@
     "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -435,7 +435,7 @@
     "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -671,7 +671,7 @@
     "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -891,7 +891,7 @@
     "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1230,7 +1230,7 @@
     "id": "HLT_019",
     "industry": "health",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1334,8 +1334,24 @@
     ],
     "data_mapping": "age_range",
     "branching": {
-      "DEFAULT": "RET_011"
+      "DEFAULT": "RET_010"
     }
+  },
+  {
+    "id": "RET_010",
+    "question": "Which statement best describes your retirement planning today?",
+    "answers": [
+      "I already have a written retirement plan",
+      "I'm saving but don't have a clear plan",
+      "I know I should start planning",
+      "I haven't thought seriously about retirement"
+    ],
+    "branching": {
+      "DEFAULT": "RET_011"
+    },
+    "auto_advance": false,
+    "question_type": "text",
+    "data_mapping": ""
   },
   {
     "pillar": "Future Planning",
@@ -1415,12 +1431,12 @@
   },
   {
     "pillar": "Future Planning",
-    "question": "If you pass away, will your spouse or dependents have enough income to maintain their lifestyle?",
+    "question": "Have you documented how your assets should be distributed and nominated beneficiaries for your retirement accounts?",
     "question_type": "single_choice",
     "answers": [
-      "Yes",
-      "No",
-      "Not applicable"
+      "Yes, I have a documented plan",
+      "Partially - I have some documentation",
+      "No, not yet"
     ],
     "risk_logic": {
       "No": {
@@ -1451,7 +1467,7 @@
     "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1610,7 +1626,7 @@
     "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1769,7 +1785,7 @@
     "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2019,7 +2035,7 @@
     "id": "SME_019",
     "industry": "sme",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2270,7 +2286,7 @@
     "id": "MFG_019",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2513,7 +2529,7 @@
     "id": "HOS_019",
     "industry": "hospital",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2753,7 +2769,7 @@
     "id": "SCH_019",
     "industry": "school",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2992,7 +3008,7 @@
     "id": "CHR_019",
     "industry": "church",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3236,7 +3252,7 @@
     "id": "CON_019",
     "industry": "construction",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3481,7 +3497,7 @@
     "id": "TRN_019",
     "industry": "transport",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",

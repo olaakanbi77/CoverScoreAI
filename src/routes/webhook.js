@@ -9,6 +9,7 @@ const { generateRecommendations } = require('../services/cre');
 const ccieEngine = require('../services/ccieEngine');
 const { CCIE_EVENTS, publishEvent } = require('../services/ccieEvents');
 const questionBank = require('../data/question_bank.json');
+const { domainConfig, defaultDomain } = require('../config/domain');
 
 const flowMap = {
   'school': 'SCH', 'manufacturing': 'MFG', 'hospital': 'HOS', 'healthcare': 'HOS',
@@ -33,6 +34,7 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
   const weakest = entries[0];
   const weakestName = weakest[0];
   const weakestScore = weakest[1];
+  const dom = domainConfig[prefix] || defaultDomain;
 
   let body = '';
   if (prefix === 'HLT') {
@@ -94,8 +96,49 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
     } else {
       body = `Your assessment provides a clear picture of your current health resilience. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact.`;
     }
+  } else if (prefix === 'RET') {
+    if (weakestName === 'Retirement Readiness') {
+      body = `You're approaching the stage of life where retirement planning becomes increasingly important, yet your assessment suggests you may still be relying primarily on future income rather than dedicated retirement assets.`;
+      const age = answers['RET_009'];
+      if (age === '46 - 55' || age === '56+') {
+        body += ` Delaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement.`;
+      }
+      const pension = answers['RET_012'];
+      if (pension === 'No') {
+        body += ` Without a dedicated pension or retirement savings account, you may have limited options to build the retirement nest egg you need.`;
+      }
+      const legacy = answers['RET_015'];
+      if (legacy === 'No' || legacy === 'Not applicable') {
+        body += ` Your retirement assets and estate plans may not be structured to protect your loved ones.`;
+      }
+      body += ` Starting a structured retirement savings plan is the most impactful step you can take toward securing your financial future.`;
+    } else if (weakestName === 'Retirement Savings') {
+      body = `Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources to maintain your lifestyle throughout retirement.`;
+      body += ` Building dedicated retirement savings that are separate from your daily income is essential for long-term financial independence.`;
+    } else if (weakestName === 'Protection & Insurance') {
+      body = `Your assessment suggests that your retirement could be disrupted by unexpected healthcare or long-term care costs.`;
+      const medical = answers['RET_013'];
+      if (medical === 'Very concerned') {
+        body += ` You're right to be concerned\u2014medical costs are one of the biggest threats to retirement savings.`;
+      }
+      const care = answers['RET_014'];
+      if (care === 'No') {
+        body += ` Without a long-term care plan, a health event could quickly deplete your retirement savings.`;
+      }
+      body += ` Reviewing your protection options for retirement is a practical step toward safeguarding your savings.`;
+    } else if (weakestName === 'Legacy Planning') {
+      body = `Your assessment shows that your estate and legacy planning is an area to strengthen.`;
+      const beneficiary = answers['RET_015'];
+      if (beneficiary === 'No') {
+        body += ` Without clear beneficiary nominations or asset distribution plans, your retirement assets may not pass to your loved ones as you intend.`;
+      }
+      body += ` Documenting your estate plan and reviewing beneficiary designations are simple steps that provide peace of mind.`;
+    } else {
+      body = `Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources and protection to maintain your lifestyle throughout retirement.`;
+    }
+    body += `\n\nDelaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement.`;
   } else {
-    body = `Your assessment highlights that your biggest opportunity to strengthen your overall resilience is your ${weakestName.toLowerCase()}. With a score of ${weakestScore}%, this is where focused attention would have the greatest impact on your overall protection profile.`;
+    body = `Your assessment highlights that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. With a score of ${weakestScore}%, this is where focused attention would have the greatest impact on your ${dom.closingTerm}.`;
   }
 
   return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
@@ -322,7 +365,7 @@ router.post('/evolution', async (req, res) => {
           ENT: { strengths: "✓ Strong business vision\n✓ Market awareness", risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection", recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets." },
           FAM: { strengths: "✓ Clear long-term goals\n✓ Strong familial support", risks: "⚠ Inadequate life cover\n⚠ Education funding gap", recommendations: "• Review Life Insurance policy.\n• Set up an education trust." },
           INC: { strengths: "✓ Income stability\n✓ Employment security", risks: "⚠ Limited emergency savings\n⚠ No income protection insurance", recommendations: "• Build an emergency fund.\n• Consider income protection insurance." },
-          RET: { strengths: "✓ Retirement planning awareness\n✓ Long-term thinking", risks: "⚠ Inadequate retirement savings\n⚠ No long-term care plan", recommendations: "• Open a pension or retirement savings account.\n• Consider long-term care insurance." },
+          RET: { strengths: "✓ Retirement planning awareness\n✓ Long-term thinking", risks: "⚠ Inadequate retirement savings\n⚠ No long-term care plan\n⚠ No legacy documentation", recommendations: "• Start or review a dedicated retirement savings plan.\n• Consider long-term care insurance.\n• Document your asset distribution and beneficiary nominations." },
           YPR: { strengths: "✓ Early career financial awareness", risks: "⚠ Limited emergency savings\n⚠ No personal insurance", recommendations: "• Build an emergency fund.\n• Consider health and accident insurance." },
           HOM: { strengths: "✓ Property ownership", risks: "⚠ No home contents insurance", recommendations: "• Consider homeowner's or renter's insurance." },
           MOT: { strengths: "✓ Vehicle ownership", risks: "⚠ No comprehensive motor insurance", recommendations: "• Consider comprehensive motor insurance." },
@@ -477,15 +520,15 @@ router.post('/evolution', async (req, res) => {
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 
-      // Resilience labels
-      const resilienceLabels = {
+      // Resilience labels (domain-aware — RET uses "Readiness" labels)
+      const domLabels = dom.resilienceLabels || {
         'low': 'Strong Resilience',
         'moderate': 'Building Resilience',
         'high': 'Needs Attention',
         'critical': 'Priority Improvement'
       };
       const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
-      const displayLabel = resilienceLabels[dbLevel] || 'Building Resilience';
+      const displayLabel = domLabels[dbLevel] || 'Building Resilience';
 
       // Derive sorted pillar lists once
       const sortedAsc = Object.entries(riskCats).sort(([, a], [, b]) => a - b);
@@ -498,7 +541,8 @@ router.post('/evolution', async (req, res) => {
         : '';
 
       // Message 1: CoverScore + Risk Pillars + improvement note
-      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\nCurrent Resilience: ${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}${improvementNote}`;
+      const dom = domainConfig[prefix] || defaultDomain;
+      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\nCurrent ${dom.displayLabel}: ${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}${improvementNote}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
       // Message 2: Summary of Findings — 1–2 sentence bridge between numbers and insight
@@ -519,7 +563,7 @@ router.post('/evolution', async (req, res) => {
           parts.push(`${prefix} ${sortedWeak.length === 1 ? 'one priority area' : 'two priority areas'}: ${weakNames.slice(0, 2).join(' and ')}`);
         }
         if (parts.length === 0) {
-          return 'Your overall resilience profile is well-balanced across all areas.';
+          return `Your overall ${dom.closingTerm} profile is well-balanced across all areas.`;
         }
         return parts.join(', ') + '.';
       };
@@ -553,12 +597,16 @@ router.post('/evolution', async (req, res) => {
           'liability risk': 'reviewing your liability protection to safeguard against potential claims',
           'cyber risk': 'strengthening your cyber security measures and reviewing your cyber insurance coverage',
           'key person risk': 'reviewing key-person protection to ensure your business survives losing a critical team member',
-          'income protection': 'reviewing your income protection to maintain financial stability if you are unable to work'
+          'income protection': 'reviewing your income protection to maintain financial stability if you are unable to work',
+          'retirement readiness': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
+          'retirement savings': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
+          'protection & insurance': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
+          'legacy planning': 'documenting how your assets should be distributed and nominating beneficiaries for your retirement accounts'
         };
-        const action = pillarActions[weakArea] || `reviewing your ${weakArea} to strengthen your overall resilience`;
+        const action = pillarActions[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
 
         return {
-          text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your overall resilience.`
+          text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your ${dom.closingTerm}.`
         };
       };
 
@@ -585,7 +633,7 @@ router.post('/evolution', async (req, res) => {
         CON: 'Construction Risk Intelligence Report\u2122',
         TRN: 'Transport Risk Intelligence Report\u2122'
       };
-      const reportName = reportNames[prefix] || 'Risk Intelligence Report\u2122';
+      const reportName = reportNames[prefix] || `${dom.assessmentTitle} Risk Intelligence Report\u2122`;
       postMessages.push({
         type: 'report_link',
         text: `\uD83D\uDCC4 Your personalized ${reportName} has been sent to:\n\n${email || 'your email'}\n\nIt explains these findings in more detail and includes practical next steps tailored to your situation.\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
