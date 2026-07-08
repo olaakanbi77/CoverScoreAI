@@ -348,6 +348,7 @@ router.post('/evolution', async (req, res) => {
         assessmentData.pillar_scores = scoreResult.pillar_scores;
         assessmentData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
           ? scoreResult.recommendations.slice(0, 3).map(r => '• ' + r).join('\n') : fallbacks.recommendations;
+        assessmentData._rawRecommendations = scoreResult.recommendations || [];
         assessmentData._scored = true;
 
         const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
@@ -448,6 +449,7 @@ router.post('/evolution', async (req, res) => {
         assessmentData.risk_categories = assessmentData.risk_categories || {};
         assessmentData.strengths = assessmentData.strengths || '';
         assessmentData.top_risks = assessmentData.top_risks || '';
+        assessmentData._rawRecommendations = [];
         assessmentData._scored = true; // Ensure Phase 3 still runs with fallback data
       }
     }
@@ -459,8 +461,8 @@ router.post('/evolution', async (req, res) => {
       const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
-      const scoreRecs = (scoreResult && scoreResult.recommendations) || [];
-      const aiTopRecs = (aiReportData && aiReportData.topRecommendations) || [];
+      const scoreRecs = assessmentData._rawRecommendations || [];
+      const aiTopRecs = [];
 
       // Resilience labels
       const resilienceLabels = {
