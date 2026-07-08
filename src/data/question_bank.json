@@ -3,45 +3,15 @@
     "id": "YPR_001",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Young Professional Assessment.\n\nAs you build your career, unexpected life events can quickly derail your financial momentum.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for financial risks and provide a personalized Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Young Professional Assessment.\n\nAs you build your career, unexpected life events can quickly derail your financial momentum.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for financial risks and provide a personalized Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "YPR_003",
-      "❓ Tell me more": "YPR_002",
-      "DEFAULT": "YPR_002"
-    }
-  },
-  {
-    "id": "YPR_002",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "YPR_003",
-      "DEFAULT": "YPR_003"
-    }
-  },
-  {
-    "id": "YPR_003",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "YPR_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "YPR_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -83,13 +53,11 @@
     "industry": "young_professional",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMost young professionals believe they're financially prepared until a single unexpected emergency wipes out their savings.\n\nOur goal today is to help you identify these hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "YPR_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "YPR_008",
@@ -121,19 +89,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "YPR_010"
-    }
-  },
-  {
-    "id": "YPR_010",
-    "industry": "young_professional",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "YPR_011"
     }
@@ -239,7 +194,8 @@
     ],
     "branching": {
       "DEFAULT": "YPR_017"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "YPR_017",
@@ -260,45 +216,15 @@
     "id": "ENT_001",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Entrepreneur Assessment.\n\nYour business relies on your drive and vision, but personal and operational risks can threaten everything you've built.\n\nIn the next 3–5 minutes, we'll help you understand how protected you are and provide a personalized Risk Intelligence Report™ with actionable recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Entrepreneur Assessment.\n\nYour business relies on your drive and vision, but personal and operational risks can threaten everything you've built.\n\nIn the next 3–5 minutes, we'll help you understand how protected you are and provide a personalized Risk Intelligence Report™ with actionable recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "ENT_003",
-      "❓ Tell me more": "ENT_002",
-      "DEFAULT": "ENT_002"
-    }
-  },
-  {
-    "id": "ENT_002",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "ENT_003",
-      "DEFAULT": "ENT_003"
-    }
-  },
-  {
-    "id": "ENT_003",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "ENT_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "ENT_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -340,13 +266,11 @@
     "industry": "entrepreneur",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany entrepreneurs intertwine their personal assets with business liabilities, leaving their families exposed to commercial risks.\n\nOur goal today is to help you build an airtight firewall around your hard work.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "ENT_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "ENT_008",
@@ -378,19 +302,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "ENT_010"
-    }
-  },
-  {
-    "id": "ENT_010",
-    "industry": "entrepreneur",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "ENT_011"
     }
@@ -513,7 +424,8 @@
     ],
     "branching": {
       "DEFAULT": "ENT_017"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "ENT_017",
@@ -534,45 +446,15 @@
     "id": "FAM_001",
     "industry": "family",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Family Protection Assessment.\n\nYour family relies on you, and ensuring their long-term stability in the face of unexpected events is your most important job.\n\nIn the next 3–5 minutes, we'll help you understand how well-protected your loved ones are and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Family Protection Assessment.\n\nYour family relies on you, and ensuring their long-term stability in the face of unexpected events is your most important job.\n\nIn the next 3–5 minutes, we'll help you understand how well-protected your loved ones are and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "FAM_003",
-      "❓ Tell me more": "FAM_002",
-      "DEFAULT": "FAM_002"
-    }
-  },
-  {
-    "id": "FAM_002",
-    "industry": "family",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "FAM_003",
-      "DEFAULT": "FAM_003"
-    }
-  },
-  {
-    "id": "FAM_003",
-    "industry": "family",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "FAM_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "FAM_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -614,13 +496,11 @@
     "industry": "family",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThe sudden loss of a primary income earner can disrupt a family's lifestyle, education plans, and home stability within months.\n\nOur goal today is to help you secure your family's future, no matter what happens.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "FAM_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "FAM_008",
@@ -652,19 +532,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "FAM_010"
-    }
-  },
-  {
-    "id": "FAM_010",
-    "industry": "family",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "FAM_011"
     }
@@ -791,7 +658,8 @@
     ],
     "branching": {
       "DEFAULT": "FAM_017"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "FAM_017",
@@ -812,45 +680,15 @@
     "id": "INC_001",
     "industry": "income",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Income Protection Assessment.\n\nYour ability to earn an income is your most valuable asset, yet it's often the least protected.\n\nIn the next 3–5 minutes, we'll help you understand how vulnerable your cash flow is to unexpected disruptions and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Income Protection Assessment.\n\nYour ability to earn an income is your most valuable asset, yet it's often the least protected.\n\nIn the next 3–5 minutes, we'll help you understand how vulnerable your cash flow is to unexpected disruptions and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "INC_003",
-      "❓ Tell me more": "INC_002",
-      "DEFAULT": "INC_002"
-    }
-  },
-  {
-    "id": "INC_002",
-    "industry": "income",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "INC_003",
-      "DEFAULT": "INC_003"
-    }
-  },
-  {
-    "id": "INC_003",
-    "industry": "income",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "INC_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "INC_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -892,13 +730,11 @@
     "industry": "income",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA severe injury or illness can halt your income stream immediately, while your living expenses continue to accumulate.\n\nOur goal today is to help you identify income vulnerabilities so you can protect your livelihood.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "INC_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "INC_008",
@@ -930,19 +766,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "INC_010"
-    }
-  },
-  {
-    "id": "INC_010",
-    "industry": "income",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "INC_011"
     }
@@ -1053,7 +876,8 @@
     ],
     "branching": {
       "DEFAULT": "INC_017"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "INC_017",
@@ -1413,45 +1237,15 @@
     "id": "RET_001",
     "industry": "retirement",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Retirement Planning Assessment.\n\nYou've worked hard to build your nest egg, but medical inflation and longevity risks can threaten your golden years.\n\nIn the next 3–5 minutes, we'll evaluate the resilience of your retirement strategy and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Retirement Planning Assessment.\n\nYou've worked hard to build your nest egg, but medical inflation and longevity risks can threaten your golden years.\n\nIn the next 3–5 minutes, we'll evaluate the resilience of your retirement strategy and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "RET_003",
-      "❓ Tell me more": "RET_002",
-      "DEFAULT": "RET_002"
-    }
-  },
-  {
-    "id": "RET_002",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "RET_003",
-      "DEFAULT": "RET_003"
-    }
-  },
-  {
-    "id": "RET_003",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "RET_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "RET_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1493,13 +1287,11 @@
     "industry": "retirement",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nUnexpected healthcare costs and long-term care needs are the leading causes of retirement savings depletion.\n\nOur goal today is to help you identify and mitigate the risks that could outlive your savings.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "RET_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "RET_008",
@@ -1531,19 +1323,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "RET_010"
-    }
-  },
-  {
-    "id": "RET_010",
-    "industry": "retirement",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "RET_011"
     }
@@ -1655,7 +1434,8 @@
     ],
     "branching": {
       "DEFAULT": "RET_017"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "RET_017",
@@ -1676,45 +1456,15 @@
     "id": "HOM_001",
     "industry": "home",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Home Protection Assessment.\n\nYour home is likely your biggest financial investment, but natural disasters, theft, and liability risks are unpredictable.\n\nIn the next 3–5 minutes, we'll help you understand how protected your property is and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Home Protection Assessment.\n\nYour home is likely your biggest financial investment, but natural disasters, theft, and liability risks are unpredictable.\n\nIn the next 3–5 minutes, we'll help you understand how protected your property is and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "HOM_003",
-      "❓ Tell me more": "HOM_002",
-      "DEFAULT": "HOM_002"
-    }
-  },
-  {
-    "id": "HOM_002",
-    "industry": "home",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "HOM_003",
-      "DEFAULT": "HOM_003"
-    }
-  },
-  {
-    "id": "HOM_003",
-    "industry": "home",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "HOM_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "HOM_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1756,13 +1506,11 @@
     "industry": "home",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany homeowners and renters realize their insurance coverage is inadequate only after a catastrophic loss has occurred.\n\nOur goal today is to ensure your sanctuary and possessions are fully secured.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "HOM_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "HOM_008",
@@ -1794,19 +1542,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "HOM_010"
-    }
-  },
-  {
-    "id": "HOM_010",
-    "industry": "home",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "HOM_011"
     }
@@ -1856,7 +1591,8 @@
     ],
     "branching": {
       "DEFAULT": "HOM_014"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "HOM_014",
@@ -1877,45 +1613,15 @@
     "id": "MOT_001",
     "industry": "motor",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Motor Protection Assessment.\n\nYour vehicle keeps your life moving, but accidents, theft, and third-party liabilities can strike at any moment.\n\nIn the next 3–5 minutes, we'll evaluate your exposure on the road and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Welcome to CoverScore™ Motor Protection Assessment.\n\nYour vehicle keeps your life moving, but accidents, theft, and third-party liabilities can strike at any moment.\n\nIn the next 3–5 minutes, we'll evaluate your exposure on the road and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "MOT_003",
-      "❓ Tell me more": "MOT_002",
-      "DEFAULT": "MOT_002"
-    }
-  },
-  {
-    "id": "MOT_002",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "MOT_003",
-      "DEFAULT": "MOT_003"
-    }
-  },
-  {
-    "id": "MOT_003",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "MOT_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "MOT_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1957,13 +1663,11 @@
     "industry": "motor",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThird-party liability claims from a serious road accident can easily exceed the value of the vehicle itself.\n\nOur goal today is to ensure you're comprehensively protected behind the wheel.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "MOT_008"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "MOT_008",
@@ -1995,19 +1699,6 @@
       "56+"
     ],
     "data_mapping": "age_range",
-    "branching": {
-      "DEFAULT": "MOT_010"
-    }
-  },
-  {
-    "id": "MOT_010",
-    "industry": "motor",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "MOT_011"
     }
@@ -2057,7 +1748,8 @@
     ],
     "branching": {
       "DEFAULT": "MOT_014"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "MOT_014",
@@ -2078,45 +1770,15 @@
     "id": "SME_001",
     "industry": "sme",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "SME_003",
-      "❓ Tell me more": "SME_002",
-      "DEFAULT": "SME_002"
-    }
-  },
-  {
-    "id": "SME_002",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "SME_003",
-      "DEFAULT": "SME_003"
-    }
-  },
-  {
-    "id": "SME_003",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "SME_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "SME_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -2180,13 +1842,11 @@
     "industry": "sme",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany businesss believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "SME_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "SME_010",
@@ -2215,19 +1875,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "SME_012"
-    }
-  },
-  {
-    "id": "SME_012",
-    "industry": "sme",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "SME_013"
     }
@@ -2351,7 +1998,8 @@
     ],
     "branching": {
       "DEFAULT": "SME_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "SME_019",
@@ -2372,45 +2020,15 @@
     "id": "MFG_001",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "MFG_003",
-      "❓ Tell me more": "MFG_002",
-      "DEFAULT": "MFG_002"
-    }
-  },
-  {
-    "id": "MFG_002",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "MFG_003",
-      "DEFAULT": "MFG_003"
-    }
-  },
-  {
-    "id": "MFG_003",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "MFG_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "MFG_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -2474,13 +2092,11 @@
     "industry": "manufacturing",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany manufacturing plants believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "MFG_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "MFG_010",
@@ -2509,19 +2125,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "MFG_012"
-    }
-  },
-  {
-    "id": "MFG_012",
-    "industry": "manufacturing",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "MFG_013"
     }
@@ -2646,7 +2249,8 @@
     ],
     "branching": {
       "DEFAULT": "MFG_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "MFG_019",
@@ -2667,45 +2271,15 @@
     "id": "HOS_001",
     "industry": "hospital",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "HOS_003",
-      "❓ Tell me more": "HOS_002",
-      "DEFAULT": "HOS_002"
-    }
-  },
-  {
-    "id": "HOS_002",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "HOS_003",
-      "DEFAULT": "HOS_003"
-    }
-  },
-  {
-    "id": "HOS_003",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "HOS_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "HOS_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -2769,13 +2343,11 @@
     "industry": "hospital",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany hospitals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "HOS_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "HOS_010",
@@ -2804,19 +2376,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "HOS_012"
-    }
-  },
-  {
-    "id": "HOS_012",
-    "industry": "hospital",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "HOS_013"
     }
@@ -2933,7 +2492,8 @@
     ],
     "branching": {
       "DEFAULT": "HOS_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "HOS_019",
@@ -2954,45 +2514,15 @@
     "id": "SCH_001",
     "industry": "school",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "SCH_003",
-      "❓ Tell me more": "SCH_002",
-      "DEFAULT": "SCH_002"
-    }
-  },
-  {
-    "id": "SCH_002",
-    "industry": "school",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "SCH_003",
-      "DEFAULT": "SCH_003"
-    }
-  },
-  {
-    "id": "SCH_003",
-    "industry": "school",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "SCH_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "SCH_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3056,13 +2586,11 @@
     "industry": "school",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany schools believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "SCH_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "SCH_010",
@@ -3091,19 +2619,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "SCH_012"
-    }
-  },
-  {
-    "id": "SCH_012",
-    "industry": "school",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "SCH_013"
     }
@@ -3217,7 +2732,8 @@
     ],
     "branching": {
       "DEFAULT": "SCH_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "SCH_019",
@@ -3238,45 +2754,15 @@
     "id": "CHR_001",
     "industry": "church",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "CHR_003",
-      "❓ Tell me more": "CHR_002",
-      "DEFAULT": "CHR_002"
-    }
-  },
-  {
-    "id": "CHR_002",
-    "industry": "church",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "CHR_003",
-      "DEFAULT": "CHR_003"
-    }
-  },
-  {
-    "id": "CHR_003",
-    "industry": "church",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "CHR_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "CHR_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3340,13 +2826,11 @@
     "industry": "church",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany churchs believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "CHR_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "CHR_010",
@@ -3375,19 +2859,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "CHR_012"
-    }
-  },
-  {
-    "id": "CHR_012",
-    "industry": "church",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "CHR_013"
     }
@@ -3500,7 +2971,8 @@
     ],
     "branching": {
       "DEFAULT": "CHR_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "CHR_019",
@@ -3521,45 +2993,15 @@
     "id": "CON_001",
     "industry": "construction",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "CON_003",
-      "❓ Tell me more": "CON_002",
-      "DEFAULT": "CON_002"
-    }
-  },
-  {
-    "id": "CON_002",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "CON_003",
-      "DEFAULT": "CON_003"
-    }
-  },
-  {
-    "id": "CON_003",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "CON_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "CON_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3623,13 +3065,11 @@
     "industry": "construction",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany construction firms believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "CON_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "CON_010",
@@ -3658,19 +3098,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "CON_012"
-    }
-  },
-  {
-    "id": "CON_012",
-    "industry": "construction",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "CON_013"
     }
@@ -3788,7 +3215,8 @@
     ],
     "branching": {
       "DEFAULT": "CON_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "CON_019",
@@ -3809,45 +3237,15 @@
     "id": "TRN_001",
     "industry": "transport",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "✅ Yes, let's begin",
-      "❓ Tell me more"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "✅ Yes, let's begin": "TRN_003",
-      "❓ Tell me more": "TRN_002",
-      "DEFAULT": "TRN_002"
-    }
-  },
-  {
-    "id": "TRN_002",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Assessment"
-    ],
-    "branching": {
-      "✅ Start Assessment": "TRN_003",
-      "DEFAULT": "TRN_003"
-    }
-  },
-  {
-    "id": "TRN_003",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ I Agree",
-      "❌ Not Now"
-    ],
-    "branching": {
-      "✅ I Agree": "TRN_004",
-      "❌ Not Now": "COMPLETE",
+      "✅ I agree — let's begin": "TRN_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3911,13 +3309,11 @@
     "industry": "transport",
     "pillar": "General",
     "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany logistics companys believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Continue"
-    ],
+    "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "TRN_010"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "TRN_010",
@@ -3946,19 +3342,6 @@
       "No"
     ],
     "data_mapping": "regular_revenue",
-    "branching": {
-      "DEFAULT": "TRN_012"
-    }
-  },
-  {
-    "id": "TRN_012",
-    "industry": "transport",
-    "pillar": "General",
-    "question": "Excellent.\n\nYou've completed the introduction.\n\nWe're now moving into your personalized assessment.\n\nThere are only a few short sections, and you're already making great progress.\n\nProgress\n████░░░░░░\n12%",
-    "question_type": "single_choice",
-    "answers": [
-      "✅ Start Questions"
-    ],
     "branching": {
       "DEFAULT": "TRN_013"
     }
@@ -4077,7 +3460,8 @@
     ],
     "branching": {
       "DEFAULT": "TRN_019"
-    }
+    },
+    "auto_advance": true
   },
   {
     "id": "TRN_019",
