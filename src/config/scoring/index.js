@@ -138,12 +138,19 @@ const scoringConfigs = {
       { id: 'debt_management', name: 'Debt Management', weight: 0.15 }
     ],
     categories: {
+      income_source: { name: 'Income Source', pillar: 'career_security' },
       emergency_savings: { name: 'Emergency Savings', pillar: 'financial_resilience' },
       income_stability: { name: 'Income Stability', pillar: 'career_security' },
       income_insurance: { name: 'Income Insurance', pillar: 'protection' },
       debt_exposure: { name: 'Debt Exposure', pillar: 'debt_management' }
     },
     questions: {
+      INC_011: {
+        category: 'income_source',
+        scores: { 'Salary from employment': 100, 'Freelance/Contract': 60, 'Business owner': 30 },
+        gaps: { 'Freelance/Contract': 'Freelance or contract income can be unpredictable.', 'Business owner': 'Business income is tied to business performance and carries higher risk.' },
+        recommendations: { 'Freelance/Contract': 'Build a steady client base and maintain an income buffer for dry periods.', 'Business owner': 'Separate personal and business finances and build business continuity safeguards.' }
+      },
       INC_012: {
         category: 'emergency_savings',
         scores: { 'Over 3 months': 100, '1-3 months': 50, 'Less than 1 month': 0 },
@@ -193,6 +200,7 @@ const scoringConfigs = {
       }
     ],
     improvements: {
+      INC_011: { 'Freelance/Contract': { target: 'Salary from employment', gain: 4, action: 'Supplement freelance income with retainer clients or part-time employment' }, 'Business owner': { target: 'Salary from employment', gain: 6, action: 'Diversify income sources and build business stability' } },
       INC_012: { 'Less than 1 month': { target: '1-3 months', gain: 10, action: 'Build an emergency fund covering 1-3 months of expenses' }, '1-3 months': { target: 'Over 3 months', gain: 6, action: 'Expand emergency fund to cover 6+ months' } },
       INC_014: { 'No': { target: 'Yes', gain: 10, action: 'Get income protection insurance' } },
       INC_015: { 'Yes': { target: 'No', gain: 8, action: 'Create a debt reduction plan' } }
@@ -297,6 +305,7 @@ const scoringConfigs = {
       retirement_horizon: { name: 'Retirement Horizon', pillar: 'retirement_timing' },
       pension_savings: { name: 'Pension & Savings', pillar: 'retirement_savings' },
       long_term_care: { name: 'Long-term Care', pillar: 'protection' },
+      medical_cost_impact: { name: 'Medical Cost Impact', pillar: 'protection', weight: 0.4 },
       dependents_security: { name: 'Dependents Security', pillar: 'legacy_planning' }
     },
     questions: {
@@ -311,6 +320,12 @@ const scoringConfigs = {
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No dedicated pension or retirement savings account.' },
         recommendations: { 'No': 'Open a pension or retirement savings account as soon as possible.' }
+      },
+      RET_013: {
+        category: 'medical_cost_impact',
+        scores: { 'Not concerned': 100, 'Somewhat concerned': 55, 'Very concerned': 25 },
+        gaps: { 'Very concerned': 'Medical costs pose a significant threat to your retirement savings.', 'Somewhat concerned': 'Rising medical costs could impact your retirement plans.' },
+        recommendations: { 'Very concerned': 'Include health cost projections in your retirement plan and consider medical cover.', 'Somewhat concerned': 'Build a medical cost buffer into your retirement savings target.' }
       },
       RET_014: {
         category: 'long_term_care',
@@ -350,6 +365,7 @@ const scoringConfigs = {
     ],
     improvements: {
       RET_012: { 'No': { target: 'Yes', gain: 12, action: 'Open and contribute to a pension or retirement savings account' } },
+      RET_013: { 'Very concerned': { target: 'Somewhat concerned', gain: 5, action: 'Research health insurance options and estimate medical costs in retirement' }, 'Somewhat concerned': { target: 'Not concerned', gain: 5, action: 'Build a medical cost buffer into your retirement savings' } },
       RET_014: { 'No': { target: 'Yes', gain: 8, action: 'Get long-term care or critical illness cover' } },
       RET_015: { 'No': { target: 'Yes', gain: 6, action: 'Review life insurance and estate planning' } }
     }
@@ -363,11 +379,19 @@ const scoringConfigs = {
       { id: 'protection', name: 'Protection & Insurance', weight: 0.35 }
     ],
     categories: {
+      career_stability: { name: 'Career Stability', pillar: 'income_security' },
       critical_illness_funding: { name: 'Critical Illness Funding', pillar: 'financial_resilience' },
       income_stability: { name: 'Income Stability', pillar: 'income_security' },
+      goal_saving: { name: 'Goal Saving', pillar: 'financial_resilience' },
       personal_insurance: { name: 'Personal Insurance', pillar: 'protection' }
     },
     questions: {
+      YPR_011: {
+        category: 'career_stability',
+        scores: { 'Over 5 years': 100, '2-5 years': 65, 'Under 2 years': 30 },
+        gaps: { 'Under 2 years': 'Early career stage with limited income history and stability.', '2-5 years': 'Building career stability but still in growth phase.' },
+        recommendations: { 'Under 2 years': 'Focus on career growth and building an emergency fund.', '2-5 years': 'Continue building professional credentials and income stability.' }
+      },
       YPR_012: {
         category: 'critical_illness_funding',
         scores: { 'Yes easily': 100, 'With difficulty': 50, 'No': 0 },
@@ -385,6 +409,12 @@ const scoringConfigs = {
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No personal health or accident insurance.' },
         recommendations: { 'No': 'Consider health and accident insurance to protect against unexpected medical costs.' }
+      },
+      YPR_015: {
+        category: 'goal_saving',
+        scores: { 'Yes': 100, 'No': 0 },
+        gaps: { 'No': 'Not actively saving towards a major life goal.', 'Yes': 'Actively saving towards a major life goal — building positive financial habits.' },
+        recommendations: { 'No': 'Set a specific savings goal and automate regular contributions.' }
       }
     },
     modifiers: [
@@ -411,8 +441,10 @@ const scoringConfigs = {
       }
     ],
     improvements: {
+      YPR_011: { 'Under 2 years': { target: '2-5 years', gain: 4, action: 'Focus on career growth and professional development' }, '2-5 years': { target: 'Over 5 years', gain: 3, action: 'Build long-term career stability through certifications and networking' } },
       YPR_012: { 'No': { target: 'With difficulty', gain: 8, action: 'Build an emergency fund for health emergencies' }, 'With difficulty': { target: 'Yes easily', gain: 5, action: 'Strengthen your critical illness funding' } },
-      YPR_014: { 'No': { target: 'Yes', gain: 10, action: 'Get personal health or accident insurance' } }
+      YPR_014: { 'No': { target: 'Yes', gain: 10, action: 'Get personal health or accident insurance' } },
+      YPR_015: { 'No': { target: 'Yes', gain: 6, action: 'Set up an automated savings plan for a major life goal' } }
     }
   },
 
@@ -507,9 +539,16 @@ const scoringConfigs = {
       { id: 'property_protection', name: 'Property Protection', weight: 1.0 }
     ],
     categories: {
+      tenure_type: { name: 'Tenure Type', pillar: 'property_protection' },
       home_insurance: { name: 'Home Insurance', pillar: 'property_protection' }
     },
     questions: {
+      HOM_011: {
+        category: 'tenure_type',
+        scores: { 'Own': 100, 'Rent': 60, 'Neither': 20 },
+        gaps: { 'Neither': 'No stable housing tenure creates significant exposure.', 'Rent': 'Renting means you do not benefit from property asset appreciation.' },
+        recommendations: { 'Neither': 'Work towards securing stable housing to reduce personal risk exposure.', 'Rent': 'Review renter\'s insurance and consider long-term homeownership goals.' }
+      },
       HOM_012: {
         category: 'home_insurance',
         scores: { 'Yes': 100, 'No': 0 },
@@ -519,6 +558,7 @@ const scoringConfigs = {
     },
     modifiers: [],
     improvements: {
+      HOM_011: { 'Rent': { target: 'Own', gain: 4, action: 'Explore homeownership pathways and build a deposit' }, 'Neither': { target: 'Rent', gain: 6, action: 'Secure stable rental accommodation' } },
       HOM_012: { 'No': { target: 'Yes', gain: 15, action: 'Get homeowner\'s or renter\'s insurance' } }
     }
   },
@@ -529,9 +569,16 @@ const scoringConfigs = {
       { id: 'vehicle_protection', name: 'Vehicle Protection', weight: 1.0 }
     ],
     categories: {
+      vehicle_count: { name: 'Vehicle Count', pillar: 'vehicle_protection' },
       motor_insurance: { name: 'Motor Insurance', pillar: 'vehicle_protection' }
     },
     questions: {
+      MOT_011: {
+        category: 'vehicle_count',
+        scores: { '1': 100, '2': 70, '3 or more': 40 },
+        gaps: { '3 or more': 'Multiple vehicles increase overall risk exposure and insurance costs.', '2': 'Two vehicles means higher combined exposure.' },
+        recommendations: { '3 or more': 'Review whether all vehicles need comprehensive cover vs third-party.', '2': 'Ensure all vehicles have appropriate insurance cover.' }
+      },
       MOT_012: {
         category: 'motor_insurance',
         scores: { 'Yes': 100, 'No': 0 },
@@ -541,6 +588,7 @@ const scoringConfigs = {
     },
     modifiers: [],
     improvements: {
+      MOT_011: { '2': { target: '1', gain: 3, action: 'Review whether you need multiple vehicles' }, '3 or more': { target: '1', gain: 5, action: 'Reduce vehicle count or ensure all are adequately insured' } },
       MOT_012: { 'No': { target: 'Yes', gain: 15, action: 'Get comprehensive motor insurance' } }
     }
   },
