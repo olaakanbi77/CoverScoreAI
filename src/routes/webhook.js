@@ -514,6 +514,7 @@ router.post('/evolution', async (req, res) => {
 
     // Phase 3: Build ending sequence — Score → Summary → Insight → Recommendation → Report → Advisor
     if (needsScoring && assessmentData._scored) {
+      const dom = domainConfig[prefix] || defaultDomain;
       const name = assessmentData.name || 'Customer';
       const email = assessmentData.email || (lead ? lead.email : null);
       const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
@@ -541,7 +542,6 @@ router.post('/evolution', async (req, res) => {
         : '';
 
       // Message 1: CoverScore + Risk Pillars + improvement note
-      const dom = domainConfig[prefix] || defaultDomain;
       const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\nCurrent ${dom.displayLabel}: ${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}${improvementNote}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
