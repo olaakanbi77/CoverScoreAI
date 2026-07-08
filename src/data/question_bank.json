@@ -3,7 +3,7 @@
     "id": "YPR_001",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Young Professional Assessment.\n\nAs you build your career, unexpected life events can quickly derail your financial momentum.\n\nIn the next 3–5 minutes, we'll help you understand how prepared you are for financial risks and provide a personalized Risk Intelligence Report™ with practical recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how prepared you are for unexpected financial setbacks.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -19,7 +19,7 @@
     "id": "YPR_004",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -30,7 +30,7 @@
     "id": "YPR_005",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -41,7 +41,7 @@
     "id": "YPR_006",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -52,7 +52,7 @@
     "id": "YPR_007",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMost young professionals believe they're financially prepared until a single unexpected emergency wipes out their savings.\n\nOur goal today is to help you identify these hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "YPR_008"
@@ -63,12 +63,14 @@
     "id": "YPR_008",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current financial situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -79,13 +81,13 @@
     "id": "YPR_009",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -133,7 +135,7 @@
   },
   {
     "pillar": "Financial Resilience",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have an emergency fund covering at least 6 months of expenses?",
+    "question": "Do you have an emergency fund covering at least 6 months of expenses?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -187,7 +189,7 @@
     "id": "YPR_016",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -201,7 +203,7 @@
     "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Financial Advisor could help you prioritize your financial protection strategy as you advance in your career.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -216,7 +218,7 @@
     "id": "ENT_001",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Entrepreneur Assessment.\n\nYour business relies on your drive and vision, but personal and operational risks can threaten everything you've built.\n\nIn the next 3–5 minutes, we'll help you understand how protected you are and provide a personalized Risk Intelligence Report™ with actionable recommendations.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how well your personal and business assets are protected.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -232,7 +234,7 @@
     "id": "ENT_004",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -243,7 +245,7 @@
     "id": "ENT_005",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -254,7 +256,7 @@
     "id": "ENT_006",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -265,7 +267,7 @@
     "id": "ENT_007",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany entrepreneurs intertwine their personal assets with business liabilities, leaving their families exposed to commercial risks.\n\nOur goal today is to help you build an airtight firewall around your hard work.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "ENT_008"
@@ -276,12 +278,14 @@
     "id": "ENT_008",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current business and personal situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -292,13 +296,13 @@
     "id": "ENT_009",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -350,7 +354,7 @@
   },
   {
     "pillar": "Business Continuity",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nIf you were hospitalized for 3 months, would your business survive?",
+    "question": "If you were hospitalized for 3 months, would your business survive?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -417,7 +421,7 @@
     "id": "ENT_016",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -431,7 +435,7 @@
     "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Commercial Advisor could help you safeguard your business continuity and personal assets.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -446,7 +450,7 @@
     "id": "FAM_001",
     "industry": "family",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Family Protection Assessment.\n\nYour family relies on you, and ensuring their long-term stability in the face of unexpected events is your most important job.\n\nIn the next 3–5 minutes, we'll help you understand how well-protected your loved ones are and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how well your family's financial future is protected.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -462,7 +466,7 @@
     "id": "FAM_004",
     "industry": "family",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -473,7 +477,7 @@
     "id": "FAM_005",
     "industry": "family",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -484,7 +488,7 @@
     "id": "FAM_006",
     "industry": "family",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -495,7 +499,7 @@
     "id": "FAM_007",
     "industry": "family",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThe sudden loss of a primary income earner can disrupt a family's lifestyle, education plans, and home stability within months.\n\nOur goal today is to help you secure your family's future, no matter what happens.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "FAM_008"
@@ -506,12 +510,14 @@
     "id": "FAM_008",
     "industry": "family",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current family situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -522,13 +528,13 @@
     "id": "FAM_009",
     "industry": "family",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -587,7 +593,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you currently have a Life Insurance policy?",
+    "question": "Do you currently have a Life Insurance policy?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -651,7 +657,7 @@
     "id": "FAM_016",
     "industry": "family",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -665,7 +671,7 @@
     "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Family Protection Advisor could help you structure a safety net that guarantees your family's peace of mind.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -680,7 +686,7 @@
     "id": "INC_001",
     "industry": "income",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Income Protection Assessment.\n\nYour ability to earn an income is your most valuable asset, yet it's often the least protected.\n\nIn the next 3–5 minutes, we'll help you understand how vulnerable your cash flow is to unexpected disruptions and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how vulnerable your income is to unexpected disruptions.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -696,7 +702,7 @@
     "id": "INC_004",
     "industry": "income",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -707,7 +713,7 @@
     "id": "INC_005",
     "industry": "income",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -718,7 +724,7 @@
     "id": "INC_006",
     "industry": "income",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -729,7 +735,7 @@
     "id": "INC_007",
     "industry": "income",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nA severe injury or illness can halt your income stream immediately, while your living expenses continue to accumulate.\n\nOur goal today is to help you identify income vulnerabilities so you can protect your livelihood.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "INC_008"
@@ -740,12 +746,14 @@
     "id": "INC_008",
     "industry": "income",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current income situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -756,13 +764,13 @@
     "id": "INC_009",
     "industry": "income",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -810,7 +818,7 @@
   },
   {
     "pillar": "Career & Income Security",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have secondary sources of income (e.g. investments, real estate)?",
+    "question": "Do you have secondary sources of income (e.g. investments, real estate)?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -869,7 +877,7 @@
     "id": "INC_016",
     "industry": "income",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -883,7 +891,7 @@
     "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Income Protection Advisor could help you guarantee that your lifestyle remains funded, even if you can't work.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1237,7 +1245,7 @@
     "id": "RET_001",
     "industry": "retirement",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Retirement Planning Assessment.\n\nYou've worked hard to build your nest egg, but medical inflation and longevity risks can threaten your golden years.\n\nIn the next 3–5 minutes, we'll evaluate the resilience of your retirement strategy and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how resilient your retirement plan really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -1253,7 +1261,7 @@
     "id": "RET_004",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1264,7 +1272,7 @@
     "id": "RET_005",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1275,7 +1283,7 @@
     "id": "RET_006",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -1286,7 +1294,7 @@
     "id": "RET_007",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nUnexpected healthcare costs and long-term care needs are the leading causes of retirement savings depletion.\n\nOur goal today is to help you identify and mitigate the risks that could outlive your savings.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "RET_008"
@@ -1297,12 +1305,14 @@
     "id": "RET_008",
     "industry": "retirement",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current retirement situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1313,13 +1323,13 @@
     "id": "RET_009",
     "industry": "retirement",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -1371,7 +1381,7 @@
   },
   {
     "pillar": "Health & Wellbeing",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nAre you concerned that escalating medical costs might deplete your retirement savings?",
+    "question": "Are you concerned that escalating medical costs might deplete your retirement savings?",
     "question_type": "single_choice",
     "answers": [
       "Very concerned",
@@ -1427,7 +1437,7 @@
     "id": "RET_016",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1441,7 +1451,7 @@
     "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Retirement Advisor could help you preserve your wealth and secure your independence.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1456,7 +1466,7 @@
     "id": "HOM_001",
     "industry": "home",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Home Protection Assessment.\n\nYour home is likely your biggest financial investment, but natural disasters, theft, and liability risks are unpredictable.\n\nIn the next 3–5 minutes, we'll help you understand how protected your property is and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how well your home and property are protected.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -1472,7 +1482,7 @@
     "id": "HOM_004",
     "industry": "home",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1483,7 +1493,7 @@
     "id": "HOM_005",
     "industry": "home",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1494,7 +1504,7 @@
     "id": "HOM_006",
     "industry": "home",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -1505,7 +1515,7 @@
     "id": "HOM_007",
     "industry": "home",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany homeowners and renters realize their insurance coverage is inadequate only after a catastrophic loss has occurred.\n\nOur goal today is to ensure your sanctuary and possessions are fully secured.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "HOM_008"
@@ -1516,12 +1526,14 @@
     "id": "HOM_008",
     "industry": "home",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current home situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1532,13 +1544,13 @@
     "id": "HOM_009",
     "industry": "home",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -1584,7 +1596,7 @@
     "id": "HOM_013",
     "industry": "home",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1598,7 +1610,7 @@
     "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Property Advisor could help you optimize your home insurance to avoid costly out-of-pocket repairs.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1613,7 +1625,7 @@
     "id": "MOT_001",
     "industry": "motor",
     "pillar": "General",
-    "question": "👋 Welcome to CoverScore™ Motor Protection Assessment.\n\nYour vehicle keeps your life moving, but accidents, theft, and third-party liabilities can strike at any moment.\n\nIn the next 3–5 minutes, we'll evaluate your exposure on the road and provide a personalized Risk Intelligence Report™.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you understand how well your vehicle and mobility are protected.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -1629,7 +1641,7 @@
     "id": "MOT_004",
     "industry": "motor",
     "pillar": "General",
-    "question": "Great!\n\nLet's start with your first name.",
+    "question": "What's your first name?",
     "question_type": "open_text",
     "data_mapping": "name",
     "branching": {
@@ -1640,7 +1652,7 @@
     "id": "MOT_005",
     "industry": "motor",
     "pillar": "General",
-    "question": "Nice to meet you, {{name}}.\n\nWhat's your email address?\n\n(Used to send your Risk Intelligence Report.)",
+    "question": "What's the best email to send your report to?",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1651,7 +1663,7 @@
     "id": "MOT_006",
     "industry": "motor",
     "pillar": "General",
-    "question": "Which city do you currently live in?",
+    "question": "Which city do you live in?",
     "question_type": "open_text",
     "data_mapping": "city",
     "branching": {
@@ -1662,7 +1674,7 @@
     "id": "MOT_007",
     "industry": "motor",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nThird-party liability claims from a serious road accident can easily exceed the value of the vehicle itself.\n\nOur goal today is to ensure you're comprehensively protected behind the wheel.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "MOT_008"
@@ -1673,12 +1685,14 @@
     "id": "MOT_008",
     "industry": "motor",
     "pillar": "General",
-    "question": "What is your primary employment status?",
+    "question": "I'd now like to understand your current vehicle situation.\n\nWhat's your employment status?",
     "question_type": "single_choice",
     "answers": [
-      "Full-time employed",
-      "Self-employed/Freelance",
-      "Unemployed/Student"
+      "Employed full-time",
+      "Self-employed",
+      "Part-time / Freelance",
+      "Student",
+      "Retired"
     ],
     "data_mapping": "employment_status",
     "branching": {
@@ -1689,13 +1703,13 @@
     "id": "MOT_009",
     "industry": "motor",
     "pillar": "General",
-    "question": "What is your age range?",
+    "question": "Which age range applies to you?",
     "question_type": "single_choice",
     "answers": [
-      "18-25",
-      "26-35",
-      "36-45",
-      "46-55",
+      "18 - 25",
+      "26 - 35",
+      "36 - 45",
+      "46 - 55",
       "56+"
     ],
     "data_mapping": "age_range",
@@ -1741,7 +1755,7 @@
     "id": "MOT_013",
     "industry": "motor",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -1755,7 +1769,7 @@
     "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nBased on your assessment, a short conversation with a CoverScore Motor Advisor could help you structure a policy that truly protects you and your assets on the road.\n\nWould you like to schedule a free consultation?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1770,7 +1784,7 @@
     "id": "SME_001",
     "industry": "sme",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your small business really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -1841,7 +1855,7 @@
     "id": "SME_009",
     "industry": "sme",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany businesss believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "SME_010"
@@ -1933,7 +1947,7 @@
   },
   {
     "pillar": "Facilities",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you operate from a physical shop or office?",
+    "question": "Do you operate from a physical shop or office?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1991,7 +2005,7 @@
     "id": "SME_018",
     "industry": "sme",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2005,7 +2019,7 @@
     "id": "SME_019",
     "industry": "sme",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2020,7 +2034,7 @@
     "id": "MFG_001",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your manufacturing operations really are.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -2091,7 +2105,7 @@
     "id": "MFG_009",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany manufacturing plants believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "MFG_010"
@@ -2180,7 +2194,7 @@
   },
   {
     "pillar": "Logistics",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you import raw materials or export finished goods?",
+    "question": "Do you import raw materials or export finished goods?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2242,7 +2256,7 @@
     "id": "MFG_018",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2256,7 +2270,7 @@
     "id": "MFG_019",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2271,7 +2285,7 @@
     "id": "HOS_001",
     "industry": "hospital",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your hospitality business really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -2342,7 +2356,7 @@
     "id": "HOS_009",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany hospitals believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "HOS_010"
@@ -2426,7 +2440,7 @@
   },
   {
     "pillar": "Legal & Liability",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have Medical Malpractice/Professional Indemnity insurance for your doctors and staff?",
+    "question": "Do you have Medical Malpractice/Professional Indemnity insurance for your doctors and staff?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2485,7 +2499,7 @@
     "id": "HOS_018",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2499,7 +2513,7 @@
     "id": "HOS_019",
     "industry": "hospital",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2514,7 +2528,7 @@
     "id": "SCH_001",
     "industry": "school",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your school really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -2585,7 +2599,7 @@
     "id": "SCH_009",
     "industry": "school",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany schools believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "SCH_010"
@@ -2667,7 +2681,7 @@
   },
   {
     "pillar": "Logistics",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you operate school buses to transport students?",
+    "question": "Do you operate school buses to transport students?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2725,7 +2739,7 @@
     "id": "SCH_018",
     "industry": "school",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2739,7 +2753,7 @@
     "id": "SCH_019",
     "industry": "school",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2754,7 +2768,7 @@
     "id": "CHR_001",
     "industry": "church",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your church really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -2825,7 +2839,7 @@
     "id": "CHR_009",
     "industry": "church",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany churchs believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "CHR_010"
@@ -2910,7 +2924,7 @@
   },
   {
     "pillar": "Legal & Liability",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nIf a visitor was injured during a service and sued, do you have Public Liability Insurance?",
+    "question": "If a visitor was injured during a service and sued, do you have Public Liability Insurance?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2964,7 +2978,7 @@
     "id": "CHR_018",
     "industry": "church",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -2978,7 +2992,7 @@
     "id": "CHR_019",
     "industry": "church",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2993,7 +3007,7 @@
     "id": "CON_001",
     "industry": "construction",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your construction business really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -3064,7 +3078,7 @@
     "id": "CON_009",
     "industry": "construction",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany construction firms believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "CON_010"
@@ -3149,7 +3163,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you currently have Contractors All Risk (CAR) insurance for your sites?",
+    "question": "Do you currently have Contractors All Risk (CAR) insurance for your sites?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3208,7 +3222,7 @@
     "id": "CON_018",
     "industry": "construction",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -3222,7 +3236,7 @@
     "id": "CON_019",
     "industry": "construction",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3237,7 +3251,7 @@
     "id": "TRN_001",
     "industry": "transport",
     "pillar": "General",
-    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?\n\nBefore we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. Over the next few minutes, I'll help you discover how resilient your transport business really is.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Risk Intelligence Report™?",
     "question_type": "single_choice",
     "answers": [
       "✅ I agree — let's begin",
@@ -3308,7 +3322,7 @@
     "id": "TRN_009",
     "industry": "transport",
     "pillar": "General",
-    "question": "Perfect.\n\nWe're ready to personalize your assessment.\n\nBefore we dive into the questions...\n\nDid you know?\nMany logistics companys believe they're financially prepared until an unexpected event interrupts their income.\n\nOur goal today is to help you discover any hidden gaps before they become real problems.\n\nLet's begin.",
+    "question": "Thanks, {{name}}. I've personalized your assessment.",
     "question_type": "auto_advance",
     "branching": {
       "DEFAULT": "TRN_010"
@@ -3389,7 +3403,7 @@
   },
   {
     "pillar": "Protection & Insurance",
-    "question": "Great job!\n\nYou're almost halfway there.\n\nEvery answer helps us make your report more accurate.\n\nProgress\n█████░░░░░\n40%\n\n---\n\nDo you have Goods In Transit (GIT) insurance for the cargo you carry?",
+    "question": "Do you have Goods In Transit (GIT) insurance for the cargo you carry?",
     "question_type": "single_choice",
     "answers": [
       "Yes",
@@ -3453,7 +3467,7 @@
     "id": "TRN_018",
     "industry": "transport",
     "pillar": "General",
-    "question": "Congratulations! You've completed your assessment.\n\nImmediately:\nGenerating your personalized report...\n✓ Calculating your CoverScore™\n✓ Identifying your strengths\n✓ Prioritizing your risks\n✓ Preparing recommendations\n\n█████████████",
+    "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Risk Intelligence Report™.",
     "question_type": "single_choice",
     "answers": [
       "✅ View My Results"
@@ -3467,7 +3481,7 @@
     "id": "TRN_019",
     "industry": "transport",
     "pillar": "General",
-    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your strongest areas*\n{{strengths}}\n\n*Needs attention*\n{{top_risks}}\n\n👉 View Full Report: {{reportUrl}}\n\nWould you like to schedule a free consultation with a Certified Risk Advisor?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}} Resilience\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
