@@ -108,14 +108,14 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
         body += ` Without a dedicated pension or retirement savings account, you may have limited options to build the retirement nest egg you need.`;
       }
       const legacy = answers['RET_015'];
-      if (legacy === 'No' || legacy === 'Not applicable') {
+      if (legacy === 'No, not yet' || legacy === 'Partially - I have some documentation') {
         body += ` Your retirement assets and estate plans may not be structured to protect your loved ones.`;
       }
       body += ` Starting a structured retirement savings plan is the most impactful step you can take toward securing your financial future.`;
     } else if (weakestName === 'Retirement Savings') {
       body = `Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources to maintain your lifestyle throughout retirement.`;
       body += ` Building dedicated retirement savings that are separate from your daily income is essential for long-term financial independence.`;
-    } else if (weakestName === 'Protection & Insurance') {
+    } else if (weakestName === 'Protection') {
       body = `Your assessment suggests that your retirement could be disrupted by unexpected healthcare or long-term care costs.`;
       const medical = answers['RET_013'];
       if (medical === 'Very concerned') {
@@ -129,7 +129,7 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
     } else if (weakestName === 'Legacy Planning') {
       body = `Your assessment shows that your estate and legacy planning is an area to strengthen.`;
       const beneficiary = answers['RET_015'];
-      if (beneficiary === 'No') {
+      if (beneficiary === 'No, not yet') {
         body += ` Without clear beneficiary nominations or asset distribution plans, your retirement assets may not pass to your loved ones as you intend.`;
       }
       body += ` Documenting your estate plan and reviewing beneficiary designations are simple steps that provide peace of mind.`;
@@ -600,7 +600,7 @@ router.post('/evolution', async (req, res) => {
           'income protection': 'reviewing your income protection to maintain financial stability if you are unable to work',
           'retirement readiness': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
           'retirement savings': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
-          'protection & insurance': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
+          'protection': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
           'legacy planning': 'documenting how your assets should be distributed and nominating beneficiaries for your retirement accounts'
         };
         const action = pillarActions[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
@@ -640,7 +640,14 @@ router.post('/evolution', async (req, res) => {
         _delay: 3000
       });
 
-      // Message 6: Advisor CTA — framed as support for the recommendation
+      // Message 6: Domain-specific follow-up message
+      postMessages.push({
+        type: 'text',
+        text: dom.followUpMsg,
+        _delay: 3000
+      });
+
+      // Message 7: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
         text: `If you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
