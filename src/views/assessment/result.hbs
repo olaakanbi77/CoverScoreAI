@@ -843,7 +843,7 @@
 
         const data = await res.json();
         const score = data.score || 0;
-        const riskLevel = data.riskLevel || data.risk_level || 'moderate';
+        const riskLevel = (data.riskLevel || data.risk_level || 'moderate').toLowerCase().replace(/\s+/g, '_');
         const cfg = getRiskConfig(riskLevel);
 
         // Set score and gauge

@@ -219,7 +219,8 @@ router.post('/evolution', async (req, res) => {
     const nextQ = questionBank.find(q => q.id === nextState);
     const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS'
       || (nextQ && nextQ.data_mapping === 'request_consultation');
-    const needsScoring = (isFinished || reachedResults) && !assessmentData._scored;
+    const isScoreQuestion = (() => { const sq = questionBank.find(q => q.id === nextStateRaw); return sq && sq.question && sq.question.includes('{{score}}'); })();
+    const needsScoring = (isFinished || reachedResults || isScoreQuestion || nextStateRaw === 'awaiting_consultation' || nextStateRaw === 'COMPLETE') && !assessmentData._scored;
 
     // Template fill helper (uses assessmentData which scoring populates)
     const riskLabelMap = {
@@ -232,16 +233,16 @@ router.post('/evolution', async (req, res) => {
     };
     let userRiskLabel = 'Needs Attention';
     const dbRiskLevelMap = {
-      'Excellent': 'excellent',
-      'Strong': 'strong',
-      'Developing': 'developing',
-      'Needs Attention': 'needs_attention',
-      'Priority Improvement': 'priority_improvement',
-      'Critical Priority': 'critical_priority',
-      'Very Low Risk': 'excellent', 'Low Risk': 'strong', 'Moderate Risk': 'developing',
-      'High Risk': 'needs_attention', 'Critical Risk': 'critical_priority',
-      'Good': 'strong', 'Moderate': 'developing', 'Vulnerable': 'needs_attention',
-      'Critical': 'critical_priority'
+      'Excellent': 'low', 'Good': 'low',
+      'Strong': 'low',
+      'Developing': 'moderate',
+      'Needs Attention': 'moderate',
+      'Priority Improvement': 'high',
+      'Critical Priority': 'critical',
+      'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
+      'High Risk': 'high', 'Critical Risk': 'critical',
+      'Moderate': 'moderate', 'Vulnerable': 'high',
+      'Critical': 'critical'
     };
     const fillTemplate = (text) => {
       return text
@@ -281,7 +282,6 @@ router.post('/evolution', async (req, res) => {
     // Phase 2: Run scoring (takes time — AI calls)
     if (needsScoring) {
       delete assessmentData.reportUrl;
-      delete assessmentData.assessmentId;
       console.log(`   [CCIE SCORING] Calculating CoverScore for ${phoneNumber}`);
       const finalAnswers = { ...(assessmentData.answers || {}), template_selection: { template_id: prefix } };
       try {
@@ -463,21 +463,17 @@ router.post('/evolution', async (req, res) => {
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 
-      // Resilience levels (CSNS Section 10 — 6-tier universal system)
-      const domLabels = dom.resilienceLabels || {
-        'excellent': 'Excellent Resilience',
-        'strong': 'Strong Resilience',
-        'developing': 'Developing Resilience',
-        'needs_attention': 'Needs Attention',
-        'priority_improvement': 'Priority Improvement',
-        'critical_priority': 'Critical Priority',
-        'low': 'Strong Resilience',
-        'moderate': 'Building Resilience',
-        'high': 'Needs Attention',
-        'critical': 'Priority Improvement'
+      // Derive CSNS display label directly from riskLevel (not via dbRiskLevelMap which maps to legacy DB values)
+      const csnsDisplayLabels = dom.resilienceLabels || {
+        'excellent': 'Excellent Resilience', 'strong': 'Strong Resilience',
+        'developing': 'Developing Resilience', 'needs_attention': 'Needs Attention',
+        'priority_improvement': 'Priority Improvement', 'critical_priority': 'Critical Priority',
+        'Excellent': 'Excellent Resilience', 'Strong': 'Strong Resilience',
+        'Developing': 'Developing Resilience', 'Needs Attention': 'Needs Attention',
+        'Priority Improvement': 'Priority Improvement', 'Critical Priority': 'Critical Priority'
       };
-      const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'needs_attention';
-      const displayLabel = domLabels[dbLevel] || 'Building Resilience';
+      const dbLevel = (dbRiskLevelMap[assessmentData.riskLevel] || '').toLowerCase();
+      const displayLabel = csnsDisplayLabels[assessmentData.riskLevel] || csnsDisplayLabels[dbLevel] || dom.displayLabel || 'Building Resilience';
 
       // Derive sorted pillar list once
       const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);

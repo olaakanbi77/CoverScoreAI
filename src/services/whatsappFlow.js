@@ -61,8 +61,13 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
   const dom = domainConfig[prefix] || defaultDomain;
 
+  const currentQ = questionBank.find(q => q.id === currentState);
+
   // Simplified ending: Yes routes to advisor, No closes gracefully, any day name closes
-  if (currentState === 'awaiting_consultation') {
+  const isAwaitingConsultation = currentState === 'awaiting_consultation' || 
+    (currentQ && currentQ.branching && currentQ.branching.DEFAULT === 'awaiting_consultation');
+
+  if (isAwaitingConsultation) {
     const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
     if (input === 'A' || input === 'YES') {
       updatedData.next_action = 'Speak with a Risk Advisor';
@@ -104,8 +109,6 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     }
     return { nextState: 'finished', replyText: "Your assessment is complete. If you wish to start over, type RESTART.", updatedData, isComplete: false };
   }
-
-  const currentQ = questionBank.find(q => q.id === currentState);
 
   if (!currentQ) {
     replyText = "I'm sorry, I didn't understand that. Please type START ASSESSMENT to begin.";

@@ -2,7 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { db, run, get, all } = require('../config/database');
 const { authenticate, optionalAuth } = require('../middleware/auth');
-const { calculateScore } = require('../services/scoringEngine');
+const { calculateScore, getRiskLevel } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
 const { generateRiskReport, getAdvisorCopilot } = require('../services/aiService');
 const { sendAssessmentReport } = require('../services/emailService');
@@ -241,21 +241,16 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     };
 
     const dbRiskLevelMap = {
-      'Excellent': 'excellent',
-      'Strong': 'strong',
-      'Developing': 'developing',
-      'Needs Attention': 'needs_attention',
-      'Priority Improvement': 'priority_improvement',
-      'Critical Priority': 'critical_priority',
-      'Very Low Risk': 'excellent',
-      'Low Risk': 'strong',
-      'Moderate Risk': 'developing',
-      'High Risk': 'needs_attention',
-      'Critical Risk': 'critical_priority',
-      'Good': 'strong',
-      'Moderate': 'developing',
-      'Vulnerable': 'needs_attention',
-      'Critical': 'critical_priority'
+      'Excellent': 'low', 'Good': 'low',
+      'Strong': 'low',
+      'Developing': 'moderate',
+      'Needs Attention': 'moderate',
+      'Priority Improvement': 'high',
+      'Critical Priority': 'critical',
+      'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
+      'High Risk': 'high', 'Critical Risk': 'critical',
+      'Moderate': 'moderate', 'Vulnerable': 'high',
+      'Critical': 'critical'
     };
     const dbRiskLevel = dbRiskLevelMap[riskLevel] || 'needs_attention';
 
@@ -493,7 +488,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     res.json({
       id: assessment.id,
       score: assessment.score,
-      riskLevel: assessment.risk_level,
+      riskLevel: getRiskLevel(assessment.score),
       min_loss,
       max_loss,
       recommendations,
