@@ -280,6 +280,8 @@ router.post('/evolution', async (req, res) => {
 
     // Phase 2: Run scoring (takes time — AI calls)
     if (needsScoring) {
+      delete assessmentData.reportUrl;
+      delete assessmentData.assessmentId;
       console.log(`   [CCIE SCORING] Calculating CoverScore for ${phoneNumber}`);
       const finalAnswers = { ...(assessmentData.answers || {}), template_selection: { template_id: prefix } };
       try {
@@ -433,6 +435,7 @@ router.post('/evolution', async (req, res) => {
 
       } catch (e) {
         console.error('Scoring error:', e);
+        console.error('Scoring error stack:', e.stack);
         assessmentData.score = assessmentData.score || 50;
         assessmentData.riskLevel = assessmentData.riskLevel || 'Moderate';
         assessmentData.risk_categories = assessmentData.risk_categories || {};
