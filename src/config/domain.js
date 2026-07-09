@@ -129,7 +129,43 @@ const domainConfig = {
     closingTerm: 'overall income protection',
     improvementTerm: 'income resilience',
     followUpMsg: "I'll also share practical income protection tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Financial Resilience': {
+          base: "Your assessment suggests that your emergency savings are not yet sufficient to weather a prolonged income disruption.",
+          answerChecks: [
+            { q: 'INC_012', values: ['Less than 1 month'], append: "With less than a month of savings, even a short income gap could create immediate financial pressure." },
+            { q: 'INC_012', values: ['1-3 months'], append: "While you have some buffer, 1\u20133 months of savings may not be enough to find new income or recover from an unexpected event." }
+          ],
+          suffix: "Building a robust emergency fund covering at least 6 months of expenses is the most impactful step you can take."
+        },
+        'Career Security': {
+          base: "Your assessment shows that your income situation has some vulnerabilities that could affect your overall protection.",
+          answerChecks: [
+            { q: 'INC_011', values: ['Freelance/Contract'], append: "Freelance or contract income can be unpredictable, making it harder to maintain consistent financial commitments during disruptions." },
+            { q: 'INC_011', values: ['Business owner'], append: "Business income is tied to business performance, which can fluctuate and create income uncertainty." },
+            { q: 'INC_013', values: ['No'], append: "Without confidence in your income stability, planning for the future becomes significantly more challenging." }
+          ],
+          suffix: "Diversifying your income sources and building a career contingency plan is a practical step toward strengthening your income security."
+        },
+        'Protection': {
+          base: "Your assessment indicates that your protection against income loss may not be adequate.",
+          answerChecks: [
+            { q: 'INC_014', values: ['No'], append: "Without income protection insurance, losing your ability to earn could have severe financial consequences for you and your dependants." }
+          ],
+          suffix: "Considering income protection insurance is one of the most important steps you can take to safeguard your livelihood."
+        },
+        'Debt Management': {
+          base: "Your assessment shows that your debt situation could present a risk if your income is disrupted.",
+          answerChecks: [
+            { q: 'INC_015', values: ['Yes'], append: "With debts that depend on continued income, any disruption to your earnings could create a cascading financial challenge." }
+          ],
+          suffix: "Reviewing your debt structure and considering debt protection insurance can help reduce this vulnerability."
+        }
+      },
+      catchAll: "Your assessment shows that your greatest income protection risk is the gap between your current financial resilience and the level of protection needed to maintain your lifestyle through unexpected disruptions."
+    }
   },
   YPR: {
     assessmentTitle: 'Young Professional',
@@ -139,7 +175,37 @@ const domainConfig = {
     closingTerm: 'overall financial foundation',
     improvementTerm: 'financial foundation',
     followUpMsg: "I'll also share practical financial planning tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Financial Resilience': {
+          base: "Your assessment shows that your financial foundation is still developing, which is normal at this stage of your career.",
+          answerChecks: [
+            { q: 'YPR_012', values: ['No'], append: "Not being able to cover a critical illness cost is a significant risk that could derail your financial progress." },
+            { q: 'YPR_012', values: ['With difficulty'], append: "Being able to cover critical illness costs only with difficulty means an unexpected health event could create financial strain." },
+            { q: 'YPR_015', values: ['No'], append: "Without a specific savings goal, it's harder to build the financial discipline needed for long-term security." }
+          ],
+          suffix: "Building an emergency fund and setting clear savings goals are the most important steps you can take right now."
+        },
+        'Income Security': {
+          base: "Your assessment suggests that your income security has areas that could be strengthened.",
+          answerChecks: [
+            { q: 'YPR_011', values: ['Under 2 years'], append: "Being early in your career means less income history and potentially less stability during economic changes." },
+            { q: 'YPR_011', values: ['2-5 years'], append: "You're building career stability but are still in a growth phase where income changes are common." },
+            { q: 'YPR_013', values: ['No'], append: "If your household would struggle without your income, it's important to build resilience through savings and contingency planning." }
+          ],
+          suffix: "Focusing on career growth while building an income buffer is the most practical strategy for your stage."
+        },
+        'Protection': {
+          base: "Your assessment shows that your personal insurance coverage may not be sufficient to protect you from unexpected events.",
+          answerChecks: [
+            { q: 'YPR_014', values: ['No'], append: "Without personal health or accident insurance, an unexpected medical event could have a major financial impact." }
+          ],
+          suffix: "Getting basic health and accident insurance is an affordable way to protect your financial foundation."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current financial foundation. Focusing on the areas highlighted in your pillar scores will help you build long-term financial security."
+    }
   },
   FAM: {
     assessmentTitle: 'Family Protection',
@@ -149,7 +215,50 @@ const domainConfig = {
     closingTerm: 'overall family protection',
     improvementTerm: 'family security',
     followUpMsg: "I'll also share practical family protection tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Family Structure': {
+          base: "Your assessment shows that your family structure creates certain responsibilities and risks that need to be addressed.",
+          answerChecks: [
+            { q: 'FAM_011', values: ['3 or more'], append: "With multiple dependents relying on you, any disruption to your income or health could have widespread impact on your family." }
+          ],
+          suffix: "Ensuring your protection plans reflect your family size is an essential step."
+        },
+        'Career Security': {
+          base: "Your assessment suggests that your family's income resilience may not be sufficient to weather unexpected financial challenges.",
+          answerChecks: [
+            { q: 'FAM_012', values: ['Less than 3 months'], append: "If your income stopped today, your family would face financial difficulty within three months." },
+            { q: 'FAM_012', values: ['3-6 months'], append: "Your family has a moderate income buffer, but extending it further would provide greater peace of mind." }
+          ],
+          suffix: "Building a family emergency fund that covers at least 6 months of expenses is the most impactful step you can take."
+        },
+        'Protection': {
+          base: "Your assessment indicates that your family's insurance coverage may not fully protect against unexpected events.",
+          answerChecks: [
+            { q: 'FAM_013', values: ['No'], append: "Without adequate family insurance, your loved ones could face significant financial hardship in an emergency." },
+            { q: 'FAM_013', values: ['Not sure'], append: "Not being certain about your family's insurance coverage means gaps could exist that you're unaware of." },
+            { q: 'FAM_015', values: ['No'], append: "Without comprehensive family health insurance, medical expenses could become a major financial burden." }
+          ],
+          suffix: "Reviewing and securing comprehensive family insurance coverage is the most important step you can take for your family's protection."
+        },
+        'Future Planning': {
+          base: "Your assessment shows that planning for your family's future needs could be strengthened.",
+          answerChecks: [
+            { q: 'FAM_014', values: ['No'], append: "Without a plan for your children's education costs, future education expenses could create significant financial pressure." }
+          ],
+          suffix: "Setting up an education savings plan or education insurance policy is a practical step toward securing your family's future."
+        },
+        'Health Wellbeing': {
+          base: "Your assessment suggests that your family's health and wellbeing protection has room for improvement.",
+          answerChecks: [
+            { q: 'FAM_015', values: ['No'], append: "Without comprehensive health insurance, an unexpected medical need could affect both your family's health and finances." }
+          ],
+          suffix: "Ensuring your family has access to quality healthcare through appropriate coverage is essential for their wellbeing."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your family's current protection profile. The areas highlighted show where focusing your attention would have the greatest impact on your family's security."
+    }
   },
   ENT: {
     assessmentTitle: 'Business Protection',
@@ -159,7 +268,48 @@ const domainConfig = {
     closingTerm: 'overall business protection',
     improvementTerm: 'business resilience',
     followUpMsg: "I'll also share practical business protection tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Business Continuity': {
+          base: "Your assessment shows that your business continuity has vulnerabilities that could affect its long-term survival.",
+          answerChecks: [
+            { q: 'ENT_011', values: ['Yes completely'], append: "Your business completely depends on your personal involvement, which creates significant risk if you're unavailable." },
+            { q: 'ENT_011', values: ['Partially'], append: "Your business has some dependency on you personally, which should be addressed to ensure continuity." },
+            { q: 'ENT_013', values: ['No'], append: "Your business would not survive three months without you, highlighting a critical continuity gap." },
+            { q: 'ENT_013', values: ['Not sure'], append: "Not knowing whether your business could survive without you means continuity planning should be a priority." }
+          ],
+          suffix: "Building team capacity and creating a business continuity plan are the most impactful steps you can take."
+        },
+        'Legal Liability': {
+          base: "Your assessment suggests that your business has legal exposures that could impact your personal finances.",
+          answerChecks: [
+            { q: 'ENT_012', values: ['Yes'], append: "Personal guarantees on business debts mean your personal assets are at risk if the business encounters difficulties." }
+          ],
+          suffix: "Reviewing your personal guarantees and exploring limited liability restructuring can protect your personal assets."
+        },
+        'Employee Protection': {
+          base: "Your assessment shows that your business may not be adequately protected against the loss of key personnel.",
+          answerChecks: [
+            { q: 'ENT_014', values: ['No'], append: "Without key person insurance, your business could face significant financial strain if you or another key person becomes unable to work." }
+          ],
+          suffix: "Key person insurance is a practical step to ensure your business can survive unexpected personnel changes."
+        },
+        'Asset Protection': {
+          base: "Your assessment indicates that your business and personal assets may not be adequately separated.",
+          answerChecks: [
+            { q: 'ENT_015', values: ['No'], append: "Without separation between personal and business assets, business liabilities could become your personal financial problem." },
+            { q: 'ENT_015', values: ['Not sure'], append: "Not being certain about your asset protection structure means there could be gaps in your protection." }
+          ],
+          suffix: "Separating personal and business assets through proper corporate structuring is an essential step for long-term protection."
+        },
+        'Financial Resilience': {
+          base: "Your assessment shows that your business's financial resilience is an area that deserves attention to ensure long-term stability.",
+          suffix: "Building financial reserves and diversifying revenue streams will strengthen your business's ability to weather challenges."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current business protection profile. Focusing on the areas highlighted will help strengthen your business's long-term resilience."
+    }
   },
   HOM: {
     assessmentTitle: 'Home Protection',
@@ -169,7 +319,21 @@ const domainConfig = {
     closingTerm: 'overall home protection',
     improvementTerm: 'home protection',
     followUpMsg: "I'll also share practical home protection tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Property Protection': {
+          base: "Your assessment shows that your current property protection has gaps that could leave you exposed to unexpected costs.",
+          answerChecks: [
+            { q: 'HOM_011', values: ['Neither'], append: "Without stable housing tenure, you face significant exposure to housing cost changes and lack the security of homeownership." },
+            { q: 'HOM_011', values: ['Rent'], append: "While renting provides flexibility, you may be missing out on property appreciation and don't benefit from landlord insurance for your contents." },
+            { q: 'HOM_012', values: ['No'], append: "Without homeowner's or renter's insurance, your personal belongings and liability are unprotected." }
+          ],
+          suffix: "Securing appropriate property insurance and working toward stable housing are the most important steps for your property protection."
+        }
+      },
+      catchAll: "Your assessment shows that your property protection is an area that could benefit from attention. Ensuring your home and belongings are adequately insured is the most practical step you can take."
+    }
   },
   MOT: {
     assessmentTitle: 'Motor Protection',
@@ -179,7 +343,21 @@ const domainConfig = {
     closingTerm: 'overall motor protection',
     improvementTerm: 'motor protection',
     followUpMsg: "I'll also share practical motor protection tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Vehicle Protection': {
+          base: "Your assessment suggests that your vehicle protection may not be adequate to cover potential risks on the road.",
+          answerChecks: [
+            { q: 'MOT_011', values: ['2'], append: "Having two vehicles doubles your exposure to accidents, theft, and repair costs." },
+            { q: 'MOT_011', values: ['3 or more'], append: "With multiple vehicles, your overall risk exposure and insurance costs increase significantly." },
+            { q: 'MOT_012', values: ['No'], append: "Without comprehensive motor insurance, you could face significant out-of-pocket costs from an accident or theft." }
+          ],
+          suffix: "Ensuring all your vehicles have appropriate insurance coverage is the most practical step you can take."
+        }
+      },
+      catchAll: "Your assessment shows that your vehicle protection is an area worth reviewing. Making sure all your vehicles are adequately insured is the most important step."
+    }
   },
   SME: {
     assessmentTitle: 'Business Risk Assessment',
@@ -189,7 +367,41 @@ const domainConfig = {
     closingTerm: 'overall business resilience',
     improvementTerm: 'business resilience',
     followUpMsg: "I'll also share practical business risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Workforce': {
+          base: "Your assessment shows that your workforce exposure could create significant liability for your business.",
+          answerChecks: [
+            { q: 'SME_013', values: ['51+'], append: "With more than 50 employees, your employment liability exposure is substantial and requires comprehensive coverage." }
+          ],
+          suffix: "Reviewing employer's liability and workforce insurance is an important step for your business."
+        },
+        'Financial': {
+          base: "Your assessment suggests that your business's financial exposure may not be fully protected.",
+          answerChecks: [
+            { q: 'SME_014', values: ['Over \u20A6200M'], append: "With revenue over \u20A6200 million, your business has significant financial exposure that needs adequate insurance cover." }
+          ],
+          suffix: "Ensuring your business insurance adequately covers your revenue scale is essential for financial protection."
+        },
+        'Asset Protection': {
+          base: "Your assessment indicates that your business assets may not be adequately protected against unexpected events.",
+          answerChecks: [
+            { q: 'SME_016', values: ['No'], append: "Without fire and burglary insurance, your business property and assets are vulnerable to significant loss." }
+          ],
+          suffix: "Getting comprehensive fire and burglary insurance is a critical step for protecting your business assets."
+        },
+        'Business Continuity': {
+          base: "Your assessment shows that your business may not be prepared to survive a major disruption.",
+          answerChecks: [
+            { q: 'SME_017', values: ['No, we would close'], append: "Your business would not survive a three-month closure, highlighting a critical continuity gap." },
+            { q: 'SME_017', values: ['With difficulty'], append: "Your business would struggle to recover from a major disaster, indicating that a continuity plan is needed." }
+          ],
+          suffix: "Creating a business continuity plan and ensuring adequate insurance coverage are the most impactful steps you can take."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current business resilience. Focusing on the areas highlighted will help protect your business from unexpected disruptions."
+    }
   },
   MFG: {
     assessmentTitle: 'Manufacturing Risk Assessment',
@@ -199,7 +411,41 @@ const domainConfig = {
     closingTerm: 'overall operational resilience',
     improvementTerm: 'operational resilience',
     followUpMsg: "I'll also share practical manufacturing risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Workforce': {
+          base: "Your assessment shows that your manufacturing workforce exposure could present significant liability risks.",
+          answerChecks: [
+            { q: 'MFG_013', values: ['200+'], append: "With over 200 employees, your workforce liability and compliance exposure is substantial." }
+          ],
+          suffix: "Reviewing comprehensive workforce insurance and safety programs is an important step for your operations."
+        },
+        'Operations': {
+          base: "Your assessment suggests that your manufacturing operations may be vulnerable to equipment-related disruptions.",
+          answerChecks: [
+            { q: 'MFG_014', values: ['Immediately'], append: "Critical machine breakdown would halt production immediately, creating significant revenue loss." }
+          ],
+          suffix: "Implementing equipment redundancy and preventive maintenance programs is essential for operational continuity."
+        },
+        'Asset Protection': {
+          base: "Your assessment indicates that your manufacturing facility and assets may not be adequately insured.",
+          answerChecks: [
+            { q: 'MFG_016', values: ['No'], append: "Without fire and special perils insurance, your facility and equipment are exposed to catastrophic loss." }
+          ],
+          suffix: "Getting comprehensive fire and special perils insurance for your facility is a critical protection step."
+        },
+        'Business Continuity': {
+          base: "Your assessment shows that your manufacturing business may not be prepared to recover from a major disaster.",
+          answerChecks: [
+            { q: 'MFG_017', values: ['No, we would close'], append: "Your business would not survive a major disaster closure, highlighting a critical continuity gap." },
+            { q: 'MFG_017', values: ['With difficulty'], append: "Your business would struggle to recover from a major disaster, indicating the need for a stronger continuity plan." }
+          ],
+          suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current operational resilience. Focusing on the areas highlighted will help protect your manufacturing business from unexpected disruptions."
+    }
   },
   HOS: {
     assessmentTitle: 'Healthcare Risk Assessment',
@@ -209,7 +455,40 @@ const domainConfig = {
     closingTerm: 'overall healthcare resilience',
     improvementTerm: 'healthcare resilience',
     followUpMsg: "I'll also share practical healthcare risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Operations': {
+          base: "Your assessment shows that your healthcare facility's operational exposure could create significant liability risks.",
+          answerChecks: [
+            { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your facility has significant patient liability exposure that requires comprehensive coverage." }
+          ],
+          suffix: "Ensuring comprehensive medical malpractice and liability coverage is essential for your facility."
+        },
+        'Legal Liability': {
+          base: "Your assessment indicates that your healthcare facility may not be adequately protected against medical liability risks.",
+          answerChecks: [
+            { q: 'HOS_015', values: ['No'], append: "Without professional indemnity or medical malpractice insurance, your facility faces significant legal and financial exposure." }
+          ],
+          suffix: "Securing comprehensive professional indemnity and medical malpractice insurance is a critical step."
+        },
+        'Equipment': {
+          base: "Your assessment suggests that your medical equipment may represent a significant uninsured value.",
+          answerChecks: [
+            { q: 'HOS_016', values: ['Yes'], append: "With high-value medical equipment on site, specialized coverage is needed to protect against damage or breakdown." }
+          ],
+          suffix: "Ensuring all high-value medical equipment is specifically insured is important for your facility's protection."
+        },
+        'Asset Protection': {
+          base: "Your assessment shows that your healthcare facility's critical equipment may not be adequately insured.",
+          answerChecks: [
+            { q: 'HOS_017', values: ['No'], append: "Without insurance for critical life-support equipment, a power surge or breakdown could disrupt operations and create significant costs." }
+          ],
+          suffix: "Getting all-risks equipment insurance covering power surge and breakdown is a practical step for asset protection."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current healthcare resilience. Focusing on the areas highlighted will help protect your facility and patients."
+    }
   },
   SCH: {
     assessmentTitle: 'School Risk Assessment',
@@ -219,7 +498,33 @@ const domainConfig = {
     closingTerm: 'overall school resilience',
     improvementTerm: 'school resilience',
     followUpMsg: "I'll also share practical school risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Operations': {
+          base: "Your assessment shows that your school's operational exposure could create significant liability risks.",
+          answerChecks: [
+            { q: 'SCH_013', values: ['Over 500'], append: "With over 500 students, your school has substantial liability exposure that requires comprehensive coverage." }
+          ],
+          suffix: "Reviewing comprehensive liability and accident coverage for all students is an important step."
+        },
+        'Legal Liability': {
+          base: "Your assessment indicates that your school may not be adequately protected against injury liability.",
+          answerChecks: [
+            { q: 'SCH_016', values: ['No'], append: "Without insurance coverage for student injuries on premises, your school faces significant legal and financial exposure." }
+          ],
+          suffix: "Securing comprehensive public liability insurance covering student injuries is essential for your school."
+        },
+        'Asset Protection': {
+          base: "Your assessment shows that your school's physical assets may not be adequately protected.",
+          answerChecks: [
+            { q: 'SCH_017', values: ['No'], append: "Without fire insurance for school buildings, a fire could result in catastrophic financial loss." }
+          ],
+          suffix: "Getting comprehensive fire insurance for all school buildings is a critical step for asset protection."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current school resilience. Focusing on the areas highlighted will help protect your school, students, and staff."
+    }
   },
   CHR: {
     assessmentTitle: 'Church Risk Assessment',
@@ -229,7 +534,40 @@ const domainConfig = {
     closingTerm: 'overall church resilience',
     improvementTerm: 'church resilience',
     followUpMsg: "I'll also share practical church risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Operations': {
+          base: "Your assessment shows that your church's operational exposure could create liability risks during gatherings.",
+          answerChecks: [
+            { q: 'CHR_013', values: ['Over 1000'], append: "With over 1,000 congregants, your church has significant liability exposure during large gatherings." }
+          ],
+          suffix: "Reviewing comprehensive public liability insurance for large gatherings is an important step."
+        },
+        'Assets': {
+          base: "Your assessment suggests that your church's valuable assets may not be adequately protected.",
+          answerChecks: [
+            { q: 'CHR_014', values: ['Yes'], append: "Valuable musical instruments and broadcast equipment require specialized insurance to protect against loss or damage." }
+          ],
+          suffix: "Ensuring high-value church assets are specifically insured is a practical step for protection."
+        },
+        'Legal Liability': {
+          base: "Your assessment indicates that your church may not be adequately protected against event liability.",
+          answerChecks: [
+            { q: 'CHR_015', values: ['No'], append: "Without insurance if a congregant is injured on church premises, your church faces significant legal exposure." }
+          ],
+          suffix: "Securing comprehensive public liability insurance for your premises is essential."
+        },
+        'Property': {
+          base: "Your assessment shows that your church building and contents may not be adequately insured.",
+          answerChecks: [
+            { q: 'CHR_017', values: ['No'], append: "Without fire insurance, your church building and contents are vulnerable to catastrophic loss." }
+          ],
+          suffix: "Getting fire insurance for the church building and contents is a critical step for property protection."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current church resilience. Focusing on the areas highlighted will help protect your church and congregation."
+    }
   },
   CON: {
     assessmentTitle: 'Construction Risk Assessment',
@@ -239,7 +577,47 @@ const domainConfig = {
     closingTerm: 'overall construction resilience',
     improvementTerm: 'construction resilience',
     followUpMsg: "I'll also share practical construction risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Operations': {
+          base: "Your assessment shows that your construction operations have risk exposure that needs to be addressed.",
+          answerChecks: [
+            { q: 'CON_013', values: ['More than 5'], append: "Managing many concurrent projects increases risk exposure and requires careful insurance coordination." }
+          ],
+          suffix: "Ensuring each project has adequate insurance coverage is an important operational step."
+        },
+        'Equipment': {
+          base: "Your assessment suggests that your construction equipment may represent a significant uninsured risk.",
+          answerChecks: [
+            { q: 'CON_014', values: ['Yes'], append: "Heavy machinery on site creates significant liability and damage risk that requires comprehensive coverage." }
+          ],
+          suffix: "Ensuring all heavy machinery is comprehensively insured is essential for your operations."
+        },
+        'Insurance': {
+          base: "Your assessment indicates that your construction projects may not be adequately insured.",
+          answerChecks: [
+            { q: 'CON_015', values: ['No'], append: "Without contractor's all-risk or works insurance, your projects are exposed to significant financial loss." }
+          ],
+          suffix: "Getting comprehensive contractor's all-risk insurance is a critical step for project protection."
+        },
+        'Worker Protection': {
+          base: "Your assessment shows that your on-site workers may not be adequately protected against accidents.",
+          answerChecks: [
+            { q: 'CON_016', values: ['No'], append: "Without group personal accident cover, your workers and your business are exposed to accident-related costs." }
+          ],
+          suffix: "Getting group personal accident cover for all on-site workers is essential for worker protection."
+        },
+        'Contractual': {
+          base: "Your assessment suggests that your business may not be protected against project delay penalties.",
+          answerChecks: [
+            { q: 'CON_017', values: ['No'], append: "Without protection against project delay penalties, your business could face significant financial liability." }
+          ],
+          suffix: "Reviewing contract terms and considering delay penalty protection is a practical step for risk management."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current construction resilience. Focusing on the areas highlighted will help protect your projects and workers."
+    }
   },
   TRN: {
     assessmentTitle: 'Transport Risk Assessment',
@@ -249,7 +627,41 @@ const domainConfig = {
     closingTerm: 'overall transport resilience',
     improvementTerm: 'transport resilience',
     followUpMsg: "I'll also share practical transport risk management tips and strategies that match your assessment.",
-    pillarMappings: {}
+    pillarMappings: {},
+    insightTexts: {
+      perPillar: {
+        'Fleet': {
+          base: "Your assessment shows that your fleet management has risk exposures that need attention.",
+          answerChecks: [
+            { q: 'TRN_013', values: ['Over 20'], append: "With over 20 vehicles, your fleet creates significant cumulative risk exposure that requires comprehensive management." }
+          ],
+          suffix: "Implementing fleet-wide risk management and comprehensive insurance is an important step."
+        },
+        'Insurance': {
+          base: "Your assessment indicates that your goods in transit may not be adequately insured.",
+          answerChecks: [
+            { q: 'TRN_015', values: ['No'], append: "Without fleet insurance for goods in transit, your cargo is exposed to loss or damage during transportation." }
+          ],
+          suffix: "Getting comprehensive goods-in-transit insurance is essential for protecting your cargo."
+        },
+        'Worker Protection': {
+          base: "Your assessment shows that your drivers may not be adequately protected against accidents.",
+          answerChecks: [
+            { q: 'TRN_016', values: ['No'], append: "Without group personal accident cover, your drivers and your business are exposed to accident-related costs." }
+          ],
+          suffix: "Getting group personal accident cover for all drivers is essential for worker protection."
+        },
+        'Compliance': {
+          base: "Your assessment suggests that your fleet may not be fully compliant with motor insurance requirements.",
+          answerChecks: [
+            { q: 'TRN_017', values: ['No'], append: "Without comprehensive motor insurance for all fleet vehicles, you face compliance and financial risks." },
+            { q: 'TRN_017', values: ['Some of them'], append: "Only some of your vehicles have comprehensive motor insurance, leaving gaps in your fleet protection." }
+          ],
+          suffix: "Extending comprehensive motor insurance to your entire fleet is a critical step for compliance and protection."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current transport resilience. Focusing on the areas highlighted will help protect your fleet, drivers, and cargo."
+    }
   }
 };
 

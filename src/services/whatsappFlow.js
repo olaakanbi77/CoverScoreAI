@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { domainConfig, defaultDomain } = require('../config/domain');
 
 const qbPath = path.join(__dirname, '..', 'data', 'question_bank.json');
 let questionBank = [];
@@ -58,12 +59,14 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
   const normalizeInput = (text) => text.toUpperCase().trim();
   const input = normalizeInput(incomingText);
 
+  const dom = domainConfig[prefix] || defaultDomain;
+
   // Simplified ending: Yes routes to advisor, No closes gracefully, any day name closes
   if (currentState === 'awaiting_consultation') {
     const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
     if (input === 'A' || input === 'YES') {
       updatedData.next_action = 'Speak with a Risk Advisor';
-      replyText = "Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and discuss practical ways to strengthen your health protection.\n\nThank you for taking the time to understand your health risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.";
+      replyText = `Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
     } else if (knownDays.includes(input)) {
@@ -76,7 +79,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     } else {
       // B / Not now / anything else
       updatedData.is_qualified = false;
-      replyText = "No problem.\n\nYour report will remain available whenever you need it.\n\nOver the coming weeks, I'll also share practical health protection tips that match your assessment.\n\nIf you ever decide you'd like a personal review, simply reply:\n\nADVISOR\n\nWe'll arrange it for you.\n\nThank you for choosing CoverScore\u2122.";
+      replyText = `No problem.\n\nYour report will remain available whenever you need it.\n\n${dom.followUpMsg}\n\nIf you ever decide you'd like a personal review, simply reply:\n\nADVISOR\n\nWe'll arrange it for you.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
     }
     return { nextState, replyText, updatedData, isComplete };
@@ -86,7 +89,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
     if (input === 'ADVISOR') {
       updatedData.next_action = 'Speak with a Risk Advisor';
-      replyText = "Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and discuss practical ways to strengthen your health protection.\n\nThank you for taking the time to understand your health risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.";
+      replyText = `Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };
@@ -94,7 +97,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     if (knownDays.includes(input)) {
       updatedData.next_action = 'Speak with a Risk Advisor';
       updatedData.consultation_day = incomingText.trim().charAt(0).toUpperCase() + incomingText.trim().slice(1).toLowerCase();
-      replyText = `Noted.\n\nOne of our Certified Risk Advisors will contact you on ${updatedData.consultation_day} to walk through your report and discuss practical ways to strengthen your health protection.\n\nThank you for taking the time to understand your health risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
+      replyText = `Noted.\n\nOne of our Certified Risk Advisors will contact you on ${updatedData.consultation_day} to walk through your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };
