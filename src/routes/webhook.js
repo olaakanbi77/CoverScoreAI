@@ -110,6 +110,12 @@ router.post('/evolution', async (req, res) => {
     const resolvedIndustry = detectedIndustry || (lead ? lead.industry : null);
     const prefix = resolvePrefix(resolvedIndustry);
 
+    // Persist the detected industry so prefix stays consistent across all webhook calls
+    if (lead && detectedIndustry && detectedIndustry !== lead.industry) {
+      await run('UPDATE leads SET industry = ? WHERE id = ?', [detectedIndustry, lead.id]);
+      lead.industry = detectedIndustry;
+    }
+
     let currentState, chatHistory, assessmentData, ccieContext;
 
     if (lead && (isRestartTrigger || incomingText === 'RESTART')) {
