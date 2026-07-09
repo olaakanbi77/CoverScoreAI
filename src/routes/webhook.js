@@ -36,110 +36,27 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
   const weakestScore = weakest[1];
   const dom = domainConfig[prefix] || defaultDomain;
 
-  let body = '';
-  if (prefix === 'HLT') {
-    if (weakestName === 'Healthcare Access') {
-      body = `Your assessment suggests that the most significant gap in your health resilience is your access to healthcare coverage.`;
-      const ins = answers['HLT_012'];
-      if (ins === 'None') {
-        body += ` Without active health insurance, a serious medical event could result in significant out-of-pocket costs that may be difficult to manage.`;
-      } else if (ins === 'Government Health Scheme') {
-        body += ` While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care.`;
-      } else if (ins === 'Employer HMO') {
-        body += ` Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care.`;
+  const pillarDef = dom.insightTexts?.perPillar?.[weakestName];
+  let body;
+  if (pillarDef) {
+    body = pillarDef.base;
+    for (const check of (pillarDef.answerChecks || [])) {
+      const answer = answers[check.q];
+      if (!answer) continue;
+      const matched = check.values
+        ? check.values.includes(answer)
+        : check.condition?.(answer);
+      if (matched) {
+        const text = typeof check.append === 'function' ? check.append(answer) : check.append;
+        body += ' ' + text;
       }
-      body += ` Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection.`;
-    } else if (weakestName === 'Preventive Health') {
-      body = `Your assessment shows that the biggest opportunity to strengthen your health resilience isn't about what you have\u2014it's about what you do.`;
-      const chk = answers['HLT_015'];
-      if (chk === 'Rarely/Only when sick') {
-        body += ` By only seeking medical attention when you're already unwell, you miss the chance to detect potential health issues early, when they are most treatable.`;
-      }
-      body += ` Making preventive health a regular habit\u2014starting with an annual check-up\u2014is a simple but powerful step toward long-term wellbeing.`;
-    } else if (weakestName === 'Medical Risk Profile') {
-      body = `Your assessment highlights that your medical history and age profile are important factors in your overall health risk.`;
-      const cond = answers['HLT_014'];
-      if (cond && cond !== 'None') {
-        body += ` Managing ${cond} requires consistent medical attention and appropriate insurance coverage.`;
-      }
-      const age = answers['HLT_009'];
-      if (age && (age === '56+' || age === '46 - 55')) {
-        body += ` As you get older, health risks naturally increase, making comprehensive coverage more important.`;
-      }
-      body += ` Ensuring your health plan is designed to address your specific circumstances is the most impactful step you can take.`;
-    } else if (weakestName === 'Financial Health Protection') {
-      body = `Your assessment suggests that your greatest health risk isn't access to healthcare\u2014it's the financial impact that a serious illness could have on you and your family.`;
-      const pay = answers['HLT_013'];
-      if (pay === "I don't know" || pay === 'Loan') {
-        body += ` Without dedicated savings for medical emergencies, a major health event could create significant debt.`;
-      }
-      const surg = answers['HLT_016'];
-      if (surg === 'No' || surg === 'Not sure') {
-        body += ` Your current health cover may not be sufficient for major procedures such as surgery.`;
-      }
-      const ill = answers['HLT_017'];
-      if (ill === 'No') {
-        body += ` A serious illness could put financial pressure on your household.`;
-      }
-      body += ` Strengthening your financial health protection is the most impactful step you can take.`;
-    } else if (weakestName === 'Household Resilience') {
-      body = `Your assessment shows that your household's overall resilience is an area to strengthen.`;
-      const dep = answers['HLT_010'];
-      if (dep === '3' || dep === '4+') {
-        body += ` With multiple dependants relying on you, any health-related income disruption affects more than just yourself.`;
-      }
-      const emp = answers['HLT_008'];
-      if (emp === 'Part-time / Freelance' || emp === 'Student') {
-        body += ` Your current employment situation means there is less of a financial buffer if a health emergency arises.`;
-      }
-      body += ` Building a stronger household safety net through appropriate coverage is your most practical next step.`;
-    } else {
-      body = `Your assessment provides a clear picture of your current health resilience. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact.`;
     }
-  } else if (prefix === 'RET') {
-    if (weakestName === 'Retirement Readiness') {
-      body = `You're approaching the stage of life where retirement planning becomes increasingly important, yet your assessment suggests you may still be relying primarily on future income rather than dedicated retirement assets.`;
-      const age = answers['RET_009'];
-      if (age === '46 - 55' || age === '56+') {
-        body += ` Delaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement.`;
-      }
-      const pension = answers['RET_012'];
-      if (pension === 'No') {
-        body += ` Without a dedicated pension or retirement savings account, you may have limited options to build the retirement nest egg you need.`;
-      }
-      const legacy = answers['RET_015'];
-      if (legacy === 'No, not yet' || legacy === 'Partially - I have some documentation') {
-        body += ` Your retirement assets and estate plans may not be structured to protect your loved ones.`;
-      }
-      body += ` Starting a structured retirement savings plan is the most impactful step you can take toward securing your financial future.`;
-    } else if (weakestName === 'Retirement Savings') {
-      body = `Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources to maintain your lifestyle throughout retirement.`;
-      body += ` Building dedicated retirement savings that are separate from your daily income is essential for long-term financial independence.`;
-    } else if (weakestName === 'Protection') {
-      body = `Your assessment suggests that your retirement could be disrupted by unexpected healthcare or long-term care costs.`;
-      const medical = answers['RET_013'];
-      if (medical === 'Very concerned') {
-        body += ` You're right to be concerned\u2014medical costs are one of the biggest threats to retirement savings.`;
-      }
-      const care = answers['RET_014'];
-      if (care === 'No') {
-        body += ` Without a long-term care plan, a health event could quickly deplete your retirement savings.`;
-      }
-      body += ` Reviewing your protection options for retirement is a practical step toward safeguarding your savings.`;
-    } else if (weakestName === 'Legacy Planning') {
-      body = `Your assessment shows that your estate and legacy planning is an area to strengthen.`;
-      const beneficiary = answers['RET_015'];
-      if (beneficiary === 'No, not yet') {
-        body += ` Without clear beneficiary nominations or asset distribution plans, your retirement assets may not pass to your loved ones as you intend.`;
-      }
-      body += ` Documenting your estate plan and reviewing beneficiary designations are simple steps that provide peace of mind.`;
-    } else {
-      body = `Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources and protection to maintain your lifestyle throughout retirement.`;
-    }
-    body += `\n\nDelaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement.`;
+    if (pillarDef.suffix) body += ' ' + pillarDef.suffix;
   } else {
-    body = `Your assessment highlights that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. With a score of ${weakestScore}%, this is where focused attention would have the greatest impact on your ${dom.closingTerm}.`;
+    body = dom.insightTexts?.catchAll ||
+      `Your assessment highlights that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. With a score of ${weakestScore}%, this is where focused attention would have the greatest impact on your ${dom.closingTerm}.`;
   }
+  if (dom.insightTexts?.suffix) body += dom.insightTexts.suffix;
 
   return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
 };

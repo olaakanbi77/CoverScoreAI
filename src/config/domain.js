@@ -19,6 +19,52 @@ const domainConfig = {
       'moderate': 'Building Resilience',
       'high': 'Needs Attention',
       'critical': 'Priority Improvement'
+    },
+    insightTexts: {
+      perPillar: {
+        'Healthcare Access': {
+          base: "Your assessment suggests that the most significant gap in your overall protection is your access to healthcare coverage.",
+          answerChecks: [
+            { q: 'HLT_012', values: ['None'], append: "Without active health insurance, a serious medical event could result in significant out-of-pocket costs that may be difficult to manage." },
+            { q: 'HLT_012', values: ['Government Health Scheme'], append: "While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care." },
+            { q: 'HLT_012', values: ['Employer HMO'], append: "Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care." }
+          ],
+          suffix: "Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection."
+        },
+        'Preventive Health': {
+          base: "Your assessment shows that the biggest opportunity to strengthen your overall protection isn't about what you have\u2014it's about what you do.",
+          answerChecks: [
+            { q: 'HLT_015', values: ['Rarely/Only when sick'], append: "By only seeking medical attention when you're already unwell, you miss the chance to detect potential health issues early, when they are most treatable." }
+          ],
+          suffix: "Making preventive health a regular habit\u2014starting with an annual check-up\u2014is a simple but powerful step toward long-term wellbeing."
+        },
+        'Medical Risk Profile': {
+          base: "Your assessment highlights that your medical history and age profile are important factors in your overall risk picture.",
+          answerChecks: [
+            { q: 'HLT_014', condition: (v) => v && v !== 'None', append: (v) => `Managing ${v} requires consistent medical attention and appropriate insurance coverage.` },
+            { q: 'HLT_009', values: ['56+', '46 - 55'], append: "As you get older, health risks naturally increase, making comprehensive coverage more important." }
+          ],
+          suffix: "Ensuring your health plan is designed to address your specific circumstances is the most impactful step you can take."
+        },
+        'Financial Health Protection': {
+          base: "Your assessment suggests that your greatest financial risk isn't access to care\u2014it's the financial impact that a serious illness could have on you and your family.",
+          answerChecks: [
+            { q: 'HLT_013', values: ["I don't know", 'Loan'], append: "Without dedicated savings for medical emergencies, a major health event could create significant debt." },
+            { q: 'HLT_016', values: ['No', 'Not sure'], append: "Your current health cover may not be sufficient for major procedures such as surgery." },
+            { q: 'HLT_017', values: ['No'], append: "A serious illness could put financial pressure on your household." }
+          ],
+          suffix: "Strengthening your financial health protection is the most impactful step you can take."
+        },
+        'Household Resilience': {
+          base: "Your assessment shows that your household's overall resilience is an area to strengthen.",
+          answerChecks: [
+            { q: 'HLT_010', values: ['3', '4+'], append: "With multiple dependants relying on you, any health-related income disruption affects more than just yourself." },
+            { q: 'HLT_008', values: ['Part-time / Freelance', 'Student'], append: "Your current employment situation means there is less of a financial buffer if a health emergency arises." }
+          ],
+          suffix: "Building a stronger household safety net through appropriate coverage is your most practical next step."
+        }
+      },
+      catchAll: "Your assessment provides a clear picture of your current protection profile. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact."
     }
   },
   RET: {
@@ -40,6 +86,39 @@ const domainConfig = {
       'moderate': 'Building Readiness',
       'high': 'Needs Attention',
       'critical': 'Priority Improvement'
+    },
+    insightTexts: {
+      perPillar: {
+        'Retirement Readiness': {
+          base: "You're approaching the stage of life where retirement planning becomes increasingly important, yet your assessment suggests you may still be relying primarily on future income rather than dedicated retirement assets.",
+          answerChecks: [
+            { q: 'RET_009', values: ['46 - 55', '56+'], append: "Delaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement." },
+            { q: 'RET_012', values: ['No'], append: "Without a dedicated pension or retirement savings account, you may have limited options to build the retirement nest egg you need." },
+            { q: 'RET_015', values: ['No, not yet', 'Partially - I have some documentation'], append: "Your retirement assets and estate plans may not be structured to protect your loved ones." }
+          ],
+          suffix: "Starting a structured retirement savings plan is the most impactful step you can take toward securing your financial future."
+        },
+        'Retirement Savings': {
+          base: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources to maintain your lifestyle throughout retirement. Building dedicated retirement savings that are separate from your daily income is essential for long-term financial independence."
+        },
+        'Protection': {
+          base: "Your assessment suggests that your retirement could be disrupted by unexpected healthcare or long-term care costs.",
+          answerChecks: [
+            { q: 'RET_013', values: ['Very concerned'], append: "You're right to be concerned\u2014medical costs are one of the biggest threats to retirement savings." },
+            { q: 'RET_014', values: ['No'], append: "Without a long-term care plan, a health event could quickly deplete your retirement savings." }
+          ],
+          suffix: "Reviewing your protection options for retirement is a practical step toward safeguarding your savings."
+        },
+        'Legacy Planning': {
+          base: "Your assessment shows that your estate and legacy planning is an area to strengthen.",
+          answerChecks: [
+            { q: 'RET_015', values: ['No, not yet'], append: "Without clear beneficiary nominations or asset distribution plans, your retirement assets may not pass to your loved ones as you intend." }
+          ],
+          suffix: "Documenting your estate plan and reviewing beneficiary designations are simple steps that provide peace of mind."
+        }
+      },
+      catchAll: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources and protection to maintain your lifestyle throughout retirement.",
+      suffix: "\n\nDelaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement."
     }
   },
   INC: {
