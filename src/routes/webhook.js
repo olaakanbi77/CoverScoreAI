@@ -488,12 +488,19 @@ router.post('/evolution', async (req, res) => {
           parts.push(`You already have ${strong.length === 1 ? 'good' : 'reasonable'} ${strongNames.join(' and ')}`);
         }
         if (sortedWeak.length > 0) {
-          const weakCount = sortedWeak.length;
-          const areaPhrase = weakCount === 1 ? 'this area' : `these ${weakCount} areas`;
-          if (parts.length > 0) {
-            parts.push(`and the good news is that improving ${areaPhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+          const weakNames = sortedWeak.map(([n]) => n.toLowerCase());
+          let namePhrase;
+          if (weakNames.length === 1) {
+            namePhrase = weakNames[0];
+          } else if (weakNames.length === 2) {
+            namePhrase = weakNames.join(' and ');
           } else {
-            parts.push(`the good news is that improving ${areaPhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+            namePhrase = weakNames.slice(0, -1).join(', ') + ' and ' + weakNames[weakNames.length - 1];
+          }
+          if (parts.length > 0) {
+            parts.push(`and the good news is that strengthening your ${namePhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+          } else {
+            parts.push(`the good news is that strengthening your ${namePhrase} can significantly strengthen your ${dom.closingTerm} over time`);
           }
         }
         if (parts.length === 0) {

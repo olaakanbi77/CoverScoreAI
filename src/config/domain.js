@@ -244,24 +244,32 @@ const domainConfig = {
     improvementTerm: 'family security',
     followUpMsg: "I'll also share practical family protection tips and strategies that match your assessment.",
     pillarMappings: {},
+    resilienceLabels: {
+      'excellent': 'Excellent Resilience',
+      'strong': 'Strong Resilience',
+      'developing': 'Developing Resilience',
+      'needs_attention': 'Needs Attention',
+      'priority_improvement': 'Priority Improvement',
+      'critical_priority': 'Critical Priority'
+    },
     insightTexts: {
       perPillar: {
-        'Family Structure': {
+        'Family Dependency': {
           base: "Your assessment shows that your family structure creates certain responsibilities and risks that need to be addressed.",
           answerChecks: [
             { q: 'FAM_011', values: ['3 or more'], append: "With multiple dependents relying on you, any disruption to your income or health could have widespread impact on your family." }
           ],
           suffix: "Ensuring your protection plans reflect your family size is an essential step."
         },
-        'Career Security': {
-          base: "Your assessment suggests that your family's income resilience may not be sufficient to weather unexpected financial challenges.",
+        'Income Resilience': {
+          base: "Your assessment suggests that your family's financial security depends heavily on your current income. If your ability to earn was interrupted unexpectedly, your household could face financial pressure within a short period. Strengthening your financial safety net now can provide greater stability and peace of mind for the people who depend on you.",
           answerChecks: [
             { q: 'FAM_012', values: ['Less than 3 months'], append: "If your income stopped today, your family would face financial difficulty within three months." },
             { q: 'FAM_012', values: ['3-6 months'], append: "Your family has a moderate income buffer, but extending it further would provide greater peace of mind." }
           ],
           suffix: "Building a family emergency fund that covers at least 6 months of expenses is the most impactful step you can take."
         },
-        'Protection': {
+        'Financial Protection': {
           base: "Your assessment indicates that your family's insurance coverage may not fully protect against unexpected events.",
           answerChecks: [
             { q: 'FAM_013', values: ['No'], append: "Without adequate family insurance, your loved ones could face significant financial hardship in an emergency." },
@@ -270,14 +278,14 @@ const domainConfig = {
           ],
           suffix: "Reviewing and securing comprehensive family insurance coverage is the most important step you can take for your family's protection."
         },
-        'Future Planning': {
+        'Future Security': {
           base: "Your assessment shows that planning for your family's future needs could be strengthened.",
           answerChecks: [
             { q: 'FAM_014', values: ['No'], append: "Without a plan for your children's education costs, future education expenses could create significant financial pressure." }
           ],
           suffix: "Setting up an education savings plan or education insurance policy is a practical step toward securing your family's future."
         },
-        'Health Wellbeing': {
+        'Family Healthcare': {
           base: "Your assessment suggests that your family's health and wellbeing protection has room for improvement.",
           answerChecks: [
             { q: 'FAM_015', values: ['No'], append: "Without comprehensive health insurance, an unexpected medical need could affect both your family's health and finances." }
@@ -288,11 +296,11 @@ const domainConfig = {
       catchAll: "Your assessment provides a clear picture of your family's current protection profile. The areas highlighted show where focusing your attention would have the greatest impact on your family's security."
     },
     recommendationTexts: {
-      'family structure': 'ensuring your protection plans reflect your family size to adequately cover all dependents',
-      'career security': 'building a family emergency fund that covers at least 6 months of expenses to protect your household',
-      'protection': 'reviewing and securing comprehensive family insurance coverage to protect your loved ones',
-      'future planning': 'setting up an education savings plan or education insurance policy for your children\'s future',
-      'health wellbeing': 'ensuring your family has access to quality healthcare through appropriate health insurance coverage'
+      'family dependency': 'ensuring your protection plans reflect your family size to adequately cover all dependents',
+      'income resilience': 'building a family emergency fund that covers at least 6 months of expenses to protect your household',
+      'financial protection': 'reviewing and securing comprehensive family insurance coverage to protect your loved ones',
+      'future security': 'setting up an education savings plan or education insurance policy for your children\'s future',
+      'family healthcare': 'ensuring your family has access to quality healthcare through appropriate health insurance coverage'
     }
   },
   ENT: {

@@ -224,18 +224,18 @@
   FAM: {
     name: 'Family Protection',
     pillars: [
-      { id: 'family_structure', name: 'Family Structure', weight: 0.15 },
-      { id: 'career_security', name: 'Career & Income Security', weight: 0.20 },
-      { id: 'protection', name: 'Protection & Insurance', weight: 0.25 },
-      { id: 'future_planning', name: 'Future Planning', weight: 0.20 },
-      { id: 'health_wellbeing', name: 'Health & Wellbeing', weight: 0.20 }
+      { id: 'family_dependency', name: 'Family Dependency', weight: 0.15 },
+      { id: 'income_resilience', name: 'Income Resilience', weight: 0.20 },
+      { id: 'financial_protection', name: 'Financial Protection', weight: 0.25 },
+      { id: 'future_security', name: 'Future Security', weight: 0.20 },
+      { id: 'family_healthcare', name: 'Family Healthcare', weight: 0.20 }
     ],
     categories: {
-      dependents: { name: 'Dependents', pillar: 'family_structure' },
-      income_resilience: { name: 'Income Resilience', pillar: 'career_security' },
-      family_insurance: { name: 'Family Insurance', pillar: 'protection' },
-      education_funding: { name: 'Education Funding', pillar: 'future_planning' },
-      family_health: { name: 'Family Health', pillar: 'health_wellbeing' }
+      dependents: { name: 'Dependents', pillar: 'family_dependency' },
+      income_resilience: { name: 'Income Resilience', pillar: 'income_resilience' },
+      family_insurance: { name: 'Family Insurance', pillar: 'financial_protection' },
+      education_funding: { name: 'Education Funding', pillar: 'future_security' },
+      family_health: { name: 'Family Health', pillar: 'family_healthcare' }
     },
     questions: {
       FAM_011: {
