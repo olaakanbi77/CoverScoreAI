@@ -503,24 +503,8 @@ router.post('/evolution', async (req, res) => {
         const weakestName = sorted[0][0];
         const weakArea = weakestName.toLowerCase();
 
-        const pillarActions = {
-          'financial health protection': 'reviewing your financial health protection to ensure you could cope with the financial impact of a serious illness without placing your family under pressure',
-          'preventive health': 'scheduling a comprehensive preventive health screening within the next month',
-          'healthcare access': 'reviewing your healthcare access to obtain appropriate health cover for your needs',
-          'medical risk profile': 'seeking a medical review and ongoing monitoring to address potential health vulnerabilities',
-          'household resilience': 'building a family protection plan to safeguard your loved ones against unexpected events',
-          'business continuity': 'developing a business continuity plan to keep your operations running through disruptions',
-          'property risk': 'reviewing your property insurance coverage to protect your assets',
-          'liability risk': 'reviewing your liability protection to safeguard against potential claims',
-          'cyber risk': 'strengthening your cyber security measures and reviewing your cyber insurance coverage',
-          'key person risk': 'reviewing key-person protection to ensure your business survives losing a critical team member',
-          'income protection': 'reviewing your income protection to maintain financial stability if you are unable to work',
-          'retirement readiness': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
-          'retirement savings': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
-          'protection': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
-          'legacy planning': 'documenting how your assets should be distributed and nominating beneficiaries for your retirement accounts'
-        };
-        const action = pillarActions[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
+        const recTexts = dom.recommendationTexts || {};
+        const action = recTexts[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
 
         return {
           text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your ${dom.closingTerm}.`

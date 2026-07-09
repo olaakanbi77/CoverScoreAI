@@ -65,6 +65,13 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current protection profile. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact."
+    },
+    recommendationTexts: {
+      'healthcare access': 'reviewing your healthcare access to obtain appropriate health cover for your needs',
+      'preventive health': 'scheduling a comprehensive preventive health screening within the next month',
+      'medical risk profile': 'seeking a medical review and ongoing monitoring to address potential health vulnerabilities',
+      'financial health protection': 'reviewing your financial health protection to ensure you could cope with the financial impact of a serious illness without placing your family under pressure',
+      'household resilience': 'building a family protection plan to safeguard your loved ones against unexpected events'
     }
   },
   RET: {
@@ -119,6 +126,12 @@ const domainConfig = {
       },
       catchAll: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources and protection to maintain your lifestyle throughout retirement.",
       suffix: "\n\nDelaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement."
+    },
+    recommendationTexts: {
+      'retirement readiness': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
+      'retirement savings': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
+      'protection': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
+      'legacy planning': 'documenting how your assets should be distributed and nominating beneficiaries for your retirement accounts'
     }
   },
   INC: {
@@ -165,6 +178,12 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment shows that your greatest income protection risk is the gap between your current financial resilience and the level of protection needed to maintain your lifestyle through unexpected disruptions."
+    },
+    recommendationTexts: {
+      'financial resilience': 'building an emergency fund that covers at least 6 months of expenses to protect against income disruptions',
+      'career security': 'diversifying your income sources and building a career contingency plan to strengthen your income stability',
+      'protection': 'considering income protection insurance to replace your earnings if you become unable to work',
+      'debt management': 'reviewing your debt structure and considering debt protection insurance to reduce financial vulnerability'
     }
   },
   YPR: {
@@ -205,6 +224,11 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current financial foundation. Focusing on the areas highlighted in your pillar scores will help you build long-term financial security."
+    },
+    recommendationTexts: {
+      'financial resilience': 'building an emergency fund and setting clear savings goals to strengthen your financial foundation',
+      'income security': 'focusing on career growth and building an income buffer to protect against income changes',
+      'protection': 'getting basic health and accident insurance to protect your financial foundation from unexpected events'
     }
   },
   FAM: {
@@ -258,6 +282,13 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your family's current protection profile. The areas highlighted show where focusing your attention would have the greatest impact on your family's security."
+    },
+    recommendationTexts: {
+      'family structure': 'ensuring your protection plans reflect your family size to adequately cover all dependents',
+      'career security': 'building a family emergency fund that covers at least 6 months of expenses to protect your household',
+      'protection': 'reviewing and securing comprehensive family insurance coverage to protect your loved ones',
+      'future planning': 'setting up an education savings plan or education insurance policy for your children\'s future',
+      'health wellbeing': 'ensuring your family has access to quality healthcare through appropriate health insurance coverage'
     }
   },
   ENT: {
@@ -309,6 +340,13 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current business protection profile. Focusing on the areas highlighted will help strengthen your business's long-term resilience."
+    },
+    recommendationTexts: {
+      'business continuity': 'building team capacity and creating a business continuity plan to reduce key-person dependency',
+      'legal liability': 'reviewing your personal guarantees and exploring limited liability restructuring to protect your personal assets',
+      'employee protection': 'considering key person insurance to protect your business against the loss of critical team members',
+      'asset protection': 'separating personal and business assets through proper corporate structuring',
+      'financial resilience': 'building financial reserves and diversifying revenue streams to strengthen your business resilience'
     }
   },
   HOM: {
@@ -333,6 +371,9 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment shows that your property protection is an area that could benefit from attention. Ensuring your home and belongings are adequately insured is the most practical step you can take."
+    },
+    recommendationTexts: {
+      'property protection': 'securing appropriate property insurance and working toward stable housing to protect your home and belongings'
     }
   },
   MOT: {
@@ -357,6 +398,9 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment shows that your vehicle protection is an area worth reviewing. Making sure all your vehicles are adequately insured is the most important step."
+    },
+    recommendationTexts: {
+      'vehicle protection': 'ensuring all your vehicles have appropriate insurance coverage to protect against accidents and theft'
     }
   },
   SME: {
@@ -401,6 +445,12 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current business resilience. Focusing on the areas highlighted will help protect your business from unexpected disruptions."
+    },
+    recommendationTexts: {
+      'workforce': 'reviewing employer\'s liability and workforce insurance to protect your employees and business',
+      'financial': 'ensuring your business insurance adequately covers your revenue scale for proper financial protection',
+      'asset protection': 'getting comprehensive fire and burglary insurance to protect your business assets',
+      'business continuity': 'creating a business continuity plan and ensuring adequate insurance coverage to survive disruptions'
     }
   },
   MFG: {
@@ -445,6 +495,12 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current operational resilience. Focusing on the areas highlighted will help protect your manufacturing business from unexpected disruptions."
+    },
+    recommendationTexts: {
+      'workforce': 'reviewing comprehensive workforce insurance and safety programs to protect your employees',
+      'operations': 'implementing equipment redundancy and preventive maintenance programs for operational continuity',
+      'asset protection': 'getting comprehensive fire and special perils insurance for your facility and equipment',
+      'business continuity': 'creating a comprehensive business continuity and disaster recovery plan for your manufacturing business'
     }
   },
   HOS: {
@@ -488,6 +544,12 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current healthcare resilience. Focusing on the areas highlighted will help protect your facility and patients."
+    },
+    recommendationTexts: {
+      'operations': 'ensuring comprehensive medical malpractice and liability coverage for your healthcare facility',
+      'legal liability': 'securing comprehensive professional indemnity and medical malpractice insurance for your facility',
+      'equipment': 'ensuring all high-value medical equipment is specifically insured against damage or breakdown',
+      'asset protection': 'getting all-risks equipment insurance covering power surge and breakdown for critical equipment'
     }
   },
   SCH: {
@@ -524,6 +586,11 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current school resilience. Focusing on the areas highlighted will help protect your school, students, and staff."
+    },
+    recommendationTexts: {
+      'operations': 'reviewing comprehensive liability and accident coverage for all students at your school',
+      'legal liability': 'securing comprehensive public liability insurance covering student injuries on your premises',
+      'asset protection': 'getting comprehensive fire insurance for all school buildings to protect your facilities'
     }
   },
   CHR: {
@@ -567,6 +634,12 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current church resilience. Focusing on the areas highlighted will help protect your church and congregation."
+    },
+    recommendationTexts: {
+      'operations': 'reviewing comprehensive public liability insurance for large gatherings at your church',
+      'assets': 'ensuring high-value musical instruments and broadcast equipment are specifically insured',
+      'legal liability': 'securing comprehensive public liability insurance for your church premises',
+      'property': 'getting fire insurance for the church building and contents to protect your property'
     }
   },
   CON: {
@@ -617,6 +690,13 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current construction resilience. Focusing on the areas highlighted will help protect your projects and workers."
+    },
+    recommendationTexts: {
+      'operations': 'ensuring each construction project has adequate insurance coverage for proper risk management',
+      'equipment': 'ensuring all heavy machinery is comprehensively insured to protect your equipment',
+      'insurance': 'getting comprehensive contractor\'s all-risk insurance to protect your construction projects',
+      'worker protection': 'getting group personal accident cover for all on-site workers to protect your team',
+      'contractual': 'reviewing contract terms and considering delay penalty protection for your projects'
     }
   },
   TRN: {
@@ -661,6 +741,12 @@ const domainConfig = {
         }
       },
       catchAll: "Your assessment provides a clear picture of your current transport resilience. Focusing on the areas highlighted will help protect your fleet, drivers, and cargo."
+    },
+    recommendationTexts: {
+      'fleet': 'implementing fleet-wide risk management and comprehensive insurance for your vehicles',
+      'insurance': 'getting comprehensive goods-in-transit insurance to protect your cargo during transportation',
+      'worker protection': 'getting group personal accident cover for all drivers to protect your team',
+      'compliance': 'extending comprehensive motor insurance to your entire fleet for compliance and protection'
     }
   }
 };
