@@ -441,8 +441,9 @@ router.post('/evolution', async (req, res) => {
         assessmentData._rawRecommendations = [];
         assessmentData._scored = true; // Ensure Phase 3 still runs with fallback data
         if (!assessmentData.reportUrl) {
-          assessmentData.reportUrl = assessmentData.assessmentId
-            ? `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentData.assessmentId}`
+          const fallbackId = assessmentData.assessmentId || (lead ? lead.assessment_id : null);
+          assessmentData.reportUrl = fallbackId
+            ? `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${fallbackId}`
             : `${process.env.APP_URL || 'https://coverscore.site'}`;
         }
       }
@@ -454,7 +455,8 @@ router.post('/evolution', async (req, res) => {
       const name = assessmentData.name || 'Customer';
       const email = assessmentData.email || (lead ? lead.email : null);
       const appBase = process.env.APP_URL || 'https://coverscore.site';
-      const reportUrl = assessmentData.reportUrl || (assessmentData.assessmentId ? `${appBase}/assessment/result/${assessmentData.assessmentId}` : appBase);
+      const fallbackId = assessmentData.assessmentId || (lead ? lead.assessment_id : null);
+      const reportUrl = assessmentData.reportUrl || (fallbackId ? `${appBase}/assessment/result/${fallbackId}` : appBase);
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 

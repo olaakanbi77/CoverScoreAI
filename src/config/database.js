@@ -652,8 +652,10 @@ const initDatabase = () => {
 const run = async (sql, params = []) => {
   if (usePostgres) {
     const pgSql = convertSqliteToPg(sql);
+    const isInsert = /^\s*INSERT\s/i.test(pgSql);
+    const finalSql = isInsert ? pgSql + ' RETURNING id' : pgSql;
     try {
-      const res = await pgPool.query(pgSql, params);
+      const res = await pgPool.query(finalSql, params);
       return { lastInsertRowid: res.rows[0]?.id || null, changes: res.rowCount };
     } catch (err) {
       throw err;
