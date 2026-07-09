@@ -335,7 +335,6 @@ router.post('/evolution', async (req, res) => {
         assessmentData.recommendations = scoreResult.recommendations && scoreResult.recommendations.length > 0
           ? scoreResult.recommendations.slice(0, 3).map(r => '• ' + r).join('\n') : fallbacks.recommendations;
         assessmentData._rawRecommendations = scoreResult.recommendations || [];
-        assessmentData._scored = true;
 
         const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
         const assessmentDataObj = {
@@ -360,6 +359,7 @@ router.post('/evolution', async (req, res) => {
         assessmentData.assessmentId = assessmentId;
         assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
         publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
+        assessmentData._scored = true;
 
         // Fire AI report generation + remaining persistence in background (don't block user response)
         setImmediate(async () => {
@@ -440,6 +440,11 @@ router.post('/evolution', async (req, res) => {
         assessmentData.top_risks = assessmentData.top_risks || '';
         assessmentData._rawRecommendations = [];
         assessmentData._scored = true; // Ensure Phase 3 still runs with fallback data
+        if (!assessmentData.reportUrl) {
+          assessmentData.reportUrl = assessmentData.assessmentId
+            ? `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentData.assessmentId}`
+            : `${process.env.APP_URL || 'https://coverscore.site'}`;
+        }
       }
     }
 
@@ -448,7 +453,8 @@ router.post('/evolution', async (req, res) => {
       const dom = domainConfig[prefix] || defaultDomain;
       const name = assessmentData.name || 'Customer';
       const email = assessmentData.email || (lead ? lead.email : null);
-      const reportUrl = assessmentData.reportUrl || 'https://coverscore.site';
+      const appBase = process.env.APP_URL || 'https://coverscore.site';
+      const reportUrl = assessmentData.reportUrl || (assessmentData.assessmentId ? `${appBase}/assessment/result/${assessmentData.assessmentId}` : appBase);
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 
