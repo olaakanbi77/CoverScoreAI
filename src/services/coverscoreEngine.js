@@ -157,6 +157,8 @@ class CoverScoreEngine {
         applied.push({ id: mod.id, name: mod.name, impact, type: impact > 0 ? 'bonus' : 'penalty' });
       }
     }
+    // Cap net modifier impact to prevent extreme score suppression
+    netImpact = Math.max(netImpact, -10);
     return { applied, netImpact };
   }
 

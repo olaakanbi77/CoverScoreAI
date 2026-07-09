@@ -373,26 +373,56 @@
       }
     },
     modifiers: [
+      // Positive modifiers — reward proactive behaviour
+      {
+        id: 'positive_retirement_planning',
+        name: 'Active Retirement Planning',
+        conditions: [['RET_010', 'I already have a written retirement plan']],
+        bonus: 5,
+        description: 'Having a written retirement plan demonstrates strong financial preparedness'
+      },
+      {
+        id: 'positive_pension_savings',
+        name: 'Dedicated Pension Savings',
+        conditions: [['RET_012', 'Yes']],
+        bonus: 6,
+        description: 'Dedicated retirement savings provide a foundation for retirement security'
+      },
+      {
+        id: 'positive_partial_planning',
+        name: 'Some Retirement Planning',
+        conditions: [['RET_010', "I'm saving but don't have a clear plan"]],
+        bonus: 2,
+        description: 'Some saving activity shows awareness even without a structured plan'
+      },
+      {
+        id: 'positive_legacy_documentation',
+        name: 'Legacy Plan Documented',
+        conditions: [['RET_015', 'Yes, I have a documented plan']],
+        bonus: 3,
+        description: 'Documented legacy planning protects loved ones and assets'
+      },
+      // Risk modifiers — penalise critical gaps
       {
         id: 'no_pension_no_care',
         name: 'No Pension + No Long-term Care Plan',
         conditions: [['RET_012', 'No'], ['RET_014', 'No']],
-        penalty: 8,
+        penalty: 5,
         description: 'No retirement savings and no care plan creates extreme vulnerability'
       },
       {
         id: 'soon_retire_no_pension',
         name: 'Soon to Retire + No Pension Savings',
         conditions: [['RET_011', 'Within 5 years'], ['RET_012', 'No']],
-        penalty: 6,
+        penalty: 4,
         description: 'Retiring without pension savings requires immediate action'
       },
       {
-        id: 'positive_retirement_planning',
-        name: 'Pension + Long-term Care Plan',
-        conditions: [['RET_012', 'Yes'], ['RET_014', 'Yes']],
-        bonus: 5,
-        description: 'Comprehensive retirement planning with savings and care coverage'
+        id: 'no_savings_no_legacy',
+        name: 'No Savings + No Legacy Plan',
+        conditions: [['RET_012', 'No'], ['RET_015', 'No, not yet']],
+        penalty: 4,
+        description: 'No retirement savings and no legacy plan compounds vulnerability'
       }
     ],
     improvements: {
