@@ -219,8 +219,9 @@ router.post('/evolution', async (req, res) => {
     const nextQ = questionBank.find(q => q.id === nextState);
     const reachedResults = ccieEngine.determinePhase(nextState) === 'RESULTS'
       || (nextQ && nextQ.data_mapping === 'request_consultation');
-    const isScoreQuestion = (() => { const sq = questionBank.find(q => q.id === nextStateRaw); return sq && sq.question && sq.question.includes('{{score}}'); })();
-    const needsScoring = (isFinished || reachedResults || isScoreQuestion || nextStateRaw === 'awaiting_consultation' || nextStateRaw === 'COMPLETE') && !assessmentData._scored;
+    const nextQScoring = questionBank.find(q => q.id === nextState);
+    const isScoreQuestion = nextQScoring && nextQScoring.question && nextQScoring.question.includes('{{score}}');
+    const needsScoring = (isFinished || reachedResults || isScoreQuestion || nextState === 'awaiting_consultation' || nextState === 'COMPLETE') && !assessmentData._scored;
 
     // Template fill helper (uses assessmentData which scoring populates)
     const riskLabelMap = {
@@ -454,6 +455,7 @@ router.post('/evolution', async (req, res) => {
 
     // Phase 3: Build ending sequence — Score → Summary → Insight → Recommendation → Report → Advisor
     if (needsScoring && assessmentData._scored) {
+      console.log(`   [Phase 3] Building ending sequence...`);
       const dom = domainConfig[prefix] || defaultDomain;
       const name = assessmentData.name || 'Customer';
       const email = assessmentData.email || (lead ? lead.email : null);
@@ -597,6 +599,7 @@ router.post('/evolution', async (req, res) => {
         text: `If you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
         _delay: 3000
       });
+      console.log(`   [Phase 3] Ending sequence built (${postMessages.length} total post-messages)`);
     }
 
     // Acknowledge webhook immediately so Evolution API doesn't timeout
@@ -604,6 +607,7 @@ router.post('/evolution', async (req, res) => {
     if (!res.headersSent) res.sendStatus(200);
 
     // Phase 4: Send remaining messages with real data and typing indicator
+    console.log(`   [Phase 4] Sending ${postMessages.length} post-messages...`);
     for (let i = 0; i < postMessages.length; i++) {
       const msg = postMessages[i];
       if (!msg.text) continue;
@@ -631,6 +635,7 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
+    console.log(`   [State Save] Saving lead state (finalState: ${assessmentData._scored ? 'awaiting_consultation' : nextState})...`);
     const finalState = assessmentData._scored ? 'awaiting_consultation' : nextState;
     await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
       [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
@@ -641,6 +646,7 @@ router.post('/evolution', async (req, res) => {
     }
 
     if (isFinished) {
+      console.log(`   [Qualifier] Assessment finished — running lead qualifier...`);
       publishEvent(CCIE_EVENTS.ASSESSMENT_COMPLETED, ccieContext, {
         leadId: lead.id, score: assessmentData.score, isQualified: !!assessmentData.is_qualified
       });
@@ -690,7 +696,8 @@ router.post('/evolution', async (req, res) => {
     }
 
   } catch (error) {
-    console.error('Webhook processing error:', error);
+    console.error('❌ Webhook processing error:', error.message || error);
+    console.error('   Stack:', error.stack || '(no stack)');
     try {
       const errJid = req.body?.data?.key?.remoteJid;
       if (errJid) {
