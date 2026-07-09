@@ -62,8 +62,8 @@ const calculateResilienceScore = (data) => {
 
 const generateAIReport = (riskResult, resilienceResult, data) => {
   return `
-CoverScore Risk Intelligence Report
------------------------------------
+CoverScore Report
+-----------------
 Entity: ${data.business_name || data.name || 'Unknown'}
 Risk Score: ${riskResult.score}/100 (${riskResult.level})
 Resilience Score: ${resilienceResult.score}/100 (${resilienceResult.level})

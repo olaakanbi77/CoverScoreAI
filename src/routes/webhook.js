@@ -454,18 +454,11 @@ router.post('/evolution', async (req, res) => {
       const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
       const displayLabel = domLabels[dbLevel] || 'Building Resilience';
 
-      // Derive sorted pillar lists once
-      const sortedAsc = Object.entries(riskCats).sort(([, a], [, b]) => a - b);
+      // Derive sorted pillar list once
       const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);
 
-      // Score-improvement sentence based on lowest two pillars
-      const lowestTwo = sortedAsc.slice(0, 2);
-      const improvementNote = lowestTwo.length === 2
-        ? `\n\nIf you improve your ${lowestTwo[0][0].toLowerCase()} and ${lowestTwo[1][0].toLowerCase()}, your CoverScore\u2122 could increase significantly over time.`
-        : '';
-
-      // Message 1: CoverScore + Risk Pillars + improvement note
-      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\nCurrent ${dom.displayLabel}: ${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}${improvementNote}`;
+      // Message 1: CoverScore + Risk Pillars (strengths/weaknesses in pillar display)
+      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\nCurrent ${dom.displayLabel}: ${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
       postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
 
       // Message 2: Summary of Findings — 1–2 sentence bridge between numbers and insight

@@ -171,7 +171,7 @@ class CCIEEngine {
   getRecoveryMessage(attempt) {
     const messages = [
       "Hi, you're halfway through your assessment. Your progress has been saved if you'd like to continue.",
-      "You're only a few minutes away from receiving your personalized Risk Intelligence Report™."
+      "You're only a few minutes away from receiving your personalized CoverScore Report™."
     ];
     return attempt <= 2 ? messages[attempt - 1] : null;
   }
