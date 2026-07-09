@@ -753,6 +753,48 @@
 
   <script>
     const riskConfig = {
+      excellent: {
+        color: '#10b981',
+        colorEnd: 'rgba(16, 185, 129, 0.3)',
+        badgeClass: 'low',
+        label: 'Excellent Resilience',
+        angle: 180
+      },
+      strong: {
+        color: '#22c55e',
+        colorEnd: 'rgba(34, 197, 94, 0.3)',
+        badgeClass: 'low',
+        label: 'Strong Resilience',
+        angle: 160
+      },
+      developing: {
+        color: '#eab308',
+        colorEnd: 'rgba(234, 179, 8, 0.3)',
+        badgeClass: 'moderate',
+        label: 'Developing Resilience',
+        angle: 135
+      },
+      needs_attention: {
+        color: '#f59e0b',
+        colorEnd: 'rgba(245, 158, 11, 0.3)',
+        badgeClass: 'high',
+        label: 'Needs Attention',
+        angle: 90
+      },
+      priority_improvement: {
+        color: '#f97316',
+        colorEnd: 'rgba(249, 115, 22, 0.3)',
+        badgeClass: 'high',
+        label: 'Priority Improvement',
+        angle: 65
+      },
+      critical_priority: {
+        color: '#ef4444',
+        colorEnd: 'rgba(239, 68, 68, 0.3)',
+        badgeClass: 'critical',
+        label: 'Critical Priority',
+        angle: 45
+      },
       low: {
         color: '#10b981',
         colorEnd: 'rgba(16, 185, 129, 0.3)',
@@ -784,7 +826,7 @@
     };
 
     function getRiskConfig(level) {
-      return riskConfig[level] || riskConfig.moderate;
+      return riskConfig[level] || riskConfig.developing;
     }
 
     async function loadResult() {
@@ -818,7 +860,7 @@
         document.getElementById('riskBadgeText').textContent = cfg.label;
 
         // Set risk text
-        document.getElementById('riskText').textContent = `${riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)}`;
+        document.getElementById('riskText').textContent = cfg.label;
 
         // Set financial exposure
         const formatMoney = (amount) => new Intl.NumberFormat('en-NG').format(amount);

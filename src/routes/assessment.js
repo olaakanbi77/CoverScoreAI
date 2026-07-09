@@ -241,18 +241,23 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
     };
 
     const dbRiskLevelMap = {
-      'Excellent': 'low',
-      'Good': 'low',
-      'Moderate': 'moderate',
-      'Vulnerable': 'high',
-      'Critical': 'critical',
-      'Very Low Risk': 'low',
-      'Low Risk': 'low',
-      'Moderate Risk': 'moderate',
-      'High Risk': 'high',
-      'Critical Risk': 'critical'
+      'Excellent': 'excellent',
+      'Strong': 'strong',
+      'Developing': 'developing',
+      'Needs Attention': 'needs_attention',
+      'Priority Improvement': 'priority_improvement',
+      'Critical Priority': 'critical_priority',
+      'Very Low Risk': 'excellent',
+      'Low Risk': 'strong',
+      'Moderate Risk': 'developing',
+      'High Risk': 'needs_attention',
+      'Critical Risk': 'critical_priority',
+      'Good': 'strong',
+      'Moderate': 'developing',
+      'Vulnerable': 'needs_attention',
+      'Critical': 'critical_priority'
     };
-    const dbRiskLevel = dbRiskLevelMap[riskLevel] || 'low';
+    const dbRiskLevel = dbRiskLevelMap[riskLevel] || 'needs_attention';
 
     await run('UPDATE assessments SET score = ?, risk_level = ?, ai_report = ? WHERE id = ?', [
       score,
