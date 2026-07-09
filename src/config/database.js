@@ -29,6 +29,28 @@ if (usePostgres) {
   db.run('PRAGMA foreign_keys = ON');
 }
 
+// PostgreSQL-only startup migration: drop legacy risk_level CHECK constraint
+if (usePostgres) {
+  (async () => {
+    try {
+      const constraints = await pgPool.query(
+        `SELECT conname FROM pg_constraint
+         JOIN pg_class ON pg_class.oid = pg_constraint.conrelid
+         WHERE pg_class.relname = 'assessments'
+         AND contype = 'c'`
+      );
+      for (const row of constraints.rows) {
+        await pgPool.query(`ALTER TABLE assessments DROP CONSTRAINT IF EXISTS "${row.conname}"`);
+        console.log(`Dropped PostgreSQL constraint: ${row.conname}`);
+      }
+    } catch (err) {
+      if (!err.message.includes('does not exist') && !err.message.includes('relation')) {
+        console.error('PG migration error (assessments constraints):', err.message);
+      }
+    }
+  })();
+}
+
 // Convert SQLite '?' to Postgres '$1, $2'
 const convertSqliteToPg = (sql) => {
   let paramIndex = 1;
@@ -55,7 +77,7 @@ const initDatabase = () => {
       user_id INTEGER,
       answers JSON NOT NULL,
       score INTEGER NOT NULL,
-      risk_level TEXT NOT NULL CHECK(risk_level IN ('low', 'moderate', 'high', 'critical')),
+      risk_level TEXT NOT NULL,
       type TEXT DEFAULT 'BUSINESS' CHECK(type IN ('BUSINESS', 'PERSONAL')),
       ai_report TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -645,6 +667,39 @@ const initDatabase = () => {
   db.run("ALTER TABLE templates ADD COLUMN category TEXT DEFAULT 'BUSINESS'", (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Migration error (templates category):', err.message);
+    }
+  });
+
+  // Drop legacy CHECK constraint on assessments.risk_level so CSNS 6-tier values can be stored
+  db.all("SELECT sql FROM sqlite_master WHERE type='table' AND name='assessments'", (err, rows) => {
+    if (!err && rows && rows[0] && /CHECK\s*\(/i.test(rows[0].sql)) {
+      db.serialize(() => {
+        db.run('PRAGMA foreign_keys = OFF');
+        db.run(`CREATE TABLE IF NOT EXISTS assessments_v2 (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER,
+          answers JSON NOT NULL,
+          score INTEGER NOT NULL,
+          risk_level TEXT NOT NULL,
+          type TEXT DEFAULT 'BUSINESS',
+          ai_report TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(id)
+        )`);
+        db.run('INSERT INTO assessments_v2 SELECT id, user_id, answers, score, risk_level, COALESCE(type,\'BUSINESS\'), ai_report, created_at FROM assessments', (e) => {
+          if (!e) {
+            db.run('DROP TABLE assessments');
+            db.run('ALTER TABLE assessments_v2 RENAME TO assessments', () => {
+              db.run('PRAGMA foreign_keys = ON');
+              console.log('Migrated assessments table: removed risk_level CHECK constraint');
+            });
+          } else {
+            console.error('Migration error (assessments CHECK):', e.message);
+            db.run('DROP TABLE IF EXISTS assessments_v2');
+            db.run('PRAGMA foreign_keys = ON');
+          }
+        });
+      });
     }
   });
 };
