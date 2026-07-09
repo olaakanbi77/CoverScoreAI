@@ -298,15 +298,15 @@ const scoringConfigs = {
     pillars: [
       { id: 'retirement_readiness', name: 'Retirement Readiness', weight: 0.25 },
       { id: 'retirement_savings', name: 'Retirement Savings', weight: 0.30 },
-      { id: 'protection', name: 'Protection & Insurance', weight: 0.25 },
+      { id: 'healthcare_protection', name: 'Healthcare & Protection', weight: 0.25 },
       { id: 'legacy_planning', name: 'Legacy Planning', weight: 0.20 }
     ],
     categories: {
       retirement_preparedness: { name: 'Retirement Preparedness', pillar: 'retirement_readiness' },
       retirement_horizon: { name: 'Retirement Horizon', pillar: 'retirement_readiness' },
       pension_savings: { name: 'Pension & Savings', pillar: 'retirement_savings' },
-      long_term_care: { name: 'Long-term Care', pillar: 'protection' },
-      medical_cost_impact: { name: 'Medical Cost Impact', pillar: 'protection', weight: 0.4 },
+      long_term_care: { name: 'Long-term Care', pillar: 'healthcare_protection' },
+      medical_cost_impact: { name: 'Medical Cost Impact', pillar: 'healthcare_protection', weight: 0.4 },
       legacy_documentation: { name: 'Legacy Documentation', pillar: 'legacy_planning' }
     },
     questions: {

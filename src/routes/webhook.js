@@ -478,17 +478,22 @@ router.post('/evolution', async (req, res) => {
         let parts = [];
         if (strong.length > 0) {
           const strongNames = strong.map(([n]) => n.toLowerCase());
-          parts.push(`Overall, you already have ${strong.length === 1 ? 'good' : 'reasonable'} ${strongNames.join(' and ')}`);
+          parts.push(`You already have ${strong.length === 1 ? 'good' : 'reasonable'} ${strongNames.join(' and ')}`);
         }
         if (sortedWeak.length > 0) {
-          const weakNames = sortedWeak.map(([n]) => n.toLowerCase());
-          const prefix = strong.length > 0 ? 'but your assessment highlights' : 'Your assessment highlights';
-          parts.push(`${prefix} ${sortedWeak.length === 1 ? 'one priority area' : 'two priority areas'}: ${weakNames.slice(0, 2).join(' and ')}`);
+          const weakCount = sortedWeak.length;
+          const areaPhrase = weakCount === 1 ? 'this area' : `these ${weakCount} areas`;
+          if (parts.length > 0) {
+            parts.push(`and the good news is that improving ${areaPhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+          } else {
+            parts.push(`the good news is that improving ${areaPhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+          }
         }
         if (parts.length === 0) {
           return `Your overall ${dom.closingTerm} profile is well-balanced across all areas.`;
         }
-        return parts.join(', ') + '.';
+        const joined = parts.join(', ');
+        return joined.charAt(0).toUpperCase() + joined.slice(1) + '.';
       };
       const summaryText = generateSummaryOfFindings(riskCats);
       if (summaryText) {
@@ -524,37 +529,30 @@ router.post('/evolution', async (req, res) => {
 
       // Message 5: Report link with bridge text merged (dynamic report name per template)
       const reportNames = {
-        HLT: 'Health Risk Intelligence Report\u2122',
-        YPR: 'Young Professional Risk Intelligence Report\u2122',
-        ENT: 'Entrepreneur Risk Intelligence Report\u2122',
-        FAM: 'Family Protection Risk Intelligence Report\u2122',
-        INC: 'Income Protection Risk Intelligence Report\u2122',
-        RET: 'Retirement Readiness Risk Intelligence Report\u2122',
-        HOM: 'Home Protection Risk Intelligence Report\u2122',
-        MOT: 'Motor Protection Risk Intelligence Report\u2122',
-        SME: 'Business Risk Intelligence Report\u2122',
-        MFG: 'Manufacturing Risk Intelligence Report\u2122',
-        HOS: 'Hospital Risk Intelligence Report\u2122',
-        SCH: 'School Risk Intelligence Report\u2122',
-        CHR: 'Church Risk Intelligence Report\u2122',
-        CON: 'Construction Risk Intelligence Report\u2122',
-        TRN: 'Transport Risk Intelligence Report\u2122'
+        HLT: 'Health Protection Report\u2122',
+        YPR: 'Young Professional Report\u2122',
+        ENT: 'Entrepreneur Report\u2122',
+        FAM: 'Family Protection Report\u2122',
+        INC: 'Income Protection Report\u2122',
+        RET: 'Retirement Readiness Report\u2122',
+        HOM: 'Home Protection Report\u2122',
+        MOT: 'Motor Protection Report\u2122',
+        SME: 'Business Risk Report\u2122',
+        MFG: 'Manufacturing Risk Report\u2122',
+        HOS: 'Hospital Risk Report\u2122',
+        SCH: 'School Risk Report\u2122',
+        CHR: 'Church Risk Report\u2122',
+        CON: 'Construction Risk Report\u2122',
+        TRN: 'Transport Risk Report\u2122'
       };
-      const reportName = reportNames[prefix] || `${dom.assessmentTitle} Risk Intelligence Report\u2122`;
+      const reportName = reportNames[prefix] || `${dom.assessmentTitle} Report\u2122`;
       postMessages.push({
         type: 'report_link',
         text: `\uD83D\uDCC4 Your personalized ${reportName} has been sent to:\n\n${email || 'your email'}\n\nIt explains these findings in more detail and includes practical next steps tailored to your situation.\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
         _delay: 3000
       });
 
-      // Message 6: Domain-specific follow-up message
-      postMessages.push({
-        type: 'text',
-        text: dom.followUpMsg,
-        _delay: 3000
-      });
-
-      // Message 7: Advisor CTA — framed as support for the recommendation
+      // Message 6: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
         text: `If you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,

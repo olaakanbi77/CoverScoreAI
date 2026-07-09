@@ -1,0 +1,3319 @@
+[
+  {
+    "id": "YPR_001",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "YPR_003",
+      "❓ Tell me more": "YPR_002",
+      "DEFAULT": "YPR_002"
+    }
+  },
+  {
+    "id": "YPR_002",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "YPR_003",
+      "DEFAULT": "YPR_003"
+    }
+  },
+  {
+    "id": "YPR_003",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "YPR_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "YPR_004",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "YPR_005"
+    }
+  },
+  {
+    "id": "YPR_005",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "YPR_006"
+    }
+  },
+  {
+    "pillar": "Career & Income Security",
+    "question": "How long have you been in your current career?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under 2 years",
+      "2-5 years",
+      "Over 5 years"
+    ],
+    "id": "YPR_006",
+    "industry": "young_professional",
+    "branching": {
+      "DEFAULT": "YPR_007"
+    }
+  },
+  {
+    "pillar": "Financial Resilience",
+    "question": "If you suffered a critical illness (e.g. cancer, stroke) today, could you afford the medical bills without going into debt?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "vulnerability_points": 20
+      },
+      "No": {
+        "vulnerability_points": 40
+      }
+    },
+    "id": "YPR_007",
+    "industry": "young_professional",
+    "branching": {
+      "DEFAULT": "YPR_008"
+    }
+  },
+  {
+    "pillar": "Financial Resilience",
+    "question": "Do you have an emergency fund covering at least 6 months of expenses?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "YPR_008",
+    "industry": "young_professional",
+    "branching": {
+      "DEFAULT": "YPR_009"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have personal Health or Accident Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 20
+      }
+    },
+    "id": "YPR_009",
+    "industry": "young_professional",
+    "branching": {
+      "DEFAULT": "YPR_010"
+    }
+  },
+  {
+    "pillar": "Future Planning",
+    "question": "Are you currently saving towards a major life goal (e.g. buying a house, marriage)?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "id": "YPR_010",
+    "industry": "young_professional",
+    "branching": {
+      "DEFAULT": "YPR_011"
+    }
+  },
+  {
+    "id": "YPR_011",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "YPR_012"
+    }
+  },
+  {
+    "id": "YPR_012",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "YPR_013",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "YPR_013",
+    "industry": "young_professional",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "ENT_001",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "ENT_003",
+      "❓ Tell me more": "ENT_002",
+      "DEFAULT": "ENT_002"
+    }
+  },
+  {
+    "id": "ENT_002",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "ENT_003",
+      "DEFAULT": "ENT_003"
+    }
+  },
+  {
+    "id": "ENT_003",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "ENT_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "ENT_004",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "ENT_005"
+    }
+  },
+  {
+    "id": "ENT_005",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "ENT_006"
+    }
+  },
+  {
+    "pillar": "Business Continuity",
+    "question": "Does your business's revenue completely rely on your personal involvement?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes completely",
+      "Partially",
+      "No it runs itself"
+    ],
+    "risk_logic": {
+      "Yes completely": {
+        "vulnerability_points": 30
+      },
+      "Partially": {
+        "vulnerability_points": 15
+      }
+    },
+    "id": "ENT_006",
+    "industry": "entrepreneur",
+    "branching": {
+      "DEFAULT": "ENT_007"
+    }
+  },
+  {
+    "pillar": "Legal & Liability",
+    "question": "Have you provided personal guarantees for any business loans or debts?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "exposure_points": 25
+      }
+    },
+    "id": "ENT_007",
+    "industry": "entrepreneur",
+    "branching": {
+      "DEFAULT": "ENT_008"
+    }
+  },
+  {
+    "pillar": "Business Continuity",
+    "question": "If you were hospitalized for 3 months, would your business survive?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 40
+      },
+      "Not sure": {
+        "vulnerability_points": 20
+      }
+    },
+    "id": "ENT_008",
+    "industry": "entrepreneur",
+    "branching": {
+      "DEFAULT": "ENT_009"
+    }
+  },
+  {
+    "pillar": "Employees",
+    "question": "Do you have Key Person Insurance to protect the business if a vital team member is lost?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "ENT_009",
+    "industry": "entrepreneur",
+    "branching": {
+      "DEFAULT": "ENT_010"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Are your personal assets properly separated and protected from business liabilities?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "exposure_points": 30
+      },
+      "Not sure": {
+        "exposure_points": 15
+      }
+    },
+    "id": "ENT_010",
+    "industry": "entrepreneur",
+    "branching": {
+      "DEFAULT": "ENT_011"
+    }
+  },
+  {
+    "id": "ENT_011",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "ENT_012"
+    }
+  },
+  {
+    "id": "ENT_012",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "ENT_013",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "ENT_013",
+    "industry": "entrepreneur",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "FAM_001",
+    "industry": "family",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "FAM_003",
+      "❓ Tell me more": "FAM_002",
+      "DEFAULT": "FAM_002"
+    }
+  },
+  {
+    "id": "FAM_002",
+    "industry": "family",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "FAM_003",
+      "DEFAULT": "FAM_003"
+    }
+  },
+  {
+    "id": "FAM_003",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "FAM_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "FAM_004",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "FAM_005"
+    }
+  },
+  {
+    "id": "FAM_005",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "FAM_006"
+    }
+  },
+  {
+    "pillar": "Personal Profile",
+    "question": "How many dependents (children or elderly relatives) rely on your income?",
+    "question_type": "single_choice",
+    "answers": [
+      "None",
+      "1-2",
+      "3 or more"
+    ],
+    "risk_logic": {
+      "None": {
+        "exposure_points": 5
+      },
+      "1-2": {
+        "exposure_points": 20
+      },
+      "3 or more": {
+        "exposure_points": 35
+      }
+    },
+    "id": "FAM_006",
+    "industry": "family",
+    "branching": {
+      "DEFAULT": "FAM_007"
+    }
+  },
+  {
+    "pillar": "Career & Income Security",
+    "question": "If you were suddenly unable to work due to illness, how long would your savings last?",
+    "question_type": "single_choice",
+    "answers": [
+      "Less than 3 months",
+      "3-6 months",
+      "Over 6 months"
+    ],
+    "risk_logic": {
+      "Less than 3 months": {
+        "vulnerability_points": 35
+      },
+      "3-6 months": {
+        "vulnerability_points": 15
+      }
+    },
+    "id": "FAM_007",
+    "industry": "family",
+    "branching": {
+      "DEFAULT": "FAM_008"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have a Life Insurance policy?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No",
+      "Not sure"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      },
+      "Not sure": {
+        "vulnerability_points": 20
+      }
+    },
+    "id": "FAM_008",
+    "industry": "family",
+    "branching": {
+      "DEFAULT": "FAM_009"
+    }
+  },
+  {
+    "pillar": "Future Planning",
+    "question": "Are your children's future education costs secured if something happens to the primary breadwinner?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No",
+      "Not applicable"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "FAM_009",
+    "industry": "family",
+    "branching": {
+      "DEFAULT": "FAM_010"
+    }
+  },
+  {
+    "pillar": "Health & Wellbeing",
+    "question": "Does your family have comprehensive Health Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "FAM_010",
+    "industry": "family",
+    "branching": {
+      "DEFAULT": "FAM_011"
+    }
+  },
+  {
+    "id": "FAM_011",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "FAM_012"
+    }
+  },
+  {
+    "id": "FAM_012",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "FAM_013",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "FAM_013",
+    "industry": "family",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "INC_001",
+    "industry": "income",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "INC_003",
+      "❓ Tell me more": "INC_002",
+      "DEFAULT": "INC_002"
+    }
+  },
+  {
+    "id": "INC_002",
+    "industry": "income",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "INC_003",
+      "DEFAULT": "INC_003"
+    }
+  },
+  {
+    "id": "INC_003",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "INC_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "INC_004",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "INC_005"
+    }
+  },
+  {
+    "id": "INC_005",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "INC_006"
+    }
+  },
+  {
+    "pillar": "Career & Income Security",
+    "question": "What is your primary source of income?",
+    "question_type": "single_choice",
+    "answers": [
+      "Salary from employment",
+      "Freelance/Contract",
+      "Business owner"
+    ],
+    "id": "INC_006",
+    "industry": "income",
+    "branching": {
+      "DEFAULT": "INC_007"
+    }
+  },
+  {
+    "pillar": "Financial Resilience",
+    "question": "If you lost your primary income tomorrow, how long would your emergency funds last?",
+    "question_type": "single_choice",
+    "answers": [
+      "Less than 1 month",
+      "1-3 months",
+      "Over 3 months"
+    ],
+    "risk_logic": {
+      "Less than 1 month": {
+        "vulnerability_points": 40
+      },
+      "1-3 months": {
+        "vulnerability_points": 20
+      }
+    },
+    "id": "INC_007",
+    "industry": "income",
+    "branching": {
+      "DEFAULT": "INC_008"
+    }
+  },
+  {
+    "pillar": "Career & Income Security",
+    "question": "Do you have secondary sources of income (e.g. investments, real estate)?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 10
+      }
+    },
+    "id": "INC_008",
+    "industry": "income",
+    "branching": {
+      "DEFAULT": "INC_009"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have a policy that pays you a monthly income if you are disabled by an accident?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "INC_009",
+    "industry": "income",
+    "branching": {
+      "DEFAULT": "INC_010"
+    }
+  },
+  {
+    "pillar": "Financial Resilience",
+    "question": "Do you have significant debts (mortgage, personal loans) that require monthly repayments?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "exposure_points": 25
+      }
+    },
+    "id": "INC_010",
+    "industry": "income",
+    "branching": {
+      "DEFAULT": "INC_011"
+    }
+  },
+  {
+    "id": "INC_011",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "INC_012"
+    }
+  },
+  {
+    "id": "INC_012",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "INC_013",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "INC_013",
+    "industry": "income",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HLT_001",
+    "industry": "health",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "HLT_003",
+      "❓ Tell me more": "HLT_002",
+      "DEFAULT": "HLT_002"
+    }
+  },
+  {
+    "id": "HLT_002",
+    "industry": "health",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "HLT_003",
+      "DEFAULT": "HLT_003"
+    }
+  },
+  {
+    "id": "HLT_003",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "HLT_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HLT_004",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "HLT_005"
+    }
+  },
+  {
+    "id": "HLT_005",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "HLT_006"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have a Health Maintenance Organization (HMO) or health insurance plan?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 35
+      }
+    },
+    "id": "HLT_006",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_007"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "If yes, are you satisfied with the limits and coverage of your current health plan?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "I don't have one"
+    ],
+    "id": "HLT_007",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_008"
+    }
+  },
+  {
+    "pillar": "Financial Resilience",
+    "question": "Have you or a close family member ever had to pay out-of-pocket for a major medical emergency?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "id": "HLT_008",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_009"
+    }
+  },
+  {
+    "pillar": "Health & Wellbeing",
+    "question": "Is there a history of critical illnesses (e.g., heart disease, cancer) in your family?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "exposure_points": 30
+      }
+    },
+    "id": "HLT_009",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_010"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you have a Critical Illness insurance policy that pays a lump sum upon diagnosis?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "HLT_010",
+    "industry": "health",
+    "branching": {
+      "DEFAULT": "HLT_011"
+    }
+  },
+  {
+    "id": "HLT_011",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "HLT_012"
+    }
+  },
+  {
+    "id": "HLT_012",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "HLT_013",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HLT_013",
+    "industry": "health",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "RET_001",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "RET_003",
+      "❓ Tell me more": "RET_002",
+      "DEFAULT": "RET_002"
+    }
+  },
+  {
+    "id": "RET_002",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "RET_003",
+      "DEFAULT": "RET_003"
+    }
+  },
+  {
+    "id": "RET_003",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "RET_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "RET_004",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "RET_005"
+    }
+  },
+  {
+    "id": "RET_005",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "RET_006"
+    }
+  },
+  {
+    "pillar": "Future Planning",
+    "question": "How soon do you plan to retire?",
+    "question_type": "single_choice",
+    "answers": [
+      "Within 5 years",
+      "5-15 years",
+      "Over 15 years"
+    ],
+    "risk_logic": {
+      "Within 5 years": {
+        "exposure_points": 30
+      },
+      "5-15 years": {
+        "exposure_points": 15
+      }
+    },
+    "id": "RET_006",
+    "industry": "retirement",
+    "branching": {
+      "DEFAULT": "RET_007"
+    }
+  },
+  {
+    "pillar": "Financial Resilience",
+    "question": "Do you have a dedicated Pension or Retirement Savings Account (RSA)?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 40
+      }
+    },
+    "id": "RET_007",
+    "industry": "retirement",
+    "branching": {
+      "DEFAULT": "RET_008"
+    }
+  },
+  {
+    "pillar": "Health & Wellbeing",
+    "question": "Are you concerned that escalating medical costs might deplete your retirement savings?",
+    "question_type": "single_choice",
+    "answers": [
+      "Very concerned",
+      "Somewhat concerned",
+      "Not concerned"
+    ],
+    "id": "RET_008",
+    "industry": "retirement",
+    "branching": {
+      "DEFAULT": "RET_009"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you have a plan in place for long-term care or critical illness during retirement?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "RET_009",
+    "industry": "retirement",
+    "branching": {
+      "DEFAULT": "RET_010"
+    }
+  },
+  {
+    "pillar": "Future Planning",
+    "question": "If you pass away, will your spouse or dependents have enough income to maintain their lifestyle?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not applicable"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      }
+    },
+    "id": "RET_010",
+    "industry": "retirement",
+    "branching": {
+      "DEFAULT": "RET_011"
+    }
+  },
+  {
+    "id": "RET_011",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "RET_012"
+    }
+  },
+  {
+    "id": "RET_012",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "RET_013",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "RET_013",
+    "industry": "retirement",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOM_001",
+    "industry": "home",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "HOM_003",
+      "❓ Tell me more": "HOM_002",
+      "DEFAULT": "HOM_002"
+    }
+  },
+  {
+    "id": "HOM_002",
+    "industry": "home",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "HOM_003",
+      "DEFAULT": "HOM_003"
+    }
+  },
+  {
+    "id": "HOM_003",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "HOM_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOM_004",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "HOM_005"
+    }
+  },
+  {
+    "id": "HOM_005",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "HOM_006"
+    }
+  },
+  {
+    "pillar": "Property & Assets",
+    "question": "Do you currently own or rent your primary residence?",
+    "question_type": "single_choice",
+    "answers": [
+      "Own",
+      "Rent",
+      "Neither"
+    ],
+    "id": "HOM_006",
+    "industry": "home",
+    "branching": {
+      "DEFAULT": "HOM_007"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you have Homeowner's or Renter's Insurance covering your personal property?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      }
+    },
+    "id": "HOM_007",
+    "industry": "home",
+    "branching": {
+      "DEFAULT": "HOM_008"
+    }
+  },
+  {
+    "id": "HOM_008",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "HOM_009"
+    }
+  },
+  {
+    "id": "HOM_009",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "HOM_010",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOM_010",
+    "industry": "home",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MOT_001",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how financially and personally prepared you are for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "MOT_003",
+      "❓ Tell me more": "MOT_002",
+      "DEFAULT": "MOT_002"
+    }
+  },
+  {
+    "id": "MOT_002",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "MOT_003",
+      "DEFAULT": "MOT_003"
+    }
+  },
+  {
+    "id": "MOT_003",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "MOT_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MOT_004",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is your full name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "MOT_005"
+    }
+  },
+  {
+    "id": "MOT_005",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nFinally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "MOT_006"
+    }
+  },
+  {
+    "pillar": "Property & Assets",
+    "question": "How many vehicles do you currently own or lease?",
+    "question_type": "single_choice",
+    "answers": [
+      "1",
+      "2",
+      "3 or more"
+    ],
+    "id": "MOT_006",
+    "industry": "motor",
+    "branching": {
+      "DEFAULT": "MOT_007"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Is your primary vehicle covered by Comprehensive Motor Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 40
+      }
+    },
+    "id": "MOT_007",
+    "industry": "motor",
+    "branching": {
+      "DEFAULT": "MOT_008"
+    }
+  },
+  {
+    "id": "MOT_008",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Life Insurance",
+      "Health Insurance (HMO)",
+      "Vehicle Insurance",
+      "Property / Home",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "MOT_009"
+    }
+  },
+  {
+    "id": "MOT_009",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "MOT_010",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MOT_010",
+    "industry": "motor",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SME_001",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "SME_003",
+      "❓ Tell me more": "SME_002",
+      "DEFAULT": "SME_002"
+    }
+  },
+  {
+    "id": "SME_002",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "SME_003",
+      "DEFAULT": "SME_003"
+    }
+  },
+  {
+    "id": "SME_003",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "SME_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SME_004",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your business?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "SME_005"
+    }
+  },
+  {
+    "id": "SME_005",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "SME_006"
+    }
+  },
+  {
+    "id": "SME_006",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "SME_007"
+    }
+  },
+  {
+    "id": "SME_007",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "SME_008"
+    }
+  },
+  {
+    "pillar": "Employees",
+    "question": "How many employees/staff do you have?",
+    "question_type": "single_choice",
+    "answers": [
+      "1-10",
+      "11-50",
+      "51+"
+    ],
+    "risk_logic": {
+      "1-10": {
+        "exposure_points": 5
+      },
+      "11-50": {
+        "exposure_points": 15
+      },
+      "51+": {
+        "exposure_points": 25
+      }
+    },
+    "id": "SME_008",
+    "industry": "sme",
+    "branching": {
+      "DEFAULT": "SME_009"
+    }
+  },
+  {
+    "pillar": "Cash Flow",
+    "question": "What is your estimated annual revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under ₦50M",
+      "₦50M - ₦200M",
+      "Over ₦200M"
+    ],
+    "risk_logic": {
+      "Under ₦50M": {
+        "exposure_points": 10
+      },
+      "₦50M - ₦200M": {
+        "exposure_points": 20
+      },
+      "Over ₦200M": {
+        "exposure_points": 30
+      }
+    },
+    "id": "SME_009",
+    "industry": "sme",
+    "branching": {
+      "DEFAULT": "SME_010"
+    }
+  },
+  {
+    "pillar": "Facilities",
+    "question": "Do you operate from a physical shop or office?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "id": "SME_010",
+    "industry": "sme",
+    "branching": {
+      "DEFAULT": "SME_011"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have a comprehensive Fire & Burglary Insurance policy?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "SME_011",
+    "industry": "sme",
+    "branching": {
+      "DEFAULT": "SME_012"
+    }
+  },
+  {
+    "pillar": "Business Continuity",
+    "question": "If a major disaster forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20
+      },
+      "No, we would close": {
+        "impact_points": 40
+      }
+    },
+    "id": "SME_012",
+    "industry": "sme",
+    "branching": {
+      "DEFAULT": "SME_013"
+    }
+  },
+  {
+    "id": "SME_013",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "SME_014"
+    }
+  },
+  {
+    "id": "SME_014",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "SME_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SME_015",
+    "industry": "sme",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MFG_001",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "MFG_003",
+      "❓ Tell me more": "MFG_002",
+      "DEFAULT": "MFG_002"
+    }
+  },
+  {
+    "id": "MFG_002",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "MFG_003",
+      "DEFAULT": "MFG_003"
+    }
+  },
+  {
+    "id": "MFG_003",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "MFG_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MFG_004",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your manufacturing plant?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "MFG_005"
+    }
+  },
+  {
+    "id": "MFG_005",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "MFG_006"
+    }
+  },
+  {
+    "id": "MFG_006",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "MFG_007"
+    }
+  },
+  {
+    "id": "MFG_007",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "MFG_008"
+    }
+  },
+  {
+    "pillar": "Employees",
+    "question": "How many factory workers do you employ?",
+    "question_type": "single_choice",
+    "answers": [
+      "1-50",
+      "51-200",
+      "200+"
+    ],
+    "risk_logic": {
+      "1-50": {
+        "exposure_points": 10
+      },
+      "51-200": {
+        "exposure_points": 20
+      },
+      "200+": {
+        "exposure_points": 30
+      }
+    },
+    "id": "MFG_008",
+    "industry": "manufacturing",
+    "branching": {
+      "DEFAULT": "MFG_009"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "If a critical machine breaks down, how quickly would it halt operations?",
+    "question_type": "single_choice",
+    "answers": [
+      "Immediately",
+      "Within a few days",
+      "We have backups"
+    ],
+    "risk_logic": {
+      "Immediately": {
+        "vulnerability_points": 30
+      },
+      "Within a few days": {
+        "vulnerability_points": 15
+      }
+    },
+    "id": "MFG_009",
+    "industry": "manufacturing",
+    "branching": {
+      "DEFAULT": "MFG_010"
+    }
+  },
+  {
+    "pillar": "Logistics",
+    "question": "Do you import raw materials or export finished goods?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "recommendation_trigger": {
+      "condition": "Yes",
+      "recommendation": "Marine/Goods In Transit Insurance required"
+    },
+    "id": "MFG_010",
+    "industry": "manufacturing",
+    "branching": {
+      "DEFAULT": "MFG_011"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you have comprehensive Fire & Special Perils insurance for your warehouse/factory?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      }
+    },
+    "id": "MFG_011",
+    "industry": "manufacturing",
+    "branching": {
+      "DEFAULT": "MFG_012"
+    }
+  },
+  {
+    "pillar": "Business Continuity",
+    "question": "If a major fire forced you to close for 3 months, could you survive without revenue?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes easily",
+      "With difficulty",
+      "No, we would close"
+    ],
+    "risk_logic": {
+      "With difficulty": {
+        "impact_points": 20
+      },
+      "No, we would close": {
+        "impact_points": 40
+      }
+    },
+    "id": "MFG_012",
+    "industry": "manufacturing",
+    "branching": {
+      "DEFAULT": "MFG_013"
+    }
+  },
+  {
+    "id": "MFG_013",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "MFG_014"
+    }
+  },
+  {
+    "id": "MFG_014",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "MFG_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "MFG_015",
+    "industry": "manufacturing",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOS_001",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "HOS_003",
+      "❓ Tell me more": "HOS_002",
+      "DEFAULT": "HOS_002"
+    }
+  },
+  {
+    "id": "HOS_002",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "HOS_003",
+      "DEFAULT": "HOS_003"
+    }
+  },
+  {
+    "id": "HOS_003",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "HOS_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOS_004",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your hospital?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "HOS_005"
+    }
+  },
+  {
+    "id": "HOS_005",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "HOS_006"
+    }
+  },
+  {
+    "id": "HOS_006",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "HOS_007"
+    }
+  },
+  {
+    "id": "HOS_007",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "HOS_008"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "Approximately how many patient beds does your facility have?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under 20",
+      "20-100",
+      "Over 100"
+    ],
+    "risk_logic": {
+      "Under 20": {
+        "exposure_points": 10
+      },
+      "20-100": {
+        "exposure_points": 20
+      },
+      "Over 100": {
+        "exposure_points": 30
+      }
+    },
+    "id": "HOS_008",
+    "industry": "hospital",
+    "branching": {
+      "DEFAULT": "HOS_009"
+    }
+  },
+  {
+    "pillar": "Cyber Security",
+    "question": "Are patient records stored electronically?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "recommendation_trigger": {
+      "condition": "Yes",
+      "recommendation": "Cyber Liability Insurance required"
+    },
+    "id": "HOS_009",
+    "industry": "hospital",
+    "branching": {
+      "DEFAULT": "HOS_010"
+    }
+  },
+  {
+    "pillar": "Legal & Liability",
+    "question": "Do you have Medical Malpractice/Professional Indemnity insurance for your doctors and staff?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 35
+      }
+    },
+    "id": "HOS_010",
+    "industry": "hospital",
+    "branching": {
+      "DEFAULT": "HOS_011"
+    }
+  },
+  {
+    "pillar": "Facilities",
+    "question": "Do you have high-value medical equipment (e.g., MRI, X-Ray) that would be costly to replace?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "exposure_points": 15
+      }
+    },
+    "id": "HOS_011",
+    "industry": "hospital",
+    "branching": {
+      "DEFAULT": "HOS_012"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "If a power surge destroyed critical life-support equipment, do you have Machinery Breakdown insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "HOS_012",
+    "industry": "hospital",
+    "branching": {
+      "DEFAULT": "HOS_013"
+    }
+  },
+  {
+    "id": "HOS_013",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "HOS_014"
+    }
+  },
+  {
+    "id": "HOS_014",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "HOS_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "HOS_015",
+    "industry": "hospital",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SCH_001",
+    "industry": "school",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "SCH_003",
+      "❓ Tell me more": "SCH_002",
+      "DEFAULT": "SCH_002"
+    }
+  },
+  {
+    "id": "SCH_002",
+    "industry": "school",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "SCH_003",
+      "DEFAULT": "SCH_003"
+    }
+  },
+  {
+    "id": "SCH_003",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "SCH_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SCH_004",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your school?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "SCH_005"
+    }
+  },
+  {
+    "id": "SCH_005",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "SCH_006"
+    }
+  },
+  {
+    "id": "SCH_006",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "SCH_007"
+    }
+  },
+  {
+    "id": "SCH_007",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "SCH_008"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "How many students are enrolled in your school?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under 100",
+      "100-500",
+      "Over 500"
+    ],
+    "risk_logic": {
+      "Under 100": {
+        "exposure_points": 10
+      },
+      "100-500": {
+        "exposure_points": 20
+      },
+      "Over 500": {
+        "exposure_points": 30
+      }
+    },
+    "id": "SCH_008",
+    "industry": "school",
+    "branching": {
+      "DEFAULT": "SCH_009"
+    }
+  },
+  {
+    "pillar": "Cash Flow",
+    "question": "What is the estimated average annual tuition fee per student?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under ₦100,000",
+      "₦100,000 - ₦500,000",
+      "Over ₦500,000"
+    ],
+    "data_mapping": "tuition_fees",
+    "id": "SCH_009",
+    "industry": "school",
+    "branching": {
+      "DEFAULT": "SCH_010"
+    }
+  },
+  {
+    "pillar": "Logistics",
+    "question": "Do you operate school buses to transport students?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "recommendation_trigger": {
+      "condition": "Yes",
+      "recommendation": "Comprehensive Motor Fleet Insurance required"
+    },
+    "id": "SCH_010",
+    "industry": "school",
+    "branching": {
+      "DEFAULT": "SCH_011"
+    }
+  },
+  {
+    "pillar": "Legal & Liability",
+    "question": "If a student was injured on the playground and parents sued, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      }
+    },
+    "id": "SCH_011",
+    "industry": "school",
+    "branching": {
+      "DEFAULT": "SCH_012"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have a comprehensive Fire Insurance policy for your school buildings?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "SCH_012",
+    "industry": "school",
+    "branching": {
+      "DEFAULT": "SCH_013"
+    }
+  },
+  {
+    "id": "SCH_013",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "SCH_014"
+    }
+  },
+  {
+    "id": "SCH_014",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "SCH_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "SCH_015",
+    "industry": "school",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CHR_001",
+    "industry": "church",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "CHR_003",
+      "❓ Tell me more": "CHR_002",
+      "DEFAULT": "CHR_002"
+    }
+  },
+  {
+    "id": "CHR_002",
+    "industry": "church",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "CHR_003",
+      "DEFAULT": "CHR_003"
+    }
+  },
+  {
+    "id": "CHR_003",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "CHR_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CHR_004",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your church?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "CHR_005"
+    }
+  },
+  {
+    "id": "CHR_005",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "CHR_006"
+    }
+  },
+  {
+    "id": "CHR_006",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "CHR_007"
+    }
+  },
+  {
+    "id": "CHR_007",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "CHR_008"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "What is your average weekly congregation size?",
+    "question_type": "single_choice",
+    "answers": [
+      "Under 200",
+      "200-1000",
+      "Over 1000"
+    ],
+    "risk_logic": {
+      "Under 200": {
+        "exposure_points": 10
+      },
+      "200-1000": {
+        "exposure_points": 20
+      },
+      "Over 1000": {
+        "exposure_points": 40
+      }
+    },
+    "id": "CHR_008",
+    "industry": "church",
+    "branching": {
+      "DEFAULT": "CHR_009"
+    }
+  },
+  {
+    "pillar": "Facilities",
+    "question": "Do you have high-value musical instruments and broadcast equipment on the premises?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "exposure_points": 15
+      }
+    },
+    "id": "CHR_009",
+    "industry": "church",
+    "branching": {
+      "DEFAULT": "CHR_010"
+    }
+  },
+  {
+    "pillar": "Legal & Liability",
+    "question": "If a visitor was injured during a service and sued, do you have Public Liability Insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "CHR_010",
+    "industry": "church",
+    "branching": {
+      "DEFAULT": "CHR_011"
+    }
+  },
+  {
+    "pillar": "Facilities",
+    "question": "Do you own the church building?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "id": "CHR_011",
+    "industry": "church",
+    "branching": {
+      "DEFAULT": "CHR_012"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have Fire Insurance for the building and its contents?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      }
+    },
+    "id": "CHR_012",
+    "industry": "church",
+    "branching": {
+      "DEFAULT": "CHR_013"
+    }
+  },
+  {
+    "id": "CHR_013",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "CHR_014"
+    }
+  },
+  {
+    "id": "CHR_014",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "CHR_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CHR_015",
+    "industry": "church",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CON_001",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "CON_003",
+      "❓ Tell me more": "CON_002",
+      "DEFAULT": "CON_002"
+    }
+  },
+  {
+    "id": "CON_002",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "CON_003",
+      "DEFAULT": "CON_003"
+    }
+  },
+  {
+    "id": "CON_003",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "CON_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CON_004",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your construction firm?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "CON_005"
+    }
+  },
+  {
+    "id": "CON_005",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "CON_006"
+    }
+  },
+  {
+    "id": "CON_006",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "CON_007"
+    }
+  },
+  {
+    "id": "CON_007",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "CON_008"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "How many active construction projects do you typically manage at once?",
+    "question_type": "single_choice",
+    "answers": [
+      "1-2",
+      "3-5",
+      "More than 5"
+    ],
+    "risk_logic": {
+      "1-2": {
+        "exposure_points": 10
+      },
+      "3-5": {
+        "exposure_points": 20
+      },
+      "More than 5": {
+        "exposure_points": 30
+      }
+    },
+    "id": "CON_008",
+    "industry": "construction",
+    "branching": {
+      "DEFAULT": "CON_009"
+    }
+  },
+  {
+    "pillar": "Facilities",
+    "question": "Do you use heavy construction machinery (e.g., excavators, cranes)?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "Yes": {
+        "exposure_points": 20
+      }
+    },
+    "id": "CON_009",
+    "industry": "construction",
+    "branching": {
+      "DEFAULT": "CON_010"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you currently have Contractors All Risk (CAR) insurance for your sites?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      }
+    },
+    "id": "CON_010",
+    "industry": "construction",
+    "branching": {
+      "DEFAULT": "CON_011"
+    }
+  },
+  {
+    "pillar": "Employees",
+    "question": "If a worker is injured on site, do you have Group Personal Accident or Employers Liability insurance?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "CON_011",
+    "industry": "construction",
+    "branching": {
+      "DEFAULT": "CON_012"
+    }
+  },
+  {
+    "pillar": "Business Continuity",
+    "question": "If a project is delayed due to an unforeseen accident, do you have cover for the resulting financial loss?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 15
+      }
+    },
+    "id": "CON_012",
+    "industry": "construction",
+    "branching": {
+      "DEFAULT": "CON_013"
+    }
+  },
+  {
+    "id": "CON_013",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "CON_014"
+    }
+  },
+  {
+    "id": "CON_014",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "CON_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "CON_015",
+    "industry": "construction",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "TRN_001",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nYou're about to discover how prepared your business is for unexpected life events.\n\nThis assessment takes about 5 minutes and you'll receive your personalized Risk Intelligence Report™ immediately after completion.\n\nThere are no right or wrong answers—just answer honestly.\n\nShall we begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
+    ],
+    "branching": {
+      "✅ Yes, let's begin": "TRN_003",
+      "❓ Tell me more": "TRN_002",
+      "DEFAULT": "TRN_002"
+    }
+  },
+  {
+    "id": "TRN_002",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "CoverScore helps people identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall CoverScore™\n• Your strongest areas\n• Your biggest risk gaps\n• Practical recommendations\n• Learning resources\n• Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ Start Assessment"
+    ],
+    "branching": {
+      "✅ Start Assessment": "TRN_003",
+      "DEFAULT": "TRN_003"
+    }
+  },
+  {
+    "id": "TRN_003",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Before we begin, we'd like your permission to securely process your responses so we can prepare your personalized report.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question_type": "single_choice",
+    "answers": [
+      "✅ I Agree",
+      "❌ Not Now"
+    ],
+    "branching": {
+      "✅ I Agree": "TRN_004",
+      "❌ Not Now": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "TRN_004",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Great.\n\nTo personalize your report, what is the name of your logistics company?",
+    "question_type": "open_text",
+    "data_mapping": "business_name",
+    "branching": {
+      "DEFAULT": "TRN_005"
+    }
+  },
+  {
+    "id": "TRN_005",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Thanks!\n\nAnd what is your name?",
+    "question_type": "open_text",
+    "data_mapping": "name",
+    "branching": {
+      "DEFAULT": "TRN_006"
+    }
+  },
+  {
+    "id": "TRN_006",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Nice to meet you.\n\nWhat is your role?",
+    "question_type": "open_text",
+    "data_mapping": "role",
+    "branching": {
+      "DEFAULT": "TRN_007"
+    }
+  },
+  {
+    "id": "TRN_007",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Risk Report here)",
+    "question_type": "open_text",
+    "data_mapping": "email",
+    "branching": {
+      "DEFAULT": "TRN_008"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "How many vehicles are in your fleet?",
+    "question_type": "single_choice",
+    "answers": [
+      "1-5",
+      "6-20",
+      "Over 20"
+    ],
+    "risk_logic": {
+      "1-5": {
+        "exposure_points": 10
+      },
+      "6-20": {
+        "exposure_points": 20
+      },
+      "Over 20": {
+        "exposure_points": 30
+      }
+    },
+    "id": "TRN_008",
+    "industry": "transport",
+    "branching": {
+      "DEFAULT": "TRN_009"
+    }
+  },
+  {
+    "pillar": "Operations",
+    "question": "Do you primarily transport goods (cargo) or passengers?",
+    "question_type": "single_choice",
+    "answers": [
+      "Goods",
+      "Passengers",
+      "Both"
+    ],
+    "id": "TRN_009",
+    "industry": "transport",
+    "branching": {
+      "DEFAULT": "TRN_010"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Do you have Goods In Transit (GIT) insurance for the cargo you carry?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Not Applicable"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 25
+      }
+    },
+    "id": "TRN_010",
+    "industry": "transport",
+    "branching": {
+      "DEFAULT": "TRN_011"
+    }
+  },
+  {
+    "pillar": "Employees",
+    "question": "If a driver is involved in a severe accident, do you have Group Life / Personal Accident cover for them?",
+    "question_type": "yes_no",
+    "answers": [
+      "Yes",
+      "No"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 20
+      }
+    },
+    "id": "TRN_011",
+    "industry": "transport",
+    "branching": {
+      "DEFAULT": "TRN_012"
+    }
+  },
+  {
+    "pillar": "Protection & Insurance",
+    "question": "Are your vehicles covered by Comprehensive Motor Insurance?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes",
+      "No",
+      "Some of them"
+    ],
+    "risk_logic": {
+      "No": {
+        "vulnerability_points": 30
+      },
+      "Some of them": {
+        "vulnerability_points": 15
+      }
+    },
+    "id": "TRN_012",
+    "industry": "transport",
+    "branching": {
+      "DEFAULT": "TRN_013"
+    }
+  },
+  {
+    "id": "TRN_013",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Which of these insurances do you currently have? (Select all that apply, e.g., A, C)",
+    "question_type": "multi_choice",
+    "answers": [
+      "Fire & Property",
+      "Group Life / Health",
+      "Public Liability",
+      "Cyber Security",
+      "Motor / Fleet",
+      "None of the above"
+    ],
+    "data_mapping": "existing_insurance",
+    "branching": {
+      "DEFAULT": "TRN_014"
+    }
+  },
+  {
+    "id": "TRN_014",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Thank you for completing the core assessment!\n\nBased on your responses, we've identified potential protection gaps.\n\nWould you like a complimentary 15-minute consultation with a Risk Advisor?",
+    "question_type": "single_choice",
+    "answers": [
+      "Yes, please",
+      "No, just send my report"
+    ],
+    "data_mapping": "consultation_preference",
+    "branching": {
+      "Yes, please": "TRN_015",
+      "No, just send my report": "COMPLETE",
+      "DEFAULT": "COMPLETE"
+    }
+  },
+  {
+    "id": "TRN_015",
+    "industry": "transport",
+    "pillar": "General",
+    "question": "Great! What time of day works best for a brief call?",
+    "question_type": "single_choice",
+    "answers": [
+      "Morning",
+      "Afternoon",
+      "Evening"
+    ],
+    "data_mapping": "consultation_time",
+    "branching": {
+      "DEFAULT": "COMPLETE"
+    }
+  }
+]

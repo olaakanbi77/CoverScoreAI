@@ -85,7 +85,7 @@ const domainConfig = {
     pillarMappings: {
       'retirement_readiness': 'Retirement Readiness',
       'retirement_savings': 'Retirement Savings',
-      'protection': 'Protection & Insurance',
+      'healthcare_protection': 'Healthcare & Protection',
       'legacy_planning': 'Legacy Planning'
     },
     resilienceLabels: {
@@ -108,7 +108,7 @@ const domainConfig = {
         'Retirement Savings': {
           base: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources to maintain your lifestyle throughout retirement. Building dedicated retirement savings that are separate from your daily income is essential for long-term financial independence."
         },
-        'Protection': {
+        'Healthcare Protection': {
           base: "Your assessment suggests that your retirement could be disrupted by unexpected healthcare or long-term care costs.",
           answerChecks: [
             { q: 'RET_013', values: ['Very concerned'], append: "You're right to be concerned\u2014medical costs are one of the biggest threats to retirement savings." },
@@ -130,7 +130,7 @@ const domainConfig = {
     recommendationTexts: {
       'retirement readiness': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
       'retirement savings': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
-      'protection': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
+      'healthcare protection': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
       'legacy planning': 'documenting how your assets should be distributed and nominating beneficiaries for your retirement accounts'
     }
   },
