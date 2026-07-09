@@ -3,10 +3,11 @@ const knowledgeService = require('./knowledgeService');
 
 const getRiskLevel = (score) => {
   if (score >= 85) return 'Excellent';
-  if (score >= 70) return 'Good';
-  if (score >= 55) return 'Moderate';
-  if (score >= 40) return 'Vulnerable';
-  return 'Critical';
+  if (score >= 70) return 'Strong';
+  if (score >= 55) return 'Developing';
+  if (score >= 40) return 'Needs Attention';
+  if (score >= 25) return 'Priority Improvement';
+  return 'Critical Priority';
 };
 
 const getExposureIndex = (score) => {

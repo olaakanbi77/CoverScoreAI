@@ -223,17 +223,25 @@ router.post('/evolution', async (req, res) => {
 
     // Template fill helper (uses assessmentData which scoring populates)
     const riskLabelMap = {
-      'Excellent': 'Excellent', 'Good': 'Good', 'Moderate': 'Moderate',
-      'Vulnerable': 'Vulnerable', 'Critical': 'Critical',
+      'Excellent': 'Excellent', 'Strong': 'Strong', 'Developing': 'Developing',
+      'Needs Attention': 'Needs Attention',
+      'Priority Improvement': 'Priority Improvement',
+      'Critical Priority': 'Critical Priority',
       'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
       'High Risk': 'High', 'Critical Risk': 'Critical'
     };
-    let userRiskLabel = 'Moderate';
+    let userRiskLabel = 'Needs Attention';
     const dbRiskLevelMap = {
-      'Excellent': 'low', 'Good': 'low', 'Moderate': 'moderate',
-      'Vulnerable': 'high', 'Critical': 'critical',
-      'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
-      'High Risk': 'high', 'Critical Risk': 'critical'
+      'Excellent': 'excellent',
+      'Strong': 'strong',
+      'Developing': 'developing',
+      'Needs Attention': 'needs_attention',
+      'Priority Improvement': 'priority_improvement',
+      'Critical Priority': 'critical_priority',
+      'Very Low Risk': 'excellent', 'Low Risk': 'strong', 'Moderate Risk': 'developing',
+      'High Risk': 'needs_attention', 'Critical Risk': 'critical_priority',
+      'Good': 'strong', 'Moderate': 'developing', 'Vulnerable': 'needs_attention',
+      'Critical': 'critical_priority'
     };
     const fillTemplate = (text) => {
       return text
@@ -444,14 +452,20 @@ router.post('/evolution', async (req, res) => {
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 
-      // Resilience labels (domain-aware — RET uses "Readiness" labels)
+      // Resilience levels (CSNS Section 10 — 6-tier universal system)
       const domLabels = dom.resilienceLabels || {
+        'excellent': 'Excellent Resilience',
+        'strong': 'Strong Resilience',
+        'developing': 'Developing Resilience',
+        'needs_attention': 'Needs Attention',
+        'priority_improvement': 'Priority Improvement',
+        'critical_priority': 'Critical Priority',
         'low': 'Strong Resilience',
         'moderate': 'Building Resilience',
         'high': 'Needs Attention',
         'critical': 'Priority Improvement'
       };
-      const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'moderate';
+      const dbLevel = dbRiskLevelMap[assessmentData.riskLevel] || 'needs_attention';
       const displayLabel = domLabels[dbLevel] || 'Building Resilience';
 
       // Derive sorted pillar list once
@@ -499,19 +513,37 @@ router.post('/evolution', async (req, res) => {
         postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
       }
 
-      // Message 4: One Primary Recommendation (always derived from lowest-scoring pillar)
+      // Message 4: One Primary Recommendation (threshold-based per CSNS Section 14)
       const getPrimaryRecommendation = (cats) => {
         const entries = Object.entries(cats);
         if (entries.length === 0) return null;
         const sorted = entries.sort(([, a], [, b]) => a - b);
         const weakestName = sorted[0][0];
+        const weakestScore = sorted[0][1];
         const weakArea = weakestName.toLowerCase();
 
         const recTexts = dom.recommendationTexts || {};
         const action = recTexts[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
 
+        let priority;
+        if (weakestScore >= 90) priority = 'monitor';
+        else if (weakestScore >= 70) priority = 'maintain';
+        else if (weakestScore >= 50) priority = 'improve';
+        else if (weakestScore >= 30) priority = 'priority';
+        else priority = 'immediate';
+
+        const priorityLabels = {
+          monitor: 'Your weakest area is currently well-managed. Continue to monitor it to maintain your strength.',
+          maintain: 'Your weakest area is holding steady. Maintaining your current approach will preserve your resilience.',
+          improve: 'Your weakest area has room for improvement. Strengthening it would meaningfully boost your overall resilience.',
+          priority: 'This is a priority area that needs attention. Addressing it will have a significant impact on your resilience.',
+          immediate: 'This area needs immediate attention. It represents your biggest risk and the greatest opportunity for improvement.'
+        };
+
+        const intro = priorityLabels[priority] || priorityLabels.priority;
+
         return {
-          text: `Based on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your ${dom.closingTerm}.`
+          text: `${intro}\n\nBased on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your ${dom.closingTerm}.`
         };
       };
 

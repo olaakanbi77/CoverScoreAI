@@ -1,4 +1,4 @@
-const scoringConfigs = {
+﻿const scoringConfigs = {
   HLT: {
     name: 'Health Protection',
     pillars: [
@@ -22,54 +22,63 @@ const scoringConfigs = {
     questions: {
       HLT_008: {
         category: 'employment_stability',
+        weight: 2,
         scores: { 'Employed full-time': 100, 'Self-employed': 60, 'Part-time / Freelance': 40, 'Student': 30, 'Retired': 70 },
         gaps: { 'Student': 'No steady income stream creates vulnerability during health emergencies.', 'Part-time / Freelance': 'Variable income makes it harder to absorb unexpected medical costs.' },
         recommendations: { 'Student': 'Build a basic emergency fund and explore health insurance options.', 'Part-time / Freelance': 'Consider a health plan that provides consistent coverage regardless of income fluctuations.' }
       },
       HLT_009: {
         category: 'age_factor',
+        weight: 3,
         scores: { '18 - 25': 100, '26 - 35': 80, '36 - 45': 60, '46 - 55': 40, '56+': 20 },
         gaps: { '56+': 'Your age increases the risk profile for health-related complications.', '46 - 55': 'Age-related health risks are increasing and may need specialized coverage.' },
         recommendations: { '56+': 'Review your health coverage with a focus on age-related care needs.', '46 - 55': 'Consider comprehensive health coverage that addresses age-related risks.' }
       },
       HLT_010: {
         category: 'dependant_burden',
+        weight: 3,
         scores: { 'None': 100, '1': 80, '2': 60, '3': 40, '4+': 20 },
         gaps: { '3': 'Multiple dependants amplify household vulnerability to health-related income shocks.', '4+': 'A large number of dependants creates significant household exposure to health emergencies.' },
         recommendations: { '3': 'Ensure your health and income protection coverage accounts for all dependants.', '4+': 'Review family health insurance and income protection to cover all dependants.' }
       },
       HLT_012: {
         category: 'insurance_coverage',
+        weight: 5,
         scores: { 'Private Health Insurance': 100, 'Employer HMO': 60, 'Government Health Scheme': 50, 'None': 0 },
         gaps: { 'None': 'You do not have active health insurance coverage.' },
         recommendations: { 'None': 'Compare health plans that provide wider hospital coverage.' }
       },
       HLT_013: {
         category: 'emergency_fund',
+        weight: 5,
         scores: { 'Savings': 100, 'Insurance': 80, 'Family/Friends': 40, 'Loan': 25, "I don't know": 0 },
         gaps: { 'Loan': 'You rely on loans or borrowing for emergency medical expenses.', "I don't know": 'You have no plan for emergency medical expenses.' },
         recommendations: { 'Loan': 'Build a medical emergency fund.', "I don't know": 'Create a plan for medical emergencies.' }
       },
       HLT_014: {
         category: 'diagnosed_conditions',
+        weight: 3,
         scores: { 'None': 100, 'Asthma': 50, 'Hypertension': 35, 'Diabetes': 25 },
         gaps: { 'Hypertension': 'You have a chronic condition that requires specialized coverage.', 'Diabetes': 'Diabetes requires consistent care that may not be fully covered.', 'Asthma': 'Asthma management needs regular medical attention.' },
         recommendations: { 'Hypertension': 'Review your HMO benefits to ensure chronic care is covered.', 'Diabetes': 'Ensure your health plan covers diabetes management.', 'Asthma': 'Confirm your insurance covers respiratory care.' }
       },
       HLT_015: {
         category: 'checkup_frequency',
+        weight: 2,
         scores: { 'Every 6 months': 100, 'Annually': 80, 'Rarely/Only when sick': 20 },
         gaps: { 'Rarely/Only when sick': 'You are missing out on early detection through routine check-ups.' },
         recommendations: { 'Rarely/Only when sick': 'Schedule an annual preventive health screening.' }
       },
       HLT_016: {
         category: 'surgery_coverage',
+        weight: 5,
         scores: { 'Yes': 100, 'Not sure': 40, 'No': 0 },
         gaps: { 'No': 'Your current cover is inadequate for major surgical procedures.' },
         recommendations: { 'No': 'Consider Critical Illness Insurance if appropriate for your circumstances.' }
       },
       HLT_017: {
         category: 'illness_resilience',
+        weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'Your household is highly vulnerable to loss of income due to illness.' },
         recommendations: { 'No': 'Explore income protection options.' }
@@ -147,30 +156,35 @@ const scoringConfigs = {
     questions: {
       INC_011: {
         category: 'income_source',
+        weight: 3,
         scores: { 'Salary from employment': 100, 'Freelance/Contract': 60, 'Business owner': 30 },
         gaps: { 'Freelance/Contract': 'Freelance or contract income can be unpredictable.', 'Business owner': 'Business income is tied to business performance and carries higher risk.' },
         recommendations: { 'Freelance/Contract': 'Build a steady client base and maintain an income buffer for dry periods.', 'Business owner': 'Separate personal and business finances and build business continuity safeguards.' }
       },
       INC_012: {
         category: 'emergency_savings',
+        weight: 5,
         scores: { 'Over 3 months': 100, '1-3 months': 50, 'Less than 1 month': 0 },
         gaps: { 'Less than 1 month': 'Your savings would last less than one month.', '1-3 months': 'Your savings provide only a short buffer.' },
         recommendations: { 'Less than 1 month': 'Build an emergency fund covering at least 3 months of expenses.', '1-3 months': 'Increase your emergency fund to 6 months of expenses.' }
       },
       INC_013: {
         category: 'income_stability',
+        weight: 2,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'You lack confidence in your income stability.' },
         recommendations: { 'No': 'Diversify your income sources and build a career contingency plan.' }
       },
       INC_014: {
         category: 'income_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'You do not have income protection insurance.' },
         recommendations: { 'No': 'Consider income protection insurance to replace earnings if unable to work.' }
       },
       INC_015: {
         category: 'debt_exposure',
+        weight: 3,
         scores: { 'No': 100, 'Yes': 25 },
         gaps: { 'Yes': 'Your debts depend on continued income, creating significant vulnerability.' },
         recommendations: { 'Yes': 'Review debt structure and consider debt protection insurance.' }
@@ -226,30 +240,35 @@ const scoringConfigs = {
     questions: {
       FAM_011: {
         category: 'dependents',
+        weight: 3,
         scores: { 'None': 100, '1-2': 60, '3 or more': 30 },
         gaps: { '3 or more': 'Multiple dependents increase financial pressure and risk exposure.' },
         recommendations: { '3 or more': 'Ensure adequate life and health cover for all dependents.' }
       },
       FAM_012: {
         category: 'income_resilience',
+        weight: 3,
         scores: { 'Over 6 months': 100, '3-6 months': 60, 'Less than 3 months': 0 },
         gaps: { 'Less than 3 months': 'Family would struggle financially within 3 months of income loss.', '3-6 months': 'Family has a moderate but limited income buffer.' },
         recommendations: { 'Less than 3 months': 'Build a family emergency fund covering 6+ months.', '3-6 months': 'Strengthen family income reserves to 6+ months.' }
       },
       FAM_013: {
         category: 'family_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'Not sure': 45, 'No': 0 },
         gaps: { 'No': 'Your family lacks adequate insurance protection.', 'Not sure': 'You are uncertain about your family insurance coverage.' },
         recommendations: { 'No': 'Review and secure comprehensive family insurance coverage.' }
       },
       FAM_014: {
         category: 'education_funding',
+        weight: 3,
         scores: { 'Yes': 100, 'Not applicable': 80, 'No': 0 },
         gaps: { 'No': 'Children\'s education costs are not secured.' },
         recommendations: { 'No': 'Set up an education savings plan or education insurance policy.' }
       },
       FAM_015: {
         category: 'family_health',
+        weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'Your family does not have comprehensive health insurance.' },
         recommendations: { 'No': 'Get comprehensive family health insurance coverage.' }
@@ -296,9 +315,9 @@ const scoringConfigs = {
   RET: {
     name: 'Retirement Readiness',
     pillars: [
-      { id: 'retirement_readiness', name: 'Retirement Readiness', weight: 0.25 },
+      { id: 'retirement_readiness', name: 'Retirement Readiness', weight: 0.30 },
       { id: 'retirement_savings', name: 'Retirement Savings', weight: 0.30 },
-      { id: 'healthcare_protection', name: 'Healthcare & Protection', weight: 0.25 },
+      { id: 'healthcare_protection', name: 'Healthcare & Protection', weight: 0.20 },
       { id: 'legacy_planning', name: 'Legacy Planning', weight: 0.20 }
     ],
     categories: {
@@ -312,36 +331,42 @@ const scoringConfigs = {
     questions: {
       RET_010: {
         category: 'retirement_preparedness',
+        weight: 2,
         scores: { 'I already have a written retirement plan': 100, "I'm saving but don't have a clear plan": 60, 'I know I should start planning': 30, "I haven't thought seriously about retirement": 0 },
         gaps: { "I haven't thought seriously about retirement": 'No retirement planning has been started.', 'I know I should start planning': 'Awareness of retirement needs exists but no concrete action taken.', "I'm saving but don't have a clear plan": 'Saving without a structured plan limits long-term effectiveness.' },
         recommendations: { "I haven't thought seriously about retirement": 'Start with a retirement savings plan immediately.', 'I know I should start planning': 'Create a written retirement plan with specific savings targets.', "I'm saving but don't have a clear plan": 'Develop a structured retirement plan with clear goals and timelines.' }
       },
       RET_011: {
         category: 'retirement_horizon',
+        weight: 2,
         scores: { 'Over 15 years': 100, '5-15 years': 60, 'Within 5 years': 20 },
         gaps: { 'Within 5 years': 'Retiring soon with potentially insufficient preparation.', '5-15 years': 'Moderate runway but accelerated savings needed.' },
         recommendations: { 'Within 5 years': 'Conduct a detailed retirement readiness review immediately.', '5-15 years': 'Maximize retirement contributions in the coming years.' }
       },
       RET_012: {
         category: 'pension_savings',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No dedicated pension or retirement savings account.' },
         recommendations: { 'No': 'Open a pension or retirement savings account as soon as possible.' }
       },
       RET_013: {
         category: 'medical_cost_impact',
+        weight: 3,
         scores: { 'Not concerned': 100, 'Somewhat concerned': 55, 'Very concerned': 25 },
         gaps: { 'Very concerned': 'Medical costs pose a significant threat to your retirement savings.', 'Somewhat concerned': 'Rising medical costs could impact your retirement plans.' },
         recommendations: { 'Very concerned': 'Include health cost projections in your retirement plan and consider medical cover.', 'Somewhat concerned': 'Build a medical cost buffer into your retirement savings target.' }
       },
       RET_014: {
         category: 'long_term_care',
+        weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No plan for long-term care or critical illness needs.' },
         recommendations: { 'No': 'Consider long-term care insurance or critical illness cover.' }
       },
       RET_015: {
         category: 'legacy_documentation',
+        weight: 1,
         scores: { 'Yes, I have a documented plan': 100, 'Partially - I have some documentation': 50, 'No, not yet': 0 },
         gaps: { 'No, not yet': 'No documented plan for asset distribution or beneficiary nominations.', 'Partially - I have some documentation': 'Partial documentation leaves gaps in your legacy plan.' },
         recommendations: { 'No, not yet': 'Document how your assets should be distributed and nominate beneficiaries for your retirement accounts.', 'Partially - I have some documentation': 'Complete your estate planning documentation and review beneficiary designations.' }
@@ -396,30 +421,35 @@ const scoringConfigs = {
     questions: {
       YPR_011: {
         category: 'career_stability',
+        weight: 3,
         scores: { 'Over 5 years': 100, '2-5 years': 65, 'Under 2 years': 30 },
         gaps: { 'Under 2 years': 'Early career stage with limited income history and stability.', '2-5 years': 'Building career stability but still in growth phase.' },
         recommendations: { 'Under 2 years': 'Focus on career growth and building an emergency fund.', '2-5 years': 'Continue building professional credentials and income stability.' }
       },
       YPR_012: {
         category: 'critical_illness_funding',
+        weight: 3,
         scores: { 'Yes easily': 100, 'With difficulty': 50, 'No': 0 },
         gaps: { 'No': 'Cannot cover critical illness costs.', 'With difficulty': 'Would struggle to cover critical illness costs.' },
         recommendations: { 'No': 'Build an emergency fund and consider critical illness insurance.', 'With difficulty': 'Strengthen your financial buffer for health emergencies.' }
       },
       YPR_013: {
         category: 'income_stability',
+        weight: 2,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'Household would struggle to maintain stability without your income.' },
         recommendations: { 'No': 'Build income resilience through savings and passive income.' }
       },
       YPR_014: {
         category: 'personal_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No personal health or accident insurance.' },
         recommendations: { 'No': 'Consider health and accident insurance to protect against unexpected medical costs.' }
       },
       YPR_015: {
         category: 'goal_saving',
+        weight: 2,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'Not actively saving towards a major life goal.', 'Yes': 'Actively saving towards a major life goal — building positive financial habits.' },
         recommendations: { 'No': 'Set a specific savings goal and automate regular contributions.' }
@@ -475,30 +505,35 @@ const scoringConfigs = {
     questions: {
       ENT_011: {
         category: 'key_person_dependency',
+        weight: 3,
         scores: { "No it runs itself": 100, 'Partially': 55, 'Yes completely': 0 },
         gaps: { 'Yes completely': 'Business completely depends on your personal involvement.', 'Partially': 'Business has partial dependency on you.' },
         recommendations: { 'Yes completely': 'Build team capacity and document processes to reduce key-person dependency.', 'Partially': 'Reduce personal dependency through delegation and systems.' }
       },
       ENT_012: {
         category: 'personal_guarantees',
+        weight: 3,
         scores: { 'No': 100, 'Yes': 20 },
         gaps: { 'Yes': 'Personal guarantees for business debts create personal financial risk.' },
         recommendations: { 'Yes': 'Review personal guarantees and explore limited liability restructuring.' }
       },
       ENT_013: {
         category: 'revenue_resilience',
+        weight: 3,
         scores: { 'Yes': 100, 'Not sure': 50, 'No': 0 },
         gaps: { 'No': 'Business would not survive 3 months without you.', 'Not sure': 'Uncertain about business survival without you.' },
         recommendations: { 'No': 'Create a business continuity plan and build an operational team.', 'Not sure': 'Assess and address key person risks in your business.' }
       },
       ENT_014: {
         category: 'key_person_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No key person insurance to protect the business if you become incapacitated.' },
         recommendations: { 'No': 'Consider key person insurance to protect your business.' }
       },
       ENT_015: {
         category: 'asset_separation',
+        weight: 2,
         scores: { 'Yes': 100, 'Not sure': 50, 'No': 0 },
         gaps: { 'No': 'Personal assets are not separated from business liabilities.', 'Not sure': 'Uncertain about personal vs business asset protection.' },
         recommendations: { 'No': 'Separate personal and business assets through proper corporate structure.', 'Not sure': 'Review your asset protection structure.' }
@@ -553,12 +588,14 @@ const scoringConfigs = {
     questions: {
       HOM_011: {
         category: 'tenure_type',
+        weight: 3,
         scores: { 'Own': 100, 'Rent': 60, 'Neither': 20 },
         gaps: { 'Neither': 'No stable housing tenure creates significant exposure.', 'Rent': 'Renting means you do not benefit from property asset appreciation.' },
         recommendations: { 'Neither': 'Work towards securing stable housing to reduce personal risk exposure.', 'Rent': 'Review renter\'s insurance and consider long-term homeownership goals.' }
       },
       HOM_012: {
         category: 'home_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No homeowner\'s or renter\'s insurance for your contents.' },
         recommendations: { 'No': 'Consider homeowner\'s or renter\'s insurance to protect your belongings.' }
@@ -583,12 +620,14 @@ const scoringConfigs = {
     questions: {
       MOT_011: {
         category: 'vehicle_count',
+        weight: 3,
         scores: { '1': 100, '2': 70, '3 or more': 40 },
         gaps: { '3 or more': 'Multiple vehicles increase overall risk exposure and insurance costs.', '2': 'Two vehicles means higher combined exposure.' },
         recommendations: { '3 or more': 'Review whether all vehicles need comprehensive cover vs third-party.', '2': 'Ensure all vehicles have appropriate insurance cover.' }
       },
       MOT_012: {
         category: 'motor_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'Primary vehicle is not covered by comprehensive motor insurance.' },
         recommendations: { 'No': 'Consider comprehensive motor insurance for your primary vehicle.' }
@@ -616,18 +655,21 @@ const scoringConfigs = {
     questions: {
       SCH_013: {
         category: 'student_exposure',
+        weight: 3,
         scores: { 'Under 100': 100, '100-500': 55, 'Over 500': 20 },
         gaps: { 'Over 500': 'Large student population increases liability exposure.' },
         recommendations: { 'Over 500': 'Review comprehensive liability and accident coverage for all students.' }
       },
       SCH_016: {
         category: 'injury_liability',
+        weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No insurance coverage if a student is injured on premises.' },
         recommendations: { 'No': 'Secure comprehensive public liability insurance covering student injuries.' }
       },
       SCH_017: {
         category: 'property_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No fire insurance for school buildings.' },
         recommendations: { 'No': 'Get comprehensive fire insurance for all school buildings.' }
@@ -672,24 +714,28 @@ const scoringConfigs = {
     questions: {
       MFG_013: {
         category: 'workforce_exposure',
+        weight: 3,
         scores: { '1-50': 100, '51-200': 55, '200+': 20 },
         gaps: { '200+': 'Large workforce creates significant liability and compliance exposure.' },
         recommendations: { '200+': 'Review comprehensive workforce insurance and safety programs.' }
       },
       MFG_014: {
         category: 'equipment_dependency',
+        weight: 3,
         scores: { 'We have backups': 100, 'Within a few days': 50, 'Immediately': 0 },
         gaps: { 'Immediately': 'Critical machine breakdown would halt production immediately.' },
         recommendations: { 'Immediately': 'Implement equipment redundancy and maintenance programs.' }
       },
       MFG_016: {
         category: 'facility_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No fire and special perils insurance for your facility.' },
         recommendations: { 'No': 'Get comprehensive fire and special perils insurance for your facility.' }
       },
       MFG_017: {
         category: 'disaster_recovery',
+        weight: 2,
         scores: { 'Yes easily': 100, 'With difficulty': 50, 'No, we would close': 0 },
         gaps: { 'No, we would close': 'Business would not survive a major disaster closure.', 'With difficulty': 'Business would struggle to recover from a major disaster.' },
         recommendations: { 'No, we would close': 'Create a comprehensive business continuity and disaster recovery plan.', 'With difficulty': 'Strengthen business continuity planning and insurance coverage.' }
@@ -735,24 +781,28 @@ const scoringConfigs = {
     questions: {
       HOS_013: {
         category: 'patient_exposure',
+        weight: 3,
         scores: { 'Under 20': 100, '20-100': 55, 'Over 100': 20 },
         gaps: { 'Over 100': 'Large facility with significant patient liability exposure.' },
         recommendations: { 'Over 100': 'Ensure comprehensive medical malpractice and liability coverage.' }
       },
       HOS_015: {
         category: 'medical_liability',
+        weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No professional indemnity or medical malpractice insurance.' },
         recommendations: { 'No': 'Secure comprehensive professional indemnity and medical malpractice insurance.' }
       },
       HOS_016: {
         category: 'equipment_value',
+        weight: 2,
         scores: { 'No': 100, 'Yes': 40 },
         gaps: { 'Yes': 'High-value medical equipment on site requires specialized coverage.' },
         recommendations: { 'Yes': 'Ensure all high-value medical equipment is specifically insured.' }
       },
       HOS_017: {
         category: 'equipment_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No insurance coverage for critical life-support equipment damage.' },
         recommendations: { 'No': 'Get all-risks equipment insurance covering power surge and breakdown.' }
@@ -797,24 +847,28 @@ const scoringConfigs = {
     questions: {
       CHR_013: {
         category: 'congregation_exposure',
+        weight: 3,
         scores: { 'Under 200': 100, '200-1000': 55, 'Over 1000': 15 },
         gaps: { 'Over 1000': 'Large congregation creates significant liability during gatherings.' },
         recommendations: { 'Over 1000': 'Review comprehensive public liability insurance for large gatherings.' }
       },
       CHR_014: {
         category: 'valuable_assets',
+        weight: 2,
         scores: { 'No': 100, 'Yes': 40 },
         gaps: { 'Yes': 'Valuable instruments and equipment require specialized insurance.' },
         recommendations: { 'Yes': 'Ensure high-value musical instruments and broadcast equipment are specifically insured.' }
       },
       CHR_015: {
         category: 'event_liability',
+        weight: 2,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No insurance if a congregant is injured on church premises.' },
         recommendations: { 'No': 'Secure comprehensive public liability insurance for your premises.' }
       },
       CHR_017: {
         category: 'building_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No fire insurance for the church building and contents.' },
         recommendations: { 'No': 'Get fire insurance for the church building and contents.' }
@@ -861,30 +915,35 @@ const scoringConfigs = {
     questions: {
       CON_013: {
         category: 'project_exposure',
+        weight: 3,
         scores: { '1-2': 100, '3-5': 55, 'More than 5': 20 },
         gaps: { 'More than 5': 'Managing many concurrent projects increases risk exposure.' },
         recommendations: { 'More than 5': 'Ensure each project has adequate insurance coverage.' }
       },
       CON_014: {
         category: 'heavy_machinery',
+        weight: 3,
         scores: { 'No': 100, 'Yes': 30 },
         gaps: { 'Yes': 'Heavy machinery on site creates significant liability and damage risk.' },
         recommendations: { 'Yes': 'Ensure all heavy machinery is comprehensively insured.' }
       },
       CON_015: {
         category: 'contractor_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No contractor\'s all-risk or works insurance.' },
         recommendations: { 'No': 'Get comprehensive contractor\'s all-risk insurance.' }
       },
       CON_016: {
         category: 'accident_cover',
+        weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No group personal accident cover for on-site workers.' },
         recommendations: { 'No': 'Get group personal accident cover for all on-site workers.' }
       },
       CON_017: {
         category: 'penalty_protection',
+        weight: 2,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No protection against project delay penalties.' },
         recommendations: { 'No': 'Review contract terms and consider delay penalty protection.' }
@@ -937,24 +996,28 @@ const scoringConfigs = {
     questions: {
       TRN_013: {
         category: 'fleet_exposure',
+        weight: 3,
         scores: { '1-5': 100, '6-20': 55, 'Over 20': 20 },
         gaps: { 'Over 20': 'Large fleet creates significant cumulative risk exposure.' },
         recommendations: { 'Over 20': 'Implement fleet-wide risk management and comprehensive insurance.' }
       },
       TRN_015: {
         category: 'fleet_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'Not Applicable': 70, 'No': 0 },
         gaps: { 'No': 'No fleet insurance for goods in transit.' },
         recommendations: { 'No': 'Get comprehensive goods-in-transit insurance.' }
       },
       TRN_016: {
         category: 'driver_accident',
+        weight: 2,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No group personal accident cover for drivers.' },
         recommendations: { 'No': 'Get group personal accident cover for all drivers.' }
       },
       TRN_017: {
         category: 'motor_compliance',
+        weight: 5,
         scores: { 'Yes': 100, 'Some of them': 50, 'No': 0 },
         gaps: { 'No': 'Vehicles not covered by comprehensive motor insurance.', 'Some of them': 'Only some vehicles have comprehensive motor insurance.' },
         recommendations: { 'No': 'Get comprehensive motor insurance for all fleet vehicles.', 'Some of them': 'Extend comprehensive motor insurance to entire fleet.' }
@@ -1000,24 +1063,28 @@ const scoringConfigs = {
     questions: {
       SME_013: {
         category: 'employee_exposure',
+        weight: 3,
         scores: { '1-10': 100, '11-50': 55, '51+': 20 },
         gaps: { '51+': 'Large workforce with significant employment liability exposure.' },
         recommendations: { '51+': 'Review comprehensive employer\'s liability and workforce insurance.' }
       },
       SME_014: {
         category: 'revenue_exposure',
+        weight: 3,
         scores: { 'Under ₦50M': 100, '₦50M - ₦200M': 55, 'Over ₦200M': 20 },
         gaps: { 'Over ₦200M': 'High revenue business with significant financial exposure.' },
         recommendations: { 'Over ₦200M': 'Ensure all business insurance adequately covers your revenue scale.' }
       },
       SME_016: {
         category: 'property_insurance',
+        weight: 5,
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No fire and burglary insurance for your business.' },
         recommendations: { 'No': 'Get comprehensive fire and burglary insurance.' }
       },
       SME_017: {
         category: 'disaster_survival',
+        weight: 2,
         scores: { 'Yes easily': 100, 'With difficulty': 45, 'No, we would close': 0 },
         gaps: { 'No, we would close': 'Business would not survive a 3-month closure.', 'With difficulty': 'Business would struggle to survive a major disaster.' },
         recommendations: { 'No, we would close': 'Create a business continuity plan and ensure adequate insurance.', 'With difficulty': 'Strengthen your business continuity and insurance coverage.' }

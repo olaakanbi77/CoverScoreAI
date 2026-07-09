@@ -15,10 +15,12 @@ const domainConfig = {
       'Household Resilience': 'Household Resilience'
     },
     resilienceLabels: {
-      'low': 'Strong Resilience',
-      'moderate': 'Building Resilience',
-      'high': 'Needs Attention',
-      'critical': 'Priority Improvement'
+      'excellent': 'Excellent Resilience',
+      'strong': 'Strong Resilience',
+      'developing': 'Developing Resilience',
+      'needs_attention': 'Needs Attention',
+      'priority_improvement': 'Priority Improvement',
+      'critical_priority': 'Critical Priority'
     },
     insightTexts: {
       perPillar: {
@@ -89,10 +91,12 @@ const domainConfig = {
       'legacy_planning': 'Legacy Planning'
     },
     resilienceLabels: {
-      'low': 'Strong Readiness',
-      'moderate': 'Building Readiness',
-      'high': 'Needs Attention',
-      'critical': 'Priority Improvement'
+      'excellent': 'Excellent Resilience',
+      'strong': 'Strong Resilience',
+      'developing': 'Developing Resilience',
+      'needs_attention': 'Needs Attention',
+      'priority_improvement': 'Priority Improvement',
+      'critical_priority': 'Critical Priority'
     },
     insightTexts: {
       perPillar: {
