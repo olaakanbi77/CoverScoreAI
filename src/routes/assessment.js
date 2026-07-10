@@ -524,6 +524,80 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
   }
 });
 
+// Advisor Preparation Summary\u2122 — internal brief for the advisor before a consultation
+router.get('/:id/advisor-brief', optionalAuth, async (req, res, next) => {
+  try {
+    const assessment = await get('SELECT * FROM assessments WHERE id = ?', [req.params.id]);
+    if (!assessment) {
+      return res.status(404).json({ error: 'Not Found', message: 'Assessment not found' });
+    }
+
+    const lead = await get('SELECT * FROM leads WHERE assessment_id = ?', [assessment.id]);
+    const answers = assessment.answers ? JSON.parse(assessment.answers) : {};
+    const aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
+    const scoreResult = await calculateScore(answers);
+    const { risk_categories, recommendations, identified_gaps, min_loss, max_loss, improvement_potential } = scoreResult;
+
+    const riskLevel = getRiskLevel(assessment.score);
+    const cats = risk_categories || {};
+    const sortedCats = Object.entries(cats).sort(([, a], [, b]) => b - a);
+    const highestPriority = sortedCats.length > 0 ? sortedCats[sortedCats.length - 1][0] : null;
+
+    // Build top risks list
+    const topRisks = [];
+    if (answers['INC_012'] === 'Less than 1 month') topRisks.push('Less than one month emergency savings');
+    else if (answers['INC_012'] === '1-3 months') topRisks.push('Limited emergency savings (1\u20133 months)');
+    if (answers['INC_014'] === 'No') topRisks.push('No income protection policy');
+    if (answers['INC_015'] === 'Yes') topRisks.push('Significant debt commitments');
+    if (answers['INC_011'] === 'Freelance/Contract') topRisks.push('Freelance/contract income with no guaranteed stability');
+    if (answers['INC_011'] === 'Business owner') topRisks.push('Income tied to business performance');
+    if (answers['INC_013'] === 'No') topRisks.push('No secondary income sources');
+    if (answers['INC_018'] === 'It would stop completely') topRisks.push('Income would stop completely during prolonged inability to work');
+    if (topRisks.length === 0 && identified_gaps) topRisks.push(...identified_gaps.slice(0, 5));
+
+    // Determine recommended conversation focus
+    const convFocus = highestPriority
+      ? `Discuss ${highestPriority.toLowerCase()} strategy before recommending protection products.`
+      : 'Review overall risk profile and identify priority areas.';
+
+    // Suggested products from recommendations
+    const suggestedProducts = (recommendations || []).slice(0, 5);
+    if (suggestedProducts.length === 0 && aiReport?.recommendations) {
+      suggestedProducts.push(...aiReport.recommendations.slice(0, 5));
+    }
+
+    // Estimated meeting duration
+    const meetingDuration = topRisks.length <= 2 ? '15 minutes' : topRisks.length <= 4 ? '20 minutes' : '30 minutes';
+    const prefix = (() => {
+      for (const key of Object.keys(answers)) {
+        const m = key.match(/^([A-Z]+)_\d+$/);
+        if (m) return m[1];
+      }
+      return null;
+    })();
+
+    res.json({
+      customerName: lead?.name || answers.name || 'Customer',
+      score: assessment.score,
+      riskLevel,
+      highestPriority,
+      prefix,
+      topRisks,
+      recommendedConversation: convFocus,
+      suggestedProducts,
+      expectedMeetingDuration: meetingDuration,
+      estimatedExposure: { min: min_loss, max: max_loss },
+      improvementPotential: improvement_potential,
+      aiInsights: aiReport ? {
+        executiveSummary: aiReport.executiveSummary,
+        professionalRecommendation: aiReport.professionalRecommendation
+      } : null
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/', authenticate, async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;

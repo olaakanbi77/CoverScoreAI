@@ -36,6 +36,46 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
   const weakestScore = weakest[1];
   const dom = domainConfig[prefix] || defaultDomain;
 
+  // For INC, build a single concise discovery paragraph
+  if (prefix === 'INC') {
+    const incomeSrc = answers['INC_011'];
+    const savings = answers['INC_012'];
+    const hasProtection = answers['INC_014'];
+    const incomeStop = answers['INC_018'];
+
+    let srcPhrase = 'your income';
+    if (incomeSrc === 'Salary from employment') srcPhrase = 'your salary';
+    else if (incomeSrc === 'Freelance/Contract') srcPhrase = 'your freelance income';
+    else if (incomeSrc === 'Business owner') srcPhrase = 'your business income';
+
+    let savingsPhrase = '';
+    const savingsMap = {
+      'Less than 1 month': 'less than one month of expenses',
+      '1-3 months': 'about 1\u20133 months of expenses',
+      '3-6 months': 'about 3\u20136 months of expenses',
+      '6+ months': 'over six months of expenses'
+    };
+    if (savings && savingsMap[savings]) savingsPhrase = savingsMap[savings];
+    else savingsPhrase = 'less than one month of expenses';
+
+    let protectionPhrase = '';
+    if (hasProtection === 'No') protectionPhrase = "and you don't have income protection cover";
+
+    let incomeStopPhrase = '';
+    if (incomeStop === 'It would stop completely' || !incomeStop) {
+      incomeStopPhrase = 'an unexpected interruption to your income could quickly affect your financial stability';
+    } else if (incomeStop === 'It would reduce significantly') {
+      incomeStopPhrase = 'even a partial income reduction could create financial pressure over time';
+    } else if (incomeStop === 'My income would continue') {
+      incomeStopPhrase = 'continuing your income during disruption is important, but gaps in savings and cover remain';
+    }
+
+    const middle = protectionPhrase ? `, ${protectionPhrase}` : '';
+    const body = `Your assessment shows that your income resilience currently depends almost entirely on ${srcPhrase}. Because your emergency savings would cover ${savingsPhrase}${middle}, ${incomeStopPhrase}.`;
+    return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
+  }
+
+  // For all other prefixes, use domain config insight texts (concise single paragraph)
   const pillarDef = dom.insightTexts?.perPillar?.[weakestName];
   let body;
   if (pillarDef) {
@@ -51,12 +91,10 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
         body += ' ' + text;
       }
     }
-    if (pillarDef.suffix) body += ' ' + pillarDef.suffix;
   } else {
     body = dom.insightTexts?.catchAll ||
-      `Your assessment highlights that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. With a score of ${weakestScore}%, this is where focused attention would have the greatest impact on your ${dom.closingTerm}.`;
+      `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}.`;
   }
-  if (dom.insightTexts?.suffix) body += dom.insightTexts.suffix;
 
   return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
 };
@@ -481,9 +519,9 @@ router.post('/evolution', async (req, res) => {
       const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);
       const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
 
-      // ===== Message 1: Completion + Score + Resilience Level + Highest Priority =====
+      // ===== Message 1: Completion + Summary + Score + Resilience Level + Highest Priority =====
       const msg1Parts = [
-        `\uD83C\uDF89 Your ${dom.assessmentTitle} Assessment is complete.`,
+        `\uD83C\uDF89 Your ${dom.assessmentTitle} Assessment is complete.\n\nHere\u2019s a summary of what we discovered.`,
         `CoverScore\u2122\n${assessmentData.score} / 100`,
         `Resilience Level\n${displayLabel}`
       ];
@@ -530,7 +568,7 @@ router.post('/evolution', async (req, res) => {
           const hasDebt = answers['INC_015'];
           const incomeSrc = answers['INC_011'];
 
-          let scenario = "Imagine being unable to work for six months because of illness or injury.";
+          let scenario = "If you were unable to work for the next six months because of illness or injury.";
           const consParts = [];
 
           if (!incomeStop || incomeStop === 'It would stop completely') {
@@ -615,7 +653,7 @@ router.post('/evolution', async (req, res) => {
           const fallbackGain = Math.round((95 - currentScore) * 0.6);
           projectedScore = Math.max(Math.round(currentScore + fallbackGain), Math.round(currentScore * 1.5));
         }
-        return { text: `Resilience Forecast\u2122\n\nIf you:\n${actionLines.slice(0, 3).join('\n')}\n\nYour ${reportName} score could improve from\n${currentScore} \u2192 approximately ${projectedScore}`, projectedScore };
+        return { text: `Resilience Forecast\u2122\n\nHere\u2019s how your resilience could improve\n${actionLines.slice(0, 3).join('\n')}\n\nYour ${reportName} score could improve from\n${currentScore} \u2192 approximately ${projectedScore}`, projectedScore };
       };
 
       // ---- confidence-phrased recommendation ----
@@ -654,22 +692,20 @@ router.post('/evolution', async (req, res) => {
         .map(([n, s]) => `${n.padEnd(maxNameLen)} ${makePillarBar(s)} ${s}%`)
         .join('\n');
 
-      // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 + Personalized Context =====
+      // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 =====
       let msg2 = `Your Risk Pillars\n\n${pillarChart}`;
       const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
       if (insightText) msg2 += `\n\n${insightText}`;
-      const personalContext = buildRealLifeContext(answers, prefix, dom);
-      if (personalContext) msg2 += `\n\n${personalContext}`;
       postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
       // ===== Message 3: Risk Story\u2122 + Forecast + Progress Potential + Recommendation + Report =====
       let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(riskCats, answers, prefix, dom)}`;
       const forecast = buildResilienceForecast(riskCats, assessmentData.score, answers, prefix, dom, reportName);
       if (forecast) msg3 += `\n\n${forecast.text}`;
-      // Progress Potential\u2122
+      // Your Improvement Potential\u2122
       if (forecast && forecast.projectedScore > assessmentData.score) {
         const diff = forecast.projectedScore - assessmentData.score;
-        msg3 += `\n\nProgress Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2193\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
+        msg3 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2193\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
       }
       const recommendation = buildRecommendation(riskCats, dom);
       if (recommendation) msg3 += `\n\n${recommendation}`;
