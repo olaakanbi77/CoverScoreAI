@@ -481,144 +481,155 @@ router.post('/evolution', async (req, res) => {
       const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);
       const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
 
-      // Message 1: CoverScore + Resilience Level (clean, separate from pillar breakdown)
-      postMessages.push({
-        type: 'report',
-        text: `CoverScore\u2122\n${assessmentData.score} / 100\n\nResilience Level\n${displayLabel}`,
-        _delay: 12000
-      });
+      // ===== Message 1: Completion + Score + Resilience Level + Highest Priority =====
+      const msg1Parts = [
+        `\uD83C\uDF89 Your ${dom.assessmentTitle} Assessment is complete.`,
+        `CoverScore\u2122\n${assessmentData.score} / 100`,
+        `Resilience Level\n${displayLabel}`
+      ];
+      if (weakestPillar) msg1Parts.push(`Highest Priority\n\n${weakestPillar}`);
+      postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
 
-      // Message 1b: Risk Pillar breakdown
-      postMessages.push({
-        type: 'pillars',
-        text: `*Your Risk Pillars*\n${assessmentData.strengths}`,
-        _delay: 3000
-      });
+      // ---- personalized real-life context builder ----
+      const buildRealLifeContext = (answers, prefix, dom) => {
+        if (prefix === 'INC') {
+          const savings = answers['INC_012'];
+          const hasProtection = answers['INC_014'];
+          const incomeStop = answers['INC_018'];
+          let savingsPhrase = 'your emergency savings may not be sufficient to cover extended expenses';
+          const savingsMap = {
+            'Less than 1 month': 'your emergency savings would likely cover less than one month of expenses',
+            '1-3 months': 'your emergency savings would cover 1\u20133 months of expenses',
+            '3-6 months': 'your emergency savings would cover 3\u20136 months of expenses',
+            '6+ months': 'your emergency savings would cover over six months of expenses'
+          };
+          if (savings && savingsMap[savings]) savingsPhrase = savingsMap[savings];
+          let protectionPhrase = '';
+          if (hasProtection === 'No') protectionPhrase = "you don't have a dedicated income protection policy";
+          let consequence = 'a prolonged interruption to your income could create financial challenges that need to be addressed';
+          if (incomeStop === 'It would stop completely' || !incomeStop) {
+            consequence = "a prolonged interruption to your income could place significant pressure on your finances before you're able to recover";
+          } else if (incomeStop === 'It would reduce significantly') {
+            consequence = 'even with some income remaining, a prolonged interruption could still create financial strain';
+          }
+          const middle = protectionPhrase ? `, and because ${protectionPhrase}` : '';
+          return `Based on your answers, ${savingsPhrase}${middle}. As a result, ${consequence}.`;
+        }
+        if (dom.realLifeContext) return dom.realLifeContext.replace(/^Here\u2019s what this means in real life:\s*/, '');
+        return null;
+      };
 
-      // Message 1c: Highest Priority callout (explicit weakest pillar)
-      if (weakestPillar) {
-        postMessages.push({
-          type: 'priority',
-          text: `Highest Priority\n\n${weakestPillar}`,
-          _delay: 3000
-        });
-      }
+      // ---- strengths explanation (replaces generic positive statements) ----
+      const buildStrengthsExplanation = (cats, answers, prefix, dom) => {
+        const entries = Object.entries(cats);
+        if (entries.length === 0) return '';
+        const strong = entries.filter(([, s]) => s >= 60);
+        const weak = entries.filter(([, s]) => s < 50).sort(([, a], [, b]) => a - b);
+        const parts = [];
+        if (prefix === 'INC') {
+          const finCommName = Object.keys(cats).find(k => k.toLowerCase().includes('financial commitment'));
+          const incStabName = Object.keys(cats).find(k => k.toLowerCase().includes('income stabilit'));
+          if (finCommName && cats[finCommName] >= 60 && answers['INC_015'] === 'No') {
+            parts.push("One positive finding is that you\u2019re not currently carrying significant debt obligations. This gives you greater flexibility to build your emergency fund without the pressure of large monthly repayments.");
+          }
+          if (incStabName && cats[incStabName] >= 60) {
+            parts.push(`Your ${incStabName.toLowerCase()} of ${cats[incStabName]}% indicates your current income sources are reasonably reliable.`);
+          }
+        }
+        if (strong.length > 0 && parts.length === 0) {
+          const sNames = strong.map(([n]) => n.toLowerCase());
+          const sList = sNames.length === 1 ? sNames[0] : sNames.slice(0, -1).join(', ') + ' and ' + sNames[sNames.length - 1];
+          parts.push(`Your ${sList} ${sNames.length === 1 ? 'is' : 'are'} relatively strong at ${strong.map(([, s]) => s).join('/')}%, providing a solid foundation for your ${dom.closingTerm}.`);
+        }
+        if (weak.length > 0) {
+          const wNames = weak.map(([n]) => n.toLowerCase());
+          const wList = wNames.length === 1 ? wNames[0] : wNames.slice(0, -1).join(', ') + ' and ' + wNames[wNames.length - 1];
+          parts.push(`The greatest opportunity to strengthen your ${dom.closingTerm} lies in addressing your ${wList}.`);
+        }
+        if (parts.length === 0) parts.push(`Your overall ${dom.closingTerm} profile is well-balanced across all areas.`);
+        return parts.join('\n\n');
+      };
 
-      // Message 2: Summary of Findings — 1–2 sentence bridge between numbers and insight
-      const generateSummaryOfFindings = (cats) => {
+      // ---- resilience forecast ----
+      const buildResilienceForecast = (cats, currentScore, answers, prefix, dom, reportName) => {
         const entries = Object.entries(cats);
         if (entries.length === 0) return null;
-        const strong = entries.filter(([, s]) => s >= 60);
-        const weak = entries.filter(([, s]) => s < 50);
-        const sortedWeak = weak.sort(([, a], [, b]) => a - b);
-        let parts = [];
-        if (strong.length > 0) {
-          const strongNames = strong.map(([n]) => n.toLowerCase());
-          parts.push(`You already have ${strong.length === 1 ? 'good' : 'reasonable'} ${strongNames.join(' and ')}`);
-        }
-        if (sortedWeak.length > 0) {
-          const weakNames = sortedWeak.map(([n]) => n.toLowerCase());
-          let namePhrase;
-          if (weakNames.length === 1) {
-            namePhrase = weakNames[0];
-          } else if (weakNames.length === 2) {
-            namePhrase = weakNames.join(' and ');
-          } else {
-            namePhrase = weakNames.slice(0, -1).join(', ') + ' and ' + weakNames[weakNames.length - 1];
+        const sorted = entries.sort(([, a], [, b]) => a - b);
+        const wName = sorted[0][0];
+        const wScore = sorted[0][1];
+        const numP = entries.length;
+        const currentSum = entries.reduce((sum, [, v]) => sum + v, 0);
+        const projectedPillar = 70;
+        const newSum = currentSum - wScore + projectedPillar;
+        const projectedScore = Math.round(newSum / numP);
+        const scoringConfig = require('../config/scoring/index');
+        const prefixConfig = scoringConfig[prefix];
+        let actionLines = [];
+        if (prefixConfig && prefixConfig.improvements) {
+          let used = 0;
+          for (const [qId, qImprovements] of Object.entries(prefixConfig.improvements)) {
+            if (used >= 3) break;
+            const answer = answers[qId];
+            if (answer && qImprovements[answer]) {
+              const imp = qImprovements[answer];
+              const verbMatch = imp.action.match(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore)/i);
+              const prefixWord = verbMatch ? verbMatch[1] : 'Build';
+              const rest = imp.action.replace(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore)\s+/i, '');
+              actionLines.push(`\u2713 ${prefixWord} ${rest.charAt(0).toLowerCase() + rest.slice(1)}`);
+              used++;
+            }
           }
-          if (parts.length > 0) {
-            parts.push(`and the good news is that strengthening your ${namePhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+        }
+        if (actionLines.length === 0) {
+          const recTexts = dom.recommendationTexts || {};
+          const wLower = wName.toLowerCase();
+          const action = recTexts[wLower];
+          if (action) {
+            action.split(',').map(s => s.trim()).filter(Boolean).slice(0, 3).forEach(step => {
+              const clean = step.replace(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)\s+/i, '');
+              const vm = step.match(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)/i);
+              const vMap = { reviewing: 'Review', building: 'Build', considering: 'Consider', diversifying: 'Diversify', getting: 'Get', securing: 'Secure', ensuring: 'Ensure', creating: 'Create', starting: 'Start' };
+              const pw = vm ? vMap[vm[1].toLowerCase()] || 'Build' : 'Build';
+              actionLines.push(`\u2713 ${pw} ${clean}`);
+            });
           } else {
-            parts.push(`the good news is that strengthening your ${namePhrase} can significantly strengthen your ${dom.closingTerm} over time`);
+            actionLines.push(`\u2713 Strengthen your ${wLower}`);
           }
         }
-        if (parts.length === 0) {
-          return `Your overall ${dom.closingTerm} profile is well-balanced across all areas.`;
-        }
-        const joined = parts.join(', ');
-        return joined.charAt(0).toUpperCase() + joined.slice(1) + '.';
+        return `Resilience Forecast\u2122\n\nIf you:\n${actionLines.slice(0, 3).join('\n')}\n\nYour ${reportName} score could improve from:\n${currentScore} \u2192 approximately ${projectedScore}`;
       };
-      const summaryText = generateSummaryOfFindings(riskCats);
-      if (summaryText) {
-        postMessages.push({ type: 'summary', text: summaryText, _delay: 3000 });
-      }
 
-      // Message 3: CoverScore Insight\u2122
-      const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
-      if (insightText) {
-        postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
-      }
-
-      // Message 3.5: What this means in real life
-      if (dom.realLifeContext) {
-        postMessages.push({ type: 'real_life', text: dom.realLifeContext, _delay: 3000 });
-      }
-
-      // Message 4: One Primary Recommendation (threshold-based per CSNS Section 14)
-      const getPrimaryRecommendation = (cats) => {
+      // ---- confidence-phrased recommendation ----
+      const buildRecommendation = (cats, dom) => {
         const entries = Object.entries(cats);
         if (entries.length === 0) return null;
         const sorted = entries.sort(([, a], [, b]) => a - b);
         const weakestName = sorted[0][0];
         const weakestScore = sorted[0][1];
         const weakArea = weakestName.toLowerCase();
-
         const recTexts = dom.recommendationTexts || {};
         const action = recTexts[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
-
-        let priority;
-        if (weakestScore >= 90) priority = 'monitor';
-        else if (weakestScore >= 70) priority = 'maintain';
-        else if (weakestScore >= 50) priority = 'improve';
-        else if (weakestScore >= 30) priority = 'priority';
-        else priority = 'immediate';
-
-        const priorityLabels = {
-          monitor: 'Your weakest area is currently well-managed. Continue to monitor it to maintain your strength.',
-          maintain: 'Your weakest area is holding steady. Maintaining your current approach will preserve your resilience.',
-          improve: 'Your weakest area has room for improvement. Strengthening it would meaningfully boost your overall resilience.',
-          priority: 'This is a priority area that needs attention. Addressing it will have a significant impact on your resilience.',
-          immediate: 'This area needs immediate attention. It represents your biggest risk and the greatest opportunity for improvement.'
-        };
-
-        const intro = priorityLabels[priority] || priorityLabels.priority;
-
-        return {
-          text: `${intro}\n\nBased on your assessment, if you only take one action this month, I recommend ${action}.\n\nImproving this area is likely to have the greatest impact on your ${dom.closingTerm}.`
-        };
+        return `Recommended First Step\n\nBased on your responses, the single action most likely to improve your CoverScore\u2122 is ${action}.\n\nImproving this area from ${weakestScore}% is expected to have the greatest impact on your ${dom.closingTerm}.`;
       };
 
-      const primaryRec = getPrimaryRecommendation(riskCats);
-      if (primaryRec) {
-        postMessages.push({ type: 'recommendation', text: primaryRec.text, _delay: 3000 });
-      }
+      // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 + Personalized Context =====
+      let msg2 = `Your Risk Pillars\n\n${pillarChart}`;
+      const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
+      if (insightText) msg2 += `\n\n${insightText}`;
+      const personalContext = buildRealLifeContext(answers, prefix, dom);
+      if (personalContext) msg2 += `\n\n${personalContext}`;
+      postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
-      // Message 5: Report link with bridge text merged (dynamic report name per template)
-      const reportNames = {
-        HLT: 'Health Protection Report\u2122',
-        YPR: 'Young Professional Report\u2122',
-        ENT: 'Entrepreneur Report\u2122',
-        FAM: 'Family Protection Report\u2122',
-        INC: 'Income Protection Report\u2122',
-        RET: 'Retirement Readiness Report\u2122',
-        HOM: 'Home Protection Report\u2122',
-        MOT: 'Motor Protection Report\u2122',
-        SME: 'Business Risk Report\u2122',
-        MFG: 'Manufacturing Risk Report\u2122',
-        HOS: 'Hospital Risk Report\u2122',
-        SCH: 'School Risk Report\u2122',
-        CHR: 'Church Risk Report\u2122',
-        CON: 'Construction Risk Report\u2122',
-        TRN: 'Transport Risk Report\u2122'
-      };
-      const reportName = reportNames[prefix] || `${dom.assessmentTitle} Report\u2122`;
-      postMessages.push({
-        type: 'report_link',
-        text: `\uD83D\uDCC4 Your personalized ${reportName} has been sent to:\n\n${email || 'your email'}\n\nIt explains these findings in more detail and includes practical next steps tailored to your situation.\n\nYou can also read it online:\n\n\uD83D\uDD17 View My Report: ${reportUrl}`,
-        _delay: 3000
-      });
+      // ===== Message 3: Risk Story\u2122 + Forecast + Recommendation + Report =====
+      let msg3 = `Your Risk Story\u2122\n\n${buildStrengthsExplanation(riskCats, answers, prefix, dom)}`;
+      const forecast = buildResilienceForecast(riskCats, assessmentData.score, answers, prefix, dom, reportName);
+      if (forecast) msg3 += `\n\n${forecast}`;
+      const recommendation = buildRecommendation(riskCats, dom);
+      if (recommendation) msg3 += `\n\n${recommendation}`;
+      msg3 += `\n\nYour complete ${reportName} is ready.\n\nIt includes:\n\n\u2713 Your detailed CoverScore breakdown\n\u2713 Personalised recommendations\n\u2713 Protection options\n\u2713 Practical next steps\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
+      postMessages.push({ type: 'report_link', text: msg3, _delay: 3000 });
 
-      // Message 6: Advisor CTA — framed as support for the recommendation
+      // ===== Message 4: Advisor CTA =====
       postMessages.push({
         type: 'advisor',
         text: `Would you like a Certified Risk Advisor to review your ${reportName} with you and show you practical ways to strengthen your financial resilience?\n\nA. Yes\nB. Not now`,
