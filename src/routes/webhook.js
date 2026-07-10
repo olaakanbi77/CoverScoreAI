@@ -624,6 +624,17 @@ router.post('/evolution', async (req, res) => {
       };
       const reportName = reportNames[prefix] || `${dom.assessmentTitle} Report\u2122`;
 
+      const makePillarBar = (s) => {
+        const filled = Math.round(Math.min(s, 100) / 10);
+        return '\u2588'.repeat(filled) + '\u2591'.repeat(10 - filled);
+      };
+      const pillarNames = Object.keys(riskCats);
+      const maxNameLen = pillarNames.length > 0 ? Math.max(...pillarNames.map(n => n.length), 20) : 20;
+      const pillarChart = Object.entries(riskCats)
+        .sort(([, a], [, b]) => b - a)
+        .map(([n, s]) => `${n.padEnd(maxNameLen)} ${makePillarBar(s)} ${s}%`)
+        .join('\n');
+
       // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 + Personalized Context =====
       let msg2 = `Your Risk Pillars\n\n${pillarChart}`;
       const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
