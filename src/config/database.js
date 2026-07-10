@@ -56,9 +56,25 @@ const convertSqliteToPg = (sql) => {
   let paramIndex = 1;
   return sql.replace(/\?/g, () => `$${paramIndex++}`);
 };
-
 const initDatabase = () => {
+  // Ensure the critical assessments table is created individually with error logging
+  db.run(`CREATE TABLE IF NOT EXISTS assessments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    answers JSON NOT NULL,
+    score INTEGER NOT NULL,
+    risk_level TEXT NOT NULL,
+    type TEXT DEFAULT 'BUSINESS' CHECK(type IN ('BUSINESS', 'PERSONAL')),
+    ai_report TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  )`, (err) => {
+    if (err) console.error('[initDatabase] Failed to create assessments table:', err.message);
+    else console.log('[initDatabase] assessments table ready');
+  });
+
   db.exec(`
+
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,
@@ -70,18 +86,6 @@ const initDatabase = () => {
       role TEXT DEFAULT 'user' CHECK(role IN ('admin', 'sales', 'analyst', 'user')),
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME
-    );
-
-    CREATE TABLE IF NOT EXISTS assessments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      answers JSON NOT NULL,
-      score INTEGER NOT NULL,
-      risk_level TEXT NOT NULL,
-      type TEXT DEFAULT 'BUSINESS' CHECK(type IN ('BUSINESS', 'PERSONAL')),
-      ai_report TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS leads (
@@ -443,7 +447,9 @@ const initDatabase = () => {
     ('XRS-CYB-001', 'Data Loss After Weak Backup Practice', 'Cross-Over', 'Individuals, professionals, SMEs, schools, and institutions', 'Cyber & Data Risk™', 'Data Loss', 'Important records were lost after a device failure and there was no tested backup available.', 'No backup, device failure.', 'Loss of important information and records.', 'Important information should not exist in only one place.', 'No backup, reliance on single device.', 'Secure backups, password protection, access control, and periodic recovery testing.', 'Cyber Protection, Electronic Equipment Insurance where applicable, Data Recovery Support.', 'Data backup practices.', '“Information stored in one place is vulnerable.”', 'Personal and Business Cyber Risk content', 'Cyber Risk Awareness™', 'High'),
     ('XRS-FIN-001', 'Emergency Fund Gap', 'Cross-Over', 'Individuals, families, SMEs, and institutions', 'Financial Resilience Risk™', 'Cash-Flow Crisis', 'An unexpected expense created a cash-flow crisis because no reserve had been set aside.', 'No emergency fund, unexpected expense.', 'Cash flow crisis, debt.', 'Protection is stronger when insurance and financial reserves work together.', 'No emergency reserve.', 'Emergency reserve policy, cash-flow review, and contingency planning.', 'Appropriate insurance protection, emergency-fund planning, and financial advisory.', 'Emergency reserve, financial resilience.', '“An emergency fund is your first line of defense.”', 'Personal and SME Risk Score™', 'Financial Resilience Planning™', 'High');
 
-  `);
+  `, (err) => {
+    if (err) console.error('[initDatabase] db.exec batch failed:', err.message);
+  });
 
   // Academy Column Migration
   db.all("PRAGMA table_info(academy_modules)", (err, columns) => {
