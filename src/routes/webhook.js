@@ -417,14 +417,14 @@ router.post('/evolution', async (req, res) => {
                 name = ?, email = ?, wa_state = 'qualification',
                 status = 'Report Sent', pipeline_stage = 2,
                 engagement_points = engagement_points + 20, sales_score = sales_score + 20,
-                estimated_premium = ?, chat_history = ?,
+                estimated_premium = ?,
                 birth_date = ?, anniversary_date = ?, contact_person = ?
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType,
               (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
               assessmentData.email || 'whatsapp@coverscore.site',
-              estimatedPremium, JSON.stringify(assessmentData),
+              estimatedPremium,
               assessmentData.birth_date || null, assessmentData.anniversary_date || null,
               assessmentData.name || 'WhatsApp User', lead.id
             ]);
