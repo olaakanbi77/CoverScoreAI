@@ -519,52 +519,67 @@ router.post('/evolution', async (req, res) => {
         return null;
       };
 
-      // ---- strengths explanation (replaces generic positive statements) ----
-      const buildStrengthsExplanation = (cats, answers, prefix, dom) => {
+      // ---- Risk Story\u2122: consequence narrative (what could happen if nothing changes) ----
+      const buildRiskStory = (cats, answers, prefix, dom) => {
         const entries = Object.entries(cats);
         if (entries.length === 0) return '';
-        const strong = entries.filter(([, s]) => s >= 60);
-        const weak = entries.filter(([, s]) => s < 50).sort(([, a], [, b]) => a - b);
-        const parts = [];
         if (prefix === 'INC') {
-          const finCommName = Object.keys(cats).find(k => k.toLowerCase().includes('financial commitment'));
-          const incStabName = Object.keys(cats).find(k => k.toLowerCase().includes('income stabilit'));
-          if (finCommName && cats[finCommName] >= 60 && answers['INC_015'] === 'No') {
-            parts.push("One positive finding is that you\u2019re not currently carrying significant debt obligations. This gives you greater flexibility to build your emergency fund without the pressure of large monthly repayments.");
+          const incomeStop = answers['INC_018'];
+          const savings = answers['INC_012'];
+          const hasProtection = answers['INC_014'];
+          const hasDebt = answers['INC_015'];
+          const incomeSrc = answers['INC_011'];
+
+          let scenario = "Imagine being unable to work for six months because of illness or injury.";
+          const consParts = [];
+
+          if (!incomeStop || incomeStop === 'It would stop completely') {
+            consParts.push("your income would stop");
+          } else if (incomeStop === 'It would reduce significantly') {
+            consParts.push("your income would reduce significantly");
           }
-          if (incStabName && cats[incStabName] >= 60) {
-            parts.push(`Your ${incStabName.toLowerCase()} of ${cats[incStabName]}% indicates your current income sources are reasonably reliable.`);
+
+          if (!savings || savings === 'Less than 1 month') {
+            consParts.push("your emergency savings would be exhausted quickly");
+          } else if (savings === '1-3 months') {
+            consParts.push("your emergency savings would only cover a few months");
           }
+
+          if (hasProtection === 'No') {
+            consParts.push("you don't have income protection cover to replace lost earnings");
+          }
+
+          if (!hasDebt || hasDebt === 'Yes') {
+            consParts.push("ongoing financial commitments could become difficult to maintain");
+          } else if (hasDebt === 'No') {
+            consParts.push("and your existing commitments could become harder to maintain");
+          }
+
+          if (consParts.length > 0) {
+            const last = consParts.pop();
+            const consequence = consParts.length > 0
+              ? consParts.join(', ') + ', and ' + last
+              : last;
+            scenario += `\n\nBased on your responses, ${consequence}.`;
+          }
+
+          scenario += `\n\nThese circumstances could place considerable pressure on both you and your household.`;
+          return scenario;
         }
-        if (strong.length > 0 && parts.length === 0) {
-          const sNames = strong.map(([n]) => n.toLowerCase());
-          const sList = sNames.length === 1 ? sNames[0] : sNames.slice(0, -1).join(', ') + ' and ' + sNames[sNames.length - 1];
-          parts.push(`Your ${sList} ${sNames.length === 1 ? 'is' : 'are'} relatively strong at ${strong.map(([, s]) => s).join('/')}%, providing a solid foundation for your ${dom.closingTerm}.`);
-        }
-        if (weak.length > 0) {
-          const wNames = weak.map(([n]) => n.toLowerCase());
-          const wList = wNames.length === 1 ? wNames[0] : wNames.slice(0, -1).join(', ') + ' and ' + wNames[wNames.length - 1];
-          parts.push(`The greatest opportunity to strengthen your ${dom.closingTerm} lies in addressing your ${wList}.`);
-        }
-        if (parts.length === 0) parts.push(`Your overall ${dom.closingTerm} profile is well-balanced across all areas.`);
-        return parts.join('\n\n');
+        // Generic fallback
+        return `Your overall ${dom.closingTerm} profile shows areas of strength and opportunities to build greater resilience for the future.`;
       };
 
-      // ---- resilience forecast ----
+      // ---- resilience forecast (illustrative, based on improvement gains) ----
       const buildResilienceForecast = (cats, currentScore, answers, prefix, dom, reportName) => {
         const entries = Object.entries(cats);
         if (entries.length === 0) return null;
         const sorted = entries.sort(([, a], [, b]) => a - b);
         const wName = sorted[0][0];
-        const wScore = sorted[0][1];
-        const numP = entries.length;
-        const currentSum = entries.reduce((sum, [, v]) => sum + v, 0);
-        const projectedPillar = 70;
-        const newSum = currentSum - wScore + projectedPillar;
-        const projectedScore = Math.round(newSum / numP);
         const scoringConfig = require('../config/scoring/index');
         const prefixConfig = scoringConfig[prefix];
         let actionLines = [];
+        let totalGain = 0;
         if (prefixConfig && prefixConfig.improvements) {
           let used = 0;
           for (const [qId, qImprovements] of Object.entries(prefixConfig.improvements)) {
@@ -572,14 +587,16 @@ router.post('/evolution', async (req, res) => {
             const answer = answers[qId];
             if (answer && qImprovements[answer]) {
               const imp = qImprovements[answer];
-              const verbMatch = imp.action.match(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore)/i);
+              totalGain += imp.gain;
+              const verbMatch = imp.action.match(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin)/i);
               const prefixWord = verbMatch ? verbMatch[1] : 'Build';
-              const rest = imp.action.replace(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore)\s+/i, '');
+              const rest = imp.action.replace(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin)\s+/i, '');
               actionLines.push(`\u2713 ${prefixWord} ${rest.charAt(0).toLowerCase() + rest.slice(1)}`);
               used++;
             }
           }
         }
+        let projectedScore = Math.min(Math.round(currentScore + totalGain), 95);
         if (actionLines.length === 0) {
           const recTexts = dom.recommendationTexts || {};
           const wLower = wName.toLowerCase();
@@ -595,8 +612,10 @@ router.post('/evolution', async (req, res) => {
           } else {
             actionLines.push(`\u2713 Strengthen your ${wLower}`);
           }
+          const fallbackGain = Math.round((95 - currentScore) * 0.6);
+          projectedScore = Math.max(Math.round(currentScore + fallbackGain), Math.round(currentScore * 1.5));
         }
-        return `Resilience Forecast\u2122\n\nIf you:\n${actionLines.slice(0, 3).join('\n')}\n\nYour ${reportName} score could improve from:\n${currentScore} \u2192 approximately ${projectedScore}`;
+        return { text: `Resilience Forecast\u2122\n\nIf you:\n${actionLines.slice(0, 3).join('\n')}\n\nYour ${reportName} score could improve from\n${currentScore} \u2192 approximately ${projectedScore}`, projectedScore };
       };
 
       // ---- confidence-phrased recommendation ----
@@ -643,10 +662,15 @@ router.post('/evolution', async (req, res) => {
       if (personalContext) msg2 += `\n\n${personalContext}`;
       postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
-      // ===== Message 3: Risk Story\u2122 + Forecast + Recommendation + Report =====
-      let msg3 = `Your Risk Story\u2122\n\n${buildStrengthsExplanation(riskCats, answers, prefix, dom)}`;
+      // ===== Message 3: Risk Story\u2122 + Forecast + Progress Potential + Recommendation + Report =====
+      let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(riskCats, answers, prefix, dom)}`;
       const forecast = buildResilienceForecast(riskCats, assessmentData.score, answers, prefix, dom, reportName);
-      if (forecast) msg3 += `\n\n${forecast}`;
+      if (forecast) msg3 += `\n\n${forecast.text}`;
+      // Progress Potential\u2122
+      if (forecast && forecast.projectedScore > assessmentData.score) {
+        const diff = forecast.projectedScore - assessmentData.score;
+        msg3 += `\n\nProgress Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2193\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
+      }
       const recommendation = buildRecommendation(riskCats, dom);
       if (recommendation) msg3 += `\n\n${recommendation}`;
       msg3 += `\n\nYour complete ${reportName} is ready.\n\nIt includes:\n\n\u2713 Your detailed CoverScore breakdown\n\u2713 Personalised recommendations\n\u2713 Protection options\n\u2713 Practical next steps\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;

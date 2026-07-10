@@ -229,7 +229,7 @@
     ],
     improvements: {
       INC_011: { 'Freelance/Contract': { target: 'Salary from employment', gain: 4, action: 'Supplement freelance income with retainer clients or part-time employment' }, 'Business owner': { target: 'Salary from employment', gain: 6, action: 'Diversify income sources and build business stability' } },
-      INC_012: { 'Less than 1 month': { target: '1-3 months', gain: 10, action: 'Build an emergency fund covering 1-3 months of expenses' }, '1-3 months': { target: 'Over 3 months', gain: 6, action: 'Expand emergency fund to cover 6+ months' } },
+      INC_012: { 'Less than 1 month': { target: '1-3 months', gain: 10, action: 'Begin building an emergency fund covering at least 1-3 months, with a long-term goal of 6 months' }, '1-3 months': { target: 'Over 3 months', gain: 6, action: 'Expand emergency fund to cover 6+ months' } },
       INC_014: { 'No': { target: 'Yes', gain: 10, action: 'Get income protection insurance' } },
       INC_015: { 'Yes': { target: 'No', gain: 8, action: 'Create a debt reduction plan' } },
       INC_018: { 'It would stop completely': { target: 'My income would continue', gain: 10, action: 'Get income protection insurance to replace earnings if unable to work' }, "I'm not sure": { target: 'My income would continue', gain: 6, action: 'Review employee benefits and explore income protection options' } }

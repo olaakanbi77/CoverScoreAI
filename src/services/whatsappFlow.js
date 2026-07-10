@@ -71,7 +71,9 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
     if (input === 'A' || input === 'YES') {
       updatedData.next_action = 'Speak with a Risk Advisor';
-      replyText = `Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
+      const name = currentData.name || '';
+      const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
+      replyText = `${greeting}\n\nI\u2019ve shared your assessment with one of our Certified Risk Advisors.\nThey\u2019ll reach out to you on this number to review your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nIn the meantime, your full report will remain available using the link above.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
     } else if (knownDays.includes(input)) {
@@ -94,7 +96,9 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
     if (input === 'ADVISOR') {
       updatedData.next_action = 'Speak with a Risk Advisor';
-      replyText = `Great.\n\nOne of our Certified Risk Advisors will contact you shortly to walk through your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
+      const name = currentData.name || '';
+      const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
+      replyText = `${greeting}\n\nI\u2019ve shared your assessment with one of our Certified Risk Advisors.\nThey\u2019ll reach out to you on this number to review your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nYour full report will remain available using the link above.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };
