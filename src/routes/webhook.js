@@ -601,7 +601,7 @@ router.post('/evolution', async (req, res) => {
             scenario += `\n\nBased on your responses, ${consequence}.`;
           }
 
-          scenario += `\n\nThese circumstances could place considerable pressure on both you and your household.`;
+          scenario += `\n\nThese circumstances could place considerable pressure on both you and your household. The goal is to protect your income when life is interrupted.`;
           return scenario;
         }
         if (prefix === 'YPR') {
@@ -679,7 +679,7 @@ router.post('/evolution', async (req, res) => {
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
 
-          story += `If a serious health issue required extended treatment, gaps in your coverage could create financial pressure at a time when you should be focused on recovery.`;
+          story += `If a serious health issue required extended treatment, gaps in your coverage could create financial pressure at a time when you should be focused on recovery. The goal is to stay healthy without financial hardship.`;
           return story;
         }
         if (prefix === 'FAM') {
@@ -717,7 +717,7 @@ router.post('/evolution', async (req, res) => {
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
 
-          story += `Without action, an unexpected event could affect not just your finances but the daily lives of the people who depend on you.`;
+          story += `Without action, an unexpected event could affect not just your finances but the daily lives of the people who depend on you. The people who depend on you deserve peace of mind.`;
           return story;
         }
         if (prefix === 'ENT') {
@@ -755,7 +755,7 @@ router.post('/evolution', async (req, res) => {
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
 
-          story += `Without addressing these gaps, a single unexpected event could put both your business and your personal finances at risk.`;
+          story += `Without addressing these gaps, a single unexpected event could put both your business and your personal finances at risk. Protect both your company and your personal future.`;
           return story;
         }
         if (prefix === 'RET') {
@@ -794,7 +794,7 @@ router.post('/evolution', async (req, res) => {
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
 
-          story += `Time is the most powerful asset in retirement planning. Addressing these gaps now gives your savings more time to grow.`;
+          story += `Time is the most powerful asset in retirement planning. Addressing these gaps now gives your savings more time to grow. Confidence in retirement comes from preparation, not hope.`;
           return story;
         }
         if (prefix === 'HOM') {
@@ -806,7 +806,7 @@ router.post('/evolution', async (req, res) => {
           else story += "Without stable housing, you face significant exposure to cost changes and lack the security of homeownership. ";
           if (insurance === 'No') story += "Without adequate home insurance, a fire, theft, or liability claim could result in significant financial loss that could have been avoided. ";
           else story += "While you have some protections in place, making sure your coverage matches the full value of your belongings is essential. ";
-          story += "Your home is more than a building\u2014it's the foundation of your life. Protecting it protects everything else.";
+          story += "Your home is more than a building\u2014it's your foundation. Protecting it protects everything else.";
           return story;
         }
         if (prefix === 'MOT') {
@@ -818,7 +818,7 @@ router.post('/evolution', async (req, res) => {
           else story += "With multiple vehicles, your overall risk exposure and insurance costs multiply significantly. ";
           if (insurance === 'No') story += "Without comprehensive motor insurance, a serious accident or theft could leave you with substantial out-of-pocket costs. ";
           else story += "Having insurance on your primary vehicle is a good start, but ensuring every vehicle you use is adequately covered is important. ";
-          story += "For most people, a vehicle is essential to daily life. Making sure it's protected means one less thing to worry about when the unexpected happens.";
+          story += "Being on the road shouldn\u2019t mean being at risk. Protect your mobility so you can keep moving.";
           return story;
         }
         if (prefix === 'SME') {
@@ -847,7 +847,7 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `A fire, burglary, or prolonged closure could undo years of effort. Closing these gaps means your business can survive the unexpected.`;
+          story += `A fire, burglary, or prolonged closure could undo years of effort. A disruption shouldn't undo everything you've built.`;
           return story;
         }
         if (prefix === 'MFG') {
@@ -868,7 +868,7 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `In manufacturing, downtime is expensive. Protecting your facility and equipment is protecting your revenue.`;
+          story += `In manufacturing, downtime is expensive and protection is essential.`;
           return story;
         }
         if (prefix === 'HOS') {
@@ -886,7 +886,7 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `${gaps.length > 0 ? gaps.join(', ') + ', and ' : ''}${lastGap}. `;
           }
-          story += `In healthcare, the cost of being unprepared isn't just financial\u2014it affects the people who depend on your facility every day.`;
+          story += `In healthcare, patient care depends on being prepared for anything.`;
           return story;
         }
         if (prefix === 'SCH') {
@@ -902,7 +902,7 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `A student injury or property damage claim could disrupt operations and affect the trust parents have placed in your school.`;
+          story += `A student injury or property damage claim could disrupt everything\u2014because the safety of your students and staff comes first.`;
           return story;
         }
         if (prefix === 'CHR') {
@@ -920,7 +920,7 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `A fire, injury, or theft could disrupt your services and create financial strain that takes focus away from your purpose.`;
+          story += `A fire, injury, or theft could disrupt your services\u2014because protecting your congregation protects your mission.`;
           return story;
         }
         if (prefix === 'CON') {
@@ -940,13 +940,14 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `An accident, equipment damage, or project delay could have cascading financial consequences that affect your entire operation.`;
+          story += `An accident, equipment damage, or project delay\u2014every project deserves to be protected.`;
           return story;
         }
         if (prefix === 'TRN') {
+          // same pattern as CON
           const fleetSize = answers['TRN_013'];
           const goodsIns = answers['TRN_015'];
-          const driverAccident = answers['TRN_016'];
+          const driverCover = answers['TRN_016'];
           const compliance = answers['TRN_017'];
           const gaps = [];
           if (fleetSize === 'Over 20') gaps.push("your large fleet creates significant cumulative risk exposure");
@@ -961,7 +962,7 @@ router.post('/evolution', async (req, res) => {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `An accident, cargo theft, or compliance issue could ground your fleet and disrupt your entire operation.`;
+          story += `An accident, cargo theft, or compliance issue\u2014your fleet should keep moving, not stop for the unexpected.`;
           return story;
         }
         // Generic fallback
@@ -1073,9 +1074,27 @@ router.post('/evolution', async (req, res) => {
       postMessages.push({ type: 'report_link', text: msg3, _delay: 3000 });
 
       // ===== Message 4: Advisor CTA =====
+      const advisorCTAs = {
+        INC: 'review your income protection report with you and help you build a plan to protect your income when life is interrupted',
+        HLT: 'review your health protection report with you and help you build a plan to stay healthy without financial hardship',
+        YPR: 'review your young professional report with you and help you protect the progress you\u2019re building',
+        FAM: 'review your family protection report with you and help you give your family the peace of mind they deserve',
+        ENT: 'review your business protection report with you and help you protect both your company and your personal future',
+        RET: 'review your retirement readiness report with you and help you build confidence that comes from preparation, not hope',
+        HOM: 'review your home protection report with you and help you protect what matters most',
+        MOT: 'review your motor protection report with you and help you stay safe on the road without being at risk',
+        SME: 'review your business risk report with you and help you make sure a disruption doesn\u2019t undo everything you\u2019ve built',
+        MFG: 'review your manufacturing risk report with you and help you keep production running without costly downtime',
+        HOS: 'review your healthcare risk report with you and help you ensure your facility is prepared for anything',
+        SCH: 'review your school risk report with you and help you put the safety of your students and staff first',
+        CHR: 'review your church risk report with you and help you protect your congregation and your mission',
+        CON: 'review your construction risk report with you and help you make sure every project is protected',
+        TRN: 'review your transport risk report with you and help you keep your fleet moving'
+      };
+      const ctaPhrase = advisorCTAs[prefix] || 'show you practical ways to strengthen your financial resilience';
       postMessages.push({
         type: 'advisor',
-        text: `Would you like a Certified Risk Advisor to review your ${reportName} with you and show you practical ways to strengthen your financial resilience?\n\nA. Yes\nB. Not now`,
+        text: `Would you like a Certified Risk Advisor to ${ctaPhrase}?\n\nA. Yes\nB. Not now`,
         _delay: 3000
       });
       console.log(`   [Phase 3] Ending sequence built (${postMessages.length} total post-messages)`);

@@ -31,7 +31,7 @@ const domainConfig = {
             { q: 'HLT_012', values: ['Government Health Scheme'], append: "While government schemes provide a foundation, the coverage limits may not extend to major medical procedures or specialist care." },
             { q: 'HLT_012', values: ['Employer HMO'], append: "Your employer HMO is a good starting point, but its coverage limits may not be sufficient for serious or chronic conditions that require extended care." }
           ],
-          suffix: "Exploring options to strengthen your health insurance is the most practical step toward improving your overall protection."
+          suffix: "Strengthening your health coverage is the most practical step toward staying healthy without financial hardship."
         },
         'Preventive Health': {
           base: "Your assessment shows that the biggest opportunity to strengthen your overall protection isn't about what you have\u2014it's about what you do.",
@@ -66,7 +66,7 @@ const domainConfig = {
           suffix: "Building a stronger household safety net through appropriate coverage is your most practical next step."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current protection profile. The areas highlighted in your pillar scores show where focusing your attention would have the greatest impact."
+      catchAll: "Your assessment provides a clear picture of your current protection profile. The goal is straightforward: stay healthy without financial hardship."
     },
     recommendationTexts: {
       'healthcare access': 'reviewing your healthcare access to obtain appropriate health cover for your needs',
@@ -108,7 +108,7 @@ const domainConfig = {
             { q: 'RET_012', values: ['No'], append: "Without a dedicated pension or retirement savings account, you may have limited options to build the retirement nest egg you need." },
             { q: 'RET_015', values: ['No, not yet', 'Partially - I have some documentation'], append: "Your retirement assets and estate plans may not be structured to protect your loved ones." }
           ],
-          suffix: "Starting a structured retirement savings plan is the most impactful step you can take toward securing your financial future."
+          suffix: "Starting a structured retirement savings plan is the most impactful step you can take toward protecting the future you're working toward."
         },
         'Retirement Savings': {
           base: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources to maintain your lifestyle throughout retirement. Building dedicated retirement savings that are separate from your daily income is essential for long-term financial independence."
@@ -129,8 +129,7 @@ const domainConfig = {
           suffix: "Documenting your estate plan and reviewing beneficiary designations are simple steps that provide peace of mind."
         }
       },
-      catchAll: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources and protection to maintain your lifestyle throughout retirement.",
-      suffix: "\n\nDelaying retirement planning further could make it significantly more difficult to achieve your desired lifestyle after retirement."
+      catchAll: "Your assessment shows that your greatest retirement risk is not when you plan to retire\u2014it's whether you'll have sufficient financial resources and protection to maintain your lifestyle throughout retirement. The goal is to make sure your retirement confidence comes from preparation, not hope."
     },
     recommendationTexts: {
       'retirement readiness': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
@@ -157,7 +156,7 @@ const domainConfig = {
             { q: 'INC_012', values: ['Less than 1 month'], append: "With less than a month of savings, even a short income gap could create immediate financial pressure." },
             { q: 'INC_012', values: ['1-3 months'], append: "While you have some buffer, 1\u20133 months of savings may not be enough to find new income or recover from an unexpected event." }
           ],
-          suffix: "Building a robust emergency fund covering at least 6 months of expenses is the most impactful step you can take."
+          suffix: "Building a robust emergency fund covering at least 6 months of expenses is the most impactful step you can take to protect your income when life is interrupted."
         },
         'Income Stability': {
           base: "Your assessment shows that your income situation has some vulnerabilities that could affect your overall protection.",
@@ -186,7 +185,7 @@ const domainConfig = {
           suffix: "Reviewing your debt structure and considering debt protection insurance can help reduce this vulnerability."
         }
       },
-      catchAll: "Your assessment shows that your greatest income protection risk is the gap between your current financial resilience and the level of protection needed to maintain your lifestyle through unexpected disruptions."
+      catchAll: "Your assessment shows that your greatest income protection risk is the gap between your current financial resilience and the level of protection needed to maintain your lifestyle through unexpected disruptions. The goal is to protect your income when life is interrupted."
     },
     recommendationTexts: {
       'emergency financial buffer': 'building an emergency fund that covers at least 6 months of expenses to protect against income disruptions',
@@ -230,14 +229,14 @@ const domainConfig = {
           answerChecks: [
             { q: 'YPR_014', values: ['No'], append: "Without personal health or accident insurance, a single unexpected medical event could force you to drain your savings or delay important life goals like buying a home or starting a family." }
           ],
-          suffix: "Getting basic health and accident insurance isn't about preparing for the worst\u2014it's about making sure nothing derails the future you're building."
+          suffix: "Getting basic health and accident insurance isn't about preparing for the worst\u2014it's about protecting the progress you're building."
         },
         'Future Goal Preparedness': {
           base: "The goals you have for your life\u2014whether that's a home, a family, further education, or financial independence\u2014are what make this assessment matter. Your current habits and income will either support those goals or limit them.",
           suffix: "Strengthening your financial foundation now means your future goals will feel achievable instead of out of reach."
         }
       },
-      catchAll: "Your financial habits are developing in a way that puts you ahead of many people your age. The question now is whether those habits are protected enough to survive life's unexpected moments."
+      catchAll: "Your financial habits are developing in a way that puts you ahead of many people your age. The question now is whether those habits are protected enough to survive life's unexpected moments \u2014 and protect the progress you're building."
     },
     recommendationTexts: {
       'career foundation': 'strengthening your career foundation by building income stability and developing skills that increase your earning potential',
@@ -271,7 +270,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'FAM_011', values: ['3 or more'], append: "With multiple dependents relying on you, any disruption to your income or health could have widespread impact on your family." }
           ],
-          suffix: "Ensuring your protection plans reflect your family size is an essential step."
+          suffix: "Ensuring your protection plans reflect your family size is an essential step\u2014because the people who depend on you deserve peace of mind."
         },
         'Income Resilience': {
           base: "Your assessment suggests that your family's financial security depends heavily on your current income. If your ability to earn was interrupted unexpectedly, your household could face financial pressure within a short period. Strengthening your financial safety net now can provide greater stability and peace of mind for the people who depend on you.",
@@ -305,7 +304,7 @@ const domainConfig = {
           suffix: "Ensuring your family has access to quality healthcare through appropriate coverage is essential for their wellbeing."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your family's current protection profile. The areas highlighted show where focusing your attention would have the greatest impact on your family's security."
+      catchAll: "Your assessment provides a clear picture of your family's current protection profile. The areas highlighted show where focusing your attention would have the greatest impact on your family's security\u2014because the people who depend on you deserve peace of mind."
     },
     recommendationTexts: {
       'family dependency': 'ensuring your protection plans reflect your family size to adequately cover all dependents',
@@ -364,7 +363,7 @@ const domainConfig = {
           suffix: "Building financial reserves and diversifying revenue streams will strengthen your business's ability to weather challenges."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current business protection profile. Focusing on the areas highlighted will help strengthen your business's long-term resilience."
+      catchAll: "Your assessment provides a clear picture of your current business protection profile. The goal is to protect both your company and your personal future."
     },
     recommendationTexts: {
       'business continuity': 'building team capacity and creating a business continuity plan to reduce key-person dependency',
@@ -393,10 +392,10 @@ const domainConfig = {
             { q: 'HOM_011', values: ['Rent'], append: "While renting provides flexibility, you may be missing out on property appreciation and don't benefit from landlord insurance for your contents." },
             { q: 'HOM_012', values: ['No'], append: "Without homeowner's or renter's insurance, your personal belongings and liability are unprotected." }
           ],
-          suffix: "Securing appropriate property insurance and working toward stable housing are the most important steps for your property protection."
+          suffix: "Securing appropriate property insurance and working toward stable housing are the most important steps\u2014because your home is more than a building, it\u2019s your foundation."
         }
       },
-      catchAll: "Your assessment shows that your property protection is an area that could benefit from attention. Ensuring your home and belongings are adequately insured is the most practical step you can take."
+      catchAll: "Your assessment shows that your property protection is an area that could benefit from attention. Ensuring your home and belongings are adequately insured is the most practical step you can take\u2014because your home is more than a building, it\u2019s your foundation."
     },
     recommendationTexts: {
       'property protection': 'securing appropriate property insurance and working toward stable housing to protect your home and belongings'
@@ -421,10 +420,10 @@ const domainConfig = {
             { q: 'MOT_011', values: ['3 or more'], append: "With multiple vehicles, your overall risk exposure and insurance costs increase significantly." },
             { q: 'MOT_012', values: ['No'], append: "Without comprehensive motor insurance, you could face significant out-of-pocket costs from an accident or theft." }
           ],
-          suffix: "Ensuring all your vehicles have appropriate insurance coverage is the most practical step you can take."
+          suffix: "Ensuring all your vehicles have appropriate insurance coverage is the most practical step you can take\u2014because being on the road shouldn't mean being at risk."
         }
       },
-      catchAll: "Your assessment shows that your vehicle protection is an area worth reviewing. Making sure all your vehicles are adequately insured is the most important step."
+      catchAll: "Your assessment shows that your vehicle protection is an area worth reviewing. Making sure all your vehicles are adequately insured is the most important step\u2014because being on the road shouldn't mean being at risk."
     },
     recommendationTexts: {
       'vehicle protection': 'ensuring all your vehicles have appropriate insurance coverage to protect against accidents and theft'
@@ -447,7 +446,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'SME_013', values: ['51+'], append: "With more than 50 employees, your employment liability exposure is substantial and requires comprehensive coverage." }
           ],
-          suffix: "Reviewing employer's liability and workforce insurance is an important step for your business."
+          suffix: "Reviewing employer's liability and workforce insurance is an important step\u2014because a disruption shouldn't undo everything you've built."
         },
         'Financial': {
           base: "Your assessment suggests that your business's financial exposure may not be fully protected.",
@@ -472,7 +471,7 @@ const domainConfig = {
           suffix: "Creating a business continuity plan and ensuring adequate insurance coverage are the most impactful steps you can take."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current business resilience. Focusing on the areas highlighted will help protect your business from unexpected disruptions."
+      catchAll: "Your assessment provides a clear picture of your current business resilience. The goal is to make sure a disruption doesn't undo everything you've built."
     },
     recommendationTexts: {
       'workforce': 'reviewing employer\'s liability and workforce insurance to protect your employees and business',
@@ -498,7 +497,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'MFG_013', values: ['200+'], append: "With over 200 employees, your workforce liability and compliance exposure is substantial." }
           ],
-          suffix: "Reviewing comprehensive workforce insurance and safety programs is an important step for your operations."
+          suffix: "Reviewing comprehensive workforce insurance and safety programs is an important step\u2014because downtime is expensive and protection is essential."
         },
         'Operations': {
           base: "Your assessment suggests that your manufacturing operations may be vulnerable to equipment-related disruptions.",
@@ -523,7 +522,7 @@ const domainConfig = {
           suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current operational resilience. Focusing on the areas highlighted will help protect your manufacturing business from unexpected disruptions."
+      catchAll: "Your assessment provides a clear picture of your current operational resilience. The goal is clear: downtime is expensive and protection is essential."
     },
     recommendationTexts: {
       'workforce': 'reviewing comprehensive workforce insurance and safety programs to protect your employees',
@@ -549,7 +548,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your facility has significant patient liability exposure that requires comprehensive coverage." }
           ],
-          suffix: "Ensuring comprehensive medical malpractice and liability coverage is essential for your facility."
+          suffix: "Ensuring comprehensive medical malpractice and liability coverage is essential\u2014because patient care depends on being prepared for anything."
         },
         'Legal Liability': {
           base: "Your assessment indicates that your healthcare facility may not be adequately protected against medical liability risks.",
@@ -573,7 +572,7 @@ const domainConfig = {
           suffix: "Getting all-risks equipment insurance covering power surge and breakdown is a practical step for asset protection."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current healthcare resilience. Focusing on the areas highlighted will help protect your facility and patients."
+      catchAll: "Your assessment provides a clear picture of your current healthcare resilience. The priority is clear\u2014because patient care depends on being prepared for anything."
     },
     recommendationTexts: {
       'operations': 'ensuring comprehensive medical malpractice and liability coverage for your healthcare facility',
@@ -599,7 +598,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'SCH_013', values: ['Over 500'], append: "With over 500 students, your school has substantial liability exposure that requires comprehensive coverage." }
           ],
-          suffix: "Reviewing comprehensive liability and accident coverage for all students is an important step."
+          suffix: "Reviewing comprehensive liability and accident coverage for all students is an important step\u2014because the safety of your students and staff comes first."
         },
         'Legal Liability': {
           base: "Your assessment indicates that your school may not be adequately protected against injury liability.",
@@ -616,7 +615,7 @@ const domainConfig = {
           suffix: "Getting comprehensive fire insurance for all school buildings is a critical step for asset protection."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current school resilience. Focusing on the areas highlighted will help protect your school, students, and staff."
+      catchAll: "Your assessment provides a clear picture of your current school resilience. The priority is protecting what matters most\u2014because the safety of your students and staff comes first."
     },
     recommendationTexts: {
       'operations': 'reviewing comprehensive liability and accident coverage for all students at your school',
@@ -641,7 +640,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'CHR_013', values: ['Over 1000'], append: "With over 1,000 congregants, your church has significant liability exposure during large gatherings." }
           ],
-          suffix: "Reviewing comprehensive public liability insurance for large gatherings is an important step."
+          suffix: "Reviewing comprehensive public liability insurance for large gatherings is an important step\u2014because protecting your congregation protects your mission."
         },
         'Assets': {
           base: "Your assessment suggests that your church's valuable assets may not be adequately protected.",
@@ -665,7 +664,7 @@ const domainConfig = {
           suffix: "Getting fire insurance for the church building and contents is a critical step for property protection."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current church resilience. Focusing on the areas highlighted will help protect your church and congregation."
+      catchAll: "Your assessment provides a clear picture of your current church resilience. The priority is clear\u2014because protecting your congregation protects your mission."
     },
     recommendationTexts: {
       'operations': 'reviewing comprehensive public liability insurance for large gatherings at your church',
@@ -691,7 +690,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'CON_013', values: ['More than 5'], append: "Managing many concurrent projects increases risk exposure and requires careful insurance coordination." }
           ],
-          suffix: "Ensuring each project has adequate insurance coverage is an important operational step."
+          suffix: "Ensuring each project has adequate insurance coverage is an important operational step\u2014because every project deserves to be protected."
         },
         'Equipment': {
           base: "Your assessment suggests that your construction equipment may represent a significant uninsured risk.",
@@ -705,7 +704,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'CON_015', values: ['No'], append: "Without contractor's all-risk or works insurance, your projects are exposed to significant financial loss." }
           ],
-          suffix: "Getting comprehensive contractor's all-risk insurance is a critical step for project protection."
+          suffix: "Getting comprehensive contractor's all-risk insurance is a critical step\u2014because every project deserves to be protected."
         },
         'Worker Protection': {
           base: "Your assessment shows that your on-site workers may not be adequately protected against accidents.",
@@ -722,7 +721,7 @@ const domainConfig = {
           suffix: "Reviewing contract terms and considering delay penalty protection is a practical step for risk management."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current construction resilience. Focusing on the areas highlighted will help protect your projects and workers."
+      catchAll: "Your assessment provides a clear picture of your current construction resilience. The priority is clear\u2014because every project deserves to be protected."
     },
     recommendationTexts: {
       'operations': 'ensuring each construction project has adequate insurance coverage for proper risk management',
@@ -749,7 +748,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'TRN_013', values: ['Over 20'], append: "With over 20 vehicles, your fleet creates significant cumulative risk exposure that requires comprehensive management." }
           ],
-          suffix: "Implementing fleet-wide risk management and comprehensive insurance is an important step."
+          suffix: "Implementing fleet-wide risk management and comprehensive insurance is an important step\u2014because your fleet should keep moving, not stop for the unexpected."
         },
         'Insurance': {
           base: "Your assessment indicates that your goods in transit may not be adequately insured.",
@@ -774,7 +773,7 @@ const domainConfig = {
           suffix: "Extending comprehensive motor insurance to your entire fleet is a critical step for compliance and protection."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current transport resilience. Focusing on the areas highlighted will help protect your fleet, drivers, and cargo."
+      catchAll: "Your assessment provides a clear picture of your current transport resilience. The goal is simple\u2014your fleet should keep moving, not stop for the unexpected."
     },
     recommendationTexts: {
       'fleet': 'implementing fleet-wide risk management and comprehensive insurance for your vehicles',
