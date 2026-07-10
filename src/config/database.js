@@ -676,9 +676,26 @@ const initDatabase = () => {
     }
   });
 
+  // Auto-heal: if assessments_v2 exists but assessments doesn't, restore it
+  db.all("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('assessments','assessments_v2')", (err2, tables) => {
+    if (!err2 && tables) {
+      const names = tables.map(t => t.name);
+      if (names.includes('assessments_v2') && !names.includes('assessments')) {
+        console.log('[initDatabase] Restoring assessments from assessments_v2...');
+        db.run('ALTER TABLE assessments_v2 RENAME TO assessments', (renameErr) => {
+          if (renameErr) {
+            console.error('[initDatabase] Failed to restore assessments:', renameErr.message);
+          } else {
+            console.log('[initDatabase] assessments table restored from assessments_v2');
+          }
+        });
+      }
+    }
+  });
+
   // Drop legacy CHECK constraint on assessments.risk_level so CSNS 6-tier values can be stored
   db.all("SELECT sql FROM sqlite_master WHERE type='table' AND name='assessments'", (err, rows) => {
-    if (!err && rows && rows[0] && /CHECK\s*\(/i.test(rows[0].sql)) {
+    if (!err && rows && rows[0] && /CHECK\s*\(\s*risk_level\s+IN\s*\(/i.test(rows[0].sql)) {
       db.serialize(() => {
         db.run('PRAGMA foreign_keys = OFF');
         db.run(`CREATE TABLE IF NOT EXISTS assessments_v2 (
@@ -695,9 +712,14 @@ const initDatabase = () => {
         db.run('INSERT INTO assessments_v2 SELECT id, user_id, answers, score, risk_level, COALESCE(type,\'BUSINESS\'), ai_report, created_at FROM assessments', (e) => {
           if (!e) {
             db.run('DROP TABLE assessments');
-            db.run('ALTER TABLE assessments_v2 RENAME TO assessments', () => {
-              db.run('PRAGMA foreign_keys = ON');
-              console.log('Migrated assessments table: removed risk_level CHECK constraint');
+            db.run('ALTER TABLE assessments_v2 RENAME TO assessments', (renameErr) => {
+              if (renameErr) {
+                console.error('[initDatabase] Migration RENAME failed:', renameErr.message);
+                db.run('PRAGMA foreign_keys = ON');
+              } else {
+                db.run('PRAGMA foreign_keys = ON');
+                console.log('Migrated assessments table: removed risk_level CHECK constraint');
+              }
             });
           } else {
             console.error('Migration error (assessments CHECK):', e.message);
