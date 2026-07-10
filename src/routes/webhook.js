@@ -612,6 +612,18 @@ router.post('/evolution', async (req, res) => {
         return `Recommended First Step\n\nBased on your responses, the single action most likely to improve your CoverScore\u2122 is ${action}.\n\nImproving this area from ${weakestScore}% is expected to have the greatest impact on your ${dom.closingTerm}.`;
       };
 
+      const reportNames = {
+        HLT: 'Health Protection Report\u2122', YPR: 'Young Professional Report\u2122',
+        ENT: 'Entrepreneur Report\u2122', FAM: 'Family Protection Report\u2122',
+        INC: 'Income Protection Report\u2122', RET: 'Retirement Readiness Report\u2122',
+        HOM: 'Home Protection Report\u2122', MOT: 'Motor Protection Report\u2122',
+        SME: 'Business Risk Report\u2122', MFG: 'Manufacturing Risk Report\u2122',
+        HOS: 'Hospital Risk Report\u2122', SCH: 'School Risk Report\u2122',
+        CHR: 'Church Risk Report\u2122', CON: 'Construction Risk Report\u2122',
+        TRN: 'Transport Risk Report\u2122'
+      };
+      const reportName = reportNames[prefix] || `${dom.assessmentTitle} Report\u2122`;
+
       // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 + Personalized Context =====
       let msg2 = `Your Risk Pillars\n\n${pillarChart}`;
       const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
