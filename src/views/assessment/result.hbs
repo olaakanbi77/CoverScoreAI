@@ -624,6 +624,82 @@
     .stagger-4 { animation-delay: 0.2s; }
     .stagger-5 { animation-delay: 0.25s; }
 
+    /* Executive Summary */
+    .exec-summary {
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .exec-summary-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.02);
+    }
+    .exec-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--glass-border);
+    }
+    .exec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 16px 20px;
+      background: var(--bg-surface);
+    }
+    .exec-item-full {
+      grid-column: 1 / -1;
+    }
+    .exec-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+    .exec-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .exec-warning {
+      color: var(--color-warning, #f59e0b);
+    }
+    .exec-highlight {
+      color: var(--color-primary);
+    }
+    .exec-arrow {
+      display: inline-block;
+      margin: 0 8px;
+      color: var(--text-muted);
+      font-size: 20px;
+    }
+    .exec-value#execPotential {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .exec-value#execPotential #execCurrentScore {
+      color: var(--text-muted);
+    }
+    .exec-value#execPotential #execPotentialScore {
+      color: var(--color-success, #10b981);
+    }
+
     @media (max-width: 600px) {
       .score-hero { padding: 36px 20px; }
       .score-gauge-wrap { width: 160px; height: 160px; }
@@ -632,6 +708,7 @@
       .section-body { padding: 20px; }
       .cta-row { flex-direction: column; }
       .cta-row a { min-width: unset; }
+      .exec-summary-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -705,6 +782,50 @@
                 Book Consultation
               </a>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Executive Summary: At a Glance -->
+      <div class="exec-summary fade-in stagger-3" id="execSummary" style="display:none;">
+        <div class="exec-summary-header">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Your CoverScore at a Glance
+        </div>
+        <div class="exec-summary-grid">
+          <div class="exec-item">
+            <span class="exec-label">CoverScore&trade;</span>
+            <span class="exec-value" id="execScore">--</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-label">Resilience Level</span>
+            <span class="exec-value" id="execRiskLevel">--</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-label">Highest Priority</span>
+            <span class="exec-value" id="execPriority">--</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-label">Biggest Strength</span>
+            <span class="exec-value" id="execStrength">--</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-label">Biggest Vulnerability</span>
+            <span class="exec-value exec-warning" id="execVulnerability">--</span>
+          </div>
+          <div class="exec-item">
+            <span class="exec-label">Recommended First Step</span>
+            <span class="exec-value" id="execFirstStep">--</span>
+          </div>
+          <div class="exec-item exec-item-full">
+            <span class="exec-label">Potential Score After Improvements</span>
+            <span class="exec-value exec-highlight" id="execPotential">
+              <span id="execCurrentScore">--</span>
+              <span class="exec-arrow">&rarr;</span>
+              <span id="execPotentialScore">--</span>
+            </span>
           </div>
         </div>
       </div>
@@ -878,6 +999,24 @@
           document.getElementById('financialExposureText').style.display = 'block';
         } else {
           document.getElementById('financialExposureText').style.display = 'none';
+        }
+
+        // Populate Executive Summary "At a Glance"
+        const exec = data.executiveSummary || {};
+        if (exec.score !== undefined) {
+          document.getElementById('execScore').textContent = exec.score + '/100';
+          document.getElementById('execRiskLevel').textContent = exec.riskLevel || '--';
+          document.getElementById('execPriority').textContent = exec.highestPriority || '--';
+          document.getElementById('execStrength').textContent = exec.biggestStrength || '--';
+          document.getElementById('execVulnerability').textContent = exec.biggestVulnerability || '--';
+          document.getElementById('execFirstStep').textContent = exec.recommendedFirstStep || '--';
+          if (exec.potentialScore !== null && exec.potentialScore !== undefined) {
+            document.getElementById('execCurrentScore').textContent = exec.score;
+            document.getElementById('execPotentialScore').textContent = exec.potentialScore;
+          } else {
+            document.getElementById('execPotential').innerHTML = '--';
+          }
+          document.getElementById('execSummary').style.display = 'block';
         }
 
         // Build AI Explanation Layer

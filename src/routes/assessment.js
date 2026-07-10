@@ -479,8 +479,19 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     const answers = assessment.answers ? JSON.parse(assessment.answers) : {};
     const aiReport = assessment.ai_report ? JSON.parse(assessment.ai_report) : null;
     
-    // Recompute to get the dynamic min_loss, max_loss, recommendations
-    const { min_loss, max_loss, recommendations } = await calculateScore(answers);
+    // Recompute to get scoring details for executive summary
+    const scoreResult = await calculateScore(answers);
+    const { min_loss, max_loss, recommendations, risk_categories, improvement_potential } = scoreResult;
+
+    // Build executive summary data
+    const riskLevel = getRiskLevel(assessment.score);
+    const cats = risk_categories || {};
+    const sortedCats = Object.entries(cats).sort(([, a], [, b]) => b - a);
+    const highestPriority = sortedCats.length > 0 ? sortedCats[sortedCats.length - 1][0] : null;
+    const biggestStrength = sortedCats.length > 0 ? sortedCats[0][0] : null;
+    const biggestVulnerability = highestPriority;
+    const recommendedFirstStep = recommendations && recommendations.length > 0 ? recommendations[0] : null;
+    const potentialScore = improvement_potential ? improvement_potential.potential_score : null;
 
     const industry = answers.business?.industry || 'General Business';
     const industryRisks = getIndustryRisks(industry);
@@ -488,10 +499,21 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     res.json({
       id: assessment.id,
       score: assessment.score,
-      riskLevel: getRiskLevel(assessment.score),
+      riskLevel,
       min_loss,
       max_loss,
       recommendations,
+      riskCategories: cats,
+      improvementPotential: improvement_potential,
+      executiveSummary: {
+        score: assessment.score,
+        riskLevel,
+        highestPriority,
+        biggestStrength,
+        biggestVulnerability,
+        recommendedFirstStep,
+        potentialScore
+      },
       aiReport,
       answers,
       industryRisks,
