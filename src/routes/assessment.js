@@ -246,7 +246,7 @@ router.post('/submit', optionalAuth, async (req, res, next) => {
       'Developing': 'moderate',
       'Needs Attention': 'moderate',
       'Priority Improvement': 'high',
-      'Critical Priority': 'critical',
+      'Critical': 'critical',
       'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
       'High Risk': 'high', 'Critical Risk': 'critical',
       'Moderate': 'moderate', 'Vulnerable': 'high',

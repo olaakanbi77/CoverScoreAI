@@ -20,7 +20,7 @@ const domainConfig = {
       'developing': 'Developing Resilience',
       'needs_attention': 'Needs Attention',
       'priority_improvement': 'Priority Improvement',
-      'critical_priority': 'Critical Priority'
+      'critical_priority': 'Critical'
     },
     insightTexts: {
       perPillar: {
@@ -74,7 +74,8 @@ const domainConfig = {
       'medical risk profile': 'seeking a medical review and ongoing monitoring to address potential health vulnerabilities',
       'financial health protection': 'reviewing your financial health protection to ensure you could cope with the financial impact of a serious illness without placing your family under pressure',
       'household resilience': 'building a family protection plan to safeguard your loved ones against unexpected events'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: If a serious health issue kept you from working for several months, your current level of protection determines whether you\u2019d need to dip into savings, take on debt, or disrupt your family\u2019s lifestyle. Every point you improve on your CoverScore brings you closer to facing a health setback without financial setback."
   },
   RET: {
     assessmentTitle: 'Retirement Readiness',
@@ -96,7 +97,7 @@ const domainConfig = {
       'developing': 'Developing Resilience',
       'needs_attention': 'Needs Attention',
       'priority_improvement': 'Priority Improvement',
-      'critical_priority': 'Critical Priority'
+      'critical_priority': 'Critical'
     },
     insightTexts: {
       perPillar: {
@@ -136,7 +137,8 @@ const domainConfig = {
       'retirement savings': 'starting or reviewing a dedicated retirement savings plan so that your future income does not depend solely on your active employment',
       'healthcare protection': 'reviewing your protection options for retirement to safeguard your savings against unexpected healthcare and long-term care costs',
       'legacy planning': 'documenting how your assets should be distributed and nominating beneficiaries for your retirement accounts'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: Your retirement isn\u2019t just about how much you save\u2014it\u2019s about whether your income, healthcare, and legacy plans will hold up when you need them. A higher CoverScore means you\u2019re more likely to maintain your lifestyle, cover medical costs, and leave the legacy you intend, no matter how long retirement lasts."
   },
   INC: {
     assessmentTitle: 'Income Protection',
@@ -149,7 +151,7 @@ const domainConfig = {
     pillarMappings: {},
     insightTexts: {
       perPillar: {
-        'Financial Resilience': {
+        'Emergency Financial Buffer': {
           base: "Your assessment suggests that your emergency savings are not yet sufficient to weather a prolonged income disruption.",
           answerChecks: [
             { q: 'INC_012', values: ['Less than 1 month'], append: "With less than a month of savings, even a short income gap could create immediate financial pressure." },
@@ -157,24 +159,27 @@ const domainConfig = {
           ],
           suffix: "Building a robust emergency fund covering at least 6 months of expenses is the most impactful step you can take."
         },
-        'Career Security': {
+        'Income Stability': {
           base: "Your assessment shows that your income situation has some vulnerabilities that could affect your overall protection.",
           answerChecks: [
             { q: 'INC_011', values: ['Freelance/Contract'], append: "Freelance or contract income can be unpredictable, making it harder to maintain consistent financial commitments during disruptions." },
             { q: 'INC_011', values: ['Business owner'], append: "Business income is tied to business performance, which can fluctuate and create income uncertainty." },
-            { q: 'INC_013', values: ['No'], append: "Without confidence in your income stability, planning for the future becomes significantly more challenging." }
+            { q: 'INC_013', values: ['No'], append: "Without secondary income sources, planning for the future becomes significantly more challenging." }
           ],
-          suffix: "Diversifying your income sources and building a career contingency plan is a practical step toward strengthening your income security."
+          suffix: "Diversifying your income sources and building a contingency plan is a practical step toward strengthening your income security."
         },
-        'Protection': {
+        'Income Protection Cover': {
           base: "Your assessment indicates that your protection against income loss may not be adequate.",
           answerChecks: [
-            { q: 'INC_014', values: ['No'], append: "Without income protection insurance, losing your ability to earn could have severe financial consequences for you and your dependants." }
+            { q: 'INC_014', values: ['No'], append: "Without income protection insurance, losing your ability to earn could have severe financial consequences for you and your dependants." },
+            { q: 'INC_018', values: ['It would stop completely'], append: "If you were unable to work for six months, your income would stop completely \u2014 leaving you without financial support during recovery." },
+            { q: 'INC_018', values: ["I'm not sure"], append: "Not knowing what would happen to your income during a prolonged inability to work is a gap worth addressing." },
+            { q: 'INC_018', values: ['It would reduce significantly'], append: "Even with some income remaining, a significant reduction during a prolonged inability to work could create financial pressure." }
           ],
           suffix: "Considering income protection insurance is one of the most important steps you can take to safeguard your livelihood."
         },
-        'Debt Management': {
-          base: "Your assessment shows that your debt situation could present a risk if your income is disrupted.",
+        'Financial Commitments': {
+          base: "Your assessment shows that your financial commitments could present a risk if your income is disrupted.",
           answerChecks: [
             { q: 'INC_015', values: ['Yes'], append: "With debts that depend on continued income, any disruption to your earnings could create a cascading financial challenge." }
           ],
@@ -184,11 +189,12 @@ const domainConfig = {
       catchAll: "Your assessment shows that your greatest income protection risk is the gap between your current financial resilience and the level of protection needed to maintain your lifestyle through unexpected disruptions."
     },
     recommendationTexts: {
-      'financial resilience': 'building an emergency fund that covers at least 6 months of expenses to protect against income disruptions',
-      'career security': 'diversifying your income sources and building a career contingency plan to strengthen your income stability',
-      'protection': 'considering income protection insurance to replace your earnings if you become unable to work',
-      'debt management': 'reviewing your debt structure and considering debt protection insurance to reduce financial vulnerability'
-    }
+      'emergency financial buffer': 'building an emergency fund that covers at least 6 months of expenses to protect against income disruptions',
+      'income stability': 'diversifying your income sources and building a contingency plan to strengthen your income stability',
+      'income protection cover': 'considering income protection insurance to replace your earnings if you become unable to work',
+      'financial commitments': 'reviewing your debt structure and considering debt protection insurance to reduce financial vulnerability'
+    },
+    realLifeContext: "Here\u2019s what this means in real life: If an illness or injury prevented you from working for six months, your current income protection determines whether you\u2019d be able to cover your bills, service your debts, and maintain your household\u2019s lifestyle. A higher CoverScore means a stronger safety net for you and the people who depend on your income."
   },
   YPR: {
     assessmentTitle: 'Young Professional',
@@ -233,7 +239,8 @@ const domainConfig = {
       'financial resilience': 'building an emergency fund and setting clear savings goals to strengthen your financial foundation',
       'income security': 'focusing on career growth and building an income buffer to protect against income changes',
       'protection': 'getting basic health and accident insurance to protect your financial foundation from unexpected events'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: As a young professional, an unexpected health issue or job loss could derail your financial progress before it really starts. Your CoverScore shows how well you\u2019d weather that storm\u2014and every point you improve means more freedom to pursue your goals without worrying about setbacks."
   },
   FAM: {
     assessmentTitle: 'Family Protection',
@@ -250,7 +257,7 @@ const domainConfig = {
       'developing': 'Developing Resilience',
       'needs_attention': 'Needs Attention',
       'priority_improvement': 'Priority Improvement',
-      'critical_priority': 'Critical Priority'
+      'critical_priority': 'Critical'
     },
     insightTexts: {
       perPillar: {
@@ -301,7 +308,8 @@ const domainConfig = {
       'financial protection': 'reviewing and securing comprehensive family insurance coverage to protect your loved ones',
       'future security': 'setting up an education savings plan or education insurance policy for your children\'s future',
       'family healthcare': 'ensuring your family has access to quality healthcare through appropriate health insurance coverage'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: If something happened to you\u2014an illness, accident, or worse\u2014your family\u2019s ability to maintain its lifestyle, pay for school, and access healthcare depends on the protection you\u2019ve put in place today. Your CoverScore measures how well your family would be protected, and every improvement means greater peace of mind for the people who matter most."
   },
   ENT: {
     assessmentTitle: 'Business Protection',
@@ -359,7 +367,8 @@ const domainConfig = {
       'employee protection': 'considering key person insurance to protect your business against the loss of critical team members',
       'asset protection': 'separating personal and business assets through proper corporate structuring',
       'financial resilience': 'building financial reserves and diversifying revenue streams to strengthen your business resilience'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: If you were suddenly unable to run your business, would it survive? Your CoverScore shows how prepared your business is for the unexpected\u2014whether that\u2019s losing a key team member, facing a liability claim, or recovering from a disruption. A higher score means a more resilient business that can weather storms without threatening your personal finances."
   },
   HOM: {
     assessmentTitle: 'Home Protection',
@@ -386,7 +395,8 @@ const domainConfig = {
     },
     recommendationTexts: {
       'property protection': 'securing appropriate property insurance and working toward stable housing to protect your home and belongings'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: Your home is likely your most valuable asset. Without proper protection, a fire, theft, or liability claim could result in significant financial loss. Your CoverScore reflects how well your home and belongings are shielded from unexpected events."
   },
   MOT: {
     assessmentTitle: 'Motor Protection',
@@ -413,7 +423,8 @@ const domainConfig = {
     },
     recommendationTexts: {
       'vehicle protection': 'ensuring all your vehicles have appropriate insurance coverage to protect against accidents and theft'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: If you were involved in a serious accident or your vehicle was stolen, would you be able to cover the loss without financial strain? Your CoverScore shows how prepared you are for vehicle-related risks that could disrupt your daily life."
   },
   SME: {
     assessmentTitle: 'Business Risk Assessment',
@@ -463,7 +474,8 @@ const domainConfig = {
       'financial': 'ensuring your business insurance adequately covers your revenue scale for proper financial protection',
       'asset protection': 'getting comprehensive fire and burglary insurance to protect your business assets',
       'business continuity': 'creating a business continuity plan and ensuring adequate insurance coverage to survive disruptions'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: If a fire, burglary, or prolonged closure hit your business today, would you be able to recover? Your CoverScore measures how resilient your business is to unexpected disruptions\u2014and every improvement means a stronger safety net for your employees and operations."
   },
   MFG: {
     assessmentTitle: 'Manufacturing Risk Assessment',
@@ -513,7 +525,8 @@ const domainConfig = {
       'operations': 'implementing equipment redundancy and preventive maintenance programs for operational continuity',
       'asset protection': 'getting comprehensive fire and special perils insurance for your facility and equipment',
       'business continuity': 'creating a comprehensive business continuity and disaster recovery plan for your manufacturing business'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: A machine breakdown, fire, or supply chain disruption could halt your manufacturing operations for weeks. Your CoverScore measures how prepared you are to keep production running\u2014and every improvement means less downtime and greater revenue protection."
   },
   HOS: {
     assessmentTitle: 'Healthcare Risk Assessment',
@@ -562,7 +575,8 @@ const domainConfig = {
       'legal liability': 'securing comprehensive professional indemnity and medical malpractice insurance for your facility',
       'equipment': 'ensuring all high-value medical equipment is specifically insured against damage or breakdown',
       'asset protection': 'getting all-risks equipment insurance covering power surge and breakdown for critical equipment'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: A malpractice claim, equipment failure, or facility damage could disrupt patient care and create significant financial liability. Your CoverScore reflects how well your healthcare facility is protected against the risks that matter most."
   },
   SCH: {
     assessmentTitle: 'School Risk Assessment',
@@ -603,7 +617,8 @@ const domainConfig = {
       'operations': 'reviewing comprehensive liability and accident coverage for all students at your school',
       'legal liability': 'securing comprehensive public liability insurance covering student injuries on your premises',
       'asset protection': 'getting comprehensive fire insurance for all school buildings to protect your facilities'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: A student injury, fire, or liability claim could disrupt operations and put your school\u2019s reputation at risk. Your CoverScore measures how prepared your school is to handle these events without major disruption to students and staff."
   },
   CHR: {
     assessmentTitle: 'Church Risk Assessment',
@@ -652,7 +667,8 @@ const domainConfig = {
       'assets': 'ensuring high-value musical instruments and broadcast equipment are specifically insured',
       'legal liability': 'securing comprehensive public liability insurance for your church premises',
       'property': 'getting fire insurance for the church building and contents to protect your property'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: A congregant injury, fire, or theft of valuable equipment could disrupt your church\u2019s operations and create financial strain. Your CoverScore reflects how well your church is protected so you can focus on your mission with confidence."
   },
   CON: {
     assessmentTitle: 'Construction Risk Assessment',
@@ -709,7 +725,8 @@ const domainConfig = {
       'insurance': 'getting comprehensive contractor\'s all-risk insurance to protect your construction projects',
       'worker protection': 'getting group personal accident cover for all on-site workers to protect your team',
       'contractual': 'reviewing contract terms and considering delay penalty protection for your projects'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: A workplace accident, equipment damage, or project delay could put your construction business under serious financial pressure. Your CoverScore measures how prepared you are to keep projects on track and protect your workers and bottom line."
   },
   TRN: {
     assessmentTitle: 'Transport Risk Assessment',
@@ -759,7 +776,8 @@ const domainConfig = {
       'insurance': 'getting comprehensive goods-in-transit insurance to protect your cargo during transportation',
       'worker protection': 'getting group personal accident cover for all drivers to protect your team',
       'compliance': 'extending comprehensive motor insurance to your entire fleet for compliance and protection'
-    }
+    },
+    realLifeContext: "Here\u2019s what this means in real life: An accident, cargo theft, or compliance issue could ground your fleet and disrupt your entire operation. Your CoverScore reflects how prepared your transport business is to keep moving\u2014no matter what happens on the road."
   }
 };
 

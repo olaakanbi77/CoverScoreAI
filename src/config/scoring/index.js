@@ -141,17 +141,17 @@
   INC: {
     name: 'Income Protection',
     pillars: [
-      { id: 'financial_resilience', name: 'Financial Resilience', weight: 0.35 },
-      { id: 'career_security', name: 'Career & Income Security', weight: 0.25 },
-      { id: 'protection', name: 'Protection & Insurance', weight: 0.25 },
-      { id: 'debt_management', name: 'Debt Management', weight: 0.15 }
+      { id: 'emergency_financial_buffer', name: 'Emergency Financial Buffer', weight: 0.35 },
+      { id: 'income_stability', name: 'Income Stability', weight: 0.25 },
+      { id: 'income_protection_cover', name: 'Income Protection Cover', weight: 0.25 },
+      { id: 'financial_commitments', name: 'Financial Commitments', weight: 0.15 }
     ],
     categories: {
-      income_source: { name: 'Income Source', pillar: 'career_security' },
-      emergency_savings: { name: 'Emergency Savings', pillar: 'financial_resilience' },
-      income_stability: { name: 'Income Stability', pillar: 'career_security' },
-      income_insurance: { name: 'Income Insurance', pillar: 'protection' },
-      debt_exposure: { name: 'Debt Exposure', pillar: 'debt_management' }
+      income_source: { name: 'Income Source', pillar: 'income_stability' },
+      emergency_savings: { name: 'Emergency Savings', pillar: 'emergency_financial_buffer' },
+      income_stability: { name: 'Income Stability', pillar: 'income_stability' },
+      income_insurance: { name: 'Income Insurance', pillar: 'income_protection_cover' },
+      debt_exposure: { name: 'Debt Exposure', pillar: 'financial_commitments' }
     },
     questions: {
       INC_011: {
@@ -188,6 +188,13 @@
         scores: { 'No': 100, 'Yes': 25 },
         gaps: { 'Yes': 'Your debts depend on continued income, creating significant vulnerability.' },
         recommendations: { 'Yes': 'Review debt structure and consider debt protection insurance.' }
+      },
+      INC_018: {
+        category: 'income_insurance',
+        weight: 3,
+        scores: { 'My income would continue': 100, 'It would reduce significantly': 50, 'It would stop completely': 0, "I'm not sure": 25 },
+        gaps: { 'It would stop completely': 'Your income would stop completely if you were unable to work for six months.', "I'm not sure": 'You are uncertain about what would happen to your income during a prolonged inability to work.' },
+        recommendations: { 'It would stop completely': 'Consider income protection insurance to replace your earnings if you cannot work.', "I'm not sure": 'Review your employee benefits and insurance options to understand what income protection you have.' }
       }
     },
     modifiers: [
@@ -206,6 +213,13 @@
         description: 'Significant debt without income protection is high risk'
       },
       {
+        id: 'no_protection_income_stops',
+        name: 'No Income Protection + Income Would Stop',
+        conditions: [['INC_014', 'No'], ['INC_018', 'It would stop completely']],
+        penalty: 8,
+        description: 'No income protection and income would stop during extended inability to work'
+      },
+      {
         id: 'positive_income_resilience',
         name: 'Strong Savings + Income Insurance',
         conditions: [['INC_012', 'Over 3 months'], ['INC_014', 'Yes']],
@@ -217,7 +231,8 @@
       INC_011: { 'Freelance/Contract': { target: 'Salary from employment', gain: 4, action: 'Supplement freelance income with retainer clients or part-time employment' }, 'Business owner': { target: 'Salary from employment', gain: 6, action: 'Diversify income sources and build business stability' } },
       INC_012: { 'Less than 1 month': { target: '1-3 months', gain: 10, action: 'Build an emergency fund covering 1-3 months of expenses' }, '1-3 months': { target: 'Over 3 months', gain: 6, action: 'Expand emergency fund to cover 6+ months' } },
       INC_014: { 'No': { target: 'Yes', gain: 10, action: 'Get income protection insurance' } },
-      INC_015: { 'Yes': { target: 'No', gain: 8, action: 'Create a debt reduction plan' } }
+      INC_015: { 'Yes': { target: 'No', gain: 8, action: 'Create a debt reduction plan' } },
+      INC_018: { 'It would stop completely': { target: 'My income would continue', gain: 10, action: 'Get income protection insurance to replace earnings if unable to work' }, "I'm not sure": { target: 'My income would continue', gain: 6, action: 'Review employee benefits and explore income protection options' } }
     }
   },
 

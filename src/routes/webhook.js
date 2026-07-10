@@ -228,7 +228,7 @@ router.post('/evolution', async (req, res) => {
       'Excellent': 'Excellent', 'Strong': 'Strong', 'Developing': 'Developing',
       'Needs Attention': 'Needs Attention',
       'Priority Improvement': 'Priority Improvement',
-      'Critical Priority': 'Critical Priority',
+      'Critical': 'Critical',
       'Very Low Risk': 'Very Low', 'Low Risk': 'Low', 'Moderate Risk': 'Moderate',
       'High Risk': 'High', 'Critical Risk': 'Critical'
     };
@@ -239,7 +239,7 @@ router.post('/evolution', async (req, res) => {
       'Developing': 'moderate',
       'Needs Attention': 'moderate',
       'Priority Improvement': 'high',
-      'Critical Priority': 'critical',
+      'Critical': 'critical',
       'Very Low Risk': 'low', 'Low Risk': 'low', 'Moderate Risk': 'moderate',
       'High Risk': 'high', 'Critical Risk': 'critical',
       'Moderate': 'moderate', 'Vulnerable': 'high',
@@ -298,7 +298,7 @@ router.post('/evolution', async (req, res) => {
           HLT: { strengths: '', risks: "⚠ Your health protection gaps need attention.", recommendations: "• Review your health coverage.\n• Build an emergency medical fund.\n• Schedule preventive health screenings." },
           ENT: { strengths: "✓ Strong business vision\n✓ Market awareness", risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection", recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets." },
           FAM: { strengths: "✓ Clear long-term goals\n✓ Strong familial support", risks: "⚠ Inadequate life cover\n⚠ Education funding gap", recommendations: "• Review Life Insurance policy.\n• Set up an education trust." },
-          INC: { strengths: "✓ Income stability\n✓ Employment security", risks: "⚠ Limited emergency savings\n⚠ No income protection insurance", recommendations: "• Build an emergency fund.\n• Consider income protection insurance." },
+           INC: { strengths: "✓ Income stability\n✓ Employment security", risks: "⚠ Limited emergency savings\n⚠ No income protection cover", recommendations: "• Build an emergency fund.\n• Consider income protection insurance." },
           RET: { strengths: "✓ Retirement planning awareness\n✓ Long-term thinking", risks: "⚠ Inadequate retirement savings\n⚠ No long-term care plan\n⚠ No legacy documentation", recommendations: "• Start or review a dedicated retirement savings plan.\n• Consider long-term care insurance.\n• Document your asset distribution and beneficiary nominations." },
           YPR: { strengths: "✓ Early career financial awareness", risks: "⚠ Limited emergency savings\n⚠ No personal insurance", recommendations: "• Build an emergency fund.\n• Consider health and accident insurance." },
           HOM: { strengths: "✓ Property ownership", risks: "⚠ No home contents insurance", recommendations: "• Consider homeowner's or renter's insurance." },
@@ -472,7 +472,7 @@ router.post('/evolution', async (req, res) => {
         'priority_improvement': 'Priority Improvement', 'critical_priority': 'Critical Priority',
         'Excellent': 'Excellent Resilience', 'Strong': 'Strong Resilience',
         'Developing': 'Developing Resilience', 'Needs Attention': 'Needs Attention',
-        'Priority Improvement': 'Priority Improvement', 'Critical Priority': 'Critical Priority'
+        'Priority Improvement': 'Priority Improvement', 'Critical': 'Critical'
       };
       const dbLevel = (dbRiskLevelMap[assessmentData.riskLevel] || '').toLowerCase();
       const displayLabel = csnsDisplayLabels[assessmentData.riskLevel] || csnsDisplayLabels[dbLevel] || dom.displayLabel || 'Building Resilience';
@@ -527,6 +527,11 @@ router.post('/evolution', async (req, res) => {
       const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
       if (insightText) {
         postMessages.push({ type: 'insight', text: insightText, _delay: 3000 });
+      }
+
+      // Message 3.5: What this means in real life
+      if (dom.realLifeContext) {
+        postMessages.push({ type: 'real_life', text: dom.realLifeContext, _delay: 3000 });
       }
 
       // Message 4: One Primary Recommendation (threshold-based per CSNS Section 14)
@@ -596,7 +601,7 @@ router.post('/evolution', async (req, res) => {
       // Message 6: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
-        text: `If you'd like, one of our Certified Risk Advisors can walk you through the report and answer any questions.\n\nWould you like help implementing this recommendation?\n\nA. Yes\nB. Not now`,
+        text: `If you'd like, one of our Certified Risk Advisors can walk you through the ${reportName} with you and show you practical ways to strengthen your ${dom.resilienceTerm.toLowerCase()}.\n\nWould you like me to arrange a free consultation?\n\nA. Yes\nB. Not now`,
         _delay: 3000
       });
       console.log(`   [Phase 3] Ending sequence built (${postMessages.length} total post-messages)`);

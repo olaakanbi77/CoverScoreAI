@@ -779,7 +779,7 @@
                       }
     },
     {
-        "pillar":  "Career \u0026 Income Security",
+        "pillar":  "Income Stability",
         "question":  "What is your primary source of income?",
         "question_type":  "single_choice",
         "answers":  [
@@ -794,7 +794,7 @@
                       }
     },
     {
-        "pillar":  "Financial Resilience",
+        "pillar":  "Emergency Financial Buffer",
         "question":  "If you lost your primary income tomorrow, how long would your emergency funds last?",
         "question_type":  "single_choice",
         "answers":  [
@@ -817,7 +817,7 @@
                       }
     },
     {
-        "pillar":  "Career \u0026 Income Security",
+        "pillar":  "Income Stability",
         "question":  "Do you have secondary sources of income (e.g. investments, real estate)?",
         "question_type":  "yes_no",
         "answers":  [
@@ -836,7 +836,7 @@
                       }
     },
     {
-        "pillar":  "Protection \u0026 Insurance",
+        "pillar":  "Income Protection Cover",
         "question":  "Do you currently have a policy that pays you a monthly income if you are disabled by an accident?",
         "question_type":  "yes_no",
         "answers":  [
@@ -855,7 +855,7 @@
                       }
     },
     {
-        "pillar":  "Financial Resilience",
+        "pillar":  "Financial Commitments",
         "question":  "Do you have significant debts (mortgage, personal loans) that require monthly repayments?",
         "question_type":  "yes_no",
         "answers":  [
@@ -869,6 +869,22 @@
                        },
         "id":  "INC_015",
         "industry":  "income",
+        "branching":  {
+                          "DEFAULT":  "INC_018"
+                      }
+    },
+    {
+        "id":  "INC_018",
+        "industry":  "income",
+        "pillar":  "Income Protection Cover",
+        "question":  "If illness or injury prevented you from working for six months, what would happen to your income?",
+        "question_type":  "single_choice",
+        "answers":  [
+                        "My income would continue",
+                        "It would reduce significantly",
+                        "It would stop completely",
+                        "I'm not sure"
+                    ],
         "branching":  {
                           "DEFAULT":  "INC_016"
                       }

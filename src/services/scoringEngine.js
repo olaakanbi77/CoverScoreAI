@@ -63,6 +63,6 @@ module.exports = {
     if (score >= 55) return 'Developing';
     if (score >= 40) return 'Needs Attention';
     if (score >= 25) return 'Priority Improvement';
-    return 'Critical Priority';
+    return 'Critical';
   }
 };
