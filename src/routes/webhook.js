@@ -168,8 +168,8 @@ router.post('/evolution', async (req, res) => {
     }
 
     currentState = lead.wa_state || 'initial';
-    chatHistory = JSON.parse(lead.chat_history || '[]');
-    assessmentData = JSON.parse(lead.assessment_data || '{}');
+    try { chatHistory = JSON.parse(lead.chat_history || '[]'); } catch (e) { chatHistory = []; }
+    try { assessmentData = JSON.parse(lead.assessment_data || '{}'); } catch (e) { assessmentData = {}; }
     ccieContext = (() => {
       try { return JSON.parse(lead.ccie_context || 'null'); } catch(e) { return null; }
     })() || ccieEngine.buildContext({
@@ -366,40 +366,40 @@ router.post('/evolution', async (req, res) => {
 
         // Fire AI report generation + remaining persistence in background (don't block user response)
         setImmediate(async () => {
-          let aiReportFinal;
           try {
-            const creIntel = generateRecommendations(assessmentDataObj);
-            aiReportFinal = await generateRiskReport(assessmentDataObj, creIntel);
-            await run(`UPDATE assessments SET ai_report = ? WHERE id = ?`, [JSON.stringify(aiReportFinal), assessmentId]);
-          } catch (err) {
-            console.error('Background AI error:', err);
-          }
+            let aiReportFinal;
+            try {
+              const creIntel = generateRecommendations(assessmentDataObj);
+              aiReportFinal = await generateRiskReport(assessmentDataObj, creIntel);
+              await run(`UPDATE assessments SET ai_report = ? WHERE id = ?`, [JSON.stringify(aiReportFinal), assessmentId]);
+            } catch (err) {
+              console.error('Background AI error:', err);
+            }
 
-          if (assessmentData.email) {
-            emailService.sendAssessmentReport(assessmentData.email, {
-              score: scoreResult.score, riskLevel: dbRiskLevel, aiReport: aiReportFinal || null,
-              businessName: assessmentData.business_name || assessmentData.name, assessmentId
-            }).then(() => {
-              publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: assessmentData.email, assessmentId });
-              console.log(`✅ Assessment report emailed to ${assessmentData.email}`);
-            }).catch(err => console.error(`❌ Failed to email report:`, err));
-          }
+            if (assessmentData.email) {
+              emailService.sendAssessmentReport(assessmentData.email, {
+                score: scoreResult.score, riskLevel: dbRiskLevel, aiReport: aiReportFinal || null,
+                businessName: assessmentData.business_name || assessmentData.name, assessmentId
+              }).then(() => {
+                publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: assessmentData.email, assessmentId });
+                console.log(`✅ Assessment report emailed to ${assessmentData.email}`);
+              }).catch(err => console.error(`❌ Failed to email report:`, err));
+            }
 
-          try {
-            const PREMIUM_RATES = {
-              'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
-              'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
-              'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
-              'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
-              'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
-              'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
-              'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
-              'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
-              'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
-              'Travel Insurance': 0.01
-            };
             let estimatedPremium = 0;
             if (scoreResult.min_loss) {
+              const PREMIUM_RATES = {
+                'All Risks Insurance': 0.01, 'Aviation Insurance': 0.01, 'Bond Insurance': 0.01,
+                'Burglary Insurance': 0.01, 'Business Interruption Insurance': 0.015,
+                'Comprehensive Motor Insurance': 0.05, 'Cyber Liability Insurance': 0.02,
+                'Directors & Officers Liability': 0.015, 'Engineering Insurance': 0.01,
+                'Fidelity Guarantee Insurance': 0.01, 'Fire & Special Perils Insurance': 0.0025,
+                'Goods in Transit Insurance': 0.01, 'Group Life & Workmen Compensation': 0.01,
+                'Health Insurance / HMO': 0.05, 'Home/Property Insurance': 0.0025,
+                'Life Insurance': 0.02, 'Marine Insurance': 0.01, 'Plant & All Risk Insurance': 0.01,
+                'Professional Indemnity Insurance': 0.015, 'Public Liability Insurance': 0.005,
+                'Travel Insurance': 0.01
+              };
               let annualPremium = 0, monthlyPremium = 0;
               const recs = scoreResult.recommendations || [];
               if (recs.length > 0) {
@@ -414,7 +414,7 @@ router.post('/evolution', async (req, res) => {
 
             await run(`
               UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?,
-                name = ?, email = ?, wa_state = 'qualification',
+                name = ?, email = ?,
                 status = 'Report Sent', pipeline_stage = 2,
                 engagement_points = engagement_points + 20, sales_score = sales_score + 20,
                 estimated_premium = ?,
@@ -430,7 +430,7 @@ router.post('/evolution', async (req, res) => {
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
           } catch (e) {
-            console.error('Background update-leads error:', e);
+            console.error('Background setImmediate error:', e);
           }
         });
 
@@ -677,7 +677,9 @@ router.post('/evolution', async (req, res) => {
 
       const sendResult = await sendWhatsApp(phoneNumber, null, { _message: msg.text, delay: msgDelay });
       if (!sendResult.success) {
-        console.error(`   ❌ Failed to send message ${i}: ${sendResult.error}. Aborting.`);
+        console.error(`   ❌ Failed to send message ${i}: ${sendResult.error}. Saving state and aborting.`);
+        await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+          [currentState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
         return;
       }
 
