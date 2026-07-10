@@ -130,11 +130,14 @@
     ],
     improvements: {
       HLT_008: { 'Student': { target: 'Employed full-time', gain: 8, action: 'Build income stability through full-time employment or consistent freelance income' }, 'Part-time / Freelance': { target: 'Employed full-time', gain: 6, action: 'Strengthen income consistency for better financial resilience' } },
-      HLT_010: { '4+': { target: '3', gain: 4, action: 'Ensure dependants have their own health coverage where possible' } },
+      HLT_009: { '56+': { target: '46 - 55', gain: 7, action: 'Review your health coverage to address age-related care needs' }, '46 - 55': { target: '36 - 45', gain: 6, action: 'Consider comprehensive health coverage for age-related risks' } },
+      HLT_010: { '3': { target: '2', gain: 4, action: 'Ensure dependants have their own health coverage where possible' }, '4+': { target: '2', gain: 6, action: 'Review family health insurance to cover all dependants' } },
       HLT_012: { 'None': { target: 'Employer HMO', gain: 8, action: 'Obtain basic health insurance coverage' }, 'Employer HMO': { target: 'Private Health Insurance', gain: 5, action: 'Upgrade to comprehensive private health insurance' } },
       HLT_013: { "I don't know": { target: 'Savings', gain: 10, action: 'Build a dedicated medical emergency fund' }, 'Loan': { target: 'Savings', gain: 8, action: 'Replace loan dependency with emergency savings' } },
+      HLT_014: { 'Asthma': { target: 'None', gain: 4, action: 'Confirm your insurance covers respiratory care and medications' }, 'Hypertension': { target: 'Asthma', gain: 2, action: 'Review your HMO benefits to ensure chronic care is covered' } },
       HLT_015: { 'Rarely/Only when sick': { target: 'Annually', gain: 6, action: 'Schedule annual preventive health screenings' } },
-      HLT_016: { 'No': { target: 'Yes', gain: 8, action: 'Review and upgrade your health insurance coverage' } }
+      HLT_016: { 'No': { target: 'Yes', gain: 8, action: 'Review and upgrade your health insurance coverage' } },
+      HLT_017: { 'No': { target: 'Yes', gain: 12, action: 'Explore income protection options for illness resilience' } }
     }
   },
 
@@ -230,9 +233,10 @@
     improvements: {
       INC_011: { 'Freelance/Contract': { target: 'Salary from employment', gain: 4, action: 'Supplement freelance income with retainer clients or part-time employment' }, 'Business owner': { target: 'Salary from employment', gain: 6, action: 'Diversify income sources and build business stability' } },
       INC_012: { 'Less than 1 month': { target: '1-3 months', gain: 10, action: 'Begin building an emergency fund covering at least 1-3 months, with a long-term goal of 6 months' }, '1-3 months': { target: 'Over 3 months', gain: 6, action: 'Expand emergency fund to cover 6+ months' } },
+      INC_013: { 'No': { target: 'Yes', gain: 8, action: 'Diversify income sources and build a career contingency plan' } },
       INC_014: { 'No': { target: 'Yes', gain: 10, action: 'Get income protection insurance' } },
       INC_015: { 'Yes': { target: 'No', gain: 8, action: 'Create a debt reduction plan' } },
-      INC_018: { 'It would stop completely': { target: 'My income would continue', gain: 10, action: 'Get income protection insurance to replace earnings if unable to work' }, "I'm not sure": { target: 'My income would continue', gain: 6, action: 'Review employee benefits and explore income protection options' } }
+      INC_018: { 'It would stop completely': { target: 'My income would continue', gain: 10, action: 'Get income protection insurance to replace earnings if unable to work' }, 'I\'m not sure': { target: 'My income would continue', gain: 6, action: 'Review employee benefits and explore income protection options' } }
     }
   },
 
@@ -320,6 +324,7 @@
       }
     ],
     improvements: {
+      FAM_011: { '3 or more': { target: '1-2', gain: 8, action: 'Ensure adequate life and health cover for all dependents' } },
       FAM_012: { 'Less than 3 months': { target: '3-6 months', gain: 8, action: 'Build family emergency fund to 3-6 months' }, '3-6 months': { target: 'Over 6 months', gain: 5, action: 'Extend family emergency fund beyond 6 months' } },
       FAM_013: { 'No': { target: 'Yes', gain: 10, action: 'Secure comprehensive family insurance' } },
       FAM_014: { 'No': { target: 'Yes', gain: 7, action: 'Start an education savings plan' } },
@@ -452,16 +457,17 @@
   YPR: {
     name: 'Young Professional',
     pillars: [
-      { id: 'financial_resilience', name: 'Financial Resilience', weight: 0.35 },
-      { id: 'income_security', name: 'Income Security', weight: 0.30 },
-      { id: 'protection', name: 'Protection & Insurance', weight: 0.35 }
+      { id: 'career_foundation', name: 'Career Foundation', weight: 0.25 },
+      { id: 'financial_habits', name: 'Financial Habits', weight: 0.30 },
+      { id: 'protection_readiness', name: 'Protection Readiness', weight: 0.30 },
+      { id: 'future_goal_preparedness', name: 'Future Goal Preparedness', weight: 0.15 }
     ],
     categories: {
-      career_stability: { name: 'Career Stability', pillar: 'income_security' },
-      critical_illness_funding: { name: 'Critical Illness Funding', pillar: 'financial_resilience' },
-      income_stability: { name: 'Income Stability', pillar: 'income_security' },
-      goal_saving: { name: 'Goal Saving', pillar: 'financial_resilience' },
-      personal_insurance: { name: 'Personal Insurance', pillar: 'protection' }
+      career_stability: { name: 'Career Stability', pillar: 'career_foundation' },
+      critical_illness_funding: { name: 'Critical Illness Funding', pillar: 'financial_habits' },
+      income_stability: { name: 'Income Stability', pillar: 'career_foundation' },
+      goal_saving: { name: 'Goal Saving', pillar: 'financial_habits' },
+      personal_insurance: { name: 'Personal Insurance', pillar: 'protection_readiness' }
     },
     questions: {
       YPR_011: {
@@ -524,9 +530,10 @@
       }
     ],
     improvements: {
-      YPR_011: { 'Under 2 years': { target: '2-5 years', gain: 4, action: 'Focus on career growth and professional development' }, '2-5 years': { target: 'Over 5 years', gain: 3, action: 'Build long-term career stability through certifications and networking' } },
-      YPR_012: { 'No': { target: 'With difficulty', gain: 8, action: 'Build an emergency fund for health emergencies' }, 'With difficulty': { target: 'Yes easily', gain: 5, action: 'Strengthen your critical illness funding' } },
-      YPR_014: { 'No': { target: 'Yes', gain: 10, action: 'Get personal health or accident insurance' } },
+      YPR_011: { 'Under 2 years': { target: '2-5 years', gain: 4, action: 'Build career stability through professional certifications and networking' }, '2-5 years': { target: 'Over 5 years', gain: 3, action: 'Strengthen your career foundation with advanced skills and income diversification' } },
+      YPR_012: { 'No': { target: 'With difficulty', gain: 8, action: 'Build an emergency fund so one unexpected expense doesn\u2019t erase your progress' }, 'With difficulty': { target: 'Yes easily', gain: 5, action: 'Strengthen your emergency fund to cover 6 months of expenses' } },
+      YPR_013: { 'No': { target: 'Yes', gain: 6, action: 'Build income resilience through savings and passive income streams' } },
+      YPR_014: { 'No': { target: 'Yes', gain: 10, action: 'Get personal health or accident insurance to protect the future you\u2019re building' } },
       YPR_015: { 'No': { target: 'Yes', gain: 6, action: 'Set up an automated savings plan for a major life goal' } }
     }
   },
@@ -615,9 +622,11 @@
       }
     ],
     improvements: {
-      ENT_011: { 'Yes completely': { target: 'Partially', gain: 8, action: 'Delegate responsibilities and document business processes' } },
+      ENT_011: { 'Yes completely': { target: 'Partially', gain: 8, action: 'Delegate responsibilities and document business processes' }, 'Partially': { target: "No it runs itself", gain: 5, action: 'Build team capacity and create operational systems' } },
+      ENT_012: { 'Yes': { target: 'No', gain: 6, action: 'Review personal guarantees and explore limited liability restructuring' } },
+      ENT_013: { 'No': { target: 'Not sure', gain: 8, action: 'Create a business continuity plan and build an operational team' }, 'Not sure': { target: 'Yes', gain: 5, action: 'Assess and address key person risks in your business' } },
       ENT_014: { 'No': { target: 'Yes', gain: 10, action: 'Get key person insurance' } },
-      ENT_015: { 'No': { target: 'Yes', gain: 8, action: 'Separate personal and business assets' } }
+      ENT_015: { 'No': { target: 'Yes', gain: 8, action: 'Separate personal and business assets' }, 'Not sure': { target: 'Yes', gain: 4, action: 'Review your asset protection structure' } }
     }
   },
 
@@ -803,9 +812,10 @@
       }
     ],
     improvements: {
+      MFG_013: { '200+': { target: '51-200', gain: 7, action: 'Review comprehensive workforce insurance and safety programs' } },
       MFG_014: { 'Immediately': { target: 'Within a few days', gain: 8, action: 'Implement equipment redundancy for critical machinery' } },
       MFG_016: { 'No': { target: 'Yes', gain: 10, action: 'Get comprehensive fire and special perils insurance' } },
-      MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan' } }
+      MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity and disaster recovery planning' } }
     }
   },
 
@@ -1159,8 +1169,10 @@
       }
     ],
     improvements: {
+      SME_013: { '51+': { target: '11-50', gain: 6, action: 'Review comprehensive employer\u2019s liability and workforce insurance' } },
+      SME_014: { 'Over \u20A6200M': { target: '\u20A650M - \u20A6200M', gain: 6, action: 'Ensure all business insurance adequately covers your revenue scale' } },
       SME_016: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive fire and burglary insurance' } },
-      SME_017: { 'No, we would close': { target: 'With difficulty', gain: 10, action: 'Create a business continuity plan' } }
+      SME_017: { 'No, we would close': { target: 'With difficulty', gain: 10, action: 'Create a business continuity plan' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity planning and insurance coverage' } }
     }
   }
 };

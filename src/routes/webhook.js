@@ -604,6 +604,366 @@ router.post('/evolution', async (req, res) => {
           scenario += `\n\nThese circumstances could place considerable pressure on both you and your household.`;
           return scenario;
         }
+        if (prefix === 'YPR') {
+          const careerStability = answers['YPR_011'];
+          const criticalIllness = answers['YPR_012'];
+          const incomeStability = answers['YPR_013'];
+          const hasInsurance = answers['YPR_014'];
+          const hasGoal = answers['YPR_015'];
+
+          const positives = [];
+          const gaps = [];
+
+          if (hasGoal === 'Yes') positives.push("you've already started saving toward a major life goal");
+          if (careerStability === 'Over 5 years') positives.push("you've built solid career stability");
+          if (criticalIllness === 'Yes easily') positives.push("you have an emergency fund that can handle unexpected costs");
+          if (incomeStability === 'Yes') positives.push("your household could manage without your income for a period");
+
+          if (hasInsurance === 'No') gaps.push("you don't have personal health or accident insurance");
+          if (criticalIllness === 'No') gaps.push("a single unexpected medical event could force you to use your savings or take on debt");
+          if (criticalIllness === 'With difficulty') gaps.push("an unexpected health event would still create significant financial strain");
+          if (careerStability === 'Under 2 years') gaps.push("you're still early in your career, so your income history and financial buffer are still developing");
+          if (incomeStability === 'No') gaps.push("if your income stopped, your household would struggle to maintain financial stability");
+
+          let story;
+          if (positives.length > 0) {
+            const lastPos = positives.pop();
+            const posStr = positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos;
+            story = `You've already taken positive steps\u2014${posStr}. `;
+          } else {
+            story = `You're at the beginning of your financial journey, and that's exactly the right time to build strong foundations. `;
+          }
+
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            const gapStr = gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap;
+            story += `However, ${gapStr}. `;
+          }
+
+          story += `Without action, an unexpected event could delay important life goals like buying a home, starting a family, or investing in your future. The progress you\u2019ve already made deserves to be protected.`;
+          return story;
+        }
+        if (prefix === 'HLT') {
+          const insurance = answers['HLT_012'];
+          const age = answers['HLT_009'];
+          const checkups = answers['HLT_015'];
+          const conditions = answers['HLT_014'];
+          const emergencyFund = answers['HLT_013'];
+          const surgeryCover = answers['HLT_016'];
+          const illnessResilience = answers['HLT_017'];
+          const dependants = answers['HLT_010'];
+
+          const positives = [];
+          const gaps = [];
+
+          if (insurance === 'Private Health Insurance') positives.push("you have private health insurance in place");
+          if (insurance === 'Employer HMO') positives.push("you have health coverage through your employer");
+          if (checkups === 'Every 6 months' || checkups === 'Annually') positives.push("you stay on top of your health with regular check-ups");
+          if (emergencyFund === 'Savings') positives.push("you have savings set aside for medical emergencies");
+          if (conditions === 'None') positives.push("you don't currently have any chronic health conditions");
+
+          if (insurance === 'None') gaps.push("you don't have any health insurance coverage");
+          if (surgeryCover === 'No') gaps.push("your current cover may not be sufficient for major surgical procedures");
+          if (checkups === 'Rarely/Only when sick') gaps.push("you only visit a doctor when you're already unwell, which means you may miss early detection of health issues");
+          if (illnessResilience === 'No') gaps.push("your household would face financial pressure if a serious illness kept you from working");
+          if (dependants === '4+' || dependants === '3') gaps.push("a health emergency would affect not just you but multiple family members who depend on you");
+
+          let story = '';
+          if (positives.length > 0) {
+            const lastPos = positives.pop();
+            story = `You've taken positive steps to manage your health\u2014${positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos}. `;
+          }
+
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+
+          story += `If a serious health issue required extended treatment, gaps in your coverage could create financial pressure at a time when you should be focused on recovery.`;
+          return story;
+        }
+        if (prefix === 'FAM') {
+          const dependents = answers['FAM_011'];
+          const incomeBuffer = answers['FAM_012'];
+          const insurance = answers['FAM_013'];
+          const education = answers['FAM_014'];
+          const healthCover = answers['FAM_015'];
+
+          const positives = [];
+          const gaps = [];
+
+          if (insurance === 'Yes') positives.push("your family has insurance protection in place");
+          if (healthCover === 'Yes') positives.push("your family is covered by a health plan");
+          if (education === 'Yes') positives.push("you've planned for your children's education costs");
+          if (incomeBuffer === 'Over 6 months') positives.push("your family has more than six months of income buffer");
+
+          if (insurance === 'No') gaps.push("your family doesn't have adequate insurance coverage");
+          if (insurance === 'Not sure') gaps.push("you're not certain whether your family's insurance coverage is adequate");
+          if (healthCover === 'No') gaps.push("your family doesn't have comprehensive health insurance");
+          if (incomeBuffer === 'Less than 3 months') gaps.push("your family would face financial difficulty within three months if your income stopped");
+          if (education === 'No') gaps.push("your children's education costs are not secured against unexpected events");
+          if (dependents === '3 or more') gaps.push("with multiple people relying on you, the impact of any disruption is magnified");
+
+          let story = '';
+          if (positives.length > 0) {
+            const lastPos = positives.pop();
+            story = `You've taken important steps to protect your family\u2014${positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos}. `;
+          } else {
+            story = `Your family depends on you, and that responsibility is at the heart of this assessment. `;
+          }
+
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+
+          story += `Without action, an unexpected event could affect not just your finances but the daily lives of the people who depend on you.`;
+          return story;
+        }
+        if (prefix === 'ENT') {
+          const keyPerson = answers['ENT_011'];
+          const guarantees = answers['ENT_012'];
+          const survival = answers['ENT_013'];
+          const keyInsurance = answers['ENT_014'];
+          const assetSeparation = answers['ENT_015'];
+
+          const positives = [];
+          const gaps = [];
+
+          if (keyPerson === 'No it runs itself') positives.push("your business doesn't depend entirely on your personal involvement");
+          if (keyInsurance === 'Yes') positives.push("you have key person insurance in place");
+          if (assetSeparation === 'Yes') positives.push("you've separated your personal and business assets");
+          if (guarantees === 'No') positives.push("you've avoided personal guarantees on business debts");
+
+          if (keyPerson === 'Yes completely') gaps.push("your business completely depends on your personal involvement, creating significant risk if you're unavailable");
+          if (survival === 'No') gaps.push("your business would not survive three months without you");
+          if (survival === 'Not sure') gaps.push("you're uncertain whether your business could survive without you");
+          if (keyInsurance === 'No') gaps.push("you don't have key person insurance to protect the business if you become incapacitated");
+          if (guarantees === 'Yes') gaps.push("your personal assets are at risk due to personal guarantees on business debts");
+          if (assetSeparation === 'No') gaps.push("your personal and business assets are not adequately separated");
+
+          let story = '';
+          if (positives.length > 0) {
+            const lastPos = positives.pop();
+            story = `You've built smart practices into your business\u2014${positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos}. `;
+          } else {
+            story = `Your business is an extension of you, and that personal investment is both your greatest strength and your greatest risk. `;
+          }
+
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+
+          story += `Without addressing these gaps, a single unexpected event could put both your business and your personal finances at risk.`;
+          return story;
+        }
+        if (prefix === 'RET') {
+          const plan = answers['RET_010'];
+          const horizon = answers['RET_011'];
+          const pension = answers['RET_012'];
+          const medicalConcern = answers['RET_013'];
+          const longTermCare = answers['RET_014'];
+          const legacy = answers['RET_015'];
+
+          const positives = [];
+          const gaps = [];
+
+          if (plan === 'I already have a written retirement plan') positives.push("you have a written retirement plan in place");
+          if (plan === "I'm saving but don't have a clear plan") positives.push("you're already saving for retirement");
+          if (pension === 'Yes') positives.push("you have a dedicated pension or retirement savings account");
+          if (legacy === 'Yes, I have a documented plan') positives.push("you've documented your estate and legacy plans");
+
+          if (pension === 'No') gaps.push("you don't have a dedicated pension or retirement savings account");
+          if (plan === "I haven't thought seriously about retirement") gaps.push("you haven't started planning for retirement yet");
+          if (plan === 'I know I should start planning') gaps.push("you know you should be planning for retirement but haven't taken concrete action");
+          if (longTermCare === 'No') gaps.push("you don't have a plan for long-term care or critical illness needs in retirement");
+          if (medicalConcern === 'Very concerned') gaps.push("you're very concerned about medical costs exhausting your retirement savings");
+          if (horizon === 'Within 5 years' && pension === 'No') gaps.push("you're close to retirement but without sufficient savings in place");
+
+          let story = '';
+          if (positives.length > 0) {
+            const lastPos = positives.pop();
+            story = `You've taken important steps toward securing your retirement\u2014${positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos}. `;
+          } else {
+            story = `Retirement may feel distant, but the decisions you make today determine whether your later years are defined by freedom or financial pressure. `;
+          }
+
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+
+          story += `Time is the most powerful asset in retirement planning. Addressing these gaps now gives your savings more time to grow.`;
+          return story;
+        }
+        if (prefix === 'HOM') {
+          const tenure = answers['HOM_011'];
+          const insurance = answers['HOM_012'];
+          let story = '';
+          if (tenure === 'Own') story += "You own your home, which is a valuable asset that deserves to be protected. ";
+          else if (tenure === 'Rent') story += "You're currently renting, which means your personal belongings and liability need coverage even though you don't own the property. ";
+          else story += "Without stable housing, you face significant exposure to cost changes and lack the security of homeownership. ";
+          if (insurance === 'No') story += "Without adequate home insurance, a fire, theft, or liability claim could result in significant financial loss that could have been avoided. ";
+          else story += "While you have some protections in place, making sure your coverage matches the full value of your belongings is essential. ";
+          story += "Your home is more than a building\u2014it's the foundation of your life. Protecting it protects everything else.";
+          return story;
+        }
+        if (prefix === 'MOT') {
+          const count = answers['MOT_011'];
+          const insurance = answers['MOT_012'];
+          let story = '';
+          if (count === '1') story += "You have a single vehicle, which simplifies your risk exposure. ";
+          else if (count === '2') story += "With two vehicles, your combined exposure to accidents, theft, and repair costs increases. ";
+          else story += "With multiple vehicles, your overall risk exposure and insurance costs multiply significantly. ";
+          if (insurance === 'No') story += "Without comprehensive motor insurance, a serious accident or theft could leave you with substantial out-of-pocket costs. ";
+          else story += "Having insurance on your primary vehicle is a good start, but ensuring every vehicle you use is adequately covered is important. ";
+          story += "For most people, a vehicle is essential to daily life. Making sure it's protected means one less thing to worry about when the unexpected happens.";
+          return story;
+        }
+        if (prefix === 'SME') {
+          const workforce = answers['SME_013'];
+          const revenue = answers['SME_014'];
+          const propertyIns = answers['SME_016'];
+          const disasterSurvival = answers['SME_017'];
+          const positives = [];
+          const gaps = [];
+          if (propertyIns === 'Yes') positives.push("you have fire and burglary insurance for your business");
+          if (disasterSurvival === 'Yes easily') positives.push("your business could recover easily from a major disruption");
+          if (workforce === '1-10') positives.push("you run a lean operation with manageable workforce exposure");
+          if (workforce === '51+') gaps.push("you have a significant workforce that creates substantial employment liability exposure");
+          if (revenue === 'Over \u20A6200M') gaps.push("your business has significant financial exposure that needs adequate coverage");
+          if (propertyIns === 'No') gaps.push("you don't have fire and burglary insurance for your business");
+          if (disasterSurvival === 'No, we would close') gaps.push("your business would not survive a three-month closure");
+          if (disasterSurvival === 'With difficulty') gaps.push("your business would struggle to recover from a major disaster");
+          let story = '';
+          if (positives.length > 0) {
+            const lastPos = positives.pop();
+            story = `You've put important safeguards in place for your business\u2014${positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos}. `;
+          } else {
+            story = `Your business is the result of hard work, and every day you're building something worth protecting. `;
+          }
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+          story += `A fire, burglary, or prolonged closure could undo years of effort. Closing these gaps means your business can survive the unexpected.`;
+          return story;
+        }
+        if (prefix === 'MFG') {
+          const workforce = answers['MFG_013'];
+          const equipment = answers['MFG_014'];
+          const facilityIns = answers['MFG_016'];
+          const disasterRecovery = answers['MFG_017'];
+          const gaps = [];
+          if (workforce === '200+') gaps.push("your large workforce creates significant liability exposure");
+          if (equipment === 'Immediately') gaps.push("a critical machine breakdown would halt production immediately");
+          if (facilityIns === 'No') gaps.push("you don't have fire and special perils insurance for your facility");
+          if (disasterRecovery === 'No, we would close') gaps.push("your business would not survive a major disaster closure");
+          if (disasterRecovery === 'With difficulty') gaps.push("your business would struggle to recover from a major disaster");
+          let story = equipment === 'Immediately'
+            ? "Your manufacturing operation depends on equipment running continuously. "
+            : "Your manufacturing operation has some resilience in its equipment setup. ";
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+          story += `In manufacturing, downtime is expensive. Protecting your facility and equipment is protecting your revenue.`;
+          return story;
+        }
+        if (prefix === 'HOS') {
+          const patientExposure = answers['HOS_013'];
+          const medicalLiability = answers['HOS_015'];
+          const equipmentValue = answers['HOS_016'];
+          const equipmentIns = answers['HOS_017'];
+          const gaps = [];
+          if (patientExposure === 'Over 100') gaps.push("your large patient volume creates significant liability exposure");
+          if (medicalLiability === 'No') gaps.push("you don't have professional indemnity or medical malpractice insurance");
+          if (equipmentValue === 'Yes') gaps.push("you have high-value medical equipment that needs specialized coverage");
+          if (equipmentIns === 'No') gaps.push("your critical equipment is not insured against damage or breakdown");
+          let story = "Your healthcare facility's first priority is patient care, but without proper protection, a liability claim or equipment failure could disrupt that care. ";
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `${gaps.length > 0 ? gaps.join(', ') + ', and ' : ''}${lastGap}. `;
+          }
+          story += `In healthcare, the cost of being unprepared isn't just financial\u2014it affects the people who depend on your facility every day.`;
+          return story;
+        }
+        if (prefix === 'SCH') {
+          const studentCount = answers['SCH_013'];
+          const injuryLiability = answers['SCH_016'];
+          const propertyIns = answers['SCH_017'];
+          const gaps = [];
+          if (studentCount === 'Over 500') gaps.push("your large student population creates substantial liability exposure");
+          if (injuryLiability === 'No') gaps.push("you don't have insurance coverage if a student is injured on your premises");
+          if (propertyIns === 'No') gaps.push("you don't have fire insurance for your school buildings");
+          let story = "Your school is responsible for the safety of every student in your care. ";
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+          story += `A student injury or property damage claim could disrupt operations and affect the trust parents have placed in your school.`;
+          return story;
+        }
+        if (prefix === 'CHR') {
+          const congregation = answers['CHR_013'];
+          const valuableAssets = answers['CHR_014'];
+          const eventLiability = answers['CHR_015'];
+          const buildingIns = answers['CHR_017'];
+          const gaps = [];
+          if (congregation === 'Over 1000') gaps.push("your large congregation creates significant liability during gatherings");
+          if (eventLiability === 'No') gaps.push("you don't have insurance if a congregant is injured on your premises");
+          if (valuableAssets === 'Yes') gaps.push("you have valuable instruments and equipment that need specialized coverage");
+          if (buildingIns === 'No') gaps.push("your church building and contents are not insured against fire");
+          let story = "Your church serves as a gathering place for your community, and protecting that space is part of protecting your mission. ";
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+          story += `A fire, injury, or theft could disrupt your services and create financial strain that takes focus away from your purpose.`;
+          return story;
+        }
+        if (prefix === 'CON') {
+          const projectCount = answers['CON_013'];
+          const machinery = answers['CON_014'];
+          const contractorIns = answers['CON_015'];
+          const accidentCover = answers['CON_016'];
+          const penaltyProtection = answers['CON_017'];
+          const gaps = [];
+          if (projectCount === 'More than 5') gaps.push("managing many concurrent projects increases your overall risk exposure");
+          if (machinery === 'Yes') gaps.push("heavy machinery on site creates significant liability and damage risk");
+          if (contractorIns === 'No') gaps.push("you don't have contractor's all-risk insurance for your projects");
+          if (accidentCover === 'No') gaps.push("your on-site workers don't have group personal accident cover");
+          if (penaltyProtection === 'No') gaps.push("you're not protected against project delay penalties");
+          let story = "Construction projects involve inherent risk, but the right protection keeps those risks from becoming crises. ";
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+          story += `An accident, equipment damage, or project delay could have cascading financial consequences that affect your entire operation.`;
+          return story;
+        }
+        if (prefix === 'TRN') {
+          const fleetSize = answers['TRN_013'];
+          const goodsIns = answers['TRN_015'];
+          const driverAccident = answers['TRN_016'];
+          const compliance = answers['TRN_017'];
+          const gaps = [];
+          if (fleetSize === 'Over 20') gaps.push("your large fleet creates significant cumulative risk exposure");
+          if (goodsIns === 'No') gaps.push("you don't have goods-in-transit insurance for your cargo");
+          if (driverAccident === 'No') gaps.push("your drivers are not covered by group personal accident insurance");
+          if (compliance === 'No') gaps.push("your fleet vehicles are not comprehensively insured");
+          if (compliance === 'Some of them') gaps.push("only some of your fleet vehicles have comprehensive motor insurance");
+          let story = fleetSize === 'Over 20'
+            ? "With a fleet of this size, every vehicle on the road represents both opportunity and risk. "
+            : "Your fleet is the backbone of your transport operation. ";
+          if (gaps.length > 0) {
+            const lastGap = gaps.pop();
+            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          }
+          story += `An accident, cargo theft, or compliance issue could ground your fleet and disrupt your entire operation.`;
+          return story;
+        }
         // Generic fallback
         return `Your overall ${dom.closingTerm} profile shows areas of strength and opportunities to build greater resilience for the future.`;
       };

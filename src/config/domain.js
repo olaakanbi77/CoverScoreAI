@@ -199,48 +199,53 @@ const domainConfig = {
   YPR: {
     assessmentTitle: 'Young Professional',
     domain: 'young professional',
-    resilienceTerm: 'Financial Foundation',
+    resilienceTerm: 'Future Foundation',
     displayLabel: 'Foundation',
-    closingTerm: 'overall financial foundation',
-    improvementTerm: 'financial foundation',
-    followUpMsg: "I'll also share practical financial planning tips and strategies that match your assessment.",
+    closingTerm: 'overall future foundation',
+    improvementTerm: 'future foundation',
+    followUpMsg: "I'll also share practical strategies to help you protect the progress you're building.",
     pillarMappings: {},
     insightTexts: {
       perPillar: {
-        'Financial Resilience': {
-          base: "Your assessment shows that your financial foundation is still developing, which is normal at this stage of your career.",
+        'Career Foundation': {
+          base: "You've started building your career, and that's a strong first step. The question isn't whether you have income today\u2014it's whether that income is stable enough to support the future you're working toward.",
           answerChecks: [
-            { q: 'YPR_012', values: ['No'], append: "Not being able to cover a critical illness cost is a significant risk that could derail your financial progress." },
-            { q: 'YPR_012', values: ['With difficulty'], append: "Being able to cover critical illness costs only with difficulty means an unexpected health event could create financial strain." },
-            { q: 'YPR_015', values: ['No'], append: "Without a specific savings goal, it's harder to build the financial discipline needed for long-term security." }
+            { q: 'YPR_011', values: ['Under 2 years'], append: "Being early in your career is exciting, but it also means less income history to draw on if the economy shifts or an unexpected opportunity requires you to make a financial leap." },
+            { q: 'YPR_011', values: ['2-5 years'], append: "You're building momentum in your career, but you're still in a phase where income changes are common. A disruption now could slow your trajectory more than you'd expect." }
           ],
-          suffix: "Building an emergency fund and setting clear savings goals are the most important steps you can take right now."
+          suffix: "The strongest career foundation isn't just your salary\u2014it's having enough stability to make choices based on opportunity, not desperation."
         },
-        'Income Security': {
-          base: "Your assessment suggests that your income security has areas that could be strengthened.",
+        'Financial Habits': {
+          base: "Your assessment shows that the financial habits you're building today will determine whether your future feels full of options or full of pressure.",
           answerChecks: [
-            { q: 'YPR_011', values: ['Under 2 years'], append: "Being early in your career means less income history and potentially less stability during economic changes." },
-            { q: 'YPR_011', values: ['2-5 years'], append: "You're building career stability but are still in a growth phase where income changes are common." },
-            { q: 'YPR_013', values: ['No'], append: "If your household would struggle without your income, it's important to build resilience through savings and contingency planning." }
+            { q: 'YPR_012', values: ['No'], append: "Not being able to cover a critical illness cost is the single biggest threat to your financial progress right now. One unexpected event could erase years of savings." },
+            { q: 'YPR_012', values: ['With difficulty'], append: "You could cover a critical illness cost, but only with difficulty\u2014which means an unexpected health event would still create real financial strain and delay your goals." },
+            { q: 'YPR_015', values: ['Yes'], append: "You're actively saving toward a major life goal, which puts you ahead of most people at your stage. The key is making sure those savings are protected from life's surprises." },
+            { q: 'YPR_015', values: ['No'], append: "Without a specific savings goal, it's harder to build the financial discipline that turns a good salary into lasting financial security." }
           ],
-          suffix: "Focusing on career growth while building an income buffer is the most practical strategy for your stage."
+          suffix: "You're already doing well in areas like saving and budgeting. The next stage is protecting the progress you've made so that unexpected events don't force you to start over."
         },
-        'Protection': {
-          base: "Your assessment shows that your personal insurance coverage may not be sufficient to protect you from unexpected events.",
+        'Protection Readiness': {
+          base: "You're at a stage in life where protection doesn't feel urgent\u2014but it's the single most important thing that separates financial progress from financial setbacks.",
           answerChecks: [
-            { q: 'YPR_014', values: ['No'], append: "Without personal health or accident insurance, an unexpected medical event could have a major financial impact." }
+            { q: 'YPR_014', values: ['No'], append: "Without personal health or accident insurance, a single unexpected medical event could force you to drain your savings or delay important life goals like buying a home or starting a family." }
           ],
-          suffix: "Getting basic health and accident insurance is an affordable way to protect your financial foundation."
+          suffix: "Getting basic health and accident insurance isn't about preparing for the worst\u2014it's about making sure nothing derails the future you're building."
+        },
+        'Future Goal Preparedness': {
+          base: "The goals you have for your life\u2014whether that's a home, a family, further education, or financial independence\u2014are what make this assessment matter. Your current habits and income will either support those goals or limit them.",
+          suffix: "Strengthening your financial foundation now means your future goals will feel achievable instead of out of reach."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current financial foundation. Focusing on the areas highlighted in your pillar scores will help you build long-term financial security."
+      catchAll: "Your financial habits are developing in a way that puts you ahead of many people your age. The question now is whether those habits are protected enough to survive life's unexpected moments."
     },
     recommendationTexts: {
-      'financial resilience': 'building an emergency fund and setting clear savings goals to strengthen your financial foundation',
-      'income security': 'focusing on career growth and building an income buffer to protect against income changes',
-      'protection': 'getting basic health and accident insurance to protect your financial foundation from unexpected events'
+      'career foundation': 'strengthening your career foundation by building income stability and developing skills that increase your earning potential',
+      'financial habits': 'building on your positive savings habits by creating a dedicated emergency fund and setting clear, measurable financial goals',
+      'protection readiness': 'getting basic health and accident insurance to protect the financial progress you\u2019ve already made',
+      'future goal preparedness': 'connecting your daily financial habits to your long-term goals so every decision moves you closer to the life you want'
     },
-    realLifeContext: "Here\u2019s what this means in real life: As a young professional, an unexpected health issue or job loss could derail your financial progress before it really starts. Your CoverScore shows how well you\u2019d weather that storm\u2014and every point you improve means more freedom to pursue your goals without worrying about setbacks."
+    realLifeContext: "Here\u2019s what this means in real life: You're making progress\u2014saving, building your career, planning for the future. But one unexpected medical event or job loss could force you to pause everything. Your CoverScore shows how well your foundation would hold up when life throws something unexpected your way."
   },
   FAM: {
     assessmentTitle: 'Family Protection',
