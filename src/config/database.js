@@ -689,6 +689,10 @@ const initDatabase = () => {
             console.log('[initDatabase] assessments table restored from assessments_v2');
           }
         });
+      } else if (names.includes('assessments_v2') && names.includes('assessments')) {
+        db.run('DROP TABLE IF EXISTS assessments_v2', (dropErr) => {
+          if (!dropErr) console.log('[initDatabase] Cleaned up orphaned assessments_v2 table');
+        });
       }
     }
   });
