@@ -568,7 +568,7 @@ router.post('/evolution', async (req, res) => {
           const hasDebt = answers['INC_015'];
           const incomeSrc = answers['INC_011'];
 
-          let scenario = "If you were unable to work for the next six months because of illness or injury.";
+          let scenario = "If you were unable to work for the next six months because of illness or injury, here\u2019s what your assessment suggests:";
           const consParts = [];
 
           if (!incomeStop || incomeStop === 'It would stop completely') {
@@ -666,7 +666,7 @@ router.post('/evolution', async (req, res) => {
         const weakArea = weakestName.toLowerCase();
         const recTexts = dom.recommendationTexts || {};
         const action = recTexts[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
-        return `Recommended First Step\n\nBased on your responses, the single action most likely to improve your CoverScore\u2122 is ${action}.\n\nImproving this area from ${weakestScore}% is expected to have the greatest impact on your ${dom.closingTerm}.`;
+        return `Recommended First Step\n\nThe single action most likely to improve your ${dom.closingTerm} is ${action}.\n\nImproving this area from ${weakestScore}% is expected to have the greatest impact on your ${dom.closingTerm}.`;
       };
 
       const reportNames = {
@@ -705,7 +705,7 @@ router.post('/evolution', async (req, res) => {
       // Your Improvement Potential\u2122
       if (forecast && forecast.projectedScore > assessmentData.score) {
         const diff = forecast.projectedScore - assessmentData.score;
-        msg3 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2193\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
+        msg3 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
       }
       const recommendation = buildRecommendation(riskCats, dom);
       if (recommendation) msg3 += `\n\n${recommendation}`;

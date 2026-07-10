@@ -73,7 +73,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
-      replyText = `${greeting}\n\nYour assessment has been securely shared with one of our Certified Risk Advisors.\n\nBefore contacting you, they\u2019ll review your report so the conversation can focus on your specific situation\u2014not generic advice.\n\nThey\u2019ll reach out on this WhatsApp number shortly.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `${greeting}\n\nYour assessment has been securely shared with one of our Certified Risk Advisors.\n\nBefore contacting you, they\u2019ll review your report so the conversation can focus on your specific situation\u2014not generic advice.\n\nThey\u2019ll contact you using this WhatsApp number to arrange a convenient time to review your report.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
     } else if (knownDays.includes(input)) {
@@ -98,7 +98,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
-      replyText = `${greeting}\n\nYour assessment has been securely shared with one of our Certified Risk Advisors.\n\nBefore contacting you, they\u2019ll review your report so the conversation can focus on your specific situation\u2014not generic advice.\n\nThey\u2019ll reach out on this WhatsApp number shortly.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `${greeting}\n\nYour assessment has been securely shared with one of our Certified Risk Advisors.\n\nBefore contacting you, they\u2019ll review your report so the conversation can focus on your specific situation\u2014not generic advice.\n\nThey\u2019ll contact you using this WhatsApp number to arrange a convenient time to review your report.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };
