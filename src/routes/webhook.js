@@ -469,7 +469,7 @@ router.post('/evolution', async (req, res) => {
       const csnsDisplayLabels = dom.resilienceLabels || {
         'excellent': 'Excellent Resilience', 'strong': 'Strong Resilience',
         'developing': 'Developing Resilience', 'needs_attention': 'Needs Attention',
-        'priority_improvement': 'Priority Improvement', 'critical_priority': 'Critical Priority',
+        'priority_improvement': 'Priority Improvement', 'critical_priority': 'Critical',
         'Excellent': 'Excellent Resilience', 'Strong': 'Strong Resilience',
         'Developing': 'Developing Resilience', 'Needs Attention': 'Needs Attention',
         'Priority Improvement': 'Priority Improvement', 'Critical': 'Critical'
@@ -479,10 +479,30 @@ router.post('/evolution', async (req, res) => {
 
       // Derive sorted pillar list once
       const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);
+      const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
 
-      // Message 1: CoverScore + Risk Pillars (strengths/weaknesses in pillar display)
-      const resultsText = `\uD83C\uDF89 Congratulations, ${name}!\n\nYour CoverScore\u2122 is ${assessmentData.score} / 100.\nCurrent ${dom.displayLabel}: ${displayLabel}\n\n*Your Risk Pillars*\n${assessmentData.strengths}`;
-      postMessages.push({ type: 'report', text: resultsText, _delay: 12000 });
+      // Message 1: CoverScore + Resilience Level (clean, separate from pillar breakdown)
+      postMessages.push({
+        type: 'report',
+        text: `CoverScore\u2122\n${assessmentData.score} / 100\n\nResilience Level\n${displayLabel}`,
+        _delay: 12000
+      });
+
+      // Message 1b: Risk Pillar breakdown
+      postMessages.push({
+        type: 'pillars',
+        text: `*Your Risk Pillars*\n${assessmentData.strengths}`,
+        _delay: 3000
+      });
+
+      // Message 1c: Highest Priority callout (explicit weakest pillar)
+      if (weakestPillar) {
+        postMessages.push({
+          type: 'priority',
+          text: `Highest Priority\n\n${weakestPillar}`,
+          _delay: 3000
+        });
+      }
 
       // Message 2: Summary of Findings — 1–2 sentence bridge between numbers and insight
       const generateSummaryOfFindings = (cats) => {
@@ -601,7 +621,7 @@ router.post('/evolution', async (req, res) => {
       // Message 6: Advisor CTA — framed as support for the recommendation
       postMessages.push({
         type: 'advisor',
-        text: `If you'd like, one of our Certified Risk Advisors can walk you through the ${reportName} with you and show you practical ways to strengthen your ${dom.resilienceTerm.toLowerCase()}.\n\nWould you like me to arrange a free consultation?\n\nA. Yes\nB. Not now`,
+        text: `Would you like a Certified Risk Advisor to review your ${reportName} with you and show you practical ways to strengthen your financial resilience?\n\nA. Yes\nB. Not now`,
         _delay: 3000
       });
       console.log(`   [Phase 3] Ending sequence built (${postMessages.length} total post-messages)`);
