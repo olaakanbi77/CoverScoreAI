@@ -594,29 +594,34 @@ const domainConfig = {
     insightTexts: {
       perPillar: {
         'Student Safety': {
-          base: "Your assessment shows that your school currently has significant exposure to legal and financial risks arising from student injuries and potential safety incidents. A single serious incident could have consequences that extend well beyond the immediate event.",
+          base: "Your assessment shows that your school may not be fully prepared to prevent and respond to student safety incidents.",
           answerChecks: [
-            { q: 'SCH_013', values: ['Over 500'], append: "With over 500 students enrolled, the likelihood and potential impact of a safety incident increases substantially." }
+            { q: 'SCH_013', values: ['Over 500'], append: "With over 500 students enrolled, the likelihood and potential impact of a safety incident increases substantially." },
+            { q: 'SCH_012', values: ['Yes'], append: "You've experienced student accidents on your premises in the past 3 years, which points to potential gaps in your safety environment." },
+            { q: 'SCH_020', values: ['No'], append: "Without written emergency procedures for accidents or fire, your staff may not know how to respond effectively in a crisis." }
           ],
-          suffix: "Your most important priority is to ensure your student safety procedures and protections are adequate\u2014because the safety of your students comes first."
+          suffix: "Strengthening student safety means protecting the people at the heart of your school."
         },
         'Business Continuity': {
-          base: "Your assessment shows that your school may not be fully prepared to handle a prolonged closure or serious disruption to its operations.",
+          base: "Your assessment reveals potential gaps in your school's ability to withstand and recover from unexpected disruptions.",
           answerChecks: [
-            { q: 'SCH_014', values: ['Under \u20A6100,000'], append: "With lower tuition revenue per student, your school has less financial cushion to absorb unexpected disruptions or closures." }
+            { q: 'SCH_014', values: ['Under \u20A6100,000'], append: "With lower tuition revenue per student, your school has less financial cushion to absorb unexpected disruptions or closures." },
+            { q: 'SCH_022', values: ['No'], append: "You've indicated your school could not meet salary and operational expenses during a one-month closure, which is a significant financial resilience gap." },
+            { q: 'SCH_022', values: ['Not sure'], append: "You're unsure if your school could survive a one-month closure, which itself signals a need for better financial contingency planning." }
           ],
-          suffix: "Developing a basic business continuity plan will help ensure your school can keep operating for students and staff no matter what comes."
+          suffix: "Building business continuity ensures your school can keep its doors open and staff paid, even when the unexpected happens."
         },
         'Transport Safety': {
-          base: "Your assessment shows that your school's transportation of students could create additional risks that need attention.",
+          base: "Your assessment indicates that your school may face exposure related to student transport.",
           answerChecks: [
             { q: 'SCH_015', values: ['Yes'], append: "Operating school buses means you carry responsibility for student safety beyond the school gates\u2014transport accidents can have serious consequences." }
           ],
-          suffix: "Ensuring your school transport is properly covered and maintained is essential for the safety of the students entrusted to you."
+          suffix: "Keeping students safe on the road is as important as keeping them safe in the classroom."
         },
         'Regulatory Readiness': {
-          base: "Your assessment indicates that your school may not be fully prepared for the legal and regulatory responsibilities that come with running a school.",
+          base: "Your assessment suggests that your school may have compliance or legal readiness gaps that could expose it to regulatory action.",
           answerChecks: [
+            { q: 'SCH_023', values: ['No one specifically assigned'], append: "No one is specifically responsible for health and safety in your school, which creates a compliance gap and regulatory exposure." },
             { q: 'SCH_016', values: ['No'], append: "Without liability coverage for student or visitor injuries on your premises, your school faces significant legal and financial exposure that could threaten its reputation." }
           ],
           suffix: "Addressing your legal readiness protects both your school\u2019s reputation and its financial stability."
@@ -624,6 +629,7 @@ const domainConfig = {
         'Property Protection': {
           base: "Your assessment shows that your school\u2019s physical facilities and property may not be adequately safeguarded.",
           answerChecks: [
+            { q: 'SCH_021', values: ['No'], append: "Fire extinguishers are not regularly inspected or available across your school buildings, putting property and lives at risk." },
             { q: 'SCH_017', values: ['No'], append: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months." }
           ],
           suffix: "Your school buildings are the foundation of your operations\u2014protecting them ensures your school can continue serving your community."

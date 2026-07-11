@@ -2725,6 +2725,113 @@
         "id": "SCH_015",
         "industry": "school",
         "branching": {
+            "DEFAULT": "SCH_012"
+        }
+    },
+    {
+        "id": "SCH_012",
+        "industry": "school",
+        "pillar": "Student Safety",
+        "question": "Have you experienced any student accidents on school premises in the past 3 years?",
+        "question_type": "yes_no",
+        "answers": [
+            "Yes",
+            "No"
+        ],
+        "data_mapping": "student_accidents",
+        "risk_logic": {
+            "Yes": {
+                "vulnerability_points": 15
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_020"
+        }
+    },
+    {
+        "id": "SCH_020",
+        "industry": "school",
+        "pillar": "Student Safety",
+        "question": "Do you have written emergency procedures for student accidents or fire?",
+        "question_type": "yes_no",
+        "answers": [
+            "Yes",
+            "No"
+        ],
+        "data_mapping": "emergency_procedures",
+        "risk_logic": {
+            "No": {
+                "vulnerability_points": 20
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_021"
+        }
+    },
+    {
+        "id": "SCH_021",
+        "industry": "school",
+        "pillar": "Property and Asset Protection",
+        "question": "Are fire extinguishers regularly inspected and available across your school?",
+        "question_type": "yes_no",
+        "answers": [
+            "Yes",
+            "No"
+        ],
+        "data_mapping": "fire_extinguishers",
+        "risk_logic": {
+            "No": {
+                "vulnerability_points": 15
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_022"
+        }
+    },
+    {
+        "id": "SCH_022",
+        "industry": "school",
+        "pillar": "Business Continuity",
+        "question": "If your school had to close unexpectedly for one month, could it continue meeting staff salaries and operating expenses?",
+        "question_type": "single_choice",
+        "answers": [
+            "Yes",
+            "No",
+            "Not sure"
+        ],
+        "data_mapping": "closure_resilience",
+        "risk_logic": {
+            "No": {
+                "vulnerability_points": 25
+            },
+            "Not sure": {
+                "vulnerability_points": 15
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_023"
+        }
+    },
+    {
+        "id": "SCH_023",
+        "industry": "school",
+        "pillar": "Regulatory and Legal Readiness",
+        "question": "Who is responsible for health and safety within your school?",
+        "question_type": "single_choice",
+        "answers": [
+            "Head Teacher / Principal",
+            "Designated Safety Officer",
+            "School Administrator",
+            "External Consultant",
+            "No one specifically assigned"
+        ],
+        "data_mapping": "health_safety_responsibility",
+        "risk_logic": {
+            "No one specifically assigned": {
+                "vulnerability_points": 20
+            }
+        },
+        "branching": {
             "DEFAULT": "SCH_016"
         }
     },

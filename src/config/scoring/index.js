@@ -707,6 +707,11 @@
       student_exposure: { name: 'Student Exposure', pillar: 'student_safety' },
       tuition_revenue: { name: 'Tuition Revenue', pillar: 'business_continuity' },
       transport_risk: { name: 'Transport Risk', pillar: 'transport_safety' },
+      student_incidents: { name: 'Student Incidents', pillar: 'student_safety' },
+      emergency_preparedness: { name: 'Emergency Preparedness', pillar: 'student_safety' },
+      fire_safety: { name: 'Fire Safety', pillar: 'property_protection' },
+      financial_continuity: { name: 'Financial Continuity', pillar: 'business_continuity' },
+      safety_governance: { name: 'Safety Governance', pillar: 'regulatory_readiness' },
       injury_liability: { name: 'Injury Liability', pillar: 'regulatory_readiness' },
       property_insurance: { name: 'Property Insurance', pillar: 'property_protection' }
     },
@@ -731,6 +736,41 @@
         scores: { 'No': 100, 'Yes': 30 },
         gaps: { 'Yes': 'School bus operations create transport safety obligations.' },
         recommendations: { 'Yes': 'Review motor fleet insurance and implement bus safety protocols.' }
+      },
+      SCH_012: {
+        category: 'student_incidents',
+        weight: 2,
+        scores: { 'No': 100, 'Yes': 40 },
+        gaps: { 'Yes': 'Student accidents have occurred on premises, indicating safety gaps.' },
+        recommendations: { 'Yes': 'Conduct a full student safety audit and review accident response protocols.' }
+      },
+      SCH_020: {
+        category: 'emergency_preparedness',
+        weight: 2,
+        scores: { 'Yes': 100, 'No': 0 },
+        gaps: { 'No': 'No written emergency procedures for student accidents or fire.' },
+        recommendations: { 'No': 'Develop and document written emergency procedures for student accidents and fire.' }
+      },
+      SCH_021: {
+        category: 'fire_safety',
+        weight: 2,
+        scores: { 'Yes': 100, 'No': 0 },
+        gaps: { 'No': 'Fire extinguishers not regularly inspected or available across the school.' },
+        recommendations: { 'No': 'Install fire extinguishers across all school buildings and establish regular inspection schedule.' }
+      },
+      SCH_022: {
+        category: 'financial_continuity',
+        weight: 3,
+        scores: { 'Yes': 100, 'No': 0, 'Not sure': 30 },
+        gaps: { 'No': 'School cannot sustain staff salaries and expenses for a one-month closure.', 'Not sure': 'Uncertainty about the school\u2019s ability to survive a one-month closure.' },
+        recommendations: { 'No': 'Develop a financial contingency plan to cover operating expenses during unexpected closures.', 'Not sure': 'Assess your school\u2019s financial reserves and develop a contingency plan for unexpected closures.' }
+      },
+      SCH_023: {
+        category: 'safety_governance',
+        weight: 1,
+        scores: { 'Head Teacher / Principal': 70, 'Designated Safety Officer': 100, 'School Administrator': 60, 'External Consultant': 40, 'No one specifically assigned': 0 },
+        gaps: { 'No one specifically assigned': 'No one is specifically responsible for health and safety.' },
+        recommendations: { 'No one specifically assigned': 'Designate a health and safety officer or committee within the school.' }
       },
       SCH_016: {
         category: 'injury_liability',
@@ -767,6 +807,11 @@
       SCH_013: { 'Over 500': { target: 'Under 100', gain: 10, action: 'Review student safety procedures and accident response protocols' } },
       SCH_014: { 'Under \u20A6100,000': { target: '\u20A6100,000 - \u20A6500,000', gain: 8, action: 'Develop a financial contingency plan to sustain operations during disruptions' } },
       SCH_015: { 'Yes': { target: 'No', gain: 5, action: 'Review transport safety policies and bus fleet insurance coverage' } },
+      SCH_012: { 'Yes': { target: 'No', gain: 10, action: 'Conduct a full student safety audit and accident response review' } },
+      SCH_020: { 'No': { target: 'Yes', gain: 8, action: 'Develop written emergency procedures for student accidents and fire' } },
+      SCH_021: { 'No': { target: 'Yes', gain: 6, action: 'Install fire extinguishers across all buildings and schedule regular inspections' } },
+      SCH_022: { 'No': { target: 'Yes', gain: 12, action: 'Build a financial contingency plan to cover 1 month of operating expenses' } },
+      SCH_023: { 'No one specifically assigned': { target: 'Designated Safety Officer', gain: 6, action: 'Designate a health and safety officer within the school' } },
       SCH_016: { 'No': { target: 'Yes', gain: 12, action: 'Secure public liability insurance for student injury protection' } },
       SCH_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for all school buildings' } }
     }
