@@ -14,10 +14,9 @@ const CCIE_PHASES = {
   WELCOME: { label: 'Welcome', minQuestion: 1, maxQuestion: 2 },
   CONSENT: { label: 'Consent', minQuestion: 3, maxQuestion: 3 },
   PROFILE: { label: 'Profile', minQuestion: 4, maxQuestion: 6 },
-  DISCOVERY: { label: 'Discovery', minQuestion: 7, maxQuestion: 16 },
-  ANALYSIS: { label: 'Analysis' },
-  REPORT_READY: { label: 'Report Ready', minQuestion: 17, maxQuestion: 18 },
-  RESULTS: { label: 'Results', minQuestion: 19, maxQuestion: 19 },
+  DISCOVERY: { label: 'Discovery', minQuestion: 7, maxQuestion: 23 },
+  ANALYSIS: { label: 'Analysis', minQuestion: 18, maxQuestion: 18 },
+  RESULTS: { label: 'Results', minQuestion: 24, maxQuestion: 99 },
   NEXT_BEST_ACTION: { label: 'Next Best Action' },
   COMPLETED: { label: 'Completed' }
 };
@@ -32,10 +31,10 @@ const determinePhase = (questionId) => {
   if (num <= 2) return 'WELCOME';
   if (num === 3) return 'CONSENT';
   if (num <= 6) return 'PROFILE';
-  if (num <= 16) return 'DISCOVERY';
-  if (num === 17) return 'ANALYSIS';
-  if (num === 18) return 'REPORT_READY';
-  if (num >= 19) return 'RESULTS';
+  if (num === 18) return 'ANALYSIS';
+  if (num === 19) return 'RESULTS';
+  if (num <= 23) return 'DISCOVERY';
+  if (num >= 24) return 'RESULTS';
   return 'DISCOVERY';
 };
 
