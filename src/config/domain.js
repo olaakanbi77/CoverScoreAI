@@ -589,40 +589,56 @@ const domainConfig = {
     displayLabel: 'Resilience',
     closingTerm: 'overall school resilience',
     improvementTerm: 'school resilience',
-    followUpMsg: "I'll also share practical school risk management tips and strategies that match your assessment.",
+    followUpMsg: "I'll also share practical ways to strengthen your school's safety and operational resilience.",
     pillarMappings: {},
     insightTexts: {
       perPillar: {
-        'Operations': {
-          base: "Your assessment shows that your school's operational exposure could create significant liability risks.",
+        'Student Safety': {
+          base: "Your assessment shows that your school currently has significant exposure to legal and financial risks arising from student injuries and potential safety incidents. A single serious incident could have consequences that extend well beyond the immediate event.",
           answerChecks: [
-            { q: 'SCH_013', values: ['Over 500'], append: "With over 500 students, your school has substantial liability exposure that requires comprehensive coverage." }
+            { q: 'SCH_013', values: ['Over 500'], append: "With over 500 students enrolled, the likelihood and potential impact of a safety incident increases substantially." }
           ],
-          suffix: "Reviewing comprehensive liability and accident coverage for all students is an important step\u2014because the safety of your students and staff comes first."
+          suffix: "Your most important priority is to ensure your student safety procedures and protections are adequate\u2014because the safety of your students comes first."
         },
-        'Legal Liability': {
-          base: "Your assessment indicates that your school may not be adequately protected against injury liability.",
+        'Business Continuity': {
+          base: "Your assessment shows that your school may not be fully prepared to handle a prolonged closure or serious disruption to its operations.",
           answerChecks: [
-            { q: 'SCH_016', values: ['No'], append: "Without insurance coverage for student injuries on premises, your school faces significant legal and financial exposure." }
+            { q: 'SCH_014', values: ['Under \u20A6100,000'], append: "With lower tuition revenue per student, your school has less financial cushion to absorb unexpected disruptions or closures." }
           ],
-          suffix: "Securing comprehensive public liability insurance covering student injuries is essential for your school."
+          suffix: "Developing a basic business continuity plan will help ensure your school can keep operating for students and staff no matter what comes."
         },
-        'Asset Protection': {
-          base: "Your assessment shows that your school's physical assets may not be adequately protected.",
+        'Transport Safety': {
+          base: "Your assessment shows that your school's transportation of students could create additional risks that need attention.",
           answerChecks: [
-            { q: 'SCH_017', values: ['No'], append: "Without fire insurance for school buildings, a fire could result in catastrophic financial loss." }
+            { q: 'SCH_015', values: ['Yes'], append: "Operating school buses means you carry responsibility for student safety beyond the school gates\u2014transport accidents can have serious consequences." }
           ],
-          suffix: "Getting comprehensive fire insurance for all school buildings is a critical step for asset protection."
+          suffix: "Ensuring your school transport is properly covered and maintained is essential for the safety of the students entrusted to you."
+        },
+        'Regulatory Readiness': {
+          base: "Your assessment indicates that your school may not be fully prepared for the legal and regulatory responsibilities that come with running a school.",
+          answerChecks: [
+            { q: 'SCH_016', values: ['No'], append: "Without liability coverage for student or visitor injuries on your premises, your school faces significant legal and financial exposure that could threaten its reputation." }
+          ],
+          suffix: "Addressing your legal readiness protects both your school\u2019s reputation and its financial stability."
+        },
+        'Property Protection': {
+          base: "Your assessment shows that your school\u2019s physical facilities and property may not be adequately safeguarded.",
+          answerChecks: [
+            { q: 'SCH_017', values: ['No'], append: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months." }
+          ],
+          suffix: "Your school buildings are the foundation of your operations\u2014protecting them ensures your school can continue serving your community."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current school resilience. The priority is protecting what matters most\u2014because the safety of your students and staff comes first."
+      catchAll: "Your assessment provides a clear picture of your school\u2019s current operational resilience. The priority is protecting what matters most\u2014your students, your reputation, and your ability to deliver quality education."
     },
     recommendationTexts: {
-      'operations': 'reviewing comprehensive liability and accident coverage for all students at your school',
-      'legal liability': 'securing comprehensive public liability insurance covering student injuries on your premises',
-      'asset protection': 'getting comprehensive fire insurance for all school buildings to protect your facilities'
+      'student safety': 'reviewing your student safety procedures and ensuring comprehensive protection is in place for student accidents and injuries',
+      'business continuity': 'developing a basic business continuity plan that covers temporary closure, loss of key personnel, and operational disruption',
+      'transport safety': 'reviewing and updating insurance coverage for all school transport and vehicles used for student movement',
+      'regulatory readiness': 'securing appropriate liability protection and reviewing your school\u2019s legal readiness for student safety incidents',
+      'property protection': 'getting comprehensive fire and building insurance for all school facilities and property'
     },
-    realLifeContext: "Here\u2019s what this means in real life: A student injury, fire, or liability claim could disrupt operations and put your school\u2019s reputation at risk. Your CoverScore measures how prepared your school is to handle these events without major disruption to students and staff."
+    realLifeContext: "Your school is more than a building\u2014it's a community. Parents trust you with the safety and education of their children. If a student incident, fire, or disruption were to happen, your school\u2019s ability to continue operations depends on the resilience you have in place today."
   },
   CHR: {
     assessmentTitle: 'Church Risk Assessment',

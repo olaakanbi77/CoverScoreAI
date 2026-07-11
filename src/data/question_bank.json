@@ -2559,7 +2559,7 @@
         "id": "SCH_001",
         "industry": "school",
         "pillar": "General",
-        "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your school really is—because the safety of your students and staff comes first.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized School Risk Report™?",
+        "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your school really is—so you can remain safe, trusted, and operational.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized School Risk Report™?",
         "question_type": "single_choice",
         "answers": [
             "✅ I agree — let's begin",
@@ -2669,7 +2669,7 @@
         }
     },
     {
-        "pillar": "Operations",
+        "pillar": "Student Safety",
         "question": "How many students are enrolled in your school?",
         "question_type": "single_choice",
         "answers": [
@@ -2695,7 +2695,7 @@
         }
     },
     {
-        "pillar": "Cash Flow",
+        "pillar": "Business Continuity",
         "question": "What is the estimated average annual tuition fee per student?",
         "question_type": "single_choice",
         "answers": [
@@ -2711,7 +2711,7 @@
         }
     },
     {
-        "pillar": "Logistics",
+        "pillar": "Transport Safety",
         "question": "Do you operate school buses to transport students?",
         "question_type": "yes_no",
         "answers": [
@@ -2729,7 +2729,7 @@
         }
     },
     {
-        "pillar": "Legal & Liability",
+        "pillar": "Regulatory and Legal Readiness",
         "question": "If a student was injured on the playground and parents sued, do you have Public Liability Insurance?",
         "question_type": "yes_no",
         "answers": [
@@ -2748,7 +2748,7 @@
         }
     },
     {
-        "pillar": "Protection & Insurance",
+        "pillar": "Property and Asset Protection",
         "question": "Do you currently have a comprehensive Fire Insurance policy for your school buildings?",
         "question_type": "yes_no",
         "answers": [

@@ -695,30 +695,48 @@
   },
 
   SCH: {
-    name: 'School Protection',
+    name: 'School Risk Assessment',
     pillars: [
-      { id: 'operations', name: 'Operations', weight: 0.30 },
-      { id: 'legal_liability', name: 'Legal & Liability', weight: 0.35 },
-      { id: 'asset_protection', name: 'Asset Protection', weight: 0.35 }
+      { id: 'student_safety', name: 'Student Safety', weight: 0.25 },
+      { id: 'business_continuity', name: 'Business Continuity', weight: 0.20 },
+      { id: 'transport_safety', name: 'Transport Safety', weight: 0.15 },
+      { id: 'regulatory_readiness', name: 'Regulatory Readiness', weight: 0.20 },
+      { id: 'property_protection', name: 'Property Protection', weight: 0.20 }
     ],
     categories: {
-      student_exposure: { name: 'Student Exposure', pillar: 'operations' },
-      injury_liability: { name: 'Injury Liability', pillar: 'legal_liability' },
-      property_insurance: { name: 'Property Insurance', pillar: 'asset_protection' }
+      student_exposure: { name: 'Student Exposure', pillar: 'student_safety' },
+      tuition_revenue: { name: 'Tuition Revenue', pillar: 'business_continuity' },
+      transport_risk: { name: 'Transport Risk', pillar: 'transport_safety' },
+      injury_liability: { name: 'Injury Liability', pillar: 'regulatory_readiness' },
+      property_insurance: { name: 'Property Insurance', pillar: 'property_protection' }
     },
     questions: {
       SCH_013: {
         category: 'student_exposure',
         weight: 3,
         scores: { 'Under 100': 100, '100-500': 55, 'Over 500': 20 },
-        gaps: { 'Over 500': 'Large student population increases liability exposure.' },
-        recommendations: { 'Over 500': 'Review comprehensive liability and accident coverage for all students.' }
+        gaps: { 'Over 500': 'Large student population increases safety risk.' },
+        recommendations: { 'Over 500': 'Strengthen student safety procedures and consider comprehensive accident coverage.' }
+      },
+      SCH_014: {
+        category: 'tuition_revenue',
+        weight: 2,
+        scores: { 'Under \u20A6100,000': 40, '\u20A6100,000 - \u20A6500,000': 70, 'Over \u20A6500,000': 100 },
+        gaps: { 'Under \u20A6100,000': 'Lower tuition revenue means less financial buffer for disruptions.' },
+        recommendations: { 'Under \u20A6100,000': 'Develop a financial contingency plan to sustain operations during unexpected disruptions.' }
+      },
+      SCH_015: {
+        category: 'transport_risk',
+        weight: 2,
+        scores: { 'No': 100, 'Yes': 30 },
+        gaps: { 'Yes': 'School bus operations create transport safety obligations.' },
+        recommendations: { 'Yes': 'Review motor fleet insurance and implement bus safety protocols.' }
       },
       SCH_016: {
         category: 'injury_liability',
         weight: 3,
         scores: { 'Yes': 100, 'No': 0 },
-        gaps: { 'No': 'No insurance coverage if a student is injured on premises.' },
+        gaps: { 'No': 'No liability coverage if a student is injured on premises.' },
         recommendations: { 'No': 'Secure comprehensive public liability insurance covering student injuries.' }
       },
       SCH_017: {
@@ -746,8 +764,11 @@
       }
     ],
     improvements: {
-      SCH_016: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive public liability insurance' } },
-      SCH_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for school buildings' } }
+      SCH_013: { 'Over 500': { target: 'Under 100', gain: 10, action: 'Review student safety procedures and accident response protocols' } },
+      SCH_014: { 'Under \u20A6100,000': { target: '\u20A6100,000 - \u20A6500,000', gain: 8, action: 'Develop a financial contingency plan to sustain operations during disruptions' } },
+      SCH_015: { 'Yes': { target: 'No', gain: 5, action: 'Review transport safety policies and bus fleet insurance coverage' } },
+      SCH_016: { 'No': { target: 'Yes', gain: 12, action: 'Secure public liability insurance for student injury protection' } },
+      SCH_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for all school buildings' } }
     }
   },
 

@@ -336,6 +336,7 @@ router.post('/evolution', async (req, res) => {
           HLT: { strengths: '', risks: "⚠ Your health protection gaps need attention.", recommendations: "• Review your health coverage.\n• Build an emergency medical fund.\n• Schedule preventive health screenings." },
           ENT: { strengths: "✓ Strong business vision\n✓ Market awareness", risks: "⚠ High key-person dependency\n⚠ Inadequate liability protection", recommendations: "• Review Key Person Insurance.\n• Separate personal and business assets." },
           FAM: { strengths: "✓ Clear long-term goals\n✓ Strong familial support", risks: "⚠ Inadequate life cover\n⚠ Education funding gap", recommendations: "• Review Life Insurance policy.\n• Set up an education trust." },
+          SCH: { strengths: "✓ Operational awareness\n✓ Commitment to student safety", risks: "⚠ Student safety gaps\n⚠ No liability cover\n⚠ No property protection", recommendations: "• Strengthen student safety procedures.\n• Secure public liability insurance.\n• Get fire insurance for school buildings." },
            INC: { strengths: "✓ Income stability\n✓ Employment security", risks: "⚠ Limited emergency savings\n⚠ No income protection cover", recommendations: "• Build an emergency fund.\n• Consider income protection insurance." },
           RET: { strengths: "✓ Retirement planning awareness\n✓ Long-term thinking", risks: "⚠ Inadequate retirement savings\n⚠ No long-term care plan\n⚠ No legacy documentation", recommendations: "• Start or review a dedicated retirement savings plan.\n• Consider long-term care insurance.\n• Document your asset distribution and beneficiary nominations." },
           YPR: { strengths: "✓ Early career financial awareness", risks: "⚠ Limited emergency savings\n⚠ No personal insurance", recommendations: "• Build an emergency fund.\n• Consider health and accident insurance." },
@@ -891,18 +892,23 @@ router.post('/evolution', async (req, res) => {
         }
         if (prefix === 'SCH') {
           const studentCount = answers['SCH_013'];
+          const tuition = answers['SCH_014'];
+          const hasBuses = answers['SCH_015'];
           const injuryLiability = answers['SCH_016'];
           const propertyIns = answers['SCH_017'];
           const gaps = [];
-          if (studentCount === 'Over 500') gaps.push("your large student population creates substantial liability exposure");
-          if (injuryLiability === 'No') gaps.push("you don't have insurance coverage if a student is injured on your premises");
-          if (propertyIns === 'No') gaps.push("you don't have fire insurance for your school buildings");
-          let story = "Your school is responsible for the safety of every student in your care. ";
+          if (studentCount === 'Over 500') gaps.push("your large student population increases safety and liability risk");
+          if (hasBuses === 'Yes') gaps.push("your school operates school buses, adding transport safety responsibilities");
+          if (injuryLiability === 'No') gaps.push("you don't have liability coverage if a student is injured on school premises");
+          if (propertyIns === 'No') gaps.push("your school buildings lack fire insurance");
+          let story = "Imagine a student is seriously injured during school hours or one of your classrooms is damaged by fire.\n\nBased on your responses, ";
           if (gaps.length > 0) {
             const lastGap = gaps.pop();
-            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+            story += (gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap) + '.';
+          } else {
+            story = "Your school has some fundamental protections in place. Let\u2019s look at areas that could be more resilient";
           }
-          story += `A student injury or property damage claim could disrupt everything\u2014because the safety of your students and staff comes first.`;
+          story += "\n\nYour school may have to fund medical claims, legal costs, repair expenses, and temporary operational disruptions directly. These unexpected costs could affect your finances, your reputation with parents, and your ability to continue normal school operations.";
           return story;
         }
         if (prefix === 'CHR') {
@@ -1086,7 +1092,7 @@ router.post('/evolution', async (req, res) => {
         SME: 'review your business risk report with you and help you make sure a disruption doesn\u2019t undo everything you\u2019ve built',
         MFG: 'review your manufacturing risk report with you and help you keep production running without costly downtime',
         HOS: 'review your healthcare risk report with you and help you ensure your facility is prepared for anything',
-        SCH: 'review your school risk report with you and help you put the safety of your students and staff first',
+        SCH: 'review your school risk report with you and provide a practical plan to strengthen your school\u2019s overall resilience and safety',
         CHR: 'review your church risk report with you and help you protect your congregation and your mission',
         CON: 'review your construction risk report with you and help you make sure every project is protected',
         TRN: 'review your transport risk report with you and help you keep your fleet moving'
