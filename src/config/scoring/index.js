@@ -836,14 +836,18 @@
       }
     ],
     improvements: {
-      SCH_013: { 'Over 500': { target: 'Under 100', gain: 10, action: 'Review student safety procedures and accident response protocols' } },
+      SCH_013: { 'Over 500': { target: 'Under 100', gain: 10, action: 'Conduct a student safety review covering supervision, premises, and accident response protocols' } },
       SCH_014: { 'Under \u20A6100,000': { target: '\u20A6100,000 - \u20A6500,000', gain: 8, action: 'Develop a financial contingency plan to sustain operations during disruptions' } },
-      SCH_015: { 'Yes': { target: 'No', gain: 5, action: 'Review transport safety policies and bus fleet insurance coverage' } },
+      SCH_015: { 'Yes': { target: 'No', gain: 5, action: 'Review transport safety policies and student movement procedures' } },
       SCH_012: { 'Yes': { target: 'No', gain: 10, action: 'Conduct a full student safety audit and accident response review' } },
-      SCH_020: { 'No': { target: 'Yes', gain: 8, action: 'Develop written emergency procedures for student accidents and fire' } },
+      SCH_020: { 'No': { target: 'Yes', gain: 8, action: 'Establish written emergency procedures for student accidents and fire' } },
       SCH_021: { 'No': { target: 'Yes', gain: 6, action: 'Install fire extinguishers across all buildings and schedule regular inspections' } },
-      SCH_022: { 'No': { target: 'Yes', gain: 12, action: 'Build a financial contingency plan to cover 1 month of operating expenses' } },
-      SCH_023: { 'No one specifically assigned': { target: 'Designated Safety Officer', gain: 6, action: 'Designate a health and safety officer within the school' } },
+      SCH_022: { 'No': { target: 'Yes', gain: 12, action: 'Develop and test a business continuity plan for unexpected disruptions' } },
+      SCH_023: { 'No one specifically assigned': { target: 'Designated Safety Officer', gain: 6, action: 'Establish formal health and safety governance with clear responsibilities' } },
+      SCH_024: { 'No': { target: 'Yes', gain: 8, action: 'Implement first aid and defensive driver training for all school bus drivers' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Confirm and document driver training certifications for school transport' } },
+      SCH_025: { 'No': { target: 'Yes', gain: 8, action: 'Establish a vehicle safety inspection schedule for all school transport' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Audit vehicle inspection procedures and set up a schedule' } },
+      SCH_026: { 'No': { target: 'Yes', gain: 10, action: 'Install and maintain a fire alarm system with monthly tests' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Verify fire alarm installation and schedule regular tests' } },
+      SCH_027: { 'Never': { target: 'Monthly', gain: 6, action: 'Conduct monthly building maintenance inspections' }, 'Rarely': { target: 'Quarterly', gain: 4, action: 'Conduct quarterly building maintenance inspections' } },
       SCH_016: { 'No': { target: 'Yes', gain: 12, action: 'Secure public liability insurance for student injury protection' } },
       SCH_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for all school buildings' } }
     }

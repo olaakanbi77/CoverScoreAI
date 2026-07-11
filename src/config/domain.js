@@ -624,7 +624,7 @@ const domainConfig = {
         'Regulatory Readiness': {
           base: "Your assessment shows that no one is formally responsible for health and safety within your school, creating a significant governance gap.",
           answerChecks: [
-            { q: 'SCH_016', values: ['No'], append: "Combined with the absence of public liability protection, this increases your exposure to legal claims, regulatory action, and reputational damage if another student incident occurs." }
+            { q: 'SCH_016', values: ['No'], append: "Combined with the absence of public liability protection, this increases your exposure to legal claims, regulatory action, and reputational damage if another student incident occurs. These gaps could also reduce your school\u2019s ability to respond confidently when incidents happen." }
           ],
           suffix: ""
         },
@@ -646,7 +646,7 @@ const domainConfig = {
       'student safety': 'reviewing your student safety procedures and ensuring comprehensive protection is in place for student accidents and injuries',
       'business continuity': 'developing a basic business continuity plan that covers temporary closure, loss of key personnel, and operational disruption',
       'transport safety': 'reviewing and updating insurance coverage for all school transport and vehicles used for student movement',
-      'regulatory readiness': 'securing appropriate liability protection and reviewing your school\u2019s legal readiness for student safety incidents',
+      'regulatory readiness': 'Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents',
       'property protection': 'getting comprehensive fire and building insurance for all school facilities and property'
     },
     realLifeContext: "Your school is more than a building\u2014it's a community. Parents trust you with the safety and education of their children. If a student incident, fire, or disruption were to happen, your school\u2019s ability to continue operations depends on the resilience you have in place today."
