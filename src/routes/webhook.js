@@ -504,6 +504,10 @@ router.post('/evolution', async (req, res) => {
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 
+      // Filter out null pillars (pillars with no evidence)
+      const scoredCats = Object.fromEntries(Object.entries(riskCats).filter(([, v]) => v !== null && v !== undefined));
+      const scoredEntries = Object.entries(scoredCats);
+
       // Derive CSNS display label directly from riskLevel (not via dbRiskLevelMap which maps to legacy DB values)
       const csnsDisplayLabels = dom.resilienceLabels || {
         'excellent': 'Excellent Resilience', 'strong': 'Strong Resilience',
@@ -517,7 +521,7 @@ router.post('/evolution', async (req, res) => {
       const displayLabel = csnsDisplayLabels[assessmentData.riskLevel] || csnsDisplayLabels[dbLevel] || dom.displayLabel || 'Building Resilience';
 
       // Derive sorted pillar list once
-      const sortedDesc = Object.entries(riskCats).sort(([, a], [, b]) => b - a);
+      const sortedDesc = scoredEntries.sort(([, a], [, b]) => b - a);
       const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
 
       // ===== Message 1: Completion + Summary + Score + Resilience Level + Highest Priority =====
@@ -911,7 +915,13 @@ router.post('/evolution', async (req, res) => {
           if (safetyOwner === 'No one specifically assigned') gaps.push("no one is specifically responsible for health and safety");
           if (injuryLiability === 'No') gaps.push("you don't have liability coverage if a student is injured on school premises");
           if (propertyIns === 'No') gaps.push("your school buildings lack fire insurance");
-          let story = "Imagine a student is seriously injured during school hours or one of your classrooms is damaged by fire.\n\nBased on your responses, ";
+          let story;
+          if (studentAccidents === 'Yes') {
+            story = "Because you've indicated that student accidents have already occurred on your premises, your school is no longer dealing with a hypothetical risk. ";
+          } else {
+            story = "Even if your school hasn't experienced a serious incident, the risks are real and the consequences can be significant. ";
+          }
+          story += "Based on your responses, ";
           if (gaps.length > 0) {
             const lastGap = gaps.pop();
             story += (gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap) + '.';
@@ -1003,9 +1013,9 @@ router.post('/evolution', async (req, res) => {
             if (answer && qImprovements[answer]) {
               const imp = qImprovements[answer];
               totalGain += imp.gain;
-              const verbMatch = imp.action.match(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin)/i);
+              const verbMatch = imp.action.match(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin|Conduct|Install|Designate|Develop|Secure)/i);
               const prefixWord = verbMatch ? verbMatch[1] : 'Build';
-              const rest = imp.action.replace(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin)\s+/i, '');
+              const rest = imp.action.replace(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin|Conduct|Install|Designate|Develop|Secure)\s+/i, '');
               actionLines.push(`\u2713 ${prefixWord} ${rest.charAt(0).toLowerCase() + rest.slice(1)}`);
               used++;
             }
@@ -1020,7 +1030,7 @@ router.post('/evolution', async (req, res) => {
             action.split(',').map(s => s.trim()).filter(Boolean).slice(0, 3).forEach(step => {
               const clean = step.replace(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)\s+/i, '');
               const vm = step.match(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)/i);
-              const vMap = { reviewing: 'Review', building: 'Build', considering: 'Consider', diversifying: 'Diversify', getting: 'Get', securing: 'Secure', ensuring: 'Ensure', creating: 'Create', starting: 'Start' };
+              const vMap = { reviewing: 'Review', building: 'Build', considering: 'Consider', diversifying: 'Diversify', getting: 'Get', securing: 'Secure', ensuring: 'Ensure', creating: 'Create', starting: 'Start', conducting: 'Conduct', installing: 'Install', designating: 'Designate', developing: 'Develop' };
               const pw = vm ? vMap[vm[1].toLowerCase()] || 'Build' : 'Build';
               actionLines.push(`\u2713 ${pw} ${clean}`);
             });
@@ -1062,29 +1072,29 @@ router.post('/evolution', async (req, res) => {
         const filled = Math.round(Math.min(s, 100) / 10);
         return '\u2588'.repeat(filled) + '\u2591'.repeat(10 - filled);
       };
-      const pillarNames = Object.keys(riskCats);
+      const pillarNames = Object.keys(scoredCats);
       const maxNameLen = pillarNames.length > 0 ? Math.max(...pillarNames.map(n => n.length), 20) : 20;
-      const pillarChart = Object.entries(riskCats)
+      const pillarChart = Object.entries(scoredCats)
         .sort(([, a], [, b]) => b - a)
         .map(([n, s]) => `${n.padEnd(maxNameLen)} ${makePillarBar(s)} ${s}%`)
         .join('\n');
 
       // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 =====
       let msg2 = `Your Risk Pillars\n\n${pillarChart}`;
-      const insightText = generateCoverScoreInsight(riskCats, answers, name, prefix);
+      const insightText = generateCoverScoreInsight(scoredCats, answers, name, prefix);
       if (insightText) msg2 += `\n\n${insightText}`;
       postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
       // ===== Message 3: Risk Story\u2122 + Forecast + Progress Potential + Recommendation + Report =====
-      let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(riskCats, answers, prefix, dom)}`;
-      const forecast = buildResilienceForecast(riskCats, assessmentData.score, answers, prefix, dom, reportName);
+      let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
+      const forecast = buildResilienceForecast(scoredCats, assessmentData.score, answers, prefix, dom, reportName);
       if (forecast) msg3 += `\n\n${forecast.text}`;
       // Your Improvement Potential\u2122
       if (forecast && forecast.projectedScore > assessmentData.score) {
         const diff = forecast.projectedScore - assessmentData.score;
         msg3 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
       }
-      const recommendation = buildRecommendation(riskCats, dom);
+      const recommendation = buildRecommendation(scoredCats, dom);
       if (recommendation) msg3 += `\n\n${recommendation}`;
       msg3 += `\n\nYour complete ${reportName} is ready.\n\nIt includes:\n\n\u2713 Your detailed CoverScore breakdown\n\u2713 Personalised recommendations\n\u2713 Protection options\n\u2713 Practical next steps\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
       postMessages.push({ type: 'report_link', text: msg3, _delay: 3000 });
