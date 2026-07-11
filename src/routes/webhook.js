@@ -91,6 +91,7 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
         body += ' ' + text;
       }
     }
+    if (pillarDef.suffix) body += ' ' + pillarDef.suffix;
   } else {
     body = dom.insightTexts?.catchAll ||
       `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}.`;
@@ -526,11 +527,17 @@ router.post('/evolution', async (req, res) => {
 
       // ===== Message 1: Completion + Summary + Score + Resilience Level + Highest Priority =====
       const msg1Parts = [
-        `\uD83C\uDF89 Your ${dom.assessmentTitle} Assessment is complete.\n\nHere\u2019s a summary of what we discovered.`,
+        `\uD83C\uDF89 Your ${dom.assessmentTitle} is complete.\n\nHere\u2019s a summary of what we discovered.`,
         `CoverScore\u2122\n${assessmentData.score} / 100`,
         `Resilience Level\n${displayLabel}`
       ];
-      if (weakestPillar) msg1Parts.push(`Highest Priority\n\n${weakestPillar}`);
+      if (weakestPillar) {
+        const weakKey = weakestPillar.toLowerCase();
+        const whyText = (dom.recommendationTexts && dom.recommendationTexts[weakKey])
+          ? dom.recommendationTexts[weakKey].replace(/^reviewing your |^developing a |^securing appropriate |^getting comprehensive /i, '')
+        : `this is the area that needs the most attention`;
+        msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}.`);
+      }
       postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
 
       // ---- personalized real-life context builder ----
@@ -895,40 +902,39 @@ router.post('/evolution', async (req, res) => {
           return story;
         }
         if (prefix === 'SCH') {
-          const studentCount = answers['SCH_013'];
-          const tuition = answers['SCH_014'];
-          const hasBuses = answers['SCH_015'];
           const studentAccidents = answers['SCH_012'];
           const emergencyProcedures = answers['SCH_020'];
-          const fireExtinguishers = answers['SCH_021'];
-          const closureResilience = answers['SCH_022'];
           const safetyOwner = answers['SCH_023'];
           const injuryLiability = answers['SCH_016'];
           const propertyIns = answers['SCH_017'];
+          const fireAlarm = answers['SCH_026'];
+          const closureResilience = answers['SCH_022'];
+          const hasBuses = answers['SCH_015'];
+          const driverTraining = answers['SCH_024'];
+          const vehicleInspections = answers['SCH_025'];
           const gaps = [];
-          if (studentCount === 'Over 500') gaps.push("your large student population increases safety and liability risk");
-          if (studentAccidents === 'Yes') gaps.push("student accidents have already occurred on your premises");
-          if (emergencyProcedures === 'No') gaps.push("you lack written emergency procedures for accidents or fire");
-          if (hasBuses === 'Yes') gaps.push("your school operates school buses, adding transport safety responsibilities");
-          if (fireExtinguishers === 'No') gaps.push("fire extinguishers are not regularly available or inspected across your school");
-          if (closureResilience === 'No') gaps.push("your school could not survive a one-month closure financially");
-          if (safetyOwner === 'No one specifically assigned') gaps.push("no one is specifically responsible for health and safety");
-          if (injuryLiability === 'No') gaps.push("you don't have liability coverage if a student is injured on school premises");
-          if (propertyIns === 'No') gaps.push("your school buildings lack fire insurance");
+          if (emergencyProcedures === 'No') gaps.push('documented emergency procedures');
+          if (safetyOwner === 'No one specifically assigned') gaps.push('assigned safety leadership');
+          if (injuryLiability === 'No') gaps.push('liability protection');
+          if (propertyIns === 'No') gaps.push('fire insurance');
+          if (fireAlarm === 'No') gaps.push('a working fire alarm');
           let story;
           if (studentAccidents === 'Yes') {
-            story = "Because you've indicated that student accidents have already occurred on your premises, your school is no longer dealing with a hypothetical risk. ";
+            story = "Because you've told us that student accidents have already occurred on your premises, your school is already operating in a higher-risk environment. ";
           } else {
             story = "Even if your school hasn't experienced a serious incident, the risks are real and the consequences can be significant. ";
           }
-          story += "Based on your responses, ";
+          story += "Based on your responses, several important safeguards are missing, including ";
           if (gaps.length > 0) {
             const lastGap = gaps.pop();
-            story += (gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap) + '.';
+            story += (gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap) + '. ';
           } else {
-            story = "Your school has some fundamental protections in place. Let\u2019s look at areas that could be more resilient";
+            story += 'some core protections. ';
           }
-          story += "\n\nYour school may have to fund medical claims, legal costs, repair expenses, and temporary operational disruptions directly. These unexpected costs could affect your finances, your reputation with parents, and your ability to continue normal school operations.";
+          if (closureResilience === 'No') {
+            story += "Your responses also indicate that an unexpected one-month closure could place immediate financial pressure on the school's ability to meet operating expenses. ";
+          }
+          story += 'Together, these gaps increase the likelihood that a future incident could disrupt school operations, damage your reputation, and create significant financial and legal consequences.';
           return story;
         }
         if (prefix === 'CHR') {
@@ -1112,7 +1118,7 @@ router.post('/evolution', async (req, res) => {
         SME: 'review your business risk report with you and help you make sure a disruption doesn\u2019t undo everything you\u2019ve built',
         MFG: 'review your manufacturing risk report with you and help you keep production running without costly downtime',
         HOS: 'review your healthcare risk report with you and help you ensure your facility is prepared for anything',
-        SCH: 'review your school risk report with you and provide a practical plan to strengthen your school\u2019s overall resilience and safety',
+        SCH: 'help you prioritise the improvements that will have the biggest impact on your school\u2019s safety, resilience, and long-term sustainability',
         CHR: 'review your church risk report with you and help you protect your congregation and your mission',
         CON: 'review your construction risk report with you and help you make sure every project is protected',
         TRN: 'review your transport risk report with you and help you keep your fleet moving'
