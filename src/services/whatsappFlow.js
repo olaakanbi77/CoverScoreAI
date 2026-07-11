@@ -68,7 +68,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
   if (isAwaitingConsultation) {
     const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
-    if (input === 'A' || input === 'YES') {
+    if (input === 'A' || input === 'YES' || input === 'ADVISOR') {
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';

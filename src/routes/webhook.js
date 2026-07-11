@@ -509,17 +509,15 @@ router.post('/evolution', async (req, res) => {
       const scoredCats = Object.fromEntries(Object.entries(riskCats).filter(([, v]) => v !== null && v !== undefined));
       const scoredEntries = Object.entries(scoredCats);
 
-      // Derive CSNS display label directly from riskLevel (not via dbRiskLevelMap which maps to legacy DB values)
-      const csnsDisplayLabels = dom.resilienceLabels || {
-        'excellent': 'Excellent Resilience', 'strong': 'Strong Resilience',
-        'developing': 'Developing Resilience', 'needs_attention': 'Needs Attention',
-        'priority_improvement': 'Priority Improvement', 'critical_priority': 'Critical',
-        'Excellent': 'Excellent Resilience', 'Strong': 'Strong Resilience',
-        'Developing': 'Developing Resilience', 'Needs Attention': 'Needs Attention',
-        'Priority Improvement': 'Priority Improvement', 'Critical': 'Critical'
+      // Derive CSNS display label directly from score using fixed bands
+      const fixedBand = (score) => {
+        if (score >= 80) return 'Strong';
+        if (score >= 60) return 'Stable';
+        if (score >= 40) return 'Needs Attention';
+        if (score >= 20) return 'High Risk';
+        return 'Critical';
       };
-      const dbLevel = (dbRiskLevelMap[assessmentData.riskLevel] || '').toLowerCase();
-      const displayLabel = csnsDisplayLabels[assessmentData.riskLevel] || csnsDisplayLabels[dbLevel] || dom.displayLabel || 'Building Resilience';
+      const displayLabel = fixedBand(assessmentData.score);
 
       // Derive sorted pillar list once
       const sortedDesc = scoredEntries.sort(([, a], [, b]) => b - a);
@@ -535,8 +533,8 @@ router.post('/evolution', async (req, res) => {
         const weakKey = weakestPillar.toLowerCase();
         const whyText = (dom.recommendationTexts && dom.recommendationTexts[weakKey])
           ? dom.recommendationTexts[weakKey].replace(/^reviewing your |^developing a |^securing appropriate |^getting comprehensive /i, '')
-        : `this is the area that needs the most attention`;
-        msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}.`);
+          : `this is the area that needs the most attention`;
+        msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\nWhy?\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}.`);
       }
       postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
 

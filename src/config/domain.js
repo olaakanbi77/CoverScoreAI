@@ -622,12 +622,11 @@ const domainConfig = {
           suffix: "Keeping students safe on the road is as important as keeping them safe in the classroom."
         },
         'Regulatory Readiness': {
-          base: "Your assessment suggests that your school may have compliance or legal readiness gaps that could expose it to regulatory action.",
+          base: "Your assessment shows that no one is formally responsible for health and safety within your school, creating a significant governance gap.",
           answerChecks: [
-            { q: 'SCH_023', values: ['No one specifically assigned'], append: "No one is specifically responsible for health and safety in your school, which creates a compliance gap and regulatory exposure." },
-            { q: 'SCH_016', values: ['No'], append: "Without liability coverage for student or visitor injuries on your premises, your school faces significant legal and financial exposure that could threaten its reputation." }
+            { q: 'SCH_016', values: ['No'], append: "Combined with the absence of public liability protection, this increases your exposure to legal claims, regulatory action, and reputational damage if another student incident occurs." }
           ],
-          suffix: "Addressing your legal readiness protects both your school\u2019s reputation and its financial stability."
+          suffix: ""
         },
         'Property Protection': {
           base: "Your assessment shows that your school\u2019s physical facilities and property may not be adequately safeguarded.",
