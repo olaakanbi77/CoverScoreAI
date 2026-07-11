@@ -712,6 +712,10 @@
       fire_safety: { name: 'Fire Safety', pillar: 'property_protection' },
       financial_continuity: { name: 'Financial Continuity', pillar: 'business_continuity' },
       safety_governance: { name: 'Safety Governance', pillar: 'regulatory_readiness' },
+      driver_training: { name: 'Driver Training', pillar: 'transport_safety' },
+      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'transport_safety' },
+      fire_alarm: { name: 'Fire Alarm', pillar: 'property_protection' },
+      building_maintenance: { name: 'Building Maintenance', pillar: 'property_protection' },
       injury_liability: { name: 'Injury Liability', pillar: 'regulatory_readiness' },
       property_insurance: { name: 'Property Insurance', pillar: 'property_protection' }
     },
@@ -771,6 +775,34 @@
         scores: { 'Head Teacher / Principal': 70, 'Designated Safety Officer': 100, 'School Administrator': 60, 'External Consultant': 40, 'No one specifically assigned': 0 },
         gaps: { 'No one specifically assigned': 'No one is specifically responsible for health and safety.' },
         recommendations: { 'No one specifically assigned': 'Designate a health and safety officer or committee within the school.' }
+      },
+      SCH_024: {
+        category: 'driver_training',
+        weight: 2,
+        scores: { 'Yes': 100, 'No': 0, 'Not sure': 30 },
+        gaps: { 'No': 'School bus drivers are not trained in first aid and defensive driving.', 'Not sure': 'Uncertainty about driver training standards for school transport.' },
+        recommendations: { 'No': 'Implement first aid and defensive driving training for all school bus drivers.', 'Not sure': 'Review driver training credentials and establish a training program.' }
+      },
+      SCH_025: {
+        category: 'vehicle_inspections',
+        weight: 2,
+        scores: { 'Yes': 100, 'No': 0, 'Not sure': 30 },
+        gaps: { 'No': 'No regular vehicle safety inspections for school transport.', 'Not sure': 'Uncertainty about vehicle inspection schedules for school transport.' },
+        recommendations: { 'No': 'Establish a regular vehicle safety inspection schedule for all school transport.', 'Not sure': 'Document and formalize vehicle inspection procedures for school transport.' }
+      },
+      SCH_026: {
+        category: 'fire_alarm',
+        weight: 2,
+        scores: { 'Yes': 100, 'No': 0, 'Not sure': 30 },
+        gaps: { 'No': 'No working and regularly tested fire alarm system.', 'Not sure': 'Uncertainty about fire alarm functionality and testing.' },
+        recommendations: { 'No': 'Install a fire alarm system and establish a regular testing schedule.', 'Not sure': 'Verify fire alarm system functionality and set up regular testing.' }
+      },
+      SCH_027: {
+        category: 'building_maintenance',
+        weight: 1,
+        scores: { 'Monthly': 100, 'Quarterly': 80, 'Annually': 50, 'Rarely': 20, 'Never': 0 },
+        gaps: { 'Rarely': 'Building maintenance inspections are only conducted rarely.', 'Never': 'No building maintenance inspections are conducted.' },
+        recommendations: { 'Rarely': 'Establish a regular building maintenance inspection schedule.', 'Never': 'Begin conducting building maintenance inspections at least annually.' }
       },
       SCH_016: {
         category: 'injury_liability',

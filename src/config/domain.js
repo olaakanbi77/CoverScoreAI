@@ -614,7 +614,10 @@ const domainConfig = {
         'Transport Safety': {
           base: "Your assessment indicates that your school may face exposure related to student transport.",
           answerChecks: [
-            { q: 'SCH_015', values: ['Yes'], append: "Operating school buses means you carry responsibility for student safety beyond the school gates\u2014transport accidents can have serious consequences." }
+            { q: 'SCH_015', values: ['Yes'], append: "Operating school buses means you carry responsibility for student safety beyond the school gates\u2014transport accidents can have serious consequences." },
+            { q: 'SCH_024', values: ['No'], append: "Your school bus drivers lack first aid and defensive driving training, increasing the risk of accidents and injuries during transport." },
+            { q: 'SCH_025', values: ['No'], append: "Without regular vehicle safety inspections, your school transport fleet may have undetected mechanical issues that could lead to breakdowns or accidents." },
+            { q: 'SCH_025', values: ['Not sure'], append: "You're uncertain whether vehicle safety inspections are conducted regularly, which itself indicates a gap in transport safety management." }
           ],
           suffix: "Keeping students safe on the road is as important as keeping them safe in the classroom."
         },
@@ -630,6 +633,9 @@ const domainConfig = {
           base: "Your assessment shows that your school\u2019s physical facilities and property may not be adequately safeguarded.",
           answerChecks: [
             { q: 'SCH_021', values: ['No'], append: "Fire extinguishers are not regularly inspected or available across your school buildings, putting property and lives at risk." },
+            { q: 'SCH_026', values: ['No'], append: "Your school does not have a working fire alarm system that is regularly tested, meaning a fire could go undetected until it's too late." },
+            { q: 'SCH_027', values: ['Never'], append: "You never conduct building maintenance inspections, allowing structural issues, electrical faults, and other hazards to go unnoticed." },
+            { q: 'SCH_027', values: ['Rarely'], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." },
             { q: 'SCH_017', values: ['No'], append: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months." }
           ],
           suffix: "Your school buildings are the foundation of your operations\u2014protecting them ensures your school can continue serving your community."

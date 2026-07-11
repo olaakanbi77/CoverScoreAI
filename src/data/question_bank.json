@@ -2832,6 +2832,104 @@
             }
         },
         "branching": {
+            "DEFAULT": "SCH_024"
+        }
+    },
+    {
+        "id": "SCH_024",
+        "industry": "school",
+        "pillar": "Transport Safety",
+        "question": "Are your school bus drivers trained in first aid and defensive driving?",
+        "question_type": "yes_no",
+        "answers": [
+            "Yes",
+            "No",
+            "Not sure"
+        ],
+        "data_mapping": "driver_training",
+        "risk_logic": {
+            "No": {
+                "vulnerability_points": 15
+            },
+            "Not sure": {
+                "vulnerability_points": 8
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_025"
+        }
+    },
+    {
+        "id": "SCH_025",
+        "industry": "school",
+        "pillar": "Transport Safety",
+        "question": "Do you conduct regular vehicle safety inspections for your school transport?",
+        "question_type": "yes_no",
+        "answers": [
+            "Yes",
+            "No",
+            "Not sure"
+        ],
+        "data_mapping": "vehicle_inspections",
+        "risk_logic": {
+            "No": {
+                "vulnerability_points": 15
+            },
+            "Not sure": {
+                "vulnerability_points": 8
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_026"
+        }
+    },
+    {
+        "id": "SCH_026",
+        "industry": "school",
+        "pillar": "Property and Asset Protection",
+        "question": "Does your school have a working fire alarm system that is regularly tested?",
+        "question_type": "yes_no",
+        "answers": [
+            "Yes",
+            "No",
+            "Not sure"
+        ],
+        "data_mapping": "fire_alarm",
+        "risk_logic": {
+            "No": {
+                "vulnerability_points": 20
+            },
+            "Not sure": {
+                "vulnerability_points": 10
+            }
+        },
+        "branching": {
+            "DEFAULT": "SCH_027"
+        }
+    },
+    {
+        "id": "SCH_027",
+        "industry": "school",
+        "pillar": "Property and Asset Protection",
+        "question": "How often do you conduct building maintenance inspections?",
+        "question_type": "single_choice",
+        "answers": [
+            "Monthly",
+            "Quarterly",
+            "Annually",
+            "Rarely",
+            "Never"
+        ],
+        "data_mapping": "building_maintenance",
+        "risk_logic": {
+            "Rarely": {
+                "vulnerability_points": 10
+            },
+            "Never": {
+                "vulnerability_points": 20
+            }
+        },
+        "branching": {
             "DEFAULT": "SCH_016"
         }
     },
