@@ -1005,40 +1005,40 @@
       MFG_016: { 'No': { target: 'Yes', gain: 10, action: 'Get comprehensive fire and special perils insurance' } },
       MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity and disaster recovery planning' } },
       MFG_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen workplace safety governance and incident investigation processes' },
       },
       MFG_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for workplace accidents and fire' },
       },
       MFG_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all areas and establish regular inspection schedule' },
       },
       MFG_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       MFG_023: {
-        'Designated Safety Officer': { target: 'Operations Manager', gain: 3, action: 'Improve from "Designated Safety Officer" to "Operations Manager"' },
-        'External Consultant': { target: 'Operations Manager', gain: 7, action: 'Improve from "External Consultant" to "Operations Manager"' },
-        'No one specifically assigned': { target: 'Operations Manager', gain: 10, action: 'Designate a responsible person or team for this area' },
+        'Designated Safety Officer': { target: 'Operations Manager', gain: 3, action: 'Upgrade safety oversight from officer to senior operations leadership' },
+        'External Consultant': { target: 'Operations Manager', gain: 7, action: 'Bring safety governance in-house under senior operations management' },
+        'No one specifically assigned': { target: 'Operations Manager', gain: 10, action: 'Designate a senior operations lead for health and safety' },
       },
       MFG_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate insurance for goods in transit during transportation' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review supply chain operations and obtain appropriate goods-in-transit cover' },
       },
       MFG_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Implement preventive maintenance training for all production staff' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program' },
       },
       MFG_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for all logistics vehicles' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
       },
       MFG_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase facility maintenance inspections to monthly' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase facility maintenance inspections to monthly' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly facility maintenance inspections' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly facility maintenance inspections' },
       }
     }
   },
@@ -1046,25 +1046,25 @@
   HOS: {
     name: 'Hospital Protection',
     pillars: [
-      { id: 'operations', name: 'Operations', weight: 0.25 },
-      { id: 'legal_liability', name: 'Legal & Liability', weight: 0.30 },
-      { id: 'equipment', name: 'Equipment', weight: 0.20 },
-      { id: 'asset_protection', name: 'Asset Protection', weight: 0.25 }
+      { id: 'operations', name: 'Clinical Risk & Patient Safety', weight: 0.25 },
+      { id: 'legal_liability', name: 'Professional Liability', weight: 0.30 },
+      { id: 'equipment', name: 'Medical Equipment Resilience', weight: 0.20 },
+      { id: 'asset_protection', name: 'Operational Continuity', weight: 0.25 }
     ],
     categories: {
-      patient_exposure: { name: 'Patient Exposure', pillar: 'operations' },
-      medical_liability: { name: 'Medical Liability', pillar: 'legal_liability' },
-      equipment_value: { name: 'Equipment Value', pillar: 'equipment' },
-      equipment_insurance: { name: 'Equipment Insurance', pillar: 'asset_protection' },
-      patient_incidents: { name: 'Patient Incidents', pillar: 'operations' },
-      emergency_procedures: { name: 'Emergency Procedures', pillar: 'operations' },
+      patient_exposure: { name: 'Patient Volume & Liability', pillar: 'operations' },
+      medical_liability: { name: 'Medical Malpractice Coverage', pillar: 'legal_liability' },
+      equipment_value: { name: 'High-Value Equipment', pillar: 'equipment' },
+      equipment_insurance: { name: 'Equipment Protection', pillar: 'equipment' },
+      patient_incidents: { name: 'Patient Safety Incidents', pillar: 'operations' },
+      emergency_procedures: { name: 'Emergency Preparedness', pillar: 'operations' },
       fire_safety: { name: 'Fire Safety', pillar: 'asset_protection' },
       financial_continuity: { name: 'Financial Continuity', pillar: 'operations' },
-      compliance_governance: { name: 'Compliance Governance', pillar: 'legal_liability' },
-      vehicle_operations: { name: 'Vehicle Operations', pillar: 'operations' },
-      driver_training: { name: 'Driver Training', pillar: 'operations' },
-      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'operations' },
-      building_maintenance: { name: 'Building Maintenance', pillar: 'asset_protection' }
+      compliance_governance: { name: 'Clinical Governance', pillar: 'legal_liability' },
+      vehicle_operations: { name: 'Medical Transport', pillar: 'operations' },
+      driver_training: { name: 'Driver Emergency Training', pillar: 'operations' },
+      vehicle_inspections: { name: 'Vehicle Safety Inspections', pillar: 'operations' },
+      building_maintenance: { name: 'Facility Maintenance', pillar: 'asset_protection' }
     },
     questions: {
       HOS_013: {
@@ -1193,40 +1193,40 @@
       HOS_015: { 'No': { target: 'Yes', gain: 12, action: 'Get professional indemnity and medical malpractice insurance' } },
       HOS_017: { 'No': { target: 'Yes', gain: 10, action: 'Get all-risks equipment insurance' } },
       HOS_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen patient safety governance and incident review processes' },
       },
       HOS_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for patient incidents and fire' },
       },
       HOS_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all facility areas and establish regular inspection schedule' },
       },
       HOS_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       HOS_023: {
-        'Designated Compliance Officer': { target: 'Medical Director', gain: 3, action: 'Improve from "Designated Compliance Officer" to "Medical Director"' },
-        'External Consultant': { target: 'Medical Director', gain: 7, action: 'Improve from "External Consultant" to "Medical Director"' },
-        'No one specifically assigned': { target: 'Medical Director', gain: 10, action: 'Designate a responsible person or team for this area' },
+        'Designated Compliance Officer': { target: 'Medical Director', gain: 3, action: 'Upgrade compliance oversight from officer to senior clinical leadership' },
+        'External Consultant': { target: 'Medical Director', gain: 7, action: 'Bring compliance governance in-house under senior clinical leadership' },
+        'No one specifically assigned': { target: 'Medical Director', gain: 10, action: 'Designate a senior clinical lead for compliance and patient safety' },
       },
       HOS_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate fleet insurance for ambulances and patient transport vehicles' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review transport operations and obtain appropriate fleet coverage' },
       },
       HOS_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Implement defensive driving and emergency protocol training for all drivers' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit driver training credentials and establish a training program' },
       },
       HOS_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for all medical transport' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
       },
       HOS_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase building maintenance inspections to monthly' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase building maintenance inspections to monthly' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly building maintenance inspections' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly building maintenance inspections' },
       }
     }
   },
@@ -1381,40 +1381,40 @@
       CHR_015: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive public liability insurance' } },
       CHR_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for church building and contents' } },
       CHR_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen premises safety governance and incident response processes' },
       },
       CHR_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for fire and medical incidents' },
       },
       CHR_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all premises and establish regular inspection schedule' },
       },
       CHR_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       CHR_023: {
-        'Designated Safety Officer': { target: 'Church Administrator', gain: 3, action: 'Improve from "Designated Safety Officer" to "Church Administrator"' },
-        'Volunteer Coordinator': { target: 'Church Administrator', gain: 7, action: 'Improve from "Volunteer Coordinator" to "Church Administrator"' },
-        'No one specifically assigned': { target: 'Church Administrator', gain: 10, action: 'Designate a responsible person or team for this area' },
+        'Designated Safety Officer': { target: 'Church Administrator', gain: 3, action: 'Upgrade safety oversight from officer to senior administrative leadership' },
+        'Volunteer Coordinator': { target: 'Church Administrator', gain: 7, action: 'Bring safety governance under senior administrative leadership' },
+        'No one specifically assigned': { target: 'Church Administrator', gain: 10, action: 'Designate a senior administrator for safety and compliance' },
       },
       CHR_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate insurance for musical instruments and broadcast equipment' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit valuable equipment and obtain appropriate coverage' },
       },
       CHR_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Implement preventive maintenance training for all technical staff' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program' },
       },
       CHR_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for church transport' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
       },
       CHR_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase facility maintenance inspections to monthly' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase facility maintenance inspections to monthly' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly facility maintenance inspections' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly facility maintenance inspections' },
       }
     }
   },
@@ -1586,40 +1586,40 @@
       CON_016: { 'No': { target: 'Yes', gain: 8, action: 'Get group personal accident cover for workers' } },
       CON_017: { 'No': { target: 'Yes', gain: 6, action: 'Add delay penalty protection to contracts' } },
       CON_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen on-site safety governance and incident investigation processes' },
       },
       CON_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for site accidents and fire' },
       },
       CON_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all sites and establish regular inspection schedule' },
       },
       CON_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month project halt' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a project disruption contingency plan' },
       },
       CON_023: {
-        'Designated Safety Officer': { target: 'Project Manager', gain: 3, action: 'Improve from "Designated Safety Officer" to "Project Manager"' },
-        'External Consultant': { target: 'Project Manager', gain: 7, action: 'Improve from "External Consultant" to "Project Manager"' },
-        'No one specifically assigned': { target: 'Project Manager', gain: 10, action: 'Designate a responsible person or team for this area' },
+        'Designated Safety Officer': { target: 'Project Manager', gain: 3, action: 'Upgrade safety oversight from officer to senior project management' },
+        'External Consultant': { target: 'Project Manager', gain: 7, action: 'Bring safety governance in-house under senior project management' },
+        'No one specifically assigned': { target: 'Project Manager', gain: 10, action: 'Designate a senior project manager for site health and safety' },
       },
       CON_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate insurance for tools and materials in transit' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review supply chain operations and obtain appropriate goods-in-transit cover' },
       },
       CON_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Implement preventive maintenance training for all equipment operators' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program' },
       },
       CON_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for site vehicles' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
       },
       CON_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase site maintenance inspections to monthly' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase site maintenance inspections to monthly' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly site maintenance inspections' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly site maintenance inspections' },
       }
     }
   },
@@ -1775,40 +1775,40 @@
       TRN_016: { 'No': { target: 'Yes', gain: 8, action: 'Get group personal accident cover for drivers' } },
       TRN_017: { 'No': { target: 'Some of them', gain: 6, action: 'Start with comprehensive insurance for high-value vehicles' } },
       TRN_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen fleet safety governance and accident investigation processes' },
       },
       TRN_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for road accidents and fleet incidents' },
       },
       TRN_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across depot and vehicles and establish regular inspection schedule' },
       },
       TRN_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month fleet suspension' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a fleet disruption contingency plan' },
       },
       TRN_023: {
-        'Designated Compliance Officer': { target: 'Fleet Manager', gain: 3, action: 'Improve from "Designated Compliance Officer" to "Fleet Manager"' },
-        'External Consultant': { target: 'Fleet Manager', gain: 7, action: 'Improve from "External Consultant" to "Fleet Manager"' },
-        'No one specifically assigned': { target: 'Fleet Manager', gain: 10, action: 'Designate a responsible person or team for this area' },
+        'Designated Compliance Officer': { target: 'Fleet Manager', gain: 3, action: 'Upgrade compliance oversight from officer to senior fleet management' },
+        'External Consultant': { target: 'Fleet Manager', gain: 7, action: 'Bring compliance governance in-house under senior fleet management' },
+        'No one specifically assigned': { target: 'Fleet Manager', gain: 10, action: 'Designate a senior fleet manager for safety and compliance' },
       },
       TRN_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Implement defensive driving and first aid training for all drivers' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit driver training credentials and establish a training program' },
       },
       TRN_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for all fleet vehicles' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
       },
       TRN_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+        'No': { target: 'Yes', gain: 10, action: 'Install a fire alarm system in depot and establish regular testing schedule' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Verify fire alarm system functionality and set up regular testing' },
       },
       TRN_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase depot and yard maintenance inspections to monthly' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase depot and yard maintenance inspections to monthly' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly depot and yard maintenance inspections' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly depot and yard maintenance inspections' },
       }
     }
   },

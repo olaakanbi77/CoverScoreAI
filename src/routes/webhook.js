@@ -531,10 +531,12 @@ router.post('/evolution', async (req, res) => {
       ];
       if (weakestPillar) {
         const weakKey = weakestPillar.toLowerCase();
-        const whyText = (dom.recommendationTexts && dom.recommendationTexts[weakKey])
-          ? dom.recommendationTexts[weakKey].replace(/^reviewing your |^developing a |^securing appropriate |^getting comprehensive /i, '')
-          : `this is the area that needs the most attention`;
-        msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\nWhy?\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}.`);
+        const whyText = (dom.whyTexts && dom.whyTexts[weakKey])
+          ? dom.whyTexts[weakKey]
+          : (dom.recommendationTexts && dom.recommendationTexts[weakKey])
+            ? dom.recommendationTexts[weakKey].replace(/^(ensuring|securing|getting|reviewing|developing|building|strengthening|creating|implementing) /i, '')
+            : `this is the area that needs the most attention`;
+        msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\nWhy?\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}`);
       }
       postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
 
@@ -882,21 +884,44 @@ router.post('/evolution', async (req, res) => {
           return story;
         }
         if (prefix === 'HOS') {
-          const patientExposure = answers['HOS_013'];
+          const patientIncidents = answers['HOS_012'];
           const medicalLiability = answers['HOS_015'];
-          const equipmentValue = answers['HOS_016'];
+          const complianceOwner = answers['HOS_023'];
+          const emergencyProcedures = answers['HOS_020'];
           const equipmentIns = answers['HOS_017'];
+          const equipmentValue = answers['HOS_016'];
+          const fireExtinguishers = answers['HOS_021'];
+          const buildingMaintenance = answers['HOS_027'];
+          const closureResilience = answers['HOS_022'];
+          const hasTransport = answers['HOS_024'];
+          const driverTraining = answers['HOS_025'];
+          const vehicleInspections = answers['HOS_026'];
           const gaps = [];
-          if (patientExposure === 'Over 100') gaps.push("your large patient volume creates significant liability exposure");
-          if (medicalLiability === 'No') gaps.push("you don't have professional indemnity or medical malpractice insurance");
-          if (equipmentValue === 'Yes') gaps.push("you have high-value medical equipment that needs specialized coverage");
-          if (equipmentIns === 'No') gaps.push("your critical equipment is not insured against damage or breakdown");
-          let story = "Your healthcare facility's first priority is patient care, but without proper protection, a liability claim or equipment failure could disrupt that care. ";
+          if (patientIncidents === 'Yes') gaps.push("you have experienced patient safety incidents in the past, so your facility is already operating in a higher-risk clinical environment");
+          if (medicalLiability === 'No') gaps.push("you do not have professional indemnity or medical malpractice protection in place");
+          if (complianceOwner === 'No one specifically assigned') gaps.push("there is no one specifically responsible for compliance and patient safety governance");
+          if (emergencyProcedures === 'No') gaps.push("documented emergency procedures for patient incidents and fire have not been established");
+          if (equipmentValue === 'Yes' && equipmentIns === 'No') gaps.push("your high-value medical equipment is not protected against damage or breakdown");
+          if (fireExtinguishers === 'No') gaps.push("fire extinguishers are not regularly inspected or available across your facility");
+          if (buildingMaintenance === 'Never' || buildingMaintenance === 'Rarely') gaps.push("building maintenance inspections are not conducted regularly");
+          if (closureResilience === 'No') gaps.push("your facility could not sustain operations through a one-month closure");
+          let story = "Your healthcare facility's first priority is patient care. However, based on your assessment, important safeguards are currently missing.";
           if (gaps.length > 0) {
+            story += ` `;
+            const intro = (patientIncidents === 'Yes')
+              ? `Because you have experienced patient safety incidents in the past, your facility is already operating in a higher-risk environment. `
+              : `Your responses indicate that your facility has exposure to clinical and operational risks. `;
+            story += intro;
             const lastGap = gaps.pop();
-            story += `${gaps.length > 0 ? gaps.join(', ') + ', and ' : ''}${lastGap}. `;
+            if (gaps.length > 0) {
+              story += `Currently, ${gaps.join(', ')}, and ${lastGap}. `;
+            } else {
+              story += `Currently, ${lastGap}. `;
+            }
+            story += `Together, these gaps could disrupt patient care, expose your facility to legal claims, damage public confidence, and create significant financial pressure following a major incident.`;
+          } else {
+            story += ` Your facility has important safeguards in place, but clinical risk management requires continuous attention.`;
           }
-          story += `In healthcare, patient care depends on being prepared for anything.`;
           return story;
         }
         if (prefix === 'SCH') {
@@ -1034,8 +1059,8 @@ router.post('/evolution', async (req, res) => {
           const action = recTexts[wLower];
           if (action) {
             action.split(',').map(s => s.trim()).filter(Boolean).slice(0, 3).forEach(step => {
-              const clean = step.replace(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)\s+/i, '');
-              const vm = step.match(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)/i);
+              const clean = step.replace(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting|strengthening)\s+/i, '');
+              const vm = step.match(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting|strengthening)/i);
               const vMap = { building: 'Build', conducting: 'Conduct', considering: 'Consider', creating: 'Create', designating: 'Designate', developing: 'Develop', diversifying: 'Diversify', documenting: 'Document', ensuring: 'Ensure', establishing: 'Establish', extending: 'Extend', getting: 'Get', implementing: 'Implement', installing: 'Install', reviewing: 'Review', scheduling: 'Schedule', securing: 'Secure', seeking: 'Seek', separating: 'Separate', setting: 'Set', starting: 'Start', strengthening: 'Strengthen' };
               const pw = vm ? vMap[vm[1].toLowerCase()] || 'Build' : 'Build';
               actionLines.push(`\u2713 ${pw} ${clean}`);

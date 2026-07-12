@@ -270,7 +270,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 const formatDynamicQuestion = (q, data = {}) => {
   let rawQuestion = q.question;
   if (rawQuestion.includes('{{name}}')) {
-    const userName = data.name ? data.name.split(' ')[0] : '{{name}}';
+    const userName = data.name ? data.name : '{{name}}';
     rawQuestion = rawQuestion.replace(/{{name}}/g, userName);
   }
 

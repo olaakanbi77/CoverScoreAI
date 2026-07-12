@@ -553,59 +553,65 @@ const domainConfig = {
     improvementTerm: 'healthcare resilience',
     followUpMsg: "I'll also share practical healthcare risk management tips and strategies that match your assessment.",
     pillarMappings: {},
+    whyTexts: {
+      'clinical risk & patient safety': "Your facility currently lacks key safeguards needed to manage clinical risks and maintain patient safety standards. A patient safety incident could create significant legal, financial, and reputational consequences for your healthcare organisation.",
+      'professional liability': "Your facility currently lacks the clinical liability protections needed to manage patient care risks. Without appropriate professional indemnity safeguards, a patient claim could create significant legal, financial, and reputational exposure.",
+      'medical equipment resilience': "Your medical equipment represents a significant clinical asset that may not be adequately protected against damage, power surge, or breakdown. Equipment failure could disrupt patient care and create unplanned financial pressure.",
+      'operational continuity': "Your facility currently has gaps in operational safeguards that could affect your ability to maintain patient care during a disruption. Fire safety, building maintenance, and equipment protection gaps increase the risk of service interruption."
+    },
     insightTexts: {
       perPillar: {
-        'Operations': {
-          base: "Your assessment shows that your healthcare facility's operational exposure could create significant liability risks.",
+        'Clinical Risk & Patient Safety': {
+          base: "Your assessment shows that your facility currently has significant exposure to clinical and patient safety risks. Without dedicated oversight for compliance and patient safety, important governance responsibilities may be missed.",
           answerChecks: [
-            { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your facility has significant patient liability exposure that requires comprehensive coverage." },
-            { q: 'HOS_012', values: ["Yes"], append: "Patient safety incidents in the past 3 years indicate gaps in your care environment that need attention." },
+            { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your patient volume creates significant clinical liability exposure that requires comprehensive risk management." },
+            { q: 'HOS_012', values: ["Yes"], append: "Your facility has already experienced patient safety incidents, making strengthened governance and incident learning an immediate priority." },
             { q: 'HOS_020', values: ["No"], append: "Without written emergency procedures for patient incidents or fire, your staff may not know how to respond effectively in a crisis." },
             { q: 'HOS_022', values: ["No"], append: "Your facility could not meet payroll and operating expenses during a one-month closure, indicating a critical financial resilience gap." },
-            { q: 'HOS_022', values: ["Not sure"], append: "You're unsure if your facility could survive a one-month closure, which itself signals a need for better financial contingency planning." },
-            { q: 'HOS_024', values: ["Yes"], append: "Operating ambulances and patient transport vehicles introduces additional liability and requires appropriate fleet insurance." },
+            { q: 'HOS_022', values: ["Not sure"], append: "You're unsure if your facility could survive a one-month closure, which signals a need for better financial contingency planning." },
+            { q: 'HOS_024', values: ["Yes"], append: "Operating ambulances and patient transport vehicles introduces additional liability exposure for your facility." },
             { q: 'HOS_025', values: ["No"], append: "Your ambulance and patient transport drivers lack defensive driving and emergency protocol training, increasing accident risk." },
-            { q: 'HOS_025', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and emergency protocols, which indicates a training gap." },
+            { q: 'HOS_025', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and emergency protocols, indicating a training gap." },
             { q: 'HOS_026', values: ["No"], append: "Without regular vehicle safety inspections, your medical transport fleet may have undetected safety issues." },
             { q: 'HOS_026', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted regularly, indicating a gap in fleet safety management." }
           ],
-          suffix: "Ensuring comprehensive medical malpractice and liability coverage is essential\u2014because patient care depends on being prepared for anything."
+          suffix: "Clinical risk management and patient safety should be your priority\u2014because patient care depends on being prepared for anything."
         },
-        'Legal Liability': {
-          base: "Your assessment indicates that your healthcare facility may not be adequately protected against medical liability risks.",
+        'Professional Liability': {
+          base: "Your assessment shows that your facility currently has significant exposure to clinical liability and compliance risks. Combined with the absence of professional indemnity protection, this increases legal, financial, and reputational exposure if a patient safety incident occurs.",
           answerChecks: [
-            { q: 'HOS_015', values: ['No'], append: "Without professional indemnity or medical malpractice insurance, your facility faces significant legal and financial exposure." },
+            { q: 'HOS_015', values: ['No'], append: "Without professional indemnity or medical malpractice insurance, your facility faces significant legal and financial exposure from patient claims." },
             { q: 'HOS_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for compliance and safety, critical regulatory and risk management responsibilities may go unaddressed." }
           ],
-          suffix: "Securing comprehensive professional indemnity and medical malpractice insurance is a critical step."
+          suffix: "Securing professional indemnity protection and strengthening clinical governance are critical steps for your facility."
         },
-        'Equipment': {
-          base: "Your assessment suggests that your medical equipment may represent a significant uninsured value.",
+        'Medical Equipment Resilience': {
+          base: "Your assessment suggests that your medical equipment represents a significant clinical asset with potential protection gaps.",
           answerChecks: [
-            { q: 'HOS_016', values: ['Yes'], append: "With high-value medical equipment on site, specialized coverage is needed to protect against damage or breakdown." }
+            { q: 'HOS_016', values: ['Yes'], append: "With high-value medical equipment on site, damage or breakdown could disrupt patient care and create significant financial pressure." }
           ],
-          suffix: "Ensuring all high-value medical equipment is specifically insured is important for your facility's protection."
+          suffix: "Ensuring all high-value medical equipment is protected against damage and breakdown is important for continuity of patient care."
         },
-        'Asset Protection': {
-          base: "Your assessment shows that your healthcare facility's critical equipment may not be adequately insured.",
+        'Operational Continuity': {
+          base: "Your assessment shows that your facility has gaps in operational safeguards that could affect your ability to maintain patient care during a disruption.",
           answerChecks: [
-            { q: 'HOS_017', values: ['No'], append: "Without insurance for critical life-support equipment, a power surge or breakdown could disrupt operations and create significant costs." },
-            { q: 'HOS_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your facility, putting property and lives at risk." },
+            { q: 'HOS_017', values: ['No'], append: "Without protection for critical life-support equipment, a power surge or breakdown could disrupt patient care and create significant costs." },
+            { q: 'HOS_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your facility, putting patients, staff, and property at risk." },
             { q: 'HOS_027', values: ["Never"], append: "You never conduct building maintenance inspections, allowing structural issues and hazards to go unnoticed." },
             { q: 'HOS_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." }
           ],
-          suffix: "Getting all-risks equipment insurance covering power surge and breakdown is a practical step for asset protection."
+          suffix: "Strengthening operational safeguards is essential to maintaining uninterrupted patient care."
         }
       },
       catchAll: "Your assessment provides a clear picture of your current healthcare resilience. The priority is clear\u2014because patient care depends on being prepared for anything."
     },
     recommendationTexts: {
-      'operations': 'ensuring comprehensive medical malpractice and liability coverage for your healthcare facility',
-      'legal liability': 'securing comprehensive professional indemnity and medical malpractice insurance for your facility',
-      'equipment': 'ensuring all high-value medical equipment is specifically insured against damage or breakdown',
-      'asset protection': 'getting all-risks equipment insurance covering power surge and breakdown for critical equipment'
+      'clinical risk & patient safety': 'ensuring clinical risk management and patient safety governance with clearly assigned responsibilities',
+      'professional liability': 'securing professional indemnity and medical malpractice protection for your healthcare facility',
+      'medical equipment resilience': 'ensuring all high-value medical equipment is specifically protected against damage or breakdown',
+      'operational continuity': 'strengthening operational safeguards including fire safety, building maintenance, and equipment protection'
     },
-    realLifeContext: "Here\u2019s what this means in real life: A malpractice claim, equipment failure, or facility damage could disrupt patient care and create significant financial liability. Your CoverScore reflects how well your healthcare facility is protected against the risks that matter most."
+    realLifeContext: "Here\u2019s what this means in real life: A patient safety incident, equipment failure, or facility disruption could threaten the continuity of care your patients depend on. Your CoverScore reflects how prepared your healthcare facility is to manage clinical risks, protect patients, and maintain operations\u2014no matter what happens."
   },
   SCH: {
     assessmentTitle: 'School Risk Assessment',
