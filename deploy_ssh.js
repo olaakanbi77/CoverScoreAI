@@ -15,7 +15,7 @@ conn.on('ready', () => {
       if (err) throw err;
       console.log('Upload complete. Extracting and restarting...');
       
-      const cmd = 'cd /root/coverscore-ai && unzip -o deployment.zip 2>/dev/null; rm -f deployment.zip; npm install; pm2 restart coverscore';
+      const cmd = 'cd /root/coverscore-ai && unzip -o deployment.zip 2>/dev/null; rm -f deployment.zip; npm install; pm2 delete coverscore 2>/dev/null; pm2 start ecosystem.config.js --update-env';
       conn.exec(cmd, (err, stream) => {
         if (err) throw err;
         stream.on('close', (code, signal) => {
