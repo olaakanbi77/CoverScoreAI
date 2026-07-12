@@ -1017,9 +1017,11 @@ router.post('/evolution', async (req, res) => {
             if (answer && qImprovements[answer]) {
               const imp = qImprovements[answer];
               totalGain += imp.gain;
-              const verbMatch = imp.action.match(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin|Conduct|Install|Designate|Develop|Secure)/i);
+              const prefixVerbs = 'Add|Assess|Audit|Begin|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Install|Make|Obtain|Open|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Upgrade|Verify';
+              const prefixRegex = new RegExp('^(' + prefixVerbs + ')', 'i');
+              const verbMatch = imp.action.match(prefixRegex);
               const prefixWord = verbMatch ? verbMatch[1] : 'Build';
-              const rest = imp.action.replace(/^(Build|Get|Create|Review|Expand|Start|Consider|Supplement|Diversify|Strengthen|Extend|Increase|Reduce|Make|Explore|Begin|Conduct|Install|Designate|Develop|Secure)\s+/i, '');
+              const rest = imp.action.replace(new RegExp('^(' + prefixVerbs + ')\\s+', 'i'), '');
               actionLines.push(`\u2713 ${prefixWord} ${rest.charAt(0).toLowerCase() + rest.slice(1)}`);
               used++;
             }
@@ -1034,7 +1036,7 @@ router.post('/evolution', async (req, res) => {
             action.split(',').map(s => s.trim()).filter(Boolean).slice(0, 3).forEach(step => {
               const clean = step.replace(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)\s+/i, '');
               const vm = step.match(/^(reviewing|building|considering|diversifying|getting|securing|ensuring|creating|starting)/i);
-              const vMap = { reviewing: 'Review', building: 'Build', considering: 'Consider', diversifying: 'Diversify', getting: 'Get', securing: 'Secure', ensuring: 'Ensure', creating: 'Create', starting: 'Start', conducting: 'Conduct', installing: 'Install', designating: 'Designate', developing: 'Develop' };
+              const vMap = { building: 'Build', conducting: 'Conduct', considering: 'Consider', creating: 'Create', designating: 'Designate', developing: 'Develop', diversifying: 'Diversify', documenting: 'Document', ensuring: 'Ensure', establishing: 'Establish', extending: 'Extend', getting: 'Get', implementing: 'Implement', installing: 'Install', reviewing: 'Review', scheduling: 'Schedule', securing: 'Secure', seeking: 'Seek', separating: 'Separate', setting: 'Set', starting: 'Start', strengthening: 'Strengthen' };
               const pw = vm ? vMap[vm[1].toLowerCase()] || 'Build' : 'Build';
               actionLines.push(`\u2713 ${pw} ${clean}`);
             });
