@@ -865,7 +865,16 @@
       workforce_exposure: { name: 'Workforce Exposure', pillar: 'workforce' },
       equipment_dependency: { name: 'Equipment Dependency', pillar: 'operations' },
       facility_insurance: { name: 'Facility Insurance', pillar: 'asset_protection' },
-      disaster_recovery: { name: 'Disaster Recovery', pillar: 'business_continuity' }
+      disaster_recovery: { name: 'Disaster Recovery', pillar: 'business_continuity' },
+      workplace_safety: { name: 'Workplace Safety', pillar: 'workforce' },
+      emergency_procedures: { name: 'Emergency Procedures', pillar: 'operations' },
+      fire_safety: { name: 'Fire Safety', pillar: 'asset_protection' },
+      financial_continuity: { name: 'Financial Continuity', pillar: 'business_continuity' },
+      safety_governance: { name: 'Safety Governance', pillar: 'operations' },
+      vehicle_operations: { name: 'Vehicle Operations', pillar: 'operations' },
+      driver_training: { name: 'Driver Training', pillar: 'operations' },
+      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'operations' },
+      building_maintenance: { name: 'Building Maintenance', pillar: 'asset_protection' }
     },
     questions: {
       MFG_013: {
@@ -895,6 +904,69 @@
         scores: { 'Yes easily': 100, 'With difficulty': 50, 'No, we would close': 0 },
         gaps: { 'No, we would close': 'Business would not survive a major disaster closure.', 'With difficulty': 'Business would struggle to recover from a major disaster.' },
         recommendations: { 'No, we would close': 'Create a comprehensive business continuity and disaster recovery plan.', 'With difficulty': 'Strengthen business continuity planning and insurance coverage.' }
+      },
+      MFG_012: {
+        category: 'workplace_safety',
+        weight: 3,
+        scores: {'No':100,'Yes':40},
+        gaps: {'Yes':'Workplace accidents indicate safety gaps in your manufacturing operation.'},
+        recommendations: {'Yes':'Conduct a full workplace safety audit and review accident response protocols.'}
+      },
+      MFG_020: {
+        category: 'emergency_procedures',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'No written emergency procedures for accidents or incidents.'},
+        recommendations: {'No':'Develop and document written emergency procedures for accidents and incidents.'}
+      },
+      MFG_021: {
+        category: 'fire_safety',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'Fire extinguishers not regularly inspected or available across your facility.'},
+        recommendations: {'No':'Install fire extinguishers across all areas and establish regular inspection schedule.'}
+      },
+      MFG_022: {
+        category: 'financial_continuity',
+        weight: 3,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Your operation lacks resilience to absorb this risk.','Not sure':'Uncertainty about your ability to handle this risk.'},
+        recommendations: {'No':'Develop a contingency plan to address this risk.','Not sure':'Assess your current position and develop a contingency plan.'}
+      },
+      MFG_023: {
+        category: 'safety_governance',
+        weight: 1,
+        scores: {'Operations Manager':100,'Designated Safety Officer':67,'External Consultant':33,'No one specifically assigned':0},
+        gaps: {'Designated Safety Officer':'Answer \'Designated Safety Officer\' indicates an area for improvement.','External Consultant':'Answer \'External Consultant\' indicates an area for improvement.','No one specifically assigned':'No one is specifically responsible for this critical area.'},
+        recommendations: {'Designated Safety Officer':'Review your approach to \'Designated Safety Officer\' and develop an improvement plan.','External Consultant':'Review your approach to \'External Consultant\' and develop an improvement plan.','No one specifically assigned':'Designate a responsible person or team for this critical area.'}
+      },
+      MFG_024: {
+        category: 'vehicle_operations',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      MFG_025: {
+        category: 'driver_training',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Vehicle operators are not trained in safe operating procedures.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Implement safe operating procedures training for all vehicle and equipment operators.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      MFG_026: {
+        category: 'vehicle_inspections',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'No regular vehicle safety inspections conducted.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Establish a regular vehicle safety inspection schedule.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      MFG_027: {
+        category: 'building_maintenance',
+        weight: 1,
+        scores: {'Monthly':100,'Quarterly':80,'Annually':50,'Rarely':20,'Never':0},
+        gaps: {'Quarterly':'Answer \'Quarterly\' indicates an area for improvement.','Annually':'Answer \'Annually\' indicates an area for improvement.','Rarely':'Maintenance inspections are only conducted rarely, increasing risk.','Never':'No maintenance inspections are conducted, allowing issues to go undetected.'},
+        recommendations: {'Quarterly':'Review your approach to \'Quarterly\' and develop an improvement plan.','Annually':'Review your approach to \'Annually\' and develop an improvement plan.','Rarely':'Establish a regular maintenance inspection schedule.','Never':'Begin conducting regular maintenance inspections at least annually.'}
       }
     },
     modifiers: [
@@ -911,13 +983,63 @@
         conditions: [['MFG_014', 'Immediately'], ['MFG_017', ['No, we would close', 'With difficulty']]],
         penalty: 8,
         description: 'Production halts immediately with no recovery plan'
+      },
+      {
+        id: 'mfg_incidents_no_procedures',
+        name: 'Workplace Incidents + No Emergency Procedures',
+        conditions: [['MFG_012', 'Yes'], ['MFG_020', 'No']],
+        penalty: 12,
+        description: 'Manufacturing operation with accident history and no emergency procedures'
+      },
+      {
+        id: 'mfg_no_fire_extinguishers_poor_maintenance',
+        name: 'No Fire Extinguishers + Poor Building Maintenance',
+        conditions: [['MFG_021', 'No'], ['MFG_027', ["Rarely","Never"]]],
+        penalty: 8,
+        description: 'Fire safety equipment gaps combined with poor facility maintenance'
       }
     ],
     improvements: {
       MFG_013: { '200+': { target: '51-200', gain: 7, action: 'Review comprehensive workforce insurance and safety programs' } },
       MFG_014: { 'Immediately': { target: 'Within a few days', gain: 8, action: 'Implement equipment redundancy for critical machinery' } },
       MFG_016: { 'No': { target: 'Yes', gain: 10, action: 'Get comprehensive fire and special perils insurance' } },
-      MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity and disaster recovery planning' } }
+      MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity and disaster recovery planning' } },
+      MFG_012: {
+        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+      },
+      MFG_020: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      MFG_021: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      MFG_022: {
+        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+      },
+      MFG_023: {
+        'Designated Safety Officer': { target: 'Operations Manager', gain: 3, action: 'Improve from "Designated Safety Officer" to "Operations Manager"' },
+        'External Consultant': { target: 'Operations Manager', gain: 7, action: 'Improve from "External Consultant" to "Operations Manager"' },
+        'No one specifically assigned': { target: 'Operations Manager', gain: 10, action: 'Designate a responsible person or team for this area' },
+      },
+      MFG_024: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      MFG_025: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      MFG_026: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      MFG_027: {
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+      }
     }
   },
 
@@ -933,7 +1055,16 @@
       patient_exposure: { name: 'Patient Exposure', pillar: 'operations' },
       medical_liability: { name: 'Medical Liability', pillar: 'legal_liability' },
       equipment_value: { name: 'Equipment Value', pillar: 'equipment' },
-      equipment_insurance: { name: 'Equipment Insurance', pillar: 'asset_protection' }
+      equipment_insurance: { name: 'Equipment Insurance', pillar: 'asset_protection' },
+      patient_incidents: { name: 'Patient Incidents', pillar: 'operations' },
+      emergency_procedures: { name: 'Emergency Procedures', pillar: 'operations' },
+      fire_safety: { name: 'Fire Safety', pillar: 'asset_protection' },
+      financial_continuity: { name: 'Financial Continuity', pillar: 'operations' },
+      compliance_governance: { name: 'Compliance Governance', pillar: 'legal_liability' },
+      vehicle_operations: { name: 'Vehicle Operations', pillar: 'operations' },
+      driver_training: { name: 'Driver Training', pillar: 'operations' },
+      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'operations' },
+      building_maintenance: { name: 'Building Maintenance', pillar: 'asset_protection' }
     },
     questions: {
       HOS_013: {
@@ -963,6 +1094,69 @@
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No insurance coverage for critical life-support equipment damage.' },
         recommendations: { 'No': 'Get all-risks equipment insurance covering power surge and breakdown.' }
+      },
+      HOS_012: {
+        category: 'patient_incidents',
+        weight: 3,
+        scores: {'No':100,'Yes':40},
+        gaps: {'Yes':'Patient safety incidents indicate gaps in your healthcare facility.'},
+        recommendations: {'Yes':'Conduct a full patient safety audit and review incident response protocols.'}
+      },
+      HOS_020: {
+        category: 'emergency_procedures',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'No written emergency procedures for accidents or incidents.'},
+        recommendations: {'No':'Develop and document written emergency procedures for accidents and incidents.'}
+      },
+      HOS_021: {
+        category: 'fire_safety',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'Fire extinguishers not regularly inspected or available across your facility.'},
+        recommendations: {'No':'Install fire extinguishers across all areas and establish regular inspection schedule.'}
+      },
+      HOS_022: {
+        category: 'financial_continuity',
+        weight: 3,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Your operation lacks resilience to absorb this risk.','Not sure':'Uncertainty about your ability to handle this risk.'},
+        recommendations: {'No':'Develop a contingency plan to address this risk.','Not sure':'Assess your current position and develop a contingency plan.'}
+      },
+      HOS_023: {
+        category: 'compliance_governance',
+        weight: 1,
+        scores: {'Medical Director':100,'Designated Compliance Officer':67,'External Consultant':33,'No one specifically assigned':0},
+        gaps: {'Designated Compliance Officer':'Answer \'Designated Compliance Officer\' indicates an area for improvement.','External Consultant':'Answer \'External Consultant\' indicates an area for improvement.','No one specifically assigned':'No one is specifically responsible for this critical area.'},
+        recommendations: {'Designated Compliance Officer':'Review your approach to \'Designated Compliance Officer\' and develop an improvement plan.','External Consultant':'Review your approach to \'External Consultant\' and develop an improvement plan.','No one specifically assigned':'Designate a responsible person or team for this critical area.'}
+      },
+      HOS_024: {
+        category: 'vehicle_operations',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      HOS_025: {
+        category: 'driver_training',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Vehicle operators are not trained in safe operating procedures.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Implement safe operating procedures training for all vehicle and equipment operators.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      HOS_026: {
+        category: 'vehicle_inspections',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'No regular vehicle safety inspections conducted.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Establish a regular vehicle safety inspection schedule.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      HOS_027: {
+        category: 'building_maintenance',
+        weight: 1,
+        scores: {'Monthly':100,'Quarterly':80,'Annually':50,'Rarely':20,'Never':0},
+        gaps: {'Quarterly':'Answer \'Quarterly\' indicates an area for improvement.','Annually':'Answer \'Annually\' indicates an area for improvement.','Rarely':'Maintenance inspections are only conducted rarely, increasing risk.','Never':'No maintenance inspections are conducted, allowing issues to go undetected.'},
+        recommendations: {'Quarterly':'Review your approach to \'Quarterly\' and develop an improvement plan.','Annually':'Review your approach to \'Annually\' and develop an improvement plan.','Rarely':'Establish a regular maintenance inspection schedule.','Never':'Begin conducting regular maintenance inspections at least annually.'}
       }
     },
     modifiers: [
@@ -979,11 +1173,61 @@
         conditions: [['HOS_013', 'Over 100'], ['HOS_015', 'No']],
         penalty: 10,
         description: 'Large hospital without professional liability coverage'
+      },
+      {
+        id: 'hos_incidents_no_procedures',
+        name: 'Patient Incidents + No Emergency Procedures',
+        conditions: [['HOS_012', 'Yes'], ['HOS_020', 'No']],
+        penalty: 12,
+        description: 'Healthcare operation with accident history and no emergency procedures'
+      },
+      {
+        id: 'hos_no_fire_extinguishers_poor_maintenance',
+        name: 'No Fire Extinguishers + Poor Building Maintenance',
+        conditions: [['HOS_021', 'No'], ['HOS_027', ["Rarely","Never"]]],
+        penalty: 8,
+        description: 'Fire safety equipment gaps combined with poor facility maintenance'
       }
     ],
     improvements: {
       HOS_015: { 'No': { target: 'Yes', gain: 12, action: 'Get professional indemnity and medical malpractice insurance' } },
-      HOS_017: { 'No': { target: 'Yes', gain: 10, action: 'Get all-risks equipment insurance' } }
+      HOS_017: { 'No': { target: 'Yes', gain: 10, action: 'Get all-risks equipment insurance' } },
+      HOS_012: {
+        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+      },
+      HOS_020: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      HOS_021: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      HOS_022: {
+        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+      },
+      HOS_023: {
+        'Designated Compliance Officer': { target: 'Medical Director', gain: 3, action: 'Improve from "Designated Compliance Officer" to "Medical Director"' },
+        'External Consultant': { target: 'Medical Director', gain: 7, action: 'Improve from "External Consultant" to "Medical Director"' },
+        'No one specifically assigned': { target: 'Medical Director', gain: 10, action: 'Designate a responsible person or team for this area' },
+      },
+      HOS_024: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      HOS_025: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      HOS_026: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      HOS_027: {
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+      }
     }
   },
 
@@ -999,7 +1243,16 @@
       congregation_exposure: { name: 'Congregation Exposure', pillar: 'operations' },
       valuable_assets: { name: 'Valuable Assets', pillar: 'assets' },
       event_liability: { name: 'Event Liability', pillar: 'legal_liability' },
-      building_insurance: { name: 'Building Insurance', pillar: 'property' }
+      building_insurance: { name: 'Building Insurance', pillar: 'property' },
+      premises_incidents: { name: 'Premises Incidents', pillar: 'legal_liability' },
+      emergency_procedures: { name: 'Emergency Procedures', pillar: 'operations' },
+      fire_safety: { name: 'Fire Safety', pillar: 'property' },
+      financial_continuity: { name: 'Financial Continuity', pillar: 'operations' },
+      safety_governance: { name: 'Safety Governance', pillar: 'legal_liability' },
+      vehicle_operations: { name: 'Vehicle Operations', pillar: 'operations' },
+      driver_training: { name: 'Driver Training', pillar: 'operations' },
+      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'operations' },
+      building_maintenance: { name: 'Building Maintenance', pillar: 'property' }
     },
     questions: {
       CHR_013: {
@@ -1029,6 +1282,69 @@
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No fire insurance for the church building and contents.' },
         recommendations: { 'No': 'Get fire insurance for the church building and contents.' }
+      },
+      CHR_012: {
+        category: 'premises_incidents',
+        weight: 3,
+        scores: {'No':100,'Yes':40},
+        gaps: {'Yes':'Incidents on your premises indicate safety gaps at your church.'},
+        recommendations: {'Yes':'Conduct a full premises safety audit and review incident response protocols.'}
+      },
+      CHR_020: {
+        category: 'emergency_procedures',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'No written emergency procedures for accidents or incidents.'},
+        recommendations: {'No':'Develop and document written emergency procedures for accidents and incidents.'}
+      },
+      CHR_021: {
+        category: 'fire_safety',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'Fire extinguishers not regularly inspected or available across your facility.'},
+        recommendations: {'No':'Install fire extinguishers across all areas and establish regular inspection schedule.'}
+      },
+      CHR_022: {
+        category: 'financial_continuity',
+        weight: 3,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Your operation lacks resilience to absorb this risk.','Not sure':'Uncertainty about your ability to handle this risk.'},
+        recommendations: {'No':'Develop a contingency plan to address this risk.','Not sure':'Assess your current position and develop a contingency plan.'}
+      },
+      CHR_023: {
+        category: 'safety_governance',
+        weight: 1,
+        scores: {'Church Administrator':100,'Designated Safety Officer':67,'Volunteer Coordinator':33,'No one specifically assigned':0},
+        gaps: {'Designated Safety Officer':'Answer \'Designated Safety Officer\' indicates an area for improvement.','Volunteer Coordinator':'Answer \'Volunteer Coordinator\' indicates an area for improvement.','No one specifically assigned':'No one is specifically responsible for this critical area.'},
+        recommendations: {'Designated Safety Officer':'Review your approach to \'Designated Safety Officer\' and develop an improvement plan.','Volunteer Coordinator':'Review your approach to \'Volunteer Coordinator\' and develop an improvement plan.','No one specifically assigned':'Designate a responsible person or team for this critical area.'}
+      },
+      CHR_024: {
+        category: 'vehicle_operations',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      CHR_025: {
+        category: 'driver_training',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Vehicle operators are not trained in safe operating procedures.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Implement safe operating procedures training for all vehicle and equipment operators.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      CHR_026: {
+        category: 'vehicle_inspections',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'No regular vehicle safety inspections conducted.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Establish a regular vehicle safety inspection schedule.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      CHR_027: {
+        category: 'building_maintenance',
+        weight: 1,
+        scores: {'Monthly':100,'Quarterly':80,'Annually':50,'Rarely':20,'Never':0},
+        gaps: {'Quarterly':'Answer \'Quarterly\' indicates an area for improvement.','Annually':'Answer \'Annually\' indicates an area for improvement.','Rarely':'Maintenance inspections are only conducted rarely, increasing risk.','Never':'No maintenance inspections are conducted, allowing issues to go undetected.'},
+        recommendations: {'Quarterly':'Review your approach to \'Quarterly\' and develop an improvement plan.','Annually':'Review your approach to \'Annually\' and develop an improvement plan.','Rarely':'Establish a regular maintenance inspection schedule.','Never':'Begin conducting regular maintenance inspections at least annually.'}
       }
     },
     modifiers: [
@@ -1045,11 +1361,61 @@
         conditions: [['CHR_014', 'Yes'], ['CHR_017', 'No']],
         penalty: 8,
         description: 'Valuable contents unprotected and no building insurance'
+      },
+      {
+        id: 'chr_incidents_no_procedures',
+        name: 'Premises Incidents + No Emergency Procedures',
+        conditions: [['CHR_012', 'Yes'], ['CHR_020', 'No']],
+        penalty: 12,
+        description: 'Church operation with accident history and no emergency procedures'
+      },
+      {
+        id: 'chr_no_fire_extinguishers_poor_maintenance',
+        name: 'No Fire Extinguishers + Poor Building Maintenance',
+        conditions: [['CHR_021', 'No'], ['CHR_027', ["Rarely","Never"]]],
+        penalty: 8,
+        description: 'Fire safety equipment gaps combined with poor facility maintenance'
       }
     ],
     improvements: {
       CHR_015: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive public liability insurance' } },
-      CHR_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for church building and contents' } }
+      CHR_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for church building and contents' } },
+      CHR_012: {
+        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+      },
+      CHR_020: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      CHR_021: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      CHR_022: {
+        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+      },
+      CHR_023: {
+        'Designated Safety Officer': { target: 'Church Administrator', gain: 3, action: 'Improve from "Designated Safety Officer" to "Church Administrator"' },
+        'Volunteer Coordinator': { target: 'Church Administrator', gain: 7, action: 'Improve from "Volunteer Coordinator" to "Church Administrator"' },
+        'No one specifically assigned': { target: 'Church Administrator', gain: 10, action: 'Designate a responsible person or team for this area' },
+      },
+      CHR_024: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      CHR_025: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      CHR_026: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      CHR_027: {
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+      }
     }
   },
 
@@ -1067,7 +1433,16 @@
       heavy_machinery: { name: 'Heavy Machinery', pillar: 'equipment' },
       contractor_insurance: { name: 'Contractor Insurance', pillar: 'insurance' },
       accident_cover: { name: 'Accident Cover', pillar: 'worker_protection' },
-      penalty_protection: { name: 'Penalty Protection', pillar: 'contractual' }
+      penalty_protection: { name: 'Penalty Protection', pillar: 'contractual' },
+      site_incidents: { name: 'Site Incidents', pillar: 'worker_protection' },
+      emergency_procedures: { name: 'Emergency Procedures', pillar: 'operations' },
+      fire_safety: { name: 'Fire Safety', pillar: 'insurance' },
+      financial_continuity: { name: 'Financial Continuity', pillar: 'contractual' },
+      safety_governance: { name: 'Safety Governance', pillar: 'worker_protection' },
+      vehicle_operations: { name: 'Vehicle Operations', pillar: 'operations' },
+      operator_training: { name: 'Operator Training', pillar: 'operations' },
+      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'operations' },
+      equipment_maintenance: { name: 'Equipment Maintenance', pillar: 'equipment' }
     },
     questions: {
       CON_013: {
@@ -1104,6 +1479,69 @@
         scores: { 'Yes': 100, 'No': 0 },
         gaps: { 'No': 'No protection against project delay penalties.' },
         recommendations: { 'No': 'Review contract terms and consider delay penalty protection.' }
+      },
+      CON_012: {
+        category: 'site_incidents',
+        weight: 3,
+        scores: {'No':100,'Yes':40},
+        gaps: {'Yes':'On-site accidents indicate safety gaps in your construction operation.'},
+        recommendations: {'Yes':'Conduct a full site safety audit and review accident response protocols.'}
+      },
+      CON_020: {
+        category: 'emergency_procedures',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'No written emergency procedures for accidents or incidents.'},
+        recommendations: {'No':'Develop and document written emergency procedures for accidents and incidents.'}
+      },
+      CON_021: {
+        category: 'fire_safety',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'Fire extinguishers not regularly inspected or available across your facility.'},
+        recommendations: {'No':'Install fire extinguishers across all areas and establish regular inspection schedule.'}
+      },
+      CON_022: {
+        category: 'financial_continuity',
+        weight: 3,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Your operation lacks resilience to absorb this risk.','Not sure':'Uncertainty about your ability to handle this risk.'},
+        recommendations: {'No':'Develop a contingency plan to address this risk.','Not sure':'Assess your current position and develop a contingency plan.'}
+      },
+      CON_023: {
+        category: 'safety_governance',
+        weight: 1,
+        scores: {'Project Manager':100,'Designated Safety Officer':67,'External Consultant':33,'No one specifically assigned':0},
+        gaps: {'Designated Safety Officer':'Answer \'Designated Safety Officer\' indicates an area for improvement.','External Consultant':'Answer \'External Consultant\' indicates an area for improvement.','No one specifically assigned':'No one is specifically responsible for this critical area.'},
+        recommendations: {'Designated Safety Officer':'Review your approach to \'Designated Safety Officer\' and develop an improvement plan.','External Consultant':'Review your approach to \'External Consultant\' and develop an improvement plan.','No one specifically assigned':'Designate a responsible person or team for this critical area.'}
+      },
+      CON_024: {
+        category: 'vehicle_operations',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      CON_025: {
+        category: 'operator_training',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Vehicle operators are not trained in safe operating procedures.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Implement safe operating procedures training for all vehicle and equipment operators.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      CON_026: {
+        category: 'vehicle_inspections',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'No regular vehicle safety inspections conducted.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Establish a regular vehicle safety inspection schedule.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      CON_027: {
+        category: 'equipment_maintenance',
+        weight: 1,
+        scores: {'Monthly':100,'Quarterly':80,'Annually':50,'Rarely':20,'Never':0},
+        gaps: {'Quarterly':'Answer \'Quarterly\' indicates an area for improvement.','Annually':'Answer \'Annually\' indicates an area for improvement.','Rarely':'Maintenance inspections are only conducted rarely, increasing risk.','Never':'No maintenance inspections are conducted, allowing issues to go undetected.'},
+        recommendations: {'Quarterly':'Review your approach to \'Quarterly\' and develop an improvement plan.','Annually':'Review your approach to \'Annually\' and develop an improvement plan.','Rarely':'Establish a regular maintenance inspection schedule.','Never':'Begin conducting regular maintenance inspections at least annually.'}
       }
     },
     modifiers: [
@@ -1127,12 +1565,62 @@
         conditions: [['CON_013', 'More than 5'], ['CON_015', 'No']],
         penalty: 10,
         description: 'High volume of projects without adequate insurance'
+      },
+      {
+        id: 'con_incidents_no_procedures',
+        name: 'Site Incidents + No Emergency Procedures',
+        conditions: [['CON_012', 'Yes'], ['CON_020', 'No']],
+        penalty: 12,
+        description: 'Construction operation with accident history and no emergency procedures'
+      },
+      {
+        id: 'con_no_fire_extinguishers_poor_maintenance',
+        name: 'No Fire Extinguishers + Poor Building Maintenance',
+        conditions: [['CON_021', 'No'], ['CON_027', ["Rarely","Never"]]],
+        penalty: 8,
+        description: 'Fire safety equipment gaps combined with poor facility maintenance'
       }
     ],
     improvements: {
       CON_015: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive contractor\'s all-risk insurance' } },
       CON_016: { 'No': { target: 'Yes', gain: 8, action: 'Get group personal accident cover for workers' } },
-      CON_017: { 'No': { target: 'Yes', gain: 6, action: 'Add delay penalty protection to contracts' } }
+      CON_017: { 'No': { target: 'Yes', gain: 6, action: 'Add delay penalty protection to contracts' } },
+      CON_012: {
+        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+      },
+      CON_020: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      CON_021: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      CON_022: {
+        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+      },
+      CON_023: {
+        'Designated Safety Officer': { target: 'Project Manager', gain: 3, action: 'Improve from "Designated Safety Officer" to "Project Manager"' },
+        'External Consultant': { target: 'Project Manager', gain: 7, action: 'Improve from "External Consultant" to "Project Manager"' },
+        'No one specifically assigned': { target: 'Project Manager', gain: 10, action: 'Designate a responsible person or team for this area' },
+      },
+      CON_024: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      CON_025: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      CON_026: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      CON_027: {
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+      }
     }
   },
 
@@ -1148,7 +1636,16 @@
       fleet_exposure: { name: 'Fleet Exposure', pillar: 'fleet' },
       fleet_insurance: { name: 'Fleet Insurance', pillar: 'insurance' },
       driver_accident: { name: 'Driver Accident Cover', pillar: 'worker_protection' },
-      motor_compliance: { name: 'Motor Compliance', pillar: 'compliance' }
+      motor_compliance: { name: 'Motor Compliance', pillar: 'compliance' },
+      fleet_incidents: { name: 'Fleet Incidents', pillar: 'fleet' },
+      emergency_procedures: { name: 'Emergency Procedures', pillar: 'fleet' },
+      fire_safety: { name: 'Fire Safety', pillar: 'compliance' },
+      financial_continuity: { name: 'Financial Continuity', pillar: 'insurance' },
+      compliance_governance: { name: 'Compliance Governance', pillar: 'compliance' },
+      driver_training: { name: 'Driver Training', pillar: 'worker_protection' },
+      vehicle_inspections: { name: 'Vehicle Inspections', pillar: 'fleet' },
+      fire_alarm: { name: 'Fire Alarm', pillar: 'compliance' },
+      depot_maintenance: { name: 'Depot Maintenance', pillar: 'fleet' }
     },
     questions: {
       TRN_013: {
@@ -1178,6 +1675,69 @@
         scores: { 'Yes': 100, 'Some of them': 50, 'No': 0 },
         gaps: { 'No': 'Vehicles not covered by comprehensive motor insurance.', 'Some of them': 'Only some vehicles have comprehensive motor insurance.' },
         recommendations: { 'No': 'Get comprehensive motor insurance for all fleet vehicles.', 'Some of them': 'Extend comprehensive motor insurance to entire fleet.' }
+      },
+      TRN_012: {
+        category: 'fleet_incidents',
+        weight: 3,
+        scores: {'No':100,'Yes':40},
+        gaps: {'Yes':'Fleet incidents indicate safety gaps in your transport operation.'},
+        recommendations: {'Yes':'Conduct a full fleet safety audit and review incident response protocols.'}
+      },
+      TRN_020: {
+        category: 'emergency_procedures',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'No written emergency procedures for accidents or incidents.'},
+        recommendations: {'No':'Develop and document written emergency procedures for accidents and incidents.'}
+      },
+      TRN_021: {
+        category: 'fire_safety',
+        weight: 2,
+        scores: {'Yes':100,'No':0},
+        gaps: {'No':'Fire extinguishers not regularly inspected or available across your facility.'},
+        recommendations: {'No':'Install fire extinguishers across all areas and establish regular inspection schedule.'}
+      },
+      TRN_022: {
+        category: 'financial_continuity',
+        weight: 3,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Your operation lacks resilience to absorb this risk.','Not sure':'Uncertainty about your ability to handle this risk.'},
+        recommendations: {'No':'Develop a contingency plan to address this risk.','Not sure':'Assess your current position and develop a contingency plan.'}
+      },
+      TRN_023: {
+        category: 'compliance_governance',
+        weight: 1,
+        scores: {'Fleet Manager':100,'Designated Compliance Officer':67,'External Consultant':33,'No one specifically assigned':0},
+        gaps: {'Designated Compliance Officer':'Answer \'Designated Compliance Officer\' indicates an area for improvement.','External Consultant':'Answer \'External Consultant\' indicates an area for improvement.','No one specifically assigned':'No one is specifically responsible for this critical area.'},
+        recommendations: {'Designated Compliance Officer':'Review your approach to \'Designated Compliance Officer\' and develop an improvement plan.','External Consultant':'Review your approach to \'External Consultant\' and develop an improvement plan.','No one specifically assigned':'Designate a responsible person or team for this critical area.'}
+      },
+      TRN_024: {
+        category: 'driver_training',
+        weight: 3,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Vehicle operators are not trained in safe operating procedures.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Address this gap to strengthen your protection.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      TRN_025: {
+        category: 'vehicle_inspections',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'Vehicle operators are not trained in safe operating procedures.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Implement safe operating procedures training for all vehicle and equipment operators.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      TRN_026: {
+        category: 'fire_alarm',
+        weight: 2,
+        scores: {'Yes':100,'No':0,'Not sure':30},
+        gaps: {'No':'No regular vehicle safety inspections conducted.','Not sure':'Uncertainty about this area indicates a gap in your management.'},
+        recommendations: {'No':'Establish a regular vehicle safety inspection schedule.','Not sure':'Review your current practices and documentation to address this uncertainty.'}
+      },
+      TRN_027: {
+        category: 'depot_maintenance',
+        weight: 1,
+        scores: {'Monthly':100,'Quarterly':80,'Annually':50,'Rarely':20,'Never':0},
+        gaps: {'Quarterly':'Answer \'Quarterly\' indicates an area for improvement.','Annually':'Answer \'Annually\' indicates an area for improvement.','Rarely':'Maintenance inspections are only conducted rarely, increasing risk.','Never':'No maintenance inspections are conducted, allowing issues to go undetected.'},
+        recommendations: {'Quarterly':'Review your approach to \'Quarterly\' and develop an improvement plan.','Annually':'Review your approach to \'Annually\' and develop an improvement plan.','Rarely':'Establish a regular maintenance inspection schedule.','Never':'Begin conducting regular maintenance inspections at least annually.'}
       }
     },
     modifiers: [
@@ -1194,12 +1754,62 @@
         conditions: [['TRN_016', 'No'], ['TRN_015', 'No']],
         penalty: 10,
         description: 'Drivers unprotected and goods in transit uninsured'
+      },
+      {
+        id: 'trn_incidents_no_procedures',
+        name: 'Fleet Incidents + No Emergency Procedures',
+        conditions: [['TRN_012', 'Yes'], ['TRN_020', 'No']],
+        penalty: 12,
+        description: 'Transport operation with accident history and no emergency procedures'
+      },
+      {
+        id: 'trn_no_fire_extinguishers_poor_maintenance',
+        name: 'No Fire Extinguishers + Poor Building Maintenance',
+        conditions: [['TRN_021', 'No'], ['TRN_027', ["Rarely","Never"]]],
+        penalty: 8,
+        description: 'Fire safety equipment gaps combined with poor facility maintenance'
       }
     ],
     improvements: {
       TRN_015: { 'No': { target: 'Yes', gain: 10, action: 'Get goods-in-transit insurance' } },
       TRN_016: { 'No': { target: 'Yes', gain: 8, action: 'Get group personal accident cover for drivers' } },
-      TRN_017: { 'No': { target: 'Some of them', gain: 6, action: 'Start with comprehensive insurance for high-value vehicles' } }
+      TRN_017: { 'No': { target: 'Some of them', gain: 6, action: 'Start with comprehensive insurance for high-value vehicles' } },
+      TRN_012: {
+        'Yes': { target: 'No', gain: 6, action: 'Resolve underlying issues that led to yes response' },
+      },
+      TRN_020: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      TRN_021: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+      },
+      TRN_022: {
+        'No': { target: 'Yes', gain: 10, action: 'Improve from "No" to "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Improve from "Not sure" to "Yes"' },
+      },
+      TRN_023: {
+        'Designated Compliance Officer': { target: 'Fleet Manager', gain: 3, action: 'Improve from "Designated Compliance Officer" to "Fleet Manager"' },
+        'External Consultant': { target: 'Fleet Manager', gain: 7, action: 'Improve from "External Consultant" to "Fleet Manager"' },
+        'No one specifically assigned': { target: 'Fleet Manager', gain: 10, action: 'Designate a responsible person or team for this area' },
+      },
+      TRN_024: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      TRN_025: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      TRN_026: {
+        'No': { target: 'Yes', gain: 10, action: 'Implement proper processes to achieve "Yes"' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit current practices and establish clear procedures' },
+      },
+      TRN_027: {
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Improve from "Quarterly" to "Monthly"' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Improve from "Annually" to "Monthly"' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Conduct regular inspections and maintenance as needed' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Conduct regular inspections and maintenance as needed' },
+      }
     }
   },
 

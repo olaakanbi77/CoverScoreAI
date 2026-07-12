@@ -495,21 +495,31 @@ const domainConfig = {
         'Workforce': {
           base: "Your assessment shows that your manufacturing workforce exposure could present significant liability risks.",
           answerChecks: [
-            { q: 'MFG_013', values: ['200+'], append: "With over 200 employees, your workforce liability and compliance exposure is substantial." }
+            { q: 'MFG_013', values: ['200+'], append: "With over 200 employees, your workforce liability and compliance exposure is substantial." },
+            { q: 'MFG_012', values: ["Yes"], append: "Workplace accidents in the past 3 years indicate gaps in your safety environment that need attention." }
           ],
           suffix: "Reviewing comprehensive workforce insurance and safety programs is an important step\u2014because downtime is expensive and protection is essential."
         },
         'Operations': {
           base: "Your assessment suggests that your manufacturing operations may be vulnerable to equipment-related disruptions.",
           answerChecks: [
-            { q: 'MFG_014', values: ['Immediately'], append: "Critical machine breakdown would halt production immediately, creating significant revenue loss." }
+            { q: 'MFG_014', values: ['Immediately'], append: "Critical machine breakdown would halt production immediately, creating significant revenue loss." },
+            { q: 'MFG_020', values: ["No"], append: "Without written emergency procedures for accidents or fire, your staff may not know how to respond effectively in a crisis." },
+            { q: 'MFG_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety, critical compliance and risk management responsibilities may go unaddressed." },
+            { q: 'MFG_024', values: ["Yes"], append: "Operating delivery vehicles and forklifts introduces additional liability and requires appropriate insurance coverage." },
+            { q: 'MFG_025', values: ["No"], append: "Your delivery and material handling vehicle drivers lack safe operating procedure training, increasing accident risk." },
+            { q: 'MFG_025', values: ["Not sure"], append: "You are uncertain whether your vehicle operators are trained in safe operating procedures, which itself indicates a training gap." },
+            { q: 'MFG_026', values: ["No"], append: "Without regular vehicle safety inspections, your delivery fleet and material handling equipment may have undetected safety issues." }
           ],
           suffix: "Implementing equipment redundancy and preventive maintenance programs is essential for operational continuity."
         },
         'Asset Protection': {
           base: "Your assessment indicates that your manufacturing facility and assets may not be adequately insured.",
           answerChecks: [
-            { q: 'MFG_016', values: ['No'], append: "Without fire and special perils insurance, your facility and equipment are exposed to catastrophic loss." }
+            { q: 'MFG_016', values: ['No'], append: "Without fire and special perils insurance, your facility and equipment are exposed to catastrophic loss." },
+            { q: 'MFG_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your facility, putting property and lives at risk." },
+            { q: 'MFG_027', values: ["Never"], append: "You never conduct building maintenance inspections, allowing structural issues and hazards to go unnoticed." },
+            { q: 'MFG_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." }
           ],
           suffix: "Getting comprehensive fire and special perils insurance for your facility is a critical protection step."
         },
@@ -517,7 +527,9 @@ const domainConfig = {
           base: "Your assessment shows that your manufacturing business may not be prepared to recover from a major disaster.",
           answerChecks: [
             { q: 'MFG_017', values: ['No, we would close'], append: "Your business would not survive a major disaster closure, highlighting a critical continuity gap." },
-            { q: 'MFG_017', values: ['With difficulty'], append: "Your business would struggle to recover from a major disaster, indicating the need for a stronger continuity plan." }
+            { q: 'MFG_017', values: ['With difficulty'], append: "Your business would struggle to recover from a major disaster, indicating the need for a stronger continuity plan." },
+            { q: 'MFG_022', values: ["No"], append: "Your factory could not meet payroll and operating expenses during a one-month closure, indicating a critical financial resilience gap." },
+            { q: 'MFG_022', values: ["Not sure"], append: "You're unsure if your factory could survive a one-month closure, which itself signals a need for better financial contingency planning." }
           ],
           suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take."
         }
@@ -546,14 +558,24 @@ const domainConfig = {
         'Operations': {
           base: "Your assessment shows that your healthcare facility's operational exposure could create significant liability risks.",
           answerChecks: [
-            { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your facility has significant patient liability exposure that requires comprehensive coverage." }
+            { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your facility has significant patient liability exposure that requires comprehensive coverage." },
+            { q: 'HOS_012', values: ["Yes"], append: "Patient safety incidents in the past 3 years indicate gaps in your care environment that need attention." },
+            { q: 'HOS_020', values: ["No"], append: "Without written emergency procedures for patient incidents or fire, your staff may not know how to respond effectively in a crisis." },
+            { q: 'HOS_022', values: ["No"], append: "Your facility could not meet payroll and operating expenses during a one-month closure, indicating a critical financial resilience gap." },
+            { q: 'HOS_022', values: ["Not sure"], append: "You're unsure if your facility could survive a one-month closure, which itself signals a need for better financial contingency planning." },
+            { q: 'HOS_024', values: ["Yes"], append: "Operating ambulances and patient transport vehicles introduces additional liability and requires appropriate fleet insurance." },
+            { q: 'HOS_025', values: ["No"], append: "Your ambulance and patient transport drivers lack defensive driving and emergency protocol training, increasing accident risk." },
+            { q: 'HOS_025', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and emergency protocols, which indicates a training gap." },
+            { q: 'HOS_026', values: ["No"], append: "Without regular vehicle safety inspections, your medical transport fleet may have undetected safety issues." },
+            { q: 'HOS_026', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted regularly, indicating a gap in fleet safety management." }
           ],
           suffix: "Ensuring comprehensive medical malpractice and liability coverage is essential\u2014because patient care depends on being prepared for anything."
         },
         'Legal Liability': {
           base: "Your assessment indicates that your healthcare facility may not be adequately protected against medical liability risks.",
           answerChecks: [
-            { q: 'HOS_015', values: ['No'], append: "Without professional indemnity or medical malpractice insurance, your facility faces significant legal and financial exposure." }
+            { q: 'HOS_015', values: ['No'], append: "Without professional indemnity or medical malpractice insurance, your facility faces significant legal and financial exposure." },
+            { q: 'HOS_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for compliance and safety, critical regulatory and risk management responsibilities may go unaddressed." }
           ],
           suffix: "Securing comprehensive professional indemnity and medical malpractice insurance is a critical step."
         },
@@ -567,7 +589,10 @@ const domainConfig = {
         'Asset Protection': {
           base: "Your assessment shows that your healthcare facility's critical equipment may not be adequately insured.",
           answerChecks: [
-            { q: 'HOS_017', values: ['No'], append: "Without insurance for critical life-support equipment, a power surge or breakdown could disrupt operations and create significant costs." }
+            { q: 'HOS_017', values: ['No'], append: "Without insurance for critical life-support equipment, a power surge or breakdown could disrupt operations and create significant costs." },
+            { q: 'HOS_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your facility, putting property and lives at risk." },
+            { q: 'HOS_027', values: ["Never"], append: "You never conduct building maintenance inspections, allowing structural issues and hazards to go unnoticed." },
+            { q: 'HOS_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." }
           ],
           suffix: "Getting all-risks equipment insurance covering power surge and breakdown is a practical step for asset protection."
         }
@@ -665,7 +690,15 @@ const domainConfig = {
         'Operations': {
           base: "Your assessment shows that your church's operational exposure could create liability risks during gatherings.",
           answerChecks: [
-            { q: 'CHR_013', values: ['Over 1000'], append: "With over 1,000 congregants, your church has significant liability exposure during large gatherings." }
+            { q: 'CHR_013', values: ['Over 1000'], append: "With over 1,000 congregants, your church has significant liability exposure during large gatherings." },
+            { q: 'CHR_020', values: ["No"], append: "Without written emergency procedures for incidents during services or events, your team may not know how to respond effectively." },
+            { q: 'CHR_022', values: ["No"], append: "Your church could not continue meeting operating expenses if closed for one month, indicating a critical financial resilience gap." },
+            { q: 'CHR_022', values: ["Not sure"], append: "You're unsure if your church could survive a one-month closure, which signals a need for better financial contingency planning." },
+            { q: 'CHR_024', values: ["Yes"], append: "Operating church vans or buses for transporting congregants introduces additional liability and requires appropriate motor insurance." },
+            { q: 'CHR_025', values: ["No"], append: "Your church van and bus drivers lack defensive driving and first aid training, increasing accident risk." },
+            { q: 'CHR_025', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and first aid, which indicates a training gap." },
+            { q: 'CHR_026', values: ["No"], append: "Without regular vehicle safety inspections, your church transport may have undetected safety issues." },
+            { q: 'CHR_026', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted for your church transport, indicating a gap in fleet safety management." }
           ],
           suffix: "Reviewing comprehensive public liability insurance for large gatherings is an important step\u2014because protecting your congregation protects your mission."
         },
@@ -679,14 +712,19 @@ const domainConfig = {
         'Legal Liability': {
           base: "Your assessment indicates that your church may not be adequately protected against event liability.",
           answerChecks: [
-            { q: 'CHR_015', values: ['No'], append: "Without insurance if a congregant is injured on church premises, your church faces significant legal exposure." }
+            { q: 'CHR_015', values: ['No'], append: "Without insurance if a congregant is injured on church premises, your church faces significant legal exposure." },
+            { q: 'CHR_012', values: ["Yes"], append: "Incidents or injuries on your premises in the past 3 years indicate safety gaps that need attention." },
+            { q: 'CHR_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety, critical responsibilities may go unaddressed." }
           ],
           suffix: "Securing comprehensive public liability insurance for your premises is essential."
         },
         'Property': {
           base: "Your assessment shows that your church building and contents may not be adequately insured.",
           answerChecks: [
-            { q: 'CHR_017', values: ['No'], append: "Without fire insurance, your church building and contents are vulnerable to catastrophic loss." }
+            { q: 'CHR_017', values: ['No'], append: "Without fire insurance, your church building and contents are vulnerable to catastrophic loss." },
+            { q: 'CHR_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your church buildings, putting property and lives at risk." },
+            { q: 'CHR_027', values: ["Never"], append: "You never conduct building maintenance inspections for your church facilities, allowing issues to go undetected." },
+            { q: 'CHR_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted for your church facilities, increasing the likelihood of undetected issues." }
           ],
           suffix: "Getting fire insurance for the church building and contents is a critical step for property protection."
         }
@@ -715,35 +753,48 @@ const domainConfig = {
         'Operations': {
           base: "Your assessment shows that your construction operations have risk exposure that needs to be addressed.",
           answerChecks: [
-            { q: 'CON_013', values: ['More than 5'], append: "Managing many concurrent projects increases risk exposure and requires careful insurance coordination." }
+            { q: 'CON_013', values: ['More than 5'], append: "Managing many concurrent projects increases risk exposure and requires careful insurance coordination." },
+            { q: 'CON_020', values: ["No"], append: "Without written emergency procedures for on-site accidents or fire, your workers may not know how to respond effectively in a crisis." },
+            { q: 'CON_024', values: ["Yes"], append: "Operating heavy vehicles and transporting materials introduces additional liability and requires appropriate fleet insurance." },
+            { q: 'CON_025', values: ["No"], append: "Your heavy vehicle and equipment operators lack safe operating procedure training, increasing accident risk." },
+            { q: 'CON_025', values: ["Not sure"], append: "You are uncertain whether your operators are trained in safe operating procedures, which indicates a training gap." },
+            { q: 'CON_026', values: ["No"], append: "Without regular vehicle and equipment safety inspections, your fleet may have undetected safety issues." },
+            { q: 'CON_026', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted regularly, indicating a gap in fleet safety management." }
           ],
           suffix: "Ensuring each project has adequate insurance coverage is an important operational step\u2014because every project deserves to be protected."
         },
         'Equipment': {
           base: "Your assessment suggests that your construction equipment may represent a significant uninsured risk.",
           answerChecks: [
-            { q: 'CON_014', values: ['Yes'], append: "Heavy machinery on site creates significant liability and damage risk that requires comprehensive coverage." }
+            { q: 'CON_014', values: ['Yes'], append: "Heavy machinery on site creates significant liability and damage risk that requires comprehensive coverage." },
+            { q: 'CON_027', values: ["Never"], append: "You never conduct maintenance inspections for your tools, machinery, and site facilities, allowing issues to go undetected." },
+            { q: 'CON_027', values: ["Rarely"], append: "Equipment maintenance inspections are rarely conducted, increasing the likelihood of undetected issues." }
           ],
           suffix: "Ensuring all heavy machinery is comprehensively insured is essential for your operations."
         },
         'Insurance': {
           base: "Your assessment indicates that your construction projects may not be adequately insured.",
           answerChecks: [
-            { q: 'CON_015', values: ['No'], append: "Without contractor's all-risk or works insurance, your projects are exposed to significant financial loss." }
+            { q: 'CON_015', values: ['No'], append: "Without contractor's all-risk or works insurance, your projects are exposed to significant financial loss." },
+            { q: 'CON_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your work sites, putting property and lives at risk." }
           ],
           suffix: "Getting comprehensive contractor's all-risk insurance is a critical step\u2014because every project deserves to be protected."
         },
         'Worker Protection': {
           base: "Your assessment shows that your on-site workers may not be adequately protected against accidents.",
           answerChecks: [
-            { q: 'CON_016', values: ['No'], append: "Without group personal accident cover, your workers and your business are exposed to accident-related costs." }
+            { q: 'CON_016', values: ['No'], append: "Without group personal accident cover, your workers and your business are exposed to accident-related costs." },
+            { q: 'CON_012', values: ["Yes"], append: "On-site accidents in the past 3 years indicate safety gaps that need attention." },
+            { q: 'CON_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety on site, critical compliance responsibilities may go unaddressed." }
           ],
           suffix: "Getting group personal accident cover for all on-site workers is essential for worker protection."
         },
         'Contractual': {
           base: "Your assessment suggests that your business may not be protected against project delay penalties.",
           answerChecks: [
-            { q: 'CON_017', values: ['No'], append: "Without protection against project delay penalties, your business could face significant financial liability." }
+            { q: 'CON_017', values: ['No'], append: "Without protection against project delay penalties, your business could face significant financial liability." },
+            { q: 'CON_022', values: ["No"], append: "Your business could not continue meeting payroll and operating expenses if a major project was halted for one month, indicating a critical financial resilience gap." },
+            { q: 'CON_022', values: ["Not sure"], append: "You're unsure if your business could survive a major project halt, which signals a need for better financial contingency planning." }
           ],
           suffix: "Reviewing contract terms and considering delay penalty protection is a practical step for risk management."
         }
@@ -773,21 +824,31 @@ const domainConfig = {
         'Fleet': {
           base: "Your assessment shows that your fleet management has risk exposures that need attention.",
           answerChecks: [
-            { q: 'TRN_013', values: ['Over 20'], append: "With over 20 vehicles, your fleet creates significant cumulative risk exposure that requires comprehensive management." }
+            { q: 'TRN_013', values: ['Over 20'], append: "With over 20 vehicles, your fleet creates significant cumulative risk exposure that requires comprehensive management." },
+            { q: 'TRN_012', values: ["Yes"], append: "Fleet accidents in the past 3 years indicate safety gaps that need attention." },
+            { q: 'TRN_020', values: ["No"], append: "Without written emergency procedures for road accidents or fleet incidents, your drivers may not know how to respond effectively." },
+            { q: 'TRN_025', values: ["No"], append: "Without regular vehicle safety inspections, your entire fleet may have undetected safety issues." },
+            { q: 'TRN_025', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted regularly for your fleet, indicating a gap in fleet safety management." },
+            { q: 'TRN_027', values: ["Never"], append: "You never conduct maintenance inspections for your depot and yard facilities, allowing issues to go undetected." },
+            { q: 'TRN_027', values: ["Rarely"], append: "Depot and yard maintenance inspections are rarely conducted, increasing the likelihood of undetected issues." }
           ],
           suffix: "Implementing fleet-wide risk management and comprehensive insurance is an important step\u2014because your fleet should keep moving, not stop for the unexpected."
         },
         'Insurance': {
           base: "Your assessment indicates that your goods in transit may not be adequately insured.",
           answerChecks: [
-            { q: 'TRN_015', values: ['No'], append: "Without fleet insurance for goods in transit, your cargo is exposed to loss or damage during transportation." }
+            { q: 'TRN_015', values: ['No'], append: "Without fleet insurance for goods in transit, your cargo is exposed to loss or damage during transportation." },
+            { q: 'TRN_022', values: ["No"], append: "Your transport business could not continue meeting payroll and operating expenses if fleet operations were suspended for one month, indicating a critical financial resilience gap." },
+            { q: 'TRN_022', values: ["Not sure"], append: "You're unsure if your business could survive a one-month fleet suspension, which signals a need for better financial contingency planning." }
           ],
           suffix: "Getting comprehensive goods-in-transit insurance is essential for protecting your cargo."
         },
         'Worker Protection': {
           base: "Your assessment shows that your drivers may not be adequately protected against accidents.",
           answerChecks: [
-            { q: 'TRN_016', values: ['No'], append: "Without group personal accident cover, your drivers and your business are exposed to accident-related costs." }
+            { q: 'TRN_016', values: ['No'], append: "Without group personal accident cover, your drivers and your business are exposed to accident-related costs." },
+            { q: 'TRN_024', values: ["No"], append: "Your drivers are not trained in defensive driving and first aid, increasing accident risk and liability exposure." },
+            { q: 'TRN_024', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and first aid, which indicates a training gap." }
           ],
           suffix: "Getting group personal accident cover for all drivers is essential for worker protection."
         },
@@ -795,7 +856,11 @@ const domainConfig = {
           base: "Your assessment suggests that your fleet may not be fully compliant with motor insurance requirements.",
           answerChecks: [
             { q: 'TRN_017', values: ['No'], append: "Without comprehensive motor insurance for all fleet vehicles, you face compliance and financial risks." },
-            { q: 'TRN_017', values: ['Some of them'], append: "Only some of your vehicles have comprehensive motor insurance, leaving gaps in your fleet protection." }
+            { q: 'TRN_017', values: ['Some of them'], append: "Only some of your vehicles have comprehensive motor insurance, leaving gaps in your fleet protection." },
+            { q: 'TRN_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available in your depot and vehicles, putting property and lives at risk." },
+            { q: 'TRN_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for safety and compliance, critical regulatory responsibilities may go unaddressed." },
+            { q: 'TRN_026', values: ["No"], append: "Your depot or yard does not have a working fire alarm system that is regularly tested." },
+            { q: 'TRN_026', values: ["Not sure"], append: "You are uncertain whether your depot has a working fire alarm system, indicating a gap in fire safety management." }
           ],
           suffix: "Extending comprehensive motor insurance to your entire fleet is a critical step for compliance and protection."
         }

@@ -982,7 +982,7 @@ router.post('/evolution', async (req, res) => {
           const gaps = [];
           if (fleetSize === 'Over 20') gaps.push("your large fleet creates significant cumulative risk exposure");
           if (goodsIns === 'No') gaps.push("you don't have goods-in-transit insurance for your cargo");
-          if (driverAccident === 'No') gaps.push("your drivers are not covered by group personal accident insurance");
+          if (driverCover === 'No') gaps.push("your drivers are not covered by group personal accident insurance");
           if (compliance === 'No') gaps.push("your fleet vehicles are not comprehensively insured");
           if (compliance === 'Some of them') gaps.push("only some of your fleet vehicles have comprehensive motor insurance");
           let story = fleetSize === 'Over 20'
