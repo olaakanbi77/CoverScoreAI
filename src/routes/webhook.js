@@ -524,18 +524,40 @@ router.post('/evolution', async (req, res) => {
       const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
 
       // ===== Message 1: Completion + Summary + Score + Resilience Level + Highest Priority =====
+      const snapshotTitles = {
+        HOS: 'Healthcare Resilience Snapshot\u2122',
+        MFG: 'Manufacturing Resilience Snapshot\u2122',
+        SCH: 'School Resilience Snapshot\u2122',
+        CHR: 'Church Resilience Snapshot\u2122',
+        CON: 'Construction Resilience Snapshot\u2122',
+        TRN: 'Transport Resilience Snapshot\u2122'
+      };
+      const snapshotTitle = snapshotTitles[prefix] || 'Risk Snapshot\u2122';
       const msg1Parts = [
-        `\uD83C\uDF89 Your ${dom.assessmentTitle} is complete.\n\nHere\u2019s a summary of what we discovered.`,
+        `\uD83C\uDF89 Your ${dom.assessmentTitle} is complete.\n\nHere\u2019s your ${snapshotTitle}`,
         `CoverScore\u2122\n${assessmentData.score} / 100`,
         `Resilience Level\n${displayLabel}`
       ];
       if (weakestPillar) {
         const weakKey = weakestPillar.toLowerCase();
-        const whyText = (dom.whyTexts && dom.whyTexts[weakKey])
-          ? dom.whyTexts[weakKey]
-          : (dom.recommendationTexts && dom.recommendationTexts[weakKey])
-            ? dom.recommendationTexts[weakKey].replace(/^(ensuring|securing|getting|reviewing|developing|building|strengthening|creating|implementing) /i, '')
-            : `this area presents the greatest opportunity to strengthen your overall ${dom.improvementTerm}`;
+        const pillarDef = dom.insightTexts?.perPillar?.[weakestPillar];
+        let whyText = '';
+        if (pillarDef && pillarDef.whyChecks) {
+          for (const check of pillarDef.whyChecks) {
+            const answer = answers[check.q];
+            if (answer && check.values.includes(answer)) {
+              whyText = check.text;
+              break;
+            }
+          }
+        }
+        if (!whyText) {
+          whyText = (dom.whyTexts && dom.whyTexts[weakKey])
+            ? dom.whyTexts[weakKey]
+            : (dom.recommendationTexts && dom.recommendationTexts[weakKey])
+              ? dom.recommendationTexts[weakKey].replace(/^(ensuring|securing|getting|reviewing|developing|building|strengthening|creating|implementing) /i, '')
+              : `this area presents the greatest opportunity to strengthen your overall ${dom.improvementTerm}`;
+        }
         msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\nWhy?\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}`);
       }
       postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
@@ -1104,9 +1126,10 @@ router.post('/evolution', async (req, res) => {
         const weakestName = sorted[0][0];
         const weakestScore = sorted[0][1];
         const weakArea = weakestName.toLowerCase();
+        const firstSteps = dom.firstStepTexts || {};
         const recTexts = dom.recommendationTexts || {};
-        const action = recTexts[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
-        return `Recommended First Step\n\nThe single action most likely to improve your ${dom.closingTerm} is ${action}.\n\nImproving this area from ${weakestScore}% is expected to have the greatest impact on your ${dom.closingTerm}.`;
+        const action = firstSteps[weakArea] || recTexts[weakArea] || `reviewing your ${weakArea} to strengthen your ${dom.closingTerm}`;
+        return `Recommended First Step\n\n${action.charAt(0).toUpperCase() + action.slice(1)}\n\nImproving this area from ${weakestScore}% is expected to have the greatest impact on your ${dom.closingTerm}.`;
       };
 
       const reportNames = {
@@ -1138,8 +1161,73 @@ router.post('/evolution', async (req, res) => {
       if (insightText) msg2 += `\n\n${insightText}`;
       postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
-      // ===== Message 3: Risk Story\u2122 + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
+      // ---- What You're Doing Well\u2122 (strengths-based section) ----
+      const buildStrengths = (answers, prefix) => {
+        const strengthDefs = {
+          HOS: [
+            { q: 'HOS_013', values: ['Less than 50', '50\u2013100'], text: 'manageable patient volume that keeps clinical liability exposure contained' },
+            { q: 'HOS_016', values: ['No'], text: 'no high-value medical equipment exposure that requires specialised protection' },
+            { q: 'HOS_020', values: ['Yes'], text: 'documented emergency procedures for patient incidents and fire' },
+            { q: 'HOS_021', values: ['Yes'], text: 'fire extinguishers regularly inspected and available across your facility' },
+            { q: 'HOS_023', values: ['Medical Director', 'Designated Compliance Officer'], text: 'dedicated compliance and patient safety leadership' },
+            { q: 'HOS_024', values: ['Yes'], text: 'structured patient transport service with appropriate fleet coverage' },
+            { q: 'HOS_025', values: ['Yes'], text: 'drivers trained in defensive driving and emergency protocols' },
+            { q: 'HOS_026', values: ['Yes'], text: 'regular vehicle safety inspections for your medical transport fleet' },
+            { q: 'HOS_027', values: ['Monthly', 'Quarterly', 'Annually'], text: 'regular building maintenance inspection programme' },
+            { q: 'HOS_022', values: ['Yes'], text: 'financial resilience to sustain operations through a one-month closure' }
+          ],
+          MFG: [
+            { q: 'MFG_013', values: ['Under 50', '50\u2013200'], text: 'manageable workforce size that keeps liability exposure contained' },
+            { q: 'MFG_020', values: ['Yes'], text: 'documented emergency procedures for accidents and fire' },
+            { q: 'MFG_021', values: ['Yes'], text: 'fire extinguishers regularly inspected across your facility' },
+            { q: 'MFG_023', values: ['Operations Manager', 'Designated Safety Officer'], text: 'dedicated health and safety leadership' },
+            { q: 'MFG_025', values: ['Yes'], text: 'operators trained in safe operating procedures' },
+            { q: 'MFG_026', values: ['Yes'], text: 'regular vehicle safety inspections for your logistics fleet' },
+            { q: 'MFG_022', values: ['Yes'], text: 'financial resilience to sustain operations through a one-month closure' }
+          ],
+          CHR: [
+            { q: 'CHR_013', values: ['Under 200', '200\u2013500', '500\u20131000'], text: 'manageable congregation size for operational risk' },
+            { q: 'CHR_020', values: ['Yes'], text: 'documented emergency procedures for services and events' },
+            { q: 'CHR_021', values: ['Yes'], text: 'fire extinguishers regularly inspected across your premises' },
+            { q: 'CHR_023', values: ['Church Administrator', 'Designated Safety Officer'], text: 'dedicated health and safety leadership' },
+            { q: 'CHR_025', values: ['Yes'], text: 'drivers trained in defensive driving and first aid' },
+            { q: 'CHR_014', values: ['No'], text: 'no high-value asset exposure requiring specialised insurance' }
+          ],
+          CON: [
+            { q: 'CON_020', values: ['Yes'], text: 'documented emergency procedures for on-site accidents and fire' },
+            { q: 'CON_021', values: ['Yes'], text: 'fire extinguishers regularly inspected across your work sites' },
+            { q: 'CON_023', values: ['Project Manager', 'Designated Safety Officer'], text: 'dedicated health and safety leadership on site' },
+            { q: 'CON_025', values: ['Yes'], text: 'equipment operators trained in safe operating procedures' },
+            { q: 'CON_014', values: ['No'], text: 'no heavy machinery exposure requiring specialised coverage' },
+            { q: 'CON_013', values: ['1\u20133', '3\u20135'], text: 'manageable project portfolio that limits cumulative risk exposure' }
+          ],
+          TRN: [
+            { q: 'TRN_013', values: ['1\u20135', '6\u201310', '11\u201320'], text: 'manageable fleet size that keeps risk exposure contained' },
+            { q: 'TRN_020', values: ['Yes'], text: 'documented emergency procedures for road accidents and fleet incidents' },
+            { q: 'TRN_021', values: ['Yes'], text: 'fire extinguishers regularly inspected in your depot and vehicles' },
+            { q: 'TRN_023', values: ['Fleet Manager', 'Designated Compliance Officer'], text: 'dedicated safety and compliance leadership' },
+            { q: 'TRN_024', values: ['Yes'], text: 'drivers trained in defensive driving and first aid' },
+            { q: 'TRN_025', values: ['Yes'], text: 'regular vehicle safety inspections across your fleet' },
+            { q: 'TRN_026', values: ['Yes'], text: 'working fire alarm system in your depot that is regularly tested' }
+          ]
+        };
+        const defs = strengthDefs[prefix] || [];
+        const found = [];
+        for (const d of defs) {
+          const answer = answers[d.q];
+          if (answer && d.values.includes(answer)) found.push(d.text);
+        }
+        return found;
+      };
+      const strengths = buildStrengths(answers, prefix);
+
+      // ===== Message 3: Risk Story\u2122 + What You're Doing Well + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
       let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
+      if (strengths.length > 0) {
+        const lastS = strengths.pop();
+        const sStr = strengths.length > 0 ? strengths.join(', ') + ', and ' + lastS : lastS;
+        msg3 += `\n\nWhat You\u2019re Doing Well\u2122\n\nYour assessment shows several important strengths. Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. These provide a solid operational foundation on which stronger resilience can be built.`;
+      }
       // If Nothing Changes\u2122 — consequence of inaction (between risk story and forecast)
       const ifNothingChangeTexts = {
         HOS: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`,

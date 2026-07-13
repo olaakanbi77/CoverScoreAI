@@ -1190,20 +1190,20 @@
       }
     ],
     improvements: {
-      HOS_015: { 'No': { target: 'Yes', gain: 12, action: 'Get professional indemnity and medical malpractice insurance' } },
-      HOS_017: { 'No': { target: 'Yes', gain: 10, action: 'Get all-risks equipment insurance' } },
+      HOS_015: { 'No': { target: 'Yes', gain: 12, action: 'Protect clinicians and your facility against malpractice claims' } },
+      HOS_017: { 'No': { target: 'Yes', gain: 10, action: 'Protect critical medical equipment against breakdown and power surge damage' } },
       HOS_012: {
         'Yes': { target: 'No', gain: 6, action: 'Strengthen patient safety governance and incident review processes' },
       },
       HOS_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for patient incidents and fire' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures so staff can respond effectively to patient incidents and fire' },
       },
       HOS_021: {
         'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all facility areas and establish regular inspection schedule' },
       },
       HOS_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain patient care operations during a one-month closure' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a contingency plan for service continuity' },
       },
       HOS_023: {
         'Designated Compliance Officer': { target: 'Medical Director', gain: 3, action: 'Upgrade compliance oversight from officer to senior clinical leadership' },
@@ -1215,16 +1215,16 @@
         'Not sure': { target: 'Yes', gain: 7, action: 'Review transport operations and obtain appropriate fleet coverage' },
       },
       HOS_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement defensive driving and emergency protocol training for all drivers' },
+        'No': { target: 'Yes', gain: 10, action: 'Train drivers in defensive driving and emergency protocols to reduce accident risk' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Audit driver training credentials and establish a training program' },
       },
       HOS_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for all medical transport' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish regular vehicle safety inspections to keep medical transport safe and reliable' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a regular schedule' },
       },
       HOS_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase building maintenance inspections to monthly' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Increase building maintenance inspections to monthly' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase building maintenance inspections to monthly frequency' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase building maintenance inspections to monthly frequency' },
         'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly building maintenance inspections' },
         'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly building maintenance inspections' },
       }

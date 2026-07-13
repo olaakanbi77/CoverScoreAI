@@ -589,14 +589,21 @@ const domainConfig = {
             { q: 'HOS_015', values: ['No'], append: "Without professional indemnity or medical malpractice insurance, your facility faces significant legal and financial exposure from patient claims." },
             { q: 'HOS_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for compliance and safety, critical regulatory and risk management responsibilities may go unaddressed." }
           ],
-          suffix: "Securing professional indemnity protection and strengthening clinical governance are critical steps for your facility."
+          suffix: "Securing professional indemnity protection and strengthening clinical governance are critical steps for your facility.",
+          whyChecks: [
+            { q: 'HOS_015', values: ['No'], text: "Your facility currently operates without professional indemnity or medical malpractice insurance, leaving it financially exposed if a patient safety incident results in a legal claim." },
+            { q: 'HOS_023', values: ["No one specifically assigned"], text: "With no one specifically responsible for compliance and patient safety governance, your facility lacks the oversight needed to manage clinical liability risks effectively." }
+          ]
         },
         'Medical Equipment Resilience': {
           base: "Your assessment suggests that your medical equipment represents a significant clinical asset with potential protection gaps.",
           answerChecks: [
             { q: 'HOS_016', values: ['Yes'], append: "With high-value medical equipment on site, damage or breakdown could disrupt patient care and create significant financial pressure." }
           ],
-          suffix: "Ensuring all high-value medical equipment is protected against damage and breakdown is important for continuity of patient care."
+          suffix: "Ensuring all high-value medical equipment is protected against damage and breakdown is important for continuity of patient care.",
+          whyChecks: [
+            { q: 'HOS_016', values: ['Yes'], text: "Your facility has high-value medical equipment that is central to patient care, and this equipment is not currently protected by dedicated Machinery Breakdown Insurance. A single equipment failure could interrupt clinical services and create significant unplanned costs." }
+          ]
         },
         'Operational Continuity': {
           base: "Your assessment shows that your facility has gaps in operational safeguards that could affect your ability to maintain patient care during a disruption.",
@@ -606,16 +613,26 @@ const domainConfig = {
             { q: 'HOS_027', values: ["Never"], append: "You never conduct building maintenance inspections, allowing structural issues and hazards to go unnoticed." },
             { q: 'HOS_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." }
           ],
-          suffix: "Strengthening operational safeguards is essential to maintaining uninterrupted patient care."
+          suffix: "Strengthening operational safeguards is essential to maintaining uninterrupted patient care.",
+          whyChecks: [
+            { q: 'HOS_017', values: ['No'], text: "Critical life-support equipment is not protected against power surge or breakdown, meaning a single electrical fault could disrupt patient care and create significant financial costs for your facility." },
+            { q: 'HOS_021', values: ['No'], text: "Fire extinguishers are not regularly inspected or available across your facility, putting patients, staff, and property at risk in the event of a fire emergency." }
+          ]
         }
       },
-      catchAll: "Your assessment shows that while your facility has some operational strengths, critical weaknesses may exist in equipment resilience and clinical governance. High-value medical equipment is central to patient care, yet gaps in protection against breakdown or damage could interrupt clinical services. Combined with the absence of formal safety leadership or documented emergency procedures, these gaps increase the risk that a single incident could disrupt operations and create significant financial and legal exposure."
+      catchAll: "Your assessment shows that while your facility has some operational strengths, critical weaknesses may exist in equipment resilience and clinical governance. High-value medical equipment is central to patient care, yet it is not currently protected by dedicated Machinery Breakdown Insurance. Combined with the absence of formal safety leadership or documented emergency procedures, these gaps increase the risk that a single incident could disrupt operations and create significant financial and legal exposure."
     },
     recommendationTexts: {
       'clinical risk & patient safety': 'ensuring clinical risk management and patient safety governance with clearly assigned responsibilities',
       'professional liability': 'securing professional indemnity and medical malpractice protection for your healthcare facility',
       'medical equipment resilience': 'ensuring all high-value medical equipment is specifically protected against damage or breakdown',
       'operational continuity': 'strengthening operational safeguards including fire safety, building maintenance, and equipment protection'
+    },
+    firstStepTexts: {
+      'clinical risk & patient safety': 'Appoint a designated compliance and patient safety lead, then document emergency procedures for patient incidents and fire.',
+      'professional liability': 'Obtain Professional Indemnity and Medical Malpractice Insurance, then appoint a designated compliance and patient safety lead.',
+      'medical equipment resilience': 'Secure dedicated Machinery Breakdown Insurance for all high-value medical equipment, then implement a regular maintenance inspection schedule.',
+      'operational continuity': 'Secure all-risks equipment insurance covering power surge and breakdown for critical life-support equipment, then establish regular fire safety and building maintenance inspections.'
     },
     realLifeContext: "Here\u2019s what this means in real life: A patient safety incident, equipment failure, or facility disruption could threaten the continuity of care your patients depend on. Your CoverScore reflects how prepared your healthcare facility is to manage clinical risks, protect patients, and maintain operations\u2014no matter what happens."
   },

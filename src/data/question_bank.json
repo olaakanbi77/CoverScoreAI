@@ -189,7 +189,7 @@
         "id": "YPR_016",
         "industry": "young_professional",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Young Professional Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Young Professional Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -421,7 +421,7 @@
         "id": "ENT_016",
         "industry": "entrepreneur",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Entrepreneur Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Entrepreneur Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -657,7 +657,7 @@
         "id": "FAM_016",
         "industry": "family",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Family Protection Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Family Protection Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -893,7 +893,7 @@
         "id": "INC_016",
         "industry": "income",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Income Protection Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Income Protection Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -1233,7 +1233,7 @@
         "industry": "health",
         "pillar": "General",
         "auto_advance": true,
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Health Protection Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Health Protection Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -1468,7 +1468,7 @@
         "id": "RET_016",
         "industry": "retirement",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Retirement Readiness Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Retirement Readiness Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -1627,7 +1627,7 @@
         "id": "HOM_013",
         "industry": "home",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Home Protection Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Home Protection Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -1786,7 +1786,7 @@
         "id": "MOT_013",
         "industry": "motor",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Motor Protection Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Motor Protection Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -2036,7 +2036,7 @@
         "id": "SME_018",
         "industry": "sme",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Business Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Business Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -2287,7 +2287,7 @@
         "id": "MFG_018",
         "industry": "manufacturing",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Manufacturing Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Manufacturing Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -2530,7 +2530,7 @@
         "id": "HOS_018",
         "industry": "hospital",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Hospital Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Hospital Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -2975,7 +2975,7 @@
         "id": "SCH_018",
         "industry": "school",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your School Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized School Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -3214,7 +3214,7 @@
         "id": "CHR_018",
         "industry": "church",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Church Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Church Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -3458,7 +3458,7 @@
         "id": "CON_018",
         "industry": "construction",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Construction Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Construction Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
@@ -3703,7 +3703,7 @@
         "id": "TRN_018",
         "industry": "transport",
         "pillar": "General",
-        "question": "Excellent. I have everything I need.\n\nGive me about 10 seconds while I prepare your Transport Risk Report™.",
+        "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Transport Risk Report™.",
         "question_type": "single_choice",
         "answers": [
             "✅ View My Results"
