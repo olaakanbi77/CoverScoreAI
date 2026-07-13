@@ -192,6 +192,27 @@ const initDatabase = () => {
       FOREIGN KEY (lead_id) REFERENCES leads(id)
     );
 
+    CREATE TABLE IF NOT EXISTS renewals (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      policy_id INTEGER NOT NULL,
+      lead_id INTEGER NOT NULL,
+      status TEXT DEFAULT 'pending',
+      new_assessment_session_id TEXT,
+      new_premium INTEGER,
+      new_policy_id INTEGER,
+      reminder_sent_at DATETIME,
+      reminder_channel TEXT,
+      decision_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME,
+      FOREIGN KEY (policy_id) REFERENCES policies(id),
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_renewals_policy_id ON renewals(policy_id);
+    CREATE INDEX IF NOT EXISTS idx_renewals_lead_id ON renewals(lead_id);
+    CREATE INDEX IF NOT EXISTS idx_renewals_status ON renewals(status);
+
     CREATE TABLE IF NOT EXISTS templates (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,

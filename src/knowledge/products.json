@@ -1,0 +1,786 @@
+[
+  {
+    "code": "FIRE_SPECIAL_PERILS",
+    "name": "Fire & Special Perils",
+    "category": "Property",
+    "description": "Covers physical damage to buildings, equipment, and stock from fire, lightning, explosion, storm, flood, and other specified perils.",
+    "who_needs_it": [
+      "Businesses with physical premises",
+      "Manufacturing facilities",
+      "Warehouses and storage",
+      "Retail shops and offices"
+    ],
+    "common_risks": [
+      "Fire destruction of assets",
+      "Business interruption after fire",
+      "Stock and inventory loss",
+      "Equipment damage"
+    ],
+    "exclusions": [
+      "Wear and tear",
+      "Mechanical breakdown (separate cover needed)",
+      "Acts of war",
+      "Nuclear risks",
+      "Gradual deterioration"
+    ],
+    "claim_examples": [
+      "A fire in a factory warehouse destroyed ₦15M worth of raw materials",
+      "A storm caused roof damage to a retail store, closing it for 3 weeks",
+      "An electrical surge triggered a fire that damaged ₦8M in office equipment"
+    ],
+    "objections": [
+      {"objection": "We've never had a fire in 10 years", "response": "Many business owners say the same until it happens. Fire risk increases with electrical age, and most Nigerian businesses don't have adequate electrical inspections. The question isn't whether you'll have a fire—it's whether you can afford to rebuild without insurance."},
+      {"objection": "Insurance is too expensive", "response": "Fire insurance typically costs 0.1-0.5% of your sum insured per year. For a ₦50M facility, that's ₦50,000-₦250,000 annually. Compare that to the cost of rebuilding without insurance."}
+    ],
+    "cross_sell": ["Business Interruption", "Machinery Breakdown", "Public Liability"],
+    "proposal_template": "We recommend Fire & Special Perils insurance to protect your {{assets}} against fire, storm, flood, and other specified risks. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Does Fire & Special Perils cover earthquakes?", "a": "Standard Nigerian policies cover earthquakes under Special Perils, but confirm with your insurer."},
+      {"q": "Can I insure just my building without contents?", "a": "Yes, you can insure building only, contents only, or both."},
+      {"q": "What is the typical excess on a fire policy?", "a": "Most Nigerian insurers apply a 5-10% excess on fire claims, subject to a minimum of ₦50,000."}
+    ],
+    "industries": ["SME", "MFG", "CHR", "CON", "SCH", "HOS", "TRN", "RET", "HOR", "PROP"],
+    "premium_range": {"min": 25000, "max": 150000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "high"},
+      {"pillar": "Property", "priority": "high"}
+    ]
+  },
+  {
+    "code": "FIRE_BURGLARY",
+    "name": "Fire & Burglary",
+    "category": "Property",
+    "description": "Combined cover for small and medium enterprises protecting premises, stock, and equipment against fire, theft, burglary, and armed robbery.",
+    "who_needs_it": [
+      "Small and medium enterprises",
+      "Retail shops and boutiques",
+      "Restaurants and eateries",
+      "Pharmacy and chemist stores"
+    ],
+    "common_risks": [
+      "Night burglary of stock and cash",
+      "Armed robbery during business hours",
+      "Fire destroying shop contents",
+      "Employee theft"
+    ],
+    "exclusions": [
+      "Wear and tear",
+      "Cash loss beyond specified limit",
+      "Fraudulent or dishonest acts of directors",
+      "Goods held on consignment unless declared"
+    ],
+    "claim_examples": [
+      "A pharmacy in Surulere lost ₦3.2M in drugs and cash during an overnight burglary",
+      "A restaurant kitchen fire caused ₦1.8M damage to cooking equipment and stock"
+    ],
+    "objections": [
+      {"objection": "We have security guards, so we don't need burglary cover", "response": "Security guards help deter crime but cannot prevent all incidents. In 2023, over 60% of businesses with guards still experienced theft. Insurance covers the loss your guards couldn't prevent."},
+      {"objection": "Our shop is small, it won't happen to us", "response": "Small shops are actually more vulnerable—they often have weaker security infrastructure. The average burglary claim for SMEs in Nigeria is ₦850,000. Can your business absorb that loss?"}
+    ],
+    "cross_sell": ["Public Liability", "Goods in Transit", "Cash in Transit"],
+    "proposal_template": "We recommend Fire & Burglary cover for your {{businessType}} to protect against fire damage and theft. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Is cash kept overnight covered under burglary?", "a": "Cash is covered up to a specified limit (usually 10% of sum insured, max ₦100,000). Higher limits require separate cash insurance."},
+      {"q": "Does this cover employee theft?", "a": "No, employee dishonesty requires a separate Fidelity Guarantee policy."}
+    ],
+    "industries": ["SME", "RET", "HOR", "CHR"],
+    "premium_range": {"min": 15000, "max": 80000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "high"},
+      {"pillar": "Property", "priority": "high"}
+    ]
+  },
+  {
+    "code": "PUBLIC_LIABILITY",
+    "name": "Public Liability",
+    "category": "Liability",
+    "description": "Protects your business against legal liability for third-party bodily injury or property damage arising from your business operations.",
+    "who_needs_it": [
+      "Any business that deals with the public",
+      "Event organizers and venues",
+      "Contractors and builders",
+      "Retail stores and restaurants"
+    ],
+    "common_risks": [
+      "Customer slips and falls on premises",
+      "Property damage caused to third parties",
+      "Injury to members of the public",
+      "Legal defense costs"
+    ],
+    "exclusions": [
+      "Employee injuries (covered by Employers Liability)",
+      "Professional negligence (covered by Professional Indemnity)",
+      "Products after delivery (covered by Product Liability)",
+      "Intentional acts",
+      "Contractual liabilities beyond standard duty of care"
+    ],
+    "claim_examples": [
+      "A customer slipped on a wet floor in a supermarket and broke their leg, claiming ₦2.5M in damages",
+      "A construction company's crane dropped debris on a neighboring car, causing ₦1.2M in damage"
+    ],
+    "objections": [
+      {"objection": "We are careful, nothing will happen", "response": "Most liability claims are accidents, not negligence. A customer slipping on a wet floor or a falling display shelf can happen despite the best precautions. Legal costs alone for defending a claim can exceed ₦1M."},
+      {"objection": "Our business is online only, we don't have foot traffic", "response": "You may still need liability cover for premises you visit (client offices, co-working spaces) and for products you sell. Product liability is often bundled."}
+    ],
+    "cross_sell": ["Employers Liability", "Product Liability", "Professional Indemnity"],
+    "proposal_template": "We recommend Public Liability insurance for {{businessName}} with a limit of ₦{{limit}}. This covers third-party bodily injury and property damage arising from your {{operations}}. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "What is a typical liability limit for SMEs?", "a": "Most SMEs in Nigeria take ₦5M to ₦25M in public liability cover. Larger businesses may need ₦50M+."},
+      {"q": "Does Public Liability cover legal fees?", "a": "Yes, legal defense costs are covered in addition to the liability limit, up to a specified amount."}
+    ],
+    "industries": ["SME", "MFG", "CHR", "CON", "SCH", "HOS", "TRN", "RET", "HOR", "PROP", "ENT", "NGO"],
+    "premium_range": {"min": 25000, "max": 200000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Liability", "priority": "high"},
+      {"pillar": "Third Party Risk", "priority": "medium"}
+    ]
+  },
+  {
+    "code": "EMPLOYERS_LIABILITY",
+    "name": "Employers Liability",
+    "category": "Liability",
+    "description": "Covers your legal liability for bodily injury or disease sustained by employees in the course of their employment, as required by the Nigerian Employees Compensation Act.",
+    "who_needs_it": [
+      "All businesses with employees",
+      "Construction and manufacturing companies",
+      "Companies with manual or hazardous labor",
+      "organizations with field staff"
+    ],
+    "common_risks": [
+      "Workplace accidents causing injury",
+      "Occupational diseases from exposure",
+      "Manual handling injuries",
+      "Machinery-related employee injuries"
+    ],
+    "exclusions": [
+      "Contractors (they need their own cover)",
+      "Injuries outside work hours and premises",
+      "Willful misconduct by employee",
+      "Pre-existing conditions"
+    ],
+    "claim_examples": [
+      "A factory worker lost two fingers in a press machine, awarded ₦3.8M under the Employees Compensation Act",
+      "A delivery driver was injured in a road accident while making company deliveries, claim settled at ₦1.5M"
+    ],
+    "objections": [
+      {"objection": "My staff are like family, I take care of them", "response": "That's commendable, but the Employees Compensation Act requires all employers to carry this insurance. Without it, you're personally liable for workplace injuries, and NAICOM can impose penalties of up to ₦500,000."},
+      {"objection": "We only have office staff, no manual work", "response": "Even office workers face risks—slips, trips, falls, repetitive strain injuries, and even stress-related claims. The law applies to all employees regardless of role."}
+    ],
+    "cross_sell": ["Group Personal Accident", "Group Life Assurance", "Public Liability"],
+    "proposal_template": "We recommend Employers Liability insurance for {{companyName}} to cover all {{employeeCount}} employees against workplace injuries and occupational diseases as required by law. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Is Employers Liability mandatory in Nigeria?", "a": "Yes, under the Employees Compensation Act 2010, all employers must provide this cover or face penalties."},
+      {"q": "What is the minimum sum insured per employee?", "a": "The act requires a minimum of ₦1M per employee, though higher limits are recommended."}
+    ],
+    "industries": ["SME", "MFG", "CHR", "CON", "SCH", "HOS", "TRN", "RET", "HOR", "AGR", "OIL", "GOV", "NGO"],
+    "premium_range": {"min": 10000, "max": 100000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Liability", "priority": "high"},
+      {"pillar": "Workforce Protection", "priority": "high"}
+    ]
+  },
+  {
+    "code": "GOODS_IN_TRANSIT",
+    "name": "Goods in Transit",
+    "category": "Marine & Transport",
+    "description": "Covers loss or damage to goods while being transported by road, rail, air, or courier within Nigeria.",
+    "who_needs_it": [
+      "Manufacturers shipping products",
+      "Distributors and wholesalers",
+      "Logistics and courier companies",
+      "Retailers receiving inventory"
+    ],
+    "common_risks": [
+      "Road accident damaging goods",
+      "Theft of goods during transit",
+      "Fire damage to goods in transit",
+      "Damage from improper handling"
+    ],
+    "exclusions": [
+      "Inherent vice (goods going bad naturally)",
+      "Insufficient or improper packaging",
+      "Delay unless specifically covered",
+      "Goods shipped via unauthorized carriers"
+    ],
+    "claim_examples": [
+      "A truck carrying ₦6.5M worth of electronics was hijacked along the Lagos-Ibadan expressway",
+      "A consignment of ₦2.3M in pharmaceutical products was destroyed when the delivery van caught fire"
+    ],
+    "objections": [
+      {"objection": "Our drivers are careful and our vehicles are reliable", "response": "You can control your drivers but not the other vehicles on the road, armed robbers, or sudden accidents. Just last year, cargo theft along Nigerian highways accounted for ₦48B in losses."},
+      {"objection": "We transfer the risk to the transporter", "response": "Transporter liability is often limited and difficult to enforce. A dedicated Goods in Transit policy ensures you're directly compensated without relying on the transporter's insurance."}
+    ],
+    "cross_sell": ["Marine Cargo", "Fleet Insurance", "Public Liability"],
+    "proposal_template": "We recommend Goods in Transit insurance for {{businessName}} covering goods valued up to ₦{{sumInsured}} during transportation within Nigeria. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Is goods in transit the same as marine cargo?", "a": "No. Goods in Transit covers domestic road/rail transport, while Marine Cargo covers cross-border and international shipments."},
+      {"q": "Can I insure goods on a per-trip basis?", "a": "Yes, we offer both annual policies and per-declaration (open cover) policies for flexible shipping volumes."}
+    ],
+    "industries": ["SME", "MFG", "TRN", "RET", "LOG", "AGR", "HOR", "TECH"],
+    "premium_range": {"min": 20000, "max": 120000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "medium"},
+      {"pillar": "Supply Chain", "priority": "high"}
+    ]
+  },
+  {
+    "code": "GROUP_PERSONAL_ACCIDENT",
+    "name": "Group Personal Accident",
+    "category": "Life & Health",
+    "description": "Provides financial compensation to employees or their families in case of accidental death, permanent disability, or temporary disablement.",
+    "who_needs_it": [
+      "Employers who want to protect their workforce",
+      "organizations with high-risk roles",
+      "Companies without group life insurance",
+      "Small businesses attracting talent"
+    ],
+    "common_risks": [
+      "Employee accidental death",
+      "Permanent disability from accident",
+      "Temporary disability from injury",
+      "Loss of income due to accident"
+    ],
+    "exclusions": [
+      "Suicide or self-inflicted injury",
+      "Injuries from war or civil commotion",
+      "Participation in hazardous sports (unless declared)",
+      "Pre-existing medical conditions"
+    ],
+    "claim_examples": [
+      "An employee suffered permanent loss of sight in one eye from a workplace chemical splash, receiving ₦4M in compensation",
+      "A staff member was paralyzed from the waist down in a road accident, policy paid ₦10M lump sum"
+    ],
+    "objections": [
+      {"objection": "We already have NHIS for our staff", "response": "NHIS covers medical treatment, not income replacement or lump-sum compensation. Group Personal Accident pays your staff (or their family) cash if they are injured or die—medical cover alone is not enough."},
+      {"objection": "It's an extra cost we don't need", "response": "For as little as ₦5,000 per employee per year, you provide a ₦5M+ benefit. It's one of the most appreciated and cost-effective staff benefits you can offer."}
+    ],
+    "cross_sell": ["Group Life Assurance", "Employers Liability", "Income Protection"],
+    "proposal_template": "We recommend Group Personal Accident cover for {{companyName}} insuring {{employeeCount}} employees against accidental death and disability. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Does this cover road accidents outside work?", "a": "Yes, most group personal accident policies provide 24-hour cover, including travel to and from work."},
+      {"q": "What is the typical sum insured per employee?", "a": "Sum insured typically ranges from ₦2M to ₦10M per employee, depending on role and seniority."}
+    ],
+    "industries": ["SME", "MFG", "CHR", "CON", "SCH", "HOS", "TRN", "RET", "HOR", "AGR", "OIL", "NGO", "GOV", "TECH", "FIN"],
+    "premium_range": {"min": 15000, "max": 500000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Workforce Protection", "priority": "high"},
+      {"pillar": "Employee Benefits", "priority": "medium"}
+    ]
+  },
+  {
+    "code": "BUSINESS_INTERRUPTION",
+    "name": "Business Interruption",
+    "category": "Property",
+    "description": "Replaces lost income and covers ongoing expenses when your business cannot operate due to an insured event like fire, flood, or equipment breakdown.",
+    "who_needs_it": [
+      "Manufacturing and production companies",
+      "Businesses with high fixed costs",
+      "Companies with perishable inventory",
+      "Any business that would struggle to survive a shutdown"
+    ],
+    "common_risks": [
+      "Loss of revenue during shutdown",
+      "Ongoing fixed costs (rent, salaries)",
+      "Extra cost of temporary premises",
+      "Loss of customer goodwill"
+    ],
+    "exclusions": [
+      "Losses from uninsured property damage",
+      "Normal seasonal fluctuations",
+      "Business losses from market conditions",
+      "Strikes or civil unrest (unless added)"
+    ],
+    "claim_examples": [
+      "A bakery fire shut down operations for 6 weeks, BI claim paid ₦8.2M for lost profits and fixed costs",
+      "A factory flood required 4 weeks of repairs, BI policy covered ₦12M in revenue loss and ₦3.5M in extra costs"
+    ],
+    "objections": [
+      {"objection": "We have fire insurance, that's enough", "response": "Fire insurance covers rebuilding your factory, but what about the income you lose while rebuilding? Most businesses that suffer a major loss and lack BI cover never reopen. BI is what keeps you in business during recovery."},
+      {"objection": "How do we calculate the sum insured?", "response": "We base it on your annual gross profit and the estimated time needed to recover. Our team will help you calculate this—typically 12-24 months of gross profit plus ongoing expenses."}
+    ],
+    "cross_sell": ["Fire & Special Perils", "Machinery Breakdown", "Public Liability"],
+    "proposal_template": "We recommend Business Interruption insurance for {{businessName}} with an indemnity period of {{months}} months, covering gross profit of up to ₦{{grossProfit}}. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "How long does the indemnity period last?", "a": "Standard indemnity periods are 12, 18, or 24 months. Choose based on how long you expect it would take to restore operations."},
+      {"q": "Is Business Interruption standalone or bundled?", "a": "It is usually bundled with a material damage policy (like Fire & Special Perils). Some insurers offer it standalone."}
+    ],
+    "industries": ["MFG", "CON", "HOS", "RET", "AGR", "OIL", "TRN", "SCH"],
+    "premium_range": {"min": 50000, "max": 500000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "high"},
+      {"pillar": "Revenue Protection", "priority": "high"}
+    ]
+  },
+  {
+    "code": "MACHINERY_BREAKDOWN",
+    "name": "Machinery Breakdown",
+    "category": "Engineering",
+    "description": "Covers sudden and unforeseen physical damage to machinery, plant, and equipment from mechanical or electrical breakdown, human error, or operator negligence.",
+    "who_needs_it": [
+      "Manufacturing companies",
+      "Factories with production machinery",
+      "Power generation plants",
+      "Businesses relying on critical equipment"
+    ],
+    "common_risks": [
+      "Mechanical breakdown of engines and motors",
+      "Electrical breakdown of generators and switchgear",
+      "Operator error damaging equipment",
+      "Boiler and pressure vessel explosion"
+    ],
+    "exclusions": [
+      "Normal wear and tear",
+      "Damage during maintenance or servicing",
+      "Gradual deterioration or corrosion",
+      "Software or programming errors",
+      "Damage from fire (covered by Fire policy)"
+    ],
+    "claim_examples": [
+      "A bottling plant's filling machine suffered gearbox failure, repairs cost ₦9.8M, covered under MB policy",
+      "A textile manufacturer's generator armature burned out due to voltage fluctuation, claim paid ₦4.2M"
+    ],
+    "objections": [
+      {"objection": "We service our machines regularly, breakdowns won't happen", "response": "Regular maintenance reduces but does not eliminate breakdown risk. Most breakdowns are caused by manufacturing defects, operator error, or unforeseen electrical faults—not lack of maintenance."},
+      {"objection": "Our machines are still under warranty", "response": "Manufacturer warranties typically expire after 1-2 years and don't cover operator error or electrical surges. Machinery Breakdown fills the gap after warranty expires and covers risks the warranty excludes."}
+    ],
+    "cross_sell": ["Business Interruption", "Fire & Special Perils", "Electronic Equipment"],
+    "proposal_template": "We recommend Machinery Breakdown cover for {{businessName}} to protect {{equipmentCount}} critical machines and equipment. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Does this cover loss of production due to breakdown?", "a": "No, that requires Business Interruption cover. Machinery Breakdown only covers the cost of repairing or replacing the damaged machine."},
+      {"q": "Are mobile generators covered?", "a": "Yes, mobile and standby generators can be covered, provided their location and usage are declared."}
+    ],
+    "industries": ["MFG", "CON", "OIL", "AGR", "TRN", "HOS"],
+    "premium_range": {"min": 35000, "max": 300000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "high"},
+      {"pillar": "Operations Continuity", "priority": "high"}
+    ]
+  },
+  {
+    "code": "PROFESSIONAL_INDEMNITY",
+    "name": "Professional Indemnity",
+    "category": "Liability",
+    "description": "Covers legal liability for claims of professional negligence, errors, omissions, or breach of duty arising from the provision of professional services.",
+    "who_needs_it": [
+      "Doctors, dentists, and medical practitioners",
+      "Lawyers and legal practitioners",
+      "Architects, engineers, and consultants",
+      "IT service providers and software companies",
+      "Accountants and financial advisors"
+    ],
+    "common_risks": [
+      "Medical malpractice claims",
+      "Negligent advice causing financial loss",
+      "Errors in design specifications",
+      "Failure to deliver professional services as contracted",
+      "Breach of confidentiality"
+    ],
+    "exclusions": [
+      "Criminal acts or fraud",
+      "Intentional wrongdoing",
+      "Claims arising before the policy inception",
+      "Employer-employee disputes",
+      "Fines and penalties"
+    ],
+    "claim_examples": [
+      "A patient sued a surgeon for ₦15M after a surgical complication led to permanent nerve damage",
+      "An engineering firm was sued for ₦8M when a structural design flaw caused a building defect"
+    ],
+    "objections": [
+      {"objection": "I have never been sued in 20 years of practice", "response": "Medical and professional litigation is rising sharply in Nigeria. Even if the claim is frivolous, defending it costs ₦1M-₦3M in legal fees alone. Professional Indemnity covers both the award and your defense costs."},
+      {"objection": "My professional body covers me", "response": "Most professional bodies in Nigeria provide limited cover (often ₦1M-₦5M) which is inadequate for serious claims. A standalone policy gives you limits from ₦10M upwards and covers gaps the body's scheme may not."}
+    ],
+    "cross_sell": ["Public Liability", "Cyber Insurance", "Directors & Officers"],
+    "proposal_template": "We recommend Professional Indemnity insurance for {{profession}} {{practitionerName}} with a limit of ₦{{limit}} per claim. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Does Professional Indemnity cover defamation?", "a": "For some professions (media, PR), defamation can be included. For most professionals, it covers negligence and errors only—not defamation."},
+      {"q": "Is there a retroactive date exclusion?", "a": "Yes, policies typically exclude claims arising from work done before a specified retroactive date. Continuous cover is important to avoid gaps."}
+    ],
+    "industries": ["HOS", "SCH", "TECH", "FIN", "LEGAL", "CON", "PROP"],
+    "premium_range": {"min": 75000, "max": 500000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Liability", "priority": "high"},
+      {"pillar": "Practice Protection", "priority": "high"}
+    ]
+  },
+  {
+    "code": "CONTRACTORS_ALL_RISK",
+    "name": "Contractors All Risk",
+    "category": "Engineering",
+    "description": "Covers construction, erection, and civil engineering projects against physical loss or damage to the works, materials, equipment, and third-party liability during the construction period.",
+    "who_needs_it": [
+      "Building and construction companies",
+      "Civil engineering contractors",
+      "Project owners and developers",
+      "Subcontractors on major projects"
+    ],
+    "common_risks": [
+      "Fire or storm damaging works under construction",
+      "Theft of building materials from site",
+      "Damage to plant and machinery on site",
+      "Collapse of structures during construction",
+      "Third-party injury or property damage at site"
+    ],
+    "exclusions": [
+      "Design errors or defects",
+      "Normal wear and tear of construction equipment",
+      "War, riots, and civil commotion (can be added)",
+      "Consequential loss (delay in completion)",
+      "Fines and penalties for delay"
+    ],
+    "claim_examples": [
+      "A storm collapsed scaffolding and damaged the building frame of a Lagos high-rise, claim paid ₦18.5M",
+      "Construction materials including ₦4.8M worth of steel rods were stolen from a site in Abuja"
+    ],
+    "objections": [
+      {"objection": "The main contractor has insurance, we don't need our own", "response": "The main contractor's policy may not cover subcontractors or may have limits that don't fully protect your interest. Having your own CAR policy ensures you're independently protected."},
+      {"objection": "Insurance will eat into our project margin", "response": "CAR insurance typically costs 0.3-0.8% of the contract value. For a ₦100M project, that's ₦300,000-₦800,000. The cost of even one incident—theft, fire, or collapse—could wipe out your entire margin."}
+    ],
+    "cross_sell": ["Public Liability", "Machinery Breakdown", "Business Interruption"],
+    "proposal_template": "We recommend Contractors All Risk insurance for the {{projectName}} project valued at ₦{{contractValue}}. Cover includes works, materials, and third-party liability. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}}.",
+    "faqs": [
+      {"q": "Does CAR insurance cover the maintenance period?", "a": "Yes, CAR policies typically include a 12-month maintenance period cover after completion."},
+      {"q": "Can we add delay in completion cover?", "a": "Yes, a Delay in Start-Up (DSU) extension is available to cover revenue loss if the project is delayed due to an insured event."}
+    ],
+    "industries": ["CON", "PROP", "OIL", "GOV"],
+    "premium_range": {"min": 100000, "max": 2000000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Project Protection", "priority": "high"},
+      {"pillar": "Asset Protection", "priority": "high"}
+    ]
+  },
+  {
+    "code": "COMPREHENSIVE_MOTOR",
+    "name": "Comprehensive Motor Insurance",
+    "category": "Motor",
+    "description": "Full motor insurance covering damage to your vehicle, third-party liability, theft, fire, and vandalism. Also covers damage from accidents, floods, and other perils.",
+    "who_needs_it": [
+      "Vehicle owners who want full protection",
+      "Fleet operators and transport companies",
+      "Corporate organizations with company vehicles",
+      "Owners of expensive or financed vehicles"
+    ],
+    "common_risks": [
+      "Collision and accident damage",
+      "Vehicle theft or hijacking",
+      "Fire damage to vehicle",
+      "Third-party property damage",
+      "Flood damage during rainy season"
+    ],
+    "exclusions": [
+      "Wear and tear and mechanical breakdown",
+      "Tyres damaged by road conditions alone",
+      "Driving under the influence of alcohol/drugs",
+      "Vehicle used for unauthorized purposes (e.g., racing)",
+      "Claims during grace period if premium unpaid"
+    ],
+    "claim_examples": [
+      "A Toyota Camry was stolen in Lagos, comprehensive policy paid ₦9.2M (market value)",
+      "A bus belonging to a transport company was involved in a collision, repairs cost ₦3.8M"
+    ],
+    "objections": [
+      {"objection": "Third-party insurance is cheaper and mandatory", "response": "Third-party only covers damage to others—not your vehicle. If your car is stolen or damaged in an accident, you get nothing. For a ₦5M car, comprehensive cover adds only ₦100,000-₦250,000 more per year than third-party."},
+      {"objection": "I am a very careful driver", "response": "Your driving skill doesn't prevent theft, vandalism, flooding, or being hit by an uninsured driver. Those are the risks comprehensive cover protects against."}
+    ],
+    "cross_sell": ["Goods in Transit", "Fleet Insurance", "Public Liability"],
+    "proposal_template": "We recommend Comprehensive Motor Insurance for your {{vehicleMake}} {{vehicleModel}} ({{year}}) valued at ₦{{vehicleValue}}. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "What is the excess on motor comprehensive policies?", "a": "Standard excess is 2-5% of sum insured, minimum ₦25,000 for private vehicles and ₦50,000 for commercial vehicles."},
+      {"q": "Does comprehensive cover windscreen damage?", "a": "Yes, we can include windscreen and glass cover, typically with a separate lower excess of ₦5,000-₦10,000."}
+    ],
+    "industries": ["SME", "TRN", "HOR", "OIL", "GOV", "NGO", "TECH", "FIN", "RET", "MFG"],
+    "premium_range": {"min": 50000, "max": 350000},
+    "commission_rate": 10,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "high"},
+      {"pillar": "Motor", "priority": "high"}
+    ]
+  },
+  {
+    "code": "GROUP_LIFE",
+    "name": "Group Life Assurance",
+    "category": "Life & Health",
+    "description": "Provides a lump sum payout to beneficiaries if an employee dies during the period of cover, whether due to natural causes, accident, or illness.",
+    "who_needs_it": [
+      "All employers (mandatory under Nigerian law)",
+      "organizations with 3 or more employees",
+      "Companies seeking employee retention",
+      "Businesses fulfilling regulatory requirements"
+    ],
+    "common_risks": [
+      "Employee death from natural causes",
+      "Fatal workplace accidents",
+      "Death from illness or disease",
+      "Key employee loss impact"
+    ],
+    "exclusions": [
+      "Suicide within first 12 months (varies by insurer)",
+      "Death from pre-existing conditions not disclosed",
+      "Participation in criminal activities",
+      "War or active military service"
+    ],
+    "claim_examples": [
+      "An employee passed away from a heart attack, Group Life paid ₦5M to the nominated beneficiary",
+      "A staff member died in a road accident, family received ₦3M death benefit under the employer's scheme"
+    ],
+    "objections": [
+      {"objection": "We already have Group Personal Accident", "response": "Group Personal Accident covers accidental death only. Group Life covers death from ALL causes including illness and natural causes. Most employers need both."},
+      {"objection": "It's not mandatory for small businesses", "response": "Actually, the Pension Reform Act and Employees Compensation Act require life cover for all employees. Beyond legal requirements, it's a low-cost way (₦5,000-₦15,000 per employee) to provide a meaningful benefit that families truly value."}
+    ],
+    "cross_sell": ["Group Personal Accident", "Employers Liability", "Income Protection"],
+    "proposal_template": "We recommend Group Life Assurance for {{companyName}} covering {{employeeCount}} employees with a sum insured of ₦{{sumInsured}} per employee. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "What is the minimum sum insured for Group Life?", "a": "There is no statutory minimum, but most insurers recommend at least 3-5 times annual salary per employee."},
+      {"q": "Can we add critical illness cover?", "a": "Yes, critical illness can be added as a rider, providing a lump sum if an employee is diagnosed with specified conditions like cancer or stroke."}
+    ],
+    "industries": ["SME", "MFG", "CHR", "CON", "SCH", "HOS", "TRN", "RET", "HOR", "AGR", "OIL", "GOV", "NGO", "TECH", "FIN", "ENT", "LEGAL", "LOG"],
+    "premium_range": {"min": 20000, "max": 400000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Workforce Protection", "priority": "high"},
+      {"pillar": "Employee Benefits", "priority": "high"}
+    ]
+  },
+  {
+    "code": "CYBER_INSURANCE",
+    "name": "Cyber Insurance",
+    "category": "Technology & Specialty",
+    "description": "Covers financial losses, legal costs, and recovery expenses arising from data breaches, cyber attacks, ransomware, phishing, and other cyber incidents.",
+    "who_needs_it": [
+      "Fintech companies and digital lenders",
+      "Banks and financial institutions",
+      "E-commerce and online retailers",
+      "Healthcare providers with patient data",
+      "Any business storing customer data digitally"
+    ],
+    "common_risks": [
+      "Data breach exposing customer information",
+      "Ransomware attacks encrypting systems",
+      "Phishing scams compromising accounts",
+      "Business interruption from cyber attack",
+      "Regulatory fines for data breaches"
+    ],
+    "exclusions": [
+      "Acts of war or cyber warfare by nation states",
+      "Intentional acts by the insured",
+      "Prior known breaches not disclosed",
+      "Loss of value from intellectual property theft",
+      "Infrastructure failures not caused by cyber attack"
+    ],
+    "claim_examples": [
+      "A Lagos fintech company suffered a ransomware attack demanding $50,000 in Bitcoin, cyber policy covered ₦8.5M in recovery costs and ransom negotiation",
+      "An e-commerce platform had 50,000 customer records leaked, cyber insurance covered ₦4.2M in notification costs, credit monitoring, and regulatory fines"
+    ],
+    "objections": [
+      {"objection": "We have good IT security, we won't get hacked", "response": "Even the best IT security cannot prevent all breaches. In 2023, 67% of Nigerian businesses experienced some form of cyber attack. Cyber insurance provides the financial safety net for when—not if—a breach occurs."},
+      {"objection": "Cyber insurance is expensive", "response": "For SMEs, cyber insurance starts at ₦100,000-₦300,000 per year for ₦10M-₦25M in cover. Compare that to the average cost of a data breach in Nigeria, which is ₦15M-₦50M including regulatory fines."}
+    ],
+    "cross_sell": ["Professional Indemnity", "Business Interruption", "Electronic Equipment"],
+    "proposal_template": "We recommend Cyber Insurance for {{businessName}} with coverage limits of ₦{{limit}} for data breach response, ransomware, and business interruption. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Does cyber insurance cover ransomware payments?", "a": "Most policies cover ransom payments (subject to sanctions screening) and include access to a breach response team and negotiators."},
+      {"q": "Is social engineering / phishing covered?", "a": "Yes, many policies now include social engineering fraud, covering losses from fraudulent transfer instructions."},
+      {"q": "What about NDPR fines?", "a": "Cyber insurance can cover NITDA/NDPR regulatory fines and defense costs arising from data breaches."}
+    ],
+    "industries": ["TECH", "FIN", "HOS", "SCH", "TEL", "RET", "OIL", "GOV", "SME"],
+    "premium_range": {"min": 100000, "max": 1500000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Data Protection", "priority": "high"},
+      {"pillar": "Technology Risk", "priority": "high"}
+    ]
+  },
+  {
+    "code": "MARINE_CARGO",
+    "name": "Marine Cargo Insurance",
+    "category": "Marine & Transport",
+    "description": "Covers loss of or damage to goods, merchandise, or cargo while being transported by sea, air, or land across international borders.",
+    "who_needs_it": [
+      "Importers and exporters",
+      "Manufacturers importing raw materials",
+      "Trading companies and distributors",
+      "Shipping and freight forwarding companies"
+    ],
+    "common_risks": [
+      "Cargo damage from rough seas or storms",
+      "Theft or pilferage during loading/unloading",
+      "Cargo loss from vessel sinking or stranding",
+      "Damage from improper container storage",
+      "Customs rejection of damaged goods"
+    ],
+    "exclusions": [
+      "Inherent vice (perishable goods going bad)",
+      "Insufficient packaging for the voyage",
+      "Delay in arrival (unless specifically covered)",
+      "Loss due to strikes or war (can be added)",
+      "Ordinary leakage or breakage in transit"
+    ],
+    "claim_examples": [
+      "A container of electronics from China was damaged by seawater ingress during the voyage, claim paid ₦12.8M",
+      "A shipment of textile materials destined for Kano was stolen from a Lagos warehouse before export, covered ₦6.5M"
+    ],
+    "objections": [
+      {"objection": "The shipping line covers our cargo", "response": "Shipping lines have limited liability under international conventions—usually $500-$2,000 per package, regardless of your cargo's value. That's far below the actual value of most shipments."},
+      {"objection": "We only import occasionally", "response": "We offer single-trip policies for occasional shipments. For a small premium (0.3-0.8% of cargo value), you can protect each shipment individually without an annual commitment."}
+    ],
+    "cross_sell": ["Goods in Transit", "Fire & Special Perils", "Warehouse Cover"],
+    "proposal_template": "We recommend Marine Cargo insurance for {{businessName}} covering shipments valued up to ₦{{cargoValue}} on {{tradeRoute}} route. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} per shipment or annually under open cover.",
+    "faqs": [
+      {"q": "What is the difference between Institute Cargo Clauses A, B, and C?", "a": "Clause A provides all-risks cover (broadest), Clause B covers specified perils, and Clause C covers major perils only (most limited). We recommend Clause A for most shipments."},
+      {"q": "Can I insure goods on FOB versus CIF terms?", "a": "Yes, you can insure cargo regardless of Incoterms. The key is having insurable interest at the time of loss. We'll advise on the right point to attach cover."}
+    ],
+    "industries": ["MFG", "TRN", "LOG", "RET", "OIL", "AGR"],
+    "premium_range": {"min": 50000, "max": 500000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Supply Chain", "priority": "high"},
+      {"pillar": "Asset Protection", "priority": "medium"}
+    ]
+  },
+  {
+    "code": "KEYMAN_INSURANCE",
+    "name": "Keyman Insurance",
+    "category": "Life & Health",
+    "description": "A life or critical illness policy on a key employee or director where the business is the beneficiary, protecting the company against financial loss if that person dies or becomes critically ill.",
+    "who_needs_it": [
+      "Businesses dependent on a founder or director",
+      "Companies with hard-to-replace technical experts",
+      "Partnerships where one partner's death impacts the business",
+      "organizations with key salespeople or rainmakers"
+    ],
+    "common_risks": [
+      "Death of a founder or key executive",
+      "Critical illness of a key employee",
+      "Loss of clients and revenue after keyman departure",
+      "Cost of recruiting and training a replacement"
+    ],
+    "exclusions": [
+      "Suicide within first 12 months",
+      "Pre-existing medical conditions not disclosed",
+      "Hazardous activities not declared",
+      "War or civil unrest"
+    ],
+    "claim_examples": [
+      "The founder of a Lagos tech startup died suddenly, Keyman Insurance paid ₦25M to the company, enabling it to hire a CEO and continue operations",
+      "A lead engineer suffered a stroke and could no longer work, critical illness rider paid ₦15M to the company for recruitment and transition costs"
+    ],
+    "objections": [
+      {"objection": "We are a large company, no one person is irreplaceable", "response": "Some roles take 6-12 months to replace effectively. During that gap, revenue can drop 30-50%. Keyman gives you the capital to bridge the gap, recruit, and stabilize. Every company has people they cannot afford to lose suddenly."},
+      {"objection": "It's too expensive for a 'what if'", "response": "Premiums for a 35-year-old keyman at ₦20M cover cost about ₦60,000-₦100,000 per year. If you lose that person for 6 months, your business could lose ₦10M+. Can you afford not to insure the person your business depends on?"}
+    ],
+    "cross_sell": ["Group Life Assurance", "Income Protection", "Business Interruption"],
+    "proposal_template": "We recommend Keyman Insurance for {{companyName}} on the life of {{keyPersonName}} for a sum assured of ₦{{sumAssured}}. The company is the beneficiary. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Who owns and pays for Keyman Insurance?", "a": "The business owns the policy, pays the premiums, and is the beneficiary. The key person's life is the insured life."},
+      {"q": "Is Keyman Insurance tax deductible?", "a": "Yes, premiums paid by the company are generally tax-deductible as a business expense, while the payout is tax-free."}
+    ],
+    "industries": ["TECH", "FIN", "MFG", "CON", "HOS", "LEGAL", "OIL", "SME"],
+    "premium_range": {"min": 60000, "max": 500000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Workforce Protection", "priority": "high"},
+      {"pillar": "Business Continuity", "priority": "high"}
+    ]
+  },
+  {
+    "code": "INCOME_PROTECTION",
+    "name": "Income Protection",
+    "category": "Life & Health",
+    "description": "Replaces a portion of an individual's income if they cannot work due to illness or injury, providing monthly payments until they can return to work or retire.",
+    "who_needs_it": [
+      "Self-employed professionals",
+      "Business owners without sick pay",
+      "High-earning employees",
+      "Sole breadwinners supporting families"
+    ],
+    "common_risks": [
+      "Long-term illness preventing work",
+      "Accident causing extended disability",
+      "Mental health conditions requiring time off",
+      "Inability to perform own occupation"
+    ],
+    "exclusions": [
+      "Pre-existing medical conditions (during waiting period)",
+      "Voluntary unemployment or redundancy",
+      "Injuries from criminal activities",
+      "Normal pregnancy and childbirth (unless complications)"
+    ],
+    "claim_examples": [
+      "A surgeon was diagnosed with a hand tremor preventing surgery, income protection paid 75% of monthly income (₦850,000/month) for 18 months",
+      "A tech founder was diagnosed with severe depression requiring 6 months of treatment, policy paid ₦350,000/month during recovery"
+    ],
+    "objections": [
+      {"objection": "I have savings, I can survive a few months", "response": "Most people's savings only last 3-6 months. If a serious illness keeps you out of work for 1-2 years, your savings will run out. Income Protection pays you monthly until you can return to work."},
+      {"objection": "My NHIS covers medical treatment", "response": "NHIS covers the cost of treatment, not your lost income. Even with free treatment, you still need to pay your rent, school fees, and daily expenses while unable to work."}
+    ],
+    "cross_sell": ["Group Personal Accident", "Group Life Assurance", "Keyman Insurance"],
+    "proposal_template": "We recommend Income Protection for {{clientName}} providing {{percentage}}% of monthly income (up to ₦{{monthlyBenefit}}) with a {{deferredPeriod}}-day waiting period. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "What percentage of income does this replace?", "a": "Most policies replace 50-75% of your monthly income, up to a maximum monthly benefit (typically ₦1M-₦2M)."},
+      {"q": "How long is the waiting period before benefits start?", "a": "Common deferred periods are 30, 60, 90, or 180 days. Longer waiting periods mean lower premiums."}
+    ],
+    "industries": ["TECH", "FIN", "HOS", "LEGAL", "CON", "SME", "SCH"],
+    "premium_range": {"min": 75000, "max": 600000},
+    "commission_rate": 12,
+    "risk_mappings": [
+      {"pillar": "Workforce Protection", "priority": "high"},
+      {"pillar": "Personal Finance", "priority": "medium"}
+    ]
+  },
+  {
+    "code": "FIRE_INSURANCE",
+    "name": "Fire Insurance",
+    "category": "Property",
+    "description": "Standalone fire insurance covering the building structure only against fire, lightning, and explosion risks. Ideal for property owners and real estate investors.",
+    "who_needs_it": [
+      "Property owners and landlords",
+      "Real estate investors",
+      "Homeowners with mortgages",
+      "Commercial building owners"
+    ],
+    "common_risks": [
+      "Fire destroying building structure",
+      "Lightning damage to building",
+      "Explosion damaging property",
+      "Loss of rental income after fire"
+    ],
+    "exclusions": [
+      "Contents and equipment inside the building",
+      "Storm, flood, earthquake (add Special Perils rider)",
+      "Wear and tear of building materials",
+      "Electrical or mechanical breakdown",
+      "Acts of war"
+    ],
+    "claim_examples": [
+      "A fire gutted a 4-story commercial building in Ikeja, building-only fire policy paid ₦35M for structural rebuilding",
+      "Lightning struck a residential building causing ₦2.5M in structural damage to the roof and electrical system"
+    ],
+    "objections": [
+      {"objection": "The tenant should insure the building", "response": "Tenants typically insure their contents and business, not the building structure. As the property owner, the building is your asset to protect. Most mortgage lenders also require building insurance."},
+      {"objection": "Fire insurance is too narrow", "response": "You're right—that's why we recommend upgrading to Fire & Special Perils which adds storm, flood, earthquake, and other risks for a small additional premium. For budget-conscious clients, Fire Insurance is a good starting point."}
+    ],
+    "cross_sell": ["Fire & Special Perils", "Public Liability", "Business Interruption"],
+    "proposal_template": "We recommend Fire Insurance for {{propertyName}} located at {{propertyAddress}} with a sum insured of ₦{{buildingValue}}. Estimated premium: ₦{{minPremium}} - ₦{{maxPremium}} annually.",
+    "faqs": [
+      {"q": "Is fire insurance the same as homeowners insurance?", "a": "No. Fire insurance covers only the building structure against fire. Homeowners insurance is a broader package covering building, contents, and liability."},
+      {"q": "Do I need a valuation before insuring?", "a": "Yes, we recommend a professional valuation or at minimum a rebuild cost assessment to ensure adequate sum insured and avoid average clause penalties."}
+    ],
+    "industries": ["PROP", "SME", "CHR", "SCH", "HOS", "HOR", "GOV"],
+    "premium_range": {"min": 20000, "max": 200000},
+    "commission_rate": 15,
+    "risk_mappings": [
+      {"pillar": "Asset Protection", "priority": "high"},
+      {"pillar": "Property", "priority": "high"}
+    ]
+  }
+]

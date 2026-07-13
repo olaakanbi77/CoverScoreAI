@@ -2,8 +2,55 @@ const express = require('express');
 const { all, get } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const { requireAgent } = require('../middleware/rbac');
+const { executeQuery, reportGenerator } = require('../analytics/index');
 
 const router = express.Router();
+
+router.get('/query/:name', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const rows = await executeQuery(req.params.name, req.query, { all, get });
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/report/weekly', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const report = await reportGenerator.advisorWeeklyReport(req.user.id, { all, get });
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/report/monthly', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const now = new Date();
+    const report = await reportGenerator.monthlyOverview(now.getMonth() + 1, now.getFullYear(), { all, get });
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/report/funnel-health', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const report = await reportGenerator.funnelHealthReport({ all, get });
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/report/assessment/:id', authenticate, requireAgent, async (req, res, next) => {
+  try {
+    const report = await reportGenerator.assessmentDeepDive(parseInt(req.params.id), { all, get });
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get('/overview', authenticate, requireAgent, async (req, res, next) => {
   try {

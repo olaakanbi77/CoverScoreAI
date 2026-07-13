@@ -6,6 +6,7 @@ const { authenticate } = require('../middleware/auth');
 const aiService = require('../services/aiService');
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
+const { generateProposal } = require('../proposals/index');
 
 const requireSalesOrAdminApi = (req, res, next) => {
   if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
@@ -33,6 +34,58 @@ router.post('/generate', authenticate, requireSalesOrAdminApi, async (req, res) 
   } catch (err) {
     console.error('Error generating proposal:', err);
     res.status(500).json({ error: 'Failed to generate proposal' });
+  }
+});
+
+// Generate PDF proposal from assessment data
+router.post('/generate-pdf', authenticate, requireSalesOrAdminApi, async (req, res) => {
+  try {
+    const { leadId } = req.body;
+    if (!leadId) return res.status(400).json({ error: 'leadId is required' });
+
+    const lead = await get('SELECT * FROM leads WHERE id = ?', [leadId]);
+    if (!lead) return res.status(404).json({ error: 'Lead not found' });
+
+    let assessment = null;
+    if (lead.assessment_id) {
+      assessment = await get('SELECT * FROM assessments WHERE id = ?', [lead.assessment_id]);
+    }
+
+    const assessmentData = {
+      name: lead.name,
+      business_name: lead.business_name,
+      email: lead.email,
+      score: lead.score || 50,
+      risk_level: lead.risk_level || 'Moderate',
+      scored_pillars: {},
+      answers: {}
+    };
+
+    if (assessment?.answers) {
+      const parsed = typeof assessment.answers === 'string' ? JSON.parse(assessment.answers) : assessment.answers;
+      if (parsed.answers) assessmentData.answers = parsed.answers;
+    }
+
+    const knowledge = require('../knowledge/index');
+    const products = knowledge.getByIndustry(lead.industry || 'sme');
+
+    const result = generateProposal(assessmentData, products, {
+      name: req.user?.name || 'CoverScore Advisor',
+      phone: process.env.WHATSAPP_BOT_NUMBER,
+      email: process.env.ADMIN_EMAIL || 'advisor@coverscore.ai'
+    });
+
+    const token = require('crypto').randomBytes(16).toString('hex');
+    const proposalId = (await run(
+      'INSERT INTO proposals (lead_id, advisor_id, title, content, amount, status, token) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [leadId, req.user?.id, `CoverScore Proposal - ${new Date().toLocaleDateString()}`, JSON.stringify(result), 0, 'Generated', token]
+    )).lastInsertRowid;
+
+    const proposal = await get('SELECT * FROM proposals WHERE id = ?', [proposalId]);
+    res.json({ success: true, proposal, pdfUrl: result.pdfUrl || result.htmlUrl, proposalNumber: result.proposalNumber });
+  } catch (err) {
+    console.error('Error generating PDF proposal:', err);
+    res.status(500).json({ error: 'Failed to generate PDF proposal' });
   }
 });
 

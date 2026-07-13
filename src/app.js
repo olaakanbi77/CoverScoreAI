@@ -622,6 +622,7 @@ app.get('/settings', (req, res) => {
 });
 
 const webhookRoutes = require('./routes/webhook');
+const renewalRoutes = require('./routes/renewals');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/assessment', assessmentRoutes);
@@ -633,6 +634,7 @@ app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/webhook', webhookRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/proposals', proposalsRoutes);
+app.use('/api/renewals', renewalRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/advisor', advisorRoutes);
 app.use('/reports', reportsRoutes);
@@ -680,5 +682,12 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error', message: err.message });
 });
+
+// Initialize renewal scheduler on startup (runs daily check)
+const { runDailyRenewalCheck } = require('./renewals/scheduler');
+runDailyRenewalCheck().catch(err => console.error('[Renewal Scheduler] Initial run error:', err.message));
+setInterval(() => {
+  runDailyRenewalCheck().catch(err => console.error('[Renewal Scheduler] Interval run error:', err.message));
+}, 24 * 60 * 60 * 1000);
 
 module.exports = app;

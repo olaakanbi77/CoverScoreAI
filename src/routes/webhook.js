@@ -19,6 +19,7 @@ const flowMap = {
   'entrepreneur': 'ENT', 'sme': 'SME', 'business': 'SME'
 };
 const { runRiskIntelligence } = require('../rie/index');
+const { renewalEngine } = require('../renewals/index');
 
 const resolvePrefix = (ind) => {
   if (!ind) return 'SME';
@@ -470,6 +471,17 @@ router.post('/evolution', async (req, res) => {
               assessmentData.name || 'WhatsApp User', lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
+
+            // Check for expiring policies after assessment completion
+            try {
+              const { all: dbAll, get: dbGet, run: dbRun } = require('../config/database');
+              const renewalActions = await renewalEngine.checkExpiringPolicies({ all: dbAll, get: dbGet, run: dbRun });
+              if (renewalActions.length > 0) {
+                console.log(`   [Renewal] ${renewalActions.length} renewal actions triggered for lead ${lead.id}`);
+              }
+            } catch (renewalErr) {
+              console.error(`   [Renewal] Background check error: ${renewalErr.message}`);
+            }
           } catch (e) {
             console.error('Background setImmediate error:', e);
           }
