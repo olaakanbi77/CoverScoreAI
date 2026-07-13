@@ -18,6 +18,7 @@ const flowMap = {
   'young': 'YPR', 'retirement': 'RET', 'income': 'INC', 'health': 'HLT',
   'entrepreneur': 'ENT', 'sme': 'SME', 'business': 'SME'
 };
+const { runRiskIntelligence } = require('../rie/index');
 
 const resolvePrefix = (ind) => {
   if (!ind) return 'SME';
@@ -1333,10 +1334,38 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
+    // ===== Risk Intelligence Engine (RIE) — run after scoring completes =====
+    if (assessmentData._scored && prefix) {
+      try {
+        const rieResult = runRiskIntelligence(
+          prefix,
+          assessmentData.answers || {},
+          scoredCats || {},
+          {
+            score: assessmentData.score,
+            advisorRequested: assessmentData.advisor_requested || false,
+            businessEntity: lead?.entity_type === 'business',
+            hasRevenue: !!(lead?.email || assessmentData.email),
+            hasEmployees: !!(assessmentData.answers?.SME_013 || assessmentData.answers?.MFG_013)
+          }
+        );
+        assessmentData.rie = rieResult;
+        console.log(`   [RIE] Opportunity Score: ${rieResult.opportunityScore}, Products: ${rieResult.recommendedProducts.length}, Follow-up: ${rieResult.followUp.nextAction}`);
+      } catch (rieErr) {
+        console.error(`   [RIE] Error: ${rieErr.message}`);
+      }
+    }
+
     console.log(`   [State Save] Saving lead state (finalState: ${assessmentData._scored ? 'awaiting_consultation' : nextState})...`);
     const finalState = assessmentData._scored ? 'awaiting_consultation' : nextState;
-    await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
-      [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
+    const oppScore = assessmentData.rie?.opportunityScore;
+    if (oppScore != null) {
+      await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ?, sales_score = ? WHERE id = ?',
+        [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), oppScore, lead.id]);
+    } else {
+      await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+        [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
+    }
 
     if (assessmentData.name || assessmentData.email) {
       await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email) WHERE id = ?',
