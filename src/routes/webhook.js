@@ -1214,7 +1214,7 @@ router.post('/evolution', async (req, res) => {
           SME: [
             { q: 'SME_011', values: ['Yes'], text: 'consistent monthly revenue that supports business stability' },
             { q: 'SME_013', values: ['1\u201310', '11\u201350'], text: 'manageable workforce size that keeps liability exposure contained' },
-            { q: 'SME_015', values: ['Yes'], text: 'a dedicated business location for your operations' },
+            { q: 'SME_015', values: ['Yes'], text: 'an established base of operations for your business' },
             { q: 'SME_016', values: ['Yes'], text: 'comprehensive fire and burglary insurance for your business premises' },
             { q: 'SME_017', values: ['Yes easily'], text: 'strong financial resilience to sustain operations through a three-month closure' }
           ]

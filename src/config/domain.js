@@ -501,7 +501,7 @@ const domainConfig = {
     firstStepTexts: {
       'workforce': 'Arrange Employer\u2019s Liability and comprehensive workforce insurance to protect your employees and reduce your business\u2019s exposure to employment-related claims.',
       'financial': 'Review your business insurance coverage to ensure it adequately matches your current revenue scale and risk profile.',
-      'asset protection': 'Arrange comprehensive Fire & Burglary Insurance as the foundation of your business continuity plan, helping your business recover more quickly after a major disruption.',
+      'asset protection': 'Arrange comprehensive Fire & Burglary Insurance to protect your premises, equipment, stock, and other business assets. This forms a key part of a strong business continuity plan and can significantly improve your ability to recover after a major disruption.',
       'business continuity': 'Develop a formal business continuity plan covering financial reserves, insurance, and operational recovery steps to sustain your business through a prolonged disruption.'
     },
     realLifeContext: "Here\u2019s what this means in real life: If a fire, burglary, or prolonged closure hit your business today, would you be able to recover? Your CoverScore measures how resilient your business is to unexpected disruptions\u2014and every improvement means a stronger safety net for your employees and operations."
