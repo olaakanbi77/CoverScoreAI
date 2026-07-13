@@ -1229,8 +1229,8 @@ router.post('/evolution', async (req, res) => {
       };
       const strengths = buildStrengths(answers, prefix);
 
-      // ===== Message 3: What You're Doing Well + Risk Story\u2122 + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
-      let msg3 = '';
+      // ===== Message 3a: What You're Doing Well + Risk Story\u2122 + If Nothing Changes =====
+      let msg3a = '';
       const riskStoryText = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
       if (strengths.length > 0) {
         const lastS = strengths.pop();
@@ -1238,11 +1238,10 @@ router.post('/evolution', async (req, res) => {
         const count = strengths.length + 1;
         const intro = count === 1 ? 'Your assessment identified an important strength.' : 'Your assessment identified several important strengths.';
         const bridge = count === 1 ? 'This provides' : 'Together, these provide';
-        msg3 = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. ${bridge} a solid operational foundation on which stronger resilience can be built.`;
+        msg3a = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. ${bridge} a solid operational foundation on which stronger resilience can be built.`;
       }
-      if (msg3) msg3 += '\n\n';
-      msg3 += riskStoryText;
-      // If Nothing Changes\u2122 — consequence of inaction (between risk story and forecast)
+      if (msg3a) msg3a += '\n\n';
+      msg3a += riskStoryText;
       const ifNothingChangeTexts = {
         HOS: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`,
         MFG: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your manufacturing operation could face extended production downtime, higher recovery costs, lost customer commitments, increased legal exposure, and greater difficulty restoring operations following a major incident.`,
@@ -1253,18 +1252,21 @@ router.post('/evolution', async (req, res) => {
         SME: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your business could face prolonged closure, lost revenue, increased legal exposure, damage to your reputation with customers and suppliers, and greater difficulty recovering following a major incident.`
       };
       const ifNothingChanges = ifNothingChangeTexts[prefix] || null;
-      if (ifNothingChanges) msg3 += `\n\n${ifNothingChanges}`;
+      if (ifNothingChanges) msg3a += `\n\n${ifNothingChanges}`;
+      postMessages.push({ type: 'report_link', text: msg3a, _delay: 3000 });
+
+      // ===== Message 3b: Resilience Forecast + Improvement Potential + First Step + Report =====
+      let msg3b = '';
       const forecast = buildResilienceForecast(scoredCats, assessmentData.score, answers, prefix, dom, reportName);
-      if (forecast) msg3 += `\n\n${forecast.text}`;
-      // Your Improvement Potential\u2122
+      if (forecast) msg3b += `${forecast.text}`;
       if (forecast && forecast.projectedScore > assessmentData.score) {
         const diff = forecast.projectedScore - assessmentData.score;
-        msg3 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
+        msg3b += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
       }
       const recommendation = buildRecommendation(scoredCats, dom);
-      if (recommendation) msg3 += `\n\n${recommendation}`;
-      msg3 += `\n\nYour complete ${reportName} is ready.\n\nIt includes:\n\n\u2713 Your detailed CoverScore breakdown\n\u2713 Personalised recommendations\n\u2713 Protection options\n\u2713 Practical next steps\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
-      postMessages.push({ type: 'report_link', text: msg3, _delay: 3000 });
+      if (recommendation) msg3b += `\n\n${recommendation}`;
+      msg3b += `\n\nYour complete ${reportName} is ready.\n\nIt includes:\n\n\u2713 Your detailed CoverScore breakdown\n\u2713 Personalised recommendations\n\u2713 Protection options\n\u2713 Practical next steps\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
+      postMessages.push({ type: 'report_link', text: msg3b, _delay: 3000 });
 
       // ===== Message 4: Advisor CTA =====
       const advisorCTAs = {
