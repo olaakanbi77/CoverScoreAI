@@ -829,13 +829,13 @@ const domainConfig = {
           ]
         },
         'Legal Liability': {
-          base: "Your assessment indicates that your church may not be adequately protected against event liability.",
+          base: "Your assessment shows that your church welcomes people through its doors each week, yet key safeguards are not fully in place to protect both your congregation and your ministry.",
           answerChecks: [
-            { q: 'CHR_015', values: ['No'], append: "Without insurance if a congregant is injured on church premises, your church faces significant legal exposure." },
-            { q: 'CHR_012', values: ["Yes"], append: "Incidents or injuries on your premises in the past 3 years indicate safety gaps that need attention." },
-            { q: 'CHR_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety, critical responsibilities may go unaddressed." }
+            { q: 'CHR_015', values: ['No'], append: "Without insurance if a congregant is injured on your premises, a single incident could create significant financial and legal pressure that distracts from your mission." },
+            { q: 'CHR_012', values: ["Yes"], append: "Previous incidents on your premises indicate that safety gaps need attention before they lead to more serious consequences." },
+            { q: 'CHR_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety, critical responsibilities for protecting your congregation may go unaddressed." }
           ],
-          suffix: "Securing comprehensive public liability insurance for your premises is essential.",
+          suffix: "Strengthening these safeguards helps your church continue serving its congregation with confidence.",
           whyChecks: [
             { q: 'CHR_015', values: ['No'], text: "Without public liability insurance, your church faces significant financial and legal exposure if a congregant is injured on your premises during a service or event." },
             { q: 'CHR_023', values: ['No one specifically assigned'], text: "With no one specifically responsible for health and safety, your church lacks the governance needed to manage premises risks and respond effectively to incidents." }
@@ -864,10 +864,10 @@ const domainConfig = {
       'property': 'getting fire insurance for the church building and contents to protect your property'
     },
     firstStepTexts: {
-      'operations': 'Review comprehensive public liability insurance for large gatherings and document emergency procedures for services and events.',
-      'assets': 'Secure specialised insurance for valuable musical instruments and broadcast equipment to protect against theft, damage, or loss.',
-      'legal liability': 'Secure comprehensive public liability insurance for your premises and designate a health and safety lead with clear responsibilities.',
-      'property': 'Secure fire insurance for your church building and contents, install fire extinguishers across all premises, and establish regular building maintenance inspections.'
+      'operations': 'Establish a safety and emergency preparedness programme covering public liability insurance for large gatherings and documented emergency procedures for services and events.',
+      'assets': 'Arrange specialised insurance for your musical instruments and broadcast equipment to protect the tools that support your ministry.',
+      'legal liability': 'Establish a comprehensive safety and liability protection programme by appointing a health and safety lead and arranging Public Liability Insurance for your church premises and activities.',
+      'property': 'Protect your church building and contents by arranging fire insurance, installing fire extinguishers across all premises, and establishing regular building maintenance inspections.'
     },
     realLifeContext: "Here\u2019s what this means in real life: A congregant injury, fire, or theft of valuable equipment could disrupt your church\u2019s operations and create financial strain. Your CoverScore reflects how well your church is protected so you can focus on your mission with confidence."
   },

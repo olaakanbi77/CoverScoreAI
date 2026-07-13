@@ -1087,7 +1087,7 @@ router.post('/evolution', async (req, res) => {
             if (answer && qImprovements[answer]) {
               const imp = qImprovements[answer];
               totalGain += imp.gain;
-              const prefixVerbs = 'Add|Assess|Audit|Begin|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Install|Make|Obtain|Open|Protect|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Upgrade|Verify';
+              const prefixVerbs = 'Add|Assess|Audit|Begin|Bring|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Increase|Install|Make|Obtain|Open|Protect|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Train|Upgrade|Verify';
               const prefixRegex = new RegExp('^(' + prefixVerbs + ')', 'i');
               const verbMatch = imp.action.match(prefixRegex);
               const prefixWord = verbMatch ? verbMatch[1] : 'Build';
@@ -1187,11 +1187,12 @@ router.post('/evolution', async (req, res) => {
             { q: 'MFG_022', values: ['Yes'], text: 'financial resilience to sustain operations through a one-month closure' }
           ],
           CHR: [
-            { q: 'CHR_013', values: ['Under 200', '200\u2013500', '500\u20131000'], text: 'manageable congregation size for operational risk' },
+            { q: 'CHR_013', values: ['Under 200', '200\u2013500', '500\u20131000'], text: 'manageable congregation size that keeps operational risk contained' },
             { q: 'CHR_020', values: ['Yes'], text: 'documented emergency procedures for services and events' },
-            { q: 'CHR_021', values: ['Yes'], text: 'fire extinguishers regularly inspected across your premises' },
+            { q: 'CHR_021', values: ['Yes'], text: 'regularly inspected fire extinguishers in place across your premises' },
             { q: 'CHR_023', values: ['Church Administrator', 'Designated Safety Officer'], text: 'dedicated health and safety leadership' },
             { q: 'CHR_025', values: ['Yes'], text: 'drivers trained in defensive driving and first aid' },
+            { q: 'CHR_026', values: ['Yes'], text: 'routine safety inspections for church transport vehicles' },
             { q: 'CHR_014', values: ['No'], text: 'no high-value asset exposure requiring specialised insurance' }
           ],
           CON: [
