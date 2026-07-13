@@ -570,10 +570,64 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
 
 router.get('/copilot', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const leadId = parseInt(req.query.lead) || null;
+    let selectedLead = null;
+    let copilotBrief = null;
+    let rieData = null;
+    let followUp = null;
+
+    if (leadId) {
+      selectedLead = await get('SELECT * FROM leads WHERE id = ?', [leadId]);
+    } else {
+      selectedLead = await get('SELECT * FROM leads WHERE assessment_id IS NOT NULL ORDER BY updated_at DESC LIMIT 1');
+    }
+
+    if (selectedLead) {
+      if (selectedLead.assessment_data) {
+        try {
+          const ad = typeof selectedLead.assessment_data === 'string'
+            ? JSON.parse(selectedLead.assessment_data)
+            : selectedLead.assessment_data;
+          if (ad.rie) {
+            rieData = ad.rie;
+            copilotBrief = ad.rie.copilotBrief || null;
+            followUp = ad.rie.followUp || null;
+          }
+        } catch (e) { /* silent */ }
+      }
+
+      if (!rieData && selectedLead.assessment_id) {
+        const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [selectedLead.assessment_id]);
+        if (assessment && assessment.ai_report) {
+          try {
+            const aiData = JSON.parse(assessment.ai_report);
+            rieData = { copilotBrief: aiData.copilot || null };
+            copilotBrief = aiData.copilot || null;
+          } catch (e) { /* silent */ }
+        }
+      }
+
+      if (selectedLead.assessment_data && !rieData) {
+        try {
+          const ad = typeof selectedLead.assessment_data === 'string'
+            ? JSON.parse(selectedLead.assessment_data)
+            : selectedLead.assessment_data;
+          if (ad.rieMetadata) {
+            rieData = { rieMetadata: ad.rieMetadata };
+          }
+        } catch (e) { /* silent */ }
+      }
+    }
+
     res.render('advisor/copilot', {
-      layout: 'admin',
+      layout: false,
       user: req.user,
-      activePage: 'copilot'
+      activePage: 'copilot',
+      selectedLead,
+      copilotBrief,
+      rieData,
+      followUp,
+      leadId: selectedLead?.id || null
     });
   } catch (err) {
     console.error('Error loading copilot:', err);

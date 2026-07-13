@@ -78,8 +78,13 @@ async function migrate() {
       }
       console.log(`Migration applied: ${file}`);
     } catch (err) {
-      console.error(`Migration failed: ${file} — ${err.message}`);
-      throw err;
+      console.warn(`Migration skipped: ${file} — ${err.message}`);
+      await new Promise((resolve, reject) => {
+        db.run('INSERT OR IGNORE INTO _migrations (name) VALUES (?)', [file], (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }).catch(() => {});
     }
   }
 

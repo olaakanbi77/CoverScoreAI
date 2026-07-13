@@ -157,8 +157,8 @@
     <!-- Welcome Header -->
     <div class="welcome-header">
       <div class="wh-text">
-        <h1>Good morning, Ayo! 👋</h1>
-        <p>Here's what I recommend you focus on today.</p>
+        <h1>Good morning, {{#if user.name}}{{user.name}}{{else}}Ayo{{/if}} 👋</h1>
+        <p>{{#if copilotBrief}}{{copilotBrief.summary}}{{else}}Here's what I recommend you focus on today.{{/if}}</p>
       </div>
       <a href="javascript:void(0)" class="btn-pro">
         <svg fill="currentColor" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
@@ -166,6 +166,7 @@
       </a>
     </div>
 
+    {{#if selectedLead}}
     <!-- Next Best Action Card -->
     <div class="nba-card">
       <div class="nba-badge">
@@ -173,155 +174,209 @@
         NEXT BEST ACTION
       </div>
       
-      <h2 class="nba-title">Call Greenfield Hospital</h2>
+      <h2 class="nba-title">{{#if copilotBrief.suggestedOpening}}{{copilotBrief.suggestedOpening}}{{else}}Connect with {{selectedLead.business_name}}{{/if}}</h2>
       
       <ul class="nba-list">
-        <li>
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-          Quote sent 2 days ago
+        {{#if copilotBrief.keyRisks}}
+          {{#each copilotBrief.keyRisks}}
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+            Elevated risk in {{this}}
+          </li>
+          {{/each}}
+        {{else}}
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Score: {{selectedLead.score}}/100
         </li>
-        <li>
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-          Quote viewed twice
-        </li>
-        <li>
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          No response yet
-        </li>
+        {{/if}}
+        {{#if copilotBrief.likelyObjections}}
+          {{#each (lookup copilotBrief 'likelyObjections')}}
+            {{#if (lte @index 1)}}
+            <li>
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              Objection: {{this}}
+            </li>
+            {{/if}}
+          {{/each}}
+        {{/if}}
       </ul>
       
-      <p class="nba-desc">This is the best opportunity to close today.</p>
+      <p class="nba-desc">{{#if followUp.nextAction}}{{followUp.nextAction}}{{else}}Review the assessment and reach out to this lead.{{/if}}</p>
       
       <div class="nba-actions">
-        <a href="tel:+1234567890" class="btn-primary">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-          Call Now
+        <a href="/advisor/proposal-writer/{{selectedLead.id}}" class="btn-primary">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Create Quote
         </a>
-        <a href="https://wa.me/" class="btn-outline">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-          Send WhatsApp
+        <a href="/advisor/risk-report/{{selectedLead.id}}" class="btn-outline">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          View Report
         </a>
       </div>
 
       <div class="nba-donut">
+        {{#if rieData.opportunityScore}}
         <svg class="donut-svg" viewBox="0 0 36 36">
           <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="4"/>
-          <circle cx="18" cy="18" r="16" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="78 100" stroke-dashoffset="0" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="{{rieData.opportunityScore}} 100" stroke-dashoffset="0" stroke-linecap="round"/>
         </svg>
         <div class="donut-text">
-          <div class="donut-val">78%</div>
-          <div class="donut-lbl">Likelihood<br>to close</div>
+          <div class="donut-val">{{rieData.opportunityScore}}%</div>
+          <div class="donut-lbl">Opportunity<br>Score</div>
         </div>
+        {{else if selectedLead.sales_score}}
+        <svg class="donut-svg" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="{{selectedLead.sales_score}} 100" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <div class="donut-text">
+          <div class="donut-val">{{selectedLead.sales_score}}%</div>
+          <div class="donut-lbl">Sales<br>Score</div>
+        </div>
+        {{else}}
+        <svg class="donut-svg" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="50 100" stroke-dashoffset="0" stroke-linecap="round"/>
+        </svg>
+        <div class="donut-text">
+          <div class="donut-val">{{selectedLead.score}}%</div>
+          <div class="donut-lbl">Risk<br>Score</div>
+        </div>
+        {{/if}}
       </div>
     </div>
 
-    <!-- Help Suggestions -->
-    <h3 class="sect-header">WHAT CAN I HELP YOU WITH?</h3>
-    <div class="help-scroller">
-      <a href="javascript:void(0)" class="help-card hc-1">
-        <div class="help-card-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        </div>
-        <div class="help-card-text">Which leads should I focus on?</div>
-      </a>
-      <a href="javascript:void(0)" class="help-card hc-2">
-        <div class="help-card-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-        </div>
-        <div class="help-card-text">Which quotes are likely to close?</div>
-      </a>
-      <a href="javascript:void(0)" class="help-card hc-3">
-        <div class="help-card-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        </div>
-        <div class="help-card-text">Which clients are underinsured?</div>
-      </a>
-      <a href="javascript:void(0)" class="help-card hc-4">
-        <div class="help-card-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-        </div>
-        <div class="help-card-text">Draft a follow-up message</div>
-      </a>
+    <!-- Recommended Products -->
+    {{#if rieData.recommendedProducts}}
+    <div class="sect-header-row">
+      <h3>RECOMMENDED PRODUCTS</h3>
     </div>
+    <div class="insights-list">
+      {{#each rieData.recommendedProducts}}
+      <div class="insight-item">
+        <div class="insight-icon {{#if (eq this.priority 'high')}}o{{else}}p{{/if}}">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">{{this.product}} {{#if (eq this.priority 'high')}}<span class="tag-new">Priority</span>{{/if}}</h4>
+          <p class="insight-desc">{{#if this.reason}}{{this.reason}}{{else}}Recommended based on assessment{{/if}}</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val {{#if (eq this.priority 'high')}}o{{else}}p{{/if}}">{{this.priority}}</span>
+          <span class="ir-lbl">Priority</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{else}}
+    <!-- No lead selected state -->
+    <div class="nba-card" style="text-align:center;padding:40px 20px;">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:48px;height:48px;color:var(--c-gray);margin:0 auto 16px;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+      </svg>
+      <h2 class="nba-title" style="font-size:16px;">No Lead Selected</h2>
+      <p class="nba-desc">Select a lead from the dashboard or pipeline to see AI-powered recommendations here.</p>
+      <div class="nba-actions" style="justify-content:center;">
+        <a href="/advisor/dashboard" class="btn-primary" style="flex:0 1 auto;padding:12px 24px;">
+          Go to Dashboard
+        </a>
+      </div>
+    </div>
+    {{/if}}
 
     <!-- AI Insights -->
     <div class="sect-header-row">
-      <h3>AI INSIGHTS</h3>
-      <a href="javascript:void(0)" class="sect-link">View All Insights ></a>
+      <h3>{{#if selectedLead}}AI INSIGHTS{{else}}QUICK ACTIONS{{/if}}</h3>
+      {{#if selectedLead}}<a href="/advisor/follow-up/{{selectedLead.id}}" class="sect-link">Follow Up ></a>{{/if}}
     </div>
     
     <div class="insights-list">
-      <!-- Insight 1 -->
-      <a href="/advisor/follow-up/1" class="insight-item">
+      {{#if selectedLead}}
+      <a href="/advisor/risk-report/{{selectedLead.id}}" class="insight-item">
         <div class="insight-icon g">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
         </div>
         <div class="insight-content">
-          <h4 class="insight-title">High Closing Opportunity <span class="tag-new">New</span></h4>
-          <p class="insight-desc">Greenfield Hospital has a 78% chance to close. Recommend calling today.</p>
+          <h4 class="insight-title">{{or selectedLead.business_name selectedLead.name}} <span class="tag-new">Score: {{selectedLead.score}}%</span></h4>
+          <p class="insight-desc">{{#if copilotBrief.summary}}{{copilotBrief.summary}}{{else}}Risk assessment completed. Review the full report for details.{{/if}}</p>
         </div>
         <div class="insight-right">
-          <span class="ir-val g">78%</span>
-          <span class="ir-lbl">Likelihood</span>
+          <span class="ir-val g">{{#if rieData.opportunityScore}}{{rieData.opportunityScore}}%{{else}}N/A{{/if}}</span>
+          <span class="ir-lbl">Opp. Score</span>
         </div>
         <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
       </a>
 
-      <!-- Insight 2 -->
-      <a href="/admin/opportunities" class="insight-item">
+      <a href="/advisor/opportunities" class="insight-item">
         <div class="insight-icon o">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         </div>
         <div class="insight-content">
-          <h4 class="insight-title">Quote Follow-Up <span class="tag-new">New</span></h4>
-          <p class="insight-desc">3 quotes were viewed but not responded to. Follow up within 24 hours.</p>
+          <h4 class="insight-title">Follow-Up Required</h4>
+          <p class="insight-desc">{{#if followUp.nextAction}}{{followUp.nextAction}} ({{followUp.channel}}, {{followUp.timing}}h){{else}}Visit opportunities page to view all leads{{/if}}</p>
         </div>
         <div class="insight-right">
-          <span class="ir-val o">3</span>
-          <span class="ir-lbl">Quotes</span>
+          <span class="ir-val o">{{#if followUp.priority}}{{followUp.priority}}{{else}}--{{/if}}</span>
+          <span class="ir-lbl">Priority</span>
         </div>
         <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
       </a>
 
-      <!-- Insight 3 -->
+      <a href="/advisor/pipeline" class="insight-item">
+        <div class="insight-icon p">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">Pipeline Overview</h4>
+          <p class="insight-desc">View all leads in your pipeline by stage and priority.</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val p">{{#if selectedLead.pipeline_stage}}Stage {{selectedLead.pipeline_stage}}/6{{else}}--{{/if}}</span>
+          <span class="ir-lbl">Pipeline</span>
+        </div>
+        <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+      {{else}}
+      <a href="/advisor/dashboard" class="insight-item">
+        <div class="insight-icon g">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">Dashboard</h4>
+          <p class="insight-desc">View your lead pipeline, stats, and next actions.</p>
+        </div>
+      </a>
+      <a href="/advisor/pipeline" class="insight-item">
+        <div class="insight-icon o">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">Pipeline</h4>
+          <p class="insight-desc">Manage leads through 6 pipeline stages.</p>
+        </div>
+      </a>
       <a href="/admin/leads" class="insight-item">
         <div class="insight-icon p">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         </div>
         <div class="insight-content">
-          <h4 class="insight-title">Coverage Gap Alert</h4>
-          <p class="insight-desc">12 clients may be underinsured based on new benchmark data.</p>
+          <h4 class="insight-title">All Leads</h4>
+          <p class="insight-desc">View and manage your complete lead list.</p>
         </div>
-        <div class="insight-right">
-          <span class="ir-val p">12</span>
-          <span class="ir-lbl">Clients</span>
-        </div>
-        <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
       </a>
+      {{/if}}
     </div>
 
-    <!-- Recent Questions -->
-    <div class="sect-header-row">
-      <h3>RECENT QUESTIONS</h3>
-      <a href="javascript:void(0)" class="sect-link" style="color:var(--c-green-dark);">Clear</a>
-    </div>
-
-    <div class="recent-q-list">
-      <a href="javascript:void(0)" class="rq-item">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <span class="rq-text">Which lead should I call today?</span>
-        <span class="rq-time">Just now</span>
-      </a>
-      <a href="javascript:void(0)" class="rq-item">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <span class="rq-text">Show me quotes likely to close this month</span>
-        <span class="rq-time">Yesterday</span>
-      </a>
-      <a href="javascript:void(0)" class="rq-item">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <span class="rq-text">Which client has the highest risk exposure?</span>
-        <span class="rq-time">2 days ago</span>
-      </a>
+    <!-- Chat History Area (visible after first message) -->
+    <div id="chat-history" style="display:none;margin-bottom:24px;">
+      <div class="sect-header-row">
+        <h3>CONVERSATION</h3>
+        <a href="javascript:void(0)" class="sect-link" id="clear-chat" style="color:var(--c-gray);">Clear</a>
+      </div>
+      <div id="chat-messages" class="recent-q-list"></div>
     </div>
 
   </div>
@@ -330,8 +385,8 @@
   <div class="floating-input-wrapper">
     <div class="ai-input-box">
       <svg class="star" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2zm6.5 1.5l1 3.5 3.5 1-3.5 1-1 3.5-1-3.5-3.5-1 3.5-1 1-3.5z"/></svg>
-      <input type="text" placeholder="Ask me anything about your business...">
-      <svg class="mic" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+      <input type="text" id="copilot-chat-input" placeholder="Ask me anything about {{#if selectedLead}}{{selectedLead.business_name}}{{else}}your business{{/if}}..." {{#unless leadId}}disabled{{/unless}}>
+      <svg class="mic" id="copilot-send-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="{{#unless leadId}}opacity:0.4;{{/unless}}cursor:pointer;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
     </div>
     <div class="disclaimer">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -340,6 +395,78 @@
   </div>
 
 </div>
+
+<script>
+(function() {
+  const leadId = {{leadId}};
+  if (!leadId) return;
+
+  const input = document.getElementById('copilot-chat-input');
+  const sendBtn = document.getElementById('copilot-send-btn');
+  const chatHistory = document.getElementById('chat-history');
+  const chatMessages = document.getElementById('chat-messages');
+  const clearChat = document.getElementById('clear-chat');
+
+  function addMessage(role, text) {
+    chatHistory.style.display = 'block';
+    const div = document.createElement('div');
+    div.className = 'rq-item';
+    div.style.flexDirection = role === 'user' ? 'row-reverse' : 'row';
+    div.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--c-gray);flex-shrink:0;stroke-width:2.5;">
+        <path d="${role === 'user' ? 'M12 15v2m-3-4h6M9 13h6M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z' : 'M13 2L3 14h9l-1 8 10-12h-9l1-8z'}"/>
+      </svg>
+      <span class="rq-text" style="${role === 'user' ? 'text-align:right;' : ''}">${text}</span>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  async function sendMessage(message) {
+    if (!message.trim()) return;
+    addMessage('user', message);
+    input.value = '';
+
+    const thinkingDiv = document.createElement('div');
+    thinkingDiv.className = 'rq-item';
+    thinkingDiv.innerHTML = '<span class="rq-text" style="color:var(--c-gray);">Thinking...</span>';
+    chatMessages.appendChild(thinkingDiv);
+
+    try {
+      const res = await fetch('/api/copilot-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId, message })
+      });
+      const data = await res.json();
+      thinkingDiv.remove();
+      addMessage('assistant', data.response || 'Sorry, I could not process that.');
+    } catch (e) {
+      thinkingDiv.remove();
+      addMessage('assistant', 'Sorry, there was an error. Please try again.');
+    }
+  }
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(input.value);
+    }
+  });
+
+  sendBtn.addEventListener('click', function() {
+    sendMessage(input.value);
+  });
+
+  if (clearChat) {
+    clearChat.addEventListener('click', function(e) {
+      e.preventDefault();
+      chatMessages.innerHTML = '';
+      chatHistory.style.display = 'none';
+    });
+  }
+})();
+</script>
 
 <!-- Bottom Navigation -->
     <!-- BOTTOM NAV -->
