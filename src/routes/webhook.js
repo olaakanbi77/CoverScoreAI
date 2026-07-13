@@ -525,6 +525,7 @@ router.post('/evolution', async (req, res) => {
 
       // ===== Message 1: Completion + Summary + Score + Resilience Level + Highest Priority =====
       const snapshotTitles = {
+        SME: 'Business Resilience Snapshot\u2122',
         HOS: 'Healthcare Resilience Snapshot\u2122',
         MFG: 'Manufacturing Resilience Snapshot\u2122',
         SCH: 'School Resilience Snapshot\u2122',
@@ -1209,6 +1210,11 @@ router.post('/evolution', async (req, res) => {
             { q: 'TRN_024', values: ['Yes'], text: 'drivers trained in defensive driving and first aid' },
             { q: 'TRN_025', values: ['Yes'], text: 'regular vehicle safety inspections across your fleet' },
             { q: 'TRN_026', values: ['Yes'], text: 'working fire alarm system in your depot that is regularly tested' }
+          ],
+          SME: [
+            { q: 'SME_013', values: ['1\u201310', '11\u201350'], text: 'manageable workforce size that keeps liability exposure contained' },
+            { q: 'SME_016', values: ['Yes'], text: 'comprehensive fire and burglary insurance for your business premises' },
+            { q: 'SME_017', values: ['Yes easily'], text: 'strong financial resilience to sustain operations through a three-month closure' }
           ]
         };
         const defs = strengthDefs[prefix] || [];
@@ -1235,7 +1241,8 @@ router.post('/evolution', async (req, res) => {
         CHR: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your church could face significant financial pressure, legal exposure, disruption to services, and greater difficulty rebuilding trust with your congregation following a major incident.`,
         CON: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your construction business could face project delays, contract penalties, increased legal exposure, higher recovery costs, and greater difficulty winning future work following a major incident.`,
         TRN: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your transport business could face fleet downtime, lost cargo, higher recovery costs, increased legal exposure, and greater difficulty maintaining client confidence following a major incident.`,
-        SCH: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your school could face longer service interruptions, increased legal exposure, damage to your reputation with parents and the community, and greater difficulty restoring normal operations following a major incident.`
+        SCH: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your school could face longer service interruptions, increased legal exposure, damage to your reputation with parents and the community, and greater difficulty restoring normal operations following a major incident.`,
+        SME: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your business could face prolonged closure, lost revenue, increased legal exposure, damage to your reputation with customers and suppliers, and greater difficulty recovering following a major incident.`
       };
       const ifNothingChanges = ifNothingChangeTexts[prefix] || null;
       if (ifNothingChanges) msg3 += `\n\n${ifNothingChanges}`;

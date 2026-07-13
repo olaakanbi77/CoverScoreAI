@@ -836,20 +836,20 @@
       }
     ],
     improvements: {
-      SCH_013: { 'Over 500': { target: 'Under 100', gain: 10, action: 'Conduct a student safety review covering supervision, premises, and accident response protocols' } },
+      SCH_013: { 'Over 500': { target: 'Under 100', gain: 10, action: 'Conduct a student safety review covering supervision, premises, and accident response to reduce injury risk and protect your students' } },
       SCH_014: { 'Under \u20A6100,000': { target: '\u20A6100,000 - \u20A6500,000', gain: 8, action: 'Develop a financial contingency plan to sustain operations during disruptions' } },
-      SCH_015: { 'Yes': { target: 'No', gain: 5, action: 'Review transport safety policies and student movement procedures' } },
-      SCH_012: { 'Yes': { target: 'No', gain: 10, action: 'Conduct a full student safety audit and accident response review' } },
-      SCH_020: { 'No': { target: 'Yes', gain: 8, action: 'Establish written emergency procedures for student accidents and fire' } },
-      SCH_021: { 'No': { target: 'Yes', gain: 6, action: 'Install fire extinguishers across all buildings and schedule regular inspections' } },
-      SCH_022: { 'No': { target: 'Yes', gain: 12, action: 'Develop and test a business continuity plan for unexpected disruptions' } },
-      SCH_023: { 'No one specifically assigned': { target: 'Designated Safety Officer', gain: 6, action: 'Establish formal health and safety governance with clear responsibilities' } },
-      SCH_024: { 'No': { target: 'Yes', gain: 8, action: 'Implement first aid and defensive driver training for all school bus drivers' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Confirm and document driver training certifications for school transport' } },
-      SCH_025: { 'No': { target: 'Yes', gain: 8, action: 'Establish a vehicle safety inspection schedule for all school transport' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Audit vehicle inspection procedures and set up a schedule' } },
-      SCH_026: { 'No': { target: 'Yes', gain: 10, action: 'Install and maintain a fire alarm system with monthly tests' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Verify fire alarm installation and schedule regular tests' } },
-      SCH_027: { 'Never': { target: 'Monthly', gain: 6, action: 'Conduct monthly building maintenance inspections' }, 'Rarely': { target: 'Quarterly', gain: 4, action: 'Conduct quarterly building maintenance inspections' } },
-      SCH_016: { 'No': { target: 'Yes', gain: 12, action: 'Secure public liability insurance for student injury protection' } },
-      SCH_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for all school buildings' } }
+      SCH_015: { 'Yes': { target: 'No', gain: 5, action: 'Review transport safety policies and student movement procedures to reduce accident risk during school transport' } },
+      SCH_012: { 'Yes': { target: 'No', gain: 10, action: 'Conduct a full student safety audit and accident response review to identify hazards and protect your students from harm' } },
+      SCH_020: { 'No': { target: 'Yes', gain: 8, action: 'Establish written emergency procedures so your staff can respond effectively to student accidents and fire' } },
+      SCH_021: { 'No': { target: 'Yes', gain: 6, action: 'Install fire extinguishers across all buildings and schedule regular inspections to protect your students, staff, and property' } },
+      SCH_022: { 'No': { target: 'Yes', gain: 12, action: 'Develop and test a business continuity plan so your school can continue operating during unexpected disruptions' } },
+      SCH_023: { 'No one specifically assigned': { target: 'Designated Safety Officer', gain: 6, action: 'Establish formal health and safety governance so safety responsibilities are clearly owned and managed' } },
+      SCH_024: { 'No': { target: 'Yes', gain: 8, action: 'Train all school bus drivers in first aid and defensive driving to reduce accident risk and protect students during transport' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Confirm and document driver training certifications to ensure your school transport drivers are properly qualified' } },
+      SCH_025: { 'No': { target: 'Yes', gain: 8, action: 'Establish regular vehicle safety inspections to keep your school transport fleet safe and reliable' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Audit vehicle inspection procedures and set up a schedule to ensure consistent school transport safety' } },
+      SCH_026: { 'No': { target: 'Yes', gain: 10, action: 'Install and maintain a fire alarm system with monthly tests to ensure early warning and protect your school community' }, 'Not sure': { target: 'Yes', gain: 3, action: 'Verify fire alarm installation and schedule regular tests to ensure your school\'s fire safety system is reliable' } },
+      SCH_027: { 'Never': { target: 'Monthly', gain: 6, action: 'Conduct monthly building maintenance inspections to catch structural and safety issues early' }, 'Rarely': { target: 'Quarterly', gain: 4, action: 'Conduct quarterly building maintenance inspections to prevent undetected deterioration of school facilities' } },
+      SCH_016: { 'No': { target: 'Yes', gain: 12, action: 'Protect your school against student injury claims with public liability insurance' } },
+      SCH_017: { 'No': { target: 'Yes', gain: 8, action: 'Protect your school buildings against catastrophic fire loss with adequate insurance' } }
     }
   },
 
@@ -1000,45 +1000,45 @@
       }
     ],
     improvements: {
-      MFG_013: { '200+': { target: '51-200', gain: 7, action: 'Review comprehensive workforce insurance and safety programs' } },
-      MFG_014: { 'Immediately': { target: 'Within a few days', gain: 8, action: 'Implement equipment redundancy for critical machinery' } },
-      MFG_016: { 'No': { target: 'Yes', gain: 10, action: 'Get comprehensive fire and special perils insurance' } },
-      MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity and disaster recovery planning' } },
+      MFG_013: { '200+': { target: '51-200', gain: 7, action: 'Review comprehensive workforce insurance and safety programs to protect your employees and reduce liability exposure' } },
+      MFG_014: { 'Immediately': { target: 'Within a few days', gain: 8, action: 'Implement equipment redundancy for critical machinery to prevent production downtime' } },
+      MFG_016: { 'No': { target: 'Yes', gain: 10, action: 'Protect your facility and equipment against fire and special perils to prevent catastrophic production loss' } },
+      MFG_017: { 'No, we would close': { target: 'With difficulty', gain: 8, action: 'Create a business continuity plan so your manufacturing operation can survive a prolonged disruption' }, 'With difficulty': { target: 'Yes easily', gain: 6, action: 'Strengthen business continuity and disaster recovery planning to keep production running during disruptions' } },
       MFG_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Strengthen workplace safety governance and incident investigation processes' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen workplace safety governance and incident investigation processes to reduce accident risk and liability exposure' },
       },
       MFG_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for workplace accidents and fire' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures so your team can respond effectively to workplace accidents and fire' },
       },
       MFG_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all areas and establish regular inspection schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all areas and establish regular inspections to protect your facility and people' },
       },
       MFG_022: {
         'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       MFG_023: {
-        'Designated Safety Officer': { target: 'Operations Manager', gain: 3, action: 'Upgrade safety oversight from officer to senior operations leadership' },
-        'External Consultant': { target: 'Operations Manager', gain: 7, action: 'Bring safety governance in-house under senior operations management' },
-        'No one specifically assigned': { target: 'Operations Manager', gain: 10, action: 'Designate a senior operations lead for health and safety' },
+        'Designated Safety Officer': { target: 'Operations Manager', gain: 3, action: 'Upgrade safety oversight from officer to senior operations leadership so safety governance has proper authority' },
+        'External Consultant': { target: 'Operations Manager', gain: 7, action: 'Bring safety governance in-house under senior operations management to strengthen accountability' },
+        'No one specifically assigned': { target: 'Operations Manager', gain: 10, action: 'Designate a senior operations lead for health and safety so responsibilities are clearly owned' },
       },
       MFG_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate insurance for goods in transit during transportation' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Review supply chain operations and obtain appropriate goods-in-transit cover' },
+        'No': { target: 'Yes', gain: 10, action: 'Secure goods-in-transit insurance to protect your shipments against loss or damage during transportation' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review supply chain operations and obtain goods-in-transit cover to protect your shipments' },
       },
       MFG_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement preventive maintenance training for all production staff' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program' },
+        'No': { target: 'Yes', gain: 10, action: 'Train production staff in preventive maintenance to reduce equipment breakdown risk' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program to close skill gaps and prevent breakdowns' },
       },
       MFG_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for all logistics vehicles' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish regular vehicle safety inspections to keep your logistics fleet safe and roadworthy' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule to ensure fleet safety' },
       },
       MFG_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase facility maintenance inspections to monthly' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Increase facility maintenance inspections to monthly' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly facility maintenance inspections' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly facility maintenance inspections' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase facility maintenance inspections to monthly frequency to catch issues early' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase facility maintenance inspections to monthly frequency to catch issues early' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly facility maintenance inspections to prevent undetected deterioration' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly facility maintenance inspections to prevent undetected issues from escalating' },
       }
     }
   },
@@ -1378,43 +1378,43 @@
       }
     ],
     improvements: {
-      CHR_015: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive public liability insurance' } },
-      CHR_017: { 'No': { target: 'Yes', gain: 8, action: 'Get fire insurance for church building and contents' } },
+      CHR_015: { 'No': { target: 'Yes', gain: 12, action: 'Protect your church and congregation against injury claims with comprehensive public liability insurance' } },
+      CHR_017: { 'No': { target: 'Yes', gain: 8, action: 'Protect your church building and contents against catastrophic fire loss' } },
       CHR_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Strengthen premises safety governance and incident response processes' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen premises safety governance so your church can respond effectively to incidents' },
       },
       CHR_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for fire and medical incidents' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures so your staff and volunteers know how to respond to fire and medical incidents' },
       },
       CHR_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all premises and establish regular inspection schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all premises and establish regular inspections to protect your congregation and property' },
       },
       CHR_022: {
         'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       CHR_023: {
-        'Designated Safety Officer': { target: 'Church Administrator', gain: 3, action: 'Upgrade safety oversight from officer to senior administrative leadership' },
-        'Volunteer Coordinator': { target: 'Church Administrator', gain: 7, action: 'Bring safety governance under senior administrative leadership' },
-        'No one specifically assigned': { target: 'Church Administrator', gain: 10, action: 'Designate a senior administrator for safety and compliance' },
+        'Designated Safety Officer': { target: 'Church Administrator', gain: 3, action: 'Upgrade safety oversight to senior administrative leadership so safety governance has proper authority' },
+        'Volunteer Coordinator': { target: 'Church Administrator', gain: 7, action: 'Bring safety governance under senior administrative leadership to strengthen accountability' },
+        'No one specifically assigned': { target: 'Church Administrator', gain: 10, action: 'Designate a senior administrator for safety and compliance so responsibilities are clearly owned' },
       },
       CHR_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate insurance for musical instruments and broadcast equipment' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit valuable equipment and obtain appropriate coverage' },
+        'No': { target: 'Yes', gain: 10, action: 'Protect your musical instruments and broadcast equipment against theft or damage with specialised insurance' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit your valuable equipment and obtain appropriate coverage to prevent financial loss' },
       },
       CHR_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement preventive maintenance training for all technical staff' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program' },
+        'No': { target: 'Yes', gain: 10, action: 'Train technical staff in preventive maintenance to reduce equipment failure risk during services' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program to close skill gaps and prevent breakdowns' },
       },
       CHR_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for church transport' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish regular vehicle safety inspections to keep your church transport safe and reliable' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule to ensure fleet safety' },
       },
       CHR_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase facility maintenance inspections to monthly' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Increase facility maintenance inspections to monthly' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly facility maintenance inspections' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly facility maintenance inspections' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase facility maintenance inspections to monthly frequency to catch issues early' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase facility maintenance inspections to monthly frequency to catch issues early' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly facility maintenance inspections to prevent undetected deterioration' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly facility maintenance inspections to prevent small issues from escalating' },
       }
     }
   },
@@ -1582,44 +1582,44 @@
       }
     ],
     improvements: {
-      CON_015: { 'No': { target: 'Yes', gain: 12, action: 'Get comprehensive contractor\'s all-risk insurance' } },
-      CON_016: { 'No': { target: 'Yes', gain: 8, action: 'Get group personal accident cover for workers' } },
-      CON_017: { 'No': { target: 'Yes', gain: 6, action: 'Add delay penalty protection to contracts' } },
+      CON_015: { 'No': { target: 'Yes', gain: 12, action: 'Protect your construction projects against site damage and loss with contractor\'s all-risk insurance' } },
+      CON_016: { 'No': { target: 'Yes', gain: 8, action: 'Protect your workers and your business against accident-related costs with group personal accident cover' } },
+      CON_017: { 'No': { target: 'Yes', gain: 6, action: 'Add delay penalty protection to your contracts so a project delay doesn\'t create financial liability' } },
       CON_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Strengthen on-site safety governance and incident investigation processes' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen on-site safety governance so your team can investigate and prevent incidents effectively' },
       },
       CON_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for site accidents and fire' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures so your team can respond effectively to site accidents and fire' },
       },
       CON_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all sites and establish regular inspection schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all work sites and establish regular inspections to protect your people and property' },
       },
       CON_022: {
         'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month project halt' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a project disruption contingency plan' },
       },
       CON_023: {
-        'Designated Safety Officer': { target: 'Project Manager', gain: 3, action: 'Upgrade safety oversight from officer to senior project management' },
-        'External Consultant': { target: 'Project Manager', gain: 7, action: 'Bring safety governance in-house under senior project management' },
-        'No one specifically assigned': { target: 'Project Manager', gain: 10, action: 'Designate a senior project manager for site health and safety' },
+        'Designated Safety Officer': { target: 'Project Manager', gain: 3, action: 'Upgrade safety oversight to senior project management so safety governance has proper authority on site' },
+        'External Consultant': { target: 'Project Manager', gain: 7, action: 'Bring safety governance in-house under senior project management to strengthen on-site accountability' },
+        'No one specifically assigned': { target: 'Project Manager', gain: 10, action: 'Designate a senior project manager for site health and safety so responsibilities are clearly owned' },
       },
       CON_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Secure appropriate insurance for tools and materials in transit' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Review supply chain operations and obtain appropriate goods-in-transit cover' },
+        'No': { target: 'Yes', gain: 10, action: 'Secure goods-in-transit insurance to protect your tools and materials against loss or damage during transit' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Review supply chain operations and obtain goods-in-transit cover to protect your materials' },
       },
       CON_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement preventive maintenance training for all equipment operators' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program' },
+        'No': { target: 'Yes', gain: 10, action: 'Train equipment operators in preventive maintenance to reduce machinery breakdown risk on site' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit maintenance skills and establish a training program to close skill gaps and prevent site breakdowns' },
       },
       CON_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for site vehicles' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish regular vehicle safety inspections to keep your site vehicles safe and operational' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule to ensure site fleet safety' },
       },
       CON_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase site maintenance inspections to monthly' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Increase site maintenance inspections to monthly' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly site maintenance inspections' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly site maintenance inspections' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase site maintenance inspections to monthly frequency to catch issues early' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase site maintenance inspections to monthly frequency to catch issues early' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly site maintenance inspections to prevent undetected deterioration' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly site maintenance inspections to prevent small issues from escalating' },
       }
     }
   },
@@ -1771,44 +1771,44 @@
       }
     ],
     improvements: {
-      TRN_015: { 'No': { target: 'Yes', gain: 10, action: 'Get goods-in-transit insurance' } },
-      TRN_016: { 'No': { target: 'Yes', gain: 8, action: 'Get group personal accident cover for drivers' } },
-      TRN_017: { 'No': { target: 'Some of them', gain: 6, action: 'Start with comprehensive insurance for high-value vehicles' } },
+      TRN_015: { 'No': { target: 'Yes', gain: 10, action: 'Protect your cargo against loss or damage during transportation with goods-in-transit insurance' } },
+      TRN_016: { 'No': { target: 'Yes', gain: 8, action: 'Protect your drivers and your business against accident-related costs with group personal accident cover' } },
+      TRN_017: { 'No': { target: 'Some of them', gain: 6, action: 'Start with comprehensive insurance for your high-value vehicles to protect your most critical fleet assets' } },
       TRN_012: {
-        'Yes': { target: 'No', gain: 6, action: 'Strengthen fleet safety governance and accident investigation processes' },
+        'Yes': { target: 'No', gain: 6, action: 'Strengthen fleet safety governance so your team can investigate and prevent accidents effectively' },
       },
       TRN_020: {
-        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures for road accidents and fleet incidents' },
+        'No': { target: 'Yes', gain: 10, action: 'Document emergency procedures so your drivers know how to respond effectively to road accidents and fleet incidents' },
       },
       TRN_021: {
-        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across depot and vehicles and establish regular inspection schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across your depot and vehicles and establish regular inspections to protect your fleet and people' },
       },
       TRN_022: {
         'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month fleet suspension' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a fleet disruption contingency plan' },
       },
       TRN_023: {
-        'Designated Compliance Officer': { target: 'Fleet Manager', gain: 3, action: 'Upgrade compliance oversight from officer to senior fleet management' },
-        'External Consultant': { target: 'Fleet Manager', gain: 7, action: 'Bring compliance governance in-house under senior fleet management' },
-        'No one specifically assigned': { target: 'Fleet Manager', gain: 10, action: 'Designate a senior fleet manager for safety and compliance' },
+        'Designated Compliance Officer': { target: 'Fleet Manager', gain: 3, action: 'Upgrade compliance oversight to senior fleet management so compliance governance has proper authority' },
+        'External Consultant': { target: 'Fleet Manager', gain: 7, action: 'Bring compliance governance in-house under senior fleet management to strengthen accountability' },
+        'No one specifically assigned': { target: 'Fleet Manager', gain: 10, action: 'Designate a senior fleet manager for safety and compliance so responsibilities are clearly owned' },
       },
       TRN_024: {
-        'No': { target: 'Yes', gain: 10, action: 'Implement defensive driving and first aid training for all drivers' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Audit driver training credentials and establish a training program' },
+        'No': { target: 'Yes', gain: 10, action: 'Train all drivers in defensive driving and first aid to reduce accident risk and improve emergency response' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Audit driver training credentials and establish a training program to close skill gaps and improve road safety' },
       },
       TRN_025: {
-        'No': { target: 'Yes', gain: 10, action: 'Establish a regular vehicle safety inspection schedule for all fleet vehicles' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule' },
+        'No': { target: 'Yes', gain: 10, action: 'Establish regular vehicle safety inspections to keep your entire fleet safe and roadworthy' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Document vehicle inspection procedures and set up a schedule to ensure consistent fleet safety' },
       },
       TRN_026: {
-        'No': { target: 'Yes', gain: 10, action: 'Install a fire alarm system in depot and establish regular testing schedule' },
-        'Not sure': { target: 'Yes', gain: 7, action: 'Verify fire alarm system functionality and set up regular testing' },
+        'No': { target: 'Yes', gain: 10, action: 'Install a fire alarm system in your depot and establish regular testing to protect your facility and fleet' },
+        'Not sure': { target: 'Yes', gain: 7, action: 'Verify fire alarm system functionality and set up regular testing to ensure your depot fire safety is reliable' },
       },
       TRN_027: {
-        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase depot and yard maintenance inspections to monthly' },
-        'Annually': { target: 'Monthly', gain: 5, action: 'Increase depot and yard maintenance inspections to monthly' },
-        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly depot and yard maintenance inspections' },
-        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly depot and yard maintenance inspections' },
+        'Quarterly': { target: 'Monthly', gain: 2, action: 'Increase depot and yard maintenance inspections to monthly frequency to catch issues early' },
+        'Annually': { target: 'Monthly', gain: 5, action: 'Increase depot and yard maintenance inspections to monthly frequency to catch issues early' },
+        'Rarely': { target: 'Monthly', gain: 8, action: 'Establish regular monthly depot and yard maintenance inspections to prevent undetected deterioration' },
+        'Never': { target: 'Monthly', gain: 10, action: 'Begin conducting regular monthly depot and yard maintenance inspections to prevent small issues from escalating' },
       }
     }
   },

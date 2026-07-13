@@ -439,6 +439,12 @@ const domainConfig = {
     improvementTerm: 'business resilience',
     followUpMsg: "I'll also share practical business risk management tips and strategies that match your assessment.",
     pillarMappings: {},
+    whyTexts: {
+      'workforce': "Your workforce is your most important asset, and every employee represents both opportunity and responsibility. Without adequate employer's liability and workforce insurance, a workplace injury or employment dispute could create significant financial and legal exposure for your business.",
+      'financial': "Your business's financial resilience depends on having the right insurance cover for your revenue scale. Without adequate coverage aligned to your revenue, a major claim could create substantial out-of-pocket costs that threaten your business's financial stability.",
+      'asset protection': "Your business assets\u2014your premises, equipment, and inventory\u2014represent years of hard work and investment. Without comprehensive fire and burglary insurance, a single event could destroy assets that took years to build.",
+      'business continuity': "Your ability to survive a major disruption depends on having both a continuity plan and adequate insurance. Without these, a fire, burglary, or prolonged closure could force your business to close permanently."
+    },
     insightTexts: {
       perPillar: {
         'Workforce': {
@@ -446,21 +452,30 @@ const domainConfig = {
           answerChecks: [
             { q: 'SME_013', values: ['51+'], append: "With more than 50 employees, your employment liability exposure is substantial and requires comprehensive coverage." }
           ],
-          suffix: "Reviewing employer's liability and workforce insurance is an important step\u2014because a disruption shouldn't undo everything you've built."
+          suffix: "Reviewing employer's liability and workforce insurance is an important step\u2014because a disruption shouldn't undo everything you've built.",
+          whyChecks: [
+            { q: 'SME_013', values: ['51+'], text: "With more than 50 employees, your business faces substantial employment liability exposure that needs comprehensive employer's liability and workforce insurance." }
+          ]
         },
         'Financial': {
           base: "Your assessment suggests that your business's financial exposure may not be fully protected.",
           answerChecks: [
             { q: 'SME_014', values: ['Over \u20A6200M'], append: "With revenue over \u20A6200 million, your business has significant financial exposure that needs adequate insurance cover." }
           ],
-          suffix: "Ensuring your business insurance adequately covers your revenue scale is essential for financial protection."
+          suffix: "Ensuring your business insurance adequately covers your revenue scale is essential for financial protection.",
+          whyChecks: [
+            { q: 'SME_014', values: ['Over \u20A6200M'], text: "With revenue over \u20A6200 million, your business has significant financial exposure, and without insurance cover aligned to your revenue scale, a major claim could create substantial out-of-pocket costs." }
+          ]
         },
         'Asset Protection': {
           base: "Your assessment indicates that your business assets may not be adequately protected against unexpected events.",
           answerChecks: [
             { q: 'SME_016', values: ['No'], append: "Without fire and burglary insurance, your business property and assets are vulnerable to significant loss." }
           ],
-          suffix: "Getting comprehensive fire and burglary insurance is a critical step for protecting your business assets."
+          suffix: "Getting comprehensive fire and burglary insurance is a critical step for protecting your business assets.",
+          whyChecks: [
+            { q: 'SME_016', values: ['No'], text: "Without fire and burglary insurance, a single fire or burglary could destroy your business premises, equipment, and inventory\u2014assets that took years to build." }
+          ]
         },
         'Business Continuity': {
           base: "Your assessment shows that your business may not be prepared to survive a major disruption.",
@@ -468,7 +483,11 @@ const domainConfig = {
             { q: 'SME_017', values: ['No, we would close'], append: "Your business would not survive a three-month closure, highlighting a critical continuity gap." },
             { q: 'SME_017', values: ['With difficulty'], append: "Your business would struggle to recover from a major disaster, indicating that a continuity plan is needed." }
           ],
-          suffix: "Creating a business continuity plan and ensuring adequate insurance coverage are the most impactful steps you can take."
+          suffix: "Creating a business continuity plan and ensuring adequate insurance coverage are the most impactful steps you can take.",
+          whyChecks: [
+            { q: 'SME_017', values: ['No, we would close'], text: "Your business would not survive a three-month closure, meaning a single major disruption could force you to close permanently." },
+            { q: 'SME_017', values: ['With difficulty'], text: "Your business would struggle to recover from a major disruption, indicating a critical gap in your continuity planning and insurance coverage." }
+          ]
         }
       },
       catchAll: "Your assessment provides a clear picture of your current business resilience. The goal is to make sure a disruption doesn't undo everything you've built."
@@ -478,6 +497,12 @@ const domainConfig = {
       'financial': 'ensuring your business insurance adequately covers your revenue scale for proper financial protection',
       'asset protection': 'getting comprehensive fire and burglary insurance to protect your business assets',
       'business continuity': 'creating a business continuity plan and ensuring adequate insurance coverage to survive disruptions'
+    },
+    firstStepTexts: {
+      'workforce': 'Review employer\u2019s liability and workforce insurance options to protect your employees and reduce business liability exposure.',
+      'financial': 'Review your business insurance cover to ensure it adequately matches your current revenue scale.',
+      'asset protection': 'Get comprehensive fire and burglary insurance for your business premises, equipment, and inventory.',
+      'business continuity': 'Create a business continuity plan and build financial reserves to sustain operations through a three-month closure.'
     },
     realLifeContext: "Here\u2019s what this means in real life: If a fire, burglary, or prolonged closure hit your business today, would you be able to recover? Your CoverScore measures how resilient your business is to unexpected disruptions\u2014and every improvement means a stronger safety net for your employees and operations."
   },
@@ -504,7 +529,11 @@ const domainConfig = {
             { q: 'MFG_013', values: ['200+'], append: "With over 200 employees, your workforce liability and compliance exposure is substantial." },
             { q: 'MFG_012', values: ["Yes"], append: "Workplace accidents in the past 3 years indicate gaps in your safety environment that need attention." }
           ],
-          suffix: "Reviewing comprehensive workforce insurance and safety programs is an important step\u2014because downtime is expensive and protection is essential."
+          suffix: "Reviewing comprehensive workforce insurance and safety programs is an important step\u2014because downtime is expensive and protection is essential.",
+          whyChecks: [
+            { q: 'MFG_012', values: ['Yes'], text: "Workplace accidents in the past 3 years indicate safety gaps that need attention, and your workforce size creates significant liability exposure that requires comprehensive management." },
+            { q: 'MFG_013', values: ['200+'], text: "With over 200 employees, a single workplace incident could create substantial legal, financial, and operational consequences for your manufacturing business." }
+          ]
         },
         'Operations': {
           base: "Your assessment suggests that your manufacturing operations may be vulnerable to equipment-related disruptions.",
@@ -517,7 +546,11 @@ const domainConfig = {
             { q: 'MFG_025', values: ["Not sure"], append: "You are uncertain whether your vehicle operators are trained in safe operating procedures, which itself indicates a training gap." },
             { q: 'MFG_026', values: ["No"], append: "Without regular vehicle safety inspections, your delivery fleet and material handling equipment may have undetected safety issues." }
           ],
-          suffix: "Implementing equipment redundancy and preventive maintenance programs is essential for operational continuity."
+          suffix: "Implementing equipment redundancy and preventive maintenance programs is essential for operational continuity.",
+          whyChecks: [
+            { q: 'MFG_014', values: ['Immediately'], text: "A critical machine breakdown would halt production immediately, and without documented emergency procedures or safety leadership, your operation would struggle to respond effectively." },
+            { q: 'MFG_020', values: ['No'], text: "Without written emergency procedures for accidents or fire, your staff may not know how to respond in a crisis, increasing the risk of harm and production downtime." }
+          ]
         },
         'Asset Protection': {
           base: "Your assessment indicates that your manufacturing facility and assets may not be adequately insured.",
@@ -527,7 +560,10 @@ const domainConfig = {
             { q: 'MFG_027', values: ["Never"], append: "You never conduct building maintenance inspections, allowing structural issues and hazards to go unnoticed." },
             { q: 'MFG_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." }
           ],
-          suffix: "Getting comprehensive fire and special perils insurance for your facility is a critical protection step."
+          suffix: "Getting comprehensive fire and special perils insurance for your facility is a critical protection step.",
+          whyChecks: [
+            { q: 'MFG_016', values: ['No'], text: "Without fire and special perils insurance, your facility and equipment are exposed to catastrophic loss that could halt production and threaten your business's long-term viability." }
+          ]
         },
         'Business Continuity': {
           base: "Your assessment shows that your manufacturing business may not be prepared to recover from a major disaster.",
@@ -537,7 +573,11 @@ const domainConfig = {
             { q: 'MFG_022', values: ["No"], append: "Your factory could not meet payroll and operating expenses during a one-month closure, indicating a critical financial resilience gap." },
             { q: 'MFG_022', values: ["Not sure"], append: "You're unsure if your factory could survive a one-month closure, which itself signals a need for better financial contingency planning." }
           ],
-          suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take."
+          suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take.",
+          whyChecks: [
+            { q: 'MFG_017', values: ['No, we would close'], text: "Your manufacturing business would not survive a major disaster closure, and without financial reserves to sustain operations, a single disruption could permanently close your doors." },
+            { q: 'MFG_022', values: ['No'], text: "Your factory could not meet payroll and operating expenses during a one-month closure, meaning a relatively short disruption could have severe financial consequences." }
+          ]
         }
       },
       catchAll: "Your assessment shows that while your manufacturing operation has some strengths, critical gaps may exist in emergency preparedness and production continuity. A single equipment failure, fire, or supply chain issue could halt production, disrupt customer commitments, and create significant financial pressure. The most resilient manufacturers combine operational safeguards with appropriate asset protection to minimise downtime."
@@ -547,6 +587,12 @@ const domainConfig = {
       'operations': 'implementing equipment redundancy and preventive maintenance programs for operational continuity',
       'asset protection': 'getting comprehensive fire and special perils insurance for your facility and equipment',
       'business continuity': 'creating a comprehensive business continuity and disaster recovery plan for your manufacturing business'
+    },
+    firstStepTexts: {
+      'workforce': 'Review comprehensive workforce insurance and safety programs, and implement workplace safety governance to reduce injury risk and liability exposure.',
+      'operations': 'Implement equipment redundancy for critical machinery, document emergency procedures, and designate a senior operations lead for health and safety.',
+      'asset protection': 'Secure comprehensive fire and special perils insurance for your facility and equipment, install fire extinguishers, and establish regular building maintenance inspections.',
+      'business continuity': 'Create a comprehensive business continuity and disaster recovery plan, and build financial reserves to sustain operations through a one-month closure.'
     },
     realLifeContext: "Here\u2019s what this means in real life: A machine breakdown, fire, or supply chain disruption could halt your manufacturing operations for weeks. Your CoverScore measures how prepared you are to keep production running\u2014and every improvement means less downtime and greater revenue protection."
   },
@@ -645,6 +691,13 @@ const domainConfig = {
     improvementTerm: 'school resilience',
     followUpMsg: "I'll also share practical ways to strengthen your school's safety and operational resilience.",
     pillarMappings: {},
+    whyTexts: {
+      'student safety': "Your school has a duty of care to every student. Without comprehensive student safety procedures and documented emergency response plans, a single accident or incident could create significant legal, financial, and reputational consequences for your school.",
+      'business continuity': "Your school's ability to continue operating during a disruption depends on financial resilience and contingency planning. Without adequate reserves or a continuity plan, an unexpected closure could threaten your ability to meet payroll and maintain operations.",
+      'transport safety': "If your school operates transport services, you carry responsibility for student safety beyond the school gates. Without proper driver training, regular vehicle inspections, and appropriate insurance coverage, a transport accident could have serious consequences.",
+      'regulatory readiness': "Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents. Without formal health and safety leadership and public liability protection, your school faces increased legal and regulatory exposure.",
+      'property protection': "Your school buildings and facilities represent a significant investment in your community's future. Without adequate fire protection, regular maintenance, and appropriate insurance, a fire or structural issue could disrupt learning for months."
+    },
     insightTexts: {
       perPillar: {
         'Student Safety': {
@@ -654,7 +707,11 @@ const domainConfig = {
             { q: 'SCH_012', values: ['Yes'], append: "You've experienced student accidents on your premises in the past 3 years, which points to potential gaps in your safety environment." },
             { q: 'SCH_020', values: ['No'], append: "Without written emergency procedures for accidents or fire, your staff may not know how to respond effectively in a crisis." }
           ],
-          suffix: "Strengthening student safety means protecting the people at the heart of your school."
+          suffix: "Strengthening student safety means protecting the people at the heart of your school.",
+          whyChecks: [
+            { q: 'SCH_012', values: ['Yes'], text: "Student accidents have occurred on your premises in the past 3 years, indicating gaps in your safety environment that need immediate attention to protect both students and your school's reputation." },
+            { q: 'SCH_020', values: ['No'], text: "Without written emergency procedures for accidents or fire, your staff may not know how to respond effectively in a crisis, increasing the risk of harm and legal exposure." }
+          ]
         },
         'Business Continuity': {
           base: "Your assessment reveals potential gaps in your school's ability to withstand and recover from unexpected disruptions.",
@@ -663,7 +720,10 @@ const domainConfig = {
             { q: 'SCH_022', values: ['No'], append: "You've indicated your school could not meet salary and operational expenses during a one-month closure, which is a significant financial resilience gap." },
             { q: 'SCH_022', values: ['Not sure'], append: "You're unsure if your school could survive a one-month closure, which itself signals a need for better financial contingency planning." }
           ],
-          suffix: "Building business continuity ensures your school can keep its doors open and staff paid, even when the unexpected happens."
+          suffix: "Building business continuity ensures your school can keep its doors open and staff paid, even when the unexpected happens.",
+          whyChecks: [
+            { q: 'SCH_022', values: ['No'], text: "Your school could not meet salary and operational expenses during a one-month closure, meaning a single disruption could have severe financial consequences for your school's ability to continue operating." }
+          ]
         },
         'Transport Safety': {
           base: "Your assessment indicates that your school may face exposure related to student transport.",
@@ -673,14 +733,21 @@ const domainConfig = {
             { q: 'SCH_025', values: ['No'], append: "Without regular vehicle safety inspections, your school transport fleet may have undetected mechanical issues that could lead to breakdowns or accidents." },
             { q: 'SCH_025', values: ['Not sure'], append: "You're uncertain whether vehicle safety inspections are conducted regularly, which itself indicates a gap in transport safety management." }
           ],
-          suffix: "Keeping students safe on the road is as important as keeping them safe in the classroom."
+          suffix: "Keeping students safe on the road is as important as keeping them safe in the classroom.",
+          whyChecks: [
+            { q: 'SCH_015', values: ['Yes'], text: "Your school operates transport services, carrying responsibility for student safety beyond the school gates. Without proper driver training and vehicle inspections, a transport accident could have serious consequences for students and your school." }
+          ]
         },
         'Regulatory Readiness': {
           base: "Your assessment shows that no one is formally responsible for health and safety within your school, creating a significant governance gap.",
           answerChecks: [
             { q: 'SCH_016', values: ['No'], append: "Combined with the absence of public liability protection, this increases your exposure to legal claims, regulatory action, and reputational damage if another student incident occurs. These gaps could also reduce your school\u2019s ability to respond confidently when incidents happen." }
           ],
-          suffix: ""
+          suffix: "",
+          whyChecks: [
+            { q: 'SCH_023', values: ['No one specifically assigned'], text: "With no one formally responsible for health and safety, your school lacks the governance and accountability needed to manage student safety risks effectively." },
+            { q: 'SCH_016', values: ['No'], text: "Without public liability protection, your school faces significant financial and legal exposure if a student or visitor is injured on your premises." }
+          ]
         },
         'Property Protection': {
           base: "Your assessment shows that your school\u2019s physical facilities and property may not be adequately safeguarded.",
@@ -691,7 +758,10 @@ const domainConfig = {
             { q: 'SCH_027', values: ['Rarely'], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." },
             { q: 'SCH_017', values: ['No'], append: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months." }
           ],
-          suffix: "Your school buildings are the foundation of your operations\u2014protecting them ensures your school can continue serving your community."
+          suffix: "Your school buildings are the foundation of your operations\u2014protecting them ensures your school can continue serving your community.",
+          whyChecks: [
+            { q: 'SCH_017', values: ['No'], text: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months, affecting students, staff, and the wider community." }
+          ]
         }
       },
       catchAll: "Your assessment provides a clear picture of your school\u2019s current operational resilience. The priority is protecting what matters most\u2014your students, your reputation, and your ability to deliver quality education."
@@ -702,6 +772,13 @@ const domainConfig = {
       'transport safety': 'reviewing and updating insurance coverage for all school transport and vehicles used for student movement',
       'regulatory readiness': 'Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents',
       'property protection': 'getting comprehensive fire and building insurance for all school facilities and property'
+    },
+    firstStepTexts: {
+      'student safety': 'Conduct a full student safety audit, document emergency procedures for accidents and fire, and ensure appropriate accident and injury protection is in place.',
+      'business continuity': 'Develop a business continuity plan covering temporary closure scenarios and build financial reserves to sustain operations through a one-month disruption.',
+      'transport safety': 'Review and update insurance coverage for all school transport, implement driver training in first aid and defensive driving, and establish regular vehicle safety inspections.',
+      'regulatory readiness': 'Appoint a designated health and safety lead, secure public liability insurance, and establish formal health and safety governance with clear responsibilities.',
+      'property protection': 'Secure comprehensive fire and building insurance for all school facilities, install fire extinguishers and alarms across all buildings, and establish regular maintenance inspections.'
     },
     realLifeContext: "Your school is more than a building\u2014it's a community. Parents trust you with the safety and education of their children. If a student incident, fire, or disruption were to happen, your school\u2019s ability to continue operations depends on the resilience you have in place today."
   },
@@ -735,14 +812,21 @@ const domainConfig = {
             { q: 'CHR_026', values: ["No"], append: "Without regular vehicle safety inspections, your church transport may have undetected safety issues." },
             { q: 'CHR_026', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted for your church transport, indicating a gap in fleet safety management." }
           ],
-          suffix: "Reviewing comprehensive public liability insurance for large gatherings is an important step\u2014because protecting your congregation protects your mission."
+          suffix: "Reviewing comprehensive public liability insurance for large gatherings is an important step\u2014because protecting your congregation protects your mission.",
+          whyChecks: [
+            { q: 'CHR_013', values: ['Over 1000'], text: "With over 1,000 congregants, a single incident during a large gathering could create significant legal, financial, and reputational consequences for your church." },
+            { q: 'CHR_020', values: ['No'], text: "Without documented emergency procedures, your team may not know how to respond effectively if an incident occurs during a service or event." }
+          ]
         },
         'Assets': {
           base: "Your assessment suggests that your church's valuable assets may not be adequately protected.",
           answerChecks: [
             { q: 'CHR_014', values: ['Yes'], append: "Valuable musical instruments and broadcast equipment require specialized insurance to protect against loss or damage." }
           ],
-          suffix: "Ensuring high-value church assets are specifically insured is a practical step for protection."
+          suffix: "Ensuring high-value church assets are specifically insured is a practical step for protection.",
+          whyChecks: [
+            { q: 'CHR_014', values: ['Yes'], text: "Your church owns valuable instruments and broadcast equipment that support your ministry, and these assets are not currently protected by specialised insurance against theft, damage, or loss." }
+          ]
         },
         'Legal Liability': {
           base: "Your assessment indicates that your church may not be adequately protected against event liability.",
@@ -751,7 +835,11 @@ const domainConfig = {
             { q: 'CHR_012', values: ["Yes"], append: "Incidents or injuries on your premises in the past 3 years indicate safety gaps that need attention." },
             { q: 'CHR_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety, critical responsibilities may go unaddressed." }
           ],
-          suffix: "Securing comprehensive public liability insurance for your premises is essential."
+          suffix: "Securing comprehensive public liability insurance for your premises is essential.",
+          whyChecks: [
+            { q: 'CHR_015', values: ['No'], text: "Without public liability insurance, your church faces significant financial and legal exposure if a congregant is injured on your premises during a service or event." },
+            { q: 'CHR_023', values: ['No one specifically assigned'], text: "With no one specifically responsible for health and safety, your church lacks the governance needed to manage premises risks and respond effectively to incidents." }
+          ]
         },
         'Property': {
           base: "Your assessment shows that your church building and contents may not be adequately insured.",
@@ -761,7 +849,10 @@ const domainConfig = {
             { q: 'CHR_027', values: ["Never"], append: "You never conduct building maintenance inspections for your church facilities, allowing issues to go undetected." },
             { q: 'CHR_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted for your church facilities, increasing the likelihood of undetected issues." }
           ],
-          suffix: "Getting fire insurance for the church building and contents is a critical step for property protection."
+          suffix: "Getting fire insurance for the church building and contents is a critical step for property protection.",
+          whyChecks: [
+            { q: 'CHR_017', values: ['No'], text: "Without fire insurance, a single fire could result in the total loss of your church building and contents, disrupting services and creating financial strain for your congregation." }
+          ]
         }
       },
       catchAll: "Your assessment shows that while your church has important strengths in serving its community, critical gaps in emergency preparedness, liability protection, and property safeguards could leave your congregation exposed. A single incident during a service, a fire, or a theft of valuable equipment could disrupt your operations and create financial strain that affects your ability to focus on your mission."
@@ -771,6 +862,12 @@ const domainConfig = {
       'assets': 'ensuring high-value musical instruments and broadcast equipment are specifically insured',
       'legal liability': 'securing comprehensive public liability insurance for your church premises',
       'property': 'getting fire insurance for the church building and contents to protect your property'
+    },
+    firstStepTexts: {
+      'operations': 'Review comprehensive public liability insurance for large gatherings and document emergency procedures for services and events.',
+      'assets': 'Secure specialised insurance for valuable musical instruments and broadcast equipment to protect against theft, damage, or loss.',
+      'legal liability': 'Secure comprehensive public liability insurance for your premises and designate a health and safety lead with clear responsibilities.',
+      'property': 'Secure fire insurance for your church building and contents, install fire extinguishers across all premises, and establish regular building maintenance inspections.'
     },
     realLifeContext: "Here\u2019s what this means in real life: A congregant injury, fire, or theft of valuable equipment could disrupt your church\u2019s operations and create financial strain. Your CoverScore reflects how well your church is protected so you can focus on your mission with confidence."
   },
@@ -803,7 +900,11 @@ const domainConfig = {
             { q: 'CON_026', values: ["No"], append: "Without regular vehicle and equipment safety inspections, your fleet may have undetected safety issues." },
             { q: 'CON_026', values: ["Not sure"], append: "You are uncertain whether vehicle safety inspections are conducted regularly, indicating a gap in fleet safety management." }
           ],
-          suffix: "Ensuring each project has adequate insurance coverage is an important operational step\u2014because every project deserves to be protected."
+          suffix: "Ensuring each project has adequate insurance coverage is an important operational step\u2014because every project deserves to be protected.",
+          whyChecks: [
+            { q: 'CON_020', values: ['No'], text: "Without documented emergency procedures, your team may not know how to respond if there is an accident or fire on your construction site." },
+            { q: 'CON_025', values: ['No'], text: "Your heavy vehicle operators lack safe operating procedure training, which increases the risk of accidents that could halt work across multiple project sites." }
+          ]
         },
         'Equipment': {
           base: "Your assessment suggests that your construction equipment may represent a significant uninsured risk.",
@@ -812,7 +913,10 @@ const domainConfig = {
             { q: 'CON_027', values: ["Never"], append: "You never conduct maintenance inspections for your tools, machinery, and site facilities, allowing issues to go undetected." },
             { q: 'CON_027', values: ["Rarely"], append: "Equipment maintenance inspections are rarely conducted, increasing the likelihood of undetected issues." }
           ],
-          suffix: "Ensuring all heavy machinery is comprehensively insured is essential for your operations."
+          suffix: "Ensuring all heavy machinery is comprehensively insured is essential for your operations.",
+          whyChecks: [
+            { q: 'CON_014', values: ['Yes'], text: "Your construction site operates heavy machinery that creates significant liability and damage risk, and this equipment is not currently protected by comprehensive insurance against breakdown, theft, or accidental damage." }
+          ]
         },
         'Insurance': {
           base: "Your assessment indicates that your construction projects may not be adequately insured.",
@@ -820,7 +924,10 @@ const domainConfig = {
             { q: 'CON_015', values: ['No'], append: "Without contractor's all-risk or works insurance, your projects are exposed to significant financial loss." },
             { q: 'CON_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your work sites, putting property and lives at risk." }
           ],
-          suffix: "Getting comprehensive contractor's all-risk insurance is a critical step\u2014because every project deserves to be protected."
+          suffix: "Getting comprehensive contractor's all-risk insurance is a critical step\u2014because every project deserves to be protected.",
+          whyChecks: [
+            { q: 'CON_015', values: ['No'], text: "Without contractor's all-risk insurance, a single incident on site\u2014fire, theft, or accidental damage\u2014could result in significant financial loss that you would have to cover out of pocket." }
+          ]
         },
         'Worker Protection': {
           base: "Your assessment shows that your on-site workers may not be adequately protected against accidents.",
@@ -829,7 +936,11 @@ const domainConfig = {
             { q: 'CON_012', values: ["Yes"], append: "On-site accidents in the past 3 years indicate safety gaps that need attention." },
             { q: 'CON_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for health and safety on site, critical compliance responsibilities may go unaddressed." }
           ],
-          suffix: "Getting group personal accident cover for all on-site workers is essential for worker protection."
+          suffix: "Getting group personal accident cover for all on-site workers is essential for worker protection.",
+          whyChecks: [
+            { q: 'CON_016', values: ['No'], text: "Without group personal accident cover, a workplace injury could create significant financial and legal consequences for both your workers and your construction business." },
+            { q: 'CON_023', values: ['No one specifically assigned'], text: "With no one specifically responsible for health and safety, your construction sites lack the governance needed to manage on-site risks and respond effectively to incidents." }
+          ]
         },
         'Contractual': {
           base: "Your assessment suggests that your business may not be protected against project delay penalties.",
@@ -838,7 +949,10 @@ const domainConfig = {
             { q: 'CON_022', values: ["No"], append: "Your business could not continue meeting payroll and operating expenses if a major project was halted for one month, indicating a critical financial resilience gap." },
             { q: 'CON_022', values: ["Not sure"], append: "You're unsure if your business could survive a major project halt, which signals a need for better financial contingency planning." }
           ],
-          suffix: "Reviewing contract terms and considering delay penalty protection is a practical step for risk management."
+          suffix: "Reviewing contract terms and considering delay penalty protection is a practical step for risk management.",
+          whyChecks: [
+            { q: 'CON_017', values: ['No'], text: "Without protection against project delay penalties, a single project delay could create significant financial liability that affects your ability to continue operations." }
+          ]
         }
       },
       catchAll: "Your assessment shows that while your construction business is actively delivering projects, critical gaps in site safety, equipment protection, and project-specific insurance could leave you exposed. A workplace accident, equipment failure, or project delay could disrupt operations, create legal liability, and put financial pressure on your business. The most resilient contractors combine operational safeguards with comprehensive project protection."
@@ -849,6 +963,13 @@ const domainConfig = {
       'insurance': 'getting comprehensive contractor\'s all-risk insurance to protect your construction projects',
       'worker protection': 'getting group personal accident cover for all on-site workers to protect your team',
       'contractual': 'reviewing contract terms and considering delay penalty protection for your projects'
+    },
+    firstStepTexts: {
+      'operations': 'Review insurance coverage for each construction project and document emergency procedures for on-site accidents and fire.',
+      'equipment': 'Secure comprehensive insurance for all heavy machinery and establish regular equipment maintenance inspection schedules.',
+      'insurance': 'Secure contractor\u2019s all-risk or works insurance for every project and install fire extinguishers across all work sites.',
+      'worker protection': 'Secure group personal accident cover for all on-site workers and designate a site health and safety lead with clear responsibilities.',
+      'contractual': 'Review contract terms for delay penalty exposure, assess project delay protection options, and build financial reserves for a one-month project halt.'
     },
     realLifeContext: "Here\u2019s what this means in real life: A workplace accident, equipment damage, or project delay could put your construction business under serious financial pressure. Your CoverScore measures how prepared you are to keep projects on track and protect your workers and bottom line."
   },
@@ -880,7 +1001,11 @@ const domainConfig = {
             { q: 'TRN_027', values: ["Never"], append: "You never conduct maintenance inspections for your depot and yard facilities, allowing issues to go undetected." },
             { q: 'TRN_027', values: ["Rarely"], append: "Depot and yard maintenance inspections are rarely conducted, increasing the likelihood of undetected issues." }
           ],
-          suffix: "Implementing fleet-wide risk management and comprehensive insurance is an important step\u2014because your fleet should keep moving, not stop for the unexpected."
+          suffix: "Implementing fleet-wide risk management and comprehensive insurance is an important step\u2014because your fleet should keep moving, not stop for the unexpected.",
+          whyChecks: [
+            { q: 'TRN_020', values: ['No'], text: "Without documented emergency procedures, your drivers may not know how to respond effectively if there is an accident or fleet incident on the road." },
+            { q: 'TRN_025', values: ['No'], text: "Without regular vehicle safety inspections, your entire fleet may have undetected safety issues that could lead to accidents or breakdowns." }
+          ]
         },
         'Insurance': {
           base: "Your assessment indicates that your goods in transit may not be adequately insured.",
@@ -889,7 +1014,10 @@ const domainConfig = {
             { q: 'TRN_022', values: ["No"], append: "Your transport business could not continue meeting payroll and operating expenses if fleet operations were suspended for one month, indicating a critical financial resilience gap." },
             { q: 'TRN_022', values: ["Not sure"], append: "You're unsure if your business could survive a one-month fleet suspension, which signals a need for better financial contingency planning." }
           ],
-          suffix: "Getting comprehensive goods-in-transit insurance is essential for protecting your cargo."
+          suffix: "Getting comprehensive goods-in-transit insurance is essential for protecting your cargo.",
+          whyChecks: [
+            { q: 'TRN_015', values: ['No'], text: "Without goods-in-transit insurance, your cargo is exposed to loss or damage during transportation, and a single lost shipment could create significant financial pressure for your business." }
+          ]
         },
         'Worker Protection': {
           base: "Your assessment shows that your drivers may not be adequately protected against accidents.",
@@ -898,7 +1026,11 @@ const domainConfig = {
             { q: 'TRN_024', values: ["No"], append: "Your drivers are not trained in defensive driving and first aid, increasing accident risk and liability exposure." },
             { q: 'TRN_024', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and first aid, which indicates a training gap." }
           ],
-          suffix: "Getting group personal accident cover for all drivers is essential for worker protection."
+          suffix: "Getting group personal accident cover for all drivers is essential for worker protection.",
+          whyChecks: [
+            { q: 'TRN_016', values: ['No'], text: "Without group personal accident cover, an accident involving your drivers could create serious financial and legal consequences for both your employees and your transport business." },
+            { q: 'TRN_024', values: ['No'], text: "Your drivers lack defensive driving and first aid training, which increases the risk of accidents on the road and liability exposure for your business." }
+          ]
         },
         'Compliance': {
           base: "Your assessment suggests that your fleet may not be fully compliant with motor insurance requirements.",
@@ -910,7 +1042,10 @@ const domainConfig = {
             { q: 'TRN_026', values: ["No"], append: "Your depot or yard does not have a working fire alarm system that is regularly tested." },
             { q: 'TRN_026', values: ["Not sure"], append: "You are uncertain whether your depot has a working fire alarm system, indicating a gap in fire safety management." }
           ],
-          suffix: "Extending comprehensive motor insurance to your entire fleet is a critical step for compliance and protection."
+          suffix: "Extending comprehensive motor insurance to your entire fleet is a critical step for compliance and protection.",
+          whyChecks: [
+            { q: 'TRN_017', values: ['No'], text: "Without comprehensive motor insurance for all fleet vehicles, your transport business faces both compliance penalties and financial exposure if an uninsured vehicle is involved in an accident." }
+          ]
         }
       },
       catchAll: "Your assessment shows that while your fleet is your core operational strength, critical gaps in fleet management, cargo protection, and compliance could leave your transport business exposed. An accident, cargo theft, or compliance issue could ground your fleet and disrupt your entire operation. The most resilient transport operators combine comprehensive fleet management with driver protection and regulatory compliance."
@@ -920,6 +1055,12 @@ const domainConfig = {
       'insurance': 'getting comprehensive goods-in-transit insurance to protect your cargo during transportation',
       'worker protection': 'getting group personal accident cover for all drivers to protect your team',
       'compliance': 'extending comprehensive motor insurance to your entire fleet for compliance and protection'
+    },
+    firstStepTexts: {
+      'fleet': 'Implement fleet-wide risk management, document emergency procedures for road accidents, and establish regular vehicle safety inspection schedules.',
+      'insurance': 'Secure comprehensive goods-in-transit insurance and build financial reserves to sustain operations through a one-month fleet suspension.',
+      'worker protection': 'Secure group personal accident cover for all drivers and implement defensive driving and first aid training programs.',
+      'compliance': 'Extend comprehensive motor insurance to your entire fleet, install fire extinguishers in all vehicles and depot, designate a safety and compliance lead, and ensure your depot has a working fire alarm system.'
     },
     realLifeContext: "Here\u2019s what this means in real life: An accident, cargo theft, or compliance issue could ground your fleet and disrupt your entire operation. Your CoverScore reflects how prepared your transport business is to keep moving\u2014no matter what happens on the road."
   }
