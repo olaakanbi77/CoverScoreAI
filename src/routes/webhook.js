@@ -865,7 +865,7 @@ router.post('/evolution', async (req, res) => {
           const gaps = [];
           if (propertyIns === 'Yes') positives.push("you have fire and burglary insurance for your business");
           if (disasterSurvival === 'Yes easily') positives.push("your business could recover easily from a major disruption");
-          if (workforce === '1-10') positives.push("you run a lean operation with manageable workforce exposure");
+          if (workforce === '1-10') positives.push("you operate a lean business with manageable workforce risks");
           if (workforce === '51+') gaps.push("you have a significant workforce that creates substantial employment liability exposure");
           if (revenue === 'Over \u20A6200M') gaps.push("your business has significant financial exposure that needs adequate coverage");
           if (propertyIns === 'No') gaps.push("you don't have fire and burglary insurance for your business");
@@ -1212,7 +1212,9 @@ router.post('/evolution', async (req, res) => {
             { q: 'TRN_026', values: ['Yes'], text: 'working fire alarm system in your depot that is regularly tested' }
           ],
           SME: [
+            { q: 'SME_011', values: ['Yes'], text: 'consistent monthly revenue that supports business stability' },
             { q: 'SME_013', values: ['1\u201310', '11\u201350'], text: 'manageable workforce size that keeps liability exposure contained' },
+            { q: 'SME_015', values: ['Yes'], text: 'a dedicated business location for your operations' },
             { q: 'SME_016', values: ['Yes'], text: 'comprehensive fire and burglary insurance for your business premises' },
             { q: 'SME_017', values: ['Yes easily'], text: 'strong financial resilience to sustain operations through a three-month closure' }
           ]
@@ -1227,13 +1229,16 @@ router.post('/evolution', async (req, res) => {
       };
       const strengths = buildStrengths(answers, prefix);
 
-      // ===== Message 3: Risk Story\u2122 + What You're Doing Well + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
-      let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
+      // ===== Message 3: What You're Doing Well + Risk Story\u2122 + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
+      let msg3 = '';
+      const riskStoryText = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
       if (strengths.length > 0) {
         const lastS = strengths.pop();
         const sStr = strengths.length > 0 ? strengths.join(', ') + ', and ' + lastS : lastS;
-        msg3 += `\n\nWhat You\u2019re Doing Well\u2122\n\nYour assessment shows several important strengths. Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. These provide a solid operational foundation on which stronger resilience can be built.`;
+        msg3 = `What You\u2019re Doing Well\u2122\n\nYour assessment shows several important strengths. Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. These provide a solid operational foundation on which stronger resilience can be built.`;
       }
+      if (msg3) msg3 += '\n\n';
+      msg3 += riskStoryText;
       // If Nothing Changes\u2122 — consequence of inaction (between risk story and forecast)
       const ifNothingChangeTexts = {
         HOS: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`,

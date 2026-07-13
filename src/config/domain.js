@@ -440,10 +440,10 @@ const domainConfig = {
     followUpMsg: "I'll also share practical business risk management tips and strategies that match your assessment.",
     pillarMappings: {},
     whyTexts: {
-      'workforce': "Your workforce is your most important asset, and every employee represents both opportunity and responsibility. Without adequate employer's liability and workforce insurance, a workplace injury or employment dispute could create significant financial and legal exposure for your business.",
-      'financial': "Your business's financial resilience depends on having the right insurance cover for your revenue scale. Without adequate coverage aligned to your revenue, a major claim could create substantial out-of-pocket costs that threaten your business's financial stability.",
-      'asset protection': "Your business assets\u2014your premises, equipment, and inventory\u2014represent years of hard work and investment. Without comprehensive fire and burglary insurance, a single event could destroy assets that took years to build.",
-      'business continuity': "Your ability to survive a major disruption depends on having both a continuity plan and adequate insurance. Without these, a fire, burglary, or prolonged closure could force your business to close permanently."
+      'workforce': "Your workforce is your most important asset, and every employee represents both opportunity and responsibility for your business. Without adequate employer's liability and workforce insurance, a workplace injury or employment dispute could create significant financial and legal exposure that affects your ability to operate.",
+      'financial': "Your business's financial resilience depends on having insurance cover that matches your revenue scale. Without adequate coverage, a major claim could create substantial out-of-pocket costs that threaten your business's financial stability and growth.",
+      'asset protection': "Your business depends on physical assets\u2014premises, equipment, and inventory\u2014to generate income every day. Without comprehensive fire and burglary insurance, a single event could destroy those assets and interrupt your ability to operate.",
+      'business continuity': "Your ability to survive a major disruption depends on having both a continuity plan and adequate insurance. Without these foundations, a fire, burglary, or prolonged closure could force your business to close permanently."
     },
     insightTexts: {
       perPillar: {
@@ -468,13 +468,13 @@ const domainConfig = {
           ]
         },
         'Asset Protection': {
-          base: "Your assessment indicates that your business assets may not be adequately protected against unexpected events.",
+          base: "Your assessment shows that your business depends on physical assets to generate income, yet those assets remain exposed to fire, burglary, and other unexpected events.",
           answerChecks: [
-            { q: 'SME_016', values: ['No'], append: "Without fire and burglary insurance, your business property and assets are vulnerable to significant loss." }
+            { q: 'SME_016', values: ['No'], append: "A single incident could interrupt operations, damage cash flow, and delay recovery." }
           ],
-          suffix: "Getting comprehensive fire and burglary insurance is a critical step for protecting your business assets.",
+          suffix: "Protecting those assets is one of the fastest ways to improve your overall business resilience.",
           whyChecks: [
-            { q: 'SME_016', values: ['No'], text: "Without fire and burglary insurance, a single fire or burglary could destroy your business premises, equipment, and inventory\u2014assets that took years to build." }
+            { q: 'SME_016', values: ['No'], text: "A single fire or burglary could destroy your premises, equipment, and inventory\u2014assets that took years to build and that your business depends on every day to generate income." }
           ]
         },
         'Business Continuity': {
@@ -499,10 +499,10 @@ const domainConfig = {
       'business continuity': 'creating a business continuity plan and ensuring adequate insurance coverage to survive disruptions'
     },
     firstStepTexts: {
-      'workforce': 'Review employer\u2019s liability and workforce insurance options to protect your employees and reduce business liability exposure.',
-      'financial': 'Review your business insurance cover to ensure it adequately matches your current revenue scale.',
-      'asset protection': 'Get comprehensive fire and burglary insurance for your business premises, equipment, and inventory.',
-      'business continuity': 'Create a business continuity plan and build financial reserves to sustain operations through a three-month closure.'
+      'workforce': 'Arrange Employer\u2019s Liability and comprehensive workforce insurance to protect your employees and reduce your business\u2019s exposure to employment-related claims.',
+      'financial': 'Review your business insurance coverage to ensure it adequately matches your current revenue scale and risk profile.',
+      'asset protection': 'Arrange comprehensive Fire & Burglary Insurance as the foundation of your business continuity plan, helping your business recover more quickly after a major disruption.',
+      'business continuity': 'Develop a formal business continuity plan covering financial reserves, insurance, and operational recovery steps to sustain your business through a prolonged disruption.'
     },
     realLifeContext: "Here\u2019s what this means in real life: If a fire, burglary, or prolonged closure hit your business today, would you be able to recover? Your CoverScore measures how resilient your business is to unexpected disruptions\u2014and every improvement means a stronger safety net for your employees and operations."
   },
