@@ -592,7 +592,7 @@ const domainConfig = {
       'workforce': 'Review comprehensive workforce insurance and safety programs, and implement workplace safety governance to reduce injury risk and liability exposure.',
       'operations': 'Implement equipment redundancy for critical machinery, document emergency procedures, and designate a senior operations lead for health and safety.',
       'asset protection': 'Secure comprehensive fire and special perils insurance for your facility and equipment, install fire extinguishers, and establish regular building maintenance inspections.',
-      'business continuity': 'Create a comprehensive business continuity and disaster recovery plan, and build financial reserves to sustain operations through a one-month closure.'
+      'business continuity': 'Develop a comprehensive Business Continuity and Disaster Recovery Plan so your manufacturing operation can continue operating and recover quickly after an unexpected disruption. Building financial reserves to sustain operations during a temporary shutdown should form part of that plan.'
     },
     realLifeContext: "Here\u2019s what this means in real life: A machine breakdown, fire, or supply chain disruption could halt your manufacturing operations for weeks. Your CoverScore measures how prepared you are to keep production running\u2014and every improvement means less downtime and greater revenue protection."
   },

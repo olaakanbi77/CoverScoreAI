@@ -1087,7 +1087,7 @@ router.post('/evolution', async (req, res) => {
             if (answer && qImprovements[answer]) {
               const imp = qImprovements[answer];
               totalGain += imp.gain;
-              const prefixVerbs = 'Add|Assess|Audit|Begin|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Install|Make|Obtain|Open|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Upgrade|Verify';
+              const prefixVerbs = 'Add|Assess|Audit|Begin|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Install|Make|Obtain|Open|Protect|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Upgrade|Verify';
               const prefixRegex = new RegExp('^(' + prefixVerbs + ')', 'i');
               const verbMatch = imp.action.match(prefixRegex);
               const prefixWord = verbMatch ? verbMatch[1] : 'Build';
@@ -1180,7 +1180,7 @@ router.post('/evolution', async (req, res) => {
           MFG: [
             { q: 'MFG_013', values: ['Under 50', '50\u2013200'], text: 'manageable workforce size that keeps liability exposure contained' },
             { q: 'MFG_020', values: ['Yes'], text: 'documented emergency procedures for accidents and fire' },
-            { q: 'MFG_021', values: ['Yes'], text: 'fire extinguishers regularly inspected across your facility' },
+            { q: 'MFG_021', values: ['Yes'], text: 'regularly inspected fire extinguishers in place across your facility' },
             { q: 'MFG_023', values: ['Operations Manager', 'Designated Safety Officer'], text: 'dedicated health and safety leadership' },
             { q: 'MFG_025', values: ['Yes'], text: 'operators trained in safe operating procedures' },
             { q: 'MFG_026', values: ['Yes'], text: 'regular vehicle safety inspections for your logistics fleet' },
@@ -1238,7 +1238,9 @@ router.post('/evolution', async (req, res) => {
         const count = strengths.length + 1;
         const intro = count === 1 ? 'Your assessment identified an important strength.' : 'Your assessment identified several important strengths.';
         const bridge = count === 1 ? 'This provides' : 'Together, these provide';
-        msg3a = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. ${bridge} a solid operational foundation on which stronger resilience can be built.`;
+        const entityMap = { MFG: 'facility', HOS: 'hospital' };
+        const entity = entityMap[prefix] || dom.domain.replace('healthcare', 'hospital');
+        msg3a = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${entity} has ${sStr}. ${bridge} a solid operational foundation on which stronger ${dom.resilienceTerm.toLowerCase()} can be built.`;
       }
       if (msg3a) msg3a += '\n\n';
       msg3a += riskStoryText;
