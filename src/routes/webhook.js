@@ -863,24 +863,32 @@ router.post('/evolution', async (req, res) => {
           return story;
         }
         if (prefix === 'MFG') {
-          const workforce = answers['MFG_013'];
+          const workplaceAccidents = answers['MFG_012'];
           const equipment = answers['MFG_014'];
+          const emergencyProcedures = answers['MFG_020'];
+          const fireExtinguishers = answers['MFG_021'];
+          const safetyOwner = answers['MFG_023'];
           const facilityIns = answers['MFG_016'];
-          const disasterRecovery = answers['MFG_017'];
-          const gaps = [];
-          if (workforce === '200+') gaps.push("your large workforce creates significant liability exposure");
-          if (equipment === 'Immediately') gaps.push("a critical machine breakdown would halt production immediately");
-          if (facilityIns === 'No') gaps.push("you don't have fire and special perils insurance for your facility");
-          if (disasterRecovery === 'No, we would close') gaps.push("your business would not survive a major disaster closure");
-          if (disasterRecovery === 'With difficulty') gaps.push("your business would struggle to recover from a major disaster");
-          let story = equipment === 'Immediately'
-            ? "Your manufacturing operation depends on equipment running continuously. "
-            : "Your manufacturing operation has some resilience in its equipment setup. ";
-          if (gaps.length > 0) {
-            const lastGap = gaps.pop();
-            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          const closureResilience = answers['MFG_022'];
+          const gapItems = [];
+          if (equipment === 'Immediately') gapItems.push("a critical machine breakdown could halt production immediately");
+          if (emergencyProcedures === 'No') gapItems.push("emergency response procedures have not been formally documented");
+          if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated health and safety lead");
+          if (facilityIns === 'No') gapItems.push("your facility and equipment are not protected against fire and special perils");
+          if (fireExtinguishers === 'No') gapItems.push("fire protection measures are incomplete");
+          let story = "Every day, your manufacturing operation depends on equipment, people, and processes working together to keep production running.\n\n";
+          if (workplaceAccidents === 'Yes') {
+            story += "Because workplace accidents have occurred in the past 3 years, your facility is already operating in a higher-risk environment. ";
           }
-          story += `In manufacturing, downtime is expensive and protection is essential.`;
+          if (gapItems.length > 0) {
+            const lastGap = gapItems.pop();
+            const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
+            story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
+            story += `\n\nAlthough these issues may not affect daily production today, a single major incident\u2014such as equipment failure, fire, or a workplace accident\u2014could halt production, disrupt customer commitments, create legal exposure, and put significant financial pressure on your business.`;
+          } else {
+            story += `Your facility has important safeguards in place, but manufacturing risk management requires continuous attention.`;
+          }
+          story += `\n\nThe encouraging news is that each of these risks can be reduced through practical operational improvements and appropriate protection strategies.`;
           return story;
         }
         if (prefix === 'HOS') {
@@ -951,63 +959,87 @@ router.post('/evolution', async (req, res) => {
           return story;
         }
         if (prefix === 'CHR') {
+          const premisesIncidents = answers['CHR_012'];
           const congregation = answers['CHR_013'];
-          const valuableAssets = answers['CHR_014'];
           const eventLiability = answers['CHR_015'];
           const buildingIns = answers['CHR_017'];
-          const gaps = [];
-          if (congregation === 'Over 1000') gaps.push("your large congregation creates significant liability during gatherings");
-          if (eventLiability === 'No') gaps.push("you don't have insurance if a congregant is injured on your premises");
-          if (valuableAssets === 'Yes') gaps.push("you have valuable instruments and equipment that need specialized coverage");
-          if (buildingIns === 'No') gaps.push("your church building and contents are not insured against fire");
-          let story = "Your church serves as a gathering place for your community, and protecting that space is part of protecting your mission. ";
-          if (gaps.length > 0) {
-            const lastGap = gaps.pop();
-            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          const emergencyProcedures = answers['CHR_020'];
+          const safetyOwner = answers['CHR_023'];
+          const gapItems = [];
+          if (emergencyProcedures === 'No') gapItems.push("emergency response procedures have not been formally documented");
+          if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated health and safety lead");
+          if (eventLiability === 'No') gapItems.push("your church does not have liability protection if a congregant is injured on your premises");
+          if (buildingIns === 'No') gapItems.push("your church building and contents are not protected against fire");
+          let story = "Every week, your church brings people together for worship, community, and support. Protecting that gathering space is part of protecting your mission.\n\n";
+          if (premisesIncidents === 'Yes') {
+            story += "Because incidents or injuries have occurred on your premises in the past, your church is already operating in a higher-risk environment. ";
           }
-          story += `A fire, injury, or theft could disrupt your services\u2014because protecting your congregation protects your mission.`;
+          if (gapItems.length > 0) {
+            const lastGap = gapItems.pop();
+            const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
+            story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
+            story += `\n\nAlthough these issues may not affect your weekly services today, a single major incident\u2014such as a fire, congregant injury, or theft of valuable equipment\u2014could disrupt your operations, create legal exposure, and put financial pressure on your church.`;
+          } else {
+            story += `Your church has important safeguards in place, but protecting your congregation requires continuous attention.`;
+          }
+          story += `\n\nThe encouraging news is that each of these risks can be reduced through practical operational improvements and appropriate protection strategies.`;
           return story;
         }
         if (prefix === 'CON') {
-          const projectCount = answers['CON_013'];
+          const siteAccidents = answers['CON_012'];
           const machinery = answers['CON_014'];
           const contractorIns = answers['CON_015'];
           const accidentCover = answers['CON_016'];
-          const penaltyProtection = answers['CON_017'];
-          const gaps = [];
-          if (projectCount === 'More than 5') gaps.push("managing many concurrent projects increases your overall risk exposure");
-          if (machinery === 'Yes') gaps.push("heavy machinery on site creates significant liability and damage risk");
-          if (contractorIns === 'No') gaps.push("you don't have contractor's all-risk insurance for your projects");
-          if (accidentCover === 'No') gaps.push("your on-site workers don't have group personal accident cover");
-          if (penaltyProtection === 'No') gaps.push("you're not protected against project delay penalties");
-          let story = "Construction projects involve inherent risk, but the right protection keeps those risks from becoming crises. ";
-          if (gaps.length > 0) {
-            const lastGap = gaps.pop();
-            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          const emergencyProcedures = answers['CON_020'];
+          const safetyOwner = answers['CON_023'];
+          const gapItems = [];
+          if (machinery === 'Yes') gapItems.push("heavy machinery on site creates significant liability and damage risk");
+          if (emergencyProcedures === 'No') gapItems.push("emergency response procedures for site accidents have not been formally documented");
+          if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated health and safety lead on site");
+          if (contractorIns === 'No') gapItems.push("your projects are not protected by contractor's all-risk insurance");
+          if (accidentCover === 'No') gapItems.push("your on-site workers do not have group personal accident cover");
+          let story = "Every day on a construction site, people, equipment, and processes must work together to deliver projects safely and on time.\n\n";
+          if (siteAccidents === 'Yes') {
+            story += "Because on-site accidents have occurred in the past 3 years, your sites are already operating in a higher-risk environment. ";
           }
-          story += `An accident, equipment damage, or project delay\u2014every project deserves to be protected.`;
+          if (gapItems.length > 0) {
+            const lastGap = gapItems.pop();
+            const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
+            story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
+            story += `\n\nAlthough these issues may not affect your day-to-day operations today, a single major incident\u2014such as an accident, equipment failure, or fire\u2014could halt work across your projects, create legal and financial exposure, delay timelines, and put significant pressure on your business.`;
+          } else {
+            story += `Your sites have important safeguards in place, but construction risk management requires continuous attention.`;
+          }
+          story += `\n\nThe encouraging news is that each of these risks can be reduced through practical operational improvements and appropriate protection strategies.`;
           return story;
         }
         if (prefix === 'TRN') {
-          // same pattern as CON
-          const fleetSize = answers['TRN_013'];
+          const fleetAccidents = answers['TRN_012'];
           const goodsIns = answers['TRN_015'];
           const driverCover = answers['TRN_016'];
           const compliance = answers['TRN_017'];
-          const gaps = [];
-          if (fleetSize === 'Over 20') gaps.push("your large fleet creates significant cumulative risk exposure");
-          if (goodsIns === 'No') gaps.push("you don't have goods-in-transit insurance for your cargo");
-          if (driverCover === 'No') gaps.push("your drivers are not covered by group personal accident insurance");
-          if (compliance === 'No') gaps.push("your fleet vehicles are not comprehensively insured");
-          if (compliance === 'Some of them') gaps.push("only some of your fleet vehicles have comprehensive motor insurance");
-          let story = fleetSize === 'Over 20'
-            ? "With a fleet of this size, every vehicle on the road represents both opportunity and risk. "
-            : "Your fleet is the backbone of your transport operation. ";
-          if (gaps.length > 0) {
-            const lastGap = gaps.pop();
-            story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
+          const emergencyProcedures = answers['TRN_020'];
+          const safetyOwner = answers['TRN_023'];
+          const gapItems = [];
+          if (emergencyProcedures === 'No') gapItems.push("emergency response procedures for road accidents have not been formally documented");
+          if (goodsIns === 'No') gapItems.push("your cargo is not protected by goods-in-transit insurance");
+          if (driverCover === 'No') gapItems.push("your drivers are not covered by group personal accident insurance");
+          if (compliance === 'No') gapItems.push("your fleet vehicles are not comprehensively insured");
+          if (compliance === 'Some of them') gapItems.push("only some of your fleet vehicles have comprehensive motor insurance");
+          if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated safety and compliance lead");
+          let story = "Every day, your fleet depends on drivers, vehicles, and processes working together to keep goods moving safely.\n\n";
+          if (fleetAccidents === 'Yes') {
+            story += "Because fleet accidents have occurred in the past 3 years, your operation is already operating in a higher-risk environment. ";
           }
-          story += `An accident, cargo theft, or compliance issue\u2014your fleet should keep moving, not stop for the unexpected.`;
+          if (gapItems.length > 0) {
+            const lastGap = gapItems.pop();
+            const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
+            story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
+            story += `\n\nAlthough these issues may not affect your daily operations today, a single major incident\u2014such as an accident, cargo theft, or compliance issue\u2014could ground your fleet, disrupt deliveries, create legal exposure, and put significant financial pressure on your business.`;
+          } else {
+            story += `Your fleet has important safeguards in place, but transport risk management requires continuous attention.`;
+          }
+          story += `\n\nThe encouraging news is that each of these risks can be reduced through practical operational improvements and appropriate protection strategies.`;
           return story;
         }
         // Generic fallback
@@ -1109,9 +1141,15 @@ router.post('/evolution', async (req, res) => {
       // ===== Message 3: Risk Story\u2122 + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
       let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
       // If Nothing Changes\u2122 — consequence of inaction (between risk story and forecast)
-      const ifNothingChanges = (prefix === 'HOS')
-        ? `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`
-        : null;
+      const ifNothingChangeTexts = {
+        HOS: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`,
+        MFG: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your manufacturing operation could face extended production downtime, higher recovery costs, lost customer commitments, increased legal exposure, and greater difficulty restoring operations following a major incident.`,
+        CHR: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your church could face significant financial pressure, legal exposure, disruption to services, and greater difficulty rebuilding trust with your congregation following a major incident.`,
+        CON: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your construction business could face project delays, contract penalties, increased legal exposure, higher recovery costs, and greater difficulty winning future work following a major incident.`,
+        TRN: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your transport business could face fleet downtime, lost cargo, higher recovery costs, increased legal exposure, and greater difficulty maintaining client confidence following a major incident.`,
+        SCH: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your school could face longer service interruptions, increased legal exposure, damage to your reputation with parents and the community, and greater difficulty restoring normal operations following a major incident.`
+      };
+      const ifNothingChanges = ifNothingChangeTexts[prefix] || null;
       if (ifNothingChanges) msg3 += `\n\n${ifNothingChanges}`;
       const forecast = buildResilienceForecast(scoredCats, assessmentData.score, answers, prefix, dom, reportName);
       if (forecast) msg3 += `\n\n${forecast.text}`;

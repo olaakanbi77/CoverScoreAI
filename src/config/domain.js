@@ -490,6 +490,12 @@ const domainConfig = {
     improvementTerm: 'operational resilience',
     followUpMsg: "I'll also share practical manufacturing risk management tips and strategies that match your assessment.",
     pillarMappings: {},
+    whyTexts: {
+      'workforce': "Your manufacturing workforce represents both your greatest asset and a significant liability exposure. Without comprehensive workforce protection and safety programs, a workplace injury could create legal, financial, and operational consequences.",
+      'operations': "Your manufacturing operations depend on equipment running continuously. Gaps in emergency preparedness, safety leadership, and preventive maintenance increase the risk of unplanned downtime that could halt production and disrupt customer commitments.",
+      'asset protection': "Your manufacturing facility and equipment represent a major capital investment. Without adequate protection against fire and other perils, a single incident could result in catastrophic financial loss and extended production downtime.",
+      'business continuity': "Your manufacturing business faces significant financial exposure if operations are interrupted. Without a continuity plan or financial reserves, an extended closure could threaten the long-term viability of your business."
+    },
     insightTexts: {
       perPillar: {
         'Workforce': {
@@ -534,7 +540,7 @@ const domainConfig = {
           suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current operational resilience. The goal is clear: downtime is expensive and protection is essential."
+      catchAll: "Your assessment shows that while your manufacturing operation has some strengths, critical gaps may exist in emergency preparedness and production continuity. A single equipment failure, fire, or supply chain issue could halt production, disrupt customer commitments, and create significant financial pressure. The most resilient manufacturers combine operational safeguards with appropriate asset protection to minimise downtime."
     },
     recommendationTexts: {
       'workforce': 'reviewing comprehensive workforce insurance and safety programs to protect your employees',
@@ -691,6 +697,12 @@ const domainConfig = {
     improvementTerm: 'church resilience',
     followUpMsg: "I'll also share practical church risk management tips and strategies that match your assessment.",
     pillarMappings: {},
+    whyTexts: {
+      'operations': "Your church serves as a gathering place for your community, and large gatherings create inherent liability exposure. Without documented emergency procedures or appropriate liability protection, a congregant injury or incident during a service could create significant legal and reputational consequences.",
+      'assets': "Your church's musical instruments and broadcast equipment represent valuable assets that support your ministry. Without specialised protection, theft, damage, or loss of these items could disrupt services and create unplanned financial pressure.",
+      'legal liability': "Your church faces potential legal exposure from congregant injuries, premises incidents, and the absence of formal safety leadership. A single incident could create financial and reputational consequences that affect your ability to serve your community.",
+      'property': "Your church building is the physical foundation of your ministry. Without adequate property protection including fire insurance and regular maintenance, a fire or structural issue could force your congregation to find alternative meeting spaces and create significant financial strain."
+    },
     insightTexts: {
       perPillar: {
         'Operations': {
@@ -735,7 +747,7 @@ const domainConfig = {
           suffix: "Getting fire insurance for the church building and contents is a critical step for property protection."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current church resilience. The priority is clear\u2014because protecting your congregation protects your mission."
+      catchAll: "Your assessment shows that while your church has important strengths in serving its community, critical gaps in emergency preparedness, liability protection, and property safeguards could leave your congregation exposed. A single incident during a service, a fire, or a theft of valuable equipment could disrupt your operations and create financial strain that affects your ability to focus on your mission."
     },
     recommendationTexts: {
       'operations': 'reviewing comprehensive public liability insurance for large gatherings at your church',
@@ -754,6 +766,13 @@ const domainConfig = {
     improvementTerm: 'construction resilience',
     followUpMsg: "I'll also share practical construction risk management tips and strategies that match your assessment.",
     pillarMappings: {},
+    whyTexts: {
+      'operations': "Your construction operations involve multiple concurrent projects, each with its own risk profile. Without documented emergency procedures, trained equipment operators, and proper site safety leadership, a single accident could halt work across multiple sites and create significant liability exposure.",
+      'equipment': "Your construction equipment and heavy machinery represent significant capital investment. Without comprehensive protection and regular maintenance inspections, damage or breakdown could delay projects and create unplanned replacement costs.",
+      'insurance': "Your construction projects face significant financial exposure from on-site accidents, fire, and property damage. Without adequate project-specific insurance, a single incident could result in substantial out-of-pocket costs that affect your ability to complete projects.",
+      'worker protection': "Your on-site workers face daily exposure to construction hazards. Without group personal accident cover and formal safety leadership, a workplace injury could create significant financial and legal consequences for both your workers and your business.",
+      'contractual': "Your construction business faces financial exposure from project delay penalties and extended operational disruptions. Without contingency planning and contractual protections, a major project halt could threaten your ability to meet payroll and operating expenses."
+    },
     insightTexts: {
       perPillar: {
         'Operations': {
@@ -805,7 +824,7 @@ const domainConfig = {
           suffix: "Reviewing contract terms and considering delay penalty protection is a practical step for risk management."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current construction resilience. The priority is clear\u2014because every project deserves to be protected."
+      catchAll: "Your assessment shows that while your construction business is actively delivering projects, critical gaps in site safety, equipment protection, and project-specific insurance could leave you exposed. A workplace accident, equipment failure, or project delay could disrupt operations, create legal liability, and put financial pressure on your business. The most resilient contractors combine operational safeguards with comprehensive project protection."
     },
     recommendationTexts: {
       'operations': 'ensuring each construction project has adequate insurance coverage for proper risk management',
@@ -825,6 +844,12 @@ const domainConfig = {
     improvementTerm: 'transport resilience',
     followUpMsg: "I'll also share practical transport risk management tips and strategies that match your assessment.",
     pillarMappings: {},
+    whyTexts: {
+      'fleet': "Your fleet is the backbone of your transport operation, and every vehicle on the road represents both opportunity and risk. Without comprehensive fleet management, emergency procedures, and regular safety inspections, a single accident or breakdown could disrupt your entire operation.",
+      'insurance': "Your transport business depends on moving goods safely, and cargo loss or damage during transit can create significant financial pressure. Without adequate goods-in-transit protection and financial reserves, a single lost shipment or extended fleet suspension could threaten your business continuity.",
+      'worker protection': "Your drivers face daily risks on the road, and their safety directly affects your ability to deliver service. Without group personal accident cover and defensive driving training, an accident involving your drivers could create both human and financial consequences for your business.",
+      'compliance': "Your fleet faces regulatory requirements for motor insurance, fire safety, and safety management. Without comprehensive compliance across all vehicles and depot facilities, your business could face legal penalties, operational disruptions, and gaps in your safety framework."
+    },
     insightTexts: {
       perPillar: {
         'Fleet': {
@@ -871,7 +896,7 @@ const domainConfig = {
           suffix: "Extending comprehensive motor insurance to your entire fleet is a critical step for compliance and protection."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current transport resilience. The goal is simple\u2014your fleet should keep moving, not stop for the unexpected."
+      catchAll: "Your assessment shows that while your fleet is your core operational strength, critical gaps in fleet management, cargo protection, and compliance could leave your transport business exposed. An accident, cargo theft, or compliance issue could ground your fleet and disrupt your entire operation. The most resilient transport operators combine comprehensive fleet management with driver protection and regulatory compliance."
     },
     recommendationTexts: {
       'fleet': 'implementing fleet-wide risk management and comprehensive insurance for your vehicles',
