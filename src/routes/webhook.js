@@ -1235,7 +1235,10 @@ router.post('/evolution', async (req, res) => {
       if (strengths.length > 0) {
         const lastS = strengths.pop();
         const sStr = strengths.length > 0 ? strengths.join(', ') + ', and ' + lastS : lastS;
-        msg3 = `What You\u2019re Doing Well\u2122\n\nYour assessment shows several important strengths. Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. These provide a solid operational foundation on which stronger resilience can be built.`;
+        const count = strengths.length + 1;
+        const intro = count === 1 ? 'Your assessment identified an important strength.' : 'Your assessment identified several important strengths.';
+        const bridge = count === 1 ? 'This provides' : 'Together, these provide';
+        msg3 = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${dom.domain.replace('healthcare', 'hospital')} has ${sStr}. ${bridge} a solid operational foundation on which stronger resilience can be built.`;
       }
       if (msg3) msg3 += '\n\n';
       msg3 += riskStoryText;
