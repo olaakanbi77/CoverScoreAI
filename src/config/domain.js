@@ -603,7 +603,7 @@ const domainConfig = {
           suffix: "Strengthening operational safeguards is essential to maintaining uninterrupted patient care."
         }
       },
-      catchAll: "Your assessment provides a clear picture of your current healthcare resilience. The priority is clear\u2014because patient care depends on being prepared for anything."
+      catchAll: "Your assessment shows that while your facility has some operational strengths, critical weaknesses may exist in equipment resilience and clinical governance. High-value medical equipment is central to patient care, yet gaps in protection against breakdown or damage could interrupt clinical services. Combined with the absence of formal safety leadership or documented emergency procedures, these gaps increase the risk that a single incident could disrupt operations and create significant financial and legal exposure."
     },
     recommendationTexts: {
       'clinical risk & patient safety': 'ensuring clinical risk management and patient safety governance with clearly assigned responsibilities',

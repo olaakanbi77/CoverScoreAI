@@ -535,7 +535,7 @@ router.post('/evolution', async (req, res) => {
           ? dom.whyTexts[weakKey]
           : (dom.recommendationTexts && dom.recommendationTexts[weakKey])
             ? dom.recommendationTexts[weakKey].replace(/^(ensuring|securing|getting|reviewing|developing|building|strengthening|creating|implementing) /i, '')
-            : `this is the area that needs the most attention`;
+            : `this area presents the greatest opportunity to strengthen your overall ${dom.improvementTerm}`;
         msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\nWhy?\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}`);
       }
       postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
@@ -892,36 +892,26 @@ router.post('/evolution', async (req, res) => {
           const equipmentValue = answers['HOS_016'];
           const fireExtinguishers = answers['HOS_021'];
           const buildingMaintenance = answers['HOS_027'];
-          const closureResilience = answers['HOS_022'];
-          const hasTransport = answers['HOS_024'];
-          const driverTraining = answers['HOS_025'];
-          const vehicleInspections = answers['HOS_026'];
-          const gaps = [];
-          if (patientIncidents === 'Yes') gaps.push("you have experienced patient safety incidents in the past, so your facility is already operating in a higher-risk clinical environment");
-          if (medicalLiability === 'No') gaps.push("you do not have professional indemnity or medical malpractice protection in place");
-          if (complianceOwner === 'No one specifically assigned') gaps.push("there is no one specifically responsible for compliance and patient safety governance");
-          if (emergencyProcedures === 'No') gaps.push("documented emergency procedures for patient incidents and fire have not been established");
-          if (equipmentValue === 'Yes' && equipmentIns === 'No') gaps.push("your high-value medical equipment is not protected against damage or breakdown");
-          if (fireExtinguishers === 'No') gaps.push("fire extinguishers are not regularly inspected or available across your facility");
-          if (buildingMaintenance === 'Never' || buildingMaintenance === 'Rarely') gaps.push("building maintenance inspections are not conducted regularly");
-          if (closureResilience === 'No') gaps.push("your facility could not sustain operations through a one-month closure");
-          let story = "Your healthcare facility's first priority is patient care. However, based on your assessment, important safeguards are currently missing.";
-          if (gaps.length > 0) {
-            story += ` `;
-            const intro = (patientIncidents === 'Yes')
-              ? `Because you have experienced patient safety incidents in the past, your facility is already operating in a higher-risk environment. `
-              : `Your responses indicate that your facility has exposure to clinical and operational risks. `;
-            story += intro;
-            const lastGap = gaps.pop();
-            if (gaps.length > 0) {
-              story += `Currently, ${gaps.join(', ')}, and ${lastGap}. `;
-            } else {
-              story += `Currently, ${lastGap}. `;
-            }
-            story += `Together, these gaps could disrupt patient care, expose your facility to legal claims, damage public confidence, and create significant financial pressure following a major incident.`;
-          } else {
-            story += ` Your facility has important safeguards in place, but clinical risk management requires continuous attention.`;
+          const gapItems = [];
+          if (complianceOwner === 'No one specifically assigned') gapItems.push("no designated compliance or patient safety lead");
+          if (emergencyProcedures === 'No') gapItems.push("emergency response procedures have not been formally documented");
+          if (equipmentValue === 'Yes' && equipmentIns === 'No') gapItems.push("critical medical equipment is not protected against breakdown");
+          if (medicalLiability === 'No') gapItems.push("professional indemnity protection is not in place");
+          if (fireExtinguishers === 'No') gapItems.push("fire protection measures are incomplete");
+          if (buildingMaintenance === 'Never' || buildingMaintenance === 'Rarely') gapItems.push("routine facility maintenance is limited");
+          let story = "Every day, your hospital depends on people, equipment, and processes working together to deliver safe patient care.\n\n";
+          if (patientIncidents === 'Yes') {
+            story += "Because you have experienced patient safety incidents in the past, your facility is already operating in a higher-risk clinical environment. ";
           }
+          if (gapItems.length > 0) {
+            const lastGap = gapItems.pop();
+            const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
+            story += `Based on your assessment, several important safeguards are currently missing. There is ${gapStr}.`;
+            story += `\n\nAlthough these issues may not affect daily operations today, a single major incident\u2014such as equipment failure, fire, or a patient safety event\u2014could interrupt clinical services, increase legal exposure, damage public confidence, and create significant financial pressure for the facility.`;
+          } else {
+            story += `Your facility has important safeguards in place, but clinical risk management requires continuous attention.`;
+          }
+          story += `\n\nThe encouraging news is that each of these risks can be reduced through practical operational improvements and appropriate protection strategies.`;
           return story;
         }
         if (prefix === 'SCH') {
@@ -1116,8 +1106,13 @@ router.post('/evolution', async (req, res) => {
       if (insightText) msg2 += `\n\n${insightText}`;
       postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
-      // ===== Message 3: Risk Story\u2122 + Forecast + Progress Potential + Recommendation + Report =====
+      // ===== Message 3: Risk Story\u2122 + If Nothing Changes + Forecast + Progress Potential + Recommendation + Report =====
       let msg3 = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
+      // If Nothing Changes\u2122 — consequence of inaction (between risk story and forecast)
+      const ifNothingChanges = (prefix === 'HOS')
+        ? `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`
+        : null;
+      if (ifNothingChanges) msg3 += `\n\n${ifNothingChanges}`;
       const forecast = buildResilienceForecast(scoredCats, assessmentData.score, answers, prefix, dom, reportName);
       if (forecast) msg3 += `\n\n${forecast.text}`;
       // Your Improvement Potential\u2122
