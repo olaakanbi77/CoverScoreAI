@@ -499,7 +499,7 @@ const initDatabase = () => {
     });
   };
 
-  // Ensure assessments.user_id column exists before indexing it
+  // Ensure assessments.user_id and leads.advisor_id columns exist before indexing
   ensureSqliteColumn('assessments', 'user_id', 'INTEGER REFERENCES users(id)', (err) => {
     if (err) {
       console.error('[initDatabase] Failed to ensure assessments.user_id:', err.message);
@@ -507,6 +507,7 @@ const initDatabase = () => {
         safeIndex("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)");
     }
   });
+  ensureSqliteColumn('leads', 'advisor_id', 'INTEGER REFERENCES users(id)');
 
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)");
@@ -653,14 +654,16 @@ const initDatabase = () => {
           employees TEXT,
           recommended_covers TEXT,
           assigned_agent TEXT,
+          advisor_id INTEGER,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at DATETIME,
-          FOREIGN KEY (assessment_id) REFERENCES assessments(id)
+          FOREIGN KEY (assessment_id) REFERENCES assessments(id),
+          FOREIGN KEY (advisor_id) REFERENCES users(id)
         );
-        INSERT INTO leads_new (id, name, email, phone, business_name, contact_person, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, assessment_data, ccie_context, birth_date, anniversary_date, created_at, updated_at)
+        INSERT INTO leads_new (id, name, email, phone, business_name, contact_person, assessment_id, score, risk_level, entity_type, status, wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, assessment_data, ccie_context, birth_date, anniversary_date, advisor_id, created_at, updated_at)
         SELECT id, name, email, phone, business_name, NULL, assessment_id, score, risk_level, entity_type, 
                CASE WHEN status = 'new' THEN 'New Lead' WHEN status = 'contacted' THEN 'WhatsApp Engaged' WHEN status = 'converted' THEN 'Won' WHEN status = 'lost' THEN 'Lost' ELSE 'New Lead' END,
-               wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, assessment_data, ccie_context, birth_date, anniversary_date, created_at, updated_at 
+               wa_state, primary_concern, consultation_preference, engagement_points, is_qualified, notes, chat_history, assessment_data, ccie_context, birth_date, anniversary_date, advisor_id, created_at, updated_at 
         FROM leads;
         DROP TABLE leads;
         ALTER TABLE leads_new RENAME TO leads;
