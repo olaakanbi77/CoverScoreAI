@@ -10,6 +10,7 @@ const ccieEngine = require('../services/ccieEngine');
 const { CCIE_EVENTS, publishEvent } = require('../services/ccieEvents');
 const questionBank = require('../data/question_bank.json');
 const { domainConfig, defaultDomain } = require('../config/domain');
+const { notify, notifyRole } = require('../services/notify');
 
 const flowMap = {
   'school': 'SCH', 'manufacturing': 'MFG', 'hospital': 'HOS', 'healthcare': 'HOS',
@@ -1395,6 +1396,14 @@ router.post('/evolution', async (req, res) => {
               stage
             ]);
             console.log(`   [Opportunity] Created for lead ${lead.id} — Score: ${oppScore}, Priority: ${priority}, Stage: ${stage}`);
+
+            // Notify advisor/admin
+            if (lead.advisor_id) {
+              notify(lead.advisor_id, 'new_opportunity', 'New Opportunity Created', `New opportunity for ${lead.name || 'a lead'} (Score: ${oppScore})`, `/advisor/opportunities`);
+            }
+            if (priority === 'High' || priority === 'Urgent') {
+              notifyRole('admin', 'high_priority_opportunity', '🚀 High-Priority Opportunity', `${lead.name || 'A lead'} scored ${oppScore} — high-value opportunity`, `/admin/leads/${lead.id}`);
+            }
           }
         } catch (oppErr) {
           console.error(`   [Opportunity] Error creating for lead ${lead.id}: ${oppErr.message}`);

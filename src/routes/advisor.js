@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { all, get } = require('../config/database');
+const { all, get, run } = require('../config/database');
 const { authenticatePage } = require('../middleware/auth');
 const HTMLtoDOCX = require('html-to-docx');
 const { calculateScore } = require('../services/scoringEngine');
 const { handleAdvisorCopilotChat } = require('../services/aiService');
+const { notify } = require('../services/notify');
 
 const requireSalesOrAdmin = (req, res, next) => {
   if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
@@ -294,14 +295,46 @@ router.get('/risk-report/:leadId', authenticatePage, requireSalesOrAdmin, async 
 
 router.get('/notifications', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
+    const notifications = await all(`
+      SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 50
+    `, [req.user.id]);
+    const unreadCount = notifications.filter(n => !n.is_read).length;
+    const grouped = {
+      all: notifications,
+      unread: notifications.filter(n => !n.is_read),
+      leads: notifications.filter(n => ['lead_assigned', 'new_opportunity'].includes(n.type)),
+      quotes: notifications.filter(n => ['stage_update', 'quote_generated'].includes(n.type)),
+      system: notifications.filter(n => ['follow_up_scheduled'].includes(n.type))
+    };
     res.render('advisor/notifications', {
       layout: 'admin',
       user: req.user,
-      activePage: 'notifications'
+      activePage: 'notifications',
+      notifications,
+      unreadCount,
+      grouped
     });
   } catch (err) {
     console.error('Error loading notifications:', err);
     res.status(500).send('Server Error');
+  }
+});
+
+router.get('/api/notifications/unread-count', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const row = await get('SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0', [req.user.id]);
+    res.json({ count: row?.count || 0 });
+  } catch (err) {
+    res.json({ count: 0 });
+  }
+});
+
+router.post('/api/notifications/:id/read', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    await run('UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to mark as read' });
   }
 });
 
@@ -711,8 +744,9 @@ router.post('/api/leads/:id/assign', authenticatePage, requireSalesOrAdmin, asyn
   try {
     const leadId = req.params.id;
     const advisorId = req.user.id;
-    const { run } = require('../config/database');
+    const lead = await get('SELECT name FROM leads WHERE id = ?', [leadId]);
     await run('UPDATE leads SET advisor_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [advisorId, leadId]);
+    notify(advisorId, 'lead_assigned', 'Lead Assigned', `You have been assigned ${lead?.name || 'a new lead'}`, `/advisor/pipeline`);
     res.json({ success: true });
   } catch (err) {
     console.error('Assign Error:', err);
@@ -729,8 +763,12 @@ router.post('/api/leads/:id/stage', authenticatePage, requireSalesOrAdmin, async
       return res.status(400).json({ error: 'Invalid stage. Must be 1-6' });
     }
 
-    const { run } = require('../config/database');
+    const stageLabels = ['', 'New', 'Assessment', 'Quote', 'Negotiation', 'Closed Won', 'Lost'];
+    const lead = await get('SELECT name, advisor_id FROM leads WHERE id = ?', [leadId]);
     await run('UPDATE leads SET pipeline_stage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [stage, leadId]);
+    if (lead?.advisor_id) {
+      notify(lead.advisor_id, 'stage_update', 'Pipeline Stage Updated', `${lead.name} moved to ${stageLabels[stage] || stage}`, `/advisor/pipeline`);
+    }
     res.json({ success: true });
   } catch (err) {
     console.error('Pipeline Update Error:', err);
@@ -852,7 +890,6 @@ router.get('/opportunities/:id', authenticatePage, requireSalesOrAdmin, async (r
 
 router.post('/api/opportunities/:id/stage', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
-    const { run } = require('../config/database');
     const oppId = req.params.id;
     const { stage, reason, nextDate } = req.body;
     
@@ -860,6 +897,11 @@ router.post('/api/opportunities/:id/stage', authenticatePage, requireSalesOrAdmi
     await run('INSERT INTO audit_logs (id, event_type, entity_type, entity_id, actor_id, metadata) VALUES (?, ?, ?, ?, ?, ?)', [
       Date.now().toString(), 'STAGE_CHANGE', 'opportunity', oppId, req.user.id, JSON.stringify({ new_stage: stage, reason })
     ]);
+
+    const opp = await get('SELECT lead_name, advisor_id FROM opportunities WHERE id = ?', [oppId]);
+    if (opp?.advisor_id) {
+      notify(opp.advisor_id, 'opportunity_update', 'Opportunity Updated', `${opp.lead_name || 'An opportunity'} moved to ${stage}`, `/advisor/opportunities/${oppId}`);
+    }
     
     // Auto-create task if necessary
     if (stage === 'Contact Attempted') {
@@ -1070,6 +1112,9 @@ router.post('/api/quote-builder/generate', authenticatePage, requireSalesOrAdmin
       htmlUrl: result.htmlUrl,
       pdfUrl: result.pdfUrl
     });
+
+    // Notify advisor
+    notify(req.user.id, 'quote_generated', 'Proposal Generated', `Proposal ready for ${lead.business_name || lead.name} — ₦${totalPremium.toLocaleString()} total`, `/advisor/proposal-writer/${leadId}`);
   } catch (err) {
     console.error('Quote Builder Generate Error:', err);
     res.status(500).json({ error: 'Failed to generate proposal' });

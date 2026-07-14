@@ -1,4 +1,5 @@
 const { db } = require('../config/database');
+const { notify } = require('./notify');
 
 const dbModule = { all: null, get: null, run: null };
 
@@ -82,6 +83,10 @@ async function processFollowUps() {
       ad.rie.followUp = followUp;
       await run('UPDATE leads SET assessment_data = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
         [JSON.stringify(ad), lead.id]);
+
+      if (lead.advisor_id) {
+        notify(lead.advisor_id, 'follow_up_scheduled', 'Follow-up Scheduled', `Follow-up for ${name}: ${followUp.nextAction}`, `/advisor/follow-up/${lead.id}`);
+      }
 
       console.log(`   [FollowUp] Dispatched for lead ${lead.id} (${name}) — ${followUp.nextAction}`);
       actions++;

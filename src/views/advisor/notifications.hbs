@@ -22,7 +22,6 @@
     --bg-page: #ffffff;
   }
 
-  /* Override Admin Layout */
   .admin-sidebar, .admin-topbar { display: none !important; }
   .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
   body.admin-layout { background: var(--bg-page) !important; }
@@ -47,7 +46,6 @@
     color: var(--c-dark);
   }
 
-  /* Header */
   .header-row {
     display: flex;
     justify-content: space-between;
@@ -75,7 +73,6 @@
     margin-left: auto;
   }
 
-  /* Filter Chips */
   .filter-chips {
     display: flex;
     gap: 8px;
@@ -98,6 +95,7 @@
     color: var(--c-gray);
     white-space: nowrap;
     text-decoration: none;
+    cursor: pointer;
   }
   .chip.active {
     border-color: var(--c-green);
@@ -117,7 +115,6 @@
     color: white;
   }
 
-  /* Sections */
   .section-title {
     font-size: 15px;
     font-weight: 800;
@@ -126,7 +123,6 @@
   }
   .section-title:first-of-type { margin-top: 8px; }
 
-  /* Notification Item */
   .notif-card {
     background: white;
     border-radius: 12px;
@@ -148,8 +144,6 @@
     justify-content: center;
     flex-shrink: 0;
   }
-  .notif-icon-wrap svg { width: 20px; height: 20px; }
-  
   .c-green .notif-icon-wrap { background: var(--c-green-light); color: var(--c-green); }
   .c-blue .notif-icon-wrap { background: var(--c-blue-light); color: var(--c-blue); }
   .c-purple .notif-icon-wrap { background: var(--c-purple-light); color: var(--c-purple); }
@@ -158,63 +152,14 @@
   .c-teal .notif-icon-wrap { background: var(--c-teal-light); color: var(--c-teal); }
   .c-indigo .notif-icon-wrap { background: var(--c-indigo-light); color: var(--c-indigo); }
 
-  .notif-body {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 24px;
-  }
-  .notif-title {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--c-dark);
-    margin: 0 0 4px 0;
-  }
-  .notif-desc {
-    font-size: 12px;
-    color: var(--c-gray);
-    line-height: 1.4;
-    margin: 0;
-  }
-  .notif-desc strong {
-    color: var(--c-dark);
-    font-weight: 700;
-  }
-  .notif-desc .t-green { color: var(--c-green-dark); font-weight: 700; }
-  
-  .notif-meta {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 6px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .notif-meta.t-green { color: var(--c-green); }
+  .notif-body { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 24px; }
+  .notif-title { font-size: 14px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; }
+  .notif-desc { font-size: 12px; color: var(--c-gray); line-height: 1.4; margin: 0; }
+  .notif-meta { display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 11px; font-weight: 600; }
+  .notif-right { position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .notif-time { font-size: 10px; color: var(--c-gray); font-weight: 600; }
+  .unread-dot { width: 8px; height: 8px; background: var(--c-green); border-radius: 50%; }
 
-  .notif-right {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-  }
-  .notif-time {
-    font-size: 10px;
-    color: var(--c-gray);
-    font-weight: 600;
-  }
-  .unread-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--c-green);
-    border-radius: 50%;
-  }
-
-  /* Preference Card */
   .pref-card {
     background: var(--c-green-light);
     border-radius: 12px;
@@ -224,48 +169,11 @@
     gap: 12px;
     margin-top: 32px;
   }
-  .pref-icon {
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    color: var(--c-green);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .pref-icon svg { width: 28px; height: 28px; }
   .pref-text { flex-grow: 1; }
-  .pref-text h4 {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--c-green-dark);
-    margin: 0 0 2px 0;
-  }
-  .pref-text p {
-    font-size: 11px;
-    color: #065f46;
-    margin: 0;
-    line-height: 1.4;
-  }
-  .btn-pref {
-    background: transparent;
-    border: 1px solid var(--c-green);
-    color: var(--c-green-dark);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-  }
+  .pref-text h4 { font-size: 13px; font-weight: 800; color: var(--c-green-dark); margin: 0 0 2px 0; }
+  .pref-text p { font-size: 11px; color: #065f46; margin: 0; line-height: 1.4; }
+  .btn-pref { background: transparent; border: 1px solid var(--c-green); color: var(--c-green-dark); padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap; }
 
-  /* Icons */
-  .icon-sm { width: 14px; height: 14px; }
-  .icon-md { width: 18px; height: 18px; }
-  .chevron-right { color: var(--c-gray); margin-top: 12px; }
-
-  /* Bottom Nav */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -282,55 +190,47 @@
     z-index: 100;
   }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sec); text-decoration: none; font-size: 10px; font-weight: 600; }
-  .nav-item.active {
-    color: var(--c-green);
-  }
-  .nav-item svg {
-    width: 24px;
-    height: 24px;
-    stroke-width: 2;
-  }
-  .nav-badge {
-    position: absolute;
-    top: -2px;
-    right: 6px;
-    background: var(--c-red);
-    color: white;
-    font-size: 9px;
-    font-weight: 800;
-    min-width: 14px;
-    height: 14px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 4px;
-    border: 2px solid white;
-  }
+  .nav-item.active { color: var(--c-green); }
+  .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
+  .nav-badge { position: absolute; top: -2px; right: 6px; background: var(--c-red); color: white; font-size: 9px; font-weight: 800; min-width: 14px; height: 14px; border-radius: 7px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid white; }
 </style>
 
 <div class="mobile-app-container">
   <div class="notifications-page">
     
-    <!-- Header -->
     <div class="header-row">
       <h1 class="header-title">Notifications</h1>
-      <a href="javascript:void(0)" class="btn-filter">
-        <svg class="icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-        Filter
-      </a>
     </div>
 
-    <!-- Filters -->
-    <div class="filter-chips">
-      <a href="javascript:void(0)" class="chip active">All <span class="chip-badge">12</span></a>
-      <a href="javascript:void(0)" class="chip">Unread <span class="chip-badge">4</span></a>
-      <a href="javascript:void(0)" class="chip">Leads <span class="chip-badge">5</span></a>
-      <a href="javascript:void(0)" class="chip">Quotes <span class="chip-badge">5</span></a>
-      <a href="javascript:void(0)" class="chip">System <span class="chip-badge">0</span></a>
+    <div class="filter-chips" id="filterChips">
+      <a href="javascript:void(0)" class="chip active" data-filter="all">All <span class="chip-badge">{{grouped.all.length}}</span></a>
+      <a href="javascript:void(0)" class="chip" data-filter="unread">Unread <span class="chip-badge">{{unreadCount}}</span></a>
+      <a href="javascript:void(0)" class="chip" data-filter="leads">Leads <span class="chip-badge">{{grouped.leads.length}}</span></a>
+      <a href="javascript:void(0)" class="chip" data-filter="quotes">Quotes <span class="chip-badge">{{grouped.quotes.length}}</span></a>
+      <a href="javascript:void(0)" class="chip" data-filter="system">System <span class="chip-badge">{{grouped.system.length}}</span></a>
     </div>
 
-    <!-- Empty State -->
+    {{#if notifications.length}}
+      <div id="notifList">
+        {{#each notifications}}
+        <a href="{{this.link}}" class="notif-card {{notifColor this.type}}" data-type="{{this.type}}" onclick="{{#unless this.is_read}}markRead({{this.id}}, this){{/unless}}">
+          <div class="notif-icon-wrap">
+            {{notifIcon this.type}}
+          </div>
+          <div class="notif-body">
+            <h3 class="notif-title">{{this.title}}</h3>
+            <p class="notif-desc">{{this.message}}</p>
+            <div class="notif-meta">{{timeAgo this.created_at}}</div>
+          </div>
+          {{#unless this.is_read}}
+          <div class="notif-right">
+            <span class="unread-dot"></span>
+          </div>
+          {{/unless}}
+        </a>
+        {{/each}}
+      </div>
+    {{else}}
     <div style="text-align: center; padding: 60px 20px; color: var(--text-sec);">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; opacity: 0.3;">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -339,47 +239,63 @@
       <h3 style="font-size: 16px; font-weight: 700; color: var(--c-dark); margin-bottom: 8px;">No new notifications</h3>
       <p style="font-size: 13px; line-height: 1.5;">You're all caught up! When you receive updates about leads or assessments, they will appear here.</p>
     </div>
+    {{/if}}
 
-    <!-- Preference Card -->
     <div class="pref-card">
-      <div class="pref-icon">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-          <!-- Sparkles -->
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4l1 3m0 0l3 1m-3-1l-1-3m1 3l-3-1m14-2l1 2m0 0l2 1m-2-1l-1-2m1 2l-2-1"/>
-        </svg>
-      </div>
       <div class="pref-text">
         <h4>Stay on top of your pipeline</h4>
-        <p>Enable push notifications to never miss important updates.</p>
+        <p>Real-time notifications keep you informed the moment something happens.</p>
       </div>
-      <a href="/admin/settings" class="btn-pref">Manage Preferences</a>
     </div>
-
   </div>
 </div>
 
-<!-- Bottom Navigation -->
-    <!-- BOTTOM NAV -->
-    <div class="bottom-nav">
-      <a href="/advisor/dashboard" class="nav-item">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        Home
-      </a>
-      <a href="/admin/leads" class="nav-item">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-        Leads
-      </a>
-      <a href="/admin/assessments" class="nav-item">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-        Assessments
-      </a>
-      <a href="/admin/opportunities" class="nav-item">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-        Opportunities
-      </a>
-      <a href="/admin/more" class="nav-item active">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
-        More
-      </a>
-    </div>
+<div class="bottom-nav">
+  <a href="/advisor/dashboard" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Home
+  </a>
+  <a href="/advisor/notifications" class="nav-item active" style="position:relative;">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+    Notifications
+    {{#if unreadCount}}<span class="nav-badge">{{unreadCount}}</span>{{/if}}
+  </a>
+  <a href="/advisor/pipeline" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    Pipeline
+  </a>
+  <a href="/advisor/opportunities" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    Opportunities
+  </a>
+  <a href="/advisor/profile" class="nav-item">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+    Profile
+  </a>
+</div>
+
+<script>
+  document.querySelectorAll('#filterChips .chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      const filter = this.dataset.filter;
+      document.querySelectorAll('#notifList .notif-card').forEach(card => {
+        if (filter === 'all') { card.style.display = 'flex'; return; }
+        if (filter === 'unread') { card.style.display = card.querySelector('.unread-dot') ? 'flex' : 'none'; return; }
+        if (filter === 'leads') { card.style.display = (card.dataset.type === 'lead_assigned' || card.dataset.type === 'new_opportunity') ? 'flex' : 'none'; return; }
+        if (filter === 'quotes') { card.style.display = (card.dataset.type === 'stage_update' || card.dataset.type === 'quote_generated') ? 'flex' : 'none'; return; }
+        if (filter === 'system') { card.style.display = card.dataset.type === 'follow_up_scheduled' ? 'flex' : 'none'; return; }
+      });
+    });
+  });
+
+  async function markRead(id, el) {
+    try {
+      await fetch('/api/notifications/' + id + '/read', { method: 'POST' });
+      const dot = el.querySelector('.unread-dot');
+      if (dot) dot.remove();
+      el.onclick = null;
+    } catch(e) {}
+  }
+</script>

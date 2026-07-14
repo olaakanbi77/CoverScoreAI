@@ -374,6 +374,20 @@ const initDatabase = () => {
     CREATE INDEX IF NOT EXISTS idx_sessions_status ON assessment_sessions(status);
     CREATE INDEX IF NOT EXISTS idx_opportunities_stage ON opportunities(stage);
 
+    CREATE TABLE IF NOT EXISTS notifications (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      type TEXT NOT NULL DEFAULT 'info',
+      title TEXT NOT NULL,
+      message TEXT,
+      link TEXT,
+      metadata TEXT,
+      is_read INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read);
+
     CREATE TABLE IF NOT EXISTS reports (
       id TEXT PRIMARY KEY,
       lead_id INTEGER NOT NULL,

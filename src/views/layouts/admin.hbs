@@ -111,9 +111,9 @@
         <a href="https://wa.me/" class="topbar-icon-btn whatsapp">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.663-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
         </a>
-        <a href="/advisor/notifications" class="topbar-icon-btn" style="text-decoration:none;">
+        <a href="/advisor/notifications" class="topbar-icon-btn" id="notificationBell" onclick="event.preventDefault(); toggleNotifications()" style="text-decoration:none;position:relative;">
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          <span class="badge-dot"></span>
+          <span class="badge-dot" id="notificationBadge"></span>
         </a>
         <div class="user-profile">
           <img src="https://ui-avatars.com/api/?name={{user.name}}&background=1E293B&color=fff" alt="User" class="avatar">
@@ -130,7 +130,19 @@
     </div>
   </main>
   
-  {{> toast}}
+  <!-- Notification Dropdown -->
+  <div class="notification-dropdown" id="notificationDropdown">
+    <div class="notification-header">
+      <span>Notifications</span>
+      <a href="/advisor/notifications" class="view-all">View all</a>
+    </div>
+    <div class="notification-list" id="notificationList">
+      <div class="notification-empty">No new notifications</div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
 
   <script src="/js/main.js"></script>
 
@@ -140,6 +152,160 @@
     function toggleSidebar() {
       document.querySelector('.admin-sidebar').classList.toggle('show');
     }
+
+    // ===== WebSocket Notifications =====
+    (function() {
+      const userId = window.currentUser?.id;
+      if (!userId) return;
+
+      let ws = null;
+      let reconnectTimer = null;
+      let unreadCount = 0;
+
+      function connectWS() {
+        const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const url = `${proto}//${window.location.host}/ws?userId=${userId}&role=${window.currentUser.role || 'sales'}`;
+        
+        try {
+          ws = new WebSocket(url);
+        } catch(e) {
+          scheduleReconnect();
+          return;
+        }
+
+        ws.onopen = () => {
+          if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+          fetchUnreadCount();
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'notification') {
+              showToast(data.notification);
+              incrementBadge();
+              addNotificationToList(data.notification);
+            }
+          } catch(e) {
+            console.error('WS message error:', e);
+          }
+        };
+
+        ws.onclose = () => scheduleReconnect();
+        ws.onerror = () => ws?.close();
+      }
+
+      function scheduleReconnect() {
+        if (reconnectTimer) return;
+        reconnectTimer = setTimeout(() => {
+          reconnectTimer = null;
+          connectWS();
+        }, 5000);
+      }
+
+      async function fetchUnreadCount() {
+        try {
+          const res = await fetch('/api/notifications/unread-count');
+          if (res.ok) {
+            const data = await res.json();
+            unreadCount = data.count || 0;
+            updateBadge(unreadCount);
+          }
+        } catch(e) {
+          console.error('Failed to fetch unread count');
+        }
+      }
+
+      function updateBadge(count) {
+        const badge = document.getElementById('notificationBadge');
+        if (!badge) return;
+        if (count > 0) {
+          badge.textContent = count > 99 ? '99+' : count;
+          badge.style.display = 'inline-flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      function incrementBadge() {
+        unreadCount++;
+        updateBadge(unreadCount);
+      }
+
+      function showToast(notification) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-' + (notification.type || 'info');
+        toast.innerHTML = `
+          <div class="toast-icon">${notification.type === 'lead_assigned' ? '👤' : notification.type === 'new_opportunity' ? '💎' : notification.type === 'follow_up_scheduled' ? '📅' : notification.type === 'stage_update' ? '🔄' : notification.type === 'high_priority_opportunity' ? '🚀' : '🔔'}</div>
+          <div class="toast-body">
+            <div class="toast-title">${esc(notification.title)}</div>
+            <div class="toast-message">${esc(notification.message)}</div>
+          </div>
+          <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+        `;
+        toast.style.cursor = 'pointer';
+        toast.onclick = (e) => {
+          if (e.target.closest('.toast-close')) return;
+          if (notification.link) window.location.href = notification.link;
+        };
+        container.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(100%)';
+          setTimeout(() => toast.remove(), 300);
+        }, 5000);
+      }
+
+      function addNotificationToList(notification) {
+        const list = document.getElementById('notificationList');
+        if (!list) return;
+        const empty = list.querySelector('.notification-empty');
+        if (empty) empty.remove();
+
+        const item = document.createElement('a');
+        item.href = notification.link || '#';
+        item.className = 'notification-item';
+        item.innerHTML = `
+          <div class="notification-item-icon">${notification.type === 'lead_assigned' ? '👤' : notification.type === 'new_opportunity' ? '💎' : notification.type === 'follow_up_scheduled' ? '📅' : notification.type === 'stage_update' ? '🔄' : notification.type === 'high_priority_opportunity' ? '🚀' : '🔔'}</div>
+          <div class="notification-item-body">
+            <div class="notification-item-title">${esc(notification.title)}</div>
+            <div class="notification-item-message">${esc(notification.message)}</div>
+            <div class="notification-item-time">Just now</div>
+          </div>
+        `;
+        list.prepend(item);
+
+        while (list.children.length > 20) {
+          list.lastChild.remove();
+        }
+      }
+
+      function esc(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      window.toggleNotifications = function() {
+        const dd = document.getElementById('notificationDropdown');
+        if (dd) dd.classList.toggle('show');
+      };
+
+      document.addEventListener('click', (e) => {
+        const dd = document.getElementById('notificationDropdown');
+        const bell = document.getElementById('notificationBell');
+        if (dd && dd.classList.contains('show') && !dd.contains(e.target) && !bell?.contains(e.target)) {
+          dd.classList.remove('show');
+        }
+      });
+
+      connectWS();
+    })();
 
     async function loadSidebarOverview() {
       try {

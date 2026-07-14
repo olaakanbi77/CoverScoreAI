@@ -60,7 +60,33 @@ app.engine('hbs', exphbs.engine({
     gte: (a, b) => Number(a) >= Number(b),
     lte: (a, b) => Number(a) <= Number(b),
     json: (obj) => JSON.stringify(obj),
-    toLowerCase: (str) => String(str).toLowerCase()
+    toLowerCase: (str) => String(str).toLowerCase(),
+    notifColor: (type) => {
+      const map = { lead_assigned: 'c-indigo', new_opportunity: 'c-purple', follow_up_scheduled: 'c-orange', stage_update: 'c-blue', high_priority_opportunity: 'c-red', quote_generated: 'c-teal' };
+      return map[type] || 'c-blue';
+    },
+    notifIcon: (type) => {
+      const icons = {
+        lead_assigned: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>',
+        new_opportunity: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>',
+        follow_up_scheduled: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+        stage_update: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>',
+        high_priority_opportunity: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>',
+        quote_generated: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>'
+      };
+      return icons[type] || icons.stage_update;
+    },
+    timeAgo: (date) => {
+      if (!date) return '';
+      const now = new Date();
+      const d = new Date(date);
+      const diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return 'Just now';
+      if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+      if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+      return d.toLocaleDateString();
+    }
   }
 }));
 
