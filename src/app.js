@@ -198,7 +198,7 @@ app.get('/retirement/calculator', (req, res) => {
   });
 });
 
-app.get('/health', (req, res) => {
+app.get('/health-protection', (req, res) => {
   res.render('coverscore-personal-health', { 
     title: 'Free Health Protection Score™ | CoverScore Personal', 
     layout: false,

@@ -134,7 +134,6 @@ const initDatabase = () => {
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
-    CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id);
     CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id);
     CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
     CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
@@ -484,6 +483,28 @@ const initDatabase = () => {
 
   `, (err) => {
     if (err) console.error('[initDatabase] db.exec batch failed:', err.message);
+  });
+
+  // Ensure assessments.user_id column exists (for databases created before user_id was added)
+  db.all("PRAGMA table_info(assessments)", (err, columns) => {
+    if (!err && columns) {
+      const hasUserId = columns.some(col => col.name === 'user_id');
+      if (!hasUserId) {
+        db.run("ALTER TABLE assessments ADD COLUMN user_id INTEGER REFERENCES users(id)", (alterErr) => {
+          if (alterErr) console.warn('[initDatabase] Could not add user_id to assessments:', alterErr.message);
+          else {
+            console.log('[initDatabase] Added user_id column to assessments');
+            db.run("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)", (idxErr) => {
+              if (idxErr) console.warn('[initDatabase] Could not create user_id index:', idxErr.message);
+            });
+          }
+        });
+      } else {
+        db.run("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)", (idxErr) => {
+          if (idxErr) console.warn('[initDatabase] Could not create user_id index:', idxErr.message);
+        });
+      }
+    }
   });
 
   // Academy Column Migration
