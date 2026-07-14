@@ -2,8 +2,18 @@ const cron = require('node-cron');
 const { all, run } = require('../config/database');
 const { sendWhatsApp } = require('./whatsappService');
 const { sendEmail } = require('./emailService');
+const { processFollowUps } = require('./followUpScheduler');
 
 const startCronJobs = () => {
+  // Run every 30 minutes to dispatch RIE follow-up tasks
+  cron.schedule('*/30 * * * *', async () => {
+    try {
+      await processFollowUps();
+    } catch (error) {
+      console.error('Error running follow-up scheduler:', error);
+    }
+  });
+
   // Run every day at 08:00 AM server time
   cron.schedule('0 8 * * *', async () => {
     console.log('Running daily automation tasks...');
