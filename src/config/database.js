@@ -134,10 +134,6 @@ const initDatabase = () => {
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
-    CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id);
-    CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
-    CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
-
     CREATE TABLE IF NOT EXISTS tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       lead_id INTEGER NOT NULL,
@@ -174,11 +170,6 @@ const initDatabase = () => {
       FOREIGN KEY (advisor_id) REFERENCES users(id)
     );
 
-    CREATE INDEX IF NOT EXISTS idx_tasks_lead_id ON tasks(lead_id);
-    CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id);
-    CREATE INDEX IF NOT EXISTS idx_proposals_lead_id ON proposals(lead_id);
-    CREATE INDEX IF NOT EXISTS idx_proposals_token ON proposals(token);
-
     CREATE TABLE IF NOT EXISTS policies (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       lead_id INTEGER NOT NULL,
@@ -207,10 +198,6 @@ const initDatabase = () => {
       FOREIGN KEY (policy_id) REFERENCES policies(id),
       FOREIGN KEY (lead_id) REFERENCES leads(id)
     );
-
-    CREATE INDEX IF NOT EXISTS idx_renewals_policy_id ON renewals(policy_id);
-    CREATE INDEX IF NOT EXISTS idx_renewals_lead_id ON renewals(lead_id);
-    CREATE INDEX IF NOT EXISTS idx_renewals_status ON renewals(status);
 
     CREATE TABLE IF NOT EXISTS templates (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -369,10 +356,6 @@ const initDatabase = () => {
       FOREIGN KEY (advisor_id) REFERENCES users(id)
     );
 
-    CREATE INDEX IF NOT EXISTS idx_sessions_lead_id ON assessment_sessions(lead_id);
-    CREATE INDEX IF NOT EXISTS idx_sessions_status ON assessment_sessions(status);
-    CREATE INDEX IF NOT EXISTS idx_opportunities_stage ON opportunities(stage);
-
     CREATE TABLE IF NOT EXISTS notifications (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -385,7 +368,6 @@ const initDatabase = () => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
-    CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read);
 
     CREATE TABLE IF NOT EXISTS reports (
       id TEXT PRIMARY KEY,
@@ -415,9 +397,6 @@ const initDatabase = () => {
       metadata TEXT DEFAULT '{}',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
-
-    CREATE INDEX IF NOT EXISTS idx_landing_events_campaign ON landing_page_events (utm_campaign, event_name, created_at);
-    CREATE INDEX IF NOT EXISTS idx_landing_events_session ON landing_page_events (session_key, created_at);
 
     INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
       (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
@@ -485,27 +464,45 @@ const initDatabase = () => {
     if (err) console.error('[initDatabase] db.exec batch failed:', err.message);
   });
 
-  // Ensure assessments.user_id column exists (for databases created before user_id was added)
+  // Create all indexes individually so a single failure doesn't abort table creation
+  const safeIndex = (sql) => {
+    db.run(sql, (err) => {
+      if (err) console.warn('[initDatabase] Index skipped:', err.message);
+    });
+  };
+
+  // Ensure assessments.user_id column exists before indexing it
   db.all("PRAGMA table_info(assessments)", (err, columns) => {
     if (!err && columns) {
       const hasUserId = columns.some(col => col.name === 'user_id');
       if (!hasUserId) {
         db.run("ALTER TABLE assessments ADD COLUMN user_id INTEGER REFERENCES users(id)", (alterErr) => {
-          if (alterErr) console.warn('[initDatabase] Could not add user_id to assessments:', alterErr.message);
-          else {
-            console.log('[initDatabase] Added user_id column to assessments');
-            db.run("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)", (idxErr) => {
-              if (idxErr) console.warn('[initDatabase] Could not create user_id index:', idxErr.message);
-            });
+          if (!alterErr) {
+            safeIndex("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)");
           }
         });
       } else {
-        db.run("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)", (idxErr) => {
-          if (idxErr) console.warn('[initDatabase] Could not create user_id index:', idxErr.message);
-        });
+        safeIndex("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)");
       }
     }
   });
+
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_tasks_lead_id ON tasks(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_proposals_lead_id ON proposals(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_proposals_token ON proposals(token)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_renewals_policy_id ON renewals(policy_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_renewals_lead_id ON renewals(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_renewals_status ON renewals(status)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_sessions_lead_id ON assessment_sessions(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_sessions_status ON assessment_sessions(status)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_opportunities_stage ON opportunities(stage)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_landing_events_campaign ON landing_page_events(utm_campaign, event_name, created_at)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_landing_events_session ON landing_page_events(session_key, created_at)");
 
   // Academy Column Migration
   db.all("PRAGMA table_info(academy_modules)", (err, columns) => {
