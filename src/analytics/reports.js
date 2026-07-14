@@ -2,12 +2,7 @@ const queries = require('./queries');
 
 const dbAll = async (db, { sql, params }) => {
   if (db.all) {
-    return new Promise((resolve, reject) => {
-      db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
+    return await db.all(sql, params);
   }
   const res = await db.query(sql, params);
   return res.rows || res;
