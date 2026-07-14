@@ -1363,6 +1363,42 @@ router.post('/evolution', async (req, res) => {
         );
         assessmentData.rie = rieResult;
         console.log(`   [RIE] Opportunity Score: ${rieResult.opportunityScore}, Products: ${rieResult.recommendedProducts.length}, Follow-up: ${rieResult.followUp.nextAction}`);
+
+        // ===== Create/Update Opportunity Record for Advisor OS =====
+        try {
+          const existingOpp = await get('SELECT id FROM opportunities WHERE lead_id = ?', [lead.id]);
+          if (!existingOpp) {
+            const oppScore = rieResult.opportunityScore || assessmentData.score || 50;
+            const scoreBand = oppScore >= 70 ? 'high' : oppScore >= 40 ? 'medium' : 'low';
+            const priority = oppScore >= 70 ? 'High' : oppScore >= 50 ? 'Standard' : 'Low';
+            const riskDna = scoredCats ? Object.entries(scoredCats).map(([k, v]) => ({ name: k, score: v })) : [];
+            const topPriorities = (rieResult.recommendedProducts || []).slice(0, 3).map(p => ({
+              name: p.product,
+              priority: p.priority,
+              gap_level: p.priority === 'high' ? 'High' : p.priority === 'medium' ? 'Medium' : 'Low',
+              reason: p.reason || ''
+            }));
+            const stage = assessmentData.advisor_requested ? 'assigned' : 'unassigned';
+
+            await run(`
+              INSERT INTO opportunities (lead_id, advisor_id, score, score_band, risk_dna, top_priorities, opportunity_priority, contact_preference, stage, created_at, updated_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            `, [
+              lead.id,
+              lead.advisor_id || null,
+              oppScore,
+              scoreBand,
+              JSON.stringify(riskDna),
+              JSON.stringify(topPriorities),
+              priority,
+              assessmentData.consultation_preference || null,
+              stage
+            ]);
+            console.log(`   [Opportunity] Created for lead ${lead.id} — Score: ${oppScore}, Priority: ${priority}, Stage: ${stage}`);
+          }
+        } catch (oppErr) {
+          console.error(`   [Opportunity] Error creating for lead ${lead.id}: ${oppErr.message}`);
+        }
       } catch (rieErr) {
         console.error(`   [RIE] Error: ${rieErr.message}`);
       }
