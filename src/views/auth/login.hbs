@@ -62,7 +62,10 @@
         body: JSON.stringify(data)
       });
 
-      const result = await res.json();
+      const contentType = res.headers.get('content-type') || '';
+      const result = contentType.includes('application/json')
+        ? await res.json()
+        : { message: await res.text() };
 
       if (!res.ok) {
         throw new Error(result.message || 'Login failed');
@@ -78,8 +81,9 @@
       if (redirectPath) {
         window.location.href = redirectPath;
       } else {
-        const adminRoles = ['admin', 'sales', 'analyst'];
-        if (adminRoles.includes(result.user.role)) {
+        if (result.user.role === 'admin') {
+          window.location.href = '/admin/dashboard';
+        } else if (['sales', 'analyst'].includes(result.user.role)) {
           window.location.href = '/advisor/dashboard';
         } else {
           window.location.href = '/dashboard';

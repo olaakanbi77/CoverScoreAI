@@ -10,7 +10,11 @@ let pgPool = null;
 
 if (usePostgres) {
   pgPool = new Pool({
-    connectionString: process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL,
+    connectionTimeoutMillis: Number(process.env.PG_CONNECTION_TIMEOUT_MS || 5000),
+    idleTimeoutMillis: Number(process.env.PG_IDLE_TIMEOUT_MS || 30000),
+    query_timeout: Number(process.env.PG_QUERY_TIMEOUT_MS || 10000),
+    statement_timeout: Number(process.env.PG_STATEMENT_TIMEOUT_MS || 10000)
   });
   pgPool.on('error', (err) => {
     console.error('PostgreSQL Pool Error:', err.message);
@@ -25,6 +29,7 @@ if (usePostgres) {
     if (err) console.error('Database connection error:', err.message);
     else console.log('SQLite Database connected');
   });
+  db.configure('busyTimeout', Number(process.env.SQLITE_BUSY_TIMEOUT_MS || 5000));
   db.run('PRAGMA journal_mode = WAL');
   db.run('PRAGMA foreign_keys = ON');
 }
@@ -57,6 +62,11 @@ const convertSqliteToPg = (sql) => {
   return sql.replace(/\?/g, () => `$${paramIndex++}`);
 };
 const initDatabase = () => {
+  if (usePostgres) {
+    console.log('Skipping SQLite initDatabase; PostgreSQL is configured');
+    return;
+  }
+
   // Ensure the critical assessments table is created individually with error logging
   db.run(`CREATE TABLE IF NOT EXISTS assessments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
