@@ -167,6 +167,45 @@ class ReportGenerator {
       history: history || []
     };
   }
+
+  async getDashboardSummary(userId, role, db) {
+    const isAdmin = role === 'admin';
+    const scopeSql = isAdmin ? '' : ' AND (l.advisor_id = ? OR l.advisor_id IS NULL)';
+
+    const leadStats = await dbGet(db, {
+      sql: `SELECT
+          COUNT(*) as total_leads,
+          SUM(CASE WHEN l.status IN ('New Lead', 'hot') THEN 1 ELSE 0 END) as hot_leads,
+          SUM(CASE WHEN l.pipeline_stage = 3 OR l.status = 'Proposal Ready' THEN 1 ELSE 0 END) as proposals_pending,
+          COALESCE(SUM(l.estimated_premium), 0) as total_premium,
+          COALESCE(SUM(CASE WHEN l.pipeline_stage IN (1,2,3,4) THEN l.estimated_premium ELSE 0 END), 0) as active_pipeline_value,
+          SUM(CASE WHEN l.pipeline_stage = 6 THEN 1 ELSE 0 END) as won_deals,
+          SUM(CASE WHEN l.pipeline_stage = 6 THEN 1 ELSE 0 END) as lost_deals,
+          SUM(CASE WHEN l.status = 'New Lead' THEN 1 ELSE 0 END) as new_leads,
+          SUM(CASE WHEN l.assessment_id IS NULL OR l.assessment_id = '' THEN 1 ELSE 0 END) as assessments_pending
+          FROM leads l
+          WHERE 1=1${scopeSql}`,
+      params: isAdmin ? [] : [userId]
+    });
+
+    const proposals = await dbAll(db, { sql: 'SELECT COUNT(*) as count FROM proposals', params: [] });
+
+    const totalLeads = leadStats?.total_leads || 0;
+    const wonDeals = leadStats?.won_deals || 0;
+
+    return {
+      hotLeads: leadStats?.hot_leads || 0,
+      proposalsPending: leadStats?.proposals_pending || 0,
+      proposalsSent: proposals[0]?.count || 0,
+      estPremium: leadStats?.total_premium || 0,
+      activePipelineValue: leadStats?.active_pipeline_value || 0,
+      wonDeals,
+      conversionRate: totalLeads > 0 ? Math.round((wonDeals / totalLeads) * 100) : 0,
+      newLeads: leadStats?.new_leads || 0,
+      assessmentsPending: leadStats?.assessments_pending || 0,
+      totalLeads
+    };
+  }
 }
 
 module.exports = new ReportGenerator();

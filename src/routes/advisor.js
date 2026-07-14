@@ -6,6 +6,7 @@ const HTMLtoDOCX = require('html-to-docx');
 const { calculateScore } = require('../services/scoringEngine');
 const { handleAdvisorCopilotChat } = require('../services/aiService');
 const { notify } = require('../services/notify');
+const { reportGenerator } = require('../analytics');
 
 const requireSalesOrAdmin = (req, res, next) => {
   if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
@@ -176,43 +177,14 @@ router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res)
 
     const proposals = await all('SELECT * FROM proposals ORDER BY created_at DESC');
 
-    const hotLeadsCount = leads.filter(l => l.badgeClass === 'hot').length;
-    const proposalsCount = proposals.length;
-    const totalPremium = leads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
-    const premiumFormatted = totalPremium > 1000000 
-      ? `₦${(totalPremium/1000000).toFixed(1)}M` 
-      : `₦${totalPremium.toLocaleString()}`;
-
-    const activePipelineLeads = leads.filter(l => [1, 2, 3, 4].includes(l.pipeline_stage));
-    const activePipelineValue = activePipelineLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
-    const activePipelineValueFormatted = activePipelineValue > 1000000 
-      ? `₦${(activePipelineValue/1000000).toFixed(1)}M` 
-      : `₦${activePipelineValue.toLocaleString()}`;
-
-    const wonLeads = leads.filter(l => l.pipeline_stage === 6);
-    const wonDealsCount = wonLeads.length;
-    
-    // Proposals Pending (Proposal Sent stage)
-    const proposalsPendingCount = leads.filter(l => l.pipeline_stage === 4).length;
-    
-    // Mobile Dashboard Stats
-    const newLeadsCount = leads.filter(l => l.status === 'New Lead').length;
-    const assessmentsPendingCount = leads.filter(l => !l.assessment_id).length;
-
-    // Conversion rate
-    const conversionRate = leads.length > 0 ? Math.round((wonDealsCount / leads.length) * 100) : 0;
-
-    const summary = {
-      hotLeads: hotLeadsCount,
-      consultations: 0,
-      proposalsSent: proposalsPendingCount,
-      policiesSold: wonDealsCount,
-      estPremium: premiumFormatted,
-      activePipelineValue: activePipelineValueFormatted,
-      conversionRate: `${conversionRate}%`,
-      newLeads: newLeadsCount,
-      assessmentsPending: assessmentsPendingCount
-    };
+    const summary = await reportGenerator.getDashboardSummary(req.user.id, req.user.role, { all, get });
+    summary.estPremium = summary.estPremium > 1000000 
+      ? `₦${(summary.estPremium/1000000).toFixed(1)}M` 
+      : `₦${summary.estPremium.toLocaleString()}`;
+    summary.activePipelineValue = summary.activePipelineValue > 1000000 
+      ? `₦${(summary.activePipelineValue/1000000).toFixed(1)}M` 
+      : `₦${summary.activePipelineValue.toLocaleString()}`;
+    summary.conversionRate = `${summary.conversionRate}%`;
 
     res.render('advisor/dashboard', {
       layout: false,
