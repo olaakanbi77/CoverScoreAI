@@ -70,9 +70,26 @@ const authenticatePage = async (req, res, next) => {
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
   }
 
+  let decoded;
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]);
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (error) {
+    res.clearCookie('accessToken');
+    return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+  }
+
+  const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('DB_TIMEOUT')), ms));
+
+  try {
+    const startTime = Date.now();
+    const user = await Promise.race([
+      get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]),
+      timeout(5000)
+    ]);
+    const elapsed = Date.now() - startTime;
+    if (elapsed > 100) {
+      console.warn(`[auth] Slow DB query (${elapsed}ms) for userId=${decoded.userId}, ip=${req.ip}`);
+    }
 
     if (!user) {
       res.clearCookie('accessToken');
@@ -83,6 +100,9 @@ const authenticatePage = async (req, res, next) => {
     res.locals.user = user;
     next();
   } catch (error) {
+    if (error.message === 'DB_TIMEOUT') {
+      console.error(`[auth] DB TIMEOUT after 5s for userId=${decoded.userId}, url=${req.originalUrl}, ip=${req.ip}`, new Error().stack);
+    }
     res.clearCookie('accessToken');
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
   }
