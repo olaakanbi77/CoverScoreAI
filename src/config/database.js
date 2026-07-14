@@ -61,6 +61,19 @@ const convertSqliteToPg = (sql) => {
   let paramIndex = 1;
   return sql.replace(/\?/g, () => `$${paramIndex++}`);
 };
+
+const ensureSqliteColumn = (table, column, definition, cb = () => {}) => {
+  db.all(`PRAGMA table_info(${table})`, (err, columns) => {
+    if (err) return cb(err);
+    const hasColumn = columns.some(col => col.name === column);
+    if (hasColumn) return cb(null, false);
+
+    db.run(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`, (alterErr) => {
+      cb(alterErr, !alterErr);
+    });
+  });
+};
+
 const initDatabase = () => {
   if (usePostgres) {
     console.log('Skipping SQLite initDatabase; PostgreSQL is configured');
@@ -80,7 +93,12 @@ const initDatabase = () => {
     FOREIGN KEY (user_id) REFERENCES users(id)
   )`, (err) => {
     if (err) console.error('[initDatabase] Failed to create assessments table:', err.message);
-    else console.log('[initDatabase] assessments table ready');
+    else {
+      ensureSqliteColumn('assessments', 'user_id', 'INTEGER REFERENCES users(id)', (alterErr) => {
+        if (alterErr) console.error('[initDatabase] Failed to add assessments.user_id:', alterErr.message);
+        else console.log('[initDatabase] assessments table ready');
+      });
+    }
   });
 
   db.exec(`
@@ -482,18 +500,11 @@ const initDatabase = () => {
   };
 
   // Ensure assessments.user_id column exists before indexing it
-  db.all("PRAGMA table_info(assessments)", (err, columns) => {
-    if (!err && columns) {
-      const hasUserId = columns.some(col => col.name === 'user_id');
-      if (!hasUserId) {
-        db.run("ALTER TABLE assessments ADD COLUMN user_id INTEGER REFERENCES users(id)", (alterErr) => {
-          if (!alterErr) {
-            safeIndex("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)");
-          }
-        });
-      } else {
+  ensureSqliteColumn('assessments', 'user_id', 'INTEGER REFERENCES users(id)', (err) => {
+    if (err) {
+      console.error('[initDatabase] Failed to ensure assessments.user_id:', err.message);
+    } else {
         safeIndex("CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id)");
-      }
     }
   });
 
@@ -723,6 +734,11 @@ const initDatabase = () => {
       console.error('Migration error (wa_state):', err.message);
     }
   });
+  ensureSqliteColumn('assessments', 'user_id', 'INTEGER REFERENCES users(id)', (err) => {
+    if (err) {
+      console.error('Migration error (assessments user_id):', err.message);
+    }
+  });
   db.run("ALTER TABLE assessments ADD COLUMN type TEXT DEFAULT 'BUSINESS'", (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Migration error (assessments type):', err.message);
@@ -763,36 +779,63 @@ const initDatabase = () => {
   // Drop legacy CHECK constraint on assessments.risk_level so CSNS 6-tier values can be stored
   db.all("SELECT sql FROM sqlite_master WHERE type='table' AND name='assessments'", (err, rows) => {
     if (!err && rows && rows[0] && /CHECK\s*\(\s*risk_level\s+IN\s*\(/i.test(rows[0].sql)) {
-      db.serialize(() => {
-        db.run('PRAGMA foreign_keys = OFF');
-        db.run(`CREATE TABLE IF NOT EXISTS assessments_v2 (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id INTEGER,
-          answers JSON NOT NULL,
-          score INTEGER NOT NULL,
-          risk_level TEXT NOT NULL,
-          type TEXT DEFAULT 'BUSINESS',
-          ai_report TEXT,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (user_id) REFERENCES users(id)
-        )`);
-        db.run('INSERT INTO assessments_v2 SELECT id, user_id, answers, score, risk_level, COALESCE(type,\'BUSINESS\'), ai_report, created_at FROM assessments', (e) => {
-          if (!e) {
-            db.run('DROP TABLE assessments');
-            db.run('ALTER TABLE assessments_v2 RENAME TO assessments', (renameErr) => {
-              if (renameErr) {
-                console.error('[initDatabase] Migration RENAME failed:', renameErr.message);
+      db.all("PRAGMA table_info(assessments)", (pragmaErr, columns = []) => {
+        if (pragmaErr) {
+          console.error('Migration error (assessments CHECK):', pragmaErr.message);
+          return;
+        }
+
+        const hasColumn = (name) => columns.some(col => col.name === name);
+        const userIdSelect = hasColumn('user_id') ? 'user_id' : 'NULL';
+        const typeSelect = hasColumn('type') ? "COALESCE(type,'BUSINESS')" : "'BUSINESS'";
+        const aiReportSelect = hasColumn('ai_report') ? 'ai_report' : 'NULL';
+        const createdAtSelect = hasColumn('created_at') ? 'created_at' : 'CURRENT_TIMESTAMP';
+
+        db.run('PRAGMA foreign_keys = OFF', () => {
+          db.run('DROP TABLE IF EXISTS assessments_v2', () => {
+            db.run(`CREATE TABLE assessments_v2 (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              user_id INTEGER,
+              answers JSON NOT NULL,
+              score INTEGER NOT NULL,
+              risk_level TEXT NOT NULL,
+              type TEXT DEFAULT 'BUSINESS',
+              ai_report TEXT,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+              FOREIGN KEY (user_id) REFERENCES users(id)
+            )`, (createErr) => {
+              if (createErr) {
+                console.error('Migration error (assessments CHECK create):', createErr.message);
                 db.run('PRAGMA foreign_keys = ON');
-              } else {
-                db.run('PRAGMA foreign_keys = ON');
-                console.log('Migrated assessments table: removed risk_level CHECK constraint');
+                return;
               }
+
+              db.run(`INSERT INTO assessments_v2 SELECT id, ${userIdSelect}, answers, score, risk_level, ${typeSelect}, ${aiReportSelect}, ${createdAtSelect} FROM assessments`, (insertErr) => {
+                if (insertErr) {
+                  console.error('Migration error (assessments CHECK copy):', insertErr.message);
+                  db.run('DROP TABLE IF EXISTS assessments_v2', () => db.run('PRAGMA foreign_keys = ON'));
+                  return;
+                }
+
+                db.run('DROP TABLE assessments', (dropErr) => {
+                  if (dropErr) {
+                    console.error('Migration error (assessments CHECK drop):', dropErr.message);
+                    db.run('DROP TABLE IF EXISTS assessments_v2', () => db.run('PRAGMA foreign_keys = ON'));
+                    return;
+                  }
+
+                  db.run('ALTER TABLE assessments_v2 RENAME TO assessments', (renameErr) => {
+                    if (renameErr) {
+                      console.error('[initDatabase] Migration RENAME failed:', renameErr.message);
+                    } else {
+                      console.log('Migrated assessments table: removed risk_level CHECK constraint');
+                    }
+                    db.run('PRAGMA foreign_keys = ON');
+                  });
+                });
+              });
             });
-          } else {
-            console.error('Migration error (assessments CHECK):', e.message);
-            db.run('DROP TABLE IF EXISTS assessments_v2');
-            db.run('PRAGMA foreign_keys = ON');
-          }
+          });
         });
       });
     }
