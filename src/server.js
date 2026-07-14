@@ -1,5 +1,4 @@
 const path = require('path');
-const http = require('http');
 require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') });
 const app = require('./app');
 const { initDatabase } = require('./config/database');
@@ -12,10 +11,7 @@ const startServer = () => {
   initDatabase();
   startCronJobs();
 
-  const server = http.createServer(app);
-  notificationServer.attach(server);
-
-  server.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`
 ╔══════════════════════════════════════════════════════════╗
 ║                                                          ║
@@ -28,6 +24,8 @@ const startServer = () => {
 ╚══════════════════════════════════════════════════════════╝
     `);
   });
+
+  notificationServer.attach(server);
 };
 
 startServer();
