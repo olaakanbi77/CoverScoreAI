@@ -356,11 +356,11 @@
             </div>
           </div>
           {{#if selectedLead}}
-          <a href="/advisor/proposal-writer/{{selectedLead.id}}" style="text-decoration:none;">
-            <button class="btn-generate">Generate Quote</button>
+          <a href="/advisor/quote-builder/{{selectedLead.id}}" style="text-decoration:none;">
+            <button class="btn-generate">Build Quote</button>
           </a>
           {{else}}
-          <button class="btn-generate" onclick="window.location.href='/admin/proposals'">Generate Quote</button>
+          <button class="btn-generate" onclick="window.location.href='/advisor/dashboard'">Build Quote</button>
           {{/if}}
         </div>
       </div>
@@ -381,11 +381,11 @@
             </div>
             <span class="qa-label">New Assessment</span>
           </a>
-          <a href="/admin/proposals" class="qa-item">
+          <a href="/advisor/quote-builder/{{#if selectedLead}}{{selectedLead.id}}{{else}}0{{/if}}" class="qa-item">
             <div class="qa-icon purple">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z"/></svg>
             </div>
-            <span class="qa-label">Generate Quote</span>
+            <span class="qa-label">Build Quote</span>
           </a>
           <a href="/admin/opportunities" class="qa-item">
             <div class="qa-icon orange">

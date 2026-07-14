@@ -899,4 +899,181 @@ router.get('/team-queue', authenticatePage, async (req, res) => {
   }
 });
 
+// ===== Quote Builder =====
+
+router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { get } = require('../config/database');
+    const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
+    if (!lead) return res.status(404).send('Lead not found');
+
+    let rieData = null;
+    let quoteData = null;
+    let products = [];
+    let totalMin = 0;
+    let totalMax = 0;
+
+    if (lead.assessment_data) {
+      try {
+        const ad = typeof lead.assessment_data === 'string'
+          ? JSON.parse(lead.assessment_data)
+          : lead.assessment_data;
+        if (ad.rie) {
+          rieData = ad.rie;
+          quoteData = ad.rie.quote || null;
+          if (quoteData && quoteData.products) {
+            products = quoteData.products.map((qp, i) => {
+              const rec = (ad.rie.recommendedProducts || [])[i] || {};
+              return {
+                product: qp.product,
+                reason: rec.reason || '',
+                priority: rec.priority || 'medium',
+                premiumMin: qp.estimatedPremium?.min || 0,
+                premiumMax: qp.estimatedPremium?.max || 0,
+                selected: true
+              };
+            });
+            totalMin = quoteData.estimatedTotalPremium?.min || 0;
+            totalMax = quoteData.estimatedTotalPremium?.max || 0;
+          }
+        }
+      } catch (e) { /* silent */ }
+    }
+
+    if (!rieData && lead.assessment_id) {
+      const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
+      if (assessment) {
+        try {
+          const aiData = JSON.parse(assessment.ai_report || '{}');
+          if (aiData.recommendations) {
+            products = aiData.recommendations.map(r => ({
+              product: r.action || r.product || 'Recommended Cover',
+              reason: r.reason || r.detail || '',
+              priority: r.severity || 'medium',
+              premiumMin: 10000,
+              premiumMax: 50000,
+              selected: true
+            }));
+          }
+        } catch (e) { /* silent */ }
+      }
+    }
+
+    if (products.length === 0) {
+      products.push({
+        product: 'Comprehensive Business Insurance',
+        reason: 'Recommended based on your assessment results',
+        priority: 'medium',
+        premiumMin: 25000,
+        premiumMax: 150000,
+        selected: true
+      });
+    }
+
+    // Calculate totals from active products
+    const activeProducts = products.filter(p => p.selected);
+    totalMin = activeProducts.reduce((s, p) => s + p.premiumMin, 0);
+    totalMax = activeProducts.reduce((s, p) => s + p.premiumMax, 0);
+
+    res.render('advisor/quote-builder', {
+      layout: false,
+      user: req.user,
+      activePage: 'quote-builder',
+      lead,
+      products: JSON.stringify(products),
+      totalMin,
+      totalMax,
+      hasRie: !!rieData
+    });
+  } catch (err) {
+    console.error('Quote Builder Error:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.post('/api/quote-builder/generate', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { run, get } = require('../config/database');
+    const { leadId, products: selectedProducts } = req.body;
+
+    if (!leadId || !selectedProducts || !Array.isArray(selectedProducts)) {
+      return res.status(400).json({ error: 'leadId and products array required' });
+    }
+
+    const lead = await get('SELECT * FROM leads WHERE id = ?', [leadId]);
+    if (!lead) return res.status(404).json({ error: 'Lead not found' });
+
+    const activeProducts = selectedProducts.filter(p => p.selected !== false);
+
+    const productData = activeProducts.map(p => ({
+      product: p.product,
+      reason: p.reason || 'Recommended based on assessment',
+      estimatedPremium: { min: p.premiumMin || 10000, max: p.premiumMax || 50000 }
+    }));
+
+    const assessmentData = {
+      name: lead.name,
+      business_name: lead.business_name,
+      email: lead.email,
+      score: lead.score || 50,
+      risk_level: lead.risk_level || 'Moderate',
+      scored_pillars: {},
+      answers: {}
+    };
+
+    if (lead.assessment_id) {
+      const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
+      if (assessment) {
+        assessmentData.scored_pillars = {};
+        if (assessment.ai_report) {
+          try {
+            const aiData = JSON.parse(assessment.ai_report);
+            if (aiData.pillar_scores) assessmentData.scored_pillars = aiData.pillar_scores;
+          } catch (e) { /* silent */ }
+        }
+        if (assessment.answers) {
+          try {
+            const parsed = JSON.parse(assessment.answers);
+            if (parsed.answers) assessmentData.answers = parsed.answers;
+          } catch (e) { /* silent */ }
+        }
+      }
+    }
+
+    const { generateProposal } = require('../proposals/generator');
+    const result = generateProposal(assessmentData, productData, {
+      name: req.user?.name || 'CoverScore Advisor',
+      phone: process.env.WHATSAPP_BOT_NUMBER,
+      email: process.env.ADMIN_EMAIL || 'advisor@coverscore.ai'
+    });
+
+    const crypto = require('crypto');
+    const token = crypto.randomBytes(16).toString('hex');
+    const totalPremium = activeProducts.reduce((s, p) => s + (p.premiumMax || 0), 0);
+
+    const proposalId = (await run(
+      'INSERT INTO proposals (lead_id, advisor_id, title, content, amount, status, token) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [leadId, req.user?.id,
+       `CoverScore Proposal - ${lead.business_name || lead.name} - ${new Date().toLocaleDateString()}`,
+       JSON.stringify(result), totalPremium, 'Generated', token]
+    )).lastInsertRowid;
+
+    const proposal = await get('SELECT * FROM proposals WHERE id = ?', [proposalId]);
+
+    await run('UPDATE leads SET status = "Proposal Ready", pipeline_stage = 3, estimated_premium = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [totalPremium, leadId]);
+
+    res.json({
+      success: true,
+      proposal,
+      proposalUrl: `/advisor/proposal-writer/${leadId}`,
+      htmlUrl: result.htmlUrl,
+      pdfUrl: result.pdfUrl
+    });
+  } catch (err) {
+    console.error('Quote Builder Generate Error:', err);
+    res.status(500).json({ error: 'Failed to generate proposal' });
+  }
+});
+
 module.exports = router;

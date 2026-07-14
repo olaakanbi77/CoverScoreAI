@@ -1,0 +1,293 @@
+<style>
+  :root {
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --text-sec: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-red-light: #fef2f2;
+    --c-red: #ef4444;
+    --c-orange-light: #fff7ed;
+    --c-blue-light: #eff6ff;
+    --bg-page: #ffffff;
+  }
+
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; }
+
+  .mobile-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: #ffffff; position: relative; padding-bottom: 200px;
+  }
+
+  .qb-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px; border-bottom: 1px solid #f1f5f9; background: white;
+  }
+  .qb-back { color: var(--c-dark); text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+  .qb-back svg { width: 20px; height: 20px; stroke-width: 2.5; }
+  .qb-title { font-size: 16px; font-weight: 800; color: var(--c-dark); margin: 0; }
+
+  .qb-header {
+    padding: 20px 16px; border-bottom: 1px solid #f1f5f9; background: white;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .lead-info h2 { font-size: 18px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; }
+  .lead-info p { font-size: 12px; color: var(--c-gray); margin: 0; }
+  .score-badge {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800;
+    border: 3px solid var(--c-green); color: var(--c-green-dark);
+  }
+  .score-badge.high { border-color: var(--c-red); color: var(--c-red); }
+  .score-badge.medium { border-color: #f59e0b; color: #b45309; }
+
+  .section-title {
+    font-size: 11px; font-weight: 800; color: var(--c-dark);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 20px 16px 12px; margin: 0;
+  }
+
+  .products-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+
+  .product-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+    overflow: hidden; transition: all 0.2s;
+  }
+  .product-card.selected { border-color: var(--c-green); background: #fafefc; }
+  .product-card.disabled { opacity: 0.6; }
+
+  .pc-header {
+    display: flex; align-items: center; gap: 12px; padding: 14px;
+    cursor: pointer;
+  }
+  .pc-check {
+    width: 22px; height: 22px; border-radius: 4px;
+    border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .product-card.selected .pc-check { background: var(--c-green); border-color: var(--c-green); }
+  .pc-check svg { width: 14px; height: 14px; color: white; display: none; stroke-width: 3; }
+  .product-card.selected .pc-check svg { display: block; }
+
+  .pc-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .pc-icon.g { background: var(--c-green-light); color: var(--c-green-dark); }
+  .pc-icon.o { background: var(--c-orange-light); color: #d97706; }
+  .pc-icon.b { background: var(--c-blue-light); color: #2563eb; }
+
+  .pc-body { flex: 1; }
+  .pc-name { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0 0 2px 0; }
+  .pc-reason { font-size: 10px; color: var(--c-gray); margin: 0; line-height: 1.3; }
+  .pc-priority {
+    display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 6px;
+    border-radius: 12px; margin-top: 4px;
+  }
+  .pc-priority.high { background: var(--c-red-light); color: var(--c-red); }
+  .pc-priority.medium { background: #fffbeb; color: #d97706; }
+
+  .pc-premium { text-align: right; flex-shrink: 0; }
+  .pc-premium-label { font-size: 9px; color: var(--c-gray); }
+  .pc-premium-range { font-size: 11px; font-weight: 700; color: var(--c-dark); }
+
+  .pc-details {
+    padding: 0 14px 14px; display: none;
+  }
+  .product-card.expanded .pc-details { display: block; }
+  .premium-row { display: flex; gap: 12px; align-items: center; margin-top: 8px; }
+  .premium-field { flex: 1; }
+  .premium-field label { font-size: 9px; font-weight: 600; color: var(--c-gray); display: block; margin-bottom: 4px; }
+  .premium-field input {
+    width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 8px;
+    font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+  }
+  .premium-field input:focus { outline: none; border-color: var(--c-green); }
+
+  /* Total Bar */
+  .total-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px; background: white;
+    border-top: 1px solid #e2e8f0; border-radius: 16px 16px 0 0;
+    padding: 16px 20px; z-index: 100; box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+  }
+  .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .total-label { font-size: 13px; font-weight: 600; color: var(--c-gray); }
+  .total-value { font-size: 18px; font-weight: 800; color: var(--c-dark); }
+  .total-detail { font-size: 11px; color: var(--c-gray); text-align: right; }
+
+  .btn-generate {
+    width: 100%; background: var(--c-green); color: white; border: none;
+    padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-generate svg { width: 18px; height: 18px; stroke-width: 2.5; }
+
+  .no-rie-banner {
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;
+    padding: 20px; margin: 16px; text-align: center;
+  }
+  .no-rie-banner p { font-size: 13px; color: #92400e; margin: 0 0 12px; }
+  .no-rie-banner a { color: var(--c-green-dark); font-weight: 700; }
+</style>
+
+<div class="mobile-app-container">
+
+  <div class="qb-topbar">
+    <a href="/advisor/dashboard" class="qb-back">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Back
+    </a>
+    <h1 class="qb-title">Quote Builder</h1>
+    <div style="width:60px;"></div>
+  </div>
+
+  <div class="qb-header">
+    <div class="lead-info">
+      <h2>{{lead.business_name}}</h2>
+      <p>{{lead.industry}} &middot; Score: {{lead.score}}/100</p>
+    </div>
+    <div class="score-badge {{#if (gte lead.score 70)}}high{{else if (gte lead.score 40)}}medium{{/if}}">
+      {{lead.score}}
+    </div>
+  </div>
+
+  {{#unless hasRie}}
+  <div class="no-rie-banner">
+    <p>This lead hasn't completed an AI-powered risk assessment yet. You can still build a manual quote below.</p>
+  </div>
+  {{/unless}}
+
+  <div id="products-section">
+    <h3 class="section-title">RECOMMENDED COVERS</h3>
+    <div class="products-list" id="products-container"></div>
+  </div>
+
+  <div class="total-bar">
+    <div class="total-row">
+      <div>
+        <div class="total-label">Estimated Annual Premium</div>
+        <div class="total-detail"><span id="product-count">0</span> products selected</div>
+      </div>
+      <div class="total-value">₦<span id="total-min">0</span> – ₦<span id="total-max">0</span></div>
+    </div>
+    <button class="btn-generate" id="btn-generate" onclick="generateProposal()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Generate Proposal
+    </button>
+  </div>
+
+</div>
+
+<script>
+  var products = {{{products}}};
+  var leadId = {{lead.id}};
+
+  var icons = ['g', 'o', 'b'];
+  var iconSvgs = [
+    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
+    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>'
+  ];
+
+  function renderProducts() {
+    var container = document.getElementById('products-container');
+    container.innerHTML = '';
+    products.forEach(function(p, i) {
+      var iconIdx = i % 3;
+      var card = document.createElement('div');
+      card.className = 'product-card' + (p.selected !== false ? ' selected' : ' disabled');
+      card.id = 'product-' + i;
+      card.innerHTML =
+        '<div class="pc-header" onclick="toggleProduct(' + i + ')">' +
+          '<div class="pc-check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>' +
+          '<div class="pc-icon ' + icons[iconIdx] + '">' + iconSvgs[iconIdx] + '</div>' +
+          '<div class="pc-body">' +
+            '<p class="pc-name">' + p.product + '</p>' +
+            '<p class="pc-reason">' + (p.reason || 'Recommended for this client') + '</p>' +
+            (p.priority === 'high' ? '<span class="pc-priority high">High Priority</span>' : '') +
+          '</div>' +
+          '<div class="pc-premium">' +
+            '<div class="pc-premium-label">Est. Premium</div>' +
+            '<div class="pc-premium-range">₦' + p.premiumMin.toLocaleString() + ' – ₦' + p.premiumMax.toLocaleString() + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="pc-details">' +
+          '<div class="premium-row">' +
+            '<div class="premium-field"><label>Min Premium (₦)</label><input type="number" id="min-' + i + '" value="' + p.premiumMin + '" onchange="updatePremium(' + i + ')" onfocus="this.select()"></div>' +
+            '<div class="premium-field"><label>Max Premium (₦)</label><input type="number" id="max-' + i + '" value="' + p.premiumMax + '" onchange="updatePremium(' + i + ')" onfocus="this.select()"></div>' +
+          '</div>' +
+        '</div>';
+      container.appendChild(card);
+    });
+    updateTotals();
+  }
+
+  function toggleProduct(i) {
+    var p = products[i];
+    if (p.selected === false) {
+      p.selected = true;
+    } else {
+      p.selected = false;
+    }
+    var card = document.getElementById('product-' + i);
+    card.className = 'product-card' + (p.selected !== false ? ' selected' : ' disabled');
+    updateTotals();
+  }
+
+  function updatePremium(i) {
+    var minEl = document.getElementById('min-' + i);
+    var maxEl = document.getElementById('max-' + i);
+    var minVal = parseInt(minEl.value) || 0;
+    var maxVal = parseInt(maxEl.value) || 0;
+    if (maxVal < minVal) maxVal = minVal;
+    products[i].premiumMin = minVal;
+    products[i].premiumMax = maxVal;
+    updateTotals();
+  }
+
+  function updateTotals() {
+    var active = products.filter(function(p) { return p.selected !== false; });
+    var totalMin = active.reduce(function(s, p) { return s + p.premiumMin; }, 0);
+    var totalMax = active.reduce(function(s, p) { return s + p.premiumMax; }, 0);
+    document.getElementById('total-min').textContent = totalMin.toLocaleString();
+    document.getElementById('total-max').textContent = totalMax.toLocaleString();
+    document.getElementById('product-count').textContent = active.length;
+  }
+
+  async function generateProposal() {
+    var btn = document.getElementById('btn-generate');
+    btn.disabled = true;
+    btn.innerHTML = 'Generating...';
+
+    try {
+      var res = await fetch('/api/quote-builder/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId: leadId, products: products })
+      });
+      var data = await res.json();
+      if (data.success) {
+        window.location.href = data.proposalUrl;
+      } else {
+        alert('Error: ' + (data.error || 'Failed to generate proposal'));
+        btn.disabled = false;
+        btn.innerHTML = 'Generate Proposal';
+      }
+    } catch (e) {
+      alert('Network error. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = 'Generate Proposal';
+    }
+  }
+
+  renderProducts();
+</script>
