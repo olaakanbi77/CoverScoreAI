@@ -845,6 +845,18 @@ const initDatabase = () => {
   });
 };
 
+const DB_TIMEOUT_MS = Number(process.env.DB_TIMEOUT_MS || 15000);
+
+const withTimeout = (promise, label) => {
+  const timer = setTimeout(() => {
+    console.error(`[DB TIMEOUT] ${label} — query exceeded ${DB_TIMEOUT_MS}ms`);
+  }, DB_TIMEOUT_MS);
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`DB_TIMEOUT: ${label}`)), DB_TIMEOUT_MS))
+  ]).finally(() => clearTimeout(timer));
+};
+
 const run = async (sql, params = []) => {
   if (usePostgres) {
     const pgSql = convertSqliteToPg(sql);
@@ -857,12 +869,12 @@ const run = async (sql, params = []) => {
       throw err;
     }
   } else {
-    return new Promise((resolve, reject) => {
+    return withTimeout(new Promise((resolve, reject) => {
       db.run(sql, params, function(err) {
         if (err) reject(err);
         else resolve({ lastInsertRowid: this.lastID, changes: this.changes });
       });
-    });
+    }), sql.slice(0, 80));
   }
 };
 
@@ -876,12 +888,12 @@ const get = async (sql, params = []) => {
       throw err;
     }
   } else {
-    return new Promise((resolve, reject) => {
+    return withTimeout(new Promise((resolve, reject) => {
       db.get(sql, params, (err, row) => {
         if (err) reject(err);
         else resolve(row);
       });
-    });
+    }), sql.slice(0, 80));
   }
 };
 
@@ -895,12 +907,12 @@ const all = async (sql, params = []) => {
       throw err;
     }
   } else {
-    return new Promise((resolve, reject) => {
+    return withTimeout(new Promise((resolve, reject) => {
       db.all(sql, params, (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
-    });
+    }), sql.slice(0, 80));
   }
 };
 
