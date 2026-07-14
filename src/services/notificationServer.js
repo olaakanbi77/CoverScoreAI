@@ -1,4 +1,10 @@
-const WebSocket = require('ws');
+let WebSocket;
+try {
+  WebSocket = require('ws');
+} catch (e) {
+  console.warn('[WS] ws module not available — WebSocket disabled');
+  WebSocket = null;
+}
 
 class NotificationServer {
   constructor() {
@@ -7,6 +13,11 @@ class NotificationServer {
   }
 
   attach(server) {
+    if (!WebSocket) {
+      console.warn('[WS] Skipping attach — ws module not available');
+      return;
+    }
+
     this.wss = new WebSocket.Server({ server, path: '/ws' });
 
     this.wss.on('connection', (ws, req) => {
@@ -57,6 +68,7 @@ class NotificationServer {
   }
 
   sendToUser(userId, notification) {
+    if (!WebSocket) return false;
     const list = this.clients.get(userId);
     if (!list) return false;
     const payload = JSON.stringify(notification);
@@ -67,6 +79,7 @@ class NotificationServer {
   }
 
   sendToRole(role, notification) {
+    if (!WebSocket) return 0;
     let sent = 0;
     for (const [, list] of this.clients) {
       for (const ws of list) {
@@ -80,6 +93,7 @@ class NotificationServer {
   }
 
   broadcast(notification) {
+    if (!this.wss) return 0;
     const payload = JSON.stringify(notification);
     let sent = 0;
     this.wss.clients.forEach(ws => {
