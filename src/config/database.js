@@ -752,6 +752,11 @@ const initDatabase = () => {
       console.error('Migration error (leads opportunity_type):', err.message);
     }
   });
+  db.run("ALTER TABLE leads ADD COLUMN assessment_type TEXT", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (assessment_type):', err.message);
+    }
+  });
   db.run("ALTER TABLE templates ADD COLUMN category TEXT DEFAULT 'BUSINESS'", (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Migration error (templates category):', err.message);

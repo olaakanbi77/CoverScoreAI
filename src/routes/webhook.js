@@ -31,6 +31,13 @@ const resolvePrefix = (ind) => {
   return 'SME';
 };
 
+const assessmentTypeMap = {
+  FAM: 'family', RET: 'retirement', HLT: 'health', INC: 'income',
+  YPR: 'young_professional', ENT: 'entrepreneur',
+  SME: 'sme', SCH: 'school', HOS: 'hospital', MFG: 'manufacturing',
+  CHR: 'church', CON: 'construction', TRN: 'transport'
+};
+
 const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
   const entries = Object.entries(pillarScores || {}).sort(([, a], [, b]) => a - b);
   if (entries.length === 0) return null;
@@ -195,9 +202,9 @@ router.post('/evolution', async (req, res) => {
       const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
       ccieContext = ccieStart.context;
       const insertResult = await run(`
-        INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, ccie_context)
-        VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?, ?)
-      `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, currentState, 'WhatsApp User', resolvedIndustry, JSON.stringify(ccieContext)]);
+        INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, ccie_context, assessment_type)
+        VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?, ?, ?)
+      `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, currentState, 'WhatsApp User', resolvedIndustry, JSON.stringify(ccieContext), assessmentTypeMap[prefix] || 'sme']);
       lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
       console.log(`   Created new lead ID: ${lead.id}`);
 
@@ -461,7 +468,8 @@ router.post('/evolution', async (req, res) => {
                 status = 'Report Sent', pipeline_stage = 2,
                 engagement_points = engagement_points + 20, sales_score = sales_score + 20,
                 estimated_premium = ?,
-                birth_date = ?, anniversary_date = ?, contact_person = ?
+                birth_date = ?, anniversary_date = ?, contact_person = ?,
+                assessment_type = COALESCE(assessment_type, ?)
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType,
@@ -469,7 +477,8 @@ router.post('/evolution', async (req, res) => {
               assessmentData.email || 'whatsapp@coverscore.site',
               estimatedPremium,
               assessmentData.birth_date || null, assessmentData.anniversary_date || null,
-              assessmentData.name || 'WhatsApp User', lead.id
+              assessmentData.name || 'WhatsApp User',
+              assessmentTypeMap[prefix] || 'sme', lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
 
