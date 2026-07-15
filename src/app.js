@@ -496,7 +496,34 @@ app.get('/admin/clients', authenticatePage, async (req, res) => {
 
 app.get('/admin/assessments', authenticatePage, async (req, res) => {
   try {
-    const assessments = await all("SELECT a.*, u.name as user_name, l.business_name, l.name as lead_name FROM assessments a LEFT JOIN users u ON a.user_id = u.id LEFT JOIN leads l ON l.assessment_id = a.id ORDER BY a.created_at DESC");
+    const rows = await all("SELECT a.*, u.name as user_name, l.business_name, l.name as lead_name FROM assessments a LEFT JOIN users u ON a.user_id = u.id LEFT JOIN leads l ON l.assessment_id = a.id ORDER BY a.created_at DESC");
+    const assessments = rows.map(a => {
+      let displayName = a.business_name || a.lead_name || null;
+      if (!displayName && a.answers) {
+        try {
+          const parsed = JSON.parse(a.answers);
+          displayName = parsed.business_name || parsed.contact_name || null;
+          if (!displayName) {
+            for (const key of Object.keys(parsed)) {
+              const v = parsed[key];
+              if (typeof v === 'string' && v.length > 2 && v.length < 100 && !key.startsWith('SCH_') && key !== 'template_selection') {
+                const numKey = parseInt(key.split('_')[1]);
+                if (numKey === 4 || numKey === 5) { displayName = v; break; }
+              }
+            }
+          }
+          if (!displayName) {
+            for (const key of Object.keys(parsed)) {
+              const v = parsed[key];
+              if (typeof v === 'string' && /^[A-Z][a-z]/.test(v) && !v.includes('@') && v.length > 2) {
+                displayName = v; break;
+              }
+            }
+          }
+        } catch (e) { /* silent */ }
+      }
+      return { ...a, business_name: displayName || 'Assessment #' + a.id };
+    });
     res.render('admin/assessments', { title: 'Assessments', activePage: 'assessments', layout: 'admin', assessments });
   } catch (error) {
     res.status(500).send('Error loading assessments');
