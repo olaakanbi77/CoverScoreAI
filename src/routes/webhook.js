@@ -1365,49 +1365,9 @@ router.post('/evolution', async (req, res) => {
         assessmentData.rie = rieResult;
         console.log(`   [RIE] Opportunity Score: ${rieResult.opportunityScore}, Products: ${rieResult.recommendedProducts.length}, Follow-up: ${rieResult.followUp.nextAction}`);
 
-        // ===== Create/Update Opportunity Record for Advisor OS =====
-        try {
-          const existingOpp = await get('SELECT id FROM opportunities WHERE lead_id = ?', [lead.id]);
-          if (!existingOpp) {
-            const oppScore = rieResult.opportunityScore || assessmentData.score || 50;
-            const scoreBand = oppScore >= 70 ? 'high' : oppScore >= 40 ? 'medium' : 'low';
-            const priority = oppScore >= 70 ? 'High' : oppScore >= 50 ? 'Standard' : 'Low';
-            const riskDna = scoredCats ? Object.entries(scoredCats).map(([k, v]) => ({ name: k, score: v })) : [];
-            const topPriorities = (rieResult.recommendedProducts || []).slice(0, 3).map(p => ({
-              name: p.product,
-              priority: p.priority,
-              gap_level: p.priority === 'high' ? 'High' : p.priority === 'medium' ? 'Medium' : 'Low',
-              reason: p.reason || ''
-            }));
-            const stage = assessmentData.advisor_requested ? 'assigned' : 'unassigned';
-
-            await run(`
-              INSERT INTO opportunities (lead_id, advisor_id, score, score_band, risk_dna, top_priorities, opportunity_priority, contact_preference, stage, created_at, updated_at)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-            `, [
-              lead.id,
-              lead.advisor_id || null,
-              oppScore,
-              scoreBand,
-              JSON.stringify(riskDna),
-              JSON.stringify(topPriorities),
-              priority,
-              assessmentData.consultation_preference || null,
-              stage
-            ]);
-            console.log(`   [Opportunity] Created for lead ${lead.id} — Score: ${oppScore}, Priority: ${priority}, Stage: ${stage}`);
-
-            // Notify advisor/admin
-            if (lead.advisor_id) {
-              notify(lead.advisor_id, 'new_opportunity', 'New Opportunity Created', `New opportunity for ${lead.name || 'a lead'} (Score: ${oppScore})`, `/advisor/opportunities`);
-            }
-            if (priority === 'High' || priority === 'Urgent') {
-              notifyRole('admin', 'high_priority_opportunity', '🚀 High-Priority Opportunity', `${lead.name || 'A lead'} scored ${oppScore} — high-value opportunity`, `/admin/leads/${lead.id}`);
-            }
-          }
-        } catch (oppErr) {
-          console.error(`   [Opportunity] Error creating for lead ${lead.id}: ${oppErr.message}`);
-        }
+        // NOTE: Opportunity is NOT created here automatically.
+        // It is created only when the user explicitly requests an advisor (is_qualified = true)
+        // in the isFinished block below, to keep the sales pipeline clean.
       } catch (rieErr) {
         console.error(`   [RIE] Error: ${rieErr.message}`);
       }
@@ -1474,6 +1434,51 @@ router.post('/evolution', async (req, res) => {
 
       if (!assessmentData.is_qualified) {
         await run(`UPDATE leads SET status = 'WhatsApp Engaged', pipeline_stage = 3, updated_at = CURRENT_TIMESTAMP WHERE id = ?`, [lead.id]);
+      }
+
+      // ===== Create Opportunity only when user explicitly requests advisor =====
+      if (assessmentData.is_qualified) {
+        try {
+          const existingOpp = await get('SELECT id FROM opportunities WHERE lead_id = ?', [lead.id]);
+          if (!existingOpp) {
+            const rie = assessmentData.rie || {};
+            const oppScore = rie.opportunityScore || assessmentData.score || 50;
+            const scoreBand = oppScore >= 70 ? 'high' : oppScore >= 40 ? 'medium' : 'low';
+            const priority = oppScore >= 70 ? 'High' : oppScore >= 50 ? 'Standard' : 'Low';
+            const cats = assessmentData.risk_categories || {};
+            const riskDna = Object.entries(cats).map(([k, v]) => ({ name: k, score: v }));
+            const topPriorities = (rie.recommendedProducts || []).slice(0, 3).map(p => ({
+              name: p.product,
+              priority: p.priority,
+              gap_level: p.priority === 'high' ? 'High' : p.priority === 'medium' ? 'Medium' : 'Low',
+              reason: p.reason || ''
+            }));
+
+            await run(`
+              INSERT INTO opportunities (lead_id, advisor_id, score, score_band, risk_dna, top_priorities, opportunity_priority, contact_preference, stage, created_at, updated_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'new', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            `, [
+              lead.id,
+              lead.advisor_id || null,
+              oppScore,
+              scoreBand,
+              JSON.stringify(riskDna),
+              JSON.stringify(topPriorities),
+              priority,
+              assessmentData.consultation_preference || null
+            ]);
+            console.log(`   [Opportunity] Created for lead ${lead.id} (advisor requested) — Score: ${oppScore}, Priority: ${priority}`);
+
+            if (lead.advisor_id) {
+              notify(lead.advisor_id, 'new_opportunity', 'New Opportunity Created', `New opportunity for ${lead.name || 'a lead'} (Score: ${oppScore})`, `/advisor/opportunities`);
+            }
+            if (priority === 'High' || priority === 'Urgent') {
+              notifyRole('admin', 'high_priority_opportunity', '🚀 High-Priority Opportunity', `${lead.name || 'A lead'} scored ${oppScore} — high-value opportunity`, `/admin/leads/${lead.id}`);
+            }
+          }
+        } catch (oppErr) {
+          console.error(`   [Opportunity] Error creating for lead ${lead.id}: ${oppErr.message}`);
+        }
       }
 
       publishEvent(CCIE_EVENTS.CONVERSATION_COMPLETED, ccieContext, { leadId: lead.id });
