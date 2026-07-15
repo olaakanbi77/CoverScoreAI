@@ -284,11 +284,13 @@
               <span class="lead-sub-icon">
                 {{#if (eq this.entity_type 'hospital')}}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 21V9a2 2 0 0 0-2-2h-2V3a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4H4a2 2 0 0 0-2 2v12"/><path d="M22 21H2"/><path d="M12 9v4"/><path d="M10 11h4"/></svg>
+                {{else if (eq this.entity_type 'school')}}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2 2 4 2s4-.9 4-2v-5"/></svg>
                 {{else}}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
                 {{/if}}
               </span>
-              <span>{{#if (eq this.entity_type 'hospital')}}Hospital{{else}}Clinic{{/if}} • {{this.location}}</span>
+              <span>{{titleCase this.entity_type}} • {{this.location}}</span>
             </div>
             <div class="lead-time">Added {{this.timeAgo}}</div>
           </div>

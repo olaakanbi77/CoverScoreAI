@@ -67,6 +67,7 @@ app.engine('hbs', exphbs.engine({
     substring: (str, start, len) => String(str || '').substring(start, len),
     json: (obj) => JSON.stringify(obj),
     toLowerCase: (str) => String(str).toLowerCase(),
+    titleCase: (str) => String(str || '').replace(/\b\w/g, c => c.toUpperCase()),
     notifColor: (type) => {
       const map = { lead_assigned: 'c-indigo', new_opportunity: 'c-purple', follow_up_scheduled: 'c-orange', stage_update: 'c-blue', high_priority_opportunity: 'c-red', quote_generated: 'c-teal' };
       return map[type] || 'c-blue';
@@ -309,7 +310,12 @@ app.get('/admin/dashboard', authenticatePage, (req, res) => {
 
 app.get('/admin/leads', authenticatePage, async (req, res) => {
   try {
-    const rawLeads = await all("SELECT * FROM leads ORDER BY updated_at DESC");
+    const rawLeads = await all(`
+      SELECT l.*, a.answers as assessment_answers
+      FROM leads l
+      LEFT JOIN assessments a ON l.assessment_id = a.id
+      ORDER BY l.updated_at DESC
+    `);
     
     let counts = { all: 0, new: 0, contacted: 0, qualified: 0 };
     counts.all = rawLeads.length;
@@ -359,13 +365,28 @@ app.get('/admin/leads', authenticatePage, async (req, res) => {
         else timeAgo = `${Math.floor(diffMins/1440)}d ago`;
       }
 
-      let location = 'Lagos';
-      let entity_type = 'hospital';
-      if (lead.answers) {
+      // Extract location and entity type from assessment answers
+      let location = 'N/A';
+      let entity_type = 'business';
+      let businessPrefix = null;
+      if (lead.assessment_answers) {
         try {
-          const ans = typeof lead.answers === 'string' ? JSON.parse(lead.answers) : lead.answers;
-          if (ans.business && ans.business.location) location = ans.business.location;
-          if (ans.business && ans.business.industry) entity_type = ans.business.industry.toLowerCase();
+          const ans = typeof lead.assessment_answers === 'string' ? JSON.parse(lead.assessment_answers) : lead.assessment_answers;
+          // Use template_selection for prefix
+          businessPrefix = (ans.template_selection && ans.template_selection.template_id) || null;
+          // Fallback: detect from keys
+          if (!businessPrefix) {
+            for (const key of Object.keys(ans)) {
+              const m = key.match(/^(SCH|BUS|SME|HOS|MFG|CHU|YPR|FAM|INC|HLT|ENT|RET|CON|TRN)_/);
+              if (m) { businessPrefix = m[1]; break; }
+            }
+          }
+          // Location from city key
+          const cityKey = businessPrefix ? `${businessPrefix}_008` : null;
+          location = (cityKey && ans[cityKey]) || ans.city || 'N/A';
+          // Entity type from prefix
+          const prefixMap = { SCH: 'school', BUS: 'business', SME: 'business', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'personal', FAM: 'personal', INC: 'personal', HLT: 'personal', ENT: 'business', RET: 'personal', CON: 'construction', TRN: 'transport' };
+          entity_type = prefixMap[businessPrefix] || lead.entity_type || 'business';
         } catch(e){}
       }
 
