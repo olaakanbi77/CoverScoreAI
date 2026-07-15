@@ -53,6 +53,11 @@ app.engine('hbs', exphbs.engine({
       return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
     },
     formatDate: (date) => new Date(date).toLocaleDateString(),
+    formatDateShort: (date) => {
+      if (!date) return '';
+      const d = new Date(date);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    },
     formatNumber: (num) => {
       if (num == null) return '0';
       return Number(num).toLocaleString('en-US');
@@ -389,7 +394,12 @@ app.get('/admin/analytics', authenticatePage, (req, res) => {
 
 app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
   try {
-    const lead = await get("SELECT * FROM leads WHERE id = ?", [req.params.id]);
+    const lead = await get(`
+      SELECT l.*, a.answers as assessment_answers
+      FROM leads l
+      LEFT JOIN assessments a ON l.assessment_id = a.id
+      WHERE l.id = ?
+    `, [req.params.id]);
     if (!lead) return res.status(404).send('Lead not found');
 
     const activities = await all("SELECT * FROM activities WHERE lead_id = ? ORDER BY created_at DESC", [req.params.id]);
@@ -416,19 +426,49 @@ app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     };
 
+    // Parse assessment answers for location, industry, business-specific metrics
+    let answers = {};
+    let extractedLocation = null;
+    let extractedEntityType = 'business';
+    let businessPrefix = null;
+    let businessMetricValue = null;
+    if (lead.assessment_answers) {
+      try {
+        answers = typeof lead.assessment_answers === 'string' ? JSON.parse(lead.assessment_answers) : lead.assessment_answers;
+        // Determine prefix from answer keys
+        for (const key of Object.keys(answers)) {
+          const m = key.match(/^(SCH|BUS|SME|HOS|MFG|CHU|YPR)_/);
+          if (m) { businessPrefix = m[1]; break; }
+        }
+        // Extract location from template-specific city key or data_mapping
+        const cityKey = businessPrefix ? `${businessPrefix}_008` : null;
+        extractedLocation = (cityKey && answers[cityKey]) || answers.city || null;
+        // Entity type based on prefix
+        const prefixMap = { SCH: 'school', BUS: 'business', SME: 'business', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'personal' };
+        extractedEntityType = prefixMap[businessPrefix] || lead.entity_type || 'business';
+        // Business-specific metric
+        if (businessPrefix === 'SCH') businessMetricValue = answers.SCH_013 || null;
+        else if (businessPrefix === 'HOS') businessMetricValue = answers.HOS_013 || null;
+        else if (businessPrefix === 'SME' || businessPrefix === 'BUS' || businessPrefix === 'MFG') businessMetricValue = answers.SME_013 || answers.MFG_013 || null;
+      } catch(e) { /* silent */ }
+    }
+
     lead.added_time = timeAgo(lead.created_at);
+    lead.added_formatted = formatDate(lead.created_at);
     lead.last_contact_time = timeAgo(lead.updated_at);
     lead.initials = initials;
     lead.dashOffset = dashOffset;
-    lead.contact_person = lead.contact_person || 'N/A';
+    lead.contact_person = lead.contact_person || lead.name || 'N/A';
     lead.phone = lead.phone || 'N/A';
     lead.email = lead.email || 'N/A';
-    lead.address = lead.location || 'N/A'; // We'll fallback location for address
-    lead.entity_type_display = lead.entity_type === 'hospital' ? 'Hospital' : 'Clinic';
+    lead.address = extractedLocation || lead.location || 'N/A';
+    lead.entity_type_display = extractedEntityType.charAt(0).toUpperCase() + extractedEntityType.slice(1);
     lead.employees = lead.employees || 'N/A';
-    lead.hospital_type = lead.industry || 'Private';
-    lead.owner = lead.assigned_agent || 'Ayo Johnson';
-    lead.lead_source = lead.lead_source || 'Referral';
+    lead.business_type_display = extractedEntityType.charAt(0).toUpperCase() + extractedEntityType.slice(1);
+    lead.business_metric_label = businessPrefix === 'SCH' ? 'Number of Students' : businessPrefix === 'HOS' ? 'Patient Capacity' : 'Employees';
+    lead.business_metric_value = businessMetricValue || lead.employees || 'N/A';
+    lead.owner = lead.assigned_agent || (req.user ? req.user.name : 'Unassigned');
+    lead.lead_source = lead.lead_source || 'CoverScore AI';
 
     let colorTheme = 'blue';
     let statusLower = (lead.status || '').toLowerCase();
