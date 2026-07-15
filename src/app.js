@@ -59,6 +59,7 @@ app.engine('hbs', exphbs.engine({
     },
     gte: (a, b) => Number(a) >= Number(b),
     lte: (a, b) => Number(a) <= Number(b),
+    substring: (str, start, len) => String(str || '').substring(start, len),
     json: (obj) => JSON.stringify(obj),
     toLowerCase: (str) => String(str).toLowerCase(),
     notifColor: (type) => {
