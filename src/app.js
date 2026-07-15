@@ -426,30 +426,57 @@ app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     };
 
-    // Parse assessment answers for location, industry, business-specific metrics
+    // Parse assessment answers for location, entity type, business-specific metrics
     let answers = {};
     let extractedLocation = null;
     let extractedEntityType = 'business';
     let businessPrefix = null;
-    let businessMetricValue = null;
+    let metricLabel = 'Employees';
+    let metricValue = null;
+    let extractedPhone = null;
+    let extractedContactPerson = null;
     if (lead.assessment_answers) {
       try {
         answers = typeof lead.assessment_answers === 'string' ? JSON.parse(lead.assessment_answers) : lead.assessment_answers;
-        // Determine prefix from answer keys
-        for (const key of Object.keys(answers)) {
-          const m = key.match(/^(SCH|BUS|SME|HOS|MFG|CHU|YPR)_/);
-          if (m) { businessPrefix = m[1]; break; }
+
+        // Use template_selection for prefix detection (most reliable)
+        businessPrefix = (answers.template_selection && answers.template_selection.template_id) || null;
+
+        // Fallback: detect from answer keys (e.g. SCH_004, BUS_004)
+        if (!businessPrefix) {
+          for (const key of Object.keys(answers)) {
+            const m = key.match(/^(SCH|BUS|SME|HOS|MFG|CHU|YPR)_/);
+            if (m) { businessPrefix = m[1]; break; }
+          }
         }
-        // Extract location from template-specific city key or data_mapping
+
+        // Extract location from template-specific city key
         const cityKey = businessPrefix ? `${businessPrefix}_008` : null;
         extractedLocation = (cityKey && answers[cityKey]) || answers.city || null;
+
         // Entity type based on prefix
         const prefixMap = { SCH: 'school', BUS: 'business', SME: 'business', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'personal' };
         extractedEntityType = prefixMap[businessPrefix] || lead.entity_type || 'business';
+
+        // Extract contact person name (question 5 is always the name field in all templates)
+        const nameKey = businessPrefix ? `${businessPrefix}_005` : null;
+        extractedContactPerson = (nameKey && answers[nameKey]) || answers.name || null;
+
+        // Extract phone from answers (question 9 in school template, others vary)
+        const phoneKey = businessPrefix ? `${businessPrefix}_009` : null;
+        extractedPhone = (phoneKey && answers[phoneKey]) || null;
+
         // Business-specific metric
-        if (businessPrefix === 'SCH') businessMetricValue = answers.SCH_013 || null;
-        else if (businessPrefix === 'HOS') businessMetricValue = answers.HOS_013 || null;
-        else if (businessPrefix === 'SME' || businessPrefix === 'BUS' || businessPrefix === 'MFG') businessMetricValue = answers.SME_013 || answers.MFG_013 || null;
+        if (businessPrefix === 'SCH') {
+          metricLabel = 'Number of Students';
+          metricValue = answers.SCH_013 || null;
+        } else if (businessPrefix === 'HOS') {
+          metricLabel = 'Patient Capacity';
+          metricValue = answers.HOS_013 || null;
+        } else if (businessPrefix === 'SME' || businessPrefix === 'BUS' || businessPrefix === 'MFG') {
+          metricLabel = null; // Don't show separate metric row — Employees row already covers it
+          metricValue = null;
+        }
       } catch(e) { /* silent */ }
     }
 
@@ -458,15 +485,14 @@ app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
     lead.last_contact_time = timeAgo(lead.updated_at);
     lead.initials = initials;
     lead.dashOffset = dashOffset;
-    lead.contact_person = lead.contact_person || lead.name || 'N/A';
-    lead.phone = lead.phone || 'N/A';
+    lead.contact_person = extractedContactPerson || lead.contact_person || lead.name || 'N/A';
+    lead.phone = extractedPhone || lead.phone || 'N/A';
     lead.email = lead.email || 'N/A';
     lead.address = extractedLocation || lead.location || 'N/A';
-    lead.entity_type_display = extractedEntityType.charAt(0).toUpperCase() + extractedEntityType.slice(1);
-    lead.employees = lead.employees || 'N/A';
     lead.business_type_display = extractedEntityType.charAt(0).toUpperCase() + extractedEntityType.slice(1);
-    lead.business_metric_label = businessPrefix === 'SCH' ? 'Number of Students' : businessPrefix === 'HOS' ? 'Patient Capacity' : 'Employees';
-    lead.business_metric_value = businessMetricValue || lead.employees || 'N/A';
+    lead.metric_label = metricLabel;
+    lead.metric_value = metricValue || 'N/A';
+    lead.employees = lead.employees || 'N/A';
     lead.owner = lead.assigned_agent || (req.user ? req.user.name : 'Unassigned');
     lead.lead_source = lead.lead_source || 'CoverScore AI';
 
