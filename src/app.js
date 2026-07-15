@@ -496,7 +496,7 @@ app.get('/admin/clients', authenticatePage, async (req, res) => {
 
 app.get('/admin/assessments', authenticatePage, async (req, res) => {
   try {
-    const assessments = await all("SELECT a.*, u.name as user_name FROM assessments a LEFT JOIN users u ON a.user_id = u.id ORDER BY a.created_at DESC");
+    const assessments = await all("SELECT a.*, u.name as user_name, l.business_name, l.name as lead_name FROM assessments a LEFT JOIN users u ON a.user_id = u.id LEFT JOIN leads l ON l.assessment_id = a.id ORDER BY a.created_at DESC");
     res.render('admin/assessments', { title: 'Assessments', activePage: 'assessments', layout: 'admin', assessments });
   } catch (error) {
     res.status(500).send('Error loading assessments');

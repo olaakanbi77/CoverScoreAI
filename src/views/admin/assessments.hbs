@@ -483,7 +483,7 @@
       
       {{#if assessments.length}}
         {{#each assessments}}
-        <div class="list-card" onclick="window.location.href='/assessment/{{this.id}}'" style="cursor: pointer;">
+        <div class="list-card" onclick="window.location.href='/assessment/result/{{this.id}}'" style="cursor: pointer;">
           <div class="c-avatar {{#if (eq this.risk_level 'critical')}}red{{else if (eq this.risk_level 'high')}}orange{{else}}green{{/if}}">
             <!-- First letter of name or business -->
             {{#if this.business_name}}{{substring this.business_name 0 2}}{{else}}CS{{/if}}
