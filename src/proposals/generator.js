@@ -1,13 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-let htmlPdf;
-try {
-  htmlPdf = require('html-pdf-node');
-} catch (e) {
-  // PDF generation library not available; will fall back to HTML
-}
-
 function generateProposal(assessmentData, products, advisorInfo) {
   const proposalNumber = 'PROP-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
   const date = new Date().toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -52,38 +45,11 @@ function generateProposal(assessmentData, products, advisorInfo) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  const basePath = path.join(outputDir, proposalNumber);
-
-  let pdfGenerated = false;
-  if (htmlPdf) {
-    try {
-      pdfGenerated = true;
-    } catch (pdfErr) {
-      // PDF generation failed, will fall back
-    }
-  }
-
-  // Save HTML version (always)
-  fs.writeFileSync(basePath + '.html', html);
-
-  // Attempt PDF generation via html-pdf-node
-  if (htmlPdf) {
-    try {
-      const file = { content: html };
-      htmlPdf.generatePdf(file, { format: 'A4', margin: { top: 0, bottom: 0, left: 0, right: 0 } })
-        .then(pdfBuffer => {
-          fs.writeFileSync(basePath + '.pdf', pdfBuffer);
-        })
-        .catch(() => {});
-    } catch (e) {
-      // PDF write failed; HTML fallback already saved
-    }
-  }
+  fs.writeFileSync(path.join(outputDir, proposalNumber + '.html'), html);
 
   return {
     success: true,
     proposalNumber,
-    pdfUrl: `/proposals/${proposalNumber}.pdf`,
     htmlUrl: `/proposals/${proposalNumber}.html`,
     generatedAt: new Date().toISOString()
   };

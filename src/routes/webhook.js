@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
-const { get, run } = require('../config/database');
+const { get, run, computeLeadScore } = require('../config/database');
 const { generateRiskReport, getLeadQualifier } = require('../services/aiService');
 const { calculateScore } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
@@ -462,6 +462,14 @@ router.post('/evolution', async (req, res) => {
               } else { estimatedPremium = Math.round(scoreResult.min_loss * 0.013); }
             }
 
+            const ls = computeLeadScore({
+              email: assessmentData.email || 'whatsapp@coverscore.site',
+              phone: lead.phone || phoneNumber,
+              engagement_points: (lead.engagement_points || 0) + 20,
+              score: scoreResult.score,
+              entity_type: entityType,
+              is_qualified: lead.is_qualified || false
+            });
             await run(`
               UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?,
                 name = ?, email = ?,
@@ -469,7 +477,8 @@ router.post('/evolution', async (req, res) => {
                 engagement_points = engagement_points + 20, sales_score = sales_score + 20,
                 estimated_premium = ?,
                 birth_date = ?, anniversary_date = ?, contact_person = ?,
-                assessment_type = COALESCE(assessment_type, ?)
+                assessment_type = COALESCE(assessment_type, ?),
+                lead_score = ?, lead_priority = ?
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType,
@@ -478,7 +487,8 @@ router.post('/evolution', async (req, res) => {
               estimatedPremium,
               assessmentData.birth_date || null, assessmentData.anniversary_date || null,
               assessmentData.name || 'WhatsApp User',
-              assessmentTypeMap[prefix] || 'sme', lead.id
+              assessmentTypeMap[prefix] || 'sme',
+              ls.score, ls.priority, lead.id
             ]);
             console.log(`   📊 Assessment completed. Lead ${lead.id} → qualification state`);
 
@@ -1429,6 +1439,17 @@ router.post('/evolution', async (req, res) => {
         qualifierOutput.next_best_action + " - " + qualifierOutput.qualification_reasoning,
         lead.id
       ]);
+
+      // Recompute lead_score now that is_qualified may have changed
+      const lsAfterQual = computeLeadScore({
+        email: assessmentData.email || lead.email,
+        phone: lead.phone || phoneNumber,
+        engagement_points: (lead.engagement_points || 0) + (assessmentData._scored ? 20 : 0),
+        score: assessmentData.score || lead.score || 0,
+        entity_type: assessmentData.entity_type || lead.entity_type || 'business',
+        is_qualified: assessmentData.is_qualified ? 1 : 0
+      });
+      await run('UPDATE leads SET lead_score = ?, lead_priority = ? WHERE id = ?', [lsAfterQual.score, lsAfterQual.priority, lead.id]);
 
       if (process.env.ADMIN_PHONE && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || assessmentData.is_qualified)) {
         const qualDetails = [];

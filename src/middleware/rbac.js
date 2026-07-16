@@ -24,5 +24,7 @@ const rbac = (...allowedRoles) => {
 
 const requireAdmin = rbac('admin');
 const requireAgent = rbac('admin', 'sales', 'analyst');
+const requireSalesOrAdmin = rbac('admin', 'sales');
+const requireSalesOrAdminApi = rbac('admin', 'sales', 'analyst');
 
-module.exports = { rbac, requireAdmin, requireAgent, ROLES };
+module.exports = { rbac, requireAdmin, requireAgent, requireSalesOrAdmin, requireSalesOrAdminApi, ROLES };

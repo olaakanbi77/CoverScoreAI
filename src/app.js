@@ -1,5 +1,5 @@
 const express = require('express');
-const { all, get, db } = require('./config/database');
+const { all, get, db, computeLeadScore } = require('./config/database');
 const exphbs = require('express-handlebars');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -20,6 +20,7 @@ const advisorRoutes = require('./routes/advisor');
 const proposalsRoutes = require('./routes/proposals');
 const documentsRoutes = require('./routes/documents');
 const reportsRoutes = require('./routes/reports');
+const ratingRoutes = require('./routes/rating');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
 
@@ -353,9 +354,6 @@ app.get('/admin/leads', authenticatePage, async (req, res) => {
         }
       }
 
-      const score = parseInt(lead.score) || 0;
-      const dashOffset = (106.8 - (106.8 * score / 100)).toFixed(1);
-
       let timeAgo = 'Just now';
       if (lead.created_at) {
         const diffMs = new Date() - new Date(lead.created_at);
@@ -390,15 +388,19 @@ app.get('/admin/leads', authenticatePage, async (req, res) => {
         } catch(e){}
       }
 
+      const scoreInfo = computeLeadScore({ ...lead, entity_type });
+      const leadDashOffset = (106.8 - (106.8 * scoreInfo.score / 100)).toFixed(1);
       return {
         ...lead,
         colorTheme,
         displayStatus,
         initials,
-        dashOffset,
+        dashOffset: leadDashOffset,
         timeAgo,
         location,
-        entity_type
+        entity_type,
+        leadScore: scoreInfo.score,
+        leadPriority: scoreInfo.priority
       };
     });
 
@@ -516,6 +518,10 @@ app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
     lead.employees = lead.employees || 'N/A';
     lead.owner = lead.assigned_agent || (req.user ? req.user.name : 'Unassigned');
     lead.lead_source = lead.lead_source || 'CoverScore AI';
+
+    const leadScoreInfo = computeLeadScore({ ...lead, entity_type: extractedEntityType, phone: lead.phone || extractedPhone });
+    lead.leadScore = leadScoreInfo.score;
+    lead.leadPriority = leadScoreInfo.priority;
 
     let colorTheme = 'blue';
     let statusLower = (lead.status || '').toLowerCase();
@@ -779,6 +785,7 @@ app.use('/api/renewals', renewalRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/advisor', advisorRoutes);
 app.use('/reports', reportsRoutes);
+app.use(ratingRoutes);
 
 // Serve QR code page for WhatsApp linking
 app.get('/whatsapp-link', (req, res) => {

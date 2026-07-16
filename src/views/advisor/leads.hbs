@@ -168,7 +168,7 @@
     }
     
     .score-gauge-wrap {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
     }
     .score-circle {
       width: 40px; height: 40px; border-radius: 50%;
@@ -185,6 +185,14 @@
     }
     .score-circle .bg { stroke: var(--border); }
     .score-label { font-size: 9px; color: var(--text-sec); text-align: center; }
+
+    .lead-priority {
+      font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px;
+      text-align: center; display: inline-block; line-height: 1.2;
+    }
+    .lead-priority.Hot { background: #FEE2E2; color: #DC2626; }
+    .lead-priority.Warm { background: #FEF3C7; color: #D97706; }
+    .lead-priority.Cold { background: #F1F5F9; color: #64748B; }
     
     .chevron { color: var(--navy); margin-left: 8px; display: flex; align-items: center; }
 
@@ -303,9 +311,10 @@
                   <circle class="bg" cx="20" cy="20" r="17"></circle>
                   <circle cx="20" cy="20" r="17" style="stroke: var(--{{this.colorTheme}}); stroke-dasharray: 106.8; stroke-dashoffset: {{this.dashOffset}};"></circle>
                 </svg>
-                <span>{{this.score}}</span>
+                <span>{{this.leadScore}}</span>
               </div>
-              <span class="score-label">Potential Score</span>
+              <span class="score-label">Lead Score</span>
+              <span class="lead-priority {{this.leadPriority}}">{{this.leadPriority}}</span>
             </div>
           </div>
 

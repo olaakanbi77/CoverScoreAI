@@ -208,13 +208,45 @@ router.get('/proposal-writer/:leadId', authenticatePage, requireSalesOrAdmin, as
     const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
     if (!lead) return res.status(404).send('Lead not found');
 
-    const proposal = await get('SELECT * FROM proposals WHERE lead_id = ?', [lead.id]) || null;
-    
+    const proposal = await get('SELECT * FROM proposals WHERE lead_id = ? ORDER BY id DESC LIMIT 1', [lead.id]) || null;
+
+    let ratingProducts = [];
+    let totalPremium = 0;
+    let productCount = 0;
+    if (proposal && proposal.content) {
+      try {
+        const content = JSON.parse(proposal.content);
+        if (content.ratingProducts) {
+          ratingProducts = content.ratingProducts;
+          productCount = ratingProducts.length;
+          totalPremium = ratingProducts.reduce((s, p) => s + p.premium, 0);
+        } else if (content.totalPremium) {
+          totalPremium = content.totalPremium;
+        }
+      } catch (e) { /* silent */ }
+    }
+    if (!totalPremium) totalPremium = proposal?.amount || 0;
+
+    let location = 'N/A';
+    if (lead.assessment_data) {
+      try {
+        const ad = JSON.parse(lead.assessment_data);
+        if (ad.answers) {
+          const prefix = ad.answers.template_selection?.template_id;
+          if (prefix) location = ad.answers[`${prefix}_008`] || 'N/A';
+        }
+      } catch (e) {}
+    }
+
     res.render('advisor/proposal-writer', {
       layout: 'admin',
       user: req.user,
       lead,
       proposal,
+      ratingProducts,
+      totalPremium,
+      productCount,
+      location,
       path: '/advisor/dashboard'
     });
   } catch (err) {
@@ -918,86 +950,68 @@ router.get('/team-queue', authenticatePage, async (req, res) => {
 router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const { get } = require('../config/database');
+    const ratingEngine = require('../rating/engine');
     const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
     if (!lead) return res.status(404).send('Lead not found');
 
-    let rieData = null;
-    let quoteData = null;
-    let products = [];
-    let totalMin = 0;
-    let totalMax = 0;
-
+    let prefix = null;
+    let assessmentData = {};
     if (lead.assessment_data) {
       try {
-        const ad = typeof lead.assessment_data === 'string'
-          ? JSON.parse(lead.assessment_data)
-          : lead.assessment_data;
-        if (ad.rie) {
-          rieData = ad.rie;
-          quoteData = ad.rie.quote || null;
-          if (quoteData && quoteData.products) {
-            products = quoteData.products.map((qp, i) => {
-              const rec = (ad.rie.recommendedProducts || [])[i] || {};
-              return {
-                product: qp.product,
-                reason: rec.reason || '',
-                priority: rec.priority || 'medium',
-                premiumMin: qp.estimatedPremium?.min || 0,
-                premiumMax: qp.estimatedPremium?.max || 0,
-                selected: true
-              };
-            });
-            totalMin = quoteData.estimatedTotalPremium?.min || 0;
-            totalMax = quoteData.estimatedTotalPremium?.max || 0;
-          }
-        }
-      } catch (e) { /* silent */ }
+        const ad = typeof lead.assessment_data === 'string' ? JSON.parse(lead.assessment_data) : lead.assessment_data;
+        assessmentData = ad;
+        if (ad.answers && ad.answers.template_selection) prefix = ad.answers.template_selection.template_id;
+      } catch (e) {}
     }
-
-    if (!rieData && lead.assessment_id) {
-      const assessment = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
-      if (assessment) {
+    if (!prefix && lead.assessment_id) {
+      const a = await get('SELECT answers FROM assessments WHERE id = ?', [lead.assessment_id]);
+      if (a && a.answers) {
         try {
-          const aiData = JSON.parse(assessment.ai_report || '{}');
-          if (aiData.recommendations) {
-            products = aiData.recommendations.map(r => ({
-              product: r.action || r.product || 'Recommended Cover',
-              reason: r.reason || r.detail || '',
-              priority: r.severity || 'medium',
-              premiumMin: 10000,
-              premiumMax: 50000,
-              selected: true
-            }));
-          }
-        } catch (e) { /* silent */ }
+          const parsed = JSON.parse(a.answers);
+          if (parsed.template_selection) prefix = parsed.template_selection.template_id;
+        } catch (e) {}
       }
     }
-
-    if (products.length === 0) {
-      products.push({
-        product: 'Comprehensive Business Insurance',
-        reason: 'Recommended based on your assessment results',
-        priority: 'medium',
-        premiumMin: 25000,
-        premiumMax: 150000,
-        selected: true
-      });
+    if (!prefix && lead.industry) {
+      const flowMap = { school: 'SCH', hospital: 'HOS', manufacturing: 'MFG', church: 'CHR', sme: 'SME', business: 'BUS' };
+      prefix = flowMap[lead.industry.toLowerCase()] || 'SME';
     }
 
-    // Calculate totals from active products
-    const activeProducts = products.filter(p => p.selected);
-    totalMin = activeProducts.reduce((s, p) => s + p.premiumMin, 0);
-    totalMax = activeProducts.reduce((s, p) => s + p.premiumMax, 0);
+    const products = await ratingEngine.getProducts('BUSINESS');
+    const productsWithClasses = await Promise.all(products.map(async (p) => {
+      const classInfo = await ratingEngine.suggestClasses(p.code, prefix);
+      return {
+        code: p.code,
+        name: p.name,
+        description: p.description,
+        icon: p.icon || 'g',
+        inputSchema: p.input_schema ? JSON.parse(p.input_schema) : {},
+        classes: classInfo.classes,
+        suggestedClass: classInfo.suggested,
+        selected: true,
+        priority: 'medium',
+        reason: `Recommended for ${classInfo.suggested || 'this client'}`
+      };
+    }));
+
+    let hasRie = false;
+    if (lead.assessment_data) {
+      try {
+        const ad = typeof lead.assessment_data === 'string' ? JSON.parse(lead.assessment_data) : lead.assessment_data;
+        if (ad.rie) hasRie = true;
+      } catch (e) {}
+    }
 
     res.render('advisor/quote-builder', {
       layout: false,
       user: req.user,
       activePage: 'quote-builder',
       lead,
-      products: JSON.stringify(products),
-      totalMin,
-      totalMax,
-      hasRie: !!rieData
+      products: JSON.stringify(productsWithClasses),
+      prefix: prefix || 'SME',
+      hasRie,
+      totalMin: 0,
+      totalMax: 0
     });
   } catch (err) {
     console.error('Quote Builder Error:', err);

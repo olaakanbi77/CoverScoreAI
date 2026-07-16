@@ -426,6 +426,104 @@ const initDatabase = () => {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS rating_products (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      code TEXT UNIQUE NOT NULL,
+      name TEXT NOT NULL,
+      description TEXT,
+      category TEXT DEFAULT 'BUSINESS',
+      input_schema TEXT,
+      icon TEXT DEFAULT 'g',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS rating_classes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_code TEXT NOT NULL,
+      name TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY (product_code) REFERENCES rating_products(code),
+      UNIQUE(product_code, name)
+    );
+
+    CREATE TABLE IF NOT EXISTS rating_rates (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_code TEXT NOT NULL,
+      class_name TEXT NOT NULL,
+      rate REAL NOT NULL,
+      min_premium INTEGER DEFAULT 0,
+      currency TEXT DEFAULT 'NGN',
+      FOREIGN KEY (product_code) REFERENCES rating_products(code),
+      FOREIGN KEY (product_code, class_name) REFERENCES rating_classes(product_code, name)
+    );
+
+    CREATE TABLE IF NOT EXISTS rating_quotes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      advisor_id INTEGER,
+      product_code TEXT NOT NULL,
+      class_name TEXT,
+      inputs TEXT,
+      premium INTEGER,
+      breakdown TEXT,
+      status TEXT DEFAULT 'draft',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    INSERT OR IGNORE INTO rating_products (code, name, description, category, input_schema, icon) VALUES
+      ('FIRE', 'Fire & Special Perils', 'Cover for buildings, contents, and stock against fire, lightning, explosion, and other specified perils', 'BUSINESS', '{"buildingValue":{"label":"Building Value","type":"number","required":true},"contentsValue":{"label":"Contents Value","type":"number","required":false},"stockValue":{"label":"Stock Value","type":"number","required":false},"location":{"label":"Location","type":"text","required":false}}', 'o'),
+      ('PL', 'Public Liability', 'Cover for legal liability to third parties for bodily injury or property damage', 'BUSINESS', '{"annualTurnover":{"label":"Annual Turnover","type":"number","required":true},"maxVisitors":{"label":"Maximum Visitors/Day","type":"number","required":false},"limitIndemnity":{"label":"Limit of Indemnity","type":"select","options":[5000000,10000000,20000000,50000000,100000000],"default":20000000,"required":true}}', 'b'),
+      ('MOTOR', 'Comprehensive Motor', 'Cover for damage to or loss of the insured vehicle and third-party liability', 'BUSINESS', '{"vehicleValue":{"label":"Vehicle Value","type":"number","required":true},"vehicleType":{"label":"Vehicle Type","type":"select","options":["Private","Commercial","Truck","Motorcycle"],"required":true},"vehicleUse":{"label":"Vehicle Use","type":"select","options":["Personal","Business","Both"],"required":true},"vehicleYear":{"label":"Year of Manufacture","type":"number","required":true},"location":{"label":"Location","type":"text","required":false}}', 'g'),
+      ('GPA', 'Group Personal Accident', 'Cover for employees or members against accidental bodily injury or death', 'BUSINESS', '{"employeeCount":{"label":"Employee Count","type":"number","required":true},"salaryRoll":{"label":"Total Annual Salary Roll","type":"number","required":true},"benefitMultiple":{"label":"Benefit Multiple","type":"select","options":[12,24,36,48,60],"default":36,"required":true}}', 'g'),
+      ('FG', 'Fidelity Guarantee', 'Cover against financial loss from employee dishonesty or fraud', 'BUSINESS', '{"employeeCount":{"label":"Employee Count","type":"number","required":true},"bondAmount":{"label":"Bond Amount","type":"number","required":true},"handlesCash":{"label":"Handles Cash/Financial Records","type":"select","options":["Yes","No"],"required":true}}', 'o');
+
+    INSERT OR IGNORE INTO rating_classes (product_code, name, description) VALUES
+      ('FIRE', 'Office', 'Office buildings and administrative premises'),
+      ('FIRE', 'School', 'Educational institutions'),
+      ('FIRE', 'Hospital', 'Medical and healthcare facilities'),
+      ('FIRE', 'Manufacturing', 'Factories and production facilities'),
+      ('FIRE', 'Retail', 'Shops and retail outlets'),
+      ('FIRE', 'Warehouse', 'Storage and warehousing facilities'),
+      ('FIRE', 'Church', 'Religious buildings'),
+      ('PL', 'School', 'Educational institutions'),
+      ('PL', 'Hospital', 'Medical and healthcare facilities'),
+      ('PL', 'Church', 'Religious organizations'),
+      ('PL', 'Manufacturing', 'Manufacturing operations'),
+      ('PL', 'Retail', 'Retail businesses'),
+      ('PL', 'Office', 'Office-based businesses'),
+      ('MOTOR', 'Private', 'Private passenger vehicles'),
+      ('MOTOR', 'Commercial', 'Commercial vehicles used for business'),
+      ('MOTOR', 'Truck', 'Trucks and heavy goods vehicles'),
+      ('MOTOR', 'Motorcycle', 'Motorcycles and tricycles'),
+      ('GPA', 'Standard', 'Standard group personal accident'),
+      ('GPA', 'Hazardous', 'Hazardous occupation group personal accident'),
+      ('FG', 'Standard', 'Standard fidelity guarantee'),
+      ('FG', 'High Risk', 'High-risk positions handling large sums');
+
+    INSERT OR IGNORE INTO rating_rates (product_code, class_name, rate, min_premium) VALUES
+      ('FIRE', 'Office', 0.0020, 100000),
+      ('FIRE', 'School', 0.0025, 150000),
+      ('FIRE', 'Hospital', 0.0035, 200000),
+      ('FIRE', 'Manufacturing', 0.0060, 250000),
+      ('FIRE', 'Retail', 0.0030, 100000),
+      ('FIRE', 'Warehouse', 0.0040, 150000),
+      ('FIRE', 'Church', 0.0025, 100000),
+      ('PL', 'School', 0.0035, 50000),
+      ('PL', 'Hospital', 0.0045, 75000),
+      ('PL', 'Church', 0.0030, 50000),
+      ('PL', 'Manufacturing', 0.0050, 100000),
+      ('PL', 'Retail', 0.0035, 50000),
+      ('PL', 'Office', 0.0030, 50000),
+      ('MOTOR', 'Private', 0.0500, 100000),
+      ('MOTOR', 'Commercial', 0.0600, 150000),
+      ('MOTOR', 'Truck', 0.0700, 200000),
+      ('MOTOR', 'Motorcycle', 0.0350, 25000),
+      ('GPA', 'Standard', 0.0150, 25000),
+      ('GPA', 'Hazardous', 0.0250, 50000),
+      ('FG', 'Standard', 0.0050, 25000),
+      ('FG', 'High Risk', 0.0080, 50000);
+
     INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
       (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
       (2, 'Proposal Sent', 'email', 'Dear {{name}},\n\nPlease find attached the insurance proposal based on our recent consultation for {{business_name}}.\n\nLet me know if you have any questions.\n\nBest regards,\nCoverScore AI Advisor');
@@ -508,6 +606,8 @@ const initDatabase = () => {
     }
   });
   ensureSqliteColumn('leads', 'advisor_id', 'INTEGER REFERENCES users(id)');
+  ensureSqliteColumn('leads', 'lead_score', 'INTEGER DEFAULT 0');
+  ensureSqliteColumn('leads', 'lead_priority', 'TEXT DEFAULT \'Cold\'');
 
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)");
@@ -757,6 +857,26 @@ const initDatabase = () => {
       console.error('Migration error (assessment_type):', err.message);
     }
   });
+  db.run("ALTER TABLE leads ADD COLUMN lead_score INTEGER DEFAULT 0", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (lead_score):', err.message);
+    }
+  });
+  db.run("ALTER TABLE leads ADD COLUMN lead_priority TEXT DEFAULT 'Cold'", (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error (lead_priority):', err.message);
+    }
+  });
+  // Backfill lead_score for existing leads
+  db.all("SELECT * FROM leads WHERE lead_score IS NULL OR lead_score = 0", (bErr, rows) => {
+    if (bErr) return console.error('Backfill error (lead_score):', bErr.message);
+    if (!rows || rows.length === 0) return;
+    for (const r of rows) {
+      const ls = computeLeadScore(r);
+      db.run("UPDATE leads SET lead_score = ?, lead_priority = ? WHERE id = ?", [ls.score, ls.priority, r.id]);
+    }
+    if (rows.length > 0) console.log(`Backfilled lead_score for ${rows.length} existing leads`);
+  });
   db.run("ALTER TABLE templates ADD COLUMN category TEXT DEFAULT 'BUSINESS'", (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Migration error (templates category):', err.message);
@@ -921,4 +1041,19 @@ const all = async (sql, params = []) => {
   }
 };
 
-module.exports = { db, pgPool, initDatabase, run, get, all };
+const computeLeadScore = (lead) => {
+  if (!lead) return { score: 0, priority: 'Cold' };
+  let s = 0;
+  if (lead.email && lead.email !== 'whatsapp@coverscore.site') s += 5;
+  if (lead.phone) s += 5;
+  if (lead.engagement_points >= 10) s += 10;
+  if (lead.score > 0) s += 20;
+  if (lead.score > 0 && lead.score < 30) s += 15;
+  if (lead.entity_type === 'business') s += 20;
+  if (lead.is_qualified) s += 40;
+  s = Math.min(Math.max(Math.round(s), 0), 100);
+  const p = s >= 80 ? 'Hot' : s >= 50 ? 'Warm' : 'Cold';
+  return { score: s, priority: p };
+};
+
+module.exports = { db, pgPool, initDatabase, run, get, all, computeLeadScore };

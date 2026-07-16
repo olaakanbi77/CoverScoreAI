@@ -5,7 +5,6 @@
     --c-green-light: #ecfdf5;
     --c-dark: #0f172a;
     --c-gray: #64748b;
-    --text-sec: #64748b;
     --c-gray-light: #f1f5f9;
     --c-red-light: #fef2f2;
     --c-red: #ef4444;
@@ -60,7 +59,6 @@
     overflow: hidden; transition: all 0.2s;
   }
   .product-card.selected { border-color: var(--c-green); background: #fafefc; }
-  .product-card.disabled { opacity: 0.6; }
 
   .pc-header {
     display: flex; align-items: center; gap: 12px; padding: 14px;
@@ -86,32 +84,49 @@
   .pc-body { flex: 1; }
   .pc-name { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0 0 2px 0; }
   .pc-reason { font-size: 10px; color: var(--c-gray); margin: 0; line-height: 1.3; }
-  .pc-priority {
-    display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 6px;
-    border-radius: 12px; margin-top: 4px;
-  }
-  .pc-priority.high { background: var(--c-red-light); color: var(--c-red); }
-  .pc-priority.medium { background: #fffbeb; color: #d97706; }
 
   .pc-premium { text-align: right; flex-shrink: 0; }
   .pc-premium-label { font-size: 9px; color: var(--c-gray); }
-  .pc-premium-range { font-size: 11px; font-weight: 700; color: var(--c-dark); }
+  .pc-premium-value { font-size: 14px; font-weight: 800; color: var(--c-dark); }
+  .pc-premium-value.calc { color: var(--c-green-dark); }
 
   .pc-details {
-    padding: 0 14px 14px; display: none;
+    padding: 0 14px 14px;
   }
-  .product-card.expanded .pc-details { display: block; }
-  .premium-row { display: flex; gap: 12px; align-items: center; margin-top: 8px; }
-  .premium-field { flex: 1; }
-  .premium-field label { font-size: 9px; font-weight: 600; color: var(--c-gray); display: block; margin-bottom: 4px; }
-  .premium-field input {
+
+  .class-selector {
+    margin-bottom: 12px;
+  }
+  .class-selector label { font-size: 10px; font-weight: 600; color: var(--c-gray); display: block; margin-bottom: 4px; }
+  .class-selector select {
     width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 8px;
-    font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; background: white;
     box-sizing: border-box;
   }
-  .premium-field input:focus { outline: none; border-color: var(--c-green); }
 
-  /* Total Bar */
+  .input-grid { display: flex; flex-direction: column; gap: 10px; }
+  .input-row { display: flex; flex-direction: column; gap: 4px; }
+  .input-row label { font-size: 10px; font-weight: 600; color: var(--c-gray); display: flex; justify-content: space-between; }
+  .input-row input, .input-row select {
+    width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 8px;
+    font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+  }
+  .input-row input:focus, .input-row select:focus { outline: none; border-color: var(--c-green); }
+
+  .calc-btn {
+    background: var(--c-green); color: white; border: none;
+    padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700;
+    cursor: pointer; width: 100%; margin-top: 10px;
+  }
+  .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .breakdown { margin-top: 10px; padding: 10px; background: var(--c-green-light); border-radius: 8px; }
+  .breakdown-row { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; }
+  .breakdown-row.total { font-weight: 800; border-top: 1px solid #d1fae5; margin-top: 4px; padding-top: 8px; }
+  .breakdown-label { color: var(--c-gray); }
+  .breakdown-val { color: var(--c-dark); font-weight: 700; }
+
   .total-bar {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 480px; background: white;
@@ -130,6 +145,9 @@
   }
   .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-generate svg { width: 18px; height: 18px; stroke-width: 2.5; }
+
+  .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .no-rie-banner {
     background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px;
@@ -174,10 +192,10 @@
   <div class="total-bar">
     <div class="total-row">
       <div>
-        <div class="total-label">Estimated Annual Premium</div>
+        <div class="total-label">Total Annual Premium</div>
         <div class="total-detail"><span id="product-count">0</span> products selected</div>
       </div>
-      <div class="total-value">₦<span id="total-min">0</span> – ₦<span id="total-max">0</span></div>
+      <div class="total-value">₦<span id="total-premium">0</span></div>
     </div>
     <button class="btn-generate" id="btn-generate" onclick="generateProposal()">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -191,88 +209,227 @@
   var products = {{{products}}};
   var leadId = {{lead.id}};
 
-  var icons = ['g', 'o', 'b'];
-  var iconSvgs = [
-    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
-    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>'
-  ];
+  var iconSvgs = {
+    g: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    o: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+    b: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>'
+  };
 
   function renderProducts() {
     var container = document.getElementById('products-container');
     container.innerHTML = '';
     products.forEach(function(p, i) {
-      var iconIdx = i % 3;
       var card = document.createElement('div');
-      card.className = 'product-card' + (p.selected !== false ? ' selected' : ' disabled');
+      card.className = 'product-card' + (p.selected !== false ? ' selected' : '');
       card.id = 'product-' + i;
-      card.innerHTML =
-        '<div class="pc-header" onclick="toggleProduct(' + i + ')">' +
-          '<div class="pc-check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>' +
-          '<div class="pc-icon ' + icons[iconIdx] + '">' + iconSvgs[iconIdx] + '</div>' +
-          '<div class="pc-body">' +
-            '<p class="pc-name">' + p.product + '</p>' +
-            '<p class="pc-reason">' + (p.reason || 'Recommended for this client') + '</p>' +
-            (p.priority === 'high' ? '<span class="pc-priority high">High Priority</span>' : '') +
-          '</div>' +
-          '<div class="pc-premium">' +
-            '<div class="pc-premium-label">Est. Premium</div>' +
-            '<div class="pc-premium-range">₦' + p.premiumMin.toLocaleString() + ' – ₦' + p.premiumMax.toLocaleString() + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="pc-details">' +
-          '<div class="premium-row">' +
-            '<div class="premium-field"><label>Min Premium (₦)</label><input type="number" id="min-' + i + '" value="' + p.premiumMin + '" onchange="updatePremium(' + i + ')" onfocus="this.select()"></div>' +
-            '<div class="premium-field"><label>Max Premium (₦)</label><input type="number" id="max-' + i + '" value="' + p.premiumMax + '" onchange="updatePremium(' + i + ')" onfocus="this.select()"></div>' +
-          '</div>' +
-        '</div>';
+      card.innerHTML = buildCardHtml(p, i);
       container.appendChild(card);
+
+      p._inputs = {};
+      p._premium = null;
+      p._breakdown = null;
     });
     updateTotals();
   }
 
+  function buildCardHtml(p, i) {
+    var svgIcon = iconSvgs[p.icon] || iconSvgs.g;
+    return '' +
+      '<div class="pc-header" onclick="toggleProduct(' + i + ')">' +
+        '<div class="pc-check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>' +
+        '<div class="pc-icon ' + p.icon + '">' + svgIcon + '</div>' +
+        '<div class="pc-body">' +
+          '<p class="pc-name">' + p.name + '</p>' +
+          '<p class="pc-reason">' + (p.reason || 'Recommended cover') + '</p>' +
+        '</div>' +
+        '<div class="pc-premium" id="premium-wrap-' + i + '">' +
+          '<div class="pc-premium-label">Premium</div>' +
+          '<div class="pc-premium-value" id="premium-val-' + i + '">—</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="pc-details" id="details-' + i + '">' +
+        buildFormHtml(p, i) +
+      '</div>';
+  }
+
+  function buildFormHtml(p, i) {
+    var html = '';
+
+    // Class selector
+    if (p.classes && p.classes.length > 0) {
+      html += '<div class="class-selector">';
+      html += '<label>Risk Class</label>';
+      html += '<select id="class-' + i + '" onchange="calculatePremium(' + i + ')">';
+      p.classes.forEach(function(c) {
+        var sel = (c.name === p.suggestedClass) ? ' selected' : '';
+        html += '<option value="' + c.name + '"' + sel + '>' + c.name + (c.description ? ' — ' + c.description : '') + '</option>';
+      });
+      html += '</select></div>';
+    }
+
+    // Input fields from schema
+    var schema = p.inputSchema || {};
+    var keys = Object.keys(schema);
+    if (keys.length > 0) {
+      html += '<div class="input-grid">';
+      keys.forEach(function(key) {
+        var field = schema[key];
+        html += '<div class="input-row">';
+        html += '<label for="input-' + i + '-' + key + '">' + field.label + (field.required ? ' <span style="color:var(--c-red)">*</span>' : '') + '</label>';
+        if (field.type === 'select' && field.options) {
+          html += '<select id="input-' + i + '-' + key + '" onchange="calculatePremium(' + i + ')">';
+          var defaultVal = field.default;
+          field.options.forEach(function(opt) {
+            var sel = (String(opt) === String(defaultVal)) ? ' selected' : '';
+            html += '<option value="' + opt + '"' + sel + '>' + (typeof opt === 'number' ? '₦' + Number(opt).toLocaleString() : opt) + '</option>';
+          });
+          html += '</select>';
+        } else {
+          html += '<input type="' + (field.type === 'number' ? 'number' : 'text') + '" id="input-' + i + '-' + key + '" placeholder="' + (field.type === 'number' ? '0' : '') + '" onchange="calculatePremium(' + i + ')" onkeyup="calculatePremium(' + i + ')">';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '<button class="calc-btn" id="calc-btn-' + i + '" onclick="calculatePremium(' + i + ')">Calculate Premium</button>';
+    }
+
+    html += '<div id="breakdown-' + i + '"></div>';
+    return html;
+  }
+
   function toggleProduct(i) {
     var p = products[i];
-    if (p.selected === false) {
-      p.selected = true;
-    } else {
-      p.selected = false;
-    }
+    p.selected = (p.selected === false) ? true : false;
     var card = document.getElementById('product-' + i);
-    card.className = 'product-card' + (p.selected !== false ? ' selected' : ' disabled');
+    card.className = 'product-card' + (p.selected ? ' selected' : '');
+    if (!p.selected) {
+      p._premium = null;
+      document.getElementById('premium-val-' + i).textContent = '—';
+      document.getElementById('breakdown-' + i).innerHTML = '';
+    }
     updateTotals();
   }
 
-  function updatePremium(i) {
-    var minEl = document.getElementById('min-' + i);
-    var maxEl = document.getElementById('max-' + i);
-    var minVal = parseInt(minEl.value) || 0;
-    var maxVal = parseInt(maxEl.value) || 0;
-    if (maxVal < minVal) maxVal = minVal;
-    products[i].premiumMin = minVal;
-    products[i].premiumMax = maxVal;
+  async function calculatePremium(i) {
+    var p = products[i];
+    if (p.selected === false) return;
+
+    var inputs = {};
+    var schema = p.inputSchema || {};
+    var keys = Object.keys(schema);
+    var hasRequired = false;
+    keys.forEach(function(key) {
+      var el = document.getElementById('input-' + i + '-' + key);
+      if (el) {
+        var val = el.value;
+        if (schema[key].type === 'number') val = parseFloat(val) || 0;
+        inputs[key] = val;
+        if (schema[key].required && (!val || val === 0)) hasRequired = true;
+      }
+    });
+
+    var className = null;
+    var classEl = document.getElementById('class-' + i);
+    if (classEl) className = classEl.value;
+
+    if (hasRequired) {
+      document.getElementById('premium-val-' + i).textContent = '—';
+      document.getElementById('breakdown-' + i).innerHTML = '';
+      p._premium = null;
+      updateTotals();
+      return;
+    }
+
+    var btn = document.getElementById('calc-btn-' + i);
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loading-spinner"></span> Calculating...'; }
+
+    try {
+      var res = await fetch('/api/rating/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productCode: p.code, className: className, inputs: inputs, leadId: leadId })
+      });
+      var data = await res.json();
+
+      if (data.finalPremium > 0) {
+        document.getElementById('premium-val-' + i).textContent = '₦' + Number(data.finalPremium).toLocaleString();
+        p._premium = data.finalPremium;
+        p._breakdown = data.breakdown || [];
+        p._inputs = inputs;
+        p._className = className || p.suggestedClass;
+
+        // Show breakdown
+        var bdHtml = '<div class="breakdown">';
+        (data.breakdown || []).forEach(function(b) {
+          if (b.premium) {
+            bdHtml += '<div class="breakdown-row"><span class="breakdown-label">' + b.label + '</span><span class="breakdown-val">₦' + Number(b.premium).toLocaleString() + '</span></div>';
+          } else if (b.label) {
+            bdHtml += '<div class="breakdown-row"><span class="breakdown-label">' + b.label + '</span></div>';
+          }
+        });
+        if (data.minPremium > 0 && data.finalPremium === data.minPremium) {
+          bdHtml += '<div class="breakdown-row" style="color:#d97706;"><span class="breakdown-label">Minimum premium applied</span><span class="breakdown-val">₦' + Number(data.minPremium).toLocaleString() + '</span></div>';
+        }
+        bdHtml += '<div class="breakdown-row total"><span class="breakdown-label">Total Premium</span><span class="breakdown-val">₦' + Number(data.finalPremium).toLocaleString() + '</span></div>';
+        bdHtml += '</div>';
+        document.getElementById('breakdown-' + i).innerHTML = bdHtml;
+      } else {
+        document.getElementById('premium-val-' + i).textContent = '₦' + Number(data.minPremium || 0).toLocaleString();
+        p._premium = data.minPremium || 0;
+      }
+    } catch (e) {
+      document.getElementById('premium-val-' + i).textContent = 'Error';
+      p._premium = null;
+    }
+
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Calculate Premium'; }
     updateTotals();
   }
 
   function updateTotals() {
-    var active = products.filter(function(p) { return p.selected !== false; });
-    var totalMin = active.reduce(function(s, p) { return s + p.premiumMin; }, 0);
-    var totalMax = active.reduce(function(s, p) { return s + p.premiumMax; }, 0);
-    document.getElementById('total-min').textContent = totalMin.toLocaleString();
-    document.getElementById('total-max').textContent = totalMax.toLocaleString();
-    document.getElementById('product-count').textContent = active.length;
+    var total = 0;
+    var count = 0;
+    products.forEach(function(p) {
+      if (p.selected !== false && p._premium > 0) {
+        total += p._premium;
+        count++;
+      }
+    });
+    document.getElementById('total-premium').textContent = total.toLocaleString();
+    document.getElementById('product-count').textContent = count;
   }
 
   async function generateProposal() {
+    var activeProducts = products.filter(function(p) {
+      return p.selected !== false && p._premium > 0;
+    });
+
+    if (activeProducts.length === 0) {
+      alert('Please calculate premiums for at least one product.');
+      return;
+    }
+
     var btn = document.getElementById('btn-generate');
     btn.disabled = true;
-    btn.innerHTML = 'Generating...';
+    btn.innerHTML = '<span class="loading-spinner"></span> Generating...';
+
+    var payload = activeProducts.map(function(p) {
+      return {
+        productCode: p.code,
+        productName: p.name,
+        className: p._className || p.suggestedClass,
+        premium: p._premium,
+        breakdown: p._breakdown || [],
+        inputs: p._inputs || {},
+        selected: true
+      };
+    });
 
     try {
-      var res = await fetch('/api/quote-builder/generate', {
+      var res = await fetch('/api/rating/generate-proposal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ leadId: leadId, products: products })
+        body: JSON.stringify({ leadId: leadId, products: payload })
       });
       var data = await res.json();
       if (data.success) {

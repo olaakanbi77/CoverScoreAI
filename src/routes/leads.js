@@ -1,6 +1,6 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { db, run, get, all } = require('../config/database');
+const { db, run, get, all, computeLeadScore } = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const { requireAgent } = require('../middleware/rbac');
 const { sendLeadContacted, sendLeadConverted, sendAdminWhatsAppQuoteAlert, sendAdminWhatsAppConsultationAlert, sendClientWhatsAppConsultationConfirmation } = require('../services/whatsappService');
@@ -57,24 +57,29 @@ router.get('/', authenticate, requireAgent, async (req, res, next) => {
     const totalResult = await get(`SELECT COUNT(*) as count FROM leads l LEFT JOIN assessments a ON l.assessment_id = a.id LEFT JOIN users u ON a.user_id = u.id WHERE ${whereClause}`, params);
 
     res.json({
-      leads: leads.map(lead => ({
-        id: lead.id,
-        name: lead.name,
-        email: lead.email,
-        phone: lead.phone,
-        businessName: lead.business_name,
-        score: lead.score,
-        riskLevel: lead.risk_level,
-        industry: lead.industry,
-        status: lead.status,
-        entity_type: lead.entity_type || 'business',
-        assessment_type: lead.assessment_type || null,
-        notes: lead.notes,
-        estimatedPremium: lead.estimated_premium || 0,
-        assignedAgent: lead.assigned_agent || '',
-        createdAt: lead.created_at,
-        updatedAt: lead.updated_at
-      })),
+      leads: leads.map(lead => {
+        const ls = computeLeadScore(lead);
+        return {
+          id: lead.id,
+          name: lead.name,
+          email: lead.email,
+          phone: lead.phone,
+          businessName: lead.business_name,
+          score: lead.score,
+          riskLevel: lead.risk_level,
+          industry: lead.industry,
+          status: lead.status,
+          entity_type: lead.entity_type || 'business',
+          assessment_type: lead.assessment_type || null,
+          leadScore: ls.score,
+          leadPriority: ls.priority,
+          notes: lead.notes,
+          estimatedPremium: lead.estimated_premium || 0,
+          assignedAgent: lead.assigned_agent || '',
+          createdAt: lead.created_at,
+          updatedAt: lead.updated_at
+        };
+      }),
       pagination: {
         page,
         limit,
@@ -128,6 +133,7 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       }
     }
 
+    const ls = computeLeadScore(lead);
     res.json({
       id: lead.id,
       name: lead.name,
@@ -139,6 +145,8 @@ router.get('/:id', authenticate, requireAgent, async (req, res, next) => {
       riskLevel: lead.risk_level,
       entity_type: lead.entity_type || 'business',
       assessment_type: lead.assessment_type || null,
+      leadScore: ls.score,
+      leadPriority: ls.priority,
       status: lead.status,
       notes: lead.notes,
       estimatedPremium: lead.estimated_premium || 0,
