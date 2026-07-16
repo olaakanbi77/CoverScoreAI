@@ -998,7 +998,7 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
     if (lead.assessment_data) {
       try {
         const ad = typeof lead.assessment_data === 'string' ? JSON.parse(lead.assessment_data) : lead.assessment_data;
-        if (ad.rie) hasRie = true;
+        hasRie = !!(ad.rie || ad._scored || ad.score || ad.answers);
       } catch (e) {}
     }
 
