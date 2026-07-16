@@ -162,20 +162,58 @@ router.post('/send', authenticate, requireSalesOrAdminApi, async (req, res) => {
   const { proposalId, method } = req.body;
   
   try {
-    const proposal = await get('SELECT p.*, l.name as lead_name, l.email as lead_email, l.phone as lead_phone FROM proposals p JOIN leads l ON p.lead_id = l.id WHERE p.id = ?', [proposalId]);
+    const proposal = await get('SELECT p.*, l.name as lead_name, l.email as lead_email, l.phone as lead_phone, l.assessment_id, l.assessment_data FROM proposals p JOIN leads l ON p.lead_id = l.id WHERE p.id = ?', [proposalId]);
     
     if (!proposal) {
       return res.status(404).json({ error: 'Proposal not found' });
     }
 
+    let resolvedPhone = proposal.lead_phone;
+    if (!resolvedPhone) {
+      let prefix = null;
+      if (proposal.assessment_data) {
+        try {
+          const ad = typeof proposal.assessment_data === 'string' ? JSON.parse(proposal.assessment_data) : proposal.assessment_data;
+          if (ad.answers && ad.answers.template_selection) prefix = ad.answers.template_selection.template_id;
+        } catch (e) {}
+      }
+      if (!prefix && proposal.assessment_id) {
+        const a = await get('SELECT answers FROM assessments WHERE id = ?', [proposal.assessment_id]);
+        if (a && a.answers) {
+          try {
+            const parsed = typeof a.answers === 'string' ? JSON.parse(a.answers) : a.answers;
+            if (parsed.template_selection) prefix = parsed.template_selection.template_id;
+          } catch (e) {}
+        }
+      }
+      if (prefix) {
+        const phoneKey = `${prefix}_009`;
+        if (proposal.assessment_data) {
+          try {
+            const ad = typeof proposal.assessment_data === 'string' ? JSON.parse(proposal.assessment_data) : proposal.assessment_data;
+            if (ad.answers && ad.answers[phoneKey]) resolvedPhone = ad.answers[phoneKey];
+          } catch (e) {}
+        }
+        if (!resolvedPhone && proposal.assessment_id) {
+          const a = await get('SELECT answers FROM assessments WHERE id = ?', [proposal.assessment_id]);
+          if (a && a.answers) {
+            try {
+              const parsed = typeof a.answers === 'string' ? JSON.parse(a.answers) : a.answers;
+              if (parsed[phoneKey]) resolvedPhone = parsed[phoneKey];
+            } catch (e) {}
+          }
+        }
+      }
+    }
+
     const proposalUrl = `${process.env.APP_URL || 'http://localhost:3016'}/api/proposals/view/${proposal.token}`;
     
     if (method === 'whatsapp') {
-      if (!proposal.lead_phone) {
+      if (!resolvedPhone) {
         return res.status(400).json({ error: 'Lead has no phone number' });
       }
       const message = `Hi ${proposal.lead_name},\n\nYour personalized insurance proposal is ready for review. You can view, accept or decline it using the secure link below:\n\n${proposalUrl}\n\nPlease let us know if you have any questions.\n\n— CoverScore AI`;
-      const result = await sendWhatsApp(proposal.lead_phone, null, { _message: message });
+      const result = await sendWhatsApp(resolvedPhone, null, { _message: message });
       
       if (!result.success) {
         return res.status(500).json({ error: 'Failed to send WhatsApp message: ' + result.error });
