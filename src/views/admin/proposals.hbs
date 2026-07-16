@@ -379,21 +379,21 @@
 
     <!-- Tabs -->
     <div class="tabs-row">
-      <div class="tab active">
+      <div class="tab active" data-filter="all">
         <span>All Quotes</span>
-        <span class="tab-badge bg-green">12</span>
+        <span class="tab-badge bg-green">{{proposals.length}}</span>
       </div>
-      <div class="tab">
+      <div class="tab" data-filter="Draft">
         <span>Draft</span>
-        <span class="tab-badge bg-gray">4</span>
+        <span class="tab-badge bg-gray">{{draftCount}}</span>
       </div>
-      <div class="tab">
+      <div class="tab" data-filter="Sent">
         <span>Sent</span>
-        <span class="tab-badge bg-gray">6</span>
+        <span class="tab-badge bg-gray">{{sentCount}}</span>
       </div>
-      <div class="tab">
+      <div class="tab" data-filter="Expired">
         <span>Expired</span>
-        <span class="tab-badge bg-gray">2</span>
+        <span class="tab-badge bg-gray">{{expiredCount}}</span>
       </div>
     </div>
 
@@ -405,17 +405,17 @@
         </div>
         <div>
           <p class="sum-lbl">Total Potential Premium</p>
-          <h2 class="sum-val">₦2,560,000</h2>
-          <p class="sum-sub">Across 12 Quotes</p>
+          <h2 class="sum-val">₦{{formatNumber totalPremium}}</h2>
+          <p class="sum-sub">Across {{proposals.length}} Quote{{#if (ne proposals.length 1)}}s{{/if}}</p>
         </div>
       </div>
       <div class="sum-right">
         <div class="growth-box">
           <div class="growth-val">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            +18%
+            {{proposals.length}}
           </div>
-          <div class="growth-lbl">vs last 30 days</div>
+          <div class="growth-lbl">total quotes</div>
         </div>
       </div>
     </div>
@@ -423,132 +423,39 @@
     <!-- Recent Quotes -->
     <div class="list-header">
       <h2 class="list-title">Recent Quotes</h2>
-      <a href="javascript:void(0)" class="view-all">View All</a>
+      <span class="view-all" style="cursor:default;">{{proposals.length}} total</span>
     </div>
 
-    <!-- Card 1 -->
-    <div class="list-card">
-      <div class="c-avatar green">GH</div>
+    <div id="quotes-list">
+    {{#each proposals}}
+    <a href="/api/rating/proposal/{{this.id}}/pdf" class="list-card" data-status="{{this.status}}" target="_blank" style="text-decoration:none;color:inherit;">
+      <div class="c-avatar {{avatarColor this.status}}">{{userInitials this.business_name}}</div>
       <div class="c-body">
-        <h3 class="c-title">Greenfield Hospital</h3>
+        <h3 class="c-title">{{this.business_name}}</h3>
         <p class="c-sub">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          Abuja, FCT
+          {{this.lead_name}}
         </p>
         <div class="c-meta">
-          <div class="status-badge green">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            Sent
+          <div class="status-badge {{statusBadgeClass this.status}}">
+            {{{statusIcon this.status}}}
+            {{this.status}}
           </div>
           <span class="meta-dot">•</span>
-          <span class="meta-time">Sent 2h ago</span>
+          <span class="meta-time">{{formatDateShort this.created_at}}</span>
         </div>
       </div>
       <div class="c-right">
-        <div class="c-amount">₦850,000</div>
+        <div class="c-amount">₦{{formatNumber this.amount}}</div>
         <div class="c-freq">Annual Premium</div>
       </div>
       <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </a>
+    {{else}}
+    <div class="list-card" style="justify-content:center;padding:30px;">
+      <p style="color:var(--c-gray);font-size:13px;">No quotes yet. Generate your first quote from a lead.</p>
     </div>
-
-    <!-- Card 2 -->
-    <div class="list-card">
-      <div class="c-avatar purple">VH</div>
-      <div class="c-body">
-        <h3 class="c-title">Victory Hospital</h3>
-        <p class="c-sub">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          Port Harcourt, Rivers
-        </p>
-        <div class="c-meta">
-          <div class="status-badge orange">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-            Draft
-          </div>
-          <span class="meta-dot">•</span>
-          <span class="meta-time">Updated 1d ago</span>
-        </div>
-      </div>
-      <div class="c-right">
-        <div class="c-amount">₦620,000</div>
-        <div class="c-freq">Annual Premium</div>
-      </div>
-      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="list-card">
-      <div class="c-avatar blue">LC</div>
-      <div class="c-body">
-        <h3 class="c-title">Lagos Medical Center</h3>
-        <p class="c-sub">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          Lagos, Lagos
-        </p>
-        <div class="c-meta">
-          <div class="status-badge green">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            Sent
-          </div>
-          <span class="meta-dot">•</span>
-          <span class="meta-time">Sent 2d ago</span>
-        </div>
-      </div>
-      <div class="c-right">
-        <div class="c-amount">₦420,000</div>
-        <div class="c-freq">Annual Premium</div>
-      </div>
-      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </div>
-
-    <!-- Card 4 -->
-    <div class="list-card">
-      <div class="c-avatar orange">NH</div>
-      <div class="c-body">
-        <h3 class="c-title">New Hope Medical</h3>
-        <p class="c-sub">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          Ibadan, Oyo
-        </p>
-        <div class="c-meta">
-          <div class="status-badge green">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            Viewed
-          </div>
-          <span class="meta-dot">•</span>
-          <span class="meta-time">Viewed 3d ago</span>
-        </div>
-      </div>
-      <div class="c-right">
-        <div class="c-amount">₦380,000</div>
-        <div class="c-freq">Annual Premium</div>
-      </div>
-      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </div>
-
-    <!-- Card 5 -->
-    <div class="list-card">
-      <div class="c-avatar red">BC</div>
-      <div class="c-body">
-        <h3 class="c-title">Brightcare Hospital</h3>
-        <p class="c-sub">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          Enugu, Enugu
-        </p>
-        <div class="c-meta">
-          <div class="status-badge red">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Expired
-          </div>
-          <span class="meta-dot">•</span>
-          <span class="meta-time">Expired 5d ago</span>
-        </div>
-      </div>
-      <div class="c-right">
-        <div class="c-amount">₦290,000</div>
-        <div class="c-freq">Annual Premium</div>
-      </div>
-      <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    {{/each}}
     </div>
 
     <!-- Create Quote CTA -->
@@ -565,9 +472,22 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </a>
     </div>
+    </div>
 
-  </div>
 </div>
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter = tab.dataset.filter;
+    document.querySelectorAll('#quotes-list .list-card').forEach(card => {
+      card.style.display = filter === 'all' || card.dataset.status === filter ? '' : 'none';
+    });
+  });
+});
+</script>
 
 <!-- Bottom Navigation -->
     <!-- BOTTOM NAV -->

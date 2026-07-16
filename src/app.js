@@ -70,6 +70,19 @@ app.engine('hbs', exphbs.engine({
     json: (obj) => JSON.stringify(obj),
     toLowerCase: (str) => String(str).toLowerCase(),
     titleCase: (str) => String(str || '').replace(/\b\w/g, c => c.toUpperCase()),
+    avatarColor: (status) => {
+      const map = { Generated: 'orange', Draft: 'orange', Sent: 'green', Expired: 'red' };
+      return map[status] || 'blue';
+    },
+    statusBadgeClass: (status) => {
+      const map = { Generated: 'orange', Draft: 'orange', Sent: 'green', Expired: 'red' };
+      return map[status] || 'orange';
+    },
+    statusIcon: (status) => {
+      if (status === 'Sent') return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="10" height="10"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>';
+      if (status === 'Expired') return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="10" height="10"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+      return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="10" height="10"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
+    },
     notifColor: (type) => {
       const map = { lead_assigned: 'c-indigo', new_opportunity: 'c-purple', follow_up_scheduled: 'c-orange', stage_update: 'c-blue', high_priority_opportunity: 'c-red', quote_generated: 'c-teal' };
       return map[type] || 'c-blue';
@@ -712,7 +725,11 @@ app.get('/admin/policies', authenticatePage, async (req, res) => {
 app.get('/admin/proposals', authenticatePage, async (req, res) => {
   try {
     const proposals = await all("SELECT p.*, l.name as lead_name, l.business_name FROM proposals p JOIN leads l ON p.lead_id = l.id ORDER BY p.created_at DESC");
-    res.render('admin/proposals', { title: 'Proposals', activePage: 'proposals', layout: 'admin', proposals });
+    const draftCount = proposals.filter(p => p.status === 'Generated' || p.status === 'Draft').length;
+    const sentCount = proposals.filter(p => p.status === 'Sent').length;
+    const expiredCount = proposals.filter(p => p.status === 'Expired').length;
+    const totalPremium = proposals.reduce((sum, p) => sum + (p.amount || 0), 0);
+    res.render('admin/proposals', { title: 'Proposals', activePage: 'proposals', layout: 'admin', proposals, draftCount, sentCount, expiredCount, totalPremium });
   } catch (error) {
     res.status(500).send('Error loading proposals');
   }
