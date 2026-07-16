@@ -17,6 +17,29 @@
   .tpl-body { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; flex: 1; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-md); font-family: monospace; white-space: pre-wrap; }
   
   .tpl-footer { display: flex; justify-content: flex-end; gap: 8px; padding-top: 16px; border-top: 1px solid var(--glass-border); }
+
+  @media (max-width: 768px) {
+    .page-container { padding: 16px; }
+    .page-header { flex-direction: column; gap: 12px; align-items: stretch; }
+    .page-title { font-size: 20px; }
+    .page-header .btn { text-align: center; }
+    .templates-grid { gap: 16px; grid-template-columns: 1fr; }
+    .template-card { padding: 16px; }
+    .tpl-footer { flex-direction: column; }
+    .tpl-footer .btn { width: 100%; text-align: center; }
+    .modal-container { width: 95%; margin: 20px auto; border-radius: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .page-container { padding: 12px; }
+    .page-title { font-size: 18px; }
+    .templates-grid { gap: 12px; }
+    .template-card { padding: 12px; }
+    .tpl-header { flex-direction: column; gap: 8px; }
+    .tpl-body { font-size: 12px; padding: 8px; }
+    .modal-overlay { align-items: flex-end; }
+    .modal-container { width: 100%; margin: 0; border-radius: 16px 16px 0 0; max-height: 90vh; overflow-y: auto; }
+  }
 </style>
 
 <div class="page-container">

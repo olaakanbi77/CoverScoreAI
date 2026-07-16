@@ -1,3 +1,59 @@
+<style>
+  @media (max-width: 768px) {
+    .dashboard-header { flex-direction: column; gap: 12px; align-items: stretch; }
+    .dashboard-header .greeting-title { font-size: 20px; }
+    .dashboard-header .greeting-sub { font-size: 13px; }
+    .date-picker { align-self: flex-start; }
+    .kpi-card { padding: 14px; }
+    .kpi-value { font-size: 22px; }
+    .pipeline-section { padding: 16px; }
+    .section-title { font-size: 16px; }
+    .table-card { padding: 16px; border-radius: var(--crm-radius); overflow: hidden; }
+    .table-card .table-filters { flex-direction: column; gap: 8px; }
+    .table-card .filter-group { min-width: 100% !important; }
+    .table-card .filter-group input,
+    .table-card .filter-group select { width: 100%; }
+    .crm-table thead { display: none; }
+    .crm-table tbody tr { display: block; padding: 12px; margin-bottom: 8px; background: white; border: 1px solid var(--crm-border); border-radius: 8px; }
+    .crm-table tbody tr td { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border: none; gap: 8px; }
+    .crm-table tbody tr td::before { content: attr(data-label); font-weight: 600; font-size: 11px; color: var(--crm-text-secondary); text-transform: uppercase; flex-shrink: 0; }
+    .crm-table tbody tr td .td-main { font-size: 13px; }
+    .crm-table tbody tr td .td-sub { font-size: 11px; }
+    .crm-table tbody tr td .btn-action-outline { width: auto; padding: 4px 10px; font-size: 11px; }
+    .table-pagination { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .charts-row { gap: 16px; }
+    .chart-card { padding: 16px; }
+    .grid-right { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .widget-card { padding: 16px; }
+    .quick-actions-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .quick-action-btn { padding: 10px; }
+    .quick-action-btn svg { width: 20px; height: 20px; }
+    .quick-action-btn span { font-size: 11px; }
+    .task-item { padding: 10px 0; }
+    .feed-item { padding: 10px 0; }
+    .modal-container { max-width: 95%; margin: 20px auto; border-radius: 12px; }
+    .modal-header { padding: 16px 20px; }
+    .modal-body { padding: 16px 20px; }
+    .modal-footer { padding: 12px 20px; flex-direction: column; }
+    .modal-footer .btn-secondary,
+    .modal-footer .btn-primary { width: 100%; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .dashboard-header .greeting-title { font-size: 18px; }
+    .kpi-card { padding: 10px; }
+    .kpi-value { font-size: 20px; }
+    .kpi-icon-wrap { width: 32px; height: 32px; }
+    .kpi-icon-wrap svg { width: 16px; height: 16px; }
+    .pipeline-section { padding: 12px; }
+    .pipeline-stage { padding: 8px 12px; font-size: 12px; }
+    .table-card { padding: 12px; border-radius: 0; margin: 0 -16px; }
+    .date-picker { font-size: 12px; padding: 6px 10px; }
+    .quick-actions-grid { grid-template-columns: 1fr; }
+    .modal-overlay { align-items: flex-end; }
+    .modal-container { width: 100%; margin: 0; border-radius: 16px 16px 0 0; max-height: 90vh; overflow-y: auto; }
+  }
+</style>
 <div class="dashboard-header">
   <div>
     {{#if (eq activePage 'leads')}}
@@ -891,16 +947,16 @@
 
       return `
         <tr onclick="window.location.href='/admin/leads/${lead.id}'" style="cursor: pointer;">
-          <td>
+          <td data-label="Name">
             <div class="td-main">${lead.name}</div>
             <div class="td-sub">${lead.email}</div>
           </td>
-          <td><div class="td-main">${lead.industry || 'Business'}</div></td>
-          <td><div class="td-main">${lead.score || 0}/100</div></td>
-          <td><span class="crm-badge ${badgeClass}">${lead.riskLevel || 'Unknown'}</span></td>
-          <td><div class="td-main">${date}</div></td>
-          <td><span class="crm-badge ${statusBadge}">${lead.status || 'New Lead'}</span></td>
-          <td><button class="btn-action-outline" onclick="event.stopPropagation(); handleAction(${lead.id}, '${lead.status}')">${action}</button></td>
+          <td data-label="Type"><div class="td-main">${lead.industry || 'Business'}</div></td>
+          <td data-label="Score"><div class="td-main">${lead.score || 0}/100</div></td>
+          <td data-label="Risk"><span class="crm-badge ${badgeClass}">${lead.riskLevel || 'Unknown'}</span></td>
+          <td data-label="Date"><div class="td-main">${date}</div></td>
+          <td data-label="Status"><span class="crm-badge ${statusBadge}">${lead.status || 'New Lead'}</span></td>
+          <td data-label=""><button class="btn-action-outline" onclick="event.stopPropagation(); handleAction(${lead.id}, '${lead.status}')">${action}</button></td>
         </tr>
       `;
     }).join('');

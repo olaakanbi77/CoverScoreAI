@@ -2,21 +2,46 @@
   .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
   .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
   .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
-  
+
   .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
   .data-table th, .data-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid var(--glass-border); }
   .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
   .data-table td { font-size: 14px; color: var(--text-primary); }
   .data-table tr:last-child td { border-bottom: none; }
-  
+
   .client-name { font-weight: 600; display: flex; align-items: center; gap: 12px; }
-  .client-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
-  
+  .client-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; flex-shrink: 0; }
+
   .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
   .badge-won { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-  
+
   .empty-state { text-align: center; padding: 64px 24px; }
   .empty-icon { width: 64px; height: 64px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; color: var(--color-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+
+  @media (max-width: 768px) {
+    .page-container { padding: 16px; }
+    .page-header { flex-direction: column; gap: 12px; align-items: stretch; }
+    .page-title { font-size: 20px; }
+    .page-header .btn { text-align: center; }
+    .data-table, .data-table thead, .data-table tbody, .data-table tr, .data-table td { display: block; }
+    .data-table thead { display: none; }
+    .data-table tr { padding: 12px; border-bottom: 1px solid var(--glass-border); }
+    .data-table tr:last-child { border-bottom: none; }
+    .data-table td { padding: 6px 0; border: none; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+    .data-table td:before { content: attr(data-label); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; min-width: 90px; flex-shrink: 0; }
+    .data-table td:first-child { padding-top: 0; }
+    .data-table td:last-child { padding-bottom: 0; }
+    .data-table td[data-label="Client"]:before { display: none; }
+    .client-avatar { width: 28px; height: 28px; font-size: 12px; }
+    .empty-state { padding: 40px 16px; }
+  }
+
+  @media (max-width: 480px) {
+    .page-container { padding: 12px; }
+    .page-title { font-size: 18px; }
+    .data-table td { font-size: 12px; }
+    .data-table td:before { min-width: 70px; font-size: 10px; }
+  }
 </style>
 
 <div class="page-container">
@@ -39,7 +64,7 @@
     <tbody>
       {{#each clients}}
       <tr>
-        <td>
+        <td data-label="Client">
           <div class="client-name">
             <div class="client-avatar">{{userInitials name}}</div>
             <div>
@@ -48,10 +73,10 @@
             </div>
           </div>
         </td>
-        <td style="text-transform: capitalize;">{{entity_type}}</td>
-        <td><span class="badge badge-won">{{status}}</span></td>
-        <td>₦{{formatNumber estimated_premium}}</td>
-        <td>{{formatDate updated_at}}</td>
+        <td data-label="Type" style="text-transform: capitalize;">{{entity_type}}</td>
+        <td data-label="Status"><span class="badge badge-won">{{status}}</span></td>
+        <td data-label="Premium">₦{{formatNumber estimated_premium}}</td>
+        <td data-label="Converted">{{formatDate updated_at}}</td>
       </tr>
       {{else}}
       <tr>

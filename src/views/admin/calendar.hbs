@@ -18,6 +18,31 @@
   
   .event-consult { background: rgba(16, 185, 129, 0.15) !important; border-left: 3px solid #10b981 !important; color: #34d399 !important; border:none; padding: 4px; font-size: 11px; margin-bottom: 4px; }
   .event-call { background: rgba(59, 130, 246, 0.15) !important; border-left: 3px solid #3b82f6 !important; color: #60a5fa !important; border:none; padding: 4px; font-size: 11px; margin-bottom: 4px; }
+
+  @media (max-width: 768px) {
+    .page-container { padding: 16px; }
+    .page-header { flex-direction: column; gap: 12px; align-items: stretch; }
+    .page-title { font-size: 20px; }
+    .page-header .btn { text-align: center; }
+    .calendar-wrapper { padding: 12px; }
+    .fc .fc-toolbar { flex-direction: column; gap: 8px; }
+    .fc .fc-toolbar-title { font-size: 16px; }
+    .fc .fc-button-group { flex-wrap: wrap; justify-content: center; }
+    .fc .fc-button { font-size: 12px; padding: 4px 8px; }
+    .modal-container { width: 95%; margin: 20px auto; border-radius: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .page-container { padding: 12px; }
+    .page-title { font-size: 18px; }
+    .calendar-wrapper { padding: 8px; border-radius: var(--radius-md); }
+    .fc .fc-toolbar-title { font-size: 14px; }
+    .fc .fc-button { font-size: 11px; padding: 3px 6px; }
+    .fc-daygrid-day-number { font-size: 12px; }
+    .fc .fc-daygrid-more-link { font-size: 11px; }
+    .modal-overlay { align-items: flex-end; }
+    .modal-container { width: 100%; margin: 0; border-radius: 16px 16px 0 0; max-height: 90vh; overflow-y: auto; }
+  }
 </style>
 
 <!-- FullCalendar JS & CSS -->
