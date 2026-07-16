@@ -322,9 +322,9 @@
       var el = document.getElementById('input-' + i + '-' + key);
       if (el) {
         var val = el.value;
-        if (schema[key].type === 'number') val = parseFloat(val) || 0;
+        if (schema[key].type === 'number') val = val === '' ? '' : parseFloat(val) || 0;
         inputs[key] = val;
-        if (schema[key].required && (!val || val === 0)) hasRequired = true;
+        if (schema[key].required && (val === '' || val === 0)) hasRequired = true;
       }
     });
 
@@ -334,7 +334,7 @@
 
     if (hasRequired) {
       document.getElementById('premium-val-' + i).textContent = '—';
-      document.getElementById('breakdown-' + i).innerHTML = '';
+      document.getElementById('breakdown-' + i).innerHTML = '<div style="padding:8px;background:#fef2f2;border-radius:8px;font-size:11px;color:#dc2626;">Fill in all required fields first</div>';
       p._premium = null;
       updateTotals();
       return;
