@@ -474,7 +474,7 @@ const initDatabase = () => {
     INSERT OR IGNORE INTO rating_products (code, name, description, category, input_schema, icon) VALUES
       ('FIRE', 'Fire & Special Perils', 'Cover for buildings, contents, and stock against fire, lightning, explosion, and other specified perils', 'BUSINESS', '{"buildingValue":{"label":"Building Value","type":"number","required":true},"contentsValue":{"label":"Contents Value","type":"number","required":false},"stockValue":{"label":"Stock Value","type":"number","required":false},"location":{"label":"Location","type":"text","required":false}}', 'o'),
       ('PL', 'Public Liability', 'Cover for legal liability to third parties for bodily injury or property damage', 'BUSINESS', '{"annualTurnover":{"label":"Annual Turnover","type":"number","required":true},"maxVisitors":{"label":"Maximum Visitors/Day","type":"number","required":false},"limitIndemnity":{"label":"Limit of Indemnity","type":"select","options":[5000000,10000000,20000000,50000000,100000000],"default":20000000,"required":true}}', 'b'),
-      ('MOTOR', 'Comprehensive Motor', 'Cover for damage to or loss of the insured vehicle and third-party liability', 'BUSINESS', '{"vehicleValue":{"label":"Vehicle Value","type":"number","required":true},"vehicleType":{"label":"Vehicle Type","type":"select","options":["Private","Commercial","Truck","Motorcycle"],"required":true},"vehicleUse":{"label":"Vehicle Use","type":"select","options":["Personal","Business","Both"],"required":true},"vehicleYear":{"label":"Year of Manufacture","type":"number","required":true},"location":{"label":"Location","type":"text","required":false}}', 'g'),
+      ('MOTOR', 'Comprehensive Motor', 'Cover for damage to or loss of the insured vehicle and third-party liability', 'BUSINESS', '{"vehicleValue":{"label":"Vehicle Value","type":"number","required":true}}', 'g'),
       ('GPA', 'Group Personal Accident', 'Cover for employees or members against accidental bodily injury or death', 'BUSINESS', '{"employeeCount":{"label":"Employee Count","type":"number","required":true},"salaryRoll":{"label":"Total Annual Salary Roll","type":"number","required":true},"benefitMultiple":{"label":"Benefit Multiple","type":"select","options":[12,24,36,48,60],"default":36,"required":true}}', 'g'),
       ('FG', 'Fidelity Guarantee', 'Cover against financial loss from employee dishonesty or fraud', 'BUSINESS', '{"employeeCount":{"label":"Employee Count","type":"number","required":true},"bondAmount":{"label":"Bond Amount","type":"number","required":true},"handlesCash":{"label":"Handles Cash/Financial Records","type":"select","options":["Yes","No"],"required":true}}', 'o');
 
@@ -516,13 +516,17 @@ const initDatabase = () => {
       ('PL', 'Retail', 0.0035, 50000),
       ('PL', 'Office', 0.0030, 50000),
       ('MOTOR', 'Private', 0.0500, 100000),
-      ('MOTOR', 'Commercial', 0.0600, 150000),
-      ('MOTOR', 'Truck', 0.0700, 200000),
-      ('MOTOR', 'Motorcycle', 0.0350, 25000),
+      ('MOTOR', 'Commercial', 0.0500, 100000),
+      ('MOTOR', 'Truck', 0.0500, 100000),
+      ('MOTOR', 'Motorcycle', 0.0500, 100000),
       ('GPA', 'Standard', 0.0150, 25000),
       ('GPA', 'Hazardous', 0.0250, 50000),
       ('FG', 'Standard', 0.0050, 25000),
       ('FG', 'High Risk', 0.0080, 50000);
+
+    -- Update Motor to simplified schema (5% NAICOM flat rate) on existing databases
+    UPDATE rating_products SET input_schema = '{"vehicleValue":{"label":"Vehicle Value","type":"number","required":true}}' WHERE code = 'MOTOR' AND input_schema IS NOT NULL;
+    UPDATE rating_rates SET rate = 0.05, min_premium = 100000 WHERE product_code = 'MOTOR';
 
     INSERT OR IGNORE INTO templates (id, title, type, content) VALUES
       (1, 'Welcome Follow-up', 'whatsapp', 'Hi {{name}}, I am your CoverScore AI Advisor. I noticed you just completed your risk assessment. Do you have a few minutes to review the recommendations?'),
