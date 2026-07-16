@@ -1001,6 +1001,10 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
         hasRie = !!(ad.rie || ad._scored || ad.score || ad.answers);
       } catch (e) {}
     }
+    if (!hasRie && lead.assessment_id) {
+      const a = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
+      if (a && (a.answers || a.ai_report)) hasRie = true;
+    }
 
     res.render('advisor/quote-builder', {
       layout: false,
