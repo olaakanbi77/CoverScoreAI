@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
-const OUTPUT_DIR = path.join(__dirname, '..', '..', 'public', 'proposals');
+const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'proposals');
 
 function formatCurrency(n) {
   return Number(n || 0).toLocaleString('en-US');
@@ -20,7 +20,7 @@ function getRiskLabel(score) {
 function buildHtml({ lead, ratingProducts, totalPremium, proposalNumber, date, pillarScores }) {
   const productCards = (ratingProducts || []).map(p => {
     const breakdownRows = (p.breakdown || []).map(b =>
-      `<tr><td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#374151;">${b.label}</td><td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#374151;text-align:right;">₦${formatCurrency(b.amount)}</td></tr>`
+      `<tr><td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#374151;">${b.label}</td><td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;font-size:13px;color:#374151;text-align:right;">₦${formatCurrency(b.premium || b.amount)}</td></tr>`
     ).join('');
 
     return `
@@ -208,10 +208,17 @@ async function generateProposalPdf(proposal, lead, ratingProducts) {
     } catch (e) {}
   }
 
-  const html = buildHtml({ lead, ratingProducts, totalPremium, proposalNumber: slug, date, pillarScores });
+  let html,
+    htmlSaved = false;
 
-  const htmlPath = filePath.replace('.pdf', '.html');
-  fs.writeFileSync(htmlPath, html);
+  try {
+    html = buildHtml({ lead, ratingProducts, totalPremium, proposalNumber: slug, date, pillarScores });
+    const htmlPath = filePath.replace('.pdf', '.html');
+    fs.writeFileSync(htmlPath, html);
+    htmlSaved = true;
+  } catch (e) {
+    console.error('[PDF] HTML build/save failed:', e.message);
+  }
 
   let pdfGenerated = false;
   let executablePath = null;
@@ -262,17 +269,24 @@ async function generateProposalPdf(proposal, lead, ratingProducts) {
     htmlUrl: `/proposals/${filename.replace('.pdf', '.html')}`,
     filePath: pdfGenerated ? filePath : null,
     proposalNumber: slug,
-    date
+    date,
+    html: html || null,
+    htmlSaved
   };
 }
 
 async function generateAndStreamPdf(proposal, lead, ratingProducts, res) {
   const result = await generateProposalPdf(proposal, lead, ratingProducts);
   if (result.success) {
-    res.download(result.filePath, `CoverScore-Proposal-${lead.business_name || lead.name || 'Client'}.pdf`);
-  } else {
-    res.redirect(result.htmlUrl);
+    return res.download(result.filePath, `CoverScore-Proposal-${lead.business_name || lead.name || 'Client'}.pdf`);
   }
+  if (result.htmlSaved) {
+    return res.redirect(result.htmlUrl);
+  }
+  if (result.html) {
+    return res.type('html').send(result.html);
+  }
+  throw new Error('PDF generation failed — could not generate HTML or PDF');
 }
 
 module.exports = { generateProposalPdf, generateAndStreamPdf, buildHtml };
