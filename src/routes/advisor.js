@@ -951,6 +951,7 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
   try {
     const { get } = require('../config/database');
     const ratingEngine = require('../rating/engine');
+    const { recommendProducts } = require('../rating/recommender');
     const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
     if (!lead) return res.status(404).send('Lead not found');
 
@@ -963,13 +964,18 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
         if (ad.answers && ad.answers.template_selection) prefix = ad.answers.template_selection.template_id;
       } catch (e) {}
     }
-    if (!prefix && lead.assessment_id) {
-      const a = await get('SELECT answers FROM assessments WHERE id = ?', [lead.assessment_id]);
-      if (a && a.answers) {
-        try {
-          const parsed = JSON.parse(a.answers);
-          if (parsed.template_selection) prefix = parsed.template_selection.template_id;
-        } catch (e) {}
+
+    let assessmentWithReport = null;
+    if (lead.assessment_id) {
+      const a = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
+      if (a) {
+        assessmentWithReport = a;
+        if (!prefix && a.answers) {
+          try {
+            const parsed = typeof a.answers === 'string' ? JSON.parse(a.answers) : a.answers;
+            if (parsed.template_selection) prefix = parsed.template_selection.template_id;
+          } catch (e) {}
+        }
       }
     }
     if (!prefix && lead.industry) {
@@ -977,34 +983,30 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
       prefix = flowMap[lead.industry.toLowerCase()] || 'SME';
     }
 
-    const products = await ratingEngine.getProducts('BUSINESS');
-    const productsWithClasses = await Promise.all(products.map(async (p) => {
+    const allRatingProducts = await ratingEngine.getProducts('BUSINESS');
+    const recommended = await recommendProducts(lead, assessmentWithReport || assessmentData, allRatingProducts, prefix);
+
+    const productsWithClasses = await Promise.all(recommended.map(async (p) => {
       const classInfo = await ratingEngine.suggestClasses(p.code, prefix);
       return {
         code: p.code,
         name: p.name,
         description: p.description,
-        icon: p.icon || 'g',
-        inputSchema: p.input_schema ? JSON.parse(p.input_schema) : {},
+        icon: p.icon,
+        inputSchema: p.inputSchema,
         classes: classInfo.classes,
         suggestedClass: classInfo.suggested,
         selected: true,
-        priority: 'medium',
-        reason: `Recommended for ${classInfo.suggested || 'this client'}`
+        priority: p.priority,
+        reason: p.reason,
+        pillarScore: p.pillarScore,
       };
     }));
 
-    let hasRie = false;
-    if (lead.assessment_data) {
-      try {
-        const ad = typeof lead.assessment_data === 'string' ? JSON.parse(lead.assessment_data) : lead.assessment_data;
-        hasRie = !!(ad.rie || ad._scored || ad.score || ad.answers);
-      } catch (e) {}
-    }
-    if (!hasRie && lead.assessment_id) {
-      const a = await get('SELECT answers, ai_report FROM assessments WHERE id = ?', [lead.assessment_id]);
-      if (a && (a.answers || a.ai_report)) hasRie = true;
-    }
+    productsWithClasses.sort((a, b) => {
+      const order = { high: 0, medium: 1, low: 2 };
+      return (order[a.priority] || 2) - (order[b.priority] || 2);
+    });
 
     res.render('advisor/quote-builder', {
       layout: false,
@@ -1013,7 +1015,7 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
       lead,
       products: JSON.stringify(productsWithClasses),
       prefix: prefix || 'SME',
-      hasRie,
+      hasRie: !!assessmentWithReport,
       totalMin: 0,
       totalMax: 0
     });

@@ -89,6 +89,13 @@
   .pc-premium-label { font-size: 9px; color: var(--c-gray); }
   .pc-premium-value { font-size: 14px; font-weight: 800; color: var(--c-dark); }
   .pc-premium-value.calc { color: var(--c-green-dark); }
+  .priority-badge {
+    font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 8px;
+    display: inline-block; margin-left: 6px;
+  }
+  .priority-badge.high { background: var(--c-red-light); color: var(--c-red); }
+  .priority-badge.medium { background: var(--c-orange-light); color: #d97706; }
+  .priority-badge.low { background: #f1f5f9; color: var(--c-gray); }
 
   .pc-details {
     padding: 0 14px 14px;
@@ -185,7 +192,7 @@
   {{/unless}}
 
   <div id="products-section">
-    <h3 class="section-title">RECOMMENDED COVERS</h3>
+    <h3 class="section-title">{{#if hasRie}}RISK-BASED RECOMMENDATIONS{{else}}AVAILABLE COVERS{{/if}}</h3>
     <div class="products-list" id="products-container"></div>
   </div>
 
@@ -239,7 +246,7 @@
         '<div class="pc-check"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>' +
         '<div class="pc-icon ' + p.icon + '">' + svgIcon + '</div>' +
         '<div class="pc-body">' +
-          '<p class="pc-name">' + p.name + '</p>' +
+          '<p class="pc-name">' + p.name + '<span class="priority-badge ' + (p.priority || 'medium') + '">' + (p.priority || 'medium') + '</span></p>' +
           '<p class="pc-reason">' + (p.reason || 'Recommended cover') + '</p>' +
         '</div>' +
         '<div class="pc-premium" id="premium-wrap-' + i + '">' +
