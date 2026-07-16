@@ -1,6 +1,8 @@
-const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
+
+let puppeteer;
+try { puppeteer = require('puppeteer'); } catch (e) { puppeteer = null; }
 
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'proposals');
 
