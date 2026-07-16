@@ -232,31 +232,51 @@
         updateBadge(unreadCount);
       }
 
-      function showToast(notification) {
+      function showToast(n1, n2, n3) {
         const container = document.getElementById('toastContainer');
         if (!container) return;
 
+        var title = '', message = '', type = 'info', link = '';
+        if (typeof n1 === 'object' && n1 !== null) {
+          title = n1.title || '';
+          message = n1.message || '';
+          type = n1.type || 'info';
+          link = n1.link || '';
+        } else if (typeof n3 === 'string') {
+          title = n1 || '';
+          message = n2 || '';
+          type = n3;
+        } else if (typeof n2 === 'string' && (n2 === 'success' || n2 === 'error' || n2 === 'info')) {
+          message = n1 || '';
+          type = n2;
+        } else if (typeof n2 === 'string') {
+          title = n1 || '';
+          message = n2;
+        } else if (typeof n1 === 'string') {
+          message = n1;
+        }
+
         const toast = document.createElement('div');
-        toast.className = 'toast toast-' + (notification.type || 'info');
+        toast.className = 'toast toast-' + type;
         toast.innerHTML = `
-          <div class="toast-icon">${notification.type === 'lead_assigned' ? '👤' : notification.type === 'new_opportunity' ? '💎' : notification.type === 'follow_up_scheduled' ? '📅' : notification.type === 'stage_update' ? '🔄' : notification.type === 'high_priority_opportunity' ? '🚀' : '🔔'}</div>
+          <div class="toast-icon">${type === 'lead_assigned' ? '👤' : type === 'new_opportunity' ? '💎' : type === 'follow_up_scheduled' ? '📅' : type === 'stage_update' ? '🔄' : type === 'high_priority_opportunity' ? '🚀' : type === 'error' ? '⚠️' : type === 'success' ? '✅' : '🔔'}</div>
           <div class="toast-body">
-            <div class="toast-title">${esc(notification.title)}</div>
-            <div class="toast-message">${esc(notification.message)}</div>
+            ${title ? '<div class="toast-title">' + esc(title) + '</div>' : ''}
+            <div class="toast-message">${esc(message)}</div>
           </div>
           <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
         `;
-        toast.style.cursor = 'pointer';
+        toast.style.cursor = link ? 'pointer' : 'default';
         toast.onclick = (e) => {
           if (e.target.closest('.toast-close')) return;
-          if (notification.link) window.location.href = notification.link;
+          if (link) window.location.href = link;
         };
         container.appendChild(toast);
 
-        setTimeout(() => {
+        setTimeout(function() {
           toast.style.opacity = '0';
           toast.style.transform = 'translateX(100%)';
-          setTimeout(() => toast.remove(), 300);
+          setTimeout(function() { toast.remove(); }, 300);
         }, 5000);
       }
 
