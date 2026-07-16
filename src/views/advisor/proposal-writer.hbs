@@ -307,6 +307,53 @@
     white-space: nowrap;
   }
 
+  /* Send Section */
+  .send-section {
+    padding: 20px 0;
+    border-top: 1px solid #f1f5f9;
+    margin-top: 20px;
+  }
+  .send-title {
+    font-size: 13px; font-weight: 800; color: var(--c-dark);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin: 0 0 4px 0;
+  }
+  .send-sub {
+    font-size: 11px; color: var(--c-gray); margin: 0 0 14px 0;
+  }
+  .send-btns { display: flex; flex-direction: column; gap: 10px; }
+  .send-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border-radius: 12px;
+    border: 1px solid #e2e8f0; background: white;
+    cursor: pointer; transition: all 0.15s; text-decoration: none;
+    width: 100%; box-sizing: border-box;
+  }
+  .send-btn:hover { border-color: var(--c-green); background: #fafefc; }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .send-btn-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .send-btn-icon.green { background: #ecfdf5; color: #059669; }
+  .send-btn-icon.blue { background: #eff6ff; color: #2563eb; }
+  .send-btn-icon svg { width: 22px; height: 22px; }
+  .send-btn-body { flex: 1; }
+  .send-btn-label { font-size: 14px; font-weight: 700; color: var(--c-dark); margin: 0 0 2px 0; }
+  .send-btn-desc { font-size: 11px; color: var(--c-gray); margin: 0; }
+  .send-btn-status { font-size: 11px; font-weight: 700; color: #059669; white-space: nowrap; }
+  .send-btn-status.sent { color: #059669; }
+  .send-btn-status.error { color: #dc2626; }
+  .send-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #e2e8f0; border-top-color: #059669; border-radius: 50%; animation: spin 0.6s linear infinite; }
+  .send-success-banner {
+    background: #ecfdf5; border: 1px solid #d1fae5; border-radius: 12px;
+    padding: 16px; text-align: center; margin-bottom: 14px;
+  }
+  .send-success-banner h4 { font-size: 14px; color: #065f46; margin: 0 0 4px; }
+  .send-success-banner p { font-size: 11px; color: #047857; margin: 0; }
+  .send-timestamp { font-size: 10px; color: var(--c-gray); text-align: center; margin-top: 10px; }
+
   /* Standard Nav included from unify script */
   .bottom-nav {
     position: fixed;
@@ -451,6 +498,44 @@
     {{/if}}
   </div>
 
+  {{#if proposal}}
+  <!-- Send Section -->
+  <div class="send-section">
+    <h3 class="send-title">Send Quote</h3>
+    <p class="send-sub">Deliver this proposal to the client</p>
+
+    <div id="send-success" class="send-success-banner" style="display:none;">
+      <h4>Proposal Sent</h4>
+      <p id="send-success-msg">Sent successfully</p>
+    </div>
+
+    <div class="send-btns" id="send-btns">
+      <button class="send-btn" id="btn-send-whatsapp" onclick="sendProposal('whatsapp')" {{#unless lead.phone}}disabled{{/unless}}>
+        <div class="send-btn-icon green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        </div>
+        <div class="send-btn-body">
+          <p class="send-btn-label">Send via WhatsApp</p>
+          <p class="send-btn-desc">{{#if lead.phone}}{{lead.phone}}{{else}}No phone number{{/if}}</p>
+        </div>
+        <span class="send-btn-status" id="status-whatsapp"></span>
+      </button>
+
+      <button class="send-btn" id="btn-send-email" onclick="sendProposal('email')" {{#unless lead.email}}disabled{{/unless}}>
+        <div class="send-btn-icon blue">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <div class="send-btn-body">
+          <p class="send-btn-label">Send via Email</p>
+          <p class="send-btn-desc">{{#if lead.email}}{{lead.email}}{{else}}No email address{{/if}}</p>
+        </div>
+        <span class="send-btn-status" id="status-email"></span>
+      </button>
+    </div>
+    <div class="send-timestamp" id="send-timestamp"></div>
+  </div>
+  {{/if}}
+
   <!-- Bottom Action Bar (Fixed) -->
   <div class="bottom-action-bar">
     <div class="bab-header">
@@ -493,6 +578,60 @@
   </div>
 
 </div>
+
+<script>
+  var PROPOSAL_ID = {{proposal.id}};
+  var PROPOSAL_STATUS = '{{proposal.status}}';
+
+  function formatTimestamp(now) {
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var d = now.getDate(), m = months[now.getMonth()];
+    var h = now.getHours().toString().padStart(2,'0'), min = now.getMinutes().toString().padStart(2,'0');
+    return m + ' ' + d + ', ' + h + ':' + min;
+  }
+
+  if (PROPOSAL_STATUS === 'Sent') {
+    document.getElementById('send-success').style.display = 'block';
+    document.getElementById('send-success-msg').textContent = 'Sent ' + formatTimestamp(new Date());
+    document.getElementById('send-btns').style.display = 'none';
+  }
+
+  async function sendProposal(method) {
+    var btn = document.getElementById('btn-send-' + method);
+    var statusEl = document.getElementById('status-' + method);
+    if (btn.disabled) return;
+    btn.disabled = true;
+    statusEl.innerHTML = '<span class="send-spinner"></span>';
+
+    try {
+      var res = await fetch('/api/proposals/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proposalId: PROPOSAL_ID, method: method })
+      });
+      var data = await res.json();
+
+      if (data.success) {
+        statusEl.textContent = 'Sent';
+        statusEl.className = 'send-btn-status sent';
+        document.getElementById('send-success').style.display = 'block';
+        document.getElementById('send-success-msg').textContent = 'Sent successfully via ' + (method === 'whatsapp' ? 'WhatsApp' : 'Email') + ' at ' + formatTimestamp(new Date());
+        document.getElementById('send-btns').style.display = 'none';
+        document.getElementById('send-timestamp').textContent = 'Proposal sent ' + formatTimestamp(new Date());
+      } else {
+        statusEl.textContent = 'Failed';
+        statusEl.className = 'send-btn-status error';
+        btn.disabled = false;
+        alert(data.error || 'Failed to send');
+      }
+    } catch (e) {
+      statusEl.textContent = 'Error';
+      statusEl.className = 'send-btn-status error';
+      btn.disabled = false;
+      alert('Network error. Please try again.');
+    }
+  }
+</script>
 
 <!-- Bottom Navigation (Standard) -->
     <!-- BOTTOM NAV -->
