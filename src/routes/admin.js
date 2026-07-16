@@ -128,10 +128,10 @@ router.put('/users/:id/role',
 router.post('/users/create',
   authenticate,
   requireAdmin,
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
-  body('name').trim().notEmpty(),
-  body('role').isIn(['admin', 'sales', 'analyst', 'user']),
+  body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('name').trim().notEmpty().withMessage('Name is required'),
+  body('role').isIn(['admin', 'sales', 'analyst', 'user']).withMessage('Invalid role'),
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
