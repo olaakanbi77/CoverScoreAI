@@ -430,7 +430,7 @@ const sendEmail = async (options) => {
   try {
     console.log(`📧 Attempting to send email to: ${options.to} (subject: ${options.subject})`);
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"CoverScore AI" <noreply@coverscore.ai>',
+      from: options.from || process.env.SMTP_FROM || process.env.SMTP_USER || '"CoverScore AI" <noreply@coverscore.ai>',
       to: options.to,
       subject: options.subject,
       html: options.html
