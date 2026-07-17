@@ -495,13 +495,20 @@ app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
         const prefixMap = { SCH: 'school', BUS: 'business', SME: 'business', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'personal' };
         extractedEntityType = prefixMap[businessPrefix] || lead.entity_type || 'business';
 
-        // Extract contact person name (question 5 is always the name field in all templates)
-        const nameKey = businessPrefix ? `${businessPrefix}_005` : null;
+        // Extract contact person name and phone (key numbering differs by funnel type)
+        // Business funnels (SCH, BUS, SME, HOS, MFG, CHU): _005 = name, _009 = phone
+        // Personal funnels (HLT, INC, FAM, ENT, YPR, RET): _004 = name, _005 = email, _009 = age
+        const personalPrefixes = ['HLT', 'INC', 'FAM', 'ENT', 'YPR', 'RET', 'HOM', 'MOT'];
+        const isPersonal = businessPrefix && personalPrefixes.includes(businessPrefix);
+        const nameKey = businessPrefix ? `${businessPrefix}_${isPersonal ? '004' : '005'}` : null;
         extractedContactPerson = (nameKey && answers[nameKey]) || answers.name || null;
 
-        // Extract phone from answers (question 9 in school template, others vary)
-        const phoneKey = businessPrefix ? `${businessPrefix}_009` : null;
-        extractedPhone = (phoneKey && answers[phoneKey]) || null;
+        if (isPersonal) {
+          extractedPhone = null; // Phone comes from WhatsApp, not assessment answers
+        } else {
+          const phoneKey = businessPrefix ? `${businessPrefix}_009` : null;
+          extractedPhone = (phoneKey && answers[phoneKey]) || null;
+        }
 
         // Business-specific metric
         if (businessPrefix === 'SCH') {
