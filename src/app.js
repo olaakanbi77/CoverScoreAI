@@ -47,7 +47,7 @@ app.engine('hbs', exphbs.engine({
   helpers: {
     eq: (a, b) => a === b,
     ne: (a, b) => a !== b,
-    or: (a, b) => a || b,
+    or: (...args) => args.slice(0, -1).some(Boolean),
     and: (a, b) => a && b,
     not: (a) => !a,
     userInitials: (name) => {
@@ -641,14 +641,40 @@ app.get('/admin/assessments', authenticatePage, async (req, res) => {
 app.get('/admin/opportunities', authenticatePage, async (req, res) => {
   try {
     const activeType = req.query.type === 'personal' ? 'PERSONAL' : 'BUSINESS';
-    
-    let rawLeads = [];
-    if (req.user.role === 'admin') {
-      rawLeads = await all("SELECT * FROM leads WHERE opportunity_type = ? ORDER BY updated_at DESC", [activeType]);
-    } else {
-      rawLeads = await all("SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ? ORDER BY updated_at DESC", [req.user.id, activeType]);
+    const filterMonth = req.query.month || '';
+    const filterYear = req.query.year || '';
+    const filterFrom = req.query.from || '';
+    const filterTo = req.query.to || '';
+
+    let sql = "SELECT * FROM leads WHERE opportunity_type = ?";
+    let params = [activeType];
+
+    if (!req.user || req.user.role !== 'admin') {
+      sql += " AND advisor_id = ?";
+      params.push(req.user.id);
     }
-    
+
+    if (filterMonth) {
+      sql += " AND CAST(strftime('%m', created_at) AS INTEGER) = ?";
+      params.push(parseInt(filterMonth));
+    }
+    if (filterYear) {
+      sql += " AND strftime('%Y', created_at) = ?";
+      params.push(filterYear);
+    }
+    if (filterFrom) {
+      sql += " AND date(created_at) >= ?";
+      params.push(filterFrom);
+    }
+    if (filterTo) {
+      sql += " AND date(created_at) <= ?";
+      params.push(filterTo);
+    }
+
+    sql += " ORDER BY updated_at DESC";
+
+    let rawLeads = await all(sql, params);
+
     const pipelineData = {
       stage1: rawLeads.filter(l => l.pipeline_stage === 1),
       stage2: rawLeads.filter(l => l.pipeline_stage === 2),
@@ -658,15 +684,23 @@ app.get('/admin/opportunities', authenticatePage, async (req, res) => {
       stage6: rawLeads.filter(l => l.pipeline_stage === 6),
     };
 
+    const MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
     res.render('admin/opportunities', { 
       title: 'Opportunities', 
       activePage: 'opportunities', 
       layout: 'admin',
       pipelineData,
       activeType: activeType.toLowerCase(),
-      activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal' 
+      activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal',
+      filterMonth,
+      filterYear,
+      filterFrom,
+      filterTo,
+      filterMonthName: MONTHS[parseInt(filterMonth)] || ''
     });
   } catch (error) {
+    console.error('[opportunities]', error);
     res.status(500).send('Error loading opportunities');
   }
 });

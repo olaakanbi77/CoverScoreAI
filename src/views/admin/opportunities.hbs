@@ -447,6 +447,85 @@
     height: 24px;
     stroke-width: 2;
   }
+
+  /* Filter Panel */
+  .filter-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .filter-panel.open { display: block; }
+  .filter-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: end;
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .filter-group label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--c-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .filter-group select,
+  .filter-group input {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13px;
+    background: white;
+    min-width: 140px;
+  }
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+    align-items: end;
+    padding-bottom: 2px;
+  }
+  .btn-apply {
+    background: #047857;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-clear {
+    background: transparent;
+    color: var(--c-gray);
+    border: 1px solid #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .filter-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .filter-tag {
+    font-size: 11px;
+    background: #e2e8f0;
+    color: var(--c-dark);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
 </style>
 
 <div class="mobile-app-container">
@@ -467,11 +546,67 @@
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           New Opportunity
         </a>
-        <a href="javascript:void(0)" class="btn-filter" onclick="alert('Filter coming soon')">
+        <a href="javascript:void(0)" class="btn-filter" onclick="toggleFilter()">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
           Filter
         </a>
       </div>
+    </div>
+
+    <!-- Filter Panel -->
+    <div class="filter-panel{{#if (or filterMonth filterFrom filterTo)}} open{{/if}}" id="filterPanel">
+      <form method="GET" action="/admin/opportunities">
+        <input type="hidden" name="type" value="{{activeType}}">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>Month</label>
+            <select name="month">
+              <option value="">All Months</option>
+              <option value="1" {{#if (eq filterMonth '1')}}selected{{/if}}>January</option>
+              <option value="2" {{#if (eq filterMonth '2')}}selected{{/if}}>February</option>
+              <option value="3" {{#if (eq filterMonth '3')}}selected{{/if}}>March</option>
+              <option value="4" {{#if (eq filterMonth '4')}}selected{{/if}}>April</option>
+              <option value="5" {{#if (eq filterMonth '5')}}selected{{/if}}>May</option>
+              <option value="6" {{#if (eq filterMonth '6')}}selected{{/if}}>June</option>
+              <option value="7" {{#if (eq filterMonth '7')}}selected{{/if}}>July</option>
+              <option value="8" {{#if (eq filterMonth '8')}}selected{{/if}}>August</option>
+              <option value="9" {{#if (eq filterMonth '9')}}selected{{/if}}>September</option>
+              <option value="10" {{#if (eq filterMonth '10')}}selected{{/if}}>October</option>
+              <option value="11" {{#if (eq filterMonth '11')}}selected{{/if}}>November</option>
+              <option value="12" {{#if (eq filterMonth '12')}}selected{{/if}}>December</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Year</label>
+            <select name="year">
+              <option value="">All Years</option>
+              <option value="2024" {{#if (eq filterYear '2024')}}selected{{/if}}>2024</option>
+              <option value="2025" {{#if (eq filterYear '2025')}}selected{{/if}}>2025</option>
+              <option value="2026" {{#if (eq filterYear '2026')}}selected{{/if}}>2026</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>From</label>
+            <input type="date" name="from" value="{{filterFrom}}">
+          </div>
+          <div class="filter-group">
+            <label>To</label>
+            <input type="date" name="to" value="{{filterTo}}">
+          </div>
+          <div class="filter-actions">
+            <button type="submit" class="btn-apply">Apply</button>
+            <a href="/admin/opportunities?type={{activeType}}" class="btn-clear">Clear</a>
+          </div>
+        </div>
+        {{#if (or filterMonth filterYear filterFrom filterTo)}}
+        <div class="filter-tags">
+          {{#if filterMonth}}<span class="filter-tag">Month: {{filterMonthName}}</span>{{/if}}
+          {{#if filterYear}}<span class="filter-tag">Year: {{filterYear}}</span>{{/if}}
+          {{#if filterFrom}}<span class="filter-tag">From: {{filterFrom}}</span>{{/if}}
+          {{#if filterTo}}<span class="filter-tag">To: {{filterTo}}</span>{{/if}}
+        </div>
+        {{/if}}
+      </form>
     </div>
 
     <!-- 4 Cards Grid -->
@@ -633,6 +768,12 @@
 
   </div>
 </div>
+
+<script>
+function toggleFilter() {
+  document.getElementById('filterPanel').classList.toggle('open');
+}
+</script>
 
 <!-- Bottom Navigation -->
     <!-- BOTTOM NAV -->
