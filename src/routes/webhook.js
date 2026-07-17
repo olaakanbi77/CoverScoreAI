@@ -1405,9 +1405,9 @@ router.post('/evolution', async (req, res) => {
         [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
     }
 
-    if (assessmentData.name || assessmentData.email) {
-      await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email) WHERE id = ?',
-        [assessmentData.name || null, assessmentData.email || null, lead.id]);
+    if (assessmentData.name || assessmentData.email || assessmentData.business_name) {
+      await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email), business_name = COALESCE(?, business_name) WHERE id = ?',
+        [assessmentData.name || null, assessmentData.email || null, assessmentData.business_name || null, lead.id]);
     }
 
     if (isFinished) {
