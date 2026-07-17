@@ -458,8 +458,8 @@
         <h1>Opportunities</h1>
         <p>Manage your active pipeline.</p>
         <div class="type-toggle">
-          <a href="javascript:void(0)" class="type-tab {{#if (eq activeType 'business')}}active{{/if}}" data-type="business" onclick="switchType('business')">Business</a>
-          <a href="javascript:void(0)" class="type-tab {{#if (eq activeType 'personal')}}active{{/if}}" data-type="personal" onclick="switchType('personal')">Personal</a>
+          <a href="?type=business" class="type-tab {{#if (eq activeType 'business')}}active{{/if}}" data-type="business">Business</a>
+          <a href="?type=personal" class="type-tab {{#if (eq activeType 'personal')}}active{{/if}}" data-type="personal">Personal</a>
         </div>
       </div>
       <div class="header-right">
@@ -635,12 +635,13 @@
 </div>
 
 <script>
+(function() {
 var CURRENT_TYPE = '{{activeType}}';
 
-function removeAllBetween(fromEl, stopTag) {
+function removeAllBetween(fromEl) {
   var el = fromEl.nextElementSibling;
   var nodes = [];
-  while (el && el.tagName !== stopTag) {
+  while (el && !el.classList.contains('list-header') && !el.classList.contains('tip-card')) {
     var next = el.nextElementSibling;
     nodes.push(el);
     el = next;
@@ -680,13 +681,14 @@ function switchType(type) {
           var badge = headers[i].querySelector('.badge.' + s.badge);
           if (!badge) continue;
           badge.textContent = p[s.stage].length;
-          removeAllBetween(headers[i], 'DIV');
+          removeAllBetween(headers[i]);
           var container = headers[i].parentNode;
+          var refNode = headers[i].nextSibling;
           if (p[s.stage].length === 0) {
             var empty = document.createElement('div');
             empty.style.cssText = 'padding:16px;text-align:center;color:var(--c-gray);font-size:12px;font-weight:600;';
             empty.textContent = 'No ' + s.title + '.';
-            container.insertBefore(empty, headers[i].nextSibling);
+            container.insertBefore(empty, refNode);
           } else {
             p[s.stage].forEach(function(item) {
               var card = document.createElement('div');
@@ -707,7 +709,7 @@ function switchType(type) {
                   ? '<div class="c-time">Recent</div>'
                   : '') +
                 '<a href="' + s.link + item.id + '" class="btn-action ' + s.btnClass + '" onclick="event.stopPropagation()">' + s.btn + '</a></div><svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>';
-              container.insertBefore(card, headers[i].nextSibling);
+              container.insertBefore(card, refNode);
             });
           }
           break;
@@ -716,6 +718,14 @@ function switchType(type) {
     })
     .catch(function() { window.location.href = '?type=' + type; });
 }
+
+document.querySelectorAll('.type-tab').forEach(function(tab) {
+  tab.addEventListener('click', function(e) {
+    e.preventDefault();
+    switchType(this.getAttribute('data-type'));
+  });
+});
+})();
 </script>
 
 <!-- Bottom Navigation -->
