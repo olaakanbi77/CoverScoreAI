@@ -462,9 +462,10 @@ router.post('/evolution', async (req, res) => {
               } else { estimatedPremium = Math.round(scoreResult.min_loss * 0.013); }
             }
 
+            const phoneToSet = lead.phone || phoneNumber;
             const ls = computeLeadScore({
               email: assessmentData.email || 'whatsapp@coverscore.site',
-              phone: lead.phone || phoneNumber,
+              phone: phoneToSet,
               engagement_points: (lead.engagement_points || 0) + 20,
               score: scoreResult.score,
               entity_type: entityType,
@@ -472,7 +473,7 @@ router.post('/evolution', async (req, res) => {
             });
             await run(`
               UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?,
-                name = ?, email = ?,
+                name = ?, email = ?, phone = ?,
                 status = 'Report Sent', pipeline_stage = 2,
                 engagement_points = engagement_points + 20, sales_score = sales_score + 20,
                 estimated_premium = ?,
@@ -484,6 +485,7 @@ router.post('/evolution', async (req, res) => {
               assessmentId, scoreResult.score, dbRiskLevel, entityType,
               (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
               assessmentData.email || 'whatsapp@coverscore.site',
+              phoneToSet,
               estimatedPremium,
               assessmentData.birth_date || null, assessmentData.anniversary_date || null,
               assessmentData.name || 'WhatsApp User',
