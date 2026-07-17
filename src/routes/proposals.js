@@ -7,6 +7,8 @@ const aiService = require('../services/aiService');
 const { sendWhatsApp } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { generateProposal } = require('../proposals/index');
+const path = require('path');
+const fs = require('fs');
 
 const requireSalesOrAdminApi = (req, res, next) => {
   if (req.user && ['admin', 'sales'].includes(req.user.role)) return next();
@@ -128,7 +130,24 @@ router.get('/view/:token', async (req, res) => {
     if (!proposal) {
       return res.status(404).send('Proposal not found or link has expired.');
     }
-    res.render('public/proposal-view', { layout: 'main', proposal });
+
+    let proposalHtml = null;
+    if (proposal.content) {
+      try {
+        const parsed = JSON.parse(proposal.content);
+        if (parsed.proposalNumber) {
+          const htmlPath = path.join(__dirname, '..', '..', 'public', 'proposals', parsed.proposalNumber + '.html');
+          if (fs.existsSync(htmlPath)) {
+            const raw = fs.readFileSync(htmlPath, 'utf8');
+            const styleMatch = raw.match(/<style>[\s\S]*?<\/style>/i);
+            const bodyMatch = raw.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+            proposalHtml = (styleMatch ? styleMatch[0] : '') + '\n' + (bodyMatch ? bodyMatch[1] : '');
+          }
+        }
+      } catch (e) {}
+    }
+
+    res.render('public/proposal-view', { layout: 'main', proposal, proposalHtml });
   } catch (err) {
     console.error('Error fetching public proposal:', err);
     res.status(500).send('Server Error');
