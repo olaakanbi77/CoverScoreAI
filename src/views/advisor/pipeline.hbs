@@ -195,6 +195,41 @@
   .nav-item.active { color: var(--c-green-dark); }
   .nav-item svg { width: 24px; height: 24px; stroke-width: 2; }
   .nav-dot { position: absolute; top: 0; right: 2px; width: 8px; height: 8px; background: var(--c-red); border-radius: 50%; border: 2px solid white; }
+
+  /* Period Dropdown */
+  .period-dd-wrap { position: relative; }
+  .period-dropdown {
+    position: absolute; top: 100%; left: 0; z-index: 50;
+    background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    min-width: 180px; overflow: hidden; display: none; margin-top: 4px;
+  }
+  .period-dropdown.open { display: block; }
+  .period-opt {
+    display: block; padding: 12px 16px; font-size: 13px; font-weight: 600;
+    color: var(--c-dark); text-decoration: none; border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s;
+  }
+  .period-opt:hover { background: #f8fafc; }
+  .period-opt:last-child { border-bottom: none; }
+  .period-opt.active { color: #047857; background: var(--c-green-light); }
+
+  /* Date Range Picker */
+  .datepicker-wrap { position: relative; }
+  .datepicker-popup {
+    position: absolute; top: 100%; right: 0; z-index: 50;
+    background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    padding: 16px; display: none; margin-top: 4px; min-width: 260px;
+  }
+  .datepicker-popup.open { display: block; }
+  .dp-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .dp-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .dp-group label { font-size: 10px; font-weight: 700; color: var(--c-gray); text-transform: uppercase; }
+  .dp-group input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; }
+  .dp-actions { display: flex; gap: 8px; }
+  .dp-apply { background: #047857; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; flex: 1; }
+  .dp-cancel { background: transparent; color: var(--c-gray); border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; flex: 1; }
+  .dp-overlay { position: fixed; inset: 0; z-index: 49; display: none; }
+  .dp-overlay.open { display: block; }
 </style>
 
 <div class="mobile-app-container">
@@ -217,16 +252,42 @@
 
   <!-- Filters Row -->
   <div class="filters-row">
-    <a href="?type={{activeType}}&amp;period=this_month" class="filter-btn{{#if (eq period 'this_month')}} active{{/if}}">
-      This Month
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-    </a>
-    <a href="?type={{activeType}}&amp;from={{currentMonthStart}}&amp;to={{currentMonthEnd}}" class="filter-btn cal">
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-      {{currentMonthRange}}
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-    </a>
+    <div class="period-dd-wrap">
+      <a href="javascript:void(0)" class="filter-btn" onclick="togglePeriodDD()">
+        <span id="periodLabel">{{#if (eq period 'today')}}Today{{else if (eq period 'this_week')}}This Week{{else}}This Month{{/if}}</span>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <div class="period-dropdown" id="periodDropdown">
+        <a href="?type={{activeType}}&period=today" class="period-opt{{#if (eq period 'today')}} active{{/if}}">Today</a>
+        <a href="?type={{activeType}}&period=this_week" class="period-opt{{#if (eq period 'this_week')}} active{{/if}}">This Week</a>
+        <a href="?type={{activeType}}&period=this_month" class="period-opt{{#if (eq period 'this_month')}} active{{/if}}">This Month</a>
+      </div>
+    </div>
+    <div class="datepicker-wrap">
+      <a href="javascript:void(0)" class="filter-btn cal" onclick="toggleDatePicker()">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span id="dateRangeLabel">{{#if filterFrom}}{{filterFrom}} – {{filterTo}}{{else}}{{currentMonthRange}}{{/if}}</span>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <div class="datepicker-popup" id="datePickerPopup">
+        <div class="dp-row">
+          <div class="dp-group">
+            <label>From</label>
+            <input type="date" id="dpFrom" value="{{filterFrom}}">
+          </div>
+          <div class="dp-group">
+            <label>To</label>
+            <input type="date" id="dpTo" value="{{filterTo}}">
+          </div>
+        </div>
+        <div class="dp-actions">
+          <button class="dp-apply" onclick="applyDateRange()">Apply</button>
+          <button class="dp-cancel" onclick="toggleDatePicker()">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
+  <div class="dp-overlay" id="dpOverlay" onclick="closeAllFilters()"></div>
 
   <div class="p-content">
     
@@ -408,6 +469,31 @@
   </div>
 
 </div>
+
+<script>
+function togglePeriodDD() {
+  document.getElementById('periodDropdown').classList.toggle('open');
+  document.getElementById('datePickerPopup').classList.remove('open');
+  document.getElementById('dpOverlay').classList.toggle('open');
+}
+function toggleDatePicker() {
+  document.getElementById('datePickerPopup').classList.toggle('open');
+  document.getElementById('periodDropdown').classList.remove('open');
+  document.getElementById('dpOverlay').classList.toggle('open');
+}
+function closeAllFilters() {
+  document.getElementById('periodDropdown').classList.remove('open');
+  document.getElementById('datePickerPopup').classList.remove('open');
+  document.getElementById('dpOverlay').classList.remove('open');
+}
+function applyDateRange() {
+  var from = document.getElementById('dpFrom').value;
+  var to = document.getElementById('dpTo').value;
+  if (!from || !to) return alert('Please select both dates');
+  var type = '{{activeType}}';
+  window.location.href = '?type=' + type + '&from=' + from + '&to=' + to;
+}
+</script>
 
 <!-- Bottom Navigation -->
     <!-- BOTTOM NAV -->

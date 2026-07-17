@@ -473,6 +473,22 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
       const to = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
       sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
       params.push(from, to);
+    } else if (period === 'this_week') {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - diffToMonday);
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
+      params.push(fmt(monday), fmt(sunday));
+    } else if (period === 'today') {
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      sql += " AND date(created_at) = ?";
+      params.push(today);
     }
     if (filterFrom) {
       sql += " AND date(created_at) >= ?";
