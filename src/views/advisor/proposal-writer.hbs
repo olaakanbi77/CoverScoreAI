@@ -590,17 +590,6 @@
     return m + ' ' + d + ', ' + h + ':' + min;
   }
 
-  if (PROPOSAL_STATUS === 'Sent') {
-    document.getElementById('send-success').style.display = 'block';
-    document.getElementById('send-success-msg').textContent = 'Sent ' + formatTimestamp(new Date());
-    document.getElementById('btn-send-whatsapp').disabled = true;
-    document.getElementById('btn-send-email').disabled = true;
-    document.getElementById('status-whatsapp').textContent = 'Sent';
-    document.getElementById('status-whatsapp').className = 'send-btn-status sent';
-    document.getElementById('status-email').textContent = 'Sent';
-    document.getElementById('status-email').className = 'send-btn-status sent';
-  }
-
   async function sendProposal(method) {
     var btn = document.getElementById('btn-send-' + method);
     var statusEl = document.getElementById('status-' + method);
