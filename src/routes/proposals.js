@@ -258,8 +258,9 @@ router.post('/send', authenticate, requireSalesOrAdminApi, async (req, res) => {
         </div>
       `;
       
+      const smtpUser = (process.env.SMTP_USER || '').trim();
       const result = await emailService.sendEmail({
-        from: req.user?.email || process.env.SMTP_USER,
+        from: smtpUser || req.user?.email,
         to: proposal.lead_email,
         subject: `Your Insurance Proposal - CoverScore AI`,
         html: html

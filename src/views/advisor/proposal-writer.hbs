@@ -593,7 +593,12 @@
   if (PROPOSAL_STATUS === 'Sent') {
     document.getElementById('send-success').style.display = 'block';
     document.getElementById('send-success-msg').textContent = 'Sent ' + formatTimestamp(new Date());
-    document.getElementById('send-btns').style.display = 'none';
+    document.getElementById('btn-send-whatsapp').disabled = true;
+    document.getElementById('btn-send-email').disabled = true;
+    document.getElementById('status-whatsapp').textContent = 'Sent';
+    document.getElementById('status-whatsapp').className = 'send-btn-status sent';
+    document.getElementById('status-email').textContent = 'Sent';
+    document.getElementById('status-email').className = 'send-btn-status sent';
   }
 
   async function sendProposal(method) {
@@ -616,7 +621,6 @@
         statusEl.className = 'send-btn-status sent';
         document.getElementById('send-success').style.display = 'block';
         document.getElementById('send-success-msg').textContent = 'Sent successfully via ' + (method === 'whatsapp' ? 'WhatsApp' : 'Email') + ' at ' + formatTimestamp(new Date());
-        document.getElementById('send-btns').style.display = 'none';
         document.getElementById('send-timestamp').textContent = 'Proposal sent ' + formatTimestamp(new Date());
       } else {
         statusEl.textContent = 'Failed';
