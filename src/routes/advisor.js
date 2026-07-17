@@ -457,8 +457,35 @@ router.get('/calendar', authenticatePage, requireSalesOrAdmin, async (req, res) 
 router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const activeType = req.query.type === 'personal' ? 'PERSONAL' : 'BUSINESS';
-    const leads = await all("SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ? ORDER BY updated_at DESC", [req.user.id, activeType]);
-    
+    const period = req.query.period || '';
+    const filterFrom = req.query.from || '';
+    const filterTo = req.query.to || '';
+
+    let sql = "SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ?";
+    let params = [req.user.id, activeType];
+
+    if (period === 'this_month') {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const from = `${year}-${month}-01`;
+      const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
+      const to = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
+      sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
+      params.push(from, to);
+    }
+    if (filterFrom) {
+      sql += " AND date(created_at) >= ?";
+      params.push(filterFrom);
+    }
+    if (filterTo) {
+      sql += " AND date(created_at) <= ?";
+      params.push(filterTo);
+    }
+
+    sql += " ORDER BY updated_at DESC";
+    const leads = await all(sql, params);
+
     const pipelineData = {
       stage1: leads.filter(l => l.pipeline_stage === 1),
       stage2: leads.filter(l => l.pipeline_stage === 2),
@@ -474,6 +501,15 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
       ? `₦${(activePipelineValue/1000000).toFixed(1)}M` 
       : `₦${activePipelineValue.toLocaleString()}`;
 
+    const now = new Date();
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const y = now.getFullYear();
+    const m = now.getMonth();
+    const currentMonthStart = `${y}-${String(m + 1).padStart(2, '0')}-01`;
+    const lastDay = new Date(y, m + 1, 0).getDate();
+    const currentMonthEnd = `${y}-${String(m + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+    const currentMonthRange = `${monthNames[m]} 1 – ${monthNames[m]} ${lastDay}, ${y}`;
+
     res.render('advisor/pipeline', {
       layout: 'admin',
       user: req.user,
@@ -481,7 +517,13 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
       pipelineData,
       activePipelineValueFormatted,
       activeType: activeType.toLowerCase(),
-      activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal'
+      activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal',
+      period,
+      filterFrom,
+      filterTo,
+      currentMonthStart,
+      currentMonthEnd,
+      currentMonthRange
     });
   } catch (err) {
     console.error('Error loading pipeline:', err);
