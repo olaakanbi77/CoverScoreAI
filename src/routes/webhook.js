@@ -462,7 +462,7 @@ router.post('/evolution', async (req, res) => {
               } else { estimatedPremium = Math.round(scoreResult.min_loss * 0.013); }
             }
 
-            const phoneToSet = lead.phone || phoneNumber;
+            const phoneToSet = phoneNumber;
             const ls = computeLeadScore({
               email: assessmentData.email || 'whatsapp@coverscore.site',
               phone: phoneToSet,

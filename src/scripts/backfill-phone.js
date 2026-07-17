@@ -10,6 +10,26 @@ const PREFIX_MAP = {
 };
 const PREFIXES = [...new Set(Object.values(PREFIX_MAP))];
 
+// Personal funnels use _009 for AGE, not phone — skip these
+const PERSONAL_PREFIXES = ['FAM', 'INC', 'HLT', 'RET', 'YPR', 'ENT', 'HOM', 'MOT'];
+
+function getPhoneFromAnswers(answers) {
+  if (!answers) return null;
+  const prefix = answers.template_selection?.template_id;
+  // For personal funnels, _009 is the age question — skip
+  if (prefix && !PERSONAL_PREFIXES.includes(prefix)) {
+    const val = answers[`${prefix}_009`];
+    if (val && typeof val === 'string' && val.length >= 7) return val;
+  }
+  // Fallback: try all prefixes but skip personal ones
+  for (const p of PREFIXES) {
+    if (PERSONAL_PREFIXES.includes(p)) continue;
+    const val = answers[`${p}_009`];
+    if (val && typeof val === 'string' && val.length >= 7) return val;
+  }
+  return null;
+}
+
 async function backfillPhones() {
   const leads = await all("SELECT id, name, business_name, phone, assessment_data, assessment_id FROM leads WHERE phone IS NULL OR phone = ''");
   console.log(`Found ${leads.length} leads without phone number`);
@@ -23,37 +43,14 @@ async function backfillPhones() {
 
       if (lead.assessment_data) {
         const ad = typeof lead.assessment_data === 'string' ? JSON.parse(lead.assessment_data) : lead.assessment_data;
-        if (ad.answers) {
-          const prefix = ad.answers.template_selection?.template_id;
-          if (prefix) {
-            phone = ad.answers[`${prefix}_009`] || null;
-          }
-          if (!phone) {
-            for (const p of PREFIXES) {
-              if (ad.answers[`${p}_009`]) {
-                phone = ad.answers[`${p}_009`];
-                break;
-              }
-            }
-          }
-        }
+        phone = getPhoneFromAnswers(ad.answers);
       }
 
       if (!phone && lead.assessment_id) {
         const a = await get('SELECT answers FROM assessments WHERE id = ?', [lead.assessment_id]);
         if (a && a.answers) {
           const answers = typeof a.answers === 'string' ? JSON.parse(a.answers) : a.answers;
-          if (answers.template_selection?.template_id) {
-            phone = answers[`${answers.template_selection.template_id}_009`] || null;
-          }
-          if (!phone) {
-            for (const p of PREFIXES) {
-              if (answers[`${p}_009`]) {
-                phone = answers[`${p}_009`];
-                break;
-              }
-            }
-          }
+          phone = getPhoneFromAnswers(answers);
         }
       }
 
