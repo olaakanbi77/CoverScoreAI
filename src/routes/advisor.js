@@ -375,6 +375,18 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
         tasksData.today.push(t);
       } else if (due <= weekEnd) {
         tasksData.week.push(t);
+      }
+    });
+
+    res.render('advisor/tasks', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'more',
+      tasksData
+    });
+  } catch (err) {
+    console.error('Error loading tasks:', err);
+    res.status(500).send('Server Error');
   }
 });
 
