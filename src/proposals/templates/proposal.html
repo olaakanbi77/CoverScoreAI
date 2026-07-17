@@ -84,8 +84,8 @@
   <div class="divider"></div>
 
   <div class="details">
-    <p><strong>Prepared for:</strong> {{clientName}}</p>
-    <p><strong>{{businessName}}</strong></p>
+    <p><strong>Prepared for:</strong> {{displayName}}</p>
+    <p><strong>{{businessSubtitle}}</strong></p>
     <p><strong>Assessment Score:</strong> {{coverScore}}% &mdash; {{riskLevel}}</p>
   </div>
 
@@ -103,7 +103,7 @@
   <div class="section">
     <h2>Executive Summary</h2>
     <div class="summary-box">
-      <p>This proposal outlines risk protection recommendations based on the comprehensive CoverScore assessment completed on behalf of <strong>{{clientName}}</strong> ({{businessName}}).</p>
+      <p>This proposal outlines risk protection recommendations based on the comprehensive CoverScore assessment completed on behalf of <strong>{{displayName}}</strong>.</p>
       <p>Your overall CoverScore of <strong>{{coverScore}}%</strong> indicates a <strong>{{riskLevel}}</strong> risk profile. The recommendations below address key risk areas identified during assessment, providing tailored cover solutions to strengthen your risk posture.</p>
       <p>Estimated total annual premium: <strong>₦{{totalPremiumMin}} &ndash; ₦{{totalPremiumMax}}</strong>.</p>
     </div>
@@ -182,7 +182,7 @@
 
   <div class="footer">
     <p>CoverScore &mdash; Intelligent Risk Assessment &amp; Protection</p>
-    <p>This document is confidential and intended solely for {{clientName}} &mdash; {{businessName}}</p>
+    <p>This document is confidential and intended solely for {{displayName}}</p>
     <p>Proposal #{{proposalNumber}} &bull; Generated {{date}}</p>
   </div>
 </div>

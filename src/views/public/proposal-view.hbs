@@ -105,7 +105,7 @@ body {
       COVER<span>SCORE</span> AI
     </div>
     <h1 style="margin:0 0 10px 0;">{{proposal.title}}</h1>
-    <p style="margin:0; opacity:0.8;">Prepared for <strong>{{proposal.lead_name}}</strong> ({{proposal.business_name}})</p>
+    <p style="margin:0; opacity:0.8;">Prepared for <strong>{{proposal.lead_name}}</strong>{{#if proposal.business_name}} ({{proposal.business_name}}){{/if}}</p>
     
     {{#if (or (eq proposal.status 'Accepted') (eq proposal.status 'Declined'))}}
       <div class="status-badge status-{{proposal.status}}">This proposal has been {{proposal.status}}</div>
