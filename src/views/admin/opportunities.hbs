@@ -554,7 +554,7 @@
     </div>
 
     <!-- Filter Panel -->
-    <div class="filter-panel{{#if (or filterMonth filterFrom filterTo)}} open{{/if}}" id="filterPanel">
+    <div class="filter-panel{{#if hasActiveFilters}} open{{/if}}" id="filterPanel">
       <form method="GET" action="/admin/opportunities">
         <input type="hidden" name="type" value="{{activeType}}">
         <div class="filter-row">
@@ -598,7 +598,7 @@
             <a href="/admin/opportunities?type={{activeType}}" class="btn-clear">Clear</a>
           </div>
         </div>
-        {{#if (or filterMonth filterYear filterFrom filterTo)}}
+        {{#if hasActiveFilters}}
         <div class="filter-tags">
           {{#if filterMonth}}<span class="filter-tag">Month: {{filterMonthName}}</span>{{/if}}
           {{#if filterYear}}<span class="filter-tag">Year: {{filterYear}}</span>{{/if}}

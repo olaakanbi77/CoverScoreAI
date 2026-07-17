@@ -47,7 +47,7 @@ app.engine('hbs', exphbs.engine({
   helpers: {
     eq: (a, b) => a === b,
     ne: (a, b) => a !== b,
-    or: (...args) => args.slice(0, -1).some(Boolean),
+    or: (a, b) => a || b,
     and: (a, b) => a && b,
     not: (a) => !a,
     userInitials: (name) => {
@@ -685,6 +685,7 @@ app.get('/admin/opportunities', authenticatePage, async (req, res) => {
     };
 
     const MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const hasActiveFilters = !!(filterMonth || filterYear || filterFrom || filterTo);
 
     res.render('admin/opportunities', { 
       title: 'Opportunities', 
@@ -697,7 +698,8 @@ app.get('/admin/opportunities', authenticatePage, async (req, res) => {
       filterYear,
       filterFrom,
       filterTo,
-      filterMonthName: MONTHS[parseInt(filterMonth)] || ''
+      filterMonthName: MONTHS[parseInt(filterMonth)] || '',
+      hasActiveFilters
     });
   } catch (error) {
     console.error('[opportunities]', error);
