@@ -632,7 +632,20 @@ app.get('/admin/assessments', authenticatePage, async (req, res) => {
       }
       return { ...a, business_name: displayName || 'Assessment #' + a.id };
     });
-    res.render('admin/assessments', { title: 'Assessments', activePage: 'assessments', layout: 'admin', assessments });
+
+    const startedCount = await get("SELECT COUNT(*) as c FROM assessments WHERE score IS NULL AND (answers IS NULL OR answers = '{}' OR answers = '')");
+    const inProgressCount = await get("SELECT COUNT(*) as c FROM assessments WHERE score IS NULL AND answers IS NOT NULL AND answers != '{}' AND answers != ''");
+    const completedCount = await get("SELECT COUNT(*) as c FROM assessments WHERE score IS NOT NULL");
+    const last30 = await get("SELECT COUNT(*) as total, SUM(CASE WHEN score IS NOT NULL THEN 1 ELSE 0 END) as done FROM assessments WHERE created_at >= datetime('now', '-30 days')");
+    const completionRate = last30 && last30.total > 0 ? Math.round((last30.done / last30.total) * 100) : 0;
+
+    res.render('admin/assessments', {
+      title: 'Assessments', activePage: 'assessments', layout: 'admin', assessments,
+      startedCount: startedCount.c || 0,
+      inProgressCount: inProgressCount.c || 0,
+      completedCount: completedCount.c || 0,
+      completionRate
+    });
   } catch (error) {
     res.status(500).send('Error loading assessments');
   }

@@ -444,7 +444,7 @@
         <div class="stat-icon">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><circle cx="12" cy="12" r="10" stroke-width="2"/></svg>
         </div>
-        <div class="stat-val">32</div>
+        <div class="stat-val">{{startedCount}}</div>
         <div class="stat-label">Started</div>
         <div class="stat-sub">Not completed</div>
       </div>
@@ -452,7 +452,7 @@
         <div class="stat-icon">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <div class="stat-val">18</div>
+        <div class="stat-val">{{inProgressCount}}</div>
         <div class="stat-label">In Progress</div>
         <div class="stat-sub">Continue</div>
       </div>
@@ -460,7 +460,7 @@
         <div class="stat-icon">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <div class="stat-val">45</div>
+        <div class="stat-val">{{completedCount}}</div>
         <div class="stat-label">Completed</div>
         <div class="stat-sub">Report sent</div>
       </div>
@@ -468,7 +468,7 @@
         <div class="stat-icon">
           <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <div class="stat-val">78%</div>
+        <div class="stat-val">{{completionRate}}%</div>
         <div class="stat-label">Completion Rate</div>
         <div class="stat-sub" style="color:var(--c-gray); font-weight:normal;">Last 30 days</div>
       </div>
