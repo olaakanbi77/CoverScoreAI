@@ -472,18 +472,6 @@ router.get('/api/pipeline/data', authenticatePage, requireSalesOrAdmin, async (r
   }
 });
 
-    res.render('advisor/tasks', {
-      layout: 'admin',
-      user: req.user,
-      activePage: 'more',
-      tasksData
-    });
-  } catch (err) {
-    console.error('Error loading tasks:', err);
-    res.status(500).send('Server Error');
-  }
-});
-
 router.get('/profile', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const leads = await all("SELECT pipeline_stage, estimated_premium FROM leads WHERE advisor_id = ?", [req.user.id]);
