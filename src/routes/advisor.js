@@ -378,11 +378,19 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
       }
     });
 
+    let myLeads;
+    if (req.user.role === 'admin') {
+      myLeads = await all("SELECT id, name, business_name FROM leads ORDER BY name ASC");
+    } else {
+      myLeads = await all("SELECT id, name, business_name FROM leads WHERE advisor_id = ? ORDER BY name ASC", [req.user.id]);
+    }
+
     res.render('advisor/tasks', {
       layout: 'admin',
       user: req.user,
       activePage: 'more',
-      tasksData
+      tasksData,
+      myLeads
     });
   } catch (err) {
     console.error('Error loading tasks:', err);
