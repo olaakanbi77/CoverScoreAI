@@ -2,80 +2,111 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CoverScore Proposal</title>
 <style>
-  @page { margin: 0; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Georgia', 'Times New Roman', serif; color: #1f2937; margin: 0; padding: 0; background: #f9fafb; }
-  .page { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; padding: 40px 50px; position: relative; }
-  .page-break { page-break-after: always; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; color: #1f2937; margin: 0; padding: 0; background: #f1f5f9; }
 
-  .cover-page { text-align: center; padding-top: 120px; }
-  .cover-page .brand { font-size: 42px; font-weight: 700; color: #1a56db; letter-spacing: -1px; }
+  .page { background: #fff; position: relative; }
+  .page-break { margin-top: 24px; }
+  .cover-page { text-align: center; padding: 48px 24px 40px; }
+  .cover-page .brand { font-size: 32px; font-weight: 700; color: #1a56db; letter-spacing: -1px; }
   .cover-page .brand span { color: #1f2937; }
-  .cover-page .tagline { font-size: 18px; color: #6b7280; margin-top: 8px; font-style: italic; }
-  .cover-page h2 { font-size: 28px; color: #1a56db; margin-top: 60px; text-transform: uppercase; letter-spacing: 3px; }
-  .cover-page .divider { width: 80px; height: 3px; background: #1a56db; margin: 20px auto; }
-  .cover-page .details { margin-top: 80px; font-size: 16px; line-height: 2; color: #374151; }
+  .cover-page .tagline { font-size: 15px; color: #6b7280; margin-top: 6px; font-style: italic; }
+  .cover-page h2 { font-size: 20px; color: #1a56db; margin-top: 32px; text-transform: uppercase; letter-spacing: 2px; }
+  .cover-page .divider { width: 60px; height: 3px; background: #1a56db; margin: 16px auto; }
+  .cover-page .details { margin-top: 40px; font-size: 14px; line-height: 2; color: #374151; }
   .cover-page .details strong { color: #1a56db; }
-  .cover-page .date-line { margin-top: 120px; font-size: 14px; color: #9ca3af; }
-  .cover-page .logo-line { margin-top: 40px; }
-  .cover-page .logo-line small { color: #9ca3af; font-size: 11px; letter-spacing: 2px; }
+  .cover-page .date-line { margin-top: 48px; font-size: 13px; color: #9ca3af; }
+  .cover-page .logo-line { margin-top: 32px; }
+  .cover-page .logo-line small { color: #9ca3af; font-size: 10px; letter-spacing: 2px; }
 
-  .section { margin-top: 40px; }
-  .section h2 { font-size: 22px; color: #1a56db; border-bottom: 2px solid #1a56db; padding-bottom: 8px; margin-bottom: 20px; }
-  .section h3 { font-size: 18px; color: #1f2937; margin-bottom: 10px; }
+  .section { margin-top: 32px; padding: 0 24px; }
+  .section h2 { font-size: 18px; color: #1a56db; border-bottom: 2px solid #1a56db; padding-bottom: 8px; margin-bottom: 16px; }
+  .section h3 { font-size: 16px; color: #1f2937; margin-bottom: 8px; }
   .section p { font-size: 14px; line-height: 1.7; color: #374151; margin-bottom: 12px; }
 
-  .summary-box { background: #f0f4ff; border-left: 4px solid #1a56db; padding: 20px 24px; border-radius: 4px; margin-bottom: 24px; }
-  .summary-box p { font-size: 15px; margin-bottom: 0; line-height: 1.8; }
+  .summary-box { background: #f0f4ff; border-left: 4px solid #1a56db; padding: 16px 20px; border-radius: 4px; margin-bottom: 20px; margin-left: 24px; margin-right: 24px; }
+  .summary-box p { font-size: 14px; margin-bottom: 0; line-height: 1.8; }
 
-  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; }
-  table thead th { background: #1a56db; color: #fff; padding: 12px 16px; text-align: left; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-  table tbody td { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; }
+  table thead th { background: #1a56db; color: #fff; padding: 10px 12px; text-align: left; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  table tbody td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
   table tbody tr:nth-child(even) { background: #f9fafb; }
-  table tbody tr:hover { background: #f0f4ff; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
   .badge-high { background: #fee2e2; color: #dc2626; }
   .badge-moderate { background: #fef3c7; color: #d97706; }
   .badge-low { background: #d1fae5; color: #059669; }
 
-  .product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 16px; transition: box-shadow 0.2s; }
-  .product-card h3 { font-size: 17px; color: #1a56db; margin-bottom: 8px; }
-  .product-card p { font-size: 14px; color: #374151; margin-bottom: 6px; }
-  .product-card .premium { font-size: 16px; font-weight: 700; color: #1f2937; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
+  .product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .product-card h3 { font-size: 15px; color: #1a56db; margin-bottom: 6px; }
+  .product-card p { font-size: 13px; color: #374151; margin-bottom: 4px; }
+  .product-card .premium { font-size: 15px; font-weight: 700; color: #1f2937; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; }
 
-  .total-box { background: #1a56db; color: #fff; padding: 20px 24px; border-radius: 8px; text-align: center; margin: 24px 0; }
-  .total-box .label { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
-  .total-box .amount { font-size: 32px; font-weight: 700; margin-top: 4px; }
+  .total-box { background: #1a56db; color: #fff; padding: 16px 20px; border-radius: 8px; text-align: center; margin: 20px 24px; }
+  .total-box .label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+  .total-box .amount { font-size: 24px; font-weight: 700; margin-top: 4px; }
 
-  .terms { font-size: 12px; color: #6b7280; line-height: 1.8; margin-top: 20px; }
+  .terms { font-size: 12px; color: #6b7280; line-height: 1.8; padding: 0 24px; }
   .terms ol { padding-left: 20px; }
   .terms li { margin-bottom: 6px; }
 
-  .next-steps { display: flex; gap: 20px; margin: 20px 0; }
-  .step { flex: 1; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; text-align: center; }
-  .step .num { width: 32px; height: 32px; background: #1a56db; color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; margin-bottom: 10px; }
-  .step h4 { font-size: 14px; color: #1f2937; margin-bottom: 4px; }
+  .next-steps { display: flex; flex-direction: column; gap: 12px; padding: 0 24px; margin: 16px 0; }
+  .step { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; text-align: center; }
+  .step .num { width: 28px; height: 28px; background: #1a56db; color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .step h4 { font-size: 13px; color: #1f2937; margin-bottom: 4px; }
   .step p { font-size: 12px; color: #6b7280; margin-bottom: 0; }
 
-  .signature-block { margin-top: 40px; padding-top: 30px; border-top: 1px solid #e5e7eb; }
-  .signature-grid { display: flex; justify-content: space-between; margin-top: 20px; }
-  .signature-col { flex: 1; }
-  .signature-col h4 { font-size: 14px; color: #1a56db; margin-bottom: 8px; }
+  .signature-block { margin: 32px 24px 0; padding-top: 24px; border-top: 1px solid #e5e7eb; }
+  .signature-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+  .signature-col h4 { font-size: 14px; color: #1a56db; margin-bottom: 4px; }
   .signature-col p { font-size: 13px; color: #374151; line-height: 1.6; }
-  .signature-line { margin-top: 40px; width: 220px; border-top: 1px solid #1f2937; padding-top: 6px; font-size: 12px; color: #6b7280; }
+  .signature-line { margin-top: 32px; width: 200px; border-top: 1px solid #1f2937; padding-top: 6px; font-size: 12px; color: #6b7280; }
 
-  .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; text-align: center; line-height: 1.6; }
+  .footer { margin: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; text-align: center; line-height: 1.6; }
+
+  .proposal-wrapper { max-width: 800px; margin: 0 auto; padding: 0; background: #fff; border-radius: 0; overflow: hidden; }
+
+  @media (min-width: 640px) {
+    .proposal-wrapper { margin: 24px auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .cover-page { padding: 80px 56px 60px; }
+    .cover-page .brand { font-size: 42px; }
+    .cover-page .tagline { font-size: 18px; }
+    .cover-page h2 { font-size: 28px; margin-top: 60px; }
+    .cover-page .details { margin-top: 60px; font-size: 16px; }
+    .cover-page .date-line { margin-top: 80px; }
+    .section { padding: 0 56px; }
+    .section h2 { font-size: 22px; }
+    .summary-box { padding: 20px 24px; margin-left: 56px; margin-right: 56px; }
+    .summary-box p { font-size: 15px; }
+    .section p { font-size: 14px; }
+    .total-box { padding: 20px 24px; margin-left: 56px; margin-right: 56px; }
+    .total-box .amount { font-size: 32px; }
+    .next-steps { flex-direction: row; gap: 20px; padding: 0 56px; }
+    .step { padding: 20px; }
+    .signature-block { margin-left: 56px; margin-right: 56px; }
+    .signature-grid { flex-direction: row; justify-content: space-between; }
+    .signature-col { flex: 1; }
+    .terms { padding: 0 56px; }
+    .footer { margin-left: 56px; margin-right: 56px; }
+    .page-break { margin-top: 0; }
+  }
 
   @media print {
+    @page { margin: 0; }
     body { background: #fff; }
-    .page { margin: 0; box-shadow: none; }
+    .proposal-wrapper { max-width: none; margin: 0; border-radius: 0; box-shadow: none; }
+    .page { width: 210mm; min-height: 297mm; padding: 40px 50px; }
+    .page-break { page-break-after: always; margin: 0; }
+    .cover-page { padding-top: 120px; }
+    .section, .summary-box, .total-box, .terms, .next-steps, .signature-block, .footer { padding: 0; margin-left: 0; margin-right: 0; }
+    .proposal-wrapper { padding: 0; }
   }
 </style>
 </head>
 <body>
-
+<div class="proposal-wrapper">
 <div class="page cover-page">
   <div class="brand">Cover<span>Score</span></div>
   <div class="tagline">Intelligent Risk Assessment &middot; Smart Protection</div>
@@ -185,6 +216,7 @@
     <p>This document is confidential and intended solely for {{displayName}}</p>
     <p>Proposal #{{proposalNumber}} &bull; Generated {{date}}</p>
   </div>
+</div>
 </div>
 
 </body>
