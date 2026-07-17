@@ -399,6 +399,10 @@ async function getPipelineData(userId, userRole, activeType, period, filterFrom,
     params.push(userId);
   }
 
+  let prevSql = sql;
+  let prevParams = [...params];
+  let hasPeriodFilter = false;
+
   if (period === 'this_month') {
     const now = new Date();
     const year = now.getFullYear();
@@ -408,6 +412,14 @@ async function getPipelineData(userId, userRole, activeType, period, filterFrom,
     const to = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
     sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
     params.push(from, to);
+    hasPeriodFilter = true;
+    const prevFrom = `${year}-${month === '01' ? 12 : String(Number(month)-1).padStart(2,'0')}-01`;
+    const prevMonth = month === '01' ? 12 : Number(month)-1;
+    const prevYear = month === '01' ? year-1 : year;
+    const prevLastDay = new Date(prevYear, prevMonth, 0).getDate();
+    const prevTo = `${prevYear}-${String(prevMonth).padStart(2,'0')}-${String(prevLastDay).padStart(2,'0')}`;
+    prevSql += " AND date(created_at) >= ? AND date(created_at) <= ?";
+    prevParams.push(prevFrom, prevTo);
   } else if (period === 'this_week') {
     const now = new Date();
     const dayOfWeek = now.getDay();
@@ -419,11 +431,24 @@ async function getPipelineData(userId, userRole, activeType, period, filterFrom,
     const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
     params.push(fmt(monday), fmt(sunday));
+    hasPeriodFilter = true;
+    const prevMonday = new Date(monday);
+    prevMonday.setDate(monday.getDate() - 7);
+    const prevSunday = new Date(prevMonday);
+    prevSunday.setDate(prevMonday.getDate() + 6);
+    prevSql += " AND date(created_at) >= ? AND date(created_at) <= ?";
+    prevParams.push(fmt(prevMonday), fmt(prevSunday));
   } else if (period === 'today') {
     const now = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
     sql += " AND date(created_at) = ?";
     params.push(today);
+    hasPeriodFilter = true;
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth()+1).padStart(2,'0')}-${String(yesterday.getDate()).padStart(2,'0')}`;
+    prevSql += " AND date(created_at) = ?";
+    prevParams.push(yStr);
   }
   if (filterFrom) {
     sql += " AND date(created_at) >= ?";
@@ -438,21 +463,86 @@ async function getPipelineData(userId, userRole, activeType, period, filterFrom,
   const leads = await all(sql, params);
 
   const pipelineData = {
-    stage1: leads.filter(l => l.pipeline_stage === 1),
-    stage2: leads.filter(l => l.pipeline_stage === 2),
-    stage3: leads.filter(l => l.pipeline_stage === 3),
-    stage4: leads.filter(l => l.pipeline_stage === 4),
-    stage5: leads.filter(l => l.pipeline_stage === 5),
-    stage6: leads.filter(l => l.pipeline_stage === 6),
+    stage1: leads.filter(l => Number(l.pipeline_stage) === 1),
+    stage2: leads.filter(l => Number(l.pipeline_stage) === 2),
+    stage3: leads.filter(l => Number(l.pipeline_stage) === 3),
+    stage4: leads.filter(l => Number(l.pipeline_stage) === 4),
+    stage5: leads.filter(l => Number(l.pipeline_stage) === 5),
+    stage6: leads.filter(l => Number(l.pipeline_stage) === 6),
   };
 
-  const activeLeads = leads.filter(l => [1, 2, 3, 4].includes(l.pipeline_stage));
+  const activeLeads = leads.filter(l => [1, 2, 3, 4].includes(Number(l.pipeline_stage)));
   const activePipelineValue = activeLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
   const activePipelineValueFormatted = activePipelineValue > 1000000
     ? `₦${(activePipelineValue/1000000).toFixed(1)}M`
     : `₦${activePipelineValue.toLocaleString()}`;
 
-  return { pipelineData, activePipelineValue, activePipelineValueFormatted, leads };
+  const totalDeals = pipelineData.stage3.length + pipelineData.stage4.length + pipelineData.stage6.length;
+  const weightedPremium = leads.reduce((sum, l) => sum + ((l.estimated_premium || 0) * (({3:0.7,4:0.5,5:0.3,6:1})[Number(l.pipeline_stage)] || 0.1)), 0);
+  const weightedPremiumFormatted = weightedPremium > 1000000 ? `₦${(weightedPremium/1000000).toFixed(1)}M` : `₦${weightedPremium.toLocaleString()}`;
+  const bestCasePremium = [3,4,5,6].reduce((sum,s) => sum + pipelineData[`stage${s}`].reduce((acc,l) => acc + (l.estimated_premium||0), 0), 0);
+  const bestCaseFormatted = bestCasePremium > 1000000 ? `₦${(bestCasePremium/1000000).toFixed(1)}M` : `₦${bestCasePremium.toLocaleString()}`;
+  const commitPremium = pipelineData.stage4.reduce((sum,l) => sum + (l.estimated_premium||0), 0) + pipelineData.stage6.reduce((sum,l) => sum + (l.estimated_premium||0), 0);
+  const commitFormatted = commitPremium > 1000000 ? `₦${(commitPremium/1000000).toFixed(1)}M` : `₦${commitPremium.toLocaleString()}`;
+  const wonPremium = pipelineData.stage6.reduce((sum,l) => sum + (l.estimated_premium||0), 0);
+  const wonFormatted = wonPremium > 1000000 ? `₦${(wonPremium/1000000).toFixed(1)}M` : `₦${wonPremium.toLocaleString()}`;
+  const conversionRate = leads.length > 0 ? ((pipelineData.stage6.length / leads.length) * 100).toFixed(1) : '0.0';
+  const quotesSentCount = pipelineData.stage3.length;
+  const quotesValueFormatted = pipelineData.stage3.reduce((sum,l) => sum + (l.estimated_premium||0), 0);
+  const quotesValue = quotesValueFormatted > 1000000 ? `₦${(quotesValueFormatted/1000000).toFixed(1)}M` : `₦${quotesValueFormatted.toLocaleString()}`;
+  const negotiationCount = pipelineData.stage4.length;
+
+  let trendPercent = '';
+  if (hasPeriodFilter) {
+    prevSql += " ORDER BY updated_at DESC";
+    const prevLeads = await all(prevSql, prevParams);
+    const prevActive = prevLeads.filter(l => [1,2,3,4].includes(Number(l.pipeline_stage)));
+    const prevValue = prevActive.reduce((sum,l) => sum + (l.estimated_premium||0), 0);
+    trendPercent = prevValue > 0 ? `${((activePipelineValue - prevValue) / prevValue * 100).toFixed(1)}%` : '+100%';
+  } else {
+    const now = new Date();
+    const currMonthStart = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+    const prevMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+    const prevMonthStart = `${prevMonthEnd.getFullYear()}-${String(prevMonthEnd.getMonth()+1).padStart(2,'0')}-01`;
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const currMonthEnd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+
+    if (!filterFrom && !filterTo) {
+      const currMonthLeads = await all("SELECT estimated_premium, pipeline_stage FROM leads WHERE opportunity_type = ? AND date(created_at) >= ? AND date(created_at) <= ?", [activeType, currMonthStart, currMonthEnd]);
+      const prevMonthLeads = await all("SELECT estimated_premium, pipeline_stage FROM leads WHERE opportunity_type = ? AND date(created_at) >= ? AND date(created_at) <= ?", [activeType, prevMonthStart, `${prevMonthEnd.getFullYear()}-${String(prevMonthEnd.getMonth()+1).padStart(2,'0')}-${String(prevMonthEnd.getDate()).padStart(2,'0')}`]);
+      const currActive = currMonthLeads.filter(l => [1,2,3,4].includes(Number(l.pipeline_stage)));
+      const prevActive = prevMonthLeads.filter(l => [1,2,3,4].includes(Number(l.pipeline_stage)));
+      const currVal = currActive.reduce((sum,l) => sum + (l.estimated_premium||0), 0);
+      const prevVal = prevActive.reduce((sum,l) => sum + (l.estimated_premium||0), 0);
+      trendPercent = prevVal > 0 ? `${((currVal - prevVal) / prevVal * 100).toFixed(1)}%` : (currVal > 0 ? '+100%' : '0.0%');
+    } else {
+      trendPercent = 'N/A';
+    }
+  }
+  trendPercent = trendPercent === '0.0%' || trendPercent === 'N/A' ? trendPercent : (trendPercent.startsWith('-') ? trendPercent : `+${trendPercent}`);
+  const trendUp = !trendPercent.startsWith('-');
+
+  return {
+    pipelineData,
+    activePipelineValue,
+    activePipelineValueFormatted,
+    leads,
+    totalDeals,
+    weightedPremium,
+    weightedPremiumFormatted,
+    bestCasePremium,
+    bestCaseFormatted,
+    commitPremium,
+    commitFormatted,
+    wonPremium,
+    wonFormatted,
+    conversionRate,
+    quotesSentCount,
+    quotesValue,
+    negotiationCount,
+    trendPercent,
+    trendUp
+  };
 }
 
 router.get('/api/pipeline/data', authenticatePage, requireSalesOrAdmin, async (req, res) => {
@@ -475,6 +565,17 @@ router.get('/api/pipeline/data', authenticatePage, requireSalesOrAdmin, async (r
       },
       activePipelineValue: result.activePipelineValue,
       activePipelineValueFormatted: result.activePipelineValueFormatted,
+      totalDeals: result.totalDeals,
+      weightedPremiumFormatted: result.weightedPremiumFormatted,
+      bestCaseFormatted: result.bestCaseFormatted,
+      commitFormatted: result.commitFormatted,
+      wonFormatted: result.wonFormatted,
+      conversionRate: result.conversionRate,
+      quotesSentCount: result.quotesSentCount,
+      quotesValue: result.quotesValue,
+      negotiationCount: result.negotiationCount,
+      trendPercent: result.trendPercent,
+      trendUp: result.trendUp,
       opportunities: result.pipelineData.stage3.map(l => ({
         id: l.id,
         business_name: l.business_name || l.name || 'Unknown',
@@ -494,9 +595,9 @@ router.get('/profile', authenticatePage, requireSalesOrAdmin, async (req, res) =
     const leads = await all("SELECT pipeline_stage, estimated_premium FROM leads WHERE advisor_id = ?", [req.user.id]);
     
     const leadsAdded = leads.length;
-    const assessments = leads.filter(l => l.pipeline_stage >= 2).length; // mock
-    const quotesSent = leads.filter(l => l.pipeline_stage >= 3).length; // mock
-    const premiumPipeline = leads.filter(l => [1,2,3,4].includes(l.pipeline_stage)).reduce((acc, l) => acc + (l.estimated_premium || 0), 0);
+    const assessments = leads.filter(l => Number(l.pipeline_stage) >= 2).length;
+    const quotesSent = leads.filter(l => Number(l.pipeline_stage) >= 3).length;
+    const premiumPipeline = leads.filter(l => [1,2,3,4].includes(Number(l.pipeline_stage))).reduce((acc, l) => acc + (l.estimated_premium || 0), 0);
     const premiumFormatted = premiumPipeline > 1000000 ? `₦${(premiumPipeline/1000000).toFixed(1)}M` : `₦${premiumPipeline.toLocaleString()}`;
 
     const stats = {
@@ -560,7 +661,12 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
     const filterFrom = req.query.from || '';
     const filterTo = req.query.to || '';
 
-    const { pipelineData, activePipelineValueFormatted } = await getPipelineData(req.user.id, req.user.role, activeType, period, filterFrom, filterTo);
+    const {
+      pipelineData, activePipelineValueFormatted, totalDeals,
+      weightedPremiumFormatted, bestCaseFormatted, commitFormatted, wonFormatted,
+      conversionRate, quotesSentCount, quotesValue, negotiationCount,
+      trendPercent, trendUp
+    } = await getPipelineData(req.user.id, req.user.role, activeType, period, filterFrom, filterTo);
 
     const now = new Date();
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -577,6 +683,17 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
       activePage: 'pipeline',
       pipelineData,
       activePipelineValueFormatted,
+      totalDeals,
+      weightedPremiumFormatted,
+      bestCaseFormatted,
+      commitFormatted,
+      wonFormatted,
+      conversionRate,
+      quotesSentCount,
+      quotesValue,
+      negotiationCount,
+      trendPercent,
+      trendUp,
       activeType: activeType.toLowerCase(),
       activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal',
       period,

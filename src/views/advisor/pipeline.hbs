@@ -301,9 +301,10 @@
           </div>
           <h1 class="mc-amount">{{activePipelineValueFormatted}}</h1>
           <div class="mc-trend">
-            <div class="mc-trend-up">
-              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
-              18.6%
+            <div class="mc-trend-up" id="trendBadge">
+              <svg id="trendArrowUp" fill="currentColor" viewBox="0 0 24 24" {{#unless trendUp}}style="display:none"{{/unless}}><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+              <svg id="trendArrowDown" fill="currentColor" viewBox="0 0 24 24" style="transform:rotate(180deg){{#if trendUp}};display:none{{/if}}"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+              <span id="trendPercent">{{trendPercent}}</span>
             </div>
             vs Last Month
           </div>
@@ -314,7 +315,7 @@
             <div class="mc-rc-icon">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
             </div>
-            <div class="mc-rc-num">32</div>
+            <div class="mc-rc-num" id="totalDeals">{{totalDeals}}</div>
           </div>
           <div class="mc-rc-sub">Active Opportunities</div>
         </div>
@@ -325,7 +326,7 @@
           <div class="mc-sub-icon green">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <h3 class="mc-sub-val">₦45.2M</h3>
+          <h3 class="mc-sub-val" id="weightedPremium">{{weightedPremiumFormatted}}</h3>
           <div class="mc-sub-lbl-row">
             <p class="mc-sub-lbl">Weighted Premium</p>
             <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -335,7 +336,7 @@
           <div class="mc-sub-icon blue">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
-          <h3 class="mc-sub-val">₦28.7M</h3>
+          <h3 class="mc-sub-val" id="bestCasePremium">{{bestCaseFormatted}}</h3>
           <div class="mc-sub-lbl-row">
             <p class="mc-sub-lbl">Best Case</p>
             <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -345,7 +346,7 @@
           <div class="mc-sub-icon orange">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <h3 class="mc-sub-val">₦16.5M</h3>
+          <h3 class="mc-sub-val" id="commitPremium">{{commitFormatted}}</h3>
           <div class="mc-sub-lbl-row">
             <p class="mc-sub-lbl">Commit</p>
             <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -355,7 +356,7 @@
           <div class="mc-sub-icon purple">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
           </div>
-          <h3 class="mc-sub-val">₦12.3M</h3>
+          <h3 class="mc-sub-val" id="wonPremium">{{wonFormatted}}</h3>
           <div class="mc-sub-lbl-row">
             <p class="mc-sub-lbl">Closed Won</p>
             <svg class="mc-sub-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -400,7 +401,7 @@
       </div>
       
       <div class="sc-bottom">
-        Conversion Rate: <span>26.2%</span>
+        Conversion Rate: <span id="conversionRate">{{conversionRate}}%</span>
       </div>
     </div>
 
@@ -449,19 +450,19 @@
           <div class="ic-item-icon green">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
           </div>
-          <div class="ic-text"><span>9</span> quotes sent awaiting response</div>
+          <div class="ic-text"><span id="quotesSentCount">{{quotesSentCount}}</span> quotes sent awaiting response</div>
         </div>
         <div class="ic-item">
           <div class="ic-item-icon orange">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
           </div>
-          <div class="ic-text"><span>₦38.6M</span> in quotes need follow-up</div>
+          <div class="ic-text"><span id="quotesValue">{{quotesValue}}</span> in quotes need follow-up</div>
         </div>
         <div class="ic-item">
           <div class="ic-item-icon blue">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
-          <div class="ic-text"><span>3</span> deals in negotiation need attention</div>
+          <div class="ic-text"><span id="negotiationCount">{{negotiationCount}}</span> deals in negotiation need attention</div>
         </div>
       </div>
     </div>
@@ -514,6 +515,19 @@ function fetchPipelineData(params) {
     .then(function(r) { return r.json(); })
     .then(function(d) {
       document.querySelector('.mc-amount').textContent = d.activePipelineValueFormatted;
+      document.getElementById('totalDeals').textContent = d.totalDeals;
+      document.getElementById('weightedPremium').textContent = d.weightedPremiumFormatted;
+      document.getElementById('bestCasePremium').textContent = d.bestCaseFormatted;
+      document.getElementById('commitPremium').textContent = d.commitFormatted;
+      document.getElementById('wonPremium').textContent = d.wonFormatted;
+      document.getElementById('conversionRate').textContent = d.conversionRate + '%';
+      document.getElementById('quotesSentCount').textContent = d.quotesSentCount;
+      document.getElementById('quotesValue').textContent = d.quotesValue;
+      document.getElementById('negotiationCount').textContent = d.negotiationCount;
+      document.getElementById('trendPercent').textContent = d.trendPercent;
+      document.getElementById('trendPercent').textContent = d.trendPercent;
+      document.getElementById('trendArrowUp').style.display = d.trendUp ? '' : 'none';
+      document.getElementById('trendArrowDown').style.display = d.trendUp ? 'none' : '';
       var sdNums = document.querySelectorAll('.sd-num');
       var stages = [d.stageCounts.stage1, d.stageCounts.stage2, d.stageCounts.stage3, d.stageCounts.stage4, d.stageCounts.stage6];
       sdNums.forEach(function(el, i) { if (i < stages.length) el.textContent = stages[i]; });
