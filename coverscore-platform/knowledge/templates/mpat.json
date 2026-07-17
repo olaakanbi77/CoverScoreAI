@@ -38,7 +38,7 @@
       "section_id": "SEC-MPAT-PROFILE",
       "sequence": 0,
       "question_type": "text",
-      "text": "What's your first name?",
+      "text": "What's your full name?",
       "category": "name",
       "options": [
         { "text": "", "value": "", "sort_order": 0, "next_question": "MPAT-011" }
