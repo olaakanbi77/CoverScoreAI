@@ -287,7 +287,7 @@
           <div class="lead-avatar color-{{this.colorTheme}}">{{this.initials}}</div>
           
           <div class="lead-info">
-            <h3>{{this.business_name}}</h3>
+            <h3>{{#if this.business_name}}{{this.business_name}}{{else}}{{this.name}}{{/if}}</h3>
             <div class="lead-sub">
               <span class="lead-sub-icon">
                 {{#if (eq this.entity_type 'hospital')}}
