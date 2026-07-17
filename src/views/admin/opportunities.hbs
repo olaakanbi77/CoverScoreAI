@@ -458,8 +458,8 @@
         <h1>Opportunities</h1>
         <p>Manage your active pipeline.</p>
         <div class="type-toggle">
-          <a href="?type=business" class="{{#if (eq activeType 'business')}}active{{/if}}">Business</a>
-          <a href="?type=personal" class="{{#if (eq activeType 'personal')}}active{{/if}}">Personal</a>
+          <a href="javascript:void(0)" class="type-tab {{#if (eq activeType 'business')}}active{{/if}}" data-type="business" onclick="switchType('business')">Business</a>
+          <a href="javascript:void(0)" class="type-tab {{#if (eq activeType 'personal')}}active{{/if}}" data-type="personal" onclick="switchType('personal')">Personal</a>
         </div>
       </div>
       <div class="header-right">
@@ -633,6 +633,90 @@
 
   </div>
 </div>
+
+<script>
+var CURRENT_TYPE = '{{activeType}}';
+
+function removeAllBetween(fromEl, stopTag) {
+  var el = fromEl.nextElementSibling;
+  var nodes = [];
+  while (el && el.tagName !== stopTag) {
+    var next = el.nextElementSibling;
+    nodes.push(el);
+    el = next;
+  }
+  nodes.forEach(function(n) { n.remove(); });
+}
+
+function switchType(type) {
+  if (type === CURRENT_TYPE) return;
+  document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('.type-tab[data-type="' + type + '"]').classList.add('active');
+  CURRENT_TYPE = type;
+
+  fetch('/api/opportunities/data?type=' + type, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var p = d.pipelineData;
+      document.querySelectorAll('.stat-card .stat-val').forEach(function(el, i) {
+        var stages = [p.stage1, p.stage2, p.stage3, p.stage5];
+        if (i < stages.length) el.textContent = stages[i].length;
+      });
+      document.querySelector('.stat-card .stat-lbl').textContent = 'New ' + d.activeTypeTitle;
+      document.querySelectorAll('.pl-item-val').forEach(function(el, i) {
+        var pstages = [p.stage1, p.stage2, p.stage3, p.stage4, p.stage6];
+        if (i < pstages.length) el.textContent = pstages[i].length;
+      });
+
+      var sections = [
+        { stage: 'stage1', badge: 'green', title: 'new opportunities', btn: 'Contact', btnClass: 'bg-green', link: '/admin/leads/' },
+        { stage: 'stage3', badge: 'blue', title: 'quotes sent', btn: 'Follow Up', btnClass: 'bg-blue', link: '/advisor/follow-up/' },
+        { stage: 'stage4', badge: 'purple', title: 'opportunities closing soon', btn: 'Follow Up', btnClass: 'bg-purple', link: '/advisor/follow-up/' }
+      ];
+
+      sections.forEach(function(s) {
+        var headers = document.querySelectorAll('.list-header');
+        for (var i = 0; i < headers.length; i++) {
+          var badge = headers[i].querySelector('.badge.' + s.badge);
+          if (!badge) continue;
+          badge.textContent = p[s.stage].length;
+          removeAllBetween(headers[i], 'DIV');
+          var container = headers[i].parentNode;
+          if (p[s.stage].length === 0) {
+            var empty = document.createElement('div');
+            empty.style.cssText = 'padding:16px;text-align:center;color:var(--c-gray);font-size:12px;font-weight:600;';
+            empty.textContent = 'No ' + s.title + '.';
+            container.insertBefore(empty, headers[i].nextSibling);
+          } else {
+            p[s.stage].forEach(function(item) {
+              var card = document.createElement('div');
+              card.className = 'list-card';
+              card.style.cursor = 'pointer';
+              card.onclick = function() { window.location.href = s.link + item.id; };
+              var name = item.business_name || item.name || '??';
+              card.innerHTML =
+                '<div class="c-avatar ' + s.badge + '">' + name.substring(0, 2).toUpperCase() + '</div>' +
+                '<div class="c-body"><h3 class="c-title">' + name + '</h3><p class="c-sub">' + (item.industry || '') + '</p><p class="c-meta">' +
+                (s.stage === 'stage1'
+                  ? 'Risk Score: <span class="t-green">' + (item.sales_score || 0) + '</span> &bull; Exposure: <strong>₦' + Number(item.estimated_premium || 0).toLocaleString() + '</strong>'
+                  : s.stage === 'stage3'
+                    ? 'Quote: <strong class="t-green">₦' + Number(item.estimated_premium || 0).toLocaleString() + '</strong> &bull; Sent recently'
+                    : 'Quote: <strong class="t-purple">₦' + Number(item.estimated_premium || 0).toLocaleString() + '</strong> &bull; <span class="t-purple">In Negotiation</span>') +
+                '</p></div><div class="c-right"><div class="c-right-col">' +
+                (s.stage === 'stage1'
+                  ? '<div class="c-time">Recent</div>'
+                  : '') +
+                '<a href="' + s.link + item.id + '" class="btn-action ' + s.btnClass + '" onclick="event.stopPropagation()">' + s.btn + '</a></div><svg class="chevron icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>';
+              container.insertBefore(card, headers[i].nextSibling);
+            });
+          }
+          break;
+        }
+      });
+    })
+    .catch(function() { window.location.href = '?type=' + type; });
+}
+</script>
 
 <!-- Bottom Navigation -->
     <!-- BOTTOM NAV -->

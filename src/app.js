@@ -671,6 +671,29 @@ app.get('/admin/opportunities', authenticatePage, async (req, res) => {
   }
 });
 
+app.get('/api/opportunities/data', authenticatePage, async (req, res) => {
+  try {
+    const activeType = req.query.type === 'personal' ? 'PERSONAL' : 'BUSINESS';
+    let rawLeads = [];
+    if (req.user.role === 'admin') {
+      rawLeads = await all("SELECT * FROM leads WHERE opportunity_type = ? ORDER BY updated_at DESC", [activeType]);
+    } else {
+      rawLeads = await all("SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ? ORDER BY updated_at DESC", [req.user.id, activeType]);
+    }
+    const pipelineData = {
+      stage1: rawLeads.filter(l => l.pipeline_stage === 1),
+      stage2: rawLeads.filter(l => l.pipeline_stage === 2),
+      stage3: rawLeads.filter(l => l.pipeline_stage === 3),
+      stage4: rawLeads.filter(l => l.pipeline_stage === 4),
+      stage5: rawLeads.filter(l => l.pipeline_stage === 5),
+      stage6: rawLeads.filter(l => l.pipeline_stage === 6),
+    };
+    res.json({ pipelineData, activeType: activeType.toLowerCase(), activeTypeTitle: activeType === 'BUSINESS' ? 'Business' : 'Personal' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load pipeline data' });
+  }
+});
+
 app.get('/admin/more', authenticatePage, async (req, res) => {
   res.render('admin/more', { title: 'More', activePage: 'more', layout: 'admin' });
 });
