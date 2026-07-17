@@ -390,9 +390,14 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
   }
 });
 
-async function getPipelineData(userId, activeType, period, filterFrom, filterTo) {
-  let sql = "SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ?";
-  let params = [userId, activeType];
+async function getPipelineData(userId, userRole, activeType, period, filterFrom, filterTo) {
+  let sql = "SELECT * FROM leads WHERE opportunity_type = ?";
+  let params = [activeType];
+
+  if (userRole !== 'admin') {
+    sql += " AND advisor_id = ?";
+    params.push(userId);
+  }
 
   if (period === 'this_month') {
     const now = new Date();
@@ -457,7 +462,7 @@ router.get('/api/pipeline/data', authenticatePage, requireSalesOrAdmin, async (r
     const filterFrom = req.query.from || '';
     const filterTo = req.query.to || '';
 
-    const result = await getPipelineData(req.user.id, activeType, period, filterFrom, filterTo);
+    const result = await getPipelineData(req.user.id, req.user.role, activeType, period, filterFrom, filterTo);
 
     res.json({
       stageCounts: {
@@ -555,7 +560,7 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
     const filterFrom = req.query.from || '';
     const filterTo = req.query.to || '';
 
-    const { pipelineData, activePipelineValueFormatted } = await getPipelineData(req.user.id, activeType, period, filterFrom, filterTo);
+    const { pipelineData, activePipelineValueFormatted } = await getPipelineData(req.user.id, req.user.role, activeType, period, filterFrom, filterTo);
 
     const now = new Date();
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
