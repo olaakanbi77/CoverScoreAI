@@ -205,7 +205,8 @@ router.post('/send', authenticate, requireSalesOrAdminApi, async (req, res) => {
           } catch (e) {}
         }
       }
-      if (prefix) {
+      const personalPrefixes = ['HLT', 'INC', 'FAM', 'ENT', 'YPR', 'RET', 'HOM', 'MOT'];
+      if (prefix && !personalPrefixes.includes(prefix)) {
         const phoneKey = `${prefix}_009`;
         if (proposal.assessment_data) {
           try {
@@ -235,7 +236,8 @@ router.post('/send', authenticate, requireSalesOrAdminApi, async (req, res) => {
       const result = await sendWhatsApp(resolvedPhone, null, { _message: message });
       
       if (!result.success) {
-        return res.status(500).json({ error: 'Failed to send WhatsApp message: ' + result.error });
+        const errMsg = typeof result.error === 'string' ? result.error : JSON.stringify(result.error);
+        return res.status(500).json({ error: 'Failed to send WhatsApp message: ' + errMsg });
       }
       
       // Save sent message to chat_history
