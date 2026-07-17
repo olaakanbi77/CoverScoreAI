@@ -258,9 +258,9 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
       </a>
       <div class="period-dropdown" id="periodDropdown">
-        <a href="?type={{activeType}}&period=today" class="period-opt{{#if (eq period 'today')}} active{{/if}}">Today</a>
-        <a href="?type={{activeType}}&period=this_week" class="period-opt{{#if (eq period 'this_week')}} active{{/if}}">This Week</a>
-        <a href="?type={{activeType}}&period=this_month" class="period-opt{{#if (eq period 'this_month')}} active{{/if}}">This Month</a>
+        <a href="javascript:void(0)" class="period-opt{{#if (eq period 'today')}} active{{/if}}" onclick="selectPeriod('today')">Today</a>
+        <a href="javascript:void(0)" class="period-opt{{#if (eq period 'this_week')}} active{{/if}}" onclick="selectPeriod('this_week')">This Week</a>
+        <a href="javascript:void(0)" class="period-opt{{#if (eq period 'this_month')}} active{{/if}}" onclick="selectPeriod('this_month')">This Month</a>
       </div>
     </div>
     <div class="datepicker-wrap">
@@ -471,6 +471,9 @@
 </div>
 
 <script>
+var CURRENT_PERIOD = '{{period}}';
+var CURRENT_TYPE = '{{activeType}}';
+
 function togglePeriodDD() {
   document.getElementById('periodDropdown').classList.toggle('open');
   document.getElementById('datePickerPopup').classList.remove('open');
@@ -486,12 +489,52 @@ function closeAllFilters() {
   document.getElementById('datePickerPopup').classList.remove('open');
   document.getElementById('dpOverlay').classList.remove('open');
 }
+
+function selectPeriod(period) {
+  var labels = { today: 'Today', this_week: 'This Week', this_month: 'This Month' };
+  document.getElementById('periodLabel').textContent = labels[period] || 'This Month';
+  CURRENT_PERIOD = period;
+  closeAllFilters();
+  fetchPipelineData({ period: period });
+}
+
 function applyDateRange() {
   var from = document.getElementById('dpFrom').value;
   var to = document.getElementById('dpTo').value;
   if (!from || !to) return alert('Please select both dates');
-  var type = '{{activeType}}';
-  window.location.href = '?type=' + type + '&from=' + from + '&to=' + to;
+  closeAllFilters();
+  document.getElementById('dateRangeLabel').textContent = from + ' \u2013 ' + to;
+  fetchPipelineData({ from: from, to: to });
+}
+
+function fetchPipelineData(params) {
+  params.type = CURRENT_TYPE;
+  var qs = Object.keys(params).map(function(k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+  fetch('/advisor/api/pipeline/data?' + qs)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      document.querySelector('.mc-amount').textContent = d.activePipelineValueFormatted;
+      var sdNums = document.querySelectorAll('.sd-num');
+      var stages = [d.stageCounts.stage1, d.stageCounts.stage2, d.stageCounts.stage3, d.stageCounts.stage4, d.stageCounts.stage6];
+      sdNums.forEach(function(el, i) { if (i < stages.length) el.textContent = stages[i]; });
+      var oppList = document.querySelector('.opp-list');
+      if (d.opportunities.length === 0) {
+        oppList.innerHTML = '<div style="padding:16px;text-align:center;color:var(--c-gray);font-size:12px;font-weight:600;">No opportunities for this period.</div>';
+      } else {
+        oppList.innerHTML = d.opportunities.map(function(o) {
+          return '<a href="/advisor/leads" class="opp-item">' +
+            '<div class="opp-avatar green">QT</div>' +
+            '<div class="opp-content">' +
+            '<div class="opp-name-row"><h4 class="opp-name">' + (o.business_name || 'Unknown') + '</h4><div class="opp-tag orange">Quote Sent</div></div>' +
+            '<p class="opp-sub">' + (o.industry || '') + '</p>' +
+            '<p class="opp-date">Updated recently</p></div>' +
+            '<div class="opp-right"><div class="opp-val-row"><span class="opp-val">₦' + Number(o.estimated_premium || 0).toLocaleString() + '</span>' +
+            '<svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>' +
+            '<div class="opp-prob">Prob. <span class="green">' + (o.sales_score || 0) + '%</span></div></div></a>';
+        }).join('');
+      }
+    })
+    .catch(function() { window.location.href = '?type=' + CURRENT_TYPE + '&' + qs; });
 }
 </script>
 

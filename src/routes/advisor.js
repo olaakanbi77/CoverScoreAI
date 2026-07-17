@@ -375,8 +375,102 @@ router.get('/tasks', authenticatePage, requireSalesOrAdmin, async (req, res) => 
         tasksData.today.push(t);
       } else if (due <= weekEnd) {
         tasksData.week.push(t);
-      }
+  }
+});
+
+async function getPipelineData(userId, activeType, period, filterFrom, filterTo) {
+  let sql = "SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ?";
+  let params = [userId, activeType];
+
+  if (period === 'this_month') {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const from = `${year}-${month}-01`;
+    const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
+    const to = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
+    sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
+    params.push(from, to);
+  } else if (period === 'this_week') {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - diffToMonday);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
+    params.push(fmt(monday), fmt(sunday));
+  } else if (period === 'today') {
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    sql += " AND date(created_at) = ?";
+    params.push(today);
+  }
+  if (filterFrom) {
+    sql += " AND date(created_at) >= ?";
+    params.push(filterFrom);
+  }
+  if (filterTo) {
+    sql += " AND date(created_at) <= ?";
+    params.push(filterTo);
+  }
+
+  sql += " ORDER BY updated_at DESC";
+  const leads = await all(sql, params);
+
+  const pipelineData = {
+    stage1: leads.filter(l => l.pipeline_stage === 1),
+    stage2: leads.filter(l => l.pipeline_stage === 2),
+    stage3: leads.filter(l => l.pipeline_stage === 3),
+    stage4: leads.filter(l => l.pipeline_stage === 4),
+    stage5: leads.filter(l => l.pipeline_stage === 5),
+    stage6: leads.filter(l => l.pipeline_stage === 6),
+  };
+
+  const activeLeads = leads.filter(l => [1, 2, 3, 4].includes(l.pipeline_stage));
+  const activePipelineValue = activeLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
+  const activePipelineValueFormatted = activePipelineValue > 1000000
+    ? `₦${(activePipelineValue/1000000).toFixed(1)}M`
+    : `₦${activePipelineValue.toLocaleString()}`;
+
+  return { pipelineData, activePipelineValue, activePipelineValueFormatted, leads };
+}
+
+router.get('/api/pipeline/data', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const activeType = req.query.type === 'personal' ? 'PERSONAL' : 'BUSINESS';
+    const period = req.query.period || '';
+    const filterFrom = req.query.from || '';
+    const filterTo = req.query.to || '';
+
+    const result = await getPipelineData(req.user.id, activeType, period, filterFrom, filterTo);
+
+    res.json({
+      stageCounts: {
+        stage1: result.pipelineData.stage1.length,
+        stage2: result.pipelineData.stage2.length,
+        stage3: result.pipelineData.stage3.length,
+        stage4: result.pipelineData.stage4.length,
+        stage5: result.pipelineData.stage5.length,
+        stage6: result.pipelineData.stage6.length
+      },
+      activePipelineValue: result.activePipelineValue,
+      activePipelineValueFormatted: result.activePipelineValueFormatted,
+      opportunities: result.pipelineData.stage3.map(l => ({
+        id: l.id,
+        business_name: l.business_name || l.name || 'Unknown',
+        industry: l.industry || '',
+        estimated_premium: l.estimated_premium || 0,
+        sales_score: l.sales_score || 0
+      }))
     });
+  } catch (err) {
+    console.error('Error loading pipeline data:', err);
+    res.status(500).json({ error: 'Failed to load pipeline data' });
+  }
+});
 
     res.render('advisor/tasks', {
       layout: 'admin',
@@ -461,61 +555,7 @@ router.get('/pipeline', authenticatePage, requireSalesOrAdmin, async (req, res) 
     const filterFrom = req.query.from || '';
     const filterTo = req.query.to || '';
 
-    let sql = "SELECT * FROM leads WHERE advisor_id = ? AND opportunity_type = ?";
-    let params = [req.user.id, activeType];
-
-    if (period === 'this_month') {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const from = `${year}-${month}-01`;
-      const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
-      const to = `${year}-${month}-${String(lastDay).padStart(2, '0')}`;
-      sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
-      params.push(from, to);
-    } else if (period === 'this_week') {
-      const now = new Date();
-      const dayOfWeek = now.getDay();
-      const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-      const monday = new Date(now);
-      monday.setDate(now.getDate() - diffToMonday);
-      const sunday = new Date(monday);
-      sunday.setDate(monday.getDate() + 6);
-      const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-      sql += " AND date(created_at) >= ? AND date(created_at) <= ?";
-      params.push(fmt(monday), fmt(sunday));
-    } else if (period === 'today') {
-      const now = new Date();
-      const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-      sql += " AND date(created_at) = ?";
-      params.push(today);
-    }
-    if (filterFrom) {
-      sql += " AND date(created_at) >= ?";
-      params.push(filterFrom);
-    }
-    if (filterTo) {
-      sql += " AND date(created_at) <= ?";
-      params.push(filterTo);
-    }
-
-    sql += " ORDER BY updated_at DESC";
-    const leads = await all(sql, params);
-
-    const pipelineData = {
-      stage1: leads.filter(l => l.pipeline_stage === 1),
-      stage2: leads.filter(l => l.pipeline_stage === 2),
-      stage3: leads.filter(l => l.pipeline_stage === 3),
-      stage4: leads.filter(l => l.pipeline_stage === 4),
-      stage5: leads.filter(l => l.pipeline_stage === 5),
-      stage6: leads.filter(l => l.pipeline_stage === 6),
-    };
-
-    const activeLeads = leads.filter(l => [1, 2, 3, 4].includes(l.pipeline_stage));
-    const activePipelineValue = activeLeads.reduce((sum, l) => sum + (l.estimated_premium || 0), 0);
-    const activePipelineValueFormatted = activePipelineValue > 1000000 
-      ? `₦${(activePipelineValue/1000000).toFixed(1)}M` 
-      : `₦${activePipelineValue.toLocaleString()}`;
+    const { pipelineData, activePipelineValueFormatted } = await getPipelineData(req.user.id, activeType, period, filterFrom, filterTo);
 
     const now = new Date();
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
