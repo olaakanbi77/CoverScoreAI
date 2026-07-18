@@ -1207,8 +1207,8 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
       }
     }
     if (!prefix && lead.industry) {
-      const flowMap = { school: 'SCH', hospital: 'HOS', manufacturing: 'MFG', church: 'CHR', sme: 'SME', business: 'BUS' };
-      prefix = flowMap[lead.industry.toLowerCase()] || 'SME';
+      const flowMap = { school: 'SCH', hospital: 'HOS', manufacturing: 'MFG', church: 'CHR', sme: 'SME', business: 'BUS', personal: 'FAM', individual: 'FAM' };
+      prefix = flowMap[lead.industry.toLowerCase()] || null;
     }
 
     const allRatingProducts = await ratingEngine.getProducts('BUSINESS');
@@ -1242,7 +1242,7 @@ router.get('/quote-builder/:leadId', authenticatePage, requireSalesOrAdmin, asyn
       activePage: 'quote-builder',
       lead,
       products: JSON.stringify(productsWithClasses),
-      prefix: prefix || 'SME',
+      prefix: prefix || 'FAM',
       hasRie: !!assessmentWithReport,
       totalMin: 0,
       totalMax: 0

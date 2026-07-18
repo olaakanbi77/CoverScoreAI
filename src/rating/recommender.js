@@ -21,7 +21,9 @@ async function recommendProducts(lead, assessmentData, ratingProducts, prefix) {
     } catch (e) {}
   }
 
-  const rieResult = mapProducts(prefix || 'SME', null, scoredPillars);
+  const personalPrefixes = ['FAM', 'HLT', 'INC', 'ENT', 'YPR', 'RET', 'HOM', 'MOT'];
+  if (!prefix) prefix = 'SME';
+  const rieResult = mapProducts(prefix, null, scoredPillars);
   const ratingMap = {};
   for (const p of ratingProducts) {
     ratingMap[p.name] = p;
