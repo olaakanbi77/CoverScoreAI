@@ -1,64 +1,49 @@
-const { mapProducts } = require('./productMapper');
+const { assessProtectionNeeds } = require('../recommendation/index');
 const { buildQuote } = require('./quoteBuilder');
 const { determineFollowUp } = require('./followUpEngine');
 const learningEngine = require('./learningEngine');
 
-function scoreOpportunity(scoredPillars, leadData) {
-  let score = 0;
-  for (const v of Object.values(scoredPillars)) {
-    if (v < 40) { score += 30; break; }
-  }
-  if (leadData.advisorRequested) score += 30;
-  if (leadData.businessEntity) score += 15;
-  if (leadData.hasRevenue) score += 15;
-  if (leadData.hasEmployees) score += 10;
-  return Math.min(score, 100);
-}
-
-function generateCopilotBrief(prefix, answers, scoredPillars, recommendedProducts) {
-  const lowScorePillars = Object.entries(scoredPillars)
-    .filter(([, v]) => v < 40)
-    .map(([k]) => k);
-  const highPriorityProducts = recommendedProducts.filter((p) => p.priority === 'high');
-  const summary = lowScorePillars.length > 0
-    ? `The client shows elevated risk in ${lowScorePillars.join(', ')}, indicating clear insurance needs.`
-    : 'The client has moderate risk exposure across key areas.';
-  const sectorHint = prefix === 'TRN' ? 'fleet/transport'
-    : prefix === 'HOS' ? 'healthcare'
-    : prefix === 'SCH' ? 'education'
-    : prefix === 'CON' ? 'construction'
-    : prefix === 'MFG' ? 'manufacturing'
-    : prefix === 'CHR' ? 'church/charity'
-    : prefix === 'SME' ? 'business'
-    : 'general';
-  const suggestedOpening = `I noticed your ${sectorHint} operation has some risk areas we should discuss — specifically around ${lowScorePillars.slice(0, 2).join(' and ') || 'general liability'}.`;
-  return {
-    summary,
-    keyRisks: lowScorePillars,
-    recommendedProducts: highPriorityProducts.map((p) => p.product),
-    suggestedOpening,
-    likelyObjections: ['Cost of additional premiums', 'Perceived overlaps with existing coverage', 'Timing of policy implementation']
-  };
-}
+const PREFIX_TO_ASSESSMENT_TYPE = {
+  FAM: 'family', HLT: 'health', INC: 'income', YPR: 'young_professional',
+  ENT: 'entrepreneur', RET: 'retirement', HOM: 'home', MOT: 'motor',
+  SME: 'sme', SCH: 'school', HOS: 'hospital', MFG: 'manufacturing',
+  CHR: 'church', CON: 'construction', TRN: 'transport',
+};
 
 function runRiskIntelligence(prefix, answers, scoredPillars, leadData) {
-  const { recommendedProducts, allProducts } = mapProducts(prefix, answers, scoredPillars);
-  const opportunityScore = scoreOpportunity(scoredPillars, leadData);
-  const copilotBrief = generateCopilotBrief(prefix, answers, scoredPillars, recommendedProducts);
-  const quote = buildQuote(recommendedProducts, leadData);
-  const followUp = determineFollowUp(leadData, { score: leadData.score, advisor_requested: leadData.advisorRequested });
+  const assessmentType = PREFIX_TO_ASSESSMENT_TYPE[prefix] || 'sme';
+
+  // Use the new layered recommendation architecture
+  const result = assessProtectionNeeds(assessmentType, scoredPillars || {}, answers || {}, {
+    score: leadData.score,
+    advisorRequested: leadData.advisorRequested || false,
+    businessEntity: leadData.businessEntity || false,
+    hasRevenue: leadData.hasRevenue || false,
+    hasEmployees: leadData.hasEmployees || false,
+  });
+
+  // Build quote for backwards compatibility
+  const productNames = result.recommendedProducts.map(r => r.product);
+  const quote = buildQuote(productNames, leadData);
 
   return {
-    opportunityScore,
-    recommendedProducts,
-    allProducts,
-    copilotBrief,
+    // New layered output
+    gaps: result.gaps,
+    needs: result.needs,
+    strategies: result.strategies,
+    productRecommendations: result.productRecommendations,
+    categories: result.categories,
+    crossSell: result.crossSell,
+
+    // Backwards-compatible fields
+    opportunityScore: result.opportunityScore,
+    recommendedProducts: result.recommendedProducts,
+    allProducts: result.allProducts,
+    copilotBrief: result.copilotBrief,
     quote,
-    followUp,
-    rieMetadata: {
-      engineVersion: '1.0',
-      scoredAt: new Date().toISOString()
-    }
+    followUp: result.followUp,
+
+    rieMetadata: result.rieMetadata,
   };
 }
 

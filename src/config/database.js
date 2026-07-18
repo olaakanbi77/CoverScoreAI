@@ -887,6 +887,14 @@ const initDatabase = () => {
     }
   });
 
+  // Seed full product catalog from productCatalog.js
+  try {
+    const { seedCatalog } = require('../rating/seedCatalog');
+    seedCatalog().catch(err => console.error('[seedCatalog] Error:', err.message));
+  } catch (err) {
+    console.error('[seedCatalog] Failed to load seedCatalog:', err.message);
+  }
+
   // Auto-heal: if assessments_v2 exists but assessments doesn't, restore it
   db.all("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('assessments','assessments_v2')", (err2, tables) => {
     if (!err2 && tables) {

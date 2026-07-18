@@ -1,11 +1,17 @@
 const { get, all } = require('../config/database');
+const genericModule = require('./modules/generic');
 
-const modules = {
-  FIRE: require('./modules/fire'),
-  PL: require('./modules/publicLiability'),
-  MOTOR: require('./modules/motor'),
-  GPA: require('./modules/groupLife'),
-  FG: require('./modules/fidelityGuarantee')
+const moduleCache = {};
+
+const loadModule = (productCode) => {
+  if (moduleCache[productCode]) return moduleCache[productCode];
+  try {
+    moduleCache[productCode] = require(`./modules/${productCode.toLowerCase()}`);
+    return moduleCache[productCode];
+  } catch (e) {
+    moduleCache[productCode] = genericModule;
+    return genericModule;
+  }
 };
 
 const getRate = async (productCode, className) => {
@@ -34,21 +40,37 @@ const getProducts = async (category) => {
   return await all('SELECT * FROM rating_products ORDER BY name');
 };
 
+const LEGACY_KM = {
+  FIRE: { SCH: 'School', HOS: 'Hospital', MFG: 'Manufacturing', CHR: 'Church', SME: 'Office', BUS: 'Office' },
+  PL: { SCH: 'School', HOS: 'Hospital', MFG: 'Manufacturing', CHR: 'Church', SME: 'Office', BUS: 'Office' },
+  MOTOR: { SCH: 'Commercial', HOS: 'Commercial', SME: 'Commercial', BUS: 'Commercial' },
+  GPA: { SCH: 'Standard', HOS: 'Standard', SME: 'Standard', BUS: 'Standard' },
+  FG: { SCH: 'Standard', HOS: 'Standard', SME: 'Standard', BUS: 'Standard' }
+};
+
+const PERSONAL_CLASS = {
+  FAM: 'Standard', HLT: 'Standard', INC: 'Standard', YPR: 'Standard',
+  RET: 'Standard', HOM: 'Standard', MOT: 'Standard'
+};
+
+const BUSINESS_CLASS = {
+  SME: 'Office', BUS: 'Office', SCH: 'School', HOS: 'Hospital',
+  MFG: 'Manufacturing', CHR: 'Church'
+};
+
 const resolveClassFromAssessment = async (productCode, assessmentData, prefix) => {
-  const classMap = {
-    FIRE: { SCH: 'School', HOS: 'Hospital', MFG: 'Manufacturing', CHR: 'Church', SME: 'Office', BUS: 'Office' },
-    PL: { SCH: 'School', HOS: 'Hospital', MFG: 'Manufacturing', CHR: 'Church', SME: 'Office', BUS: 'Office' },
-    MOTOR: { SCH: 'Commercial', HOS: 'Commercial', SME: 'Commercial', BUS: 'Commercial' },
-    GPA: { SCH: 'Standard', HOS: 'Standard', SME: 'Standard', BUS: 'Standard' },
-    FG: { SCH: 'Standard', HOS: 'Standard', SME: 'Standard', BUS: 'Standard' }
-  };
-  const map = classMap[productCode] || {};
-  return map[prefix] || 'Office';
+  const legacyMap = LEGACY_KM[productCode];
+  if (legacyMap) return legacyMap[prefix] || 'Office';
+
+  const personalPrefixes = ['FAM', 'HLT', 'INC', 'YPR', 'RET', 'HOM', 'MOT'];
+  if (!prefix || personalPrefixes.includes(prefix)) {
+    return PERSONAL_CLASS[prefix] || 'Standard';
+  }
+  return BUSINESS_CLASS[prefix] || 'Standard';
 };
 
 const calculate = async (productCode, className, inputs, assessmentData, prefix) => {
-  const module = modules[productCode];
-  if (!module) throw new Error(`No rating module for product: ${productCode}`);
+  const module = loadModule(productCode);
 
   const resolvedClass = className || await resolveClassFromAssessment(productCode, assessmentData, prefix);
   const rateInfo = await getRate(productCode, resolvedClass);

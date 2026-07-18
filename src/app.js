@@ -108,6 +108,10 @@ app.engine('hbs', exphbs.engine({
       if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
       if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
       return d.toLocaleDateString();
+    },
+    slice: (arr, start, end) => {
+      if (!arr || !Array.isArray(arr)) return [];
+      return arr.slice(start, end);
     }
   }
 }));

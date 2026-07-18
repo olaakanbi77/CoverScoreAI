@@ -247,7 +247,131 @@
       </div>
     </div>
 
-    <!-- Recommended Products -->
+    <!-- Protection Gaps -->
+    {{#if rieData.gaps}}
+    <div class="sect-header-row">
+      <h3>PROTECTION GAPS</h3>
+    </div>
+    <div class="insights-list">
+      {{#each (slice rieData.gaps 0 4)}}
+      <div class="insight-item" style="border-left:4px solid {{#if (eq this.severity 'critical')}}#ef4444{{else if (eq this.severity 'high')}}#f59e0b{{else}}#3b82f6{{/if}};">
+        <div class="insight-icon {{#if (eq this.severity 'critical')}}o{{else if (eq this.severity 'high')}}o{{else}}p{{/if}}">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">{{this.label}} <span class="tag-new" style="background:{{#if (eq this.severity 'critical')}}#fef2f2;color:#ef4444{{else if (eq this.severity 'high')}}#fff7ed;color:#f59e0b{{else}}#eff6ff;color:#3b82f6{{/if}}">{{this.severityLabel}}</span></h4>
+          <p class="insight-desc">{{this.description}}</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val {{#if (eq this.severity 'critical')}}o{{else if (eq this.severity 'high')}}o{{else}}p{{/if}}">{{this.score}}%</span>
+          <span class="ir-lbl">Score</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Protection Needs (Strategies) -->
+    {{#if rieData.needs}}
+    <div class="sect-header-row">
+      <h3>PROTECTION STRATEGIES</h3>
+    </div>
+    <div class="insights-list">
+      {{#each (slice rieData.needs 0 3)}}
+      <div class="insight-item">
+        <div class="insight-icon p">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">{{this.label}}</h4>
+          <p class="insight-desc">{{this.category}} priority &middot; {{this.severity}} severity</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val p">{{this.priority}}</span>
+          <span class="ir-lbl">Priority</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Categorized Product Recommendations -->
+    {{#if rieData.productRecommendations}}
+    <!-- Immediate Priorities -->
+    {{#if rieData.categories.immediate}}
+    <div class="sect-header-row">
+      <h3>IMMEDIATE PRIORITIES</h3>
+    </div>
+    <div class="insights-list">
+      {{#each rieData.categories.immediate}}
+      <div class="insight-item">
+        <div class="insight-icon o">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">{{this.productName}} <span class="tag-new">{{this.confidence}}%</span></h4>
+          <p class="insight-desc">{{this.explanation}}</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val o">{{this.confidence}}%</span>
+          <span class="ir-lbl">Confidence</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Strongly Recommended -->
+    {{#if rieData.categories.stronglyRecommended}}
+    <div class="sect-header-row">
+      <h3>STRONGLY RECOMMENDED</h3>
+    </div>
+    <div class="insights-list">
+      {{#each rieData.categories.stronglyRecommended}}
+      <div class="insight-item">
+        <div class="insight-icon p">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">{{this.productName}} <span class="tag-new" style="background:#eff6ff;color:#3b82f6;">{{this.confidence}}%</span></h4>
+          <p class="insight-desc">{{this.explanation}}</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val p">{{this.confidence}}%</span>
+          <span class="ir-lbl">Confidence</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Consider Next -->
+    {{#if rieData.categories.considerNext}}
+    <div class="sect-header-row">
+      <h3>CONSIDER NEXT</h3>
+    </div>
+    <div class="insights-list">
+      {{#each rieData.categories.considerNext}}
+      <div class="insight-item" style="opacity:0.7;">
+        <div class="insight-icon g">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="insight-content">
+          <h4 class="insight-title">{{this.productName}} <span class="tag-new" style="background:#f1f5f9;color:#64748b;">{{this.confidence}}%</span></h4>
+          <p class="insight-desc">{{this.explanation}}</p>
+        </div>
+        <div class="insight-right">
+          <span class="ir-val g">{{this.confidence}}%</span>
+          <span class="ir-lbl">Confidence</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    {{/if}}
+
+    <!-- Fallback: legacy recommendedProducts (backwards compat) -->
+    {{#unless rieData.productRecommendations}}
     {{#if rieData.recommendedProducts}}
     <div class="sect-header-row">
       <h3>RECOMMENDED PRODUCTS</h3>
@@ -266,6 +390,25 @@
           <span class="ir-val {{#if (eq this.priority 'high')}}o{{else}}p{{/if}}">{{this.priority}}</span>
           <span class="ir-lbl">Priority</span>
         </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+    {{/unless}}
+
+    <!-- Cross-Sell Suggestions -->
+    {{#if rieData.crossSell}}
+    <div class="sect-header-row">
+      <h3>NEXT ASSESSMENTS</h3>
+    </div>
+    <div class="help-scroller">
+      {{#each rieData.crossSell}}
+      <div class="help-card hc-{{#if (eq @index 0)}}1{{else if (eq @index 1)}}2{{else}}3{{/if}}" onclick="window.location.href='/admin/leads'">
+        <div class="help-card-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="help-card-text">{{this.label}}</div>
+        <span style="font-size:9px;color:var(--c-gray);">{{this.description}}</span>
       </div>
       {{/each}}
     </div>
