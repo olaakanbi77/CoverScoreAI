@@ -267,91 +267,66 @@
       </div>
     </div>
 
-    <!-- Curriculum Map -->
+    <!-- Featured Courses -->
     <div>
       <div class="section-header">
-        <h3 class="sec-title">Curriculum Map</h3>
+        <h3 class="sec-title">Featured Courses</h3>
         <a href="#" class="sec-link">View All</a>
       </div>
       
       <div class="fc-list">
-        {{#each levels}}
-          <div class="level-header" style="padding: 12px 0 8px; border-bottom: 2px solid #f1f5f9; margin-bottom: 12px; margin-top: {{#if @first}}0{{else}}16px{{/if}};">
-            <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: var(--c-navy);">{{this.name}}</h4>
-            <p style="margin: 2px 0 0; font-size: 10px; color: var(--c-gray); font-weight: 600;">{{this.description}}</p>
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #10b981, #047857);">
+            <div class="fc-img-text">Introduction to Insurance</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
           </div>
-          
-          {{#if this.isSplitTrack}}
-            <!-- Personal Track -->
-            <div class="track-header" style="margin-bottom: 12px; display: inline-block; background: var(--c-purple-light); color: var(--c-purple); padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800;">Track A: Personal Risk Advisory™</div>
-            {{#each this.personalModules}}
-            <div class="fc-item">
-              <div class="fc-img-wrap" style="background: linear-gradient(135deg, #7c3aed, #4c1d95);">
-                <div class="fc-img-text">{{this.title}}</div>
-                <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-              </div>
-              <div class="fc-info">
-                <h4 class="fc-title">{{this.title}}</h4>
-                <p class="fc-desc">{{this.description}}</p>
-              </div>
-              <div class="fc-action">
-                {{#if (eq this.status 'completed')}}
-                <a href="#" class="fc-btn completed"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Completed</a>
-                {{else}}
-                <a href="#" class="fc-btn start">Start</a>
-                {{/if}}
-              </div>
-            </div>
-            {{/each}}
-
-            <!-- Business Track -->
-            <div class="track-header" style="margin: 16px 0 12px; display: inline-block; background: var(--c-blue-light); color: var(--c-blue); padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800;">Track B: Business Risk Advisory™</div>
-            {{#each this.businessModules}}
-            <div class="fc-item">
-              <div class="fc-img-wrap" style="background: linear-gradient(135deg, #2563eb, #1e3a8a);">
-                <div class="fc-img-text">{{this.title}}</div>
-                <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-              </div>
-              <div class="fc-info">
-                <h4 class="fc-title">{{this.title}}</h4>
-                <p class="fc-desc">{{this.description}}</p>
-              </div>
-              <div class="fc-action">
-                {{#if (eq this.status 'completed')}}
-                <a href="#" class="fc-btn completed"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Completed</a>
-                {{else}}
-                <a href="#" class="fc-btn start">Start</a>
-                {{/if}}
-              </div>
-            </div>
-            {{/each}}
-          
-          {{else}}
-            <!-- Core Modules -->
-            {{#each this.modules}}
-            <div class="fc-item">
-              <div class="fc-img-wrap" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-                <div class="fc-img-text">{{this.title}}</div>
-                <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-              </div>
-              <div class="fc-info">
-                <h4 class="fc-title">{{this.title}}</h4>
-                <p class="fc-desc">{{this.description}}</p>
-              </div>
-              <div class="fc-action">
-                {{#if (eq this.status 'completed')}}
-                <a href="#" class="fc-btn completed">
-                  <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                  Completed
-                </a>
-                {{else}}
-                <a href="#" class="fc-btn start">Start</a>
-                {{/if}}
-              </div>
-            </div>
-            {{/each}}
-          {{/if}}
-        {{/each}}
+          <div class="fc-info">
+            <h4 class="fc-title">Introduction to Insurance</h4>
+            <p class="fc-desc">Basics of insurance — learn the core principles that power risk protection.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+          </div>
+        </div>
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #7c3aed, #4c1d95);">
+            <div class="fc-img-text">Family Protection Risk</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">Family Protection Risk</h4>
+            <p class="fc-desc">Identify risks facing families and recommend appropriate coverage.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+          </div>
+        </div>
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #2563eb, #1e3a8a);">
+            <div class="fc-img-text">Small Business Risk</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">Small Business Risk</h4>
+            <p class="fc-desc">Assess and mitigate risks for SMEs and entrepreneurs effectively.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+          </div>
+        </div>
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #f97316, #c2410c);">
+            <div class="fc-img-text">School Risk Advisory</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">School Risk Advisory</h4>
+            <p class="fc-desc">Comprehensive risk assessment for educational institutions.</p>
+          </div>
+          <div class="fc-action">
+            <a href="#" class="fc-btn start">Start</a>
+          </div>
+        </div>
       </div>
     </div>
 
