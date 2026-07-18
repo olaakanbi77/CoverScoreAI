@@ -482,7 +482,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     
     // Recompute to get scoring details for executive summary
     const scoreResult = await calculateScore(answers);
-    const { min_loss, max_loss, recommendations, risk_categories, improvement_potential } = scoreResult;
+    const { min_loss, max_loss, recommendations, risk_categories, improvement_potential, identified_gaps } = scoreResult;
 
     // Build executive summary data
     const riskLevel = getRiskLevel(assessment.score);
