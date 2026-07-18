@@ -408,6 +408,89 @@ const initDatabase = () => {
       FOREIGN KEY (lead_id) REFERENCES leads(id)
     );
 
+    CREATE TABLE IF NOT EXISTS nurture_campaigns (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      trigger_event TEXT NOT NULL DEFAULT 'not_now',
+      description TEXT,
+      status TEXT DEFAULT 'active',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS nurture_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      campaign_id INTEGER NOT NULL,
+      step_order INTEGER NOT NULL,
+      delay_days INTEGER NOT NULL DEFAULT 1,
+      channel TEXT NOT NULL DEFAULT 'email',
+      subject TEXT,
+      body TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (campaign_id) REFERENCES nurture_campaigns(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS nurture_queue (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      campaign_id INTEGER NOT NULL,
+      message_id INTEGER NOT NULL,
+      step_order INTEGER NOT NULL,
+      channel TEXT NOT NULL DEFAULT 'email',
+      subject TEXT,
+      body TEXT NOT NULL,
+      scheduled_at DATETIME NOT NULL,
+      sent_at DATETIME,
+      status TEXT DEFAULT 'pending',
+      error TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (lead_id) REFERENCES leads(id),
+      FOREIGN KEY (campaign_id) REFERENCES nurture_campaigns(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS claims (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      claim_number TEXT UNIQUE NOT NULL,
+      lead_id INTEGER NOT NULL,
+      policy_id INTEGER,
+      claim_type TEXT NOT NULL,
+      description TEXT,
+      amount_claimed INTEGER DEFAULT 0,
+      amount_approved INTEGER,
+      status TEXT DEFAULT 'filed',
+      documents TEXT DEFAULT '[]',
+      filed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME,
+      settled_at DATETIME,
+      notes TEXT,
+      FOREIGN KEY (lead_id) REFERENCES leads(id),
+      FOREIGN KEY (policy_id) REFERENCES policies(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS risk_surveys (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL,
+      session_id TEXT,
+      surveyor_id INTEGER,
+      type TEXT NOT NULL DEFAULT 'site_inspection',
+      status TEXT DEFAULT 'pending',
+      answers JSON DEFAULT '{}',
+      report TEXT,
+      scheduled_at DATETIME,
+      completed_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME,
+      FOREIGN KEY (lead_id) REFERENCES leads(id),
+      FOREIGN KEY (surveyor_id) REFERENCES users(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS risk_survey_templates (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT 'general',
+      questions JSON NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS landing_page_events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       session_key TEXT,
@@ -546,6 +629,23 @@ const initDatabase = () => {
       (4, 1, 'Introduction to CoverScore™', 'Overview of the CoverScore platform', 4),
       (5, 1, 'Customer Communication Basics', 'How to communicate with clients', 5);
 
+    INSERT OR IGNORE INTO nurture_campaigns (id, name, trigger_event, description) VALUES
+      (1, 'Not Now Follow-Up', 'not_now', 'Drip campaign for leads who declined advisor after assessment'),
+      (2, 'Birthday Campaign', 'birthday', 'Automated birthday greetings with protection tips'),
+      (3, 'General Nurture', 'general', 'General lead nurturing with educational content');
+
+    INSERT OR IGNORE INTO nurture_messages (id, campaign_id, step_order, delay_days, channel, subject, body) VALUES
+      (1, 1, 1, 3, 'email', 'Your CoverScore Risk Report Summary', 'Hi {{name}},\n\nThank you for completing your CoverScore assessment. Your personalized risk report is ready whenever you need it.\n\nHere is a quick summary:\n• Your CoverScore: {{score}}/100\n• Risk Level: {{riskLevel}}\n\nWould you like to schedule a complimentary 15-minute review with a licensed advisor? No obligation.\n\nReply to this email or click here to book: {{bookingLink}}\n\nStay protected,\nThe CoverScore Team'),
+      (2, 1, 2, 7, 'email', 'Understanding Your Protection Gaps', 'Hi {{name}},\n\nDid you know that addressing just your top protection gap could improve your CoverScore by {{potentialIncrease}} points?\n\nYour assessment identified {{gapCount}} key areas where you may be under-protected. Our advisors can help you understand these gaps and find practical solutions.\n\nBook a free review: {{bookingLink}}\n\nBest regards,\nCoverScore AI'),
+      (3, 1, 3, 14, 'email', 'Top Risks Facing Your Business/Family', 'Hi {{name}},\n\nBased on your assessment, here are the top risks to keep on your radar:\n\n{{topRisks}}\n\nEach of these can be managed with the right protection strategy. Our advisors are just a click away.\n\nSchedule a chat: {{bookingLink}}\n\n— The CoverScore Team'),
+      (4, 1, 4, 30, 'email', 'Your CoverScore Has Not Changed — But Your Risk May Have', 'Hi {{name}},\n\nIt has been one month since your assessment. While your CoverScore remains the same, your risk exposure may have changed.\n\nLife changes quickly — a new job, a growing family, or changes in your business. We recommend reassessing every quarter.\n\nRetake your assessment: {{retakeLink}}\n\nOr speak with an advisor: {{bookingLink}}\n\nStay ahead of risk,\nCoverScore AI');
+
+    INSERT OR IGNORE INTO risk_survey_templates (id, name, category, questions) VALUES
+      (1, 'Site Safety Inspection', 'general', '["Are fire extinguishers present and serviced within the last 12 months?", "Are emergency exits clearly marked and unobstructed?", "Is there adequate ventilation in work areas?", "Are electrical panels accessible and clearly labeled?", "Are first aid kits available and stocked?", "Are walkways and floors free of trip hazards?"]'),
+      (2, 'Property & Equipment', 'general', '["Is the building structure in good condition?", "Are roofs, gutters and drainage in good repair?", "Is the electrical system up to code?", "Is HVAC equipment serviced regularly?", "Are security systems (CCTV, alarms) functional?", "Is there evidence of water damage or leaks?"]'),
+      (3, 'Fire & Emergency Preparedness', 'general', '["Are smoke detectors installed and tested monthly?", "Is there a documented fire evacuation plan?", "Are fire drills conducted at least annually?", "Are flammable materials stored safely?", "Is there a sprinkler system installed?", "Are fire extinguishers located within 75ft of all areas?"]'),
+      (4, 'General Business Health Check', 'general', '["Are business insurance documents current and accessible?", "Are employee records and contracts properly filed?", "Is there a business continuity plan?", "Are critical business records backed up?", "Is there an incident reporting procedure?"]');
+
     INSERT OR IGNORE INTO assessment_templates (id, title, track, description) VALUES 
       ('family_protection', 'Family Protection Score™', 'Personal', 'Family protection readiness'),
       ('sme_risk', 'SME Risk Score™', 'Business', 'Overall small-business risk posture'),
@@ -612,6 +712,9 @@ const initDatabase = () => {
   ensureSqliteColumn('leads', 'advisor_id', 'INTEGER REFERENCES users(id)');
   ensureSqliteColumn('leads', 'lead_score', 'INTEGER DEFAULT 0');
   ensureSqliteColumn('leads', 'lead_priority', 'TEXT DEFAULT \'Cold\'');
+  ensureSqliteColumn('leads', 'nurture_campaign_id', 'INTEGER');
+  ensureSqliteColumn('leads', 'nurture_stage', 'INTEGER DEFAULT 0');
+  ensureSqliteColumn('leads', 'nurture_status', 'TEXT DEFAULT \'idle\'');
 
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)");
@@ -629,6 +732,12 @@ const initDatabase = () => {
   safeIndex("CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_landing_events_campaign ON landing_page_events(utm_campaign, event_name, created_at)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_landing_events_session ON landing_page_events(session_key, created_at)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_nurture_queue_status ON nurture_queue(status, scheduled_at)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_nurture_queue_lead ON nurture_queue(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_claims_lead ON claims(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_claims_status ON claims(status)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_risk_surveys_lead ON risk_surveys(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_risk_surveys_status ON risk_surveys(status)");
 
   // Academy Column Migration
   db.all("PRAGMA table_info(academy_modules)", (err, columns) => {

@@ -332,4 +332,46 @@ router.get('/knowledge/path/:fromType/:fromId/:toType', authenticate, requireAdm
   } catch (error) { next(error); }
 });
 
+// Audit Logs
+router.get('/audit-logs', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = (page - 1) * limit;
+    const { event_type, entity_type, actor_type } = req.query;
+
+    let sql = 'SELECT * FROM audit_logs WHERE 1=1';
+    const params = [];
+    if (event_type) { sql += ' AND event_type = ?'; params.push(event_type); }
+    if (entity_type) { sql += ' AND entity_type = ?'; params.push(entity_type); }
+    if (actor_type) { sql += ' AND actor_type = ?'; params.push(actor_type); }
+    sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const logs = await all(sql, params);
+    const countResult = await get('SELECT COUNT(*) as count FROM audit_logs');
+    const eventTypes = await all('SELECT DISTINCT event_type FROM audit_logs ORDER BY event_type');
+    const entityTypes = await all('SELECT DISTINCT entity_type FROM audit_logs ORDER BY entity_type');
+
+    res.json({
+      logs: logs.map(l => ({
+        ...l,
+        metadata: l.metadata ? (typeof l.metadata === 'string' ? JSON.parse(l.metadata) : l.metadata) : null
+      })),
+      eventTypes: eventTypes.map(e => e.event_type),
+      entityTypes: entityTypes.map(e => e.entity_type),
+      pagination: { page, limit, total: countResult.count, totalPages: Math.ceil(countResult.count / limit) }
+    });
+  } catch (error) { next(error); }
+});
+
+router.get('/audit-logs/stats', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const total = await get('SELECT COUNT(*) as count FROM audit_logs');
+    const byEvent = await all('SELECT event_type, COUNT(*) as count FROM audit_logs GROUP BY event_type ORDER BY count DESC');
+    const byDate = await all("SELECT DATE(created_at) as date, COUNT(*) as count FROM audit_logs GROUP BY DATE(created_at) ORDER BY date DESC LIMIT 30");
+    res.json({ total: total.count, byEvent, byDate });
+  } catch (error) { next(error); }
+});
+
 module.exports = router;

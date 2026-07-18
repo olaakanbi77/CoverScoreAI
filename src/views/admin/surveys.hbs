@@ -1,0 +1,180 @@
+<style>
+  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px 16px; border-radius: var(--radius-md); font-size: 14px; outline: none; min-height: 40px; }
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .data-table th, .data-table td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+  .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
+  .data-table td { font-size: 14px; color: var(--text-primary); }
+  .data-table tr:hover { background: rgba(255,255,255,0.03); }
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display:inline-block; }
+  .badge-pending { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .badge-completed { background: rgba(16,185,129,0.15); color: #34d399; }
+  .badge-cancelled { background: rgba(239,68,68,0.15); color: #f87171; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal-container { background:var(--bg-surface); border:1px solid var(--glass-border); border-radius:var(--radius-xl); width:100%; max-width:500px; max-height:90vh; overflow-y:auto; }
+  .modal-header { padding:20px 24px; border-bottom:1px solid var(--glass-border); font-size:18px; font-weight:600; color:var(--text-primary); display:flex; justify-content:space-between; }
+  .modal-body { padding:24px; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block; font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--glass-border); color:white; padding:10px 14px; border-radius:var(--radius-md); font-size:14px; }
+  .btn-sm { padding:6px 12px; font-size:12px; border-radius:6px; display:inline-block; min-height:32px; }
+  .survey-question { padding:12px 16px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:var(--radius-md); margin-bottom:8px; }
+  .survey-question label { display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .survey-question input[type="checkbox"], .survey-question input[type="radio"] { width:auto; }
+  @media (max-width:768px) { .page-container { padding:16px; } }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Risk Surveys</h1>
+    <button class="btn btn-primary" onclick="openModal('scheduleSurveyModal')">+ Schedule Survey</button>
+  </div>
+
+  <table class="data-table">
+    <thead><tr>
+      <th>Client</th><th>Type</th><th>Status</th><th>Surveyor</th><th>Scheduled</th><th>Completed</th><th>Actions</th>
+    </tr></thead>
+    <tbody id="surveysTable"><tr><td colspan="7" style="text-align:center;padding:48px;color:var(--text-muted);">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- Schedule Survey Modal -->
+<div class="modal-overlay" id="scheduleSurveyModal">
+  <div class="modal-container">
+    <div class="modal-header"><span>Schedule Risk Survey</span><button class="btn-ghost" onclick="closeModal('scheduleSurveyModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Lead ID</label><input id="surveyLeadId" type="number" required></div>
+      <div class="form-group"><label>Survey Type</label>
+        <select id="surveyType">
+          <option value="site_inspection">Site Inspection</option>
+          <option value="property_assessment">Property Assessment</option>
+          <option value="safety_audit">Safety Audit</option>
+          <option value="compliance_check">Compliance Check</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Template (optional)</label>
+        <select id="surveyTemplate"></select>
+      </div>
+      <div class="form-group"><label>Scheduled Date</label><input id="surveyDate" type="datetime-local"></div>
+      <button class="btn btn-primary" onclick="scheduleSurvey()">Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Complete Survey Modal -->
+<div class="modal-overlay" id="completeSurveyModal">
+  <div class="modal-container" style="max-width:700px;">
+    <div class="modal-header"><span>Complete Survey</span><button class="btn-ghost" onclick="closeModal('completeSurveyModal')">✕</button></div>
+    <div class="modal-body" id="completeSurveyBody">
+      <div id="surveyQuestions"></div>
+      <div class="form-group" style="margin-top:16px;"><label>Survey Report / Notes</label><textarea id="surveyReport" rows="4"></textarea></div>
+      <button class="btn btn-primary" onclick="completeSurvey()">Submit Completed Survey</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSurveyId = null;
+let surveyQuestions = [];
+
+async function loadSurveys() {
+  try {
+    const res = await fetch('/api/surveys', { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } });
+    const surveys = await res.json();
+    const tbody = document.getElementById('surveysTable');
+    if (!surveys.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--text-muted);">No surveys found</td></tr>';
+      return;
+    }
+    tbody.innerHTML = surveys.map(s => {
+      const badgeClass = s.status === 'pending' || s.status === 'in_progress' ? 'badge-pending' : s.status === 'completed' ? 'badge-completed' : 'badge-cancelled';
+      return `<tr>
+        <td><strong>${s.client_name || s.business_name || 'N/A'}</strong></td>
+        <td>${s.type.replace(/_/g, ' ')}</td>
+        <td><span class="badge ${badgeClass}">${s.status}</span></td>
+        <td>${s.surveyor_name || 'Unassigned'}</td>
+        <td>${s.scheduled_at ? new Date(s.scheduled_at).toLocaleDateString() : 'N/A'}</td>
+        <td>${s.completed_at ? new Date(s.completed_at).toLocaleDateString() : '-'}</td>
+        <td>${s.status !== 'completed' ? `<button class="btn btn-outline btn-sm" onclick="openCompleteSurvey(${s.id})">Complete</button>` : '-'}</td>
+      </tr>`;
+    }).join('');
+  } catch (err) { console.error(err); }
+}
+
+async function loadTemplates() {
+  try {
+    const res = await fetch('/api/surveys/templates', { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } });
+    const templates = await res.json();
+    const sel = document.getElementById('surveyTemplate');
+    sel.innerHTML = '<option value="">No template</option>' + templates.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    surveyQuestions = templates;
+  } catch (err) { console.error(err); }
+}
+
+async function scheduleSurvey() {
+  const payload = {
+    lead_id: parseInt(document.getElementById('surveyLeadId').value),
+    type: document.getElementById('surveyType').value,
+    template_id: parseInt(document.getElementById('surveyTemplate').value) || undefined,
+    scheduled_at: document.getElementById('surveyDate').value || undefined
+  };
+  try {
+    const res = await fetch('/api/surveys', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Failed to schedule');
+    alert('Survey scheduled!');
+    closeModal('scheduleSurveyModal');
+    loadSurveys();
+  } catch (err) { alert(err.message); }
+}
+
+async function openCompleteSurvey(surveyId) {
+  currentSurveyId = surveyId;
+  try {
+    const res = await fetch(`/api/surveys/${surveyId}`, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } });
+    const survey = await res.json();
+    const answers = survey.answers || {};
+    const questions = answers.questions || [];
+    const responses = answers.responses || {};
+    let html = '';
+    if (questions.length) {
+      html += '<h4 style="margin-bottom:16px;color:var(--text-primary);">Survey Checklist</h4>';
+      questions.forEach((q, i) => {
+        const checked = responses[q] ? 'checked' : '';
+        html += `<div class="survey-question"><label><input type="checkbox" data-question="${q}" ${checked}> <span>${q}</span></label></div>`;
+      });
+    }
+    document.getElementById('surveyQuestions').innerHTML = html;
+    document.getElementById('surveyReport').value = survey.report || '';
+    openModal('completeSurveyModal');
+  } catch (err) { alert(err.message); }
+}
+
+async function completeSurvey() {
+  const checkboxes = document.querySelectorAll('#surveyQuestions input[type="checkbox"]');
+  const responses = {};
+  checkboxes.forEach(cb => { responses[cb.dataset.question] = cb.checked; });
+  const report = document.getElementById('surveyReport').value;
+  try {
+    const res = await fetch(`/api/surveys/${currentSurveyId}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      body: JSON.stringify({ answers: { responses, questions: Object.keys(responses) }, report, status: 'completed' })
+    });
+    if (!res.ok) throw new Error('Failed to complete survey');
+    alert('Survey completed!');
+    closeModal('completeSurveyModal');
+    loadSurveys();
+  } catch (err) { alert(err.message); }
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+loadSurveys();
+loadTemplates();
+</script>

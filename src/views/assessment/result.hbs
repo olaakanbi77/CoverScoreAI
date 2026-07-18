@@ -849,6 +849,19 @@
         <div class="section-body" id="recommendationsContent"></div>
       </div>
 
+      <!-- Cross-Sell Recommendations -->
+      <div class="section-card fade-in stagger-4" id="crossSellCard" style="display:none;">
+        <div class="section-header">
+          <div class="section-icon warning">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <span class="section-title">You Might Also Need</span>
+        </div>
+        <div class="section-body" id="crossSellContent"></div>
+      </div>
+
       <!-- Compliance Note -->
       <div class="compliance-note fade-in stagger-4">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1183,6 +1196,27 @@
           recsHtml = '<p style="color: var(--text-muted); font-size: 14px;">No specific recommendations available.</p>';
         }
         document.getElementById('recommendationsContent').innerHTML = recsHtml;
+
+        // Cross-Sell Recommendations
+        const crossSell = data.crossSell;
+        if (crossSell && crossSell.length) {
+          const crossSellCard = document.getElementById('crossSellCard');
+          const crossSellContent = document.getElementById('crossSellContent');
+          let xsHtml = '<div class="rec-grid">';
+          crossSell.forEach(xs => {
+            xsHtml += `
+              <a href="/assessment/start" class="rec-tag" style="text-decoration:none; cursor:pointer;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                ${xs.label}
+                <span style="font-size:11px; opacity:0.7; margin-left:4px;">${xs.description}</span>
+              </a>`;
+          });
+          xsHtml += '</div>';
+          crossSellContent.innerHTML = xsHtml;
+          crossSellCard.style.display = 'block';
+        }
 
         // Home button text
         const homeBtn = document.getElementById('homeBtn');

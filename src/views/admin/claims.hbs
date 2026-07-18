@@ -1,0 +1,173 @@
+<style>
+  .page-container { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px 16px; border-radius: var(--radius-md); font-size: 14px; outline: none; min-height: 40px; }
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .data-table th, .data-table td { padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+  .data-table th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
+  .data-table td { font-size: 14px; color: var(--text-primary); }
+  .data-table tr:hover { background: rgba(255,255,255,0.03); }
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+  .badge-filed { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .badge-review { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .badge-approved { background: rgba(16,185,129,0.15); color: #34d399; }
+  .badge-settled { background: rgba(16,185,129,0.15); color: #34d399; }
+  .badge-declined { background: rgba(239,68,68,0.15); color: #f87171; }
+  .badge-document { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .status-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal-container { background:var(--bg-surface); border:1px solid var(--glass-border); border-radius:var(--radius-xl); width:100%; max-width:500px; max-height:90vh; overflow-y:auto; }
+  .modal-header { padding:20px 24px; border-bottom:1px solid var(--glass-border); font-size:18px; font-weight:600; color:var(--text-primary); display:flex; justify-content:space-between; }
+  .modal-body { padding:24px; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block; font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--glass-border); color:white; padding:10px 14px; border-radius:var(--radius-md); font-size:14px; }
+  .btn-sm { padding:6px 12px; font-size:12px; border-radius:6px; display:inline-block; min-height:32px; }
+  @media (max-width:768px) { .page-container { padding:16px; } }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Claims Management</h1>
+    <button class="btn btn-primary" onclick="openModal('fileClaimModal')">+ File New Claim</button>
+  </div>
+
+  <div class="filters">
+    <select class="filter-select" id="statusFilter" onchange="loadClaims()">
+      <option value="">All Statuses</option>
+      <option value="filed">Filed</option>
+      <option value="under_review">Under Review</option>
+      <option value="document_requested">Document Requested</option>
+      <option value="approved">Approved</option>
+      <option value="settled">Settled</option>
+      <option value="declined">Declined</option>
+    </select>
+  </div>
+
+  <table class="data-table">
+    <thead><tr>
+      <th>Claim #</th><th>Client</th><th>Type</th><th>Amount</th><th>Status</th><th>Filed</th><th>Actions</th>
+    </tr></thead>
+    <tbody id="claimsTable"><tr><td colspan="7" style="text-align:center;padding:48px;color:var(--text-muted);">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- File Claim Modal -->
+<div class="modal-overlay" id="fileClaimModal">
+  <div class="modal-container">
+    <div class="modal-header"><span>File New Claim</span><button class="btn-ghost" onclick="closeModal('fileClaimModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Lead ID</label><input id="claimLeadId" type="number" required></div>
+      <div class="form-group"><label>Policy ID (optional)</label><input id="claimPolicyId" type="number"></div>
+      <div class="form-group"><label>Claim Type</label>
+        <select id="claimType"><option value="motor">Motor</option><option value="fire">Fire</option><option value="health">Health</option><option value="life">Life</option><option value="liability">Liability</option><option value="property">Property</option><option value="other">Other</option></select>
+      </div>
+      <div class="form-group"><label>Description</label><textarea id="claimDescription" rows="3"></textarea></div>
+      <div class="form-group"><label>Amount Claimed (₦)</label><input id="claimAmount" type="number"></div>
+      <button class="btn btn-primary" onclick="fileClaim()">Submit Claim</button>
+    </div>
+  </div>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal-overlay" id="statusModal">
+  <div class="modal-container">
+    <div class="modal-header"><span>Update Claim Status</span><button class="btn-ghost" onclick="closeModal('statusModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="statusClaimId">
+      <div class="form-group"><label>New Status</label>
+        <select id="newClaimStatus">
+          <option value="under_review">Under Review</option>
+          <option value="document_requested">Document Requested</option>
+          <option value="approved">Approved</option>
+          <option value="settled">Settled</option>
+          <option value="declined">Declined</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Amount Approved (₦)</label><input id="claimApprovedAmount" type="number"></div>
+      <div class="form-group"><label>Notes</label><textarea id="claimNotes" rows="3"></textarea></div>
+      <button class="btn btn-primary" onclick="updateClaimStatus()">Update</button>
+    </div>
+  </div>
+</div>
+
+<script>
+async function loadClaims() {
+  const status = document.getElementById('statusFilter').value;
+  const params = new URLSearchParams();
+  if (status) params.set('status', status);
+  try {
+    const res = await fetch(`/api/claims?${params}`, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } });
+    const claims = await res.json();
+    const tbody = document.getElementById('claimsTable');
+    if (!claims.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--text-muted);">No claims found</td></tr>';
+      return;
+    }
+    tbody.innerHTML = claims.map(c => {
+      const badgeClass = c.status === 'filed' ? 'badge-filed' : c.status === 'under_review' || c.status === 'document_requested' ? 'badge-review' : c.status === 'approved' || c.status === 'settled' ? 'badge-settled' : 'badge-declined';
+      const statusLabel = c.status.replace(/_/g, ' ').replace(/\b\w/g, s => s.toUpperCase());
+      return `<tr>
+        <td><strong>${c.claim_number}</strong></td>
+        <td>${c.client_name || c.business_name || 'N/A'}</td>
+        <td>${c.claim_type}</td>
+        <td>₦${(c.amount_claimed || 0).toLocaleString()}</td>
+        <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+        <td>${new Date(c.filed_at).toLocaleDateString()}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="openStatusModal(${c.id})">Update</button></td>
+      </tr>`;
+    }).join('');
+  } catch (err) { console.error(err); }
+}
+
+async function fileClaim() {
+  const payload = {
+    lead_id: parseInt(document.getElementById('claimLeadId').value),
+    policy_id: parseInt(document.getElementById('claimPolicyId').value) || undefined,
+    claim_type: document.getElementById('claimType').value,
+    description: document.getElementById('claimDescription').value,
+    amount_claimed: parseInt(document.getElementById('claimAmount').value) || 0
+  };
+  try {
+    const res = await fetch('/api/claims', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Failed to file claim');
+    alert('Claim filed successfully!');
+    closeModal('fileClaimModal');
+    loadClaims();
+  } catch (err) { alert(err.message); }
+}
+
+function openStatusModal(claimId) {
+  document.getElementById('statusClaimId').value = claimId;
+  openModal('statusModal');
+}
+
+async function updateClaimStatus() {
+  const id = document.getElementById('statusClaimId').value;
+  const payload = {
+    status: document.getElementById('newClaimStatus').value,
+    amount_approved: parseInt(document.getElementById('claimApprovedAmount').value) || undefined,
+    notes: document.getElementById('claimNotes').value
+  };
+  try {
+    const res = await fetch(`/api/claims/${id}/status`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Update failed');
+    alert('Status updated!');
+    closeModal('statusModal');
+    loadClaims();
+  } catch (err) { alert(err.message); }
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+loadClaims();
+</script>

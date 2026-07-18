@@ -3,6 +3,7 @@ const { all, run } = require('../config/database');
 const { sendWhatsApp } = require('./whatsappService');
 const { sendEmail } = require('./emailService');
 const { processFollowUps } = require('./followUpScheduler');
+const { processNurtureQueue } = require('./nurtureEngine');
 
 const startCronJobs = () => {
   // Run every 30 minutes to dispatch RIE follow-up tasks
@@ -14,6 +15,16 @@ const startCronJobs = () => {
     }
   });
 
+  // Run every 15 minutes to dispatch nurture emails
+  cron.schedule('*/15 * * * *', async () => {
+    try {
+      const sent = await processNurtureQueue();
+      if (sent > 0) console.log(`Nurture queue: ${sent} messages processed`);
+    } catch (error) {
+      console.error('Error processing nurture queue:', error);
+    }
+  });
+
   // Run every day at 08:00 AM server time
   cron.schedule('0 8 * * *', async () => {
     console.log('Running daily automation tasks...');
@@ -21,6 +32,7 @@ const startCronJobs = () => {
       await processBirthdaysAndAnniversaries();
       await processRenewalNotices();
       await processMonthlyRiskTips();
+      await processAnnualReviewReminders();
     } catch (error) {
       console.error('Error running daily automation tasks:', error);
     }
@@ -159,11 +171,55 @@ const processProposalFollowUps = async () => {
   }
 };
 
+const processAnnualReviewReminders = async () => {
+  // Find leads whose assessment was completed about a year ago (between 360-370 days)
+  const candidates = await all(`
+    SELECT l.id, l.name, l.email, l.phone, l.score, a.id as assessment_id, a.created_at as assessment_date
+    FROM leads l
+    JOIN assessments a ON l.assessment_id = a.id
+    WHERE DATE(a.created_at) = DATE('now', '-365 days')
+      AND l.status NOT IN ('Lost')
+    LIMIT 50
+  `);
+
+  for (const lead of candidates) {
+    const msg = `Hi ${lead.name.split(' ')[0]},\n\nIt has been one year since your last CoverScore assessment! A lot can change in a year — your risks may have evolved, and your protection needs may be different.\n\nWe recommend retaking your assessment to get an updated CoverScore and ensure you are still properly protected.\n\nRetake here: ${process.env.APP_URL || 'http://localhost:3016'}/assessment/start?lead=${lead.id}\n\n— Your CoverScore Team`;
+
+    await sendMultiChannelMessage(lead, 'Time for Your Annual CoverScore Review', msg);
+    console.log(`Annual review reminder sent to ${lead.name} (lead ${lead.id})`);
+  }
+};
+
+// Also find leads approaching 11 months (30 days before annual)
+const processUpcomingAnnualReviewReminders = async () => {
+  const candidates = await all(`
+    SELECT l.id, l.name, l.email, l.phone, l.score, a.id as assessment_id, a.created_at as assessment_date
+    FROM leads l
+    JOIN assessments a ON l.assessment_id = a.id
+    WHERE DATE(a.created_at) = DATE('now', '-335 days')
+      AND l.status NOT IN ('Lost')
+    LIMIT 50
+  `);
+
+  for (const lead of candidates) {
+    const msg = `Hi ${lead.name.split(' ')[0]},\n\nYour CoverScore assessment is coming up on its one-year anniversary. To stay on top of your risk profile, we recommend scheduling your annual review soon.\n\nYour current score: ${lead.score}/100\n\nRetake here: ${process.env.APP_URL || 'http://localhost:3016'}/assessment/start?lead=${lead.id}\n\n— Your CoverScore Team`;
+
+    await sendMultiChannelMessage(lead, 'Your Annual CoverScore Review Is Coming Up', msg);
+  }
+};
+
+// Add the 30-day pre-reminder to the daily cron via the existing function
+const originalProcessAnnualReviewReminders = processAnnualReviewReminders;
+processAnnualReviewReminders = async () => {
+  await originalProcessAnnualReviewReminders();
+  await processUpcomingAnnualReviewReminders();
+};
+
 module.exports = {
   startCronJobs,
-  // Export for manual triggering
   processBirthdaysAndAnniversaries,
   processRenewalNotices,
   processMonthlyRiskTips,
-  processProposalFollowUps
+  processProposalFollowUps,
+  processAnnualReviewReminders
 };

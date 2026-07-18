@@ -320,13 +320,53 @@ app.get('/assessment/final-cta', optionalAuth, (req, res) => {
   res.render('assessment/final-cta', { title: 'Final Step - Get Your Report', activePage: 'assessment', layout: false });
 });
 
-app.get('/dashboard', authenticatePage, (req, res) => {
+app.get('/dashboard', authenticatePage, async (req, res) => {
   if (req.user && req.user.role === 'admin') {
     return res.redirect('/admin/dashboard');
   } else if (req.user && ['sales', 'analyst'].includes(req.user.role)) {
     return res.redirect('/advisor/dashboard');
   }
-  res.render('dashboard/index', { title: 'Dashboard', activePage: 'dashboard', layout: 'main' });
+
+  // Load customer-specific data: assessments, policies, claims
+  let assessments = [];
+  let policies = [];
+  let claims = [];
+  let comparisonData = null;
+
+  try {
+    const userId = req.user.id;
+    assessments = await all('SELECT id, score, risk_level, created_at FROM assessments WHERE user_id = ? ORDER BY created_at DESC', [userId]);
+    policies = await all(`
+      SELECT p.* FROM policies p
+      JOIN leads l ON p.lead_id = l.id
+      WHERE l.assessment_id IN (SELECT id FROM assessments WHERE user_id = ?)
+      ORDER BY p.created_at DESC
+    `, [userId]);
+
+    // Latest assessment for comparison
+    if (assessments.length >= 2) {
+      const current = assessments[0];
+      const previous = assessments[1];
+      comparisonData = {
+        hasPrevious: true,
+        current: { id: current.id, score: current.score, risk_level: current.risk_level, date: current.created_at },
+        previous: { id: previous.id, score: previous.score, risk_level: previous.risk_level, date: previous.created_at },
+        improvement: current.score > previous.score ? 'improved' : current.score < previous.score ? 'declined' : 'unchanged',
+        scoreChange: Math.abs(current.score - previous.score)
+      };
+    } else if (assessments.length === 1) {
+      comparisonData = { hasPrevious: false, current: assessments[0] };
+    }
+  } catch (e) { console.error('Dashboard load error:', e.message); }
+
+  res.render('dashboard/index', {
+    title: 'Dashboard',
+    activePage: 'dashboard',
+    layout: 'main',
+    assessments,
+    policies,
+    comparison: JSON.stringify(comparisonData)
+  });
 });
 
 app.get('/admin', authenticatePage, (req, res) => {
@@ -443,6 +483,29 @@ app.get('/admin/leads', authenticatePage, async (req, res) => {
 
 app.get('/admin/analytics', authenticatePage, (req, res) => {
   res.render('admin/analytics', { title: 'Analytics', activePage: 'analytics', layout: 'admin' });
+});
+
+app.get('/admin/audit-logs', authenticatePage, (req, res) => {
+  if (req.user.role !== 'admin') return res.redirect('/dashboard');
+  res.render('admin/audit-logs', { title: 'Audit Logs', activePage: 'audit-logs', layout: 'admin' });
+});
+
+app.get('/admin/claims', authenticatePage, async (req, res) => {
+  let claims = [];
+  try {
+    const { getAllClaims } = require('./services/claimsService');
+    claims = await getAllClaims();
+  } catch (e) { console.error('Failed to load claims:', e.message); }
+  res.render('admin/claims', { title: 'Claims Management', activePage: 'claims', layout: 'admin', claims });
+});
+
+app.get('/admin/surveys', authenticatePage, async (req, res) => {
+  let surveys = [];
+  try {
+    const { getAllSurveys } = require('./services/surveyService');
+    surveys = await getAllSurveys();
+  } catch (e) { console.error('Failed to load surveys:', e.message); }
+  res.render('admin/surveys', { title: 'Risk Surveys', activePage: 'surveys', layout: 'admin', surveys });
 });
 
 app.get('/admin/leads/:id', authenticatePage, async (req, res) => {
@@ -860,6 +923,9 @@ app.get('/settings', (req, res) => {
 
 const webhookRoutes = require('./routes/webhook');
 const renewalRoutes = require('./routes/renewals');
+const claimsRoutes = require('./routes/claims');
+const surveysRoutes = require('./routes/surveys');
+const nurtureRoutes = require('./routes/nurture');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/assessment', assessmentRoutes);
@@ -873,6 +939,9 @@ app.use('/api/crm', crmRoutes);
 app.use('/api/proposals', proposalsRoutes);
 app.use('/api/renewals', renewalRoutes);
 app.use('/api/documents', documentsRoutes);
+app.use('/api/claims', claimsRoutes);
+app.use('/api/surveys', surveysRoutes);
+app.use('/api/nurture', nurtureRoutes);
 app.use('/advisor', advisorRoutes);
 app.use('/reports', reportsRoutes);
 app.use(ratingRoutes);

@@ -9,6 +9,7 @@
       <a href="/start-whatsapp?text={{#if trigger}}{{trigger}}{{else}}START ASSESSMENT{{/if}}" class="navbar-item {{#if (eq activePage 'assessment')}}active{{/if}}">Start Assessment</a>
       
       {{#if user}}
+        <a href="/dashboard" class="navbar-item {{#if (eq activePage 'dashboard')}}active{{/if}}">Dashboard</a>
         {{#if (or (eq user.role 'admin') (eq user.role 'sales') (eq user.role 'analyst'))}}
           <a href="/admin/dashboard" class="navbar-item {{#if (eq activePage 'admin')}}active{{/if}}">Admin Panel</a>
         {{/if}}
@@ -23,6 +24,7 @@
               <p class="user-email">{{user.email}}</p>
             </div>
             <div class="divider"></div>
+            <a href="/dashboard" class="user-menu-item">My Dashboard</a>
             {{#if (or (eq user.role 'admin') (eq user.role 'sales') (eq user.role 'analyst'))}}
               <a href="/admin/dashboard" class="user-menu-item">Admin Dashboard</a>
             {{/if}}

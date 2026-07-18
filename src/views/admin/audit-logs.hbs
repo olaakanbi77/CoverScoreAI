@@ -1,0 +1,132 @@
+<style>
+  .page-container { padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0; }
+  .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-select { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px 16px; border-radius: var(--radius-md); font-size: 14px; outline: none; min-height: 40px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 20px; }
+  .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 8px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); }
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
+  .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+  .data-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; background: rgba(0,0,0,0.2); }
+  .data-table td { font-size: 13px; color: var(--text-primary); font-family: var(--font-mono); }
+  .data-table tr:hover { background: rgba(255,255,255,0.03); }
+  .event-badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .event-badge.create { background: rgba(16,185,129,0.15); color: #34d399; }
+  .event-badge.update { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .event-badge.delete { background: rgba(239,68,68,0.15); color: #f87171; }
+  .event-badge.view { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .pagination { display: flex; justify-content: center; gap: 8px; align-items: center; }
+  .pagination button { padding: 8px 16px; border: 1px solid var(--glass-border); background: var(--bg-surface); color: var(--text-primary); border-radius: var(--radius-md); cursor: pointer; }
+  .pagination button:disabled { opacity: 0.4; cursor: default; }
+  .pagination span { color: var(--text-secondary); font-size: 14px; }
+  @media (max-width: 768px) { .page-container { padding: 16px; } .data-table td { font-size: 12px; padding: 8px 10px; } }
+</style>
+
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Audit Logs</h1>
+  </div>
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-label">Total Events</div><div class="stat-value" id="totalEvents">-</div></div>
+    <div class="stat-card"><div class="stat-label">By Event Type</div><div class="stat-value" id="eventBreakdown" style="font-size:14px;font-family:inherit;">-</div></div>
+  </div>
+
+  <div class="filters">
+    <select class="filter-select" id="eventTypeFilter"><option value="">All Events</option></select>
+    <select class="filter-select" id="entityTypeFilter"><option value="">All Entities</option></select>
+    <select class="filter-select" id="actorTypeFilter"><option value="">All Actors</option>
+      <option value="user">User</option>
+      <option value="system">System</option>
+      <option value="lead">Lead</option>
+    </select>
+  </div>
+
+  <table class="data-table">
+    <thead><tr>
+      <th>Timestamp</th><th>Event</th><th>Entity</th><th>Entity ID</th><th>Actor</th><th>Metadata</th>
+    </tr></thead>
+    <tbody id="logsTable"><tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text-muted);">Loading...</td></tr></tbody>
+  </table>
+
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<script>
+let currentPage = 1;
+
+async function loadLogs(page = 1) {
+  currentPage = page;
+  const eventType = document.getElementById('eventTypeFilter').value;
+  const entityType = document.getElementById('entityTypeFilter').value;
+  const actorType = document.getElementById('actorTypeFilter').value;
+  const params = new URLSearchParams({ page, limit: 50 });
+  if (eventType) params.set('event_type', eventType);
+  if (entityType) params.set('entity_type', entityType);
+  if (actorType) params.set('actor_type', actorType);
+
+  try {
+    const [logsRes, statsRes] = await Promise.all([
+      fetch(`/api/admin/audit-logs?${params}`, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } }),
+      fetch(`/api/admin/audit-logs/stats`, { headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } })
+    ]);
+
+    const data = await logsRes.json();
+    const stats = statsRes.ok ? await statsRes.json() : {};
+
+    document.getElementById('totalEvents').textContent = stats.total || data.pagination.total;
+
+    if (stats.byEvent) {
+      document.getElementById('eventBreakdown').innerHTML = stats.byEvent.slice(0, 5).map(e =>
+        `<span style="margin-right:8px;">${e.event_type}: <strong>${e.count}</strong></span>`
+      ).join('');
+    }
+
+    const eventSelect = document.getElementById('eventTypeFilter');
+    if (data.eventTypes && !eventSelect.hasChildNodes()) {
+      data.eventTypes.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; eventSelect.appendChild(o); });
+    }
+    const entitySelect = document.getElementById('entityTypeFilter');
+    if (data.entityTypes && !entitySelect.hasChildNodes()) {
+      data.entityTypes.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; entitySelect.appendChild(o); });
+    }
+
+    const tbody = document.getElementById('logsTable');
+    if (!data.logs.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text-muted);">No logs found</td></tr>';
+    } else {
+      tbody.innerHTML = data.logs.map(log => {
+        const eventClass = log.event_type?.includes('create') ? 'create' : log.event_type?.includes('update') ? 'update' : log.event_type?.includes('delete') ? 'delete' : 'view';
+        const meta = log.metadata ? JSON.stringify(log.metadata).substring(0, 80) + (JSON.stringify(log.metadata).length > 80 ? '...' : '') : '-';
+        return `<tr>
+          <td style="white-space:nowrap;">${new Date(log.created_at).toLocaleString()}</td>
+          <td><span class="event-badge ${eventClass}">${log.event_type}</span></td>
+          <td>${log.entity_type || '-'}</td>
+          <td style="font-size:12px;">${log.entity_id || '-'}</td>
+          <td>${log.actor_type}:${log.actor_id || ''}</td>
+          <td style="font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;">${meta}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    const pag = document.getElementById('pagination');
+    const { page: cp, totalPages } = data.pagination;
+    pag.innerHTML = `
+      <button onclick="loadLogs(${cp - 1})" ${cp <= 1 ? 'disabled' : ''}>Previous</button>
+      <span>Page ${cp} of ${totalPages || 1}</span>
+      <button onclick="loadLogs(${cp + 1})" ${cp >= totalPages ? 'disabled' : ''}>Next</button>
+    `;
+  } catch (err) {
+    console.error(err);
+    document.getElementById('logsTable').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--text-muted);">Failed to load audit logs</td></tr>';
+  }
+}
+
+document.getElementById('eventTypeFilter').addEventListener('change', () => loadLogs(1));
+document.getElementById('entityTypeFilter').addEventListener('change', () => loadLogs(1));
+document.getElementById('actorTypeFilter').addEventListener('change', () => loadLogs(1));
+loadLogs();
+</script>

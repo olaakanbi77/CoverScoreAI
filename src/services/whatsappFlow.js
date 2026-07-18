@@ -87,6 +87,13 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.is_qualified = false;
       replyText = `No problem.\n\nYour report will remain available whenever you need it.\n\n${dom.followUpMsg}\n\nIf you ever decide you'd like a personal review, simply reply:\n\nADVISOR\n\nWe'll arrange it for you.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
+      // Enroll in nurture campaign
+      try {
+        const { enrollLead } = require('./nurtureEngine');
+        if (currentData.leadId) {
+          enrollLead(currentData.leadId, 'not_now').catch(err => console.error('Nurture enrollment failed:', err.message));
+        }
+      } catch (e) {}
     }
     return { nextState, replyText, updatedData, isComplete };
   }

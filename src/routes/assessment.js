@@ -8,6 +8,7 @@ const { generateRiskReport, getAdvisorCopilot } = require('../services/aiService
 const { sendAssessmentReport } = require('../services/emailService');
 const { sendAssessmentComplete } = require('../services/whatsappService');
 const { getIndustryRisks } = require('../services/industryIntelligence');
+const { generateCrossSell } = require('../recommendation/engine');
 
 const router = express.Router();
 
@@ -496,6 +497,18 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     const industry = answers.business?.industry || 'General Business';
     const industryRisks = getIndustryRisks(industry);
 
+    // Detect assessment type prefix for cross-sell
+    let assessmentType = 'sme';
+    for (const key of Object.keys(answers)) {
+      const m = key.match(/^([A-Z]+)_\d+$/);
+      if (m) {
+        const prefixMap = { SCH: 'school', BUS: 'sme', SME: 'sme', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'young_professional', FAM: 'family', INC: 'income', HLT: 'health', ENT: 'entrepreneur', RET: 'retirement' };
+        assessmentType = prefixMap[m[1]] || 'sme';
+        break;
+      }
+    }
+    const crossSell = generateCrossSell(assessmentType, identified_gaps || [], recommendations || []);
+
     res.json({
       id: assessment.id,
       score: assessment.score,
@@ -517,11 +530,46 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
       aiReport,
       answers,
       industryRisks,
+      crossSell,
       createdAt: assessment.created_at
     });
   } catch (error) {
     next(error);
   }
+});
+
+// Reassessment comparison — compare current vs previous assessment scores
+router.get('/compare/:leadId', optionalAuth, async (req, res, next) => {
+  try {
+    const assessments = await all(
+      'SELECT id, score, risk_level, created_at FROM assessments WHERE id IN (SELECT assessment_id FROM leads WHERE id = ?) OR user_id = (SELECT user_id FROM leads WHERE id = ?) ORDER BY created_at DESC LIMIT 2',
+      [req.params.leadId, req.params.leadId]
+    );
+
+    if (assessments.length < 2) {
+      const lead = await get('SELECT * FROM leads WHERE id = ?', [req.params.leadId]);
+      const current = assessments[0] || await get('SELECT id, score, risk_level, created_at FROM assessments WHERE id = ?', [lead?.assessment_id]);
+      return res.json({
+        hasPrevious: false,
+        current: current ? { id: current.id, score: current.score, risk_level: current.risk_level, date: current.created_at } : null,
+        previous: null,
+        improvement: null
+      });
+    }
+
+    const current = assessments[0];
+    const previous = assessments[1];
+    const scoreChange = current.score - previous.score;
+    const improvement = scoreChange > 0 ? 'improved' : scoreChange < 0 ? 'declined' : 'unchanged';
+
+    res.json({
+      hasPrevious: true,
+      current: { id: current.id, score: current.score, risk_level: current.risk_level, date: current.created_at },
+      previous: { id: previous.id, score: previous.score, risk_level: previous.risk_level, date: previous.created_at },
+      improvement,
+      scoreChange: Math.abs(scoreChange)
+    });
+  } catch (error) { next(error); }
 });
 
 // Advisor Preparation Summary\u2122 — internal brief for the advisor before a consultation
