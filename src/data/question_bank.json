@@ -2792,7 +2792,7 @@
         "id": "SCH_022",
         "industry": "school",
         "pillar": "Business Continuity",
-        "question": "If your school had to close unexpectedly for one month, could it continue meeting staff salaries and operating expenses?",
+        "question": "If your school had to close unexpectedly for three months, could it continue meeting staff salaries and operating expenses?",
         "question_type": "single_choice",
         "answers": [
             "Yes",
@@ -3792,7 +3792,7 @@
         "id": "MFG_022",
         "industry": "manufacturing",
         "pillar": "Business Continuity",
-        "question": "If your factory had to close unexpectedly for one month, could it continue meeting payroll and operating expenses?",
+        "question": "If your factory had to close unexpectedly for three months, could it continue meeting payroll and operating expenses?",
         "question_type": "single_choice",
         "answers": [
             "Yes",
@@ -3992,7 +3992,7 @@
         "id": "HOS_022",
         "industry": "healthcare",
         "pillar": "Operations",
-        "question": "If your facility had to close unexpectedly for one month, could it continue meeting payroll and operating expenses?",
+        "question": "If your facility had to close unexpectedly for three months, could it continue meeting payroll and operating expenses?",
         "question_type": "single_choice",
         "answers": [
             "Yes",
@@ -4596,7 +4596,7 @@
         "id": "CHR_022",
         "industry": "church",
         "pillar": "Operations",
-        "question": "If your church had to close unexpectedly for one month, could it continue meeting operating expenses?",
+        "question": "If your church had to close unexpectedly for three months, could it continue meeting operating expenses?",
         "question_type": "single_choice",
         "answers": [
             "Yes",
