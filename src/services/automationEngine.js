@@ -188,11 +188,9 @@ const processAnnualReviewReminders = async () => {
     await sendMultiChannelMessage(lead, 'Time for Your Annual CoverScore Review', msg);
     console.log(`Annual review reminder sent to ${lead.name} (lead ${lead.id})`);
   }
-};
 
-// Also find leads approaching 11 months (30 days before annual)
-const processUpcomingAnnualReviewReminders = async () => {
-  const candidates = await all(`
+  // Also find leads approaching 11 months (30 days before annual)
+  const upcoming = await all(`
     SELECT l.id, l.name, l.email, l.phone, l.score, a.id as assessment_id, a.created_at as assessment_date
     FROM leads l
     JOIN assessments a ON l.assessment_id = a.id
@@ -201,18 +199,11 @@ const processUpcomingAnnualReviewReminders = async () => {
     LIMIT 50
   `);
 
-  for (const lead of candidates) {
+  for (const lead of upcoming) {
     const msg = `Hi ${lead.name.split(' ')[0]},\n\nYour CoverScore assessment is coming up on its one-year anniversary. To stay on top of your risk profile, we recommend scheduling your annual review soon.\n\nYour current score: ${lead.score}/100\n\nRetake here: ${process.env.APP_URL || 'http://localhost:3016'}/assessment/start?lead=${lead.id}\n\n— Your CoverScore Team`;
 
     await sendMultiChannelMessage(lead, 'Your Annual CoverScore Review Is Coming Up', msg);
   }
-};
-
-// Add the 30-day pre-reminder to the daily cron via the existing function
-const originalProcessAnnualReviewReminders = processAnnualReviewReminders;
-processAnnualReviewReminders = async () => {
-  await originalProcessAnnualReviewReminders();
-  await processUpcomingAnnualReviewReminders();
 };
 
 module.exports = {
