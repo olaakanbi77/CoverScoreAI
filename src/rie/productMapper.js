@@ -35,18 +35,19 @@ function mapProducts(prefix, answers, scoredPillars) {
       { product: 'Fire & Special Perils', risk: 'property protection' },
       { product: 'Group Personal Accident', risk: 'transport safety' },
     ],
-    // Personal funnels
+    // Personal funnels — mapped to available rating products only
+    // GPA = Group Personal Accident (closest to accident/health cover)
+    // FIRE = Fire & Special Perils (for home contents)
+    // PL = Public Liability (for entrepreneurs)
+    // MOTOR = Comprehensive Motor (for vehicle owners)
     FAM: [
       { product: 'Group Personal Accident', risk: 'family protection' },
-      { product: 'Comprehensive Motor', risk: 'transportation' },
     ],
     HLT: [
       { product: 'Group Personal Accident', risk: 'health security' },
-      { product: 'Comprehensive Motor', risk: 'transportation' },
     ],
     INC: [
       { product: 'Group Personal Accident', risk: 'income security' },
-      { product: 'Comprehensive Motor', risk: 'transportation' },
     ],
     ENT: [
       { product: 'Group Personal Accident', risk: 'personal liability' },
@@ -59,7 +60,6 @@ function mapProducts(prefix, answers, scoredPillars) {
     ],
     RET: [
       { product: 'Group Personal Accident', risk: 'health security' },
-      { product: 'Comprehensive Motor', risk: 'transportation' },
     ],
   };
 
