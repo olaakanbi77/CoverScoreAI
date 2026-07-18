@@ -155,6 +155,15 @@ function mapProducts(prefix, answers, scoredPillars) {
     }
   }
 
+  // Fallback: if no products recommended (no pillar data), return first 3 prefix-specific products
+  if (recommendedProducts.length === 0) {
+    const defaults = allProductDefs.slice(0, 3).map(d => ({
+      product: d.product, risk: d.risk, priority: 'medium',
+      reason: `${d.product} helps address your ${d.risk} risk exposure.`
+    }));
+    return { recommendedProducts: defaults, allProducts: allProductDefs.map((d) => ({ product: d.product, risk: d.risk })) };
+  }
+
   return {
     recommendedProducts,
     allProducts: allProductDefs.map((d) => ({ product: d.product, risk: d.risk })),
