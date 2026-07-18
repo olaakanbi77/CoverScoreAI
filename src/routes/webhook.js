@@ -389,7 +389,8 @@ router.post('/evolution', async (req, res) => {
           ? scoreResult.recommendations.slice(0, 3).map(r => '• ' + r).join('\n') : fallbacks.recommendations;
         assessmentData._rawRecommendations = scoreResult.recommendations || [];
 
-        const entityType = (lead.industry === 'personal' || lead.industry === 'family') ? 'individual' : 'business';
+        const personalPrefixes = ['FAM', 'HLT', 'INC', 'YPR', 'ENT', 'RET', 'HOM', 'MOT'];
+        const entityType = personalPrefixes.includes(prefix) ? 'individual' : 'business';
         const assessmentDataObj = {
           answers: finalAnswers, score: scoreResult.score, riskLevel: scoreResult.risk_level,
           min_loss: scoreResult.min_loss, max_loss: scoreResult.max_loss,

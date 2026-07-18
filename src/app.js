@@ -109,6 +109,18 @@ app.engine('hbs', exphbs.engine({
       if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
       return d.toLocaleDateString();
     },
+    relativeDate: (date) => {
+      if (!date) return '';
+      const now = new Date();
+      const d = new Date(date);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const diffDays = Math.floor((today - target) / 86400000);
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return diffDays + 'd ago';
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    },
     slice: (arr, start, end) => {
       if (!arr || !Array.isArray(arr)) return [];
       return arr.slice(start, end);

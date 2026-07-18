@@ -433,7 +433,7 @@
                   <p>{{this.status}}</p>
                 </div>
                 <div class="act-meta">
-                  <span class="act-time">{{#if this.last_activity}}Yesterday{{else}}Today{{/if}}</span>
+                  <span class="act-time">{{relativeDate this.last_activity}}</span>
                   <span class="act-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></span>
                 </div>
               </div>
