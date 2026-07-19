@@ -785,6 +785,11 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
     // Process levels and attach modules and progress
     let totalModules = 0;
     let completedModules = 0;
+    let inProgressCount = 0;
+
+    // Track continue learning candidate
+    let continueModule = null;
+    let continueProgress = null;
 
     const processedLevels = levels.map(level => {
       const levelModules = modules.filter(m => m.level_id === level.id).map(m => {
@@ -792,7 +797,16 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
         const p = progress.find(pr => pr.module_id === m.id);
         const status = p ? p.status : 'pending';
         if (status === 'completed') completedModules++;
-        return { ...m, status };
+        const enriched = { ...m, status };
+        if (status === 'in_progress') {
+          inProgressCount++;
+          if (!continueModule) { continueModule = enriched; continueProgress = p; }
+        }
+        // Fallback: first pending module if nothing in progress
+        if (status === 'pending' && !continueModule && !p) {
+          continueModule = enriched;
+        }
+        return enriched;
       });
       
       const isSplitTrack = level.order_index === 3;
@@ -807,16 +821,44 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
         coreModules = levelModules;
       }
 
+      const modsWithStatus = isSplitTrack ? [...personalModules, ...businessModules] : coreModules;
+      const completedInLevel = modsWithStatus.filter(m => m.status === 'completed').length;
+      const completedPct = modsWithStatus.length > 0 ? Math.round((completedInLevel / modsWithStatus.length) * 100) : 0;
+
+      const firstModuleId = !isSplitTrack && coreModules.length > 0 ? coreModules[0].id : null;
+      const firstPersonalModuleId = isSplitTrack && personalModules.length > 0 ? personalModules[0].id : null;
+      const firstBusinessModuleId = isSplitTrack && businessModules.length > 0 ? businessModules[0].id : null;
+
       return { 
         ...level, 
         modules: coreModules,
         isSplitTrack,
         personalModules,
-        businessModules
+        businessModules,
+        completedPct,
+        firstModuleId,
+        firstPersonalModuleId,
+        firstBusinessModuleId
       };
     });
 
     const progressPercentage = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+
+    // Compute achievements
+    const pointsEarned = completedModules * 50 + inProgressCount * 10;
+    const currentStreak = inProgressCount > 0 ? Math.min(inProgressCount * 2, 30) : 0;
+
+    // Featured courses: pick first module from each level that has content
+    const featuredModules = [];
+    for (const level of levels) {
+      const levelMods = modules.filter(m => m.level_id === level.id && m.content);
+      if (levelMods.length > 0) {
+        const first = levelMods[0];
+        const p = progress.find(pr => pr.module_id === first.id);
+        featuredModules.push({ ...first, status: p ? p.status : 'pending', levelName: level.name });
+      }
+      if (featuredModules.length >= 4) break;
+    }
 
     res.render('advisor/academy', {
       layout: 'admin',
@@ -825,11 +867,86 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
       levels: processedLevels,
       progressPercentage,
       completedModules,
-      totalModules
+      totalModules,
+      continueModule,
+      featuredModules,
+      streaks: currentStreak,
+      pointsEarned,
+      badgesUnlocked: completedModules >= 5 ? Math.floor(completedModules / 5) : 0
     });
   } catch (err) {
     console.error('Error loading academy:', err);
     res.status(500).send('Server Error');
+  }
+});
+
+// ── Academy Module Detail ─────────────────────────────────────────────────
+router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const moduleId = parseInt(req.params.id);
+    const mod = await get("SELECT * FROM academy_modules WHERE id = ?", [moduleId]);
+    if (!mod) return res.status(404).send('Module not found');
+
+    const level = await get("SELECT * FROM academy_levels WHERE id = ?", [mod.level_id]);
+
+    // Get all modules in this level for progress calculation
+    const levelModules = await all("SELECT id FROM academy_modules WHERE level_id = ? ORDER BY order_index", [mod.level_id]);
+    const levelProgress = await all("SELECT module_id, status FROM academy_progress WHERE user_id = ? AND module_id IN (" + levelModules.map(m => m.id).join(',') + ")", [req.user.id]);
+    const levelCompleted = levelProgress.filter(p => p.status === 'completed').length;
+    const levelTotal = levelModules.length;
+    const levelPct = levelTotal > 0 ? Math.round((levelCompleted / levelTotal) * 100) : 0;
+
+    // User's status for this module
+    const progress = await get("SELECT status FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, moduleId]);
+    const status = progress ? progress.status : 'pending';
+
+    // Get prev/next modules in the same level
+    const allMods = await all("SELECT id, title, order_index FROM academy_modules WHERE level_id = ? ORDER BY order_index", [mod.level_id]);
+    const curIdx = allMods.findIndex(m => m.id === moduleId);
+    const prevModule = curIdx > 0 ? allMods[curIdx - 1] : null;
+    const nextModule = curIdx < allMods.length - 1 ? allMods[curIdx + 1] : null;
+
+    res.render('advisor/academy-module', {
+      layout: 'admin',
+      user: req.user,
+      activePage: 'academy',
+      module: mod,
+      level,
+      status,
+      levelProgress: levelPct,
+      levelCompleted,
+      levelTotal,
+      prevModule,
+      nextModule
+    });
+  } catch (err) {
+    console.error('Error loading module:', err);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.post('/api/academy/progress', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const { moduleId, status } = req.body;
+    if (!moduleId || !['pending', 'in_progress', 'completed'].includes(status)) {
+      return res.status(400).json({ success: false, error: 'Invalid request' });
+    }
+
+    const existing = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, moduleId]);
+
+    if (existing) {
+      await run("UPDATE academy_progress SET status = ?, updated_at = datetime('now') WHERE id = ?", [status, existing.id]);
+    } else {
+      await run(
+        "INSERT INTO academy_progress (user_id, module_id, status, started_at, completed_at) VALUES (?, ?, ?, datetime('now'), ?)",
+        [req.user.id, moduleId, status === 'completed' ? 'completed' : 'in_progress', status === 'completed' ? "datetime('now')" : null]
+      );
+    }
+
+    res.json({ success: true, message: status === 'completed' ? '🎉 Lesson completed!' : status === 'in_progress' ? 'Progress saved' : 'Progress reset' });
+  } catch (err) {
+    console.error('Error updating progress:', err);
+    res.status(500).json({ success: false, error: 'Failed to update progress' });
   }
 });
 

@@ -437,6 +437,56 @@ router.post('/send-report', optionalAuth, async (req, res, next) => {
       }
     }
 
+    // Dormant account creation: auto-create user + passport if not existing
+    try {
+      const existingUser = await get('SELECT id FROM users WHERE email = ?', [email]);
+      if (!existingUser) {
+        const bcrypt = require('bcrypt');
+        const crypto = require('crypto');
+        const randomHash = await bcrypt.hash(crypto.randomBytes(24).toString('hex'), 12);
+        const displayName = name || businessName || email.split('@')[0];
+        const userResult = await run(
+          'INSERT INTO users (email, password_hash, name, phone, business_name, role) VALUES (?, ?, ?, ?, ?, ?)',
+          [email, randomHash, displayName, cleanPhone, businessName, 'user']
+        );
+        const newUser = await get('SELECT id, email, name FROM users WHERE id = ?', [userResult.lastInsertRowid]);
+
+        // Check if customer already exists by email
+        let customer = await get('SELECT * FROM customers WHERE email = ?', [email]);
+        if (!customer) {
+          const passportId = 'CSP-' + crypto.randomBytes(12).toString('hex').toUpperCase();
+          const custResult = await run(
+            'INSERT INTO customers (user_id, lead_id, passport_id, full_name, email, phone, last_score, last_risk_level, total_assessments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)',
+            [newUser.id, assessment ? null : null, passportId, displayName, email, cleanPhone, assessment.score, assessment.risk_level]
+          );
+          customer = await get('SELECT * FROM customers WHERE id = ?', [custResult.lastInsertRowid]);
+        } else {
+          await run('UPDATE customers SET user_id = ?, total_assessments = total_assessments + 1, last_score = ?, last_risk_level = ?, phone = COALESCE(?, phone), updated_at = datetime("now") WHERE id = ?',
+            [newUser.id, assessment.score, assessment.risk_level, cleanPhone, customer.id]);
+        }
+
+        // Link lead to passport
+        if (customer && customer.passport_id) {
+          await run('UPDATE leads SET passport_id = ? WHERE assessment_id = ?', [customer.passport_id, assessmentId]);
+          if (!customer.lead_id) {
+            await run('UPDATE customers SET lead_id = ? WHERE id = ?', [assessment ? assessment.id : null, customer.id]);
+          }
+        }
+      } else {
+        // User exists, just update passport stats and link lead
+        let customer = await get('SELECT * FROM customers WHERE user_id = ?', [existingUser.id]);
+        if (!customer) {
+          customer = await get('SELECT * FROM customers WHERE email = ?', [email]);
+        }
+        if (customer) {
+          await run('UPDATE customers SET total_assessments = total_assessments + 1, last_score = ?, last_risk_level = ?, updated_at = datetime("now") WHERE id = ?',
+            [assessment.score, assessment.risk_level, customer.id]);
+        }
+      }
+    } catch (dormantErr) {
+      console.error('Dormant account creation failed (non-fatal):', dormantErr.message);
+    }
+
     // Return appropriate response based on email result
     if (emailSent) {
       res.json({

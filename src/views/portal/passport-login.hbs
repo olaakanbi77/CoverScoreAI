@@ -1,0 +1,132 @@
+<div class="container container-sm" style="padding: 40px 0;">
+  <div class="card glass-card">
+    <div class="card-header">
+      <h2 class="text-center">Customer Portal</h2>
+      <p class="text-center text-muted">Sign in with a verification code sent to your email</p>
+    </div>
+    <div class="card-body">
+      <form id="otpForm" class="flex flex-col gap-4">
+        <div class="input-group" id="emailStep">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+
+        <div class="input-group" id="codeStep" style="display:none;">
+          <label for="code">Verification Code</label>
+          <input type="text" id="code" name="code" placeholder="000000" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" style="font-family: var(--font-mono); font-size: 24px; letter-spacing: 8px; text-align: center;">
+          <p class="text-muted text-sm" style="margin-top: 8px;">Enter the 6-digit code sent to <span id="codeEmail"></span></p>
+        </div>
+
+        <div id="errorMessage" class="text-center text-danger text-sm" style="display: none;"></div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+          Send Code
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; padding: 16px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.12); border-radius: var(--radius-md);">
+        <p class="text-sm text-muted" style="margin: 0;">
+          <strong style="color: var(--text-primary);">No password needed.</strong>
+          Enter your email and we'll send you a one-time code to access your dashboard, assessments, policies, and CoverScore Passport.
+        </p>
+      </div>
+
+      <div class="card-footer text-center" style="margin-top: 16px;">
+        <span class="text-muted text-sm">Have a password?</span>
+        <a href="/auth/login" class="text-sm font-semibold">Sign in with password</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentEmail = '';
+  const form = document.getElementById('otpForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorDiv = document.getElementById('errorMessage');
+  const emailStep = document.getElementById('emailStep');
+  const codeStep = document.getElementById('codeStep');
+  const codeEmail = document.getElementById('codeEmail');
+  const emailInput = document.getElementById('email');
+  const codeInput = document.getElementById('code');
+  const redirect = '{{redirect}}';
+
+  let step = 'email';
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorDiv.style.display = 'none';
+    submitBtn.disabled = true;
+
+    if (step === 'email') {
+      currentEmail = emailInput.value.trim();
+      if (!currentEmail) {
+        showError('Please enter your email address');
+        return;
+      }
+      submitBtn.textContent = 'Sending...';
+      try {
+        const res = await fetch('/api/identity/otp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.message || 'Failed to send code');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Code';
+          return;
+        }
+        step = 'code';
+        emailStep.style.display = 'none';
+        codeStep.style.display = 'block';
+        codeEmail.textContent = currentEmail;
+        submitBtn.textContent = 'Verify & Sign In';
+        submitBtn.disabled = false;
+        codeInput.focus();
+      } catch (err) {
+        showError('Network error. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Code';
+      }
+    } else {
+      const code = codeInput.value.trim();
+      if (!code || code.length !== 6) {
+        showError('Please enter the 6-digit verification code');
+        submitBtn.disabled = false;
+        return;
+      }
+      submitBtn.textContent = 'Verifying...';
+      try {
+        const res = await fetch('/api/identity/otp/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail, code })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.message || 'Invalid code');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Verify & Sign In';
+          return;
+        }
+        localStorage.setItem('accessToken', data.accessToken);
+        window.location.href = redirect || '/portal/dashboard';
+      } catch (err) {
+        showError('Network error. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Verify & Sign In';
+      }
+    }
+  });
+
+  function showError(msg) {
+    errorDiv.textContent = msg;
+    errorDiv.style.display = 'block';
+  }
+
+  codeInput.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+  });
+</script>

@@ -153,6 +153,35 @@ const initDatabase = () => {
       FOREIGN KEY (assessment_id) REFERENCES assessments(id)
     );
 
+    CREATE TABLE IF NOT EXISTS customers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER UNIQUE,
+      lead_id INTEGER UNIQUE,
+      passport_id TEXT UNIQUE NOT NULL,
+      full_name TEXT,
+      email TEXT,
+      phone TEXT,
+      profile_image TEXT,
+      preferred_assessment_type TEXT,
+      total_assessments INTEGER DEFAULT 0,
+      last_score INTEGER,
+      last_risk_level TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (lead_id) REFERENCES leads(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS otp_codes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT NOT NULL,
+      code TEXT NOT NULL,
+      purpose TEXT DEFAULT 'login',
+      expires_at DATETIME NOT NULL,
+      used_at DATETIME,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS refresh_tokens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -715,9 +744,14 @@ const initDatabase = () => {
   ensureSqliteColumn('leads', 'nurture_campaign_id', 'INTEGER');
   ensureSqliteColumn('leads', 'nurture_stage', 'INTEGER DEFAULT 0');
   ensureSqliteColumn('leads', 'nurture_status', 'TEXT DEFAULT \'idle\'');
+  ensureSqliteColumn('leads', 'passport_id', 'TEXT REFERENCES customers(passport_id)');
 
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_assessment_id ON leads(assessment_id)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_customers_passport_id ON customers(passport_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_customers_lead_id ON customers(lead_id)");
+  safeIndex("CREATE INDEX IF NOT EXISTS idx_otp_codes_email ON otp_codes(email)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_tasks_lead_id ON tasks(lead_id)");
   safeIndex("CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id)");

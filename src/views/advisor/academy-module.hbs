@@ -1,0 +1,247 @@
+<style>
+  :root {
+    --c-navy: #0b1120;
+    --c-navy-light: #1e293b;
+    --c-purple: #7c3aed;
+    --c-purple-light: #f5f3ff;
+    --c-dark: #0f172a;
+    --c-gray: #64748b;
+    --text-sec: #64748b;
+    --c-gray-light: #f1f5f9;
+    --c-green: #10b981;
+    --c-green-dark: #047857;
+    --c-green-light: #ecfdf5;
+    --c-orange: #f97316;
+    --c-orange-light: #fff7ed;
+    --c-blue: #2563eb;
+    --c-blue-light: #eff6ff;
+    --bg-page: #ffffff;
+    --gold: #fbbf24;
+  }
+
+  .admin-sidebar, .admin-topbar { display: none !important; }
+  .admin-main, .admin-content-wrapper { padding: 0 !important; margin: 0 !important; background: var(--bg-page) !important; height: 100vh; overflow-y: auto; }
+  body.admin-layout { background: var(--bg-page) !important; }
+  body { font-family: 'Inter', sans-serif; background-color: var(--bg-page); margin: 0; }
+
+  .module-app-container {
+    max-width: 480px; margin: 0 auto; min-height: 100vh;
+    background: var(--bg-page); position: relative;
+  }
+
+  /* Topbar */
+  .m-topbar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: white; position: sticky; top: 0; z-index: 20; border-bottom: 1px solid #f1f5f9; }
+  .m-back { background: none; border: none; padding: 4px; cursor: pointer; color: var(--c-dark); display: flex; align-items: center; }
+  .m-back svg { width: 20px; height: 20px; stroke-width: 2; }
+  .m-top-info { flex: 1; min-width: 0; }
+  .m-level-label { font-size: 9px; font-weight: 700; color: var(--c-purple); text-transform: uppercase; letter-spacing: 0.5px; }
+  .m-title-top { font-size: 12px; font-weight: 800; color: var(--c-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Hero Banner */
+  .m-hero { padding: 20px 16px; background: linear-gradient(135deg, #0b1120 0%, #1e293b 100%); }
+  .m-hero-level { font-size: 10px; font-weight: 700; color: var(--c-purple); background: rgba(124,58,237,0.15); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .m-hero-title { font-size: 16px; font-weight: 800; color: white; margin: 0 0 4px 0; line-height: 1.3; }
+  .m-hero-track { font-size: 10px; font-weight: 700; color: var(--gold); margin: 0 0 12px 0; }
+  .m-hero-meta { display: flex; gap: 16px; }
+  .m-meta-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #94a3b8; font-weight: 600; }
+  .m-meta-item svg { width: 14px; height: 14px; stroke-width: 2; }
+
+  /* Progress Bar */
+  .m-progress-section { padding: 12px 16px; background: white; border-bottom: 1px solid #f1f5f9; }
+  .m-progress-row { display: flex; align-items: center; gap: 10px; }
+  .m-progress-bg { flex: 1; height: 4px; background: #f1f5f9; border-radius: 2px; overflow: hidden; }
+  .m-progress-fill { height: 100%; background: var(--c-green); border-radius: 2px; transition: width 0.3s; }
+  .m-progress-txt { font-size: 10px; font-weight: 700; color: var(--c-green-dark); white-space: nowrap; }
+
+  /* Action Buttons */
+  .m-actions { display: flex; gap: 8px; padding: 0 16px; margin: 12px 0; }
+  .m-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; }
+  .m-btn.primary { background: var(--c-green-dark); color: white; }
+  .m-btn.primary:hover { background: #065f46; }
+  .m-btn.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .m-btn.outline { background: white; color: var(--c-dark); border: 1px solid #e2e8f0; }
+  .m-btn.outline:hover { background: #f8fafc; }
+  .m-btn.outline.completed { border-color: #d1fae5; color: var(--c-green-dark); background: var(--c-green-light); }
+  .m-btn svg { width: 14px; height: 14px; stroke-width: 2; }
+
+  /* Lesson Content */
+  .m-lesson { padding: 0 16px 24px; }
+
+  .m-lesson :deep(h2) { font-size: 15px; font-weight: 800; color: var(--c-dark); margin: 24px 0 8px 0; }
+  .m-lesson :deep(h3) { font-size: 13px; font-weight: 700; color: var(--c-dark); margin: 20px 0 6px 0; }
+  .m-lesson :deep(p) { font-size: 12px; line-height: 1.6; color: var(--c-gray); font-weight: 500; margin: 0 0 12px 0; }
+  .m-lesson :deep(ul), .m-lesson :deep(ol) { margin: 0 0 12px 0; padding-left: 20px; }
+  .m-lesson :deep(li) { font-size: 12px; line-height: 1.6; color: var(--c-gray); font-weight: 500; margin-bottom: 4px; }
+  .m-lesson :deep(strong) { color: var(--c-dark); font-weight: 700; }
+  .m-lesson :deep(table) { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11px; }
+  .m-lesson :deep(th) { background: var(--c-navy); color: white; padding: 8px 10px; text-align: left; font-weight: 700; }
+  .m-lesson :deep(td) { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: var(--c-gray); font-weight: 500; }
+  .m-lesson :deep(tr:last-child td) { border-bottom: none; }
+  .m-lesson :deep(.lesson-section) { margin-bottom: 8px; }
+  .m-lesson :deep(.lesson-table) { margin: 12px 0; }
+  .m-lesson :deep(.lesson-table th) { background: var(--c-navy); color: white; padding: 8px 10px; text-align: left; font-weight: 700; font-size: 11px; }
+  .m-lesson :deep(.lesson-table td) { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: var(--c-gray); font-weight: 500; font-size: 11px; }
+
+  /* Section spacing in content */
+  .lesson-content > *:first-child { margin-top: 0; }
+
+  /* Navigation between modules */
+  .m-nav { display: flex; gap: 8px; padding: 0 16px 80px; }
+  .m-nav-btn { flex: 1; display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-radius: 8px; font-size: 10px; font-weight: 700; border: 1px solid #e2e8f0; background: white; color: var(--c-dark); text-decoration: none; cursor: pointer; }
+  .m-nav-btn:hover { background: #f8fafc; }
+  .m-nav-btn svg { width: 14px; height: 14px; stroke-width: 2; flex-shrink: 0; }
+  .m-nav-btn .nav-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .m-nav-btn:only-child { max-width: 50%; margin: 0 auto; }
+
+  /* Attachment section */
+  .m-attachments { padding: 0 16px; margin-bottom: 16px; }
+  .m-att-title { font-size: 11px; font-weight: 700; color: var(--c-dark); margin: 0 0 8px 0; }
+  .m-att-list { display: flex; flex-direction: column; gap: 6px; }
+  .m-att-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #f8fafc; border-radius: 6px; font-size: 10px; color: var(--c-dark); text-decoration: none; font-weight: 600; }
+  .m-att-item svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--c-purple); }
+  .m-att-item:hover { background: #f1f5f9; }
+
+  /* Toast */
+  .m-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--c-dark); color: white; padding: 10px 20px; border-radius: 8px; font-size: 11px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; max-width: 360px; text-align: center; }
+  .m-toast.show { opacity: 1; }
+
+  /* Status indicator in the hero */
+  .m-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; margin-left: 8px; }
+  .m-status.pending { background: #f1f5f9; color: var(--c-gray); }
+  .m-status.in_progress { background: #eff6ff; color: var(--c-blue); }
+  .m-status.completed { background: var(--c-green-light); color: var(--c-green-dark); }
+</style>
+
+<div class="module-app-container">
+
+  <!-- Topbar -->
+  <div class="m-topbar">
+    <a href="/advisor/academy" class="m-back">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </a>
+    <div class="m-top-info">
+      <div class="m-level-label">{{level.name}}</div>
+      <h1 class="m-title-top">{{module.title}}</h1>
+    </div>
+  </div>
+
+  <!-- Hero Banner -->
+  <div class="m-hero">
+    <div class="m-hero-level">{{level.name}}</div>
+    <h2 class="m-hero-title">{{module.title}}</h2>
+    {{#if module.track}}
+      {{#if (ne module.track 'CORE')}}
+        <div class="m-hero-track">{{module.track}} Track</div>
+      {{/if}}
+    {{/if}}
+    <p class="m-hero-level" style="color:#94a3b8; font-size:10px; margin-top:4px;">{{module.description}}</p>
+    <div class="m-hero-meta">
+      {{#if module.duration_minutes}}
+      <span class="m-meta-item">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        {{module.duration_minutes}} min
+      </span>
+      {{/if}}
+      <span class="m-meta-item">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+        Lesson {{module.order_index}}
+      </span>
+      <span class="m-meta-item">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        {{#if status}}<span class="m-status {{status}}">{{status}}</span>{{else}}<span class="m-status pending">Not Started</span>{{/if}}
+      </span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="m-progress-section">
+    <div class="m-progress-row">
+      <span style="font-size:10px; font-weight:700; color:var(--c-dark);">Level Progress</span>
+      <div class="m-progress-bg">
+        <div class="m-progress-fill" style="width: {{levelProgress}}%"></div>
+      </div>
+      <span class="m-progress-txt">{{levelCompleted}}/{{levelTotal}}</span>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="m-actions">
+    {{#if (eq status 'completed')}}
+    <button class="m-btn outline completed" disabled>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      Completed
+    </button>
+    {{else}}
+    <button class="m-btn primary" id="completeBtn" onclick="updateProgress('completed')">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      Mark as Complete
+    </button>
+    {{/if}}
+    {{#if (eq status 'in_progress')}}
+    <button class="m-btn outline" onclick="updateProgress('pending')">Reset Progress</button>
+    {{else if (ne status 'completed')}}
+    <button class="m-btn outline" id="saveBtn" onclick="updateProgress('in_progress')">Save Progress</button>
+    {{/if}}
+  </div>
+
+  <!-- Lesson Content -->
+  <div class="m-lesson">
+    {{{module.content}}}
+  </div>
+
+  <!-- Module Navigation -->
+  {{#if prevModule}}
+  <div class="m-nav">
+    <a href="/advisor/academy/module/{{prevModule.id}}" class="m-nav-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      <span class="nav-label">{{prevModule.title}}</span>
+    </a>
+    {{#if nextModule}}
+    <a href="/advisor/academy/module/{{nextModule.id}}" class="m-nav-btn" style="justify-content:flex-end;">
+      <span class="nav-label">{{nextModule.title}}</span>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+    {{/if}}
+  </div>
+  {{else if nextModule}}
+  <div class="m-nav">
+    <a href="/advisor/academy/module/{{nextModule.id}}" class="m-nav-btn" style="justify-content:center;">
+      <span class="nav-label">Next: {{nextModule.title}}</span>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  {{/if}}
+
+  <!-- Toast -->
+  <div id="toast" class="m-toast"></div>
+
+</div>
+
+<script>
+async function updateProgress(status) {
+  const moduleId = {{module.id}};
+  try {
+    const res = await fetch('/api/academy/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ moduleId, status })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(data.message || 'Progress updated');
+      setTimeout(() => location.reload(), 800);
+    } else {
+      showToast(data.error || 'Failed to update');
+    }
+  } catch (err) {
+    showToast('Network error');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>

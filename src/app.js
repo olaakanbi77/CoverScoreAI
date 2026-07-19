@@ -20,6 +20,8 @@ const advisorRoutes = require('./routes/advisor');
 const proposalsRoutes = require('./routes/proposals');
 const documentsRoutes = require('./routes/documents');
 const reportsRoutes = require('./routes/reports');
+const portalRoutes = require('./routes/portal');
+const identityRoutes = require('./routes/identity');
 const ratingRoutes = require('./routes/rating');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
@@ -64,8 +66,11 @@ app.engine('hbs', exphbs.engine({
       if (num == null) return '0';
       return Number(num).toLocaleString('en-US');
     },
+    gt: (a, b) => Number(a) > Number(b),
+    lt: (a, b) => Number(a) < Number(b),
     gte: (a, b) => Number(a) >= Number(b),
     lte: (a, b) => Number(a) <= Number(b),
+    add: (a, b) => Number(a) + Number(b),
     substring: (str, start, len) => String(str || '').substring(start, len),
     json: (obj) => JSON.stringify(obj),
     toLowerCase: (str) => String(str).toLowerCase(),
@@ -944,6 +949,8 @@ app.use('/api/surveys', surveysRoutes);
 app.use('/api/nurture', nurtureRoutes);
 app.use('/advisor', advisorRoutes);
 app.use('/reports', reportsRoutes);
+app.use('/api/identity', identityRoutes);
+app.use('/portal', portalRoutes);
 app.use(ratingRoutes);
 
 // Serve QR code page for WhatsApp linking

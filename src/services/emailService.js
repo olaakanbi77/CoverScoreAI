@@ -593,6 +593,66 @@ const sendClientConsultationConfirmation = async (leadData, meetLink) => {
   }
 };
 
+const sendOTPEmail = async (to, otpCode) => {
+  await ensureReady();
+
+  if (!transporter) {
+    console.warn('⚠️ OTP email not sent: SMTP not configured');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Verification Code - CoverScore AI</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f5; color: #1e293b;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 32px; text-align: center;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">CoverScore AI</h1>
+        <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0; font-size: 14px;">Your Verification Code</p>
+      </div>
+      <div style="padding: 32px; text-align: center;">
+        <p style="color: #64748b; font-size: 14px; line-height: 1.6;">Use the code below to complete your login. This code expires in <strong>10 minutes</strong>.</p>
+        <div style="background: #f8fafc; border-radius: 12px; padding: 24px; margin: 24px 0; border: 2px dashed #3b82f6;">
+          <span style="font-size: 36px; font-weight: 700; letter-spacing: 8px; color: #1e293b; font-family: 'Courier New', monospace;">${otpCode}</span>
+        </div>
+        <p style="color: #94a3b8; font-size: 13px;">If you didn't request this code, you can safely ignore this email.</p>
+      </div>
+      <div style="background: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
+        <p style="color: #64748b; font-size: 13px; margin: 0;">CoverScore AI - Insurance Risk Intelligence Platform (Africa)</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  try {
+    console.log(`📧 Attempting to send OTP email to: ${to}`);
+    const info = await transporter.sendMail({
+      from: process.env.SMTP_FROM || '"CoverScore AI" <noreply@coverscore.ai>',
+      to: to,
+      subject: 'Your CoverScore Verification Code',
+      html: html
+    });
+
+    if (etherealAccount) {
+      console.log(`📧 OTP email preview (Ethereal): ${nodemailer.getTestMessageUrl(info)}`);
+    }
+
+    console.log(`✅ OTP email sent successfully to ${to}`);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error(`❌ OTP email FAILED to ${to}:`, error.message);
+    return { success: false, error: error.message };
+  }
+};
+
 module.exports = { 
   sendAssessmentReport, 
   sendPasswordResetEmail, 
@@ -600,5 +660,6 @@ module.exports = {
   getDiagnostics,
   sendAdminQuoteNotification,
   sendAdminConsultationNotification,
-  sendClientConsultationConfirmation
+  sendClientConsultationConfirmation,
+  sendOTPEmail
 };

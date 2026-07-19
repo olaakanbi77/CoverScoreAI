@@ -19,7 +19,13 @@ const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]);
+    const user = await get(`
+      SELECT u.id, u.email, u.name, u.role, u.industry, u.meet_link,
+             c.passport_id
+      FROM users u
+      LEFT JOIN customers c ON c.user_id = u.id
+      WHERE u.id = ?
+    `, [decoded.userId]);
 
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized', message: 'User not found' });
@@ -44,7 +50,13 @@ const optionalAuth = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]);
+    const user = await get(`
+      SELECT u.id, u.email, u.name, u.role, u.industry, u.meet_link,
+             c.passport_id
+      FROM users u
+      LEFT JOIN customers c ON c.user_id = u.id
+      WHERE u.id = ?
+    `, [decoded.userId]);
     if (user) {
       req.user = user;
       res.locals.user = user;
@@ -83,7 +95,13 @@ const authenticatePage = async (req, res, next) => {
   try {
     const startTime = Date.now();
     const user = await Promise.race([
-      get('SELECT id, email, name, role, industry, meet_link FROM users WHERE id = ?', [decoded.userId]),
+      get(`
+        SELECT u.id, u.email, u.name, u.role, u.industry, u.meet_link,
+               c.passport_id
+        FROM users u
+        LEFT JOIN customers c ON c.user_id = u.id
+        WHERE u.id = ?
+      `, [decoded.userId]),
       timeout(5000)
     ]);
     const elapsed = Date.now() - startTime;
