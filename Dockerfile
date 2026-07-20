@@ -1,6 +1,6 @@
 FROM node:20-slim
 WORKDIR /app
-RUN apt-get update -qq && apt-get install -y -qq python3 make g++ wget unzip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -y -qq python3 python3-pip make g++ wget unzip ffmpeg imagemagick && rm -rf /var/lib/apt/lists/* && pip3 install edge-tts
 COPY package*.json ./
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 RUN npm ci --omit=dev && npm rebuild sqlite3
