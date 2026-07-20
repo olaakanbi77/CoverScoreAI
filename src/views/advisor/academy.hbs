@@ -248,6 +248,62 @@
       {{/if}}
     </div>
 
+    <!-- CCA Programme -->
+    {{#if ccaCourses}}
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">CCA Programme</h3>
+        <a href="/advisor/academy" class="sec-link">8 Courses</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        {{#each ccaCourses}}
+        <a href="/advisor/academy/course/{{this.id}}" class="cl-card" style="text-decoration:none; padding:12px; border:1px solid #f1f5f9; border-radius:10px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+              <span style="font-size:8px; font-weight:800; color:var(--c-purple); background:var(--c-purple-light); padding:2px 6px; border-radius:4px;">{{this.code}}</span>
+              {{#if this.inProgress}}<span style="font-size:8px; font-weight:700; color:var(--c-blue); background:var(--c-blue-light); padding:2px 6px; border-radius:4px;">In Progress</span>{{/if}}
+            </div>
+            <h4 style="font-size:12px; font-weight:800; color:var(--c-dark); margin:0 0 2px 0;">{{this.title}}</h4>
+            <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+              <div style="flex:1; height:4px; background:#f1f5f9; border-radius:2px; overflow:hidden;">
+                <div style="height:100%; background:var(--c-green); border-radius:2px; width:{{this.progressPct}}%;"></div>
+              </div>
+              <span style="font-size:9px; font-weight:700; color:var(--c-green-dark);">{{this.completedLessons}}/{{this.lessonCount}}</span>
+            </div>
+          </div>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--c-gray);flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    <!-- Featured Courses -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Featured Courses</h3>
+        <a href="/advisor/academy" class="sec-link">View All</a>
+      </div>
+      
+      <div class="fc-list">
+        {{#each featuredCourses}}
+        <div class="fc-item">
+          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #0b1120, #1e293b);">
+            <div class="fc-img-text" style="display:flex; align-items:center; justify-content:center; font-size:7px; text-align:center;">{{this.levelName}}</div>
+            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="fc-info">
+            <h4 class="fc-title">{{this.title}}</h4>
+            <p class="fc-desc" style="font-size:8px; color:var(--c-gray);">{{this.description}}</p>
+          </div>
+          <div class="fc-action">
+            <a href="/advisor/academy/course/{{this.id}}" class="fc-btn start">View</a>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
     <!-- Learning Paths -->
     <div>
       <div class="section-header">
@@ -285,38 +341,6 @@
           <div class="pc-bar green" style="width: {{this.completedPct}}%"></div>
         </a>
         {{/if}}
-        {{/each}}
-      </div>
-    </div>
-
-    <!-- Featured Courses -->
-    <div>
-      <div class="section-header">
-        <h3 class="sec-title">Featured Courses</h3>
-        <a href="/advisor/academy" class="sec-link">View All</a>
-      </div>
-      
-      <div class="fc-list">
-        {{#each featuredModules}}
-        <div class="fc-item">
-          <div class="fc-img-wrap" style="background: linear-gradient(135deg, #0b1120, #1e293b);">
-            <div class="fc-img-text" style="display:flex; align-items:center; justify-content:center; font-size:7px; text-align:center;">{{this.levelName}}</div>
-            <div class="cl-play"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:white;margin-left:2px;"><path d="M8 5v14l11-7z"/></svg></div>
-          </div>
-          <div class="fc-info">
-            <h4 class="fc-title">{{this.title}}</h4>
-            <p class="fc-desc">{{this.description}}</p>
-          </div>
-          <div class="fc-action">
-            {{#if (eq this.status 'completed')}}
-            <a href="/advisor/academy/module/{{this.id}}" class="fc-btn completed" style="border:1px solid #d1fae5;">Completed</a>
-            {{else if (eq this.status 'in_progress')}}
-            <a href="/advisor/academy/module/{{this.id}}" class="fc-btn start">Continue</a>
-            {{else}}
-            <a href="/advisor/academy/module/{{this.id}}" class="fc-btn start">Start</a>
-            {{/if}}
-          </div>
-        </div>
         {{/each}}
       </div>
     </div>
@@ -371,11 +395,32 @@
       </div>
     </div>
 
+    <!-- Certificates -->
+    {{#if certificates}}
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Certificates</h3>
+        <a href="/advisor/academy" class="sec-link">{{certificates.length}} Earned</a>
+      </div>
+      <div class="ach-scroll">
+        {{#each certificates}}
+        <div class="ach-item" style="min-width:200px;">
+          <div class="ach-icon green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <div class="ach-text">
+            <span class="ach-val" style="font-size:11px;">{{this.course_code}}</span>
+            <span class="ach-lbl">{{this.course_title}}<br>{{this.issued_at}}</span>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
   </div>
 </div>
 
-<!-- Bottom Navigation -->
-    <!-- BOTTOM NAV -->
     <div class="bottom-nav">
       <a href="/advisor/dashboard" class="nav-item">
         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>

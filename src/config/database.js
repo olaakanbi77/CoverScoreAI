@@ -860,6 +860,179 @@ const initDatabase = () => {
     }
   });
 
+  // Academy Courses & v3 Curriculum Migration
+  db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS academy_courses (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      level_id INTEGER NOT NULL,
+      code TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      order_index INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (level_id) REFERENCES academy_levels(id)
+    )`);
+  });
+
+  ['course_id', 'lesson_number', 'duration_minutes', 'quiz_data', 'video_script', 'workbook_content', 'case_study', 'resources'].forEach(col => {
+    db.get(`SELECT ${col} FROM academy_modules LIMIT 1`, (err) => {
+      if (err && err.message.includes('no such column')) {
+        const defs = { course_id: 'INTEGER', lesson_number: 'INTEGER', duration_minutes: 'INTEGER DEFAULT 15', quiz_data: 'TEXT', video_script: 'TEXT', workbook_content: 'TEXT', case_study: 'TEXT', resources: 'TEXT' };
+        db.exec(`ALTER TABLE academy_modules ADD COLUMN ${col} ${defs[col]}`, (e) => {
+          if (!e) console.log(`Added academy_modules.${col}`);
+        });
+      }
+    });
+  });
+
+  // Seed CCA courses + 60 lessons for Level 1
+  db.get("SELECT id FROM academy_courses LIMIT 1", (err, row) => {
+    if (err || row) return;
+    console.log('Seeding CCA courses and v3 curriculum...');
+
+    const courseSql = `INSERT INTO academy_courses (level_id, code, title, description, order_index) VALUES
+      (1, 'CCA-101', 'Foundations of Risk & Insurance', 'Build a solid understanding of risk, insurance principles, and the Nigerian risk landscape.', 1),
+      (1, 'CCA-102', 'The Nigerian Insurance Market & Regulatory Environment', 'Explore the Nigerian insurance industry structure, key players, and the regulatory framework overseen by NAICOM.', 2),
+      (1, 'CCA-103', 'CoverScore Risk Assessment Methodology', 'Master the CoverScore assessment framework, risk scoring, and protection gap analysis.', 3),
+      (1, 'CCA-104', 'Advisory & Client Engagement', 'Develop client discovery skills, risk conversation techniques, and relationship management abilities.', 4),
+      (1, 'CCA-105', 'CoverScore Product Suite & Solutions Design', 'Learn the full CoverScore product range and how to design tailored protection solutions for clients.', 5),
+      (1, 'CCA-106', 'Ethics, Compliance & Professional Standards', 'Understand ethical advisory, regulatory compliance, data protection, and the CoverScore Code of Ethics.', 6),
+      (1, 'CCA-107', 'Digital Tools & Technology in Advisory', 'Leverage digital tools, the CoverScore platform, and virtual engagement to enhance your advisory practice.', 7),
+      (1, 'CCA-108', 'Capstone: Integrated Advisory Simulation & Assessment', 'Apply all CCA knowledge in an integrated simulation covering real-world client scenarios from assessment to recommendation.', 8)`;
+
+    db.exec(courseSql, (err) => {
+      if (err) { console.error('Failed to seed courses:', err.message); return; }
+
+      // Now seed all 60 lessons across the 8 courses
+      // Course 1 (CCA-101): 8 lessons
+      const m1Content = `<div class="lesson-content"><section class="lesson-section"><h2>Learning Objectives</h2><ul><li>Define risk and distinguish it from uncertainty</li><li>Understand why risk awareness is the foundation of protection planning</li><li>Recognise how CoverScore approach transforms risk advisory</li></ul></section><section class="lesson-section"><h2>What Is Risk?</h2><p>Risk is the possibility that an event will occur and cause a negative outcome. In the insurance context, risk is the <strong>uncertainty of financial loss</strong>. Every individual, family, and business faces risk every day — from a minor accident to a catastrophic disaster.</p><p>Risk is not inherently bad. It is a natural part of life and commerce. What matters is how we <strong>identify, measure, and manage</strong> it.</p><div class="callout-box" style="background:#f5f3ff;border-left:3px solid #7c3aed;padding:12px;border-radius:6px;margin:12px 0;"><p style="margin:0;font-size:12px;color:#1e293b;font-weight:600;"><strong>Key Insight:</strong> Risk is not about fear — it is about readiness. The goal is not to eliminate risk but to understand it well enough to make informed decisions.</p></div></section><section class="lesson-section"><h2>Risk vs Uncertainty</h2><table class="lesson-table"><tr><th>Risk</th><th>Uncertainty</th></tr><tr><td>Probabilities can be estimated based on past data</td><td>Probabilities cannot be estimated</td></tr><tr><td>Insurance companies use risk to set premiums</td><td>Uncertain events are generally not insurable</td></tr><tr><td>Example: The probability of a house fire in a given year</td><td>Example: Whether a new technology will succeed in the market</td></tr></table></section><section class="lesson-section"><h2>Why Risk Awareness Matters</h2><p>Most people do not think about risk until something happens. By then, it is often too late to avoid financial loss. As a CoverScore Certified Advisor, your role is to help clients <strong>recognise their risks before they materialise</strong> and put appropriate protection in place.</p><ul><li>Over 70% of Nigerian small businesses have no insurance coverage</li><li>Fewer than 5% of Nigerian adults have any form of life assurance</li><li>Most families are one medical emergency away from financial distress</li></ul></section><section class="lesson-section"><h2>The CoverScore Difference</h2><p>Traditional insurance advisory is reactive: a client walks in, asks for a product, and the advisor sells it. CoverScore flips this model:</p><ol><li><strong>Assess</strong> — Use AI-powered tools to evaluate a client risk profile</li><li><strong>Score</strong> — Generate an objective risk score (0–100)</li><li><strong>Analyze</strong> — Identify protection gaps with the Risk Fingerprint™</li><li><strong>Recommend</strong> — Present tailored solutions that address real needs</li><li><strong>Protect</strong> — Implement the plan and track improvement</li><li><strong>Reflect</strong> — Review outcomes and adjust as circumstances change</li><li><strong>Improve</strong> — Continuously enhance the client risk posture over time</li></ol></section><section class="lesson-section"><h2>Key Takeaways</h2><ul><li>Risk is the possibility of financial loss — it can be measured and managed</li><li>Risk differs from uncertainty; insurance works where probabilities can be estimated</li><li>Nigeria has massive protection gaps that advisors can help close</li><li>CoverScore replaces reactive selling with proactive, data-driven advisory</li></ul></section></div>`;
+
+      const m1Quiz = JSON.stringify([
+        {id:1,type:'multiple-choice',question:'What is risk in the context of insurance?',options:['The certainty of financial gain','The possibility of an event causing a negative financial outcome','A guaranteed loss that will occur','An unpredictable event with no measurable probability'],correctIndex:1,explanation:'Risk in insurance is the possibility that an event will occur and cause financial loss.'},
+        {id:2,type:'true-false',question:'Risk and uncertainty mean the same thing in insurance and can be used interchangeably.',options:['True','False'],correctIndex:1,explanation:'Risk and uncertainty are different. Risk involves outcomes where probabilities can be estimated.'},
+        {id:3,type:'multiple-choice',question:'What is the primary goal of risk management according to CoverScore?',options:['To eliminate all risk','To sell as many insurance policies as possible','To understand risk well enough to make informed protection decisions','To predict exactly when a loss will occur'],correctIndex:2,explanation:'The goal is not to eliminate risk but to understand it well enough to make informed decisions.'},
+        {id:4,type:'multiple-choice',question:'What percentage of Nigerian adults have some form of life assurance?',options:['Approximately 50%','Approximately 25%','Approximately 10%','Fewer than 5%'],correctIndex:3,explanation:'Fewer than 5% of Nigerian adults have any form of life assurance.'},
+        {id:5,type:'scenario-analysis',question:'Scenario: A client says nothing bad has ever happened so they do not need insurance. How should you respond?',options:['Agree and move on','Explain that past experience does not predict future risk, and use data to show how quickly circumstances can change','Tell them they are being irresponsible','Offer a discount if they buy today'],correctIndex:1,explanation:'Help clients understand that risk is about future possibilities, not past experiences.'}
+      ]);
+
+      const lessonData = [
+        [1,1,'What Is Risk? — The Foundation of Protection','Discover what risk means in insurance, why it matters, and how proactive risk awareness changes outcomes.',m1Content,m1Quiz,20],
+        [1,2,'Types of Risk — Pure vs Speculative, Insurable vs Non-Insurable','Learn to distinguish risk types and determine which are insurable.',null,null,15],
+        [1,3,'The Insurance Mechanism — How Risk Pooling Works','Understand the core mechanism of insurance: pooling, premiums, claims, and actuarial fairness.',null,null,15],
+        [1,4,'Core Insurance Principles in Practice','Apply the six core insurance principles to real advisory scenarios.',null,null,15],
+        [1,5,'The Nigerian Risk Landscape','Explore the unique risk profile of Nigerian individuals, families, and businesses.',null,null,15],
+        [1,6,'Why Risk Management Matters for Individuals & Businesses','Make the case for proactive risk management to clients at every level.',null,null,15],
+        [1,7,'Introduction to the CoverScore Approach to Risk','Understand how CoverScore transforms traditional insurance advisory through data and intelligence.',null,null,15],
+        [1,8,'Module 1 Knowledge Check & Case Study','Apply all Module 1 concepts to a practical client case study.',null,null,20],
+        [2,1,'Overview of the Nigerian Insurance Industry','Survey the structure, size, and key characteristics of Nigeria insurance market.',null,null,15],
+        [2,2,'Key Players: Insurers, Brokers, Agents, and Regulators','Understand the roles and relationships of every participant in the insurance ecosystem.',null,null,15],
+        [2,3,'NAICOM and the Regulatory Framework','Learn NAICOM mandate, licensing requirements, and compliance obligations.',null,null,15],
+        [2,4,'Insurance Products in the Nigerian Market','Survey the major insurance products available and their market penetration.',null,null,15],
+        [2,5,'Distribution Channels and Market Access','Explore how insurance reaches customers: agents, brokers, bancassurance, digital.',null,null,15],
+        [2,6,'Industry Challenges and Opportunities','Understand barriers to growth and the opportunities driving market evolution.',null,null,15],
+        [2,7,'Module 2 Knowledge Check & Case Study','Apply market and regulatory knowledge to a compliance scenario.',null,null,20],
+        [3,1,'The CoverScore Assessment Framework','Understand the structure and methodology behind all CoverScore risk assessments.',null,null,15],
+        [3,2,'Family Protection Score™ — Personal Risk Assessment','Master the personal risk assessment for individuals and families.',null,null,15],
+        [3,3,'SME Risk Score™ — Business Risk Assessment','Learn to assess small and medium enterprise risk comprehensively.',null,null,15],
+        [3,4,'Sector-Specific Assessments','Navigate specialized assessments for schools, churches, hospitals, and manufacturers.',null,null,15],
+        [3,5,'The CoverScore™ — Interpreting the 0–100 Score','Deep-dive into score calculation, band interpretation, and client communication.',null,null,15],
+        [3,6,'The Risk Fingerprint™ & Protection Gap Analysis™','Generate and interpret multi-dimensional risk profiles.',null,null,15],
+        [3,7,'The Exposure Index™ — Prioritising Client Risk','Calculate and rank client exposures by likelihood and severity.',null,null,15],
+        [3,8,'Module 3 Knowledge Check & Case Study','Analyze a complete assessment and produce a risk report.',null,null,20],
+        [4,1,'The Advisor Role: From Seller to Trusted Partner','Transform your mindset from product-selling to client-centric advisory.',null,null,15],
+        [4,2,'The Client Discovery Process','Conduct structured discovery conversations that uncover real client needs.',null,null,15],
+        [4,3,'Conducting Effective Risk Conversations','Guide clients through risk discussions with confidence and empathy.',null,null,15],
+        [4,4,'Presenting the Risk Fingerprint™ to Clients','Translate data-rich reports into clear, actionable client conversations.',null,null,15],
+        [4,5,'Handling Objections and Building Trust','Overcome common client objections with proven response frameworks.',null,null,15],
+        [4,6,'Proposal Writing and Presentation','Craft compelling protection proposals that drive client action.',null,null,15],
+        [4,7,'Post-Sale Relationship Management and Cross-Selling','Nurture long-term client relationships and identify expansion opportunities.',null,null,15],
+        [4,8,'Module 4 Knowledge Check & Case Study','Role-play a complete advisory engagement from discovery to proposal.',null,null,20],
+        [5,1,'Introduction to Insurance Products via CoverScore','Survey the full product landscape available through the CoverScore platform.',null,null,15],
+        [5,2,'Life Assurance Products','Master term life, whole life, and endowment products and their client applications.',null,null,15],
+        [5,3,'Health Insurance Products','Navigate HMO, IPP, group health, and critical illness products.',null,null,15],
+        [5,4,'Personal Accident and Income Protection','Recommend personal accident and income replacement solutions.',null,null,15],
+        [5,5,'Property Insurance','Advise on fire, burglary, all-risk, and specialized property covers.',null,null,15],
+        [5,6,'Motor Insurance','Explain third-party, third-party fire and theft, and comprehensive motor policies.',null,null,15],
+        [5,7,'Business Insurance Lines','Structure business interruption, public liability, group PA, and combined policies.',null,null,15],
+        [5,8,'Module 5 Knowledge Check & Case Study','Design a multi-product solution for a complex client scenario.',null,null,20],
+        [6,1,'Introduction to Ethics in Risk Advisory','Understand why ethics are the foundation of trust in advisory relationships.',null,null,15],
+        [6,2,'Core Ethical Principles for Advisors','Master integrity, competence, client interest, confidentiality, fairness, and professionalism.',null,null,15],
+        [6,3,'Conflicts of Interest — Identification and Management','Recognize and manage situations where personal interest conflicts with client duty.',null,null,15],
+        [6,4,'Client Data Protection and Confidentiality','Apply data protection principles and maintain client confidentiality.',null,null,15],
+        [6,5,'Regulatory Compliance for Insurance Intermediaries','Understand licensing, continuing education, and reporting obligations.',null,null,15],
+        [6,6,'Professional Conduct and the CoverScore Code of Ethics','Adhere to CoverScore standards of professional conduct.',null,null,15],
+        [6,7,'Module 6 Knowledge Check & Case Study','Navigate an ethical dilemma using structured decision-making.',null,null,20],
+        [7,1,'The Digital Transformation of Insurance Advisory','Understand how technology is reshaping client expectations and advisory delivery.',null,null,15],
+        [7,2,'Using the CoverScore Platform Effectively','Navigate the advisor dashboard, assessments, reports, and client management tools.',null,null,15],
+        [7,3,'Digital Client Engagement','Master email, WhatsApp, video consultations, and digital document sharing.',null,null,15],
+        [7,4,'CRM Best Practices for Client Management','Use the CoverScore CRM to track leads, nurture relationships, and manage pipelines.',null,null,15],
+        [7,5,'Data-Driven Advisory','Leverage reports, analytics, and benchmarking to deliver superior client outcomes.',null,null,15],
+        [7,6,'Digital Security and Best Practices','Protect client data and maintain professional standards in digital channels.',null,null,15],
+        [7,7,'Module 7 Knowledge Check & Case Study','Build a digital client engagement plan using CoverScore platform tools.',null,null,20],
+        [8,1,'Capstone Introduction — Putting It All Together','Understand the capstone structure, assessment criteria, and certification pathway.',null,null,20],
+        [8,2,'Client Scenario A — Young Professional Family Protection','Assess, analyze, and recommend for a young professional starting a family.',null,null,25],
+        [8,3,'Client Scenario B — SME Owner Risk Assessment','Conduct a full SME risk assessment and produce a protection plan.',null,null,25],
+        [8,4,'Client Scenario C — Comprehensive Business Protection','Design a multi-line protection strategy for an established business.',null,null,25],
+        [8,5,'Integrated Advisory Simulation','Complete an end-to-end advisory simulation covering all CCA competencies.',null,null,30],
+        [8,6,'Capstone Assessment Review and Feedback','Receive detailed feedback on your capstone performance with improvement recommendations.',null,null,20],
+        [8,7,'CCA Certification Preparation and Final Assessment','Prepare for and complete the CCA certification examination.',null,null,30]
+      ];
+
+      const insertSql = lessonData.map(row => {
+        const content = row[4] ? `'${row[4].replace(/'/g, "''")}'` : 'NULL';
+        const quiz = row[5] ? `'${row[5].replace(/'/g, "''")}'` : 'NULL';
+        return `INSERT INTO academy_modules (level_id, course_id, lesson_number, title, description, order_index, track, content, quiz_data, duration_minutes) VALUES (1,${row[0]},${row[1]},'${row[2].replace(/'/g, "''")}','${row[3].replace(/'/g, "''")}',${row[1]},'CORE',${content},${quiz},${row[6]});`;
+      }).join('\n');
+
+      db.exec(insertSql, (err) => {
+        if (err) console.error('Failed to seed lessons:', err.message);
+        else console.log('Seeded 8 CCA courses with 60 lessons');
+      });
+    });
+  });
+
+  // Update existing Level 1 modules to belong to CCA-101
+  db.run("UPDATE academy_modules SET course_id = 1 WHERE level_id = 1 AND course_id IS NULL");
+
+  // Academy support tables
+  db.serialize(() => {
+    db.run(`CREATE TABLE IF NOT EXISTS academy_quiz_results (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      module_id INTEGER NOT NULL,
+      score INTEGER NOT NULL,
+      total INTEGER NOT NULL,
+      percentage INTEGER NOT NULL,
+      passed INTEGER DEFAULT 0,
+      answers TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (module_id) REFERENCES academy_modules(id)
+    )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS academy_coach_history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      module_id INTEGER NOT NULL,
+      role TEXT NOT NULL CHECK(role IN ('user', 'coach')),
+      message TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (module_id) REFERENCES academy_modules(id)
+    )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS academy_certificates (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      certificate_id TEXT UNIQUE NOT NULL,
+      user_id INTEGER NOT NULL,
+      course_id INTEGER NOT NULL,
+      user_name TEXT NOT NULL,
+      issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (course_id) REFERENCES academy_courses(id)
+    )`);
+  });
+
   // CRM Schema Migration (Option B)
   // Drop the old leads table constraint by recreating the table if the old constraint exists,
   // or simply adding the new columns if the table already exists.
