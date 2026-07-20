@@ -25,6 +25,7 @@ const identityRoutes = require('./routes/identity');
 const ratingRoutes = require('./routes/rating');
 
 const { authenticate, authenticatePage, optionalAuth } = require('./middleware/auth');
+const { requireAdmin } = require('./middleware/rbac');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -874,6 +875,60 @@ app.get('/admin/proposals', authenticatePage, async (req, res) => {
   } catch (error) {
     res.status(500).send('Error loading proposals');
   }
+});
+
+// ── Academy Admin Pages ─────────────────────────────────────────────
+app.get('/admin/academy', authenticatePage, requireAdmin, async (req, res) => {
+  try {
+    const courses = await all(`SELECT c.*, COUNT(m.id) as lessonCount FROM academy_courses c LEFT JOIN academy_modules m ON m.course_id = c.id GROUP BY c.id ORDER BY c.order_index`);
+    res.render('admin/academy-courses', { title: 'Academy Courses', activePage: 'academy-admin', layout: 'admin', courses });
+  } catch (error) { res.status(500).send('Error'); }
+});
+
+app.get('/admin/academy/course/new', authenticatePage, requireAdmin, async (req, res) => {
+  try {
+    const levels = await all('SELECT * FROM academy_levels ORDER BY order_index');
+    res.render('admin/academy-course-edit', { title: 'New Course', activePage: 'academy-admin', layout: 'admin', course: null, levels });
+  } catch (error) { res.status(500).send('Error'); }
+});
+
+app.get('/admin/academy/course/:id', authenticatePage, requireAdmin, async (req, res) => {
+  try {
+    const course = await get('SELECT * FROM academy_courses WHERE id = ?', [req.params.id]);
+    if (!course) return res.status(404).send('Course not found');
+    const levels = await all('SELECT * FROM academy_levels ORDER BY order_index');
+    res.render('admin/academy-course-edit', { title: 'Edit Course', activePage: 'academy-admin', layout: 'admin', course, levels });
+  } catch (error) { res.status(500).send('Error'); }
+});
+
+app.get('/admin/academy/course/:id/lessons', authenticatePage, requireAdmin, async (req, res) => {
+  try {
+    const course = await get('SELECT * FROM academy_courses WHERE id = ?', [req.params.id]);
+    if (!course) return res.status(404).send('Course not found');
+    const lessons = await all("SELECT *, CASE WHEN content IS NOT NULL AND content != '' THEN 1 ELSE 0 END as hasContent, CASE WHEN quiz_data IS NOT NULL AND quiz_data != '' THEN 1 ELSE 0 END as hasQuiz, CASE WHEN video_script IS NOT NULL AND video_script != '' THEN 1 ELSE 0 END as hasVideoScript, CASE WHEN workbook_content IS NOT NULL AND workbook_content != '' THEN 1 ELSE 0 END as hasWorkbook, CASE WHEN resources IS NOT NULL AND resources != '' THEN 1 ELSE 0 END as hasResources FROM academy_modules WHERE course_id = ? ORDER BY lesson_number ASC", [req.params.id]);
+    res.render('admin/academy-lessons', { title: 'Lessons', activePage: 'academy-admin', layout: 'admin', course, lessons });
+  } catch (error) { res.status(500).send('Error'); }
+});
+
+app.get('/admin/academy/course/:id/lessons/new', authenticatePage, requireAdmin, async (req, res) => {
+  try {
+    const course = await get('SELECT * FROM academy_courses WHERE id = ?', [req.params.id]);
+    if (!course) return res.status(404).send('Course not found');
+    res.render('admin/academy-lesson-edit', { title: 'New Lesson', activePage: 'academy-admin', layout: 'admin', course, lesson: null, quizData: null, resources: null });
+  } catch (error) { res.status(500).send('Error'); }
+});
+
+app.get('/admin/academy/lesson/:id', authenticatePage, requireAdmin, async (req, res) => {
+  try {
+    const lesson = await get('SELECT * FROM academy_modules WHERE id = ?', [req.params.id]);
+    if (!lesson) return res.status(404).send('Lesson not found');
+    const course = await get('SELECT * FROM academy_courses WHERE id = ?', [lesson.course_id]);
+    let quizData = null;
+    if (lesson.quiz_data) { try { quizData = JSON.parse(lesson.quiz_data); } catch(e) {} }
+    let resources = null;
+    if (lesson.resources) { try { resources = JSON.parse(lesson.resources); } catch(e) {} }
+    res.render('admin/academy-lesson-edit', { title: 'Edit Lesson', activePage: 'academy-admin', layout: 'admin', course, lesson, quizData, resources });
+  } catch (error) { res.status(500).send('Error'); }
 });
 
 app.get(['/quote', '/request-quote'], (req, res) => {

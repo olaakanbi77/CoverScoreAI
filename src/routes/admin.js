@@ -374,4 +374,79 @@ router.get('/audit-logs/stats', authenticate, requireAdmin, async (req, res, nex
   } catch (error) { next(error); }
 });
 
+// ── Academy Management API ─────────────────────────────────────
+
+router.get('/academy/courses', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const courses = await all(`SELECT c.*, COUNT(m.id) as lessonCount FROM academy_courses c LEFT JOIN academy_modules m ON m.course_id = c.id GROUP BY c.id ORDER BY c.order_index`);
+    res.json({ success: true, courses });
+  } catch (error) { next(error); }
+});
+
+router.post('/academy/courses', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const { code, title, description, level_id, order_index } = req.body;
+    if (!code || !title) return res.status(400).json({ success: false, error: 'Code and title required' });
+    const result = await run('INSERT INTO academy_courses (level_id, code, title, description, order_index) VALUES (?, ?, ?, ?, ?)',
+      [level_id || 1, code, title, description || '', order_index || 1]);
+    res.json({ success: true, id: result.lastID });
+  } catch (error) { next(error); }
+});
+
+router.put('/academy/courses/:id', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const { code, title, description, level_id, order_index } = req.body;
+    await run('UPDATE academy_courses SET code=?, title=?, description=?, level_id=?, order_index=? WHERE id=?',
+      [code, title, description, level_id || 1, order_index || 1, req.params.id]);
+    res.json({ success: true });
+  } catch (error) { next(error); }
+});
+
+router.delete('/academy/courses/:id', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    await run('DELETE FROM academy_modules WHERE course_id = ?', [req.params.id]);
+    await run('DELETE FROM academy_courses WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (error) { next(error); }
+});
+
+router.post('/academy/lessons', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const { course_id, lesson_number, title, description, content, quiz_data, video_script, video_url, workbook_content, case_study, resources, duration_minutes } = req.body;
+    if (!course_id || !title) return res.status(400).json({ success: false, error: 'Course ID and title required' });
+
+    // Get the course's level_id
+    const course = await get('SELECT level_id FROM academy_courses WHERE id = ?', [course_id]);
+    if (!course) return res.status(404).json({ success: false, error: 'Course not found' });
+
+    // Find max module id and increment
+    const maxMod = await get('SELECT MAX(id) as maxId FROM academy_modules');
+    const newId = (maxMod.maxId || 109) + 1;
+
+    await run(`INSERT INTO academy_modules (id, level_id, course_id, lesson_number, title, description, order_index, track, content, quiz_data, video_script, video_url, workbook_content, case_study, resources, duration_minutes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [newId, course.level_id, course_id, lesson_number || 1, title, description || '', lesson_number || 1, 'CORE',
+       content || null, quiz_data || null, video_script || null, video_url || null, workbook_content || null, case_study || null, resources || null, duration_minutes || 15]);
+    res.json({ success: true, id: newId });
+  } catch (error) { next(error); }
+});
+
+router.put('/academy/lessons/:id', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    const fields = ['title', 'description', 'content', 'quiz_data', 'video_script', 'video_url', 'workbook_content', 'case_study', 'resources', 'duration_minutes', 'lesson_number'];
+    const sets = fields.filter(f => req.body[f] !== undefined).map(f => `${f} = ?`);
+    const params = fields.filter(f => req.body[f] !== undefined).map(f => req.body[f]);
+    if (sets.length === 0) return res.json({ success: true });
+    params.push(req.params.id);
+    await run(`UPDATE academy_modules SET ${sets.join(', ')} WHERE id = ?`, params);
+    res.json({ success: true });
+  } catch (error) { next(error); }
+});
+
+router.delete('/academy/lessons/:id', authenticate, requireAdmin, async (req, res, next) => {
+  try {
+    await run('DELETE FROM academy_modules WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (error) { next(error); }
+});
+
 module.exports = router;

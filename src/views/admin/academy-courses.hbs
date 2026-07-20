@@ -1,0 +1,92 @@
+<style>
+  .ac-mgmt { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .ac-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .ac-header h1 { font-size: 20px; font-weight: 800; color: #0f172a; margin: 0; }
+  .ac-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; }
+  .ac-btn.primary { background: #7c3aed; color: white; }
+  .ac-btn.primary:hover { background: #6d28d9; }
+  .ac-btn.outline { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
+  .ac-btn.outline:hover { background: #f8fafc; }
+  .ac-btn.sm { padding: 4px 10px; font-size: 10px; }
+  .ac-btn.danger { background: #ef4444; color: white; }
+  .ac-btn.danger:hover { background: #dc2626; }
+  .ac-card { background: white; border: 1px solid #f1f5f9; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+  .ac-card-body { padding: 16px; }
+  .ac-course-row { display: flex; align-items: center; gap: 16px; }
+  .ac-course-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .ac-course-info { flex: 1; min-width: 0; }
+  .ac-course-code { font-size: 10px; font-weight: 700; color: #7c3aed; text-transform: uppercase; }
+  .ac-course-title { font-size: 13px; font-weight: 700; color: #0f172a; margin: 2px 0; }
+  .ac-course-desc { font-size: 11px; color: #64748b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ac-course-meta { font-size: 10px; color: #94a3b8; display: flex; gap: 12px; margin-top: 4px; }
+  .ac-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .ac-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 700; }
+  .ac-badge.active { background: #ecfdf5; color: #047857; }
+  .ac-toast { position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; }
+  .ac-toast.show { opacity: 1; }
+</style>
+
+<div class="ac-mgmt">
+  <div class="ac-header">
+    <div>
+      <h1>Academy Courses</h1>
+      <p style="font-size:12px;color:#64748b;margin:4px 0 0 0;">Manage CCA programme courses, lessons, and quizzes</p>
+    </div>
+    <a href="/admin/academy/course/new" class="ac-btn primary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      New Course
+    </a>
+  </div>
+
+  {{#each courses}}
+  <div class="ac-card">
+    <div class="ac-card-body">
+      <div class="ac-course-row">
+        <div class="ac-course-icon" style="background:{{#if (eq @index 0)}}#f5f3ff;color:#7c3aed{{else if (eq @index 1)}}#eff6ff;color:#2563eb{{else if (eq @index 2)}}#ecfdf5;color:#10b981{{else}}#fff7ed;color:#f97316{{/if}};">
+          {{add @index 1}}
+        </div>
+        <div class="ac-course-info">
+          <div class="ac-course-code">{{code}}</div>
+          <div class="ac-course-title">{{title}}</div>
+          <div class="ac-course-desc">{{description}}</div>
+          <div class="ac-course-meta">
+            <span>{{lessonCount}} lessons</span>
+            <span>·</span>
+            <span>Order {{order_index}}</span>
+          </div>
+        </div>
+        <div class="ac-actions">
+          <a href="/admin/academy/course/{{id}}" class="ac-btn outline sm">Edit</a>
+          <a href="/admin/academy/course/{{id}}/lessons" class="ac-btn outline sm">Lessons</a>
+          <button class="ac-btn danger sm" onclick="deleteCourse({{id}},'{{title}}')">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+  <div class="ac-card">
+    <div class="ac-card-body" style="text-align:center;padding:40px;">
+      <p style="font-size:13px;color:#64748b;margin:0;">No courses yet. Create your first course!</p>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+<div id="toast" class="ac-toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+async function deleteCourse(id, title) {
+  if (!confirm(`Delete "${title}" and all its lessons? This cannot be undone.`)) return;
+  try {
+    const r = await fetch(`/api/admin/academy/courses/${id}`, { method: 'DELETE' });
+    const d = await r.json();
+    if (d.success) { showToast('Course deleted'); setTimeout(() => location.reload(), 800); }
+    else { showToast(d.error || 'Failed to delete'); }
+  } catch(e) { showToast('Network error'); }
+}
+</script>

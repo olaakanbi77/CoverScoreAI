@@ -1,0 +1,322 @@
+<style>
+  .ac-mgmt { max-width: 800px; margin: 0 auto; padding: 24px; }
+  .ac-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .ac-header h1 { font-size: 20px; font-weight: 800; color: #0f172a; margin: 0; }
+  .ac-back { text-decoration: none; color: #64748b; display: flex; align-items: center; }
+  .ac-back:hover { color: #0f172a; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; outline: none; box-sizing: border-box; font-family: inherit; }
+  .form-group input:focus, .form-group textarea:focus { border-color: #7c3aed; }
+  .form-group textarea { min-height: 60px; resize: vertical; }
+  .form-group .hint { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+  .ac-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; }
+  .ac-btn.primary { background: #7c3aed; color: white; }
+  .ac-btn.primary:hover { background: #6d28d9; }
+  .ac-btn.outline { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
+  .ac-btn.outline:hover { background: #f8fafc; }
+  .ac-btn.green { background: #10b981; color: white; }
+  .ac-tabs { display: flex; gap: 0; border-bottom: 2px solid #f1f5f9; margin-bottom: 20px; overflow-x: auto; }
+  .ac-tab { padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; }
+  .ac-tab:hover { color: #0f172a; }
+  .ac-tab.active { color: #7c3aed; border-bottom-color: #7c3aed; }
+  .ac-tab-pane { display: none; }
+  .ac-tab-pane.active { display: block; }
+  .ac-editor { min-height: 300px; font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.5; }
+  .quiz-item { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+  .quiz-item h4 { font-size: 12px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a; }
+  .quiz-opt-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .quiz-opt-row input[type="text"] { flex: 1; }
+  .quiz-opt-row input[type="radio"] { width: auto; }
+  .resource-item { display: flex; gap: 8px; align-items: start; margin-bottom: 8px; padding: 8px; background: #f8fafc; border-radius: 6px; }
+  .resource-item input { flex: 1; }
+  .ac-toast { position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; }
+  .ac-toast.show { opacity: 1; }
+</style>
+
+<div class="ac-mgmt">
+  <div class="ac-header">
+    <a href="/admin/academy/course/{{course.id}}/lessons" class="ac-back">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </a>
+    <h1>{{#if lesson}}Edit Lesson{{else}}New Lesson{{/if}}</h1>
+  </div>
+
+  <form id="lessonForm">
+    <input type="hidden" name="course_id" value="{{course.id}}">
+    {{#if lesson}}<input type="hidden" name="id" value="{{lesson.id}}">{{/if}}
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Lesson Number</label>
+        <input type="number" name="lesson_number" value="{{lesson.lesson_number}}" min="1" required>
+      </div>
+      <div class="form-group">
+        <label>Duration (minutes)</label>
+        <input type="number" name="duration_minutes" value="{{lesson.duration_minutes}}" min="5" max="120">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Lesson Title</label>
+      <input type="text" name="title" value="{{lesson.title}}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="2">{{lesson.description}}</textarea>
+    </div>
+
+    <!-- Tabs -->
+    <div class="ac-tabs">
+      <button class="ac-tab active" data-tab="content">Handbook</button>
+      <button class="ac-tab" data-tab="quiz">Quiz</button>
+      <button class="ac-tab" data-tab="video">Video Script</button>
+      <button class="ac-tab" data-tab="workbook">Workbook</button>
+      <button class="ac-tab" data-tab="case">Case Study</button>
+      <button class="ac-tab" data-tab="resources">Resources</button>
+    </div>
+
+    <div class="ac-tab-pane active" id="tab-content">
+      <div class="form-group">
+        <label>Handbook Content (HTML)</label>
+        <div class="hint">Full HTML lesson content. Wrap in &lt;div class="lesson-content"&gt;...&lt;/div&gt;</div>
+        <textarea name="content" class="ac-editor" rows="20">{{lesson.content}}</textarea>
+      </div>
+    </div>
+
+    <div class="ac-tab-pane" id="tab-quiz">
+      <div id="quizContainer">
+        {{#if quizData}}
+        {{#each quizData}}
+        <div class="quiz-item" data-qidx="{{@index}}">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <h4>Question {{add @index 1}}</h4>
+            <button type="button" class="ac-btn outline sm" onclick="removeQuiz(this)">Remove</button>
+          </div>
+          <div class="form-group">
+            <label>Question</label>
+            <input type="text" name="quiz[{{@index}}][question]" value="{{this.question}}" style="font-size:11px;">
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select name="quiz[{{@index}}][type]">
+              <option value="multiple-choice" {{#if (eq this.type 'multiple-choice')}}selected{{/if}}>Multiple Choice</option>
+              <option value="true-false" {{#if (eq this.type 'true-false')}}selected{{/if}}>True/False</option>
+              <option value="scenario-analysis" {{#if (eq this.type 'scenario-analysis')}}selected{{/if}}>Scenario</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Options</label>
+            {{#each this.options}}
+            <div class="quiz-opt-row">
+              <input type="radio" name="quiz[{{../@index}}][correctIndex]" value="{{@index}}" {{#if (eq @index ../correctIndex)}}checked{{/if}}>
+              <input type="text" name="quiz[{{../@index}}][options][]" value="{{this}}" placeholder="Option {{add @index 1}}">
+            </div>
+            {{/each}}
+          </div>
+          <div class="form-group">
+            <label>Explanation</label>
+            <textarea name="quiz[{{@index}}][explanation]" rows="2">{{this.explanation}}</textarea>
+          </div>
+        </div>
+        {{/each}}
+        {{/if}}
+      </div>
+      <button type="button" class="ac-btn outline" onclick="addQuestion()">+ Add Question</button>
+    </div>
+
+    <div class="ac-tab-pane" id="tab-video">
+      <div class="form-group">
+        <label>Video Script</label>
+        <div class="hint">Narration script for TTS video generation. Plain text, 2-4 paragraphs.</div>
+        <textarea name="video_script" class="ac-editor" rows="12">{{lesson.video_script}}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Video URL</label>
+        <div class="hint">Leave empty to auto-generate. Set after running video generator.</div>
+        <input type="text" name="video_url" value="{{lesson.video_url}}" placeholder="/videos/lesson_N_title.mp4">
+      </div>
+    </div>
+
+    <div class="ac-tab-pane" id="tab-workbook">
+      <div class="form-group">
+        <label>Workbook Content (HTML)</label>
+        <div class="hint">Exercises and reflection prompts. Wrap in &lt;div class="workbook-content"&gt;...&lt;/div&gt;</div>
+        <textarea name="workbook_content" class="ac-editor" rows="15">{{lesson.workbook_content}}</textarea>
+      </div>
+    </div>
+
+    <div class="ac-tab-pane" id="tab-case">
+      <div class="form-group">
+        <label>Case Study (HTML)</label>
+        <div class="hint">Practical scenario with tasks. Wrap in &lt;div class="case-study"&gt;...&lt;/div&gt;</div>
+        <textarea name="case_study" class="ac-editor" rows="15">{{lesson.case_study}}</textarea>
+      </div>
+    </div>
+
+    <div class="ac-tab-pane" id="tab-resources">
+      <div id="resourcesContainer">
+        {{#if resources}}
+        {{#each resources}}
+        <div class="resource-item" data-ridx="{{@index}}">
+          <input type="text" name="resources[{{@index}}][title]" value="{{this.title}}" placeholder="Title" style="flex:1;">
+          <input type="text" name="resources[{{@index}}][url]" value="{{this.url}}" placeholder="URL" style="flex:1;">
+          <select name="resources[{{@index}}][type]">
+            <option value="link" {{#if (eq this.type 'link')}}selected{{/if}}>Link</option>
+            <option value="pdf" {{#if (eq this.type 'pdf')}}selected{{/if}}>PDF</option>
+            <option value="video" {{#if (eq this.type 'video')}}selected{{/if}}>Video</option>
+            <option value="doc" {{#if (eq this.type 'doc')}}selected{{/if}}>Document</option>
+          </select>
+          <button type="button" class="ac-btn danger sm" onclick="this.parentElement.remove()">✕</button>
+        </div>
+        {{/each}}
+        {{/if}}
+      </div>
+      <button type="button" class="ac-btn outline" onclick="addResource()">+ Add Resource</button>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Resources JSON (alternative to above)</label>
+        <textarea name="resources_raw" rows="4" placeholder='[{"url":"...","type":"link","title":"...","description":"..."}]'>{{lesson.resources}}</textarea>
+        <div class="hint">Use either the fields above or paste JSON directly. JSON takes priority.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:20px;padding-top:20px;border-top:1px solid #f1f5f9;">
+      <button type="submit" class="ac-btn primary">{{#if lesson}}Save Lesson{{else}}Create Lesson{{/if}}</button>
+      <a href="/admin/academy/course/{{course.id}}/lessons" class="ac-btn outline">Back to Lessons</a>
+    </div>
+  </form>
+</div>
+
+<div id="toast" class="ac-toast"></div>
+
+<script>
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+
+// Tab switching
+document.querySelectorAll('.ac-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ac-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.ac-tab-pane').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Quiz management
+let qIdx = {{#if quizData}}{{quizData.length}}{{else}}0{{/if}};
+function addQuestion() {
+  const c = document.getElementById('quizContainer');
+  const idx = qIdx++;
+  c.insertAdjacentHTML('beforeend', `
+    <div class="quiz-item" data-qidx="${idx}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h4>Question ${idx+1}</h4>
+        <button type="button" class="ac-btn outline sm" onclick="removeQuiz(this)">Remove</button>
+      </div>
+      <div class="form-group">
+        <label>Question</label>
+        <input type="text" name="quiz[${idx}][question]" style="font-size:11px;">
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select name="quiz[${idx}][type]">
+          <option value="multiple-choice">Multiple Choice</option>
+          <option value="true-false">True/False</option>
+          <option value="scenario-analysis">Scenario</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Options</label>
+        <div class="quiz-opt-row"><input type="radio" name="quiz[${idx}][correctIndex]" value="0"><input type="text" name="quiz[${idx}][options][]" placeholder="Option 1"></div>
+        <div class="quiz-opt-row"><input type="radio" name="quiz[${idx}][correctIndex]" value="1"><input type="text" name="quiz[${idx}][options][]" placeholder="Option 2"></div>
+        <div class="quiz-opt-row"><input type="radio" name="quiz[${idx}][correctIndex]" value="2"><input type="text" name="quiz[${idx}][options][]" placeholder="Option 3"></div>
+        <div class="quiz-opt-row"><input type="radio" name="quiz[${idx}][correctIndex]" value="3"><input type="text" name="quiz[${idx}][options][]" placeholder="Option 4"></div>
+      </div>
+      <div class="form-group">
+        <label>Explanation</label>
+        <textarea name="quiz[${idx}][explanation]" rows="2"></textarea>
+      </div>
+    </div>
+  `);
+}
+function removeQuiz(btn) { btn.closest('.quiz-item').remove(); }
+
+// Resource management
+let rIdx = {{#if resources}}{{resources.length}}{{else}}0{{/if}};
+function addResource() {
+  const c = document.getElementById('resourcesContainer');
+  const idx = rIdx++;
+  c.insertAdjacentHTML('beforeend', `
+    <div class="resource-item" data-ridx="${idx}">
+      <input type="text" name="resources[${idx}][title]" placeholder="Title" style="flex:1;">
+      <input type="text" name="resources[${idx}][url]" placeholder="URL" style="flex:1;">
+      <select name="resources[${idx}][type]">
+        <option value="link">Link</option>
+        <option value="pdf">PDF</option>
+        <option value="video">Video</option>
+        <option value="doc">Document</option>
+      </select>
+      <button type="button" class="ac-btn danger sm" onclick="this.parentElement.remove()">✕</button>
+    </div>
+  `);
+}
+
+// Form submission
+document.getElementById('lessonForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  const isNew = !data.id;
+  const url = isNew ? '/api/admin/academy/lessons' : `/api/admin/academy/lessons/${data.id}`;
+  const method = isNew ? 'POST' : 'PUT';
+
+  // Collect quiz data from form
+  const quizItems = document.querySelectorAll('.quiz-item');
+  const quizData = [];
+  quizItems.forEach(item => {
+    const q = {
+      question: item.querySelector('input[name$="[question]"]')?.value || '',
+      type: item.querySelector('select[name$="[type]"]')?.value || 'multiple-choice',
+      options: [],
+      correctIndex: parseInt(item.querySelector('input[type="radio"]:checked')?.value || '0'),
+      explanation: item.querySelector('textarea[name$="[explanation]"]')?.value || ''
+    };
+    const optInputs = item.querySelectorAll('input[type="text"][name$="[options][]"]');
+    optInputs.forEach(inp => { if(inp.value) q.options.push(inp.value); });
+    if (q.question && q.options.length >= 2) quizData.push(q);
+  });
+  if (quizData.length > 0) data.quiz_data = JSON.stringify(quizData);
+
+  // Collect resources
+  const resRaw = data.resources_raw;
+  if (resRaw && resRaw.trim()) {
+    try { JSON.parse(resRaw); data.resources = resRaw; }
+    catch(e) { /* invalid JSON, ignore */ }
+  } else {
+    const resItems = document.querySelectorAll('.resource-item');
+    const resArr = [];
+    resItems.forEach(item => {
+      const inputs = item.querySelectorAll('input');
+      const sel = item.querySelector('select');
+      if (inputs[0]?.value && inputs[1]?.value) {
+        resArr.push({ title: inputs[0].value, url: inputs[1].value, type: sel?.value || 'link', description: '' });
+      }
+    });
+    if (resArr.length > 0) data.resources = JSON.stringify(resArr);
+  }
+
+  delete data.resources_raw;
+  // Clean up quiz array keys from form data
+  Object.keys(data).forEach(k => { if (k.startsWith('quiz[') || k.startsWith('resources[')) delete data[k]; });
+
+  try {
+    const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const d = await r.json();
+    if (d.success) { showToast(isNew ? 'Lesson created' : 'Lesson saved'); if(isNew) setTimeout(()=>location.href='/admin/academy/course/'+data.course_id+'/lessons',800); }
+    else { showToast(d.error || 'Failed'); }
+  } catch(e) { showToast('Network error'); }
+});
+</script>

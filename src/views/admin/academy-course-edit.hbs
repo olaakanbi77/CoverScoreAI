@@ -1,0 +1,90 @@
+<style>
+  .ac-mgmt { max-width: 700px; margin: 0 auto; padding: 24px; }
+  .ac-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .ac-header h1 { font-size: 20px; font-weight: 800; color: #0f172a; margin: 0; }
+  .ac-back { text-decoration: none; color: #64748b; display: flex; align-items: center; }
+  .ac-back:hover { color: #0f172a; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; outline: none; box-sizing: border-box; }
+  .form-group input:focus, .form-group textarea:focus { border-color: #7c3aed; }
+  .form-group textarea { min-height: 80px; resize: vertical; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+  .ac-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; }
+  .ac-btn.primary { background: #7c3aed; color: white; }
+  .ac-btn.primary:hover { background: #6d28d9; }
+  .ac-btn.outline { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
+  .ac-toast { position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; }
+  .ac-toast.show { opacity: 1; }
+</style>
+
+<div class="ac-mgmt">
+  <div class="ac-header">
+    <a href="/admin/academy" class="ac-back">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </a>
+    <h1>{{#if course}}Edit Course{{else}}New Course{{/if}}</h1>
+  </div>
+
+  <form id="courseForm">
+    {{#if course}}<input type="hidden" name="id" value="{{course.id}}">{{/if}}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Course Code</label>
+        <input type="text" name="code" value="{{course.code}}" placeholder="e.g. CCA-101" required>
+      </div>
+      <div class="form-group">
+        <label>Level</label>
+        <select name="level_id">
+          {{#each levels}}
+          <option value="{{id}}" {{#if (eq id ../course.level_id)}}selected{{/if}}>{{name}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Course Title</label>
+      <input type="text" name="title" value="{{course.title}}" placeholder="e.g. Foundations of Risk & Insurance" required>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" placeholder="Course description...">{{course.description}}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Order Index</label>
+        <input type="number" name="order_index" value="{{course.order_index}}" min="1">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:20px;">
+      <button type="submit" class="ac-btn primary">{{#if course}}Save Changes{{else}}Create Course{{/if}}</button>
+      <a href="/admin/academy" class="ac-btn outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<div id="toast" class="ac-toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.getElementById('courseForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  const isNew = !data.id;
+  const url = isNew ? '/api/admin/academy/courses' : `/api/admin/academy/courses/${data.id}`;
+  const method = isNew ? 'POST' : 'PUT';
+  try {
+    const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const d = await r.json();
+    if (d.success) { showToast(isNew ? 'Course created' : 'Course saved'); setTimeout(() => location.href='/admin/academy', 800); }
+    else { showToast(d.error || 'Failed'); }
+  } catch(e) { showToast('Network error'); }
+});
+</script>

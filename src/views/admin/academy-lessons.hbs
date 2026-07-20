@@ -1,0 +1,106 @@
+<style>
+  .ac-mgmt { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .ac-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .ac-header-left { display: flex; align-items: center; gap: 12px; }
+  .ac-header-left h1 { font-size: 20px; font-weight: 800; color: #0f172a; margin: 0; }
+  .ac-header-sub { font-size: 11px; color: #64748b; }
+  .ac-back { text-decoration: none; color: #64748b; display: flex; align-items: center; }
+  .ac-back:hover { color: #0f172a; }
+  .ac-course-info { margin: -16px 0 16px 0; padding: 12px 16px; background: #f5f3ff; border-radius: 8px; }
+  .ac-course-info code { font-size: 10px; font-weight: 700; color: #7c3aed; }
+  .ac-course-info p { font-size: 12px; color: #0f172a; margin: 4px 0 0 0; font-weight: 600; }
+  .ac-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; }
+  .ac-btn.primary { background: #7c3aed; color: white; }
+  .ac-btn.primary:hover { background: #6d28d9; }
+  .ac-btn.outline { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
+  .ac-btn.outline:hover { background: #f8fafc; }
+  .ac-btn.sm { padding: 4px 10px; font-size: 10px; }
+  .ac-btn.danger { background: #ef4444; color: white; }
+  .ac-btn.danger:hover { background: #dc2626; }
+  .ac-btn.green { background: #10b981; color: white; }
+  .ac-btn.green:hover { background: #059669; }
+  .ac-card { background: white; border: 1px solid #f1f5f9; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+  .ac-card-body { padding: 14px 16px; }
+  .ac-lesson-row { display: flex; align-items: center; gap: 12px; }
+  .ac-lesson-num { width: 28px; height: 28px; border-radius: 6px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #64748b; flex-shrink: 0; }
+  .ac-lesson-info { flex: 1; min-width: 0; }
+  .ac-lesson-title { font-size: 13px; font-weight: 700; color: #0f172a; margin: 0; }
+  .ac-lesson-desc { font-size: 10px; color: #64748b; margin: 2px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ac-lesson-meta { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .ac-meta-tag { display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 600; }
+  .ac-meta-tag.has { background: #ecfdf5; color: #047857; }
+  .ac-meta-tag.missing { background: #fef2f2; color: #b91c1c; }
+  .ac-actions { display: flex; gap: 4px; flex-shrink: 0; }
+  .ac-toast { position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: white; padding: 12px 20px; border-radius: 8px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; }
+  .ac-toast.show { opacity: 1; }
+</style>
+
+<div class="ac-mgmt">
+  <div class="ac-header">
+    <div class="ac-header-left">
+      <a href="/admin/academy" class="ac-back">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </a>
+      <div>
+        <h1>Lessons</h1>
+        <div class="ac-header-sub">{{course.code}}: {{course.title}}</div>
+      </div>
+    </div>
+    <a href="/admin/academy/course/{{course.id}}/lessons/new" class="ac-btn primary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      New Lesson
+    </a>
+  </div>
+
+  <div class="ac-course-info">
+    <code>{{course.code}}</code>
+    <p>{{course.description}}</p>
+  </div>
+
+  {{#each lessons}}
+  <div class="ac-card">
+    <div class="ac-card-body">
+      <div class="ac-lesson-row">
+        <div class="ac-lesson-num">{{lesson_number}}</div>
+        <div class="ac-lesson-info">
+          <div class="ac-lesson-title">{{title}}</div>
+          <div class="ac-lesson-desc">{{description}}</div>
+          <div class="ac-lesson-meta">
+            <span class="ac-meta-tag {{#if hasContent}}has{{else}}missing{{/if}}">{{#if hasContent}}✓{{else}}✗{{/if}} Content</span>
+            <span class="ac-meta-tag {{#if hasQuiz}}has{{else}}missing{{/if}}">{{#if hasQuiz}}✓{{else}}✗{{/if}} Quiz</span>
+            <span class="ac-meta-tag {{#if hasVideoScript}}has{{else}}missing{{/if}}">{{#if hasVideoScript}}✓{{else}}✗{{/if}} Video</span>
+            <span class="ac-meta-tag {{#if hasWorkbook}}has{{else}}missing{{/if}}">{{#if hasWorkbook}}✓{{else}}✗{{/if}} Workbook</span>
+            <span class="ac-meta-tag {{#if hasResources}}has{{else}}missing{{/if}}">{{#if hasResources}}✓{{else}}✗{{/if}} Resources</span>
+            <span style="font-size:9px;color:#94a3b8;">{{duration_minutes}}min</span>
+          </div>
+        </div>
+        <div class="ac-actions">
+          <a href="/admin/academy/lesson/{{id}}" class="ac-btn outline sm">Edit</a>
+          <button class="ac-btn danger sm" onclick="deleteLesson({{id}},'{{title}}')">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+  <div class="ac-card">
+    <div class="ac-card-body" style="text-align:center;padding:40px;">
+      <p style="font-size:13px;color:#64748b;margin:0;">No lessons for this course yet.</p>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+<div id="toast" class="ac-toast"></div>
+
+<script>
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+async function deleteLesson(id, title) {
+  if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+  try {
+    const r = await fetch(`/api/admin/academy/lessons/${id}`, { method: 'DELETE' });
+    const d = await r.json();
+    if (d.success) { showToast('Lesson deleted'); setTimeout(()=>location.reload(),800); }
+    else { showToast(d.error||'Failed'); }
+  } catch(e) { showToast('Network error'); }
+}
+</script>
