@@ -1007,9 +1007,9 @@ const initDatabase = () => {
         });
       });
     });
-  });
 
-  // Academy support tables
+    // Academy support tables
+    db.run(`CREATE TABLE IF NOT EXISTS academy_quiz_results (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
       module_id INTEGER NOT NULL,
@@ -1044,7 +1044,7 @@ const initDatabase = () => {
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (course_id) REFERENCES academy_courses(id)
     )`);
-  });
+  }); // end serialize
 
   // CRM Schema Migration (Option B)
   // Drop the old leads table constraint by recreating the table if the old constraint exists,
