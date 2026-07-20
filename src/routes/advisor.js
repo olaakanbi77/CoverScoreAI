@@ -1033,7 +1033,8 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       hasWorkbook: !!workbookContent,
       hasCaseStudy: !!caseStudy,
       hasResources: !!resources,
-      hasVideo: !!mod.video_url
+      videoUrl: mod.video_url,
+      videoScript: mod.video_script
     });
   } catch (err) {
     console.error('Error loading module:', err);
