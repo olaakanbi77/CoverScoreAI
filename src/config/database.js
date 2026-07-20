@@ -870,12 +870,67 @@ const initDatabase = () => {
 
     db.run("UPDATE academy_modules SET course_id = 1 WHERE level_id = 1 AND course_id IS NULL");
 
-    // Check if courses already seeded
-    db.get("SELECT id FROM academy_courses LIMIT 1", (err, row) => {
-      if (err || row) return;
-      console.log('Seeding CCA courses and v3 curriculum...');
+    console.log('Seeding CCA courses and v3 curriculum...');
 
-      db.exec(`INSERT INTO academy_courses (level_id, code, title, description, order_index) VALUES
+    db.exec(`
+      INSERT OR IGNORE INTO academy_levels (id, name, description, order_index) VALUES 
+        (1, 'CoverScore Certified Associate™ (CCA™)', 'Level 1: Foundation', 1),
+        (2, 'CoverScore Risk Assessment Specialist™ (CRAS™)', 'Level 2: Assessment', 2),
+        (3, 'Specialization Tracks™ (CPRA™ / CBRA™)', 'Level 3: Specialization', 3),
+        (4, 'CoverScore Risk Consultant™ (CRC™)', 'Level 4: Consulting', 4),
+        (5, 'CoverScore Intelligent Solutions Advisor™ (CISA™)', 'Level 5: AI & Data', 5),
+        (6, 'CoverScore Master Risk Advisor™ (CMRA™)', 'Level 6: Mastery', 6);
+
+      INSERT OR IGNORE INTO academy_modules (id, level_id, title, description, order_index, track) VALUES 
+        (1,1,'Introduction to Risk','Basic risk concepts',1,'CORE'),
+        (2,1,'Introduction to Insurance','Basics of insurance',2,'CORE'),
+        (3,1,'Risk Management Principles','Core risk management principles',3,'CORE'),
+        (4,1,'CoverScore Philosophy™','Understanding our approach',4,'CORE'),
+        (5,1,'Professional Ethics','Ethical advisory',5,'CORE'),
+        (6,1,'Customer Communication','Effective client interaction',6,'CORE'),
+        (7,1,'Digital Advisory Skills','Using digital tools',7,'CORE'),
+        (8,2,'Assessment Fundamentals™','How to assess risk',1,'CORE'),
+        (9,2,'CoverScore Risk Score™','Understanding the score',2,'CORE'),
+        (10,2,'Risk Fingerprint™','Individual risk profiles',3,'CORE'),
+        (11,2,'Exposure Index™','Calculating exposure',4,'CORE'),
+        (12,2,'Protection Gap™','Identifying gaps',5,'CORE'),
+        (13,2,'Risk DNA™','Deep dive into risk elements',6,'CORE'),
+        (14,2,'AI Assessment Interpretation™','Using AI for insights',7,'CORE'),
+        (15,3,'Family Protection Planning™','Planning for families',1,'PERSONAL'),
+        (16,3,'Health Protection Planning™','Health risk advisory',2,'PERSONAL'),
+        (17,3,'Income Protection Planning™','Securing income',3,'PERSONAL'),
+        (18,3,'Retirement Readiness Planning™','Retirement risks',4,'PERSONAL'),
+        (19,3,'Education Funding Planning™','Education risks',5,'PERSONAL'),
+        (20,3,'Estate & Legacy Awareness™','Legacy planning',6,'PERSONAL'),
+        (21,3,'Personal Risk Reviews™','Conducting reviews',7,'PERSONAL'),
+        (22,3,'SME Risk Advisory™','Advising small businesses',8,'BUSINESS'),
+        (23,3,'School Risk Advisory™','Advising schools',9,'BUSINESS'),
+        (24,3,'Church Risk Advisory™','Advising churches',10,'BUSINESS'),
+        (25,3,'Hospital Risk Advisory™','Advising hospitals',11,'BUSINESS'),
+        (26,3,'Manufacturing Risk Advisory™','Advising manufacturers',12,'BUSINESS'),
+        (27,3,'Construction Risk Advisory™','Advising construction firms',13,'BUSINESS'),
+        (28,4,'Consultative Selling™','Advanced selling techniques',1,'CORE'),
+        (29,4,'Risk Advisory Framework™','Structured advisory',2,'CORE'),
+        (30,4,'Risk Improvement Roadmaps™','Creating roadmaps',3,'CORE'),
+        (31,4,'Business Continuity™','Ensuring continuity',4,'CORE'),
+        (32,4,'Enterprise Risk Concepts™','ERM basics',5,'CORE'),
+        (33,4,'Strategic Protection Planning™','Strategic planning',6,'CORE'),
+        (34,4,'Executive Presentation Skills™','Presenting to executives',7,'CORE'),
+        (35,5,'AI Risk Intelligence™','Leveraging AI',1,'CORE'),
+        (36,5,'Industry Benchmarking™','Benchmarking risks',2,'CORE'),
+        (37,5,'Predictive Risk Thinking™','Anticipating risks',3,'CORE'),
+        (38,5,'CoverScore Copilot™','Using the copilot',4,'CORE'),
+        (39,5,'Risk Analytics™','Data analysis',5,'CORE'),
+        (40,5,'Data-Driven Advisory™','Data-driven insights',6,'CORE'),
+        (41,6,'Strategic Risk Leadership™','Leading in risk',1,'CORE'),
+        (42,6,'Risk Transformation™','Transforming risk management',2,'CORE'),
+        (43,6,'Risk Culture Development™','Building culture',3,'CORE'),
+        (44,6,'Advanced Advisory™','Master-level advisory',4,'CORE'),
+        (45,6,'Thought Leadership™','Becoming a thought leader',5,'CORE'),
+        (46,6,'Coaching & Mentorship™','Mentoring others',6,'CORE'),
+        (47,6,'Academy Facilitation™','Teaching the academy',7,'CORE');
+
+      INSERT OR IGNORE INTO academy_courses (level_id, code, title, description, order_index) VALUES
 (1,'CCA-101','Foundations of Risk & Insurance','Build a solid understanding of risk, insurance principles, and the Nigerian risk landscape.',1),
 (1,'CCA-102','The Nigerian Insurance Market & Regulatory Environment','Explore the Nigerian insurance industry structure, key players, and the regulatory framework overseen by NAICOM.',2),
 (1,'CCA-103','CoverScore Risk Assessment Methodology','Master the CoverScore assessment framework, risk scoring, and protection gap analysis.',3),
@@ -884,7 +939,7 @@ const initDatabase = () => {
 (1,'CCA-106','Ethics, Compliance & Professional Standards','Understand ethical advisory, regulatory compliance, data protection, and the CoverScore Code of Ethics.',6),
 (1,'CCA-107','Digital Tools & Technology in Advisory','Leverage digital tools, the CoverScore platform, and virtual engagement to enhance your advisory practice.',7),
 (1,'CCA-108','Capstone: Integrated Advisory Simulation & Assessment','Apply all CCA knowledge in an integrated simulation covering real-world client scenarios from assessment to recommendation.',8)`, (err) => {
-        if (err) { console.error('Failed to seed courses:', err.message); return; }
+        if (err) { console.error('Failed to seed academy:', err.message); return; }
 
         // Seed 60 lessons across 8 courses
         const m1Content = '<div class="lesson-content"><section class="lesson-section"><h2>Learning Objectives</h2><ul><li>Define risk and distinguish it from uncertainty</li><li>Understand why risk awareness is the foundation of protection planning</li><li>Recognise how CoverScore approach transforms risk advisory</li></ul></section><section class="lesson-section"><h2>What Is Risk?</h2><p>Risk is the possibility that an event will occur and cause a negative outcome. In the insurance context, risk is the <strong>uncertainty of financial loss</strong>. Every individual, family, and business faces risk every day.</p><p>What matters is how we <strong>identify, measure, and manage</strong> it.</p><div class="callout-box" style="background:#f5f3ff;border-left:3px solid #7c3aed;padding:12px;border-radius:6px;margin:12px 0;"><p style="margin:0;font-size:12px;color:#1e293b;font-weight:600;"><strong>Key Insight:</strong> Risk is not about fear — it is about readiness. The goal is not to eliminate risk but to understand it well enough to make informed decisions.</p></div></section><section class="lesson-section"><h2>Risk vs Uncertainty</h2><table class="lesson-table"><tr><th>Risk</th><th>Uncertainty</th></tr><tr><td>Probabilities can be estimated based on past data</td><td>Probabilities cannot be estimated</td></tr><tr><td>Insurance companies use risk to set premiums</td><td>Uncertain events are generally not insurable</td></tr><tr><td>Example: The probability of a house fire in a given year</td><td>Example: Whether a new technology will succeed in the market</td></tr></table></section><section class="lesson-section"><h2>Why Risk Awareness Matters</h2><p>Most people do not think about risk until something happens. As a CoverScore advisor, your role is to help clients <strong>recognise their risks before they materialise</strong>.</p><ul><li>Over 70% of Nigerian small businesses have no insurance coverage</li><li>Fewer than 5% of Nigerian adults have any form of life assurance</li><li>Most families are one medical emergency away from financial distress</li></ul></section><section class="lesson-section"><h2>The CoverScore Difference</h2><ol><li><strong>Assess</strong> — Use AI-powered tools to evaluate a client risk profile</li><li><strong>Score</strong> — Generate an objective risk score (0–100)</li><li><strong>Analyze</strong> — Identify protection gaps with the Risk Fingerprint™</li><li><strong>Recommend</strong> — Present tailored solutions that address real needs</li><li><strong>Protect</strong> — Implement the plan and track improvement</li><li><strong>Reflect</strong> — Review outcomes and adjust as circumstances change</li><li><strong>Improve</strong> — Continuously enhance the client risk posture</li></ol></section><section class="lesson-section"><h2>Key Takeaways</h2><ul><li>Risk is the possibility of financial loss — it can be measured and managed</li><li>Risk differs from uncertainty; insurance works where probabilities can be estimated</li><li>Nigeria has massive protection gaps that advisors can help close</li><li>CoverScore replaces reactive selling with proactive, data-driven advisory</li></ul></section></div>';
@@ -992,7 +1047,6 @@ const initDatabase = () => {
           else console.log('Seeded 8 CCA courses with 60 lessons');
         });
       });
-    });
 
     // Academy support tables
     db.run(`CREATE TABLE IF NOT EXISTS academy_quiz_results (
