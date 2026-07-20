@@ -88,30 +88,69 @@
   .cl-prog-txt { font-size: 9px; font-weight: 700; color: var(--c-green-dark); }
 
   /* Learning Paths */
-  .paths-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-right: -16px; padding-right: 16px; scrollbar-width: none; }
+  .paths-scroll { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; margin-right: -16px; padding-right: 16px; scrollbar-width: none; align-items: stretch; }
   .paths-scroll::-webkit-scrollbar { display: none; }
-  .path-card { min-width: 110px; border: 1px solid #f1f5f9; border-radius: 12px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-  
-  .pc-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
-  .pc-icon.green { background: var(--c-green-light); color: var(--c-green-dark); }
-  .pc-icon.blue { background: var(--c-blue-light); color: var(--c-blue); }
-  .pc-icon.purple { background: var(--c-purple-light); color: var(--c-purple); }
-  .pc-icon.orange { background: var(--c-orange-light); color: var(--c-orange); }
-  .pc-icon svg { width: 18px; height: 18px; stroke-width: 2; }
-  
-  .pc-title { font-size: 10px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.2; height: 24px; display: flex; align-items: center; justify-content: center; }
-  .pc-sub { font-size: 9px; color: var(--c-gray); font-weight: 600; margin: 0; }
-  .pc-pct { font-size: 11px; font-weight: 800; margin: 4px 0 0 0; }
-  .pc-pct.green { color: var(--c-green-dark); }
-  .pc-pct.blue { color: var(--c-blue); }
-  .pc-pct.purple { color: var(--c-purple); }
-  .pc-pct.orange { color: var(--c-orange); }
-  
-  .pc-bar { width: 32px; height: 3px; border-radius: 2px; margin-top: 4px; }
-  .pc-bar.green { background: var(--c-green-dark); }
-  .pc-bar.blue { background: var(--c-blue); }
-  .pc-bar.purple { background: var(--c-purple); }
-  .pc-bar.orange { background: var(--c-orange); }
+  .path-card { min-width: 200px; max-width: 240px; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; position: relative; overflow: hidden; }
+  .path-card.level1 { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1px solid #a7f3d0; }
+  .path-card.level2 { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; }
+  .path-card.level3 { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border: 1px solid #ddd6fe; }
+  .path-card.level4 { background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa; }
+  .path-card.level5 { background: linear-gradient(135deg, #fef2f2, #fecaca); border: 1px solid #fca5a5; }
+  .path-card.level6 { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; }
+  .path-card.level7 { background: linear-gradient(135deg, #0b1120, #1e293b); border: 1px solid #334155; }
+  .path-card.level7 .pc-title, .path-card.level7 .pc-desc, .path-card.level7 .pc-mod-label { color: white !important; }
+  .path-card.level7 .pc-mod-item { color: #cbd5e1; }
+  .path-card.level7 .pc-badge { background: rgba(251,191,36,0.2); color: #fbbf24; border-color: rgba(251,191,36,0.3); }
+
+  .pc-level { font-size: 8px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
+  .level1 .pc-level { color: #047857; }
+  .level2 .pc-level { color: #1d4ed8; }
+  .level3 .pc-level { color: #6d28d9; }
+  .level4 .pc-level { color: #c2410c; }
+  .level5 .pc-level { color: #b91c1c; }
+  .level6 .pc-level { color: #15803d; }
+  .level7 .pc-level { color: #fbbf24; }
+
+  .pc-title { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0; line-height: 1.2; }
+  .pc-title span { display: block; font-size: 10px; font-weight: 600; opacity: 0.7; margin-top: 1px; }
+  .pc-desc { font-size: 9px; color: var(--c-gray); font-weight: 500; margin: 0; line-height: 1.3; }
+  .pc-mod-label { font-size: 8px; font-weight: 700; color: var(--c-text); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 4px; }
+  .pc-mod-list { display: flex; flex-wrap: wrap; gap: 3px; }
+  .pc-mod-item { font-size: 7px; font-weight: 600; color: #475569; background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+  .pc-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-top: auto; width: fit-content; }
+  .level1 .pc-badge { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
+  .level2 .pc-badge { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .level3 .pc-badge { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+  .level4 .pc-badge { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+  .level5 .pc-badge { background: #fecaca; color: #b91c1c; border: 1px solid #fca5a5; }
+  .level6 .pc-badge { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+
+  /* Micro-certs */
+  .micro-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-right: -16px; padding-right: 16px; scrollbar-width: none; }
+  .micro-scroll::-webkit-scrollbar { display: none; }
+  .micro-chip { font-size: 9px; font-weight: 700; padding: 6px 12px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; background: #f8fafc; border: 1px solid #e2e8f0; color: var(--c-dark); }
+  .micro-chip svg { width: 12px; height: 12px; margin-right: 4px; vertical-align: middle; }
+
+  /* Soft Skills */
+  .skills-grid { display: flex; flex-direction: column; gap: 12px; }
+  .skill-group { background: #f8fafc; border-radius: 10px; padding: 12px; }
+  .skill-group h5 { font-size: 11px; font-weight: 800; color: var(--c-dark); margin: 0 0 6px 0; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .skill-tag { font-size: 8px; font-weight: 600; color: #475569; background: white; padding: 3px 8px; border-radius: 6px; border: 1px solid #e2e8f0; }
+
+  /* Journey Map */
+  .journey { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .journey-step { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; }
+  .journey-step:last-child { border-bottom: none; }
+  .journey-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; font-weight: 900; }
+  .journey-dot.green { background: var(--c-green-light); color: var(--c-green-dark); }
+  .journey-dot.blue { background: var(--c-blue-light); color: var(--c-blue); }
+  .journey-dot.purple { background: var(--c-purple-light); color: var(--c-purple); }
+  .journey-dot.orange { background: var(--c-orange-light); color: var(--c-orange); }
+  .journey-dot.red { background: #fef2f2; color: #b91c1c; }
+  .journey-dot.dark { background: var(--c-navy-light); color: white; }
+  .journey-label { font-size: 11px; font-weight: 700; color: var(--c-dark); }
+  .journey-arrow { font-size: 10px; color: var(--c-gray); text-align: center; padding: 2px 0; }
 
   /* Featured Courses */
   .fc-list { display: flex; flex-direction: column; gap: 16px; }
@@ -308,40 +347,240 @@
     <div>
       <div class="section-header">
         <h3 class="sec-title">Learning Paths</h3>
-        <a href="/advisor/academy" class="sec-link">View All</a>
       </div>
-      
+      <p style="font-size:10px; color:var(--c-gray); margin: -8px 0 12px 0; line-height:1.4;">Learn → Assess → Advise → Protect → Grow</p>
+
       <div class="paths-scroll">
-        {{#each levels}}
-        {{#if this.isSplitTrack}}
-        <div class="path-card" style="cursor:default;">
-          <div class="pc-icon green">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
+        <!-- Level 1: CCA -->
+        <div class="path-card level1">
+          <div class="pc-level">Level 1 — Foundations</div>
+          <div class="pc-title">CCA <span>Certified CoverScore Advisor</span></div>
+          <div class="pc-desc">For beginners and new insurance advisors. Build risk & insurance fundamentals.</div>
+          <div class="pc-mod-label">Modules</div>
+          <div class="pc-mod-list">
+            <span class="pc-mod-item">Risk Management</span>
+            <span class="pc-mod-item">Insurance Principles</span>
+            <span class="pc-mod-item">Risk vs Uncertainty</span>
+            <span class="pc-mod-item">Types of Risk</span>
+            <span class="pc-mod-item">Nigerian Insurance</span>
+            <span class="pc-mod-item">Laws & Regulations</span>
+            <span class="pc-mod-item">Ethics</span>
+            <span class="pc-mod-item">Customer-Centric</span>
           </div>
-          <h4 class="pc-title">{{this.name}}</h4>
-          <p class="pc-sub">{{add this.personalModules.length this.businessModules.length}} Lessons</p>
-          <div style="display:flex; gap:6px; margin-top:4px;">
-            {{#if this.firstPersonalModuleId}}
-            <a href="/advisor/academy/module/{{this.firstPersonalModuleId}}" class="pc-pct" style="font-size:9px; font-weight:700; color:#7c3aed; text-decoration:none; padding:4px 8px; border-radius:4px; background:#f5f3ff;">Personal</a>
-            {{/if}}
-            {{#if this.firstBusinessModuleId}}
-            <a href="/advisor/academy/module/{{this.firstBusinessModuleId}}" class="pc-pct" style="font-size:9px; font-weight:700; color:#2563eb; text-decoration:none; padding:4px 8px; border-radius:4px; background:#eff6ff;">Business</a>
-            {{/if}}
-          </div>
-          <div class="pc-bar green" style="width: 100%"></div>
+          <div class="pc-badge">🏆 CCA</div>
         </div>
-        {{else}}
-        <a href="/advisor/academy/module/{{this.firstModuleId}}" class="path-card" style="text-decoration:none;">
-          <div class="pc-icon green">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+
+        <!-- Level 2: CRAS -->
+        <div class="path-card level2">
+          <div class="pc-level">Level 2 — Assessment</div>
+          <div class="pc-title">CRAS <span>Certified Risk Assessment Specialist</span></div>
+          <div class="pc-desc">For advisors who use CoverScore daily. Master risk assessment and reporting.</div>
+          <div class="pc-mod-label">Modules</div>
+          <div class="pc-mod-list">
+            <span class="pc-mod-item">Introduction to CoverScore</span>
+            <span class="pc-mod-item">CoverScore Philosophy</span>
+            <span class="pc-mod-item">Risk Intelligence</span>
+            <span class="pc-mod-item">Understanding CoverScore™</span>
+            <span class="pc-mod-item">Risk Pillars</span>
+            <span class="pc-mod-item">Risk Story™</span>
+            <span class="pc-mod-item">CoverScore Insight™</span>
+            <span class="pc-mod-item">Resilience Forecast™</span>
+            <span class="pc-mod-item">Explaining Reports</span>
+            <span class="pc-mod-item">Handling Objections</span>
           </div>
-          <h4 class="pc-title">{{this.name}}</h4>
-          <p class="pc-sub">{{this.modules.length}} Lessons</p>
-          <div class="pc-pct green" style="color:#10b981;">{{#if (gt this.modules.length 0)}}{{this.completedPct}}%{{else}}0%{{/if}}</div>
-          <div class="pc-bar green" style="width: {{this.completedPct}}%"></div>
-        </a>
-        {{/if}}
-        {{/each}}
+          <div class="pc-badge">🏆 CRAS</div>
+        </div>
+
+        <!-- Level 3: CIRC -->
+        <div class="path-card level3">
+          <div class="pc-level">Level 3 — Industry Expert</div>
+          <div class="pc-title">CIRC <span>Certified Industry Risk Consultant</span></div>
+          <div class="pc-desc">Industry-specific risk expertise across key sectors.</div>
+          <div class="pc-mod-label">Specializations</div>
+          <div class="pc-mod-list">
+            <span class="pc-mod-item">School Risk</span>
+            <span class="pc-mod-item">Hospital Risk</span>
+            <span class="pc-mod-item">Manufacturing Risk</span>
+            <span class="pc-mod-item">SME Risk</span>
+            <span class="pc-mod-item">Church Risk</span>
+          </div>
+          <div class="pc-badge">🏆 CIRC</div>
+        </div>
+
+        <!-- Level 4: CISA -->
+        <div class="path-card level4">
+          <div class="pc-level">Level 4 — Solution Architect</div>
+          <div class="pc-title">CISA <span>Certified Insurance Solution Architect</span></div>
+          <div class="pc-desc">Bridge risk findings to insurance solutions. Design multi-policy programmes.</div>
+          <div class="pc-mod-label">Modules</div>
+          <div class="pc-mod-list">
+            <span class="pc-mod-item">Mapping Risks to Strategies</span>
+            <span class="pc-mod-item">Product Selection</span>
+            <span class="pc-mod-item">Multi-Policy Design</span>
+            <span class="pc-mod-item">Protection Gaps</span>
+            <span class="pc-mod-item">Quote Builder</span>
+            <span class="pc-mod-item">Proposal Writing</span>
+            <span class="pc-mod-item">Risk Financing</span>
+            <span class="pc-mod-item">Underwriting</span>
+          </div>
+          <div class="pc-badge">🏆 CISA</div>
+        </div>
+
+        <!-- Level 5: CMRA -->
+        <div class="path-card level5">
+          <div class="pc-level">Level 5 — Master Advisor</div>
+          <div class="pc-title">CMRA <span>Certified Master Risk Advisor</span></div>
+          <div class="pc-desc">The highest advisory level. Lead full CoverScore engagements.</div>
+          <div class="pc-mod-label">Modules</div>
+          <div class="pc-mod-list">
+            <span class="pc-mod-item">Advanced Risk Consulting</span>
+            <span class="pc-mod-item">Enterprise Risk Management</span>
+            <span class="pc-mod-item">AI-Assisted Advisory</span>
+            <span class="pc-mod-item">Executive Communication</span>
+            <span class="pc-mod-item">Complex Account Mgmt</span>
+            <span class="pc-mod-item">Negotiation</span>
+            <span class="pc-mod-item">Leadership</span>
+            <span class="pc-mod-item">Team Coaching</span>
+          </div>
+          <div class="pc-badge">🏆 CMRA</div>
+        </div>
+
+        <!-- Level 6: CCRIP -->
+        <div class="path-card level6">
+          <div class="pc-level">Level 6 — Risk Intelligence</div>
+          <div class="pc-title">CCRIP <span>Certified CoverScore Risk Intelligence Professional</span></div>
+          <div class="pc-desc">Operate and optimise the entire CoverScore platform. Ideal for enterprise deployments.</div>
+          <div class="pc-mod-label">Modules</div>
+          <div class="pc-mod-list">
+            <span class="pc-mod-item">AI-Powered Risk Analysis</span>
+            <span class="pc-mod-item">Recommendation Engine</span>
+            <span class="pc-mod-item">Quote Builder Workflows</span>
+            <span class="pc-mod-item">Rating Engine Config</span>
+            <span class="pc-mod-item">Advisor Analytics</span>
+            <span class="pc-mod-item">Portfolio Risk Mgmt</span>
+            <span class="pc-mod-item">Enterprise Implementation</span>
+          </div>
+          <div class="pc-badge">🏆 CCRIP</div>
+        </div>
+
+        <!-- Level 7: Mentor -->
+        <div class="path-card level7">
+          <div class="pc-level">Future Track</div>
+          <div class="pc-title">Mentor / Trainer</div>
+          <div class="pc-desc">Graduate to coaching and leading the next generation of CoverScore advisors.</div>
+          <div style="margin-top:4px; display:flex; flex-wrap:wrap; gap:3px;">
+            <span style="font-size:7px; font-weight:600; color:#94a3b8; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">Personal Risk</span>
+            <span style="font-size:7px; font-weight:600; color:#94a3b8; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">Corporate Risk</span>
+            <span style="font-size:7px; font-weight:600; color:#94a3b8; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">Technical Underwriting</span>
+            <span style="font-size:7px; font-weight:600; color:#94a3b8; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">Claims & Loss Mgmt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Micro-Certifications -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Micro-Certifications</h3>
+      </div>
+      <p style="font-size:10px; color:var(--c-gray); margin: -8px 0 8px 0;">Short, focused credentials you can earn independently.</p>
+      <div class="micro-scroll">
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Motor Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Fire Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Liability Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Health Protection</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Life Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Group Life</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Marine Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Engineering Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Cyber Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Agriculture Insurance</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Bonds & Guarantees</span>
+        <span class="micro-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Claims Management</span>
+      </div>
+    </div>
+
+    <!-- Soft Skills Academy -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Soft Skills Academy</h3>
+      </div>
+      <p style="font-size:10px; color:var(--c-gray); margin: -8px 0 8px 0;">Every advisor develops professional skills alongside technical knowledge.</p>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <h5>💬 Communication</h5>
+          <div class="skill-tags">
+            <span class="skill-tag">Active Listening</span>
+            <span class="skill-tag">Consultative Conversations</span>
+            <span class="skill-tag">Asking Better Questions</span>
+            <span class="skill-tag">Storytelling with Risk</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h5>📈 Sales</h5>
+          <div class="skill-tags">
+            <span class="skill-tag">Consultative Selling</span>
+            <span class="skill-tag">Objection Handling</span>
+            <span class="skill-tag">Value-Based Selling</span>
+            <span class="skill-tag">Negotiation</span>
+            <span class="skill-tag">Closing Techniques</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h5>⚙️ Technology</h5>
+          <div class="skill-tags">
+            <span class="skill-tag">Using CoverScore</span>
+            <span class="skill-tag">AI for Advisors</span>
+            <span class="skill-tag">CRM</span>
+            <span class="skill-tag">Quote Builder</span>
+            <span class="skill-tag">Proposal Builder</span>
+            <span class="skill-tag">Digital Marketing</span>
+            <span class="skill-tag">WhatsApp Selling</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning Journey -->
+    <div>
+      <div class="section-header">
+        <h3 class="sec-title">Your Learning Journey</h3>
+      </div>
+      <div class="journey">
+        <div class="journey-step">
+          <div class="journey-dot green">1</div>
+          <span class="journey-label">Foundation — CCA</span>
+        </div>
+        <div class="journey-arrow">▼</div>
+        <div class="journey-step">
+          <div class="journey-dot blue">2</div>
+          <span class="journey-label">Risk Assessment — CRAS</span>
+        </div>
+        <div class="journey-arrow">▼</div>
+        <div class="journey-step">
+          <div class="journey-dot purple">3</div>
+          <span class="journey-label">Industry Specialization — CIRC</span>
+        </div>
+        <div class="journey-arrow">▼</div>
+        <div class="journey-step">
+          <div class="journey-dot orange">4</div>
+          <span class="journey-label">Solution Design — CISA</span>
+        </div>
+        <div class="journey-arrow">▼</div>
+        <div class="journey-step">
+          <div class="journey-dot red">5</div>
+          <span class="journey-label">Master Advisor — CMRA</span>
+        </div>
+        <div class="journey-arrow">▼</div>
+        <div class="journey-step">
+          <div class="journey-dot dark">6</div>
+          <span class="journey-label">Risk Intelligence — CCRIP</span>
+        </div>
+        <div class="journey-arrow">▼</div>
+        <div class="journey-step">
+          <div class="journey-dot dark">7+</div>
+          <span class="journey-label">Mentor / Trainer</span>
+        </div>
       </div>
     </div>
 
