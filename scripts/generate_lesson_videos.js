@@ -137,15 +137,22 @@ async function generateVideo(lesson) {
   generateSlideImage(lesson_number, title, code || 'CCA', slideFile);
 
   console.log(`  Rendering video for lesson ${id} (${Math.round(minDuration)}s)...`);
-  try {
-    execSync(
-      `ffmpeg -y -loop 1 -i "${slideFile}" -i "${audioFile}" ` +
-      `-c:v libx264 -t ${minDuration} -pix_fmt yuv420p -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" ` +
-      `-c:a aac -b:a 128k -shortest "${videoFile}"`,
-      { stdio: 'pipe', timeout: 600000 }
-    );
-  } catch (e) {
-    console.error(`  ffmpeg failed for lesson ${id}:`, e.message);
+  const ffmpegArgs = [
+    '-y', '-loop', '1',
+    '-i', slideFile,
+    '-i', audioFile,
+    '-c:v', 'libx264',
+    '-t', String(minDuration),
+    '-pix_fmt', 'yuv420p',
+    '-vf', 'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2',
+    '-c:a', 'aac',
+    '-b:a', '128k',
+    '-shortest',
+    videoFile
+  ];
+  const ffResult = spawnSync('ffmpeg', ffmpegArgs, { stdio: 'pipe', timeout: 900000 });
+  if (ffResult.status !== 0) {
+    console.error(`  ffmpeg failed (status ${ffResult.status}):`, ffResult.stderr.toString().slice(0, 500));
     return null;
   }
 
