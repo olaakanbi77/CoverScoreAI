@@ -110,14 +110,18 @@ async function generateVideo(lesson) {
 
   console.log(`  Generating audio for lesson ${id}...`);
   try {
-    spawnSync('edge-tts', [
+    const result = spawnSync('edge-tts', [
       '--voice', 'en-GB-SoniaNeural',
-      '--rate', '-15%',
+      '--rate=-15%',
       '--text', ssmlText,
       '--write-media', audioFile
     ], { stdio: 'pipe', timeout: 600000 });
+    if (result.status !== 0) {
+      console.error(`  edge-tts failed (status ${result.status}):`, result.stderr.toString().slice(0, 300));
+      return null;
+    }
   } catch (e) {
-    console.error(`  edge-tts failed for lesson ${id}:`, e.message);
+    console.error(`  edge-tts threw for lesson ${id}:`, e.message);
     return null;
   }
   if (!fs.existsSync(audioFile)) {
