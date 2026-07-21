@@ -143,6 +143,7 @@ async function generateVideo(lesson) {
     '-i', audioFile,
     '-c:v', 'libx264',
     '-preset', 'ultrafast',
+    '-r', '5',
     '-t', String(minDuration),
     '-pix_fmt', 'yuv420p',
     '-vf', 'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2',
