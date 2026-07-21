@@ -6,13 +6,12 @@
 
 const sqlite3 = require('sqlite3');
 const path = require('path');
-const { promisify } = require('util');
 const DB_PATH = path.join(__dirname, '..', 'data', 'coverscore.db');
 const db = new sqlite3.Database(DB_PATH);
 
-const R = promisify(db.run.bind(db));
-const G = promisify(db.get.bind(db));
-const A = promisify(db.all.bind(db));
+const A = (sql) => new Promise((res, rej) => db.all(sql, (e, r) => e ? rej(e) : res(r)));
+const G = (sql) => new Promise((res, rej) => db.get(sql, (e, r) => e ? rej(e) : res(r)));
+const R = (sql, p) => new Promise((res, rej) => db.run(sql, p, (e) => e ? rej(e) : res()));
 
 // ── Content Builders ────────────────────────────────────────────
 function hContent(title, obj, sections, ta) {
