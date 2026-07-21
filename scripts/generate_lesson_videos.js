@@ -81,12 +81,26 @@ async function generateVideo(lesson) {
   }
 
   const script = content || video_script || `Welcome to ${title}.`;
-  const plainText = script.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-  const truncated = plainText.substring(0, 5000);
+  // Convert block HTML tags to paragraph breaks, strip remaining tags
+  const withBreaks = script
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/div>/gi, '\n\n')
+    .replace(/<\/li>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\r\n?/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  const truncated = withBreaks.substring(0, 5000);
+  const xmlSafe = truncated
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 
   // Add SSML pauses: short for comma/period, long for paragraph breaks
   const ssmlText = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">`
-    + truncated
+    + xmlSafe
       .replace(/\n\n+/g, '<break time="800ms"/>')
       .replace(/\n/g, '<break time="400ms"/>')
       .replace(/\.(?=\s)/g, '.<break time="300ms"/>')
