@@ -9,9 +9,24 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, '..', 'data', 'coverscore.db');
 const db = new sqlite3.Database(DB_PATH);
 
-const A = (sql) => new Promise((res, rej) => db.all(sql, (e, r) => e ? rej(e) : res(r)));
-const G = (sql) => new Promise((res, rej) => db.get(sql, (e, r) => e ? rej(e) : res(r)));
-const R = (sql, p) => new Promise((res, rej) => db.run(sql, p, (e) => e ? rej(e) : res()));
+const A = (sql) => new Promise((resolve, reject) => {
+  db.all(sql, [], function(err, rows) {
+    if (err) reject(err);
+    else resolve(rows);
+  });
+});
+const G = (sql) => new Promise((resolve, reject) => {
+  db.get(sql, [], function(err, row) {
+    if (err) reject(err);
+    else resolve(row);
+  });
+});
+const R = (sql, params) => new Promise((resolve, reject) => {
+  db.run(sql, params, function(err) {
+    if (err) reject(err);
+    else resolve();
+  });
+});
 
 // ── Content Builders ────────────────────────────────────────────
 function hContent(title, obj, sections, ta) {
