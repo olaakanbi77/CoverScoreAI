@@ -868,7 +868,7 @@ const initDatabase = () => {
       });
     });
 
-    db.run("UPDATE academy_modules SET course_id = 1 WHERE level_id = 1 AND course_id IS NULL");
+    db.run("UPDATE academy_modules SET course_id = 1 WHERE level_id = 1 AND course_id IS NULL AND id >= 50");
 
     console.log('Seeding CCA courses and v3 curriculum...');
 
