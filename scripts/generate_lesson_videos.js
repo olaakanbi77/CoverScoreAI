@@ -90,7 +90,7 @@ async function generateVideo(lesson) {
       '--voice', 'en-GB-SoniaNeural',
       '--text', truncated,
       '--write-media', audioFile
-    ], { stdio: 'pipe', timeout: 120000 });
+    ], { stdio: 'pipe', timeout: 600000 });
   } catch (e) {
     console.error(`  edge-tts failed for lesson ${id}:`, e.message);
     return null;
@@ -113,7 +113,7 @@ async function generateVideo(lesson) {
       `ffmpeg -y -loop 1 -i "${slideFile}" -i "${audioFile}" ` +
       `-c:v libx264 -t ${minDuration} -pix_fmt yuv420p -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" ` +
       `-c:a aac -b:a 128k -shortest "${videoFile}"`,
-      { stdio: 'pipe', timeout: 120000 }
+      { stdio: 'pipe', timeout: 600000 }
     );
   } catch (e) {
     console.error(`  ffmpeg failed for lesson ${id}:`, e.message);
