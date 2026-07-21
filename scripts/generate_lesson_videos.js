@@ -80,9 +80,9 @@ async function generateVideo(lesson) {
     return videoFile;
   }
 
-  const script = video_script || content || `Welcome to ${title}.`;
+  const script = content || video_script || `Welcome to ${title}.`;
   const plainText = script.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-  const truncated = plainText.substring(0, 3000);
+  const truncated = plainText.substring(0, 5000);
 
   // Add SSML pauses: short for comma/period, long for paragraph breaks
   const ssmlText = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">`
