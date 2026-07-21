@@ -84,11 +84,22 @@ async function generateVideo(lesson) {
   const plainText = script.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
   const truncated = plainText.substring(0, 3000);
 
+  // Add SSML pauses: short for comma/period, long for paragraph breaks
+  const ssmlText = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">`
+    + truncated
+      .replace(/\n\n+/g, '<break time="800ms"/>')
+      .replace(/\n/g, '<break time="400ms"/>')
+      .replace(/\.(?=\s)/g, '.<break time="300ms"/>')
+      .replace(/,(?=\s)/g, ',<break time="150ms"/>')
+      .replace(/\s{2,}/g, ' ')
+    + `</speak>`;
+
   console.log(`  Generating audio for lesson ${id}...`);
   try {
     spawnSync('edge-tts', [
       '--voice', 'en-GB-SoniaNeural',
-      '--text', truncated,
+      '--rate', '-15%',
+      '--text', ssmlText,
       '--write-media', audioFile
     ], { stdio: 'pipe', timeout: 600000 });
   } catch (e) {
