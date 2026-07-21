@@ -78,6 +78,8 @@ const generateRefreshToken = (userId) => {
 const authenticatePage = async (req, res, next) => {
   const token = req.cookies?.accessToken || (req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
 
+  console.log('[auth] called:', req.originalUrl, 'hasToken:', !!token, 'cookies:', JSON.stringify(req.cookies || {}), 'authHeader:', req.headers.authorization ? req.headers.authorization.substring(0,30)+'...' : 'none');
+
   if (!token) {
     console.log('[auth] no token found, headers:', JSON.stringify(req.headers));
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
