@@ -78,24 +78,17 @@ const generateRefreshToken = (userId) => {
 const authenticatePage = async (req, res, next) => {
   const token = req.cookies?.accessToken || (req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
 
-  console.log('[auth] called:', req.originalUrl, 'hasToken:', !!token, 'cookies:', JSON.stringify(req.cookies || {}));
-
   if (!token) {
-    console.log('[auth] no token found');
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
   }
 
   let decoded;
   try {
     decoded = jwt.verify(token, JWT_SECRET);
-    console.log('[auth] jwt verify OK, decoded:', JSON.stringify(decoded));
   } catch (error) {
-    console.log('[auth] token verification failed:', error.message);
     res.clearCookie('accessToken');
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
   }
-
-  console.log('[auth] starting DB query for userId:', decoded.userId);
 
   const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('DB_TIMEOUT')), ms));
 
@@ -103,7 +96,7 @@ const authenticatePage = async (req, res, next) => {
     const startTime = Date.now();
     const user = await Promise.race([
       get(`
-        SELECT u.id, u.email, u.name, u.role, u.industry, u.meet_link,
+        SELECT u.id, u.email, u.name, u.role, u.industry,
                c.passport_id
         FROM users u
         LEFT JOIN customers c ON c.user_id = u.id
@@ -117,17 +110,14 @@ const authenticatePage = async (req, res, next) => {
     }
 
     if (!user) {
-      console.log('[auth] user not found in DB for userId:', decoded.userId);
       res.clearCookie('accessToken');
       return res.redirect('/auth/login');
     }
 
-    console.log('[auth] DB query OK, user:', user.id, user.role);
     req.user = user;
     res.locals.user = user;
     next();
   } catch (error) {
-    console.log('[auth] catch block, error:', error.message);
     if (error.message === 'DB_TIMEOUT') {
       console.error(`[auth] DB TIMEOUT after 5s for userId=${decoded.userId}, url=${req.originalUrl}, ip=${req.ip}`, new Error().stack);
     }
