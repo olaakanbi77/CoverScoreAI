@@ -146,7 +146,7 @@ async function generateVideo(lesson) {
     '-r', '5',
     '-t', String(minDuration),
     '-pix_fmt', 'yuv420p',
-    '-vf', 'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2',
+    '-vf', 'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2',
     '-c:a', 'aac',
     '-b:a', '128k',
     '-shortest',
