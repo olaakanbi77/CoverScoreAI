@@ -1,11 +1,12 @@
 const { Client } = require('ssh2');
 const conn = new Client();
 conn.on('ready', () => {
-  conn.exec(`docker logs coverscore-ai 2>&1 | head -100`, (err, stream) => {
+  conn.exec('docker logs coverscore-vidgen --tail 20 2>&1', (err, stream) => {
     if (err) { console.error(err); conn.end(); return; }
-    stream.on('data', d => process.stdout.write(d.toString()));
-    stream.stderr.on('data', d => process.stderr.write(d.toString()));
-    stream.on('close', () => conn.end());
+    let out = '';
+    stream.on('data', d => out += d.toString());
+    stream.stderr.on('data', d => out += d.toString());
+    stream.on('close', () => { console.log(out); conn.end(); });
   });
 });
 conn.on('error', e => console.error(e.message));
