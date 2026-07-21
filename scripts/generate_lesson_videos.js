@@ -47,7 +47,7 @@ function generateBackground() {
 }
 
 function generateSlideImage(lessonNumber, title, courseCode, outputPath) {
-  const esc = t => t.replace(/"/g, '\\"').replace(/'/g, "\\'");
+  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
   const svg = `<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
