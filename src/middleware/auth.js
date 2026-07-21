@@ -79,6 +79,7 @@ const authenticatePage = async (req, res, next) => {
   const token = req.cookies?.accessToken || (req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
 
   if (!token) {
+    console.log('[auth] no token found, headers:', JSON.stringify(req.headers));
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
   }
 
@@ -86,6 +87,7 @@ const authenticatePage = async (req, res, next) => {
   try {
     decoded = jwt.verify(token, JWT_SECRET);
   } catch (error) {
+    console.log('[auth] token verification failed:', error.message);
     res.clearCookie('accessToken');
     return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
   }
