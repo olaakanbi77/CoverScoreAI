@@ -20,7 +20,7 @@ const authenticate = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await get(`
-      SELECT u.id, u.email, u.name, u.role, u.industry, u.meet_link,
+      SELECT u.id, u.email, u.name, u.role, u.industry,
              c.passport_id
       FROM users u
       LEFT JOIN customers c ON c.user_id = u.id
@@ -51,7 +51,7 @@ const optionalAuth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await get(`
-      SELECT u.id, u.email, u.name, u.role, u.industry, u.meet_link,
+      SELECT u.id, u.email, u.name, u.role, u.industry,
              c.passport_id
       FROM users u
       LEFT JOIN customers c ON c.user_id = u.id
