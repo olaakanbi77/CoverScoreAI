@@ -8,6 +8,7 @@ const sqlite3 = require('sqlite3');
 const path = require('path');
 const DB_PATH = path.join(__dirname, '..', 'data', 'coverscore.db');
 const db = new sqlite3.Database(DB_PATH);
+db.configure("busyTimeout", 10000);
 
 const A = (sql) => new Promise((resolve, reject) => {
   db.all(sql, [], function(err, rows) {
