@@ -200,12 +200,13 @@ async function generateVideo(lesson) {
     '-i', audioFile,
     '-c:v', 'libx264',
     '-preset', 'ultrafast',
-    '-crf', '35',
+    '-crf', '40',
+    '-tune', 'stillimage',
     '-t', String(minDuration),
     '-pix_fmt', 'yuv420p',
     '-vf', 'fps=1,scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2',
     '-c:a', 'aac',
-    '-b:a', '128k',
+    '-b:a', '64k',
     '-shortest',
     videoFile
   ];
