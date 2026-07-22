@@ -13,6 +13,7 @@ const FONT_REG = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf';
 if (!fs.existsSync(VIDEOS_DIR)) fs.mkdirSync(VIDEOS_DIR, { recursive: true });
 
 const db = new sqlite3.Database(DB_PATH);
+db.run('PRAGMA busy_timeout = 30000');
 
 function checkTool(cmd) {
   try { execSync(`which ${cmd}`, { stdio: 'pipe' }); return true; }
