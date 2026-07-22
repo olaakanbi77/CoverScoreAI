@@ -1,7 +1,7 @@
 const { Client } = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
-  c.exec('for i in $(seq 1 15); do s=$(docker ps --filter name=coverscore-ai --format "{{.Status}}" 2>&1); echo "$i: $s"; echo "$s" | grep -q healthy && break; sleep 3; done; echo "==="; sqlite3 /root/CoverScoreAI/data/coverscore.db "PRAGMA table_info(leads);" 2>&1 | grep -E "pipeline_stage|estimated_premium|sales_score|contact_person|industry"; echo "==="; docker logs coverscore-ai --tail 10 2>&1 | grep -i -E "migration|error|crm"', (e, s) => {
+  c.exec("sqlite3 /root/CoverScoreAI/data/coverscore.db \"SELECT MIN(id), MAX(id), course_id, MIN(lesson_number), MAX(lesson_number), COUNT(*) FROM academy_modules WHERE id >= 50 GROUP BY course_id ORDER BY course_id;\" 2>&1", (e, s) => {
     if (e) { console.error(e.message); c.end(); return; }
     let o = '';
     s.on('data', d => o += d.toString());

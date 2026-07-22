@@ -848,10 +848,10 @@ const initDatabase = () => {
 
   // Academy Courses & v3 Curriculum Migration — all in one serialize block
   db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS academy_courses (
+    db.run(`    CREATE TABLE IF NOT EXISTS academy_courses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       level_id INTEGER NOT NULL,
-      code TEXT NOT NULL,
+      code TEXT NOT NULL UNIQUE,
       title TEXT NOT NULL,
       description TEXT,
       order_index INTEGER NOT NULL,
