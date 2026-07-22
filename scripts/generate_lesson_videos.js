@@ -61,7 +61,6 @@ function generateSlideImage(lessonNumber, title, courseCode, outputPath) {
     <text x="960" y="460" font-family="DejaVu Sans" font-size="52" font-weight="bold" fill="white" text-anchor="middle">Lesson ${lessonNumber}</text>
     <text x="960" y="560" font-family="DejaVu Sans" font-size="36" fill="#cbd5e1" text-anchor="middle" max-width="1600">${esc(title.length > 80 ? title.substring(0, 77) + '...' : title)}</text>
     <rect x="860" y="630" width="200" height="4" rx="2" fill="#10b981"/>
-    <text x="960" y="750" font-family="DejaVu Sans" font-size="20" fill="#64748b" text-anchor="middle">coverscore.site/academy</text>
   </svg>`;
 
   const svgFile = outputPath.replace('.png', '.svg');
@@ -99,22 +98,16 @@ function extractSectionLi(html, sectionName) {
 }
 
 function buildNarration(lesson) {
-  const { lesson_number, title, content, video_script, case_study, code } = lesson;
-  const courseCode = code || 'CCA';
+  const { lesson_number, title, video_script, case_study } = lesson;
   const parts = [];
 
-  // Intro
-  parts.push(`Welcome to Lesson ${lesson_number} of ${courseCode}: ${title}.`);
+  // Intro: just the topic
+  parts.push(`Lesson ${lesson_number}: ${title}.`);
 
-  // Learning objectives
-  const objectives = extractSectionLi(content, 'Learning Objectives');
-  if (objectives.length > 0) {
-    parts.push(`In this lesson, we will cover: ${objectives.join(', ')}.`);
-  }
-
-  // Body: use video_script (a proper summary, not handbook verbatim)
+  // Body: use video_script (concise lesson summary)
   if (video_script) {
-    const body = stripHtml(video_script).replace(/^Title:.*?\n/i, '').trim();
+    let body = stripHtml(video_script);
+    body = body.replace(/^Title:.*$/m, '').trim();
     if (body.length > 20) parts.push(body);
   }
 
@@ -125,14 +118,8 @@ function buildNarration(lesson) {
       const titleMatch = cs.match(/Case Study:\s*([^\n]+)/i);
       const csTitle = titleMatch ? titleMatch[1].trim() : 'a real-world scenario';
       const csBody = cs.replace(/Case Study:\s*[^\n]*\n*/i, '').trim();
-      parts.push(`Let's look at ${csTitle}. ${csBody}`);
+      parts.push(`Consider this scenario: ${csTitle}. ${csBody}`);
     }
-  }
-
-  // Key takeaways
-  const takeaways = extractSectionLi(content, 'Key Takeaways');
-  if (takeaways.length > 0) {
-    parts.push(`To summarize: ${takeaways.join('. ')}.`);
   }
 
   return parts.join('\n\n');
