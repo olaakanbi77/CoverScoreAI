@@ -70,8 +70,76 @@ function generateSlideImage(lessonNumber, title, courseCode, outputPath) {
   fs.unlinkSync(svgFile);
 }
 
+function stripHtml(html) {
+  if (!html) return '';
+  return html
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/div>/gi, '\n\n')
+    .replace(/<\/li>/gi, '\n')
+    .replace(/<li>/gi, '\n• ')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\r\n?/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function extractSectionLi(html, sectionName) {
+  if (!html) return [];
+  const regex = new RegExp(`<h2>${sectionName}<\\/h2>\\s*([\\s\\S]*?)(?=<section class="lesson-section|<h2>|$)`, 'i');
+  const match = html.match(regex);
+  if (!match) return [];
+  const liMatches = match[1].match(/<li>([\s\S]*?)<\/li>/g);
+  if (!liMatches) return [];
+  return liMatches.map(li => li.replace(/<\/?li>/g, '').replace(/<[^>]*>/g, '').trim()).filter(Boolean);
+}
+
+function buildNarration(lesson) {
+  const { lesson_number, title, content, video_script, case_study, code } = lesson;
+  const courseCode = code || 'CCA';
+  const parts = [];
+
+  // Intro
+  parts.push(`Welcome to Lesson ${lesson_number} of ${courseCode}: ${title}.`);
+
+  // Learning objectives
+  const objectives = extractSectionLi(content, 'Learning Objectives');
+  if (objectives.length > 0) {
+    parts.push(`In this lesson, we will cover: ${objectives.join(', ')}.`);
+  }
+
+  // Body: use video_script (a proper summary, not handbook verbatim)
+  if (video_script) {
+    const body = stripHtml(video_script).replace(/^Title:.*?\n/i, '').trim();
+    if (body.length > 20) parts.push(body);
+  }
+
+  // Case study / real-world scenario
+  if (case_study) {
+    const cs = stripHtml(case_study);
+    if (cs.length > 10) {
+      const titleMatch = cs.match(/Case Study:\s*([^\n]+)/i);
+      const csTitle = titleMatch ? titleMatch[1].trim() : 'a real-world scenario';
+      const csBody = cs.replace(/Case Study:\s*[^\n]*\n*/i, '').trim();
+      parts.push(`Let's look at ${csTitle}. ${csBody}`);
+    }
+  }
+
+  // Key takeaways
+  const takeaways = extractSectionLi(content, 'Key Takeaways');
+  if (takeaways.length > 0) {
+    parts.push(`To summarize: ${takeaways.join('. ')}.`);
+  }
+
+  return parts.join('\n\n');
+}
+
 async function generateVideo(lesson) {
-  const { id, lesson_number, title, course_id, video_script, content, code } = lesson;
+  const { id, lesson_number, title, content, code } = lesson;
   const safeTitle = title.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_').substring(0, 50);
   const videoFile = path.join(VIDEOS_DIR, `lesson_${id}_${safeTitle}.mp4`);
   const audioFile = path.join(VIDEOS_DIR, `audio_${id}.mp3`);
@@ -81,25 +149,13 @@ async function generateVideo(lesson) {
     return videoFile;
   }
 
-  const script = content || video_script || `Welcome to ${title}.`;
-  // Convert block HTML tags to paragraph breaks, strip remaining tags
-  const withBreaks = script
-    .replace(/<\/p>/gi, '\n\n')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/div>/gi, '\n\n')
-    .replace(/<\/li>/gi, '\n')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\r\n?/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-  const truncated = withBreaks.substring(0, 5000);
+  const script = buildNarration(lesson);
+  const truncated = script.substring(0, 5000);
   const xmlSafe = truncated
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  // Add SSML pauses: short for comma/period, long for paragraph breaks
   const ssmlText = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">`
     + xmlSafe
       .replace(/\n\n+/g, '<break time="800ms"/>')
@@ -142,8 +198,9 @@ async function generateVideo(lesson) {
     '-y', '-loop', '1',
     '-i', slideFile,
     '-i', audioFile,
-    '-c:v', 'mpeg4',
-    '-q:v', '10',
+    '-c:v', 'libx264',
+    '-preset', 'ultrafast',
+    '-crf', '35',
     '-t', String(minDuration),
     '-pix_fmt', 'yuv420p',
     '-vf', 'fps=1,scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2',
