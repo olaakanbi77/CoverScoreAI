@@ -194,23 +194,38 @@ async function generateVideo(lesson) {
   generateSlideImage(lesson_number, title, code || 'CCA', slideFile);
 
   console.log(`  Rendering video for lesson ${id} (${Math.round(minDuration)}s)...`);
-  const ffmpegArgs = [
-    '-y', '-loop', '1',
-    '-i', slideFile,
-    '-i', audioFile,
+  // Step 1: encode single h264 frame
+  const frameFile = path.join(VIDEOS_DIR, `frame_${id}.mp4`);
+  const frameArgs = [
+    '-y', '-i', slideFile,
     '-c:v', 'libx264',
     '-preset', 'ultrafast',
     '-crf', '40',
     '-tune', 'stillimage',
-    '-t', String(minDuration),
     '-pix_fmt', 'yuv420p',
-    '-vf', 'fps=1,scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2',
+    '-vf', 'scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2',
+    '-frames:v', '1',
+    '-an', frameFile
+  ];
+  const frameResult = spawnSync('ffmpeg', frameArgs, { stdio: 'pipe', timeout: 120000 });
+  if (frameResult.status !== 0 || !fs.existsSync(frameFile)) {
+    console.error(`  single frame encode failed for lesson ${id}`);
+    return null;
+  }
+  // Step 2: loop the frame to full duration, copy video (no re-encode)
+  const ffmpegArgs = [
+    '-y', '-stream_loop', '-1',
+    '-i', frameFile,
+    '-i', audioFile,
+    '-c:v', 'copy',
     '-c:a', 'aac',
     '-b:a', '64k',
     '-shortest',
+    '-fflags', '+genpts',
     videoFile
   ];
   const ffResult = spawnSync('ffmpeg', ffmpegArgs, { stdio: 'pipe', timeout: 900000 });
+  try { fs.unlinkSync(frameFile); } catch {}; // clean up frame file
   if (ffResult.status !== 0) {
     console.error(`  ffmpeg failed (status ${ffResult.status}):`, ffResult.stderr.toString().slice(0, 500));
     return null;
