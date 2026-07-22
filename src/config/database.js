@@ -1145,8 +1145,34 @@ const initDatabase = () => {
         COMMIT;
         PRAGMA foreign_keys=on;
       `, (err) => {
-        if (err) console.error('Migration failed:', err);
-        else console.log('CRM Migration complete.');
+        if (err) {
+          console.error('Migration failed, falling back to ALTER TABLE:', err.message);
+          // Fallback: add columns individually
+          const fallbackColumns = [
+            "ALTER TABLE leads ADD COLUMN assessment_data TEXT DEFAULT '{}'",
+            "ALTER TABLE leads ADD COLUMN ccie_context TEXT",
+            "ALTER TABLE leads ADD COLUMN birth_date TEXT",
+            "ALTER TABLE leads ADD COLUMN anniversary_date TEXT",
+            "ALTER TABLE leads ADD COLUMN sales_score INTEGER DEFAULT 0",
+            "ALTER TABLE leads ADD COLUMN pipeline_stage INTEGER DEFAULT 1",
+            "ALTER TABLE leads ADD COLUMN estimated_premium INTEGER DEFAULT 0",
+            "ALTER TABLE leads ADD COLUMN lead_source TEXT DEFAULT 'CoverScore AI'",
+            "ALTER TABLE leads ADD COLUMN industry TEXT",
+            "ALTER TABLE leads ADD COLUMN employees TEXT",
+            "ALTER TABLE leads ADD COLUMN recommended_covers TEXT",
+            "ALTER TABLE leads ADD COLUMN assigned_agent TEXT",
+            "ALTER TABLE leads ADD COLUMN contact_person TEXT"
+          ];
+          fallbackColumns.forEach(sql => {
+            db.run(sql, (err) => {
+              if (err && !err.message.includes('duplicate column name')) {
+                console.error('Migration fallback error:', err.message);
+              }
+            });
+          });
+        } else {
+          console.log('CRM Migration complete.');
+        }
       });
     } else {
       // If table exists but doesn't have the old constraint, just ensure the new columns exist
