@@ -6,8 +6,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'coverscore.db');
 const VIDEOS_DIR = path.join(__dirname, '..', 'data', 'videos');
-const BG_IMAGE = path.join(VIDEOS_DIR, 'bg.png');
-const FONT_FILE = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
+const FONT_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
 const FONT_REG = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf';
 
 if (!fs.existsSync(VIDEOS_DIR)) fs.mkdirSync(VIDEOS_DIR, { recursive: true });
@@ -15,235 +14,219 @@ if (!fs.existsSync(VIDEOS_DIR)) fs.mkdirSync(VIDEOS_DIR, { recursive: true });
 const db = new sqlite3.Database(DB_PATH);
 db.run('PRAGMA busy_timeout = 30000');
 
+const SCENE_NAMES = ['Welcome', 'Learning Objectives', 'Main Concept', 'Deep Dive', 'Practical Application', 'CoverScore Insight', 'Lesson Summary'];
+
 function checkTool(cmd) {
   try { execSync(`which ${cmd}`, { stdio: 'pipe' }); return true; }
   catch { return false; }
 }
 
-function generateBackground() {
-  console.log('Creating branded background...');
-  const bgPath = BG_IMAGE;
-  if (fs.existsSync(bgPath)) return bgPath;
+function esc(t) {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
 
+function generateSceneSlide(sceneNum, sceneName, slideTitle, lessonNumber, courseCode, moduleLabel, lessonTitle, outputPath) {
+  const isInsight = sceneNum === 6;
+  const isSummary = sceneNum === 7;
+  const bgFrom = isInsight ? '#7c3aed' : '#0b1120';
+  const bgTo = isInsight ? '#4c1d95' : '#1e293b';
+  const accent = isInsight ? '#fbbf24' : (isSummary ? '#10b981' : '#7c3aed');
   const svg = `<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#0b1120"/>
-        <stop offset="100%" stop-color="#1e293b"/>
-      </linearGradient>
-    </defs>
+    <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${bgFrom}"/>
+      <stop offset="100%" stop-color="${bgTo}"/>
+    </linearGradient></defs>
     <rect width="1920" height="1080" fill="url(#bg)"/>
     <circle cx="1600" cy="200" r="400" fill="rgba(124,58,237,0.05)"/>
     <circle cx="300" cy="900" r="300" fill="rgba(16,185,129,0.04)"/>
-    <text x="960" y="480" font-family="DejaVu Sans" font-size="64" font-weight="bold" fill="white" text-anchor="middle">CoverScore Academy</text>
-    <text x="960" y="560" font-family="DejaVu Sans" font-size="28" fill="#94a3b8" text-anchor="middle">Risk Intelligence Training</text>
-    <rect x="760" y="600" width="400" height="4" rx="2" fill="#7c3aed"/>
-  </svg>`;
-
-  const svgFile = bgPath.replace('.png', '.svg');
-  fs.writeFileSync(svgFile, svg);
-  execSync(`convert "${svgFile}" "${bgPath}"`, { stdio: 'pipe' });
-  fs.unlinkSync(svgFile);
-  return bgPath;
-}
-
-function generateSlideImage(lessonNumber, title, courseCode, outputPath) {
-  const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-  const svg = `<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#0b1120"/>
-        <stop offset="100%" stop-color="#1e293b"/>
-      </linearGradient>
-    </defs>
-    <rect width="1920" height="1080" fill="url(#bg)"/>
-    <text x="960" y="380" font-family="DejaVu Sans" font-size="48" font-weight="bold" fill="#7c3aed" text-anchor="middle">${esc(courseCode)}</text>
-    <text x="960" y="460" font-family="DejaVu Sans" font-size="52" font-weight="bold" fill="white" text-anchor="middle">Lesson ${lessonNumber}</text>
-    <text x="960" y="560" font-family="DejaVu Sans" font-size="36" fill="#cbd5e1" text-anchor="middle" max-width="1600">${esc(title.length > 80 ? title.substring(0, 77) + '...' : title)}</text>
-    <rect x="860" y="630" width="200" height="4" rx="2" fill="#10b981"/>
+    <text x="960" y="200" font-family="DejaVu Sans" font-size="22" font-weight="bold" fill="#64748b" text-anchor="middle" letter-spacing="3">${esc(sceneName.toUpperCase())}</text>
+    ${isInsight ? '' : `<text x="960" y="280" font-family="DejaVu Sans" font-size="18" fill="#94a3b8" text-anchor="middle">${esc(courseCode)} • Module ${moduleLabel} • ${esc(lessonTitle)}</text>`}
+    <text x="960" y="${isInsight ? 480 : 440}" font-family="DejaVu Sans" font-size="${isInsight ? 56 : 52}" font-weight="bold" fill="white" text-anchor="middle">${esc(slideTitle)}</text>
+    ${isInsight ? `<text x="960" y="560" font-family="DejaVu Sans" font-size="24" fill="#fbbf24" text-anchor="middle" font-style="italic">"Risk is about readiness, not fear."</text>
+    <text x="960" y="700" font-family="DejaVu Sans" font-size="18" fill="#cbd5e1" text-anchor="middle">CoverScore Academy — Professional Risk Advisory</text>` : ''}
+    <rect x="860" y="${isInsight ? 620 : 510}" width="200" height="4" rx="2" fill="${accent}"/>
+    <text x="960" y="950" font-family="DejaVu Sans" font-size="16" fill="#475569" text-anchor="middle">Scene ${sceneNum} of 7 — ${esc(sceneName)}</text>
   </svg>`;
 
   const svgFile = outputPath.replace('.png', '.svg');
   fs.writeFileSync(svgFile, svg);
-  execSync(`convert "${svgFile}" "${outputPath}"`, { stdio: 'pipe' });
+  execSync(`convert "${svgFile}" -background none -flatten "${outputPath}"`, { stdio: 'pipe' });
   fs.unlinkSync(svgFile);
 }
 
-function stripHtml(html) {
-  if (!html) return '';
-  return html
-    .replace(/<\/p>/gi, '\n\n')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/div>/gi, '\n\n')
-    .replace(/<\/li>/gi, '\n')
-    .replace(/<li>/gi, '\n• ')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/\r\n?/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
-
-function extractSectionLi(html, sectionName) {
-  if (!html) return [];
-  const regex = new RegExp(`<h2>${sectionName}<\\/h2>\\s*([\\s\\S]*?)(?=<section class="lesson-section|<h2>|$)`, 'i');
-  const match = html.match(regex);
-  if (!match) return [];
-  const liMatches = match[1].match(/<li>([\s\S]*?)<\/li>/g);
-  if (!liMatches) return [];
-  return liMatches.map(li => li.replace(/<\/?li>/g, '').replace(/<[^>]*>/g, '').trim()).filter(Boolean);
-}
-
-function buildNarration(lesson) {
-  const { lesson_number, title, video_script, case_study } = lesson;
-  const parts = [];
-
-  // Intro: just the topic
-  parts.push(`Lesson ${lesson_number}: ${title}.`);
-
-  // Body: use video_script (concise lesson summary)
-  if (video_script) {
-    let body = stripHtml(video_script);
-    body = body.replace(/^Title:.*$/m, '').trim();
-    if (body.length > 20) parts.push(body);
-  }
-
-  // Case study / real-world scenario
-  if (case_study) {
-    const cs = stripHtml(case_study);
-    if (cs.length > 10) {
-      const titleMatch = cs.match(/Case Study:\s*([^\n]+)/i);
-      const csTitle = titleMatch ? titleMatch[1].trim() : 'a real-world scenario';
-      const csBody = cs.replace(/Case Study:\s*[^\n]*\n*/i, '').trim();
-      parts.push(`Consider this scenario: ${csTitle}. ${csBody}`);
-    }
-  }
-
-  return parts.join('\n\n');
-}
-
-async function generateVideo(lesson) {
-  const { id, lesson_number, title, content, code } = lesson;
-  const safeTitle = title.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_').substring(0, 50);
-  const videoFile = path.join(VIDEOS_DIR, `lesson_${id}_${safeTitle}.mp4`);
-  const audioFile = path.join(VIDEOS_DIR, `audio_${id}.mp3`);
-  const slideFile = path.join(VIDEOS_DIR, `slide_${id}.png`);
-
-  if (fs.existsSync(videoFile)) {
-    return videoFile;
-  }
-
-  const script = buildNarration(lesson);
-  const truncated = script.substring(0, 5000);
-  const xmlSafe = truncated
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-
-  const ssmlText = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">`
+function narrationToSsml(text) {
+  const xmlSafe = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">'
     + xmlSafe
       .replace(/\n\n+/g, '<break time="800ms"/>')
       .replace(/\n/g, '<break time="400ms"/>')
       .replace(/\.(?=\s)/g, '.<break time="300ms"/>')
       .replace(/,(?=\s)/g, ',<break time="150ms"/>')
       .replace(/\s{2,}/g, ' ')
-    + `</speak>`;
+    + '</speak>';
+}
 
-  console.log(`  Generating audio for lesson ${id}...`);
-  try {
-    const result = spawnSync('edge-tts', [
-      '--voice', 'en-GB-SoniaNeural',
-      '--rate=-15%',
-      '--text', ssmlText,
-      '--write-media', audioFile
-    ], { stdio: 'pipe', timeout: 600000 });
-    if (result.status !== 0) {
-      console.error(`  edge-tts failed (status ${result.status}):`, result.stderr.toString().slice(0, 300));
-      return null;
-    }
-  } catch (e) {
-    console.error(`  edge-tts threw for lesson ${id}:`, e.message);
+async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseCode, moduleLabel) {
+  const slideFile = path.join(VIDEOS_DIR, `slide_${lessonId}_s${sceneNum}.png`);
+  const audioFile = path.join(VIDEOS_DIR, `audio_${lessonId}_s${sceneNum}.mp3`);
+  const clipFile = path.join(VIDEOS_DIR, `clip_${lessonId}_s${sceneNum}.mp4`);
+
+  // 1. Generate slide
+  const slideTitle = scene.slideTitle || scene.name;
+  generateSceneSlide(sceneNum, SCENE_NAMES[sceneNum - 1], slideTitle, sceneNum, courseCode, moduleLabel, lessonTitle, slideFile);
+
+  // 2. Generate audio
+  const ssml = narrationToSsml(scene.narration);
+  const audioResult = spawnSync('edge-tts', [
+    '--voice', 'en-GB-SoniaNeural',
+    '--rate=-15%',
+    '--text', ssml,
+    '--write-media', audioFile
+  ], { stdio: 'pipe', timeout: 300000 });
+
+  if (audioResult.status !== 0 || !fs.existsSync(audioFile)) {
+    console.error(`  edge-tts failed for scene ${sceneNum} (lesson ${lessonId})`);
     return null;
   }
-  if (!fs.existsSync(audioFile)) {
-    console.error(`  audio file not created for lesson ${id}`);
-    return null;
-  }
 
-  const audioDuration = execSync(`ffprobe -i "${audioFile}" -show_entries format=duration -v quiet -of csv="p=0"`).toString().trim();
-  const duration = parseFloat(audioDuration) || 30;
-  const minDuration = Math.max(duration, 15);
+  // 3. Get audio duration
+  const durOut = execSync(`ffprobe -i "${audioFile}" -show_entries format=duration -v quiet -of csv="p=0"`).toString().trim();
+  const audioDur = Math.max(parseFloat(durOut) || scene.duration, 10);
 
-  console.log(`  Creating slide for lesson ${id}...`);
-  generateSlideImage(lesson_number, title, code || 'CCA', slideFile);
-
-  console.log(`  Rendering video for lesson ${id} (${Math.round(minDuration)}s)...`);
-  // Step 1: encode single h264 frame
-  const frameFile = path.join(VIDEOS_DIR, `frame_${id}.mp4`);
+  // 4. Encode single h264 frame from slide
+  const frameFile = path.join(VIDEOS_DIR, `frame_${lessonId}_s${sceneNum}.mp4`);
   const frameArgs = [
     '-y', '-i', slideFile,
-    '-c:v', 'libx264',
-    '-preset', 'ultrafast',
-    '-crf', '40',
-    '-tune', 'stillimage',
-    '-pix_fmt', 'yuv420p',
+    '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '40',
+    '-tune', 'stillimage', '-pix_fmt', 'yuv420p',
     '-vf', 'scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2',
-    '-frames:v', '1',
-    '-an', frameFile
+    '-frames:v', '1', '-an', frameFile
   ];
   const frameResult = spawnSync('ffmpeg', frameArgs, { stdio: 'pipe', timeout: 120000 });
   if (frameResult.status !== 0 || !fs.existsSync(frameFile)) {
-    console.error(`  single frame encode failed for lesson ${id}`);
-    return null;
-  }
-  // Step 2: loop the frame to full duration, copy video (no re-encode)
-  const ffmpegArgs = [
-    '-y', '-stream_loop', '-1',
-    '-i', frameFile,
-    '-i', audioFile,
-    '-c:v', 'copy',
-    '-c:a', 'aac',
-    '-b:a', '64k',
-    '-shortest',
-    '-fflags', '+genpts',
-    videoFile
-  ];
-  const ffResult = spawnSync('ffmpeg', ffmpegArgs, { stdio: 'pipe', timeout: 900000 });
-  try { fs.unlinkSync(frameFile); } catch {}; // clean up frame file
-  if (ffResult.status !== 0) {
-    console.error(`  ffmpeg failed (status ${ffResult.status}):`, ffResult.stderr.toString().slice(0, 500));
+    console.error(`  frame encode failed for scene ${sceneNum}`);
+    try { fs.unlinkSync(slideFile); } catch {}
+    try { fs.unlinkSync(audioFile); } catch {}
     return null;
   }
 
-  [audioFile, slideFile].forEach(f => { try { fs.unlinkSync(f); } catch {} });
+  // 5. Loop frame to audio duration with stream_loop
+  const clipArgs = [
+    '-y', '-stream_loop', '-1', '-i', frameFile,
+    '-i', audioFile,
+    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '64k',
+    '-t', String(Math.ceil(audioDur)),
+    '-fflags', '+genpts',
+    clipFile
+  ];
+  const clipResult = spawnSync('ffmpeg', clipArgs, { stdio: 'pipe', timeout: 300000 });
+  try { fs.unlinkSync(frameFile); } catch {}
+
+  if (clipResult.status !== 0 || !fs.existsSync(clipFile)) {
+    console.error(`  clip render failed for scene ${sceneNum}`);
+    try { fs.unlinkSync(slideFile); } catch {}
+    try { fs.unlinkSync(audioFile); } catch {}
+    return null;
+  }
+
+  return { clipFile, slideFile, audioFile, duration: audioDur };
+}
+
+async function generateVideo(lesson) {
+  const { id, lesson_number, title, code, scene_data } = lesson;
+  const courseCode = code || 'CCA';
+  const moduleLabel = `${lesson.course_id || ''}.${lesson_number || ''}`;
+  const safeTitle = title.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_').substring(0, 50);
+  const videoFile = path.join(VIDEOS_DIR, `lesson_${id}_${safeTitle}.mp4`);
+
+  if (fs.existsSync(videoFile)) {
+    console.log(`  ✓ Already exists: ${path.basename(videoFile)}`);
+    return videoFile;
+  }
+
+  // Parse scene data
+  let scenes;
+  try {
+    scenes = JSON.parse(scene_data);
+  } catch {
+    console.error(`  No valid scene_data for lesson ${id}`);
+    return null;
+  }
+
+  if (!scenes || scenes.length === 0) {
+    console.error(`  Empty scene_data for lesson ${id}`);
+    return null;
+  }
+
+  console.log(`  Generating ${scenes.length} scenes...`);
+
+  const clipResults = [];
+  for (let i = 0; i < scenes.length; i++) {
+    const scene = scenes[i];
+    const sceneNum = scene.id || (i + 1);
+    process.stdout.write(`    Scene ${sceneNum}/7 (${SCENE_NAMES[sceneNum - 1] || scene.name})...`);
+    const result = await generateSceneClip(id, scene, sceneNum, title, courseCode, moduleLabel);
+    if (result) {
+      clipResults.push(result);
+      console.log(` ${Math.round(result.duration)}s ✓`);
+    } else {
+      console.log(` FAILED`);
+      // Clean up any partial files
+      clipResults.forEach(r => {
+        try { fs.unlinkSync(r.clipFile); } catch {}
+        try { fs.unlinkSync(r.slideFile); } catch {}
+        try { fs.unlinkSync(r.audioFile); } catch {}
+      });
+      return null;
+    }
+  }
+
+  // Concatenate all scene clips into final video
+  console.log(`  Concatenating ${clipResults.length} scenes...`);
+  const concatFile = path.join(VIDEOS_DIR, `concat_${id}.txt`);
+  const concatContent = clipResults.map(r => `file '${r.clipFile.replace(/\\/g, '/')}'`).join('\n');
+  fs.writeFileSync(concatFile, concatContent);
+
+  // Use concat demuxer with -c copy (all clips have identical codec settings)
+  const concatArgs = [
+    '-y', '-f', 'concat', '-safe', '0',
+    '-i', concatFile,
+    '-c', 'copy',
+    '-movflags', '+faststart',
+    videoFile
+  ];
+  const concatResult = spawnSync('ffmpeg', concatArgs, { stdio: 'pipe', timeout: 600000 });
+
+  // Cleanup temp files
+  try { fs.unlinkSync(concatFile); } catch {}
+  clipResults.forEach(r => {
+    try { fs.unlinkSync(r.clipFile); } catch {}
+    try { fs.unlinkSync(r.slideFile); } catch {}
+    try { fs.unlinkSync(r.audioFile); } catch {}
+  });
+
+  if (concatResult.status !== 0 || !fs.existsSync(videoFile)) {
+    console.error(`  ffmpeg concat failed:`, concatResult.stderr.toString().slice(0, 300));
+    return null;
+  }
+
+  // Verify total duration
+  const finalDur = execSync(`ffprobe -i "${videoFile}" -show_entries format=duration -v quiet -of csv="p=0"`).toString().trim();
+  console.log(`  ✓ Final video: ${path.basename(videoFile)} (${Math.round(parseFloat(finalDur))}s, ${Math.round(clipResults.reduce((s, r) => s + r.duration, 0))}s audio)`);
   return videoFile;
 }
 
 async function main() {
-  console.log('=== CoverScore Academy Lesson Video Generator ===\n');
+  console.log('=== CoverScore Academy — 7-Scene Production Generator ===\n');
 
-  if (!checkTool('ffmpeg')) {
-    console.log('FFmpeg not found. Install: apt-get install -y ffmpeg');
-    process.exit(1);
-  }
-  if (!checkTool('convert')) {
-    console.log('ImageMagick not found. Install: apt-get install -y imagemagick');
-    process.exit(1);
-  }
-  if (!checkTool('edge-tts')) {
-    console.log('edge-tts not found. Install: pip install edge-tts');
-    process.exit(1);
-  }
-
+  if (!checkTool('ffmpeg')) { console.log('FFmpeg not found.'); process.exit(1); }
+  if (!checkTool('convert')) { console.log('ImageMagick not found.'); process.exit(1); }
+  if (!checkTool('edge-tts')) { console.log('edge-tts not found.'); process.exit(1); }
   console.log('All tools available.\n');
-  generateBackground();
 
-  console.log('Querying lessons without video...');
+  console.log('Querying lessons needing video generation...');
   const lessons = await new Promise((res, rej) => {
-    db.all(`SELECT m.*, c.code FROM academy_modules m LEFT JOIN academy_courses c ON c.id = m.course_id WHERE m.video_url IS NULL AND m.content IS NOT NULL ORDER BY m.course_id, m.lesson_number`, (err, rows) => {
+    db.all(`SELECT m.*, c.code FROM academy_modules m LEFT JOIN academy_courses c ON c.id = m.course_id WHERE m.video_url IS NULL AND m.scene_data IS NOT NULL ORDER BY m.course_id, m.lesson_number`, (err, rows) => {
       if (err) rej(err); else res(rows || []);
     });
   });
