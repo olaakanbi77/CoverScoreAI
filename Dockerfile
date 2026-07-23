@@ -6,11 +6,12 @@ RUN apt-get update -qq && apt-get install -y -qq \
   python3 python3-pip python3-venv espeak-ng make g++ wget unzip ffmpeg imagemagick \
   && rm -rf /var/lib/apt/lists/*
 
-# Python TTS — Kokoro-82M (replaces edge-tts)
+# Python TTS — Kokoro-82M (CPU-only torch)
 RUN python3 -m venv /opt/venv && \
-  /opt/venv/bin/pip install kokoro soundfile numpy misaki[en] && \
+  /opt/venv/bin/pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu && \
+  /opt/venv/bin/pip install --quiet kokoro soundfile numpy misaki[en] && \
   /opt/venv/bin/python3 -c "from kokoro import KPipeline; KPipeline(lang_code='b')" \
-  && rm -rf /root/.cache/huggingface
+  && rm -rf /root/.cache/huggingface /root/.cache/pip
 
 COPY package*.json ./
 ENV PUPPETEER_SKIP_DOWNLOAD=true
