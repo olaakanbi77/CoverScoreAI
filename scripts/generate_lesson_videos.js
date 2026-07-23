@@ -80,7 +80,7 @@ async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseC
   const audioResult = spawnSync('edge-tts', [
     '--voice', 'en-GB-SoniaNeural',
     '--rate=-15%',
-    '--text', ssml,
+    '--ssml', ssml,
     '--write-media', audioFile
   ], { stdio: 'pipe', timeout: 300000 });
 
