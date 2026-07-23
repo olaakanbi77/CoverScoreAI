@@ -54,18 +54,6 @@ function generateSceneSlide(sceneNum, sceneName, slideTitle, lessonNumber, cours
   fs.unlinkSync(svgFile);
 }
 
-function narrationToSsml(text) {
-  const xmlSafe = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">'
-    + xmlSafe
-      .replace(/\n\n+/g, '<break time="800ms"/>')
-      .replace(/\n/g, '<break time="400ms"/>')
-      .replace(/\.(?=\s)/g, '.<break time="300ms"/>')
-      .replace(/,(?=\s)/g, ',<break time="150ms"/>')
-      .replace(/\s{2,}/g, ' ')
-    + '</speak>';
-}
-
 async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseCode, moduleLabel) {
   const slideFile = path.join(VIDEOS_DIR, `slide_${lessonId}_s${sceneNum}.png`);
   const audioFile = path.join(VIDEOS_DIR, `audio_${lessonId}_s${sceneNum}.mp3`);
@@ -76,11 +64,10 @@ async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseC
   generateSceneSlide(sceneNum, SCENE_NAMES[sceneNum - 1], slideTitle, sceneNum, courseCode, moduleLabel, lessonTitle, slideFile);
 
   // 2. Generate audio via edge-tts
-  const ssml = narrationToSsml(scene.narration);
   const audioResult = spawnSync('edge-tts', [
     '--voice', 'en-GB-SoniaNeural',
     '--rate=-15%',
-    '--ssml', ssml,
+    '--text', scene.narration,
     '--write-media', audioFile
   ], { stdio: 'pipe', timeout: 300000 });
 
