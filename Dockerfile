@@ -10,8 +10,7 @@ RUN apt-get update -qq && apt-get install -y -qq \
 RUN python3 -m venv /opt/venv && \
   /opt/venv/bin/pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu && \
   /opt/venv/bin/pip install --quiet kokoro soundfile numpy misaki[en] && \
-  /opt/venv/bin/python3 -c "from kokoro import KPipeline; KPipeline(lang_code='b')" \
-  && rm -rf /root/.cache/huggingface /root/.cache/pip
+  /opt/venv/bin/python3 -c "from kokoro import KPipeline; KPipeline(lang_code='b')"
 
 COPY package*.json ./
 ENV PUPPETEER_SKIP_DOWNLOAD=true
