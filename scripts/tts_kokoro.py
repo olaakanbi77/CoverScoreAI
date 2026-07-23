@@ -1,40 +1,42 @@
 #!/usr/bin/env python3
-"""Kokoro TTS wrapper for CoverScore Academy video generation.
-Usage: python tts_kokoro.py <text_file> <output_wav> [voice]
-Reads text from file, outputs WAV at 24kHz using Kokoro-82M.
+"""Kokoro TTS daemon — reads JSON lines from stdin, writes WAV.
+Usage: echo '{"text":"...","output":"/path/to.wav","voice":"bf_alice"}' | python3 tts_kokoro.py
+Keeps the pipeline alive across invocations to avoid model reload.
 """
-import sys, os, numpy as np, soundfile as sf
+import sys, json, os, numpy as np, soundfile as sf
+
+# Load pipeline once at startup
 from kokoro import KPipeline
+pipeline = KPipeline(lang_code='b')
 
-def generate(text_path: str, output_path: str, voice: str = 'bf_alice'):
-    with open(text_path, 'r', encoding='utf-8') as f:
-        text = f.read().strip()
+for line in sys.stdin:
+    line = line.strip()
+    if not line:
+        continue
+    try:
+        req = json.loads(line)
+    except json.JSONDecodeError as e:
+        print(f'{{"error":"json: {e}"}}', file=sys.stderr)
+        continue
+
+    text = req.get('text', '').strip()
+    output = req.get('output', '')
+    voice = req.get('voice', 'bf_alice')
+
     if not text:
-        print('  [kokoro] empty text', file=sys.stderr)
-        return False
-
-    lang = voice[0]  # 'b' for British, 'a' for American
-    pipeline = KPipeline(lang_code=lang)
+        print(f'{{"error":"empty text"}}', file=sys.stderr)
+        continue
 
     segments = []
     for gs, ps, audio in pipeline(text, voice=voice, speed=1.0):
         segments.append(audio)
 
     if not segments:
-        print('  [kokoro] no audio generated', file=sys.stderr)
-        return False
+        print(f'{{"error":"no audio"}}', file=sys.stderr)
+        continue
 
     full = np.concatenate(segments)
-    sf.write(output_path, full, 24000)
-    return True
-
-if __name__ == '__main__':
-    args = sys.argv[1:]
-    if len(args) < 2:
-        print('Usage: tts_kokoro.py <text_file> <output_wav> [voice]', file=sys.stderr)
-        sys.exit(1)
-    text_file = args[0]
-    wav_file = args[1]
-    voice = args[2] if len(args) > 2 else 'bf_alice'
-    ok = generate(text_file, wav_file, voice)
-    sys.exit(0 if ok else 1)
+    sf.write(output, full, 24000)
+    dur = len(full) / 24000
+    print(f'{{"ok":true,"output":"{output}","duration":{dur:.1f}}}')
+    sys.stdout.flush()

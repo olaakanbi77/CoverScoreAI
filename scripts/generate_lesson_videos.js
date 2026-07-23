@@ -1,4 +1,4 @@
-const { execSync, spawnSync } = require('child_process');
+const { execSync, spawnSync, spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
@@ -54,7 +54,39 @@ function generateSceneSlide(sceneNum, sceneName, slideTitle, lessonNumber, cours
   fs.unlinkSync(svgFile);
 }
 
-async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseCode, moduleLabel) {
+function startKokoro() {
+  const proc = spawn('python3', [path.join(__dirname, 'tts_kokoro.py')], {
+    stdio: ['pipe', 'pipe', 'pipe']
+  });
+  let buf = '';
+  proc.stdout.on('data', (d) => { buf += d.toString(); });
+  proc.on('error', (e) => console.error('kokoro process error:', e));
+  return { proc, buf: () => buf, clear: () => { buf = ''; } };
+}
+
+function kokoroTTS(kokoro, text, outputFile, voice = 'bf_alice') {
+  return new Promise((resolve, reject) => {
+    const req = JSON.stringify({ text, output: outputFile, voice }) + '\n';
+    const prevLen = kokoro.buf().length;
+    const timeout = setTimeout(() => reject(new Error('Kokoro timeout')), 180000);
+    kokoro.proc.stdin.write(req);
+    const check = setInterval(() => {
+      const newData = kokoro.buf().slice(prevLen);
+      const idx = newData.indexOf('\n');
+      if (idx >= 0) {
+        clearInterval(check);
+        clearTimeout(timeout);
+        try {
+          const resp = JSON.parse(newData.slice(0, idx).trim());
+          if (resp.error) reject(new Error(resp.error));
+          else resolve(resp);
+        } catch (e) { reject(e); }
+      }
+    }, 200);
+  });
+}
+
+async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseCode, moduleLabel, kokoro) {
   const slideFile = path.join(VIDEOS_DIR, `slide_${lessonId}_s${sceneNum}.png`);
   const audioFile = path.join(VIDEOS_DIR, `audio_${lessonId}_s${sceneNum}.wav`);
   const clipFile = path.join(VIDEOS_DIR, `clip_${lessonId}_s${sceneNum}.mp4`);
@@ -63,18 +95,15 @@ async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseC
   const slideTitle = scene.slideTitle || scene.name;
   generateSceneSlide(sceneNum, SCENE_NAMES[sceneNum - 1], slideTitle, sceneNum, courseCode, moduleLabel, lessonTitle, slideFile);
 
-  // 2. Generate audio via Kokoro TTS
-  const txtFile = path.join(VIDEOS_DIR, `text_${lessonId}_s${sceneNum}.txt`);
-  fs.writeFileSync(txtFile, scene.narration, 'utf-8');
-  const audioResult = spawnSync('python3', [
-    path.join(__dirname, 'tts_kokoro.py'),
-    txtFile, audioFile, 'bf_alice'
-  ], { stdio: 'pipe', timeout: 300000 });
-
-  try { fs.unlinkSync(txtFile); } catch {}
-
-  if (audioResult.status !== 0 || !fs.existsSync(audioFile)) {
-    console.error(`  Kokoro TTS failed for scene ${sceneNum} (lesson ${lessonId}):`, audioResult.stderr.toString().slice(0, 200));
+  // 2. Generate audio via persistent Kokoro TTS
+  try {
+    const resp = await kokoroTTS(kokoro, scene.narration, audioFile, 'bf_alice');
+    if (!fs.existsSync(audioFile)) {
+      console.error(`  audio file not created for scene ${sceneNum}`);
+      return null;
+    }
+  } catch (e) {
+    console.error(`  Kokoro TTS failed for scene ${sceneNum}: ${e.message}`);
     return null;
   }
 
@@ -149,17 +178,22 @@ async function generateVideo(lesson) {
 
   console.log(`  Generating ${scenes.length} scenes...`);
 
+  const kokoro = startKokoro();
+  // Wait for process to start
+  await new Promise(r => setTimeout(r, 2000));
+
   const clipResults = [];
   for (let i = 0; i < scenes.length; i++) {
     const scene = scenes[i];
     const sceneNum = scene.id || (i + 1);
     process.stdout.write(`    Scene ${sceneNum}/7 (${SCENE_NAMES[sceneNum - 1] || scene.name})...`);
-    const result = await generateSceneClip(id, scene, sceneNum, title, courseCode, moduleLabel);
+    const result = await generateSceneClip(id, scene, sceneNum, title, courseCode, moduleLabel, kokoro);
     if (result) {
       clipResults.push(result);
       console.log(` ${Math.round(result.duration)}s ✓`);
     } else {
       console.log(` FAILED`);
+      try { kokoro.proc.stdin.end(); } catch {}
       // Clean up any partial files
       clipResults.forEach(r => {
         try { fs.unlinkSync(r.clipFile); } catch {}
@@ -193,6 +227,7 @@ async function generateVideo(lesson) {
     try { fs.unlinkSync(r.slideFile); } catch {}
     try { fs.unlinkSync(r.audioFile); } catch {}
   });
+  try { kokoro.proc.stdin.end(); } catch {}
 
   if (concatResult.status !== 0 || !fs.existsSync(videoFile)) {
     console.error(`  ffmpeg concat failed:`, concatResult.stderr.toString().slice(0, 300));
