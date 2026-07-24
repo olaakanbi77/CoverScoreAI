@@ -11,7 +11,7 @@ import subprocess
 import re
 
 AGNES_URL = "http://localhost:8765"
-REFERENCE_IMAGE_URL = "http://163.245.210.111:8765/api/image/081c4d14e352"
+REFERENCE_IMAGE_URL = "http://163.245.210.111:8765/api/image/7739bb8902ad"
 DB_PATH = "/root/CoverScoreAI/data/coverscore.db"
 OUTPUT_DIR = "/root/CoverScoreAI/public/videos"
 AVATAR_HEIGHT = 360
@@ -30,18 +30,34 @@ def get_scenes(lesson_id):
 
 
 def generate_slide(scene, scene_index, workdir):
+    scene_labels = ["Welcome", "Learning Objectives", "Main Concept", "Deep Dive", "Practical Application", "CoverScore Insight", "Lesson Summary"]
+    scene_num = scene.get("id", scene_index + 1)
+    scene_label = scene.get("name", scene_labels[scene_index] if scene_index < len(scene_labels) else f"Scene {scene_num}")
+    title = scene.get("slideTitle", scene_label)
+    subtitle = scene.get("subtitle", "")
     slide_svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e3a5f"/>
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="50%" stop-color="#132543"/>
+      <stop offset="100%" stop-color="#1a365d"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00b4d8"/>
+      <stop offset="100%" stop-color="#0077b6"/>
     </linearGradient>
   </defs>
   <rect width="1280" height="720" fill="url(#bg)"/>
-  <rect x="60" y="180" width="1160" height="400" rx="20" fill="rgba(255,255,255,0.06)"/>
-  <text x="640" y="260" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#e2e8f0">{scene.get("title","")}</text>
-  <text x="640" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" fill="#94a3b8" opacity="0.9"><tspan x="640" dy="0">{scene.get("subtitle","")}</tspan></text>
-  <text x="640" y="550" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#64748b">{scene.get("scene_type","")}</text>
+  <rect x="0" y="0" width="1280" height="6" fill="url(#accent)"/>
+  <rect x="60" y="40" width="200" height="36" rx="18" fill="rgba(0,180,216,0.15)"/>
+  <text x="160" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#00b4d8" font-weight="bold">SCENE {scene_num} OF 7</text>
+  <text x="640" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#ffffff" font-weight="bold">{title}</text>
+  <text x="640" y="260" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#94a3b8">{scene_label}</text>
+  <rect x="605" y="290" width="70" height="3" rx="1.5" fill="#00b4d8"/>
+  <rect x="60" y="420" width="1160" height="200" rx="12" fill="rgba(255,255,255,0.04)"/>
+  <text x="640" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#cbd5e1">CoverScore Academy</text>
+  <text x="640" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#64748b">Certified Coverage Advisor &bull; Module 1</text>
+  <text x="1200" y="690" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">coverscore.site</text>
 </svg>"""
     svg_path = os.path.join(workdir, f"slide_{scene_index}.svg")
     png_path = os.path.join(workdir, f"slide_{scene_index}.png")
@@ -59,12 +75,17 @@ def generate_anchor_clip(narration, workdir, scene_index):
     data = {
         "anchor_reference_image": REFERENCE_IMAGE_URL,
         "script_text": narration,
-        "audio_voice": "en-GB-SoniaNeural",
+        "audio_voice": "en-NG-EzinneNeural",
         "audio_rate": "-15%",
         "video_width": 768,
         "video_height": 1344,
         "audio_enabled": True,
-        "subtitle_enabled": False,
+        "subtitle_enabled": True,
+        "subtitle_fontsize": 38,
+        "subtitle_color": "white",
+        "subtitle_position": "bottom",
+        "subtitle_stroke_color": "black",
+        "subtitle_stroke_width": 3,
     }
     r = requests.post(f"{AGNES_URL}/api/tasks/anchor", data=data)
     r.raise_for_status()
@@ -107,7 +128,15 @@ def composite_scene(slide_png, anchor_mp4, output_path, workdir):
     pos_x = 1280 - avatar_w - MARGIN
     pos_y = 720 - AVATAR_HEIGHT - MARGIN
 
-    filter_graph = f"[1:v]scale={avatar_w}:{AVATAR_HEIGHT}[av];[0:v][av]overlay={pos_x}:{pos_y}"
+    filter_graph = (
+        f"[1:v]scale={avatar_w}:{AVATAR_HEIGHT},"
+        f"format=rgba,"
+        f"drawbox=x=0:y={AVATAR_HEIGHT-2}:w={avatar_w}:h=2:c=#00b4d8@0.8:t=fill,"
+        f"drawbox=x={avatar_w-2}:y=0:w=2:h={AVATAR_HEIGHT}:c=#00b4d8@0.8:t=fill,"
+        f"drawbox=x=0:y=0:w={avatar_w}:h=2:c=#00b4d8@0.8:t=fill,"
+        f"drawbox=x=0:y=0:w=2:h={AVATAR_HEIGHT}:c=#00b4d8@0.8:t=fill[av];"
+        f"[0:v][av]overlay={pos_x}:{pos_y}"
+    )
 
     temp_out = output_path + ".tmp.mp4"
     subprocess.run(
