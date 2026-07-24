@@ -50,14 +50,14 @@ def generate_slide(scene, scene_index, workdir):
   <rect width="1280" height="720" fill="url(#bg)"/>
   <rect x="0" y="0" width="1280" height="6" fill="url(#accent)"/>
   <rect x="60" y="40" width="200" height="36" rx="18" fill="rgba(0,180,216,0.15)"/>
-  <text x="160" y="63" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#00b4d8" font-weight="bold">SCENE {scene_num} OF 7</text>
-  <text x="640" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#ffffff" font-weight="bold">{title}</text>
-  <text x="640" y="260" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#94a3b8">{scene_label}</text>
+  <text x="160" y="63" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="14" fill="#00b4d8" font-weight="bold">SCENE {scene_num} OF 7</text>
+  <text x="640" y="200" text-anchor="middle" font-family="DejaVu Serif,serif" font-size="44" fill="#ffffff" font-weight="bold">{title}</text>
+  <text x="640" y="260" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#94a3b8">{scene_label}</text>
   <rect x="605" y="290" width="70" height="3" rx="1.5" fill="#00b4d8"/>
   <rect x="60" y="420" width="1160" height="200" rx="12" fill="rgba(255,255,255,0.04)"/>
-  <text x="640" y="470" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#cbd5e1">CoverScore Academy</text>
-  <text x="640" y="500" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#64748b">Certified Coverage Advisor &bull; Module 1</text>
-  <text x="1200" y="690" text-anchor="end" font-family="Arial,sans-serif" font-size="12" fill="#475569">coverscore.site</text>
+  <text x="640" y="470" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="20" fill="#cbd5e1">CoverScore Academy</text>
+  <text x="640" y="500" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="14" fill="#64748b">Certified Coverage Advisor - Module 1</text>
+  <text x="1200" y="690" text-anchor="end" font-family="DejaVu Sans,sans-serif" font-size="12" fill="#475569">coverscore.site</text>
 </svg>"""
     svg_path = os.path.join(workdir, f"slide_{scene_index}.svg")
     png_path = os.path.join(workdir, f"slide_{scene_index}.png")
