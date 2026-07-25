@@ -164,7 +164,7 @@ def build_scene_video(slide_png, audio_path, srt_path, output_path, workdir):
         "ffmpeg", "-y",
         "-loop", "1", "-i", slide_png,
         "-i", audio_path,
-        "-vf", f"{zoom_expr},subtitles={srt_path}:force_style='Fontsize=20,Alignment=2,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3,Outline=2,Shadow=1'",
+        "-vf", f"{zoom_expr},subtitles={srt_path}:force_style='Fontsize=22,Alignment=2,MarginV=80,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3,Outline=2,Shadow=1'",
         "-c:v", "libx264", "-preset", "fast", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "128k",
         "-shortest", "-t", str(duration),
