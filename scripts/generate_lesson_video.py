@@ -13,7 +13,7 @@ DB_PATH = "/root/CoverScoreAI/data/coverscore.db"
 OUTPUT_DIR = "/root/CoverScoreAI/public/videos"
 
 VOICE = "en-NG-EzinneNeural"
-RATE = "-15%"
+RATE = "-5%"
 FPS = 25
 WIDTH, HEIGHT = 1280, 720
 
@@ -52,8 +52,7 @@ def generate_slide(scene, scene_index, workdir):
   </defs>
   <rect width="1280" height="720" fill="url(#bg)"/>
   <rect x="0" y="0" width="1280" height="6" fill="url(#accent)"/>
-  <rect x="60" y="40" width="200" height="36" rx="18" fill="rgba(0,180,216,0.15)"/>
-  <text x="640" y="200" text-anchor="middle" font-family="DejaVu Serif,serif" font-size="44" fill="#ffffff" font-weight="bold">{title}</text>
+     <text x="640" y="200" text-anchor="middle" font-family="DejaVu Serif,serif" font-size="44" fill="#ffffff" font-weight="bold">{title}</text>
   <text x="640" y="260" text-anchor="middle" font-family="DejaVu Sans,sans-serif" font-size="18" fill="#94a3b8">{scene_label}</text>
   <rect x="605" y="290" width="70" height="3" rx="1.5" fill="#00b4d8"/>
   <rect x="60" y="420" width="1160" height="200" rx="12" fill="rgba(255,255,255,0.04)"/>
