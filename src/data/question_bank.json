@@ -2657,13 +2657,15 @@
         "id": "SCH_011",
         "industry": "school",
         "pillar": "General",
-        "question": "Do you currently generate regular monthly revenue?",
-        "question_type": "yes_no",
+        "question": "How predictable is your school's income throughout the year?",
+        "question_type": "single_choice",
         "answers": [
-            "Yes",
-            "No"
+            "Very predictable — we have stable, consistent revenue",
+            "Moderately predictable — slight seasonal variation",
+            "Somewhat unpredictable — noticeable fluctuations",
+            "Very unpredictable — revenue varies significantly"
         ],
-        "data_mapping": "regular_revenue",
+        "data_mapping": "income_predictability",
         "branching": {
             "DEFAULT": "SCH_013"
         }
@@ -2815,7 +2817,7 @@
     {
         "id": "SCH_023",
         "industry": "school",
-        "pillar": "Regulatory and Legal Readiness",
+        "pillar": "Safety and Compliance Readiness",
         "question": "Who is responsible for health and safety within your school?",
         "question_type": "single_choice",
         "answers": [
@@ -2930,11 +2932,29 @@
             }
         },
         "branching": {
+            "DEFAULT": "SCH_028"
+        }
+    },
+    {
+        "id": "SCH_028",
+        "industry": "school",
+        "pillar": "General",
+        "question": "What is your biggest concern about your school right now?",
+        "question_type": "single_choice",
+        "answers": [
+            "Student safety and accident prevention",
+            "Financial stability and revenue",
+            "Property / facility condition",
+            "Regulatory and compliance readiness",
+            "Transport safety"
+        ],
+        "data_mapping": "primary_concern",
+        "branching": {
             "DEFAULT": "SCH_016"
         }
     },
     {
-        "pillar": "Regulatory and Legal Readiness",
+        "pillar": "Safety and Compliance Readiness",
         "question": "If a student was injured on the playground and parents sued, do you have Public Liability Insurance?",
         "question_type": "yes_no",
         "answers": [

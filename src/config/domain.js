@@ -556,7 +556,7 @@ const domainConfig = {
           base: "Your assessment indicates that your manufacturing facility and assets may not be adequately insured.",
           answerChecks: [
             { q: 'MFG_016', values: ['No'], append: "Without fire and special perils insurance, your facility and equipment are exposed to catastrophic loss." },
-            { q: 'MFG_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your facility, putting property and lives at risk." },
+            { q: 'MFG_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your facility, creating a significant fire safety exposure." },
             { q: 'MFG_027', values: ["Never"], append: "You never conduct building maintenance inspections, allowing structural issues and hazards to go unnoticed." },
             { q: 'MFG_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." }
           ],
@@ -695,7 +695,7 @@ const domainConfig = {
       'student safety': "Your school has a duty of care to every student. Without comprehensive student safety procedures and documented emergency response plans, a single accident or incident could create significant legal, financial, and reputational consequences for your school.",
       'business continuity': "Your school's ability to continue operating during a disruption depends on financial resilience and contingency planning. Without adequate reserves or a continuity plan, an unexpected closure could threaten your ability to meet payroll and maintain operations.",
       'transport safety': "If your school operates transport services, you carry responsibility for student safety beyond the school gates. Without proper driver training, regular vehicle inspections, and appropriate insurance coverage, a transport accident could have serious consequences.",
-      'regulatory readiness': "Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents. Without formal health and safety leadership and public liability protection, your school faces increased legal and regulatory exposure.",
+      'safety & compliance readiness': "Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents. Without formal health and safety leadership and public liability protection, your school faces increased legal and regulatory exposure.",
       'property protection': "Your school buildings and facilities represent a significant investment in your community's future. Without adequate fire protection, regular maintenance, and appropriate insurance, a fire or structural issue could disrupt learning for months."
     },
     insightTexts: {
@@ -738,7 +738,7 @@ const domainConfig = {
             { q: 'SCH_015', values: ['Yes'], text: "Your school operates transport services, carrying responsibility for student safety beyond the school gates. Without proper driver training and vehicle inspections, a transport accident could have serious consequences for students and your school." }
           ]
         },
-        'Regulatory Readiness': {
+        'Safety & Compliance Readiness': {
           base: "Your assessment shows that no one is formally responsible for health and safety within your school, creating a significant governance gap.",
           answerChecks: [
             { q: 'SCH_016', values: ['No'], append: "Combined with the absence of public liability protection, this increases your exposure to legal claims, regulatory action, and reputational damage if another student incident occurs. These gaps could also reduce your school\u2019s ability to respond confidently when incidents happen." }
@@ -752,7 +752,7 @@ const domainConfig = {
         'Property Protection': {
           base: "Your assessment shows that your school\u2019s physical facilities and property may not be adequately safeguarded.",
           answerChecks: [
-            { q: 'SCH_021', values: ['No'], append: "Fire extinguishers are not regularly inspected or available across your school buildings, putting property and lives at risk." },
+            { q: 'SCH_021', values: ['No'], append: "Fire extinguishers are not regularly inspected or available across your school buildings, creating a significant fire safety exposure." },
             { q: 'SCH_026', values: ['No'], append: "Your school does not have a working fire alarm system that is regularly tested, meaning a fire could go undetected until it's too late." },
             { q: 'SCH_027', values: ['Never'], append: "You never conduct building maintenance inspections, allowing structural issues, electrical faults, and other hazards to go unnoticed." },
             { q: 'SCH_027', values: ['Rarely'], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." },
@@ -770,14 +770,14 @@ const domainConfig = {
       'student safety': 'reviewing your student safety procedures and ensuring comprehensive protection is in place for student accidents and injuries',
       'business continuity': 'developing a basic business continuity plan that covers temporary closure, loss of key personnel, and operational disruption',
       'transport safety': 'reviewing and updating insurance coverage for all school transport and vehicles used for student movement',
-      'regulatory readiness': 'Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents',
+      'safety & compliance readiness': 'Your school currently lacks key governance and liability safeguards needed to respond effectively to student safety incidents',
       'property protection': 'getting comprehensive fire and building insurance for all school facilities and property'
     },
     firstStepTexts: {
       'student safety': 'Conduct a full student safety audit, document emergency procedures for accidents and fire, and ensure appropriate accident and injury protection is in place.',
       'business continuity': 'Develop a business continuity plan covering temporary closure scenarios and build financial reserves to sustain operations through a one-month disruption.',
       'transport safety': 'Review and update insurance coverage for all school transport, implement driver training in first aid and defensive driving, and establish regular vehicle safety inspections.',
-      'regulatory readiness': 'Appoint a designated health and safety lead, secure public liability insurance, and establish formal health and safety governance with clear responsibilities.',
+      'safety & compliance readiness': 'Appoint a designated health and safety lead, secure public liability insurance, and establish formal health and safety governance with clear responsibilities.',
       'property protection': 'Secure comprehensive fire and building insurance for all school facilities, install fire extinguishers and alarms across all buildings, and establish regular maintenance inspections.'
     },
     realLifeContext: "Your school is more than a building\u2014it's a community. Parents trust you with the safety and education of their children. If a student incident, fire, or disruption were to happen, your school\u2019s ability to continue operations depends on the resilience you have in place today."
@@ -845,7 +845,7 @@ const domainConfig = {
           base: "Your assessment shows that your church building and contents may not be adequately insured.",
           answerChecks: [
             { q: 'CHR_017', values: ['No'], append: "Without fire insurance, your church building and contents are vulnerable to catastrophic loss." },
-            { q: 'CHR_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your church buildings, putting property and lives at risk." },
+            { q: 'CHR_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your church buildings, creating a significant fire safety exposure." },
             { q: 'CHR_027', values: ["Never"], append: "You never conduct building maintenance inspections for your church facilities, allowing issues to go undetected." },
             { q: 'CHR_027', values: ["Rarely"], append: "Building maintenance inspections are rarely conducted for your church facilities, increasing the likelihood of undetected issues." }
           ],
@@ -922,7 +922,7 @@ const domainConfig = {
           base: "Your assessment indicates that your construction projects may not be adequately insured.",
           answerChecks: [
             { q: 'CON_015', values: ['No'], append: "Without contractor's all-risk or works insurance, your projects are exposed to significant financial loss." },
-            { q: 'CON_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your work sites, putting property and lives at risk." }
+            { q: 'CON_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available across your work sites, creating a significant fire safety exposure." }
           ],
           suffix: "Getting comprehensive contractor's all-risk insurance is a critical step\u2014because every project deserves to be protected.",
           whyChecks: [
@@ -1037,7 +1037,7 @@ const domainConfig = {
           answerChecks: [
             { q: 'TRN_017', values: ['No'], append: "Without comprehensive motor insurance for all fleet vehicles, you face compliance and financial risks." },
             { q: 'TRN_017', values: ['Some of them'], append: "Only some of your vehicles have comprehensive motor insurance, leaving gaps in your fleet protection." },
-            { q: 'TRN_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available in your depot and vehicles, putting property and lives at risk." },
+            { q: 'TRN_021', values: ["No"], append: "Fire extinguishers are not regularly inspected or available in your depot and vehicles, creating a significant fire safety exposure." },
             { q: 'TRN_023', values: ["No one specifically assigned"], append: "With no one specifically responsible for safety and compliance, critical regulatory responsibilities may go unaddressed." },
             { q: 'TRN_026', values: ["No"], append: "Your depot or yard does not have a working fire alarm system that is regularly tested." },
             { q: 'TRN_026', values: ["Not sure"], append: "You are uncertain whether your depot has a working fire alarm system, indicating a gap in fire safety management." }

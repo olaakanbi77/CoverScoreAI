@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { sendWhatsApp } = require('../services/whatsappService');
+const { sendWhatsApp, sendWhatsAppToGroup } = require('../services/whatsappService');
 const emailService = require('../services/emailService');
 const { get, run, computeLeadScore } = require('../config/database');
 const { generateRiskReport, getLeadQualifier } = require('../services/aiService');
@@ -73,15 +73,15 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
 
     let incomeStopPhrase = '';
     if (incomeStop === 'It would stop completely' || !incomeStop) {
-      incomeStopPhrase = 'an unexpected interruption to your income could quickly affect your financial stability';
+      incomeStopPhrase = 'an unexpected illness or injury could put your finances under severe pressure before you\u2019re able to recover';
     } else if (incomeStop === 'It would reduce significantly') {
-      incomeStopPhrase = 'even a partial income reduction could create financial pressure over time';
+      incomeStopPhrase = 'even a partial income reduction could create financial pressure that affects your daily life and long-term plans';
     } else if (incomeStop === 'My income would continue') {
-      incomeStopPhrase = 'continuing your income during disruption is important, but gaps in savings and cover remain';
+      incomeStopPhrase = 'while your income would continue during disruption, gaps in savings and protection remain';
     }
 
     const middle = protectionPhrase ? `, ${protectionPhrase}` : '';
-    const body = `Your assessment shows that your income resilience currently depends almost entirely on ${srcPhrase}. Because your emergency savings would cover ${savingsPhrase}${middle}, ${incomeStopPhrase}.`;
+    const body = `Your assessment shows that your income resilience currently depends almost entirely on ${srcPhrase}. Because your emergency savings would cover only ${savingsPhrase}${middle}, ${incomeStopPhrase}. The question isn\u2019t whether you\u2019ll face a disruption\u2014it\u2019s whether your finances can survive one.`;
     return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
   }
 
@@ -104,10 +104,407 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
     if (pillarDef.suffix) body += ' ' + pillarDef.suffix;
   } else {
     body = dom.insightTexts?.catchAll ||
-      `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}.`;
+      `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. The cost of acting is far less than the cost of waiting.`;
   }
 
   return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
+};
+
+const buildAdvisorBrief = (assessmentData, lead, phoneNumber, prefix, dom, qualifierOutput, appBase) => {
+  const answers = assessmentData.answers || {};
+  const score = assessmentData.score || lead.score || 0;
+  const riskLevel = assessmentData.riskLevel || lead.risk_level || 'Moderate';
+  const riskEmojis = { Critical: '\uD83D\uDD34', 'High Risk': '\uD83D\uDD34', Moderate: '\uD83D\uDFE0', Low: '\uD83D\uDFE1', 'Very Low': '\uD83D\uDFE2' };
+  const riskEmoji = riskEmojis[riskLevel] || '\uD83D\uDD34';
+  const cats = assessmentData.risk_categories || {};
+  const name = assessmentData.name || lead.name || 'Client';
+  const businessName = assessmentData.business_name || '';
+  const rie = assessmentData.rie || {};
+  const products = rie.recommendedProducts || [];
+  const weakestCats = Object.entries(cats).sort(([, a], [, b]) => a - b).slice(0, 3);
+
+  // Domain labels per funnel
+  const entityLabels = {
+    FAM: 'Family', YPR: 'Young Professional', ENT: 'Entrepreneur',
+    INC: 'Individual', RET: 'Retiree', HLT: 'Individual',
+    HOM: 'Homeowner', MOT: 'Vehicle Owner',
+    SCH: 'School', SME: 'Business', MFG: 'Manufacturing',
+    HOS: 'Hospital', CHR: 'Church', CON: 'Construction', TRN: 'Transport'
+  };
+  const entityLabel = entityLabels[prefix] || 'Client';
+
+  const personalFunnels = ['FAM', 'YPR', 'ENT', 'INC', 'RET', 'HLT', 'HOM', 'MOT'];
+  const isPersonal = personalFunnels.includes(prefix);
+
+  // Build priority risk areas dynamically from pillar scores and answers
+  const buildRiskAreas = () => {
+    const areas = [];
+    for (const [catName, catScore] of Object.entries(cats).sort(([, a], [, b]) => a - b)) {
+      if (catScore >= 60) continue;
+      const label = catScore < 30 ? 'Critical' : catScore < 50 ? 'High' : 'Moderate';
+      const gaps = [];
+      // === BUSINESS FUNNEL CHECKS ===
+      if (prefix === 'SCH') {
+        if (catName === 'Property Protection' || catName === 'Property') {
+          if (answers['SCH_017'] === 'No') gaps.push('No Fire Insurance');
+          if (answers['SCH_026'] === 'No') gaps.push('No functional fire alarm system');
+          if (answers['SCH_021'] === 'No') gaps.push('Fire extinguishers not adequately provided or inspected');
+          if (answers['SCH_027'] === 'Never' || answers['SCH_027'] === 'Rarely') gaps.push('Building maintenance rarely conducted');
+        }
+        if (catName === 'Student Safety' || catName === 'Liability Protection') {
+          if (answers['SCH_012'] === 'Yes') gaps.push('Previous student accidents reported');
+          if (answers['SCH_020'] === 'No') gaps.push('No documented emergency response procedures');
+          if (answers['SCH_016'] === 'No') gaps.push('No liability / injury protection');
+        }
+        if (catName === 'Business Continuity' || catName === 'Financial Resilience') {
+          if (answers['SCH_022'] === 'No') gaps.push('School unlikely to sustain operations during prolonged closure');
+        }
+        if (catName === 'Transport Safety') {
+          if (answers['SCH_015'] === 'Yes') gaps.push('School buses in operation');
+          if (answers['SCH_024'] === 'No') gaps.push('Drivers not trained in first aid or defensive driving');
+          if (answers['SCH_025'] === 'No') gaps.push('No routine vehicle safety inspections');
+        }
+      }
+      if (prefix === 'SME') {
+        if (catName === 'Property Protection') {
+          if (answers['SME_016'] === 'No') gaps.push('No fire / burglary insurance');
+        }
+        if (catName === 'Business Continuity') {
+          if (answers['SME_017'] === 'No, we would close' || answers['SME_017'] === 'With difficulty') gaps.push('Business would not survive 3-month closure');
+        }
+      }
+      // === PERSONAL FUNNEL CHECKS ===
+      if (prefix === 'HLT') {
+        if (catName === 'Healthcare Access') {
+          if (answers['HLT_012'] === 'None') gaps.push('No health insurance coverage');
+          if (answers['HLT_012'] === 'Government Health Scheme') gaps.push('Government scheme may not cover major procedures');
+        }
+        if (catName === 'Financial Health Protection' || catName === 'Financial Preparedness') {
+          if (answers['HLT_013'] === 'Loan' || answers['HLT_013'] === "I don't know") gaps.push('Would rely on loans for emergency medical costs');
+          if (answers['HLT_016'] === 'No') gaps.push('Current cover inadequate for major surgery');
+        }
+        if (catName === 'Medical Risk Profile') {
+          if (answers['HLT_014'] && answers['HLT_014'] !== 'None') gaps.push(`Chronic condition: ${answers['HLT_014']}`);
+        }
+        if (catName === 'Household Resilience') {
+          if (answers['HLT_017'] === 'No') gaps.push('Household vulnerable to income loss from illness');
+        }
+      }
+      if (prefix === 'INC') {
+        if (catName === 'Emergency Financial Buffer') {
+          if (answers['INC_012'] === 'Less than 1 month') gaps.push('Emergency savings cover less than 1 month');
+          if (answers['INC_012'] === '1-3 months') gaps.push('Emergency savings cover only 1-3 months');
+        }
+        if (catName === 'Income Protection Cover') {
+          if (answers['INC_014'] === 'No') gaps.push('No disability income protection policy');
+        }
+        if (catName === 'Income Stability') {
+          if (answers['INC_013'] === 'No') gaps.push('No secondary source of income');
+        }
+        if (catName === 'Financial Commitments') {
+          if (answers['INC_015'] === 'Yes') gaps.push('Significant debt requiring monthly repayments');
+        }
+      }
+      if (prefix === 'FAM') {
+        if (catName === 'Career & Income Security' || catName === 'Emergency Financial Buffer') {
+          if (answers['FAM_012'] === 'Less than 3 months') gaps.push('Savings would last less than 3 months');
+        }
+        if (catName === 'Protection & Insurance') {
+          if (answers['FAM_013'] === 'No') gaps.push('No life insurance policy in place');
+          if (answers['FAM_013'] === 'Not sure') gaps.push('Unsure about life insurance status');
+          if (answers['FAM_015'] === 'No') gaps.push('No family health insurance');
+        }
+        if (catName === 'Future Planning') {
+          if (answers['FAM_014'] === 'No') gaps.push("Children's education not secured");
+        }
+      }
+      if (prefix === 'ENT') {
+        if (catName === 'Business Continuity') {
+          if (answers['ENT_011'] === 'Yes completely') gaps.push('Revenue 100% dependent on personal involvement');
+          if (answers['ENT_013'] === 'No') gaps.push('Business would not survive 3-month absence');
+          if (answers['ENT_013'] === 'Not sure') gaps.push('Unsure if business could survive without you');
+        }
+        if (catName === 'Legal & Liability') {
+          if (answers['ENT_012'] === 'Yes') gaps.push('Personal guarantees on business debts');
+          if (answers['ENT_015'] === 'No' || answers['ENT_015'] === 'Not sure') gaps.push('Personal assets not properly separated from business');
+        }
+        if (catName === 'Employees' || catName === 'Protection & Insurance') {
+          if (answers['ENT_014'] === 'No') gaps.push('No key person insurance');
+        }
+      }
+      if (prefix === 'YPR') {
+        if (catName === 'Financial Resilience') {
+          if (answers['YPR_012'] === 'No' || answers['YPR_012'] === 'With difficulty') gaps.push('Cannot afford critical illness bills without debt');
+          if (answers['YPR_013'] === 'No') gaps.push('No emergency fund covering 6 months of expenses');
+        }
+        if (catName === 'Protection & Insurance') {
+          if (answers['YPR_014'] === 'No') gaps.push('No personal health or accident insurance');
+        }
+      }
+      if (prefix === 'RET') {
+        if (catName === 'Financial Resilience') {
+          if (answers['RET_012'] === 'No') gaps.push('No dedicated pension or retirement savings account');
+        }
+        if (catName === 'Protection & Insurance' || catName === 'Health & Wellbeing') {
+          if (answers['RET_014'] === 'No') gaps.push('No long-term care or critical illness plan');
+        }
+        if (catName === 'Future Planning') {
+          if (answers['RET_015'] === 'No, not yet') gaps.push('No documented asset distribution or beneficiary nominations');
+        }
+      }
+      if (prefix === 'HOM') {
+        if (catName === 'Protection & Insurance') {
+          if (answers['HOM_012'] === 'No') gaps.push('No homeowner\'s or renter\'s insurance');
+        }
+      }
+      if (prefix === 'MOT') {
+        if (catName === 'Protection & Insurance') {
+          if (answers['MOT_012'] === 'No') gaps.push('No comprehensive motor insurance');
+        }
+      }
+      // Generic gap from score
+      if (gaps.length === 0 && catScore < 40) gaps.push(`Score: ${catScore}% — needs significant improvement`);
+      if (gaps.length > 0) areas.push({ name: catName, label, score: catScore, gaps });
+    }
+    return areas;
+  };
+
+  const riskAreas = buildRiskAreas();
+
+  // Build client mindset
+  const mindsetLines = [];
+  if (assessmentData._scored) mindsetLines.push('✅ Completed the full CoverScore Assessment');
+  if (assessmentData.is_qualified) mindsetLines.push('✅ Requested to speak with a Certified Risk Advisor');
+  if (assessmentData.consultation_preference) mindsetLines.push(`📅 Preferred contact: ${assessmentData.consultation_preference}`);
+  mindsetLines.push('\nThis indicates the client is actively seeking professional guidance rather than simply requesting an insurance quotation.');
+
+  // Build advisory strategy based on weakest pillars
+  const buildStrategy = () => {
+    if (prefix === 'SCH') {
+      return 'Lead the conversation with school resilience, not insurance.\n\nSuggested order:\n1. Student Safety\n2. Business Continuity\n3. Property Protection\n4. Regulatory Compliance\n5. Appropriate Protection Solutions';
+    }
+    if (prefix === 'SME') {
+      return 'Lead the conversation with business resilience, not insurance.\n\nSuggested order:\n1. Business Continuity\n2. Property Protection\n3. Liability & Compliance\n4. Employee Protection\n5. Appropriate Protection Solutions';
+    }
+    if (prefix === 'HLT') {
+      return 'Lead the conversation with health protection, not insurance.\n\nSuggested order:\n1. Healthcare Access & Coverage\n2. Financial Preparedness for Emergencies\n3. Lifestyle & Preventive Health\n4. Household Resilience\n5. Appropriate Health Protection Solutions';
+    }
+    if (prefix === 'INC') {
+      return 'Lead the conversation with income resilience, not insurance.\n\nSuggested order:\n1. Emergency Savings Buffer\n2. Income Protection Options\n3. Debt & Commitment Management\n4. Long-Term Income Strategy\n5. Appropriate Income Protection Solutions';
+    }
+    if (prefix === 'FAM') {
+      return 'Lead the conversation with family security, not insurance.\n\nSuggested order:\n1. Income Replacement & Savings\n2. Life Protection Needs\n3. Children\'s Education Security\n4. Health Cover for the Family\n5. Appropriate Family Protection Solutions';
+    }
+    if (prefix === 'ENT') {
+      return 'Lead the conversation with business continuity, not insurance.\n\nSuggested order:\n1. Key-Person Dependency\n2. Business Survival Planning\n3. Asset & Liability Separation\n4. Personal & Business Protection\n5. Appropriate Entrepreneur Protection Solutions';
+    }
+    if (prefix === 'YPR') {
+      return 'Lead the conversation with financial foundation, not insurance.\n\nSuggested order:\n1. Emergency Fund Readiness\n2. Health & Accident Protection\n3. Career & Income Stability\n4. Future Goal Planning\n5. Appropriate Young Professional Solutions';
+    }
+    if (prefix === 'RET') {
+      return 'Lead the conversation with retirement confidence, not insurance.\n\nSuggested order:\n1. Retirement Savings Status\n2. Healthcare Cost Planning\n3. Long-Term Care Readiness\n4. Legacy & Estate Planning\n5. Appropriate Retirement Solutions';
+    }
+    if (prefix === 'HOM') {
+      return 'Lead the conversation with asset protection, not insurance.\n\nSuggested order:\n1. Property & Asset Exposure\n2. Home/Renter\'s Protection Needs\n3. Contents & Liability Coverage\n4. Appropriate Home Protection Solutions';
+    }
+    if (prefix === 'MOT') {
+      return 'Lead the conversation with mobility protection, not insurance.\n\nSuggested order:\n1. Vehicle Exposure & Usage\n2. Comprehensive Coverage Needs\n3. Liability & Third-Party Risk\n4. Appropriate Motor Protection Solutions';
+    }
+    const topNames = weakestCats.map(([n]) => n);
+    return 'Lead the conversation with risk areas the client cares about most.\n\nSuggested order:\n' + topNames.map((n, i) => `${i + 1}. ${n}`).join('\n') + '\n' + (topNames.length >= 4 ? '' : `${topNames.length + 1}. Appropriate Protection Solutions`);
+  };
+
+  // Build suggested opening
+  const buildOpening = () => {
+    if (prefix === 'SCH') {
+      const hasAccidents = answers['SCH_012'] === 'Yes';
+      const noProcedures = answers['SCH_020'] === 'No';
+      if (hasAccidents && noProcedures) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore School Assessment. I've reviewed your report, and one issue stood out immediately\u2014your school has already experienced student accidents, yet there are no documented emergency procedures in place. I'd like to understand how those incidents were managed so we can identify the improvements that will make the biggest difference."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore School Assessment. I've reviewed your report and identified several areas where targeted improvements could significantly strengthen your school's resilience. I'd like to walk you through the key findings."`;
+    }
+    if (prefix === 'SME') {
+      const noFire = answers['SME_016'] === 'No';
+      const cantSurvive = answers['SME_017'] === 'No, we would close' || answers['SME_017'] === 'With difficulty';
+      if (noFire && cantSurvive) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Business Assessment. Your report shows that your business currently lacks fire insurance and would struggle to survive a prolonged closure. These are exactly the kinds of risks we can address together. I'd like to understand your business better so we can prioritise the most impactful improvements."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Business Assessment. I've reviewed your report and I'd like to walk you through a few key areas where we can make a real difference to your business resilience."`;
+    }
+    if (prefix === 'HLT') {
+      const noIns = answers['HLT_012'] === 'None';
+      const wouldBorrow = answers['HLT_013'] === 'Loan' || answers['HLT_013'] === "I don't know";
+      if (noIns && wouldBorrow) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Health Assessment. Your report shows that you currently have no health insurance and would need to borrow if a medical emergency arose. That's exactly the kind of situation we can help you prepare for. I'd like to understand your situation better and identify the most impactful improvements."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Health Assessment. I've reviewed your report and identified several practical steps that could significantly strengthen your health protection. I'd like to walk you through the key findings."`;
+    }
+    if (prefix === 'INC') {
+      const noBuffer = answers['INC_012'] === 'Less than 1 month' || answers['INC_012'] === '1-3 months';
+      const noPolicy = answers['INC_014'] === 'No';
+      if (noBuffer && noPolicy) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Income Assessment. Your report shows that your emergency savings would only last a short time and you don't yet have income protection in place. That means an unexpected interruption to your income could create real financial pressure. I'd like to walk you through the most impactful ways to strengthen your income resilience."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Income Protection Assessment. I've reviewed your report and identified practical steps to strengthen your income resilience. I'd like to walk you through the key findings."`;
+    }
+    if (prefix === 'FAM') {
+      const noLife = answers['FAM_013'] === 'No';
+      const noHealth = answers['FAM_015'] === 'No';
+      if (noLife && noHealth) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Family Protection Assessment. Your report shows that your family currently lacks both life insurance and health coverage. That means the people who depend on you could be vulnerable if something unexpected happens. I'd like to understand your situation better and help you build a plan that gives your family real peace of mind."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Family Protection Assessment. I've reviewed your report and identified several ways to strengthen the protection around your family. I'd like to walk you through the key findings."`;
+    }
+    if (prefix === 'ENT') {
+      const keyDependency = answers['ENT_011'] === 'Yes completely';
+      const wouldNotSurvive = answers['ENT_013'] === 'No';
+      if (keyDependency && wouldNotSurvive) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Entrepreneur Assessment. Your report highlights a critical risk\u2014your business completely depends on your personal involvement and would not survive a prolonged absence. This is a common challenge for entrepreneurs, and one we can address together. I'd like to understand your business better so we can prioritise the most impactful improvements."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Entrepreneur Assessment. I've reviewed your report and identified key areas where we can strengthen both your business and personal protection. I'd like to walk you through the findings."`;
+    }
+    if (prefix === 'YPR') {
+      const noFund = answers['YPR_013'] === 'No';
+      const noIns = answers['YPR_014'] === 'No';
+      if (noFund && noIns) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Young Professional Assessment. Your report shows that you're building your financial foundation, but there are two important gaps\u2014no emergency fund and no personal insurance. Addressing these early is one of the smartest financial decisions you can make. I'd like to walk you through the most practical next steps."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Young Professional Assessment. You're at exactly the right stage to build strong financial foundations. I've reviewed your report and I'd like to walk you through a few key areas."`;
+    }
+    if (prefix === 'RET') {
+      const noPension = answers['RET_012'] === 'No';
+      const noCarePlan = answers['RET_014'] === 'No';
+      if (noPension && noCarePlan) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Retirement Assessment. Your report shows that you don't yet have a dedicated retirement savings plan or a long-term care strategy. Time is one of the most powerful assets in retirement planning\u2014and the sooner we address these gaps, the more options you'll have. I'd like to walk you through the key findings."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Retirement Assessment. I've reviewed your report and identified practical ways to strengthen your retirement confidence. I'd like to walk you through the key findings."`;
+    }
+    if (prefix === 'HOM') {
+      const noIns = answers['HOM_012'] === 'No';
+      if (noIns) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Home Protection Assessment. Your report shows that your home and personal belongings are not currently insured. A fire, theft, or liability incident could result in significant financial loss. I'd like to understand your situation better so we can find the right level of protection for your home."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Home Protection Assessment. I've reviewed your report and identified practical ways to strengthen your home protection. I'd like to walk you through the key findings."`;
+    }
+    if (prefix === 'MOT') {
+      const noIns = answers['MOT_012'] === 'No';
+      if (noIns) {
+        return `"Good day, ${name}. Thank you for completing your CoverScore Motor Assessment. Your report shows that your primary vehicle is not covered by comprehensive motor insurance. An accident or theft could leave you with significant out-of-pocket costs. I'd like to understand your driving patterns and find the right level of protection."`;
+      }
+      return `"Good day, ${name}. Thank you for completing your CoverScore Motor Assessment. I've reviewed your report and identified practical ways to strengthen your motor protection. I'd like to walk you through the key findings."`;
+    }
+    return `"Good day, ${name}. Thank you for completing your CoverScore Assessment. I've reviewed your report and identified several priority areas where targeted improvements could make a significant difference. I'd like to walk you through the key findings."`;
+  };
+
+  // Build product list
+  const buildProducts = () => {
+    if (prefix === 'SCH') {
+      return '• Fire & Special Perils Insurance\n• Public Liability Insurance\n• School Comprehensive Protection\n• School Bus / Motor Insurance\n• Business Interruption Cover\n• Group Personal Accident (Students & Staff)';
+    }
+    if (prefix === 'SME') {
+      return '• Fire & Special Perils Insurance\n• Public Liability Insurance\n• Business Interruption Cover\n• Burglary Insurance\n• Group Life & Workmen Compensation\n• Goods in Transit Insurance';
+    }
+    if (prefix === 'HLT') {
+      return '• Private Health Insurance / HMO\n• Critical Illness Insurance\n• Personal Accident Insurance\n• Hospital Cash Plan\n• Medical Emergency Fund';
+    }
+    if (prefix === 'INC') {
+      return '• Income Protection / Disability Insurance\n• Emergency Savings Plan\n• Accident & Sickness Cover\n• Critical Illness Insurance\n• Debt Protection Cover';
+    }
+    if (prefix === 'FAM') {
+      return '• Life Insurance (Term / Whole Life)\n• Family Health Insurance / HMO\n• Education Savings / Trust Plan\n• Personal Accident Cover\n• Income Protection';
+    }
+    if (prefix === 'ENT') {
+      return '• Key Person Insurance\n• Business Continuity Plan\n• Personal Health / Accident Cover\n• Asset & Liability Separation Structure\n• Life Insurance';
+    }
+    if (prefix === 'YPR') {
+      return '• Personal Health / Accident Insurance\n• Emergency Fund Strategy\n• Critical Illness Cover\n• Life Insurance (starter)\n• Income Protection';
+    }
+    if (prefix === 'RET') {
+      return '• Pension / Retirement Savings (RSA)\n• Long-Term Care Insurance\n• Critical Illness Cover\n• Annuity / Retirement Income Plan\n• Estate & Legacy Planning';
+    }
+    if (prefix === 'HOM') {
+      return '• Homeowner\'s / Renter\'s Insurance\n• Contents Insurance\n• Fire & Perils Cover\n• Public Liability Cover\n• Burglary Insurance';
+    }
+    if (prefix === 'MOT') {
+      return '• Comprehensive Motor Insurance\n• Third-Party Liability Cover\n• Accident & Breakdown Cover\n• Personal Accident Cover for Driver';
+    }
+    if (products.length > 0) {
+      return products.slice(0, 6).map(p => `• ${p.product || p}`).join('\n');
+    }
+    return '• Review assessment for tailored product recommendations';
+  };
+
+  // Build next action
+  const nextAction = qualifierOutput?.next_best_action || 'Contact client within 24 hours';
+  const priority = qualifierOutput?.lead_status?.toLowerCase().includes('hot') ? '\uD83D\uDD34 High' : '\uD83D\uDFE1 Medium';
+  const url = `${appBase || 'https://coverscore.site'}/admin/dashboard`;
+
+  // Role label
+  const roleLabel = isPersonal ? '' : (prefix === 'SCH' ? 'Proprietor' : (assessmentData.contact_person || lead.contact_person || 'Contact'));
+
+  // Assemble the message
+  const parts = [];
+  parts.push(`\uD83D\uDD25 *NEW COVERSCORE ADVISOR BRIEF* \uD83D\uDD25`);
+  parts.push('');
+  parts.push(`\uD83D\uDC64 *Client Profile*`);
+  parts.push(`Contact: ${name}`);
+  if (businessName) parts.push(`${entityLabel}: ${businessName}`);
+  if (!isPersonal) parts.push(`Role: ${roleLabel}`);
+  parts.push(`Location: ${answers.city || lead.city || 'Not specified'}`);
+  parts.push(`Phone: ${phoneNumber}`);
+  parts.push('');
+  parts.push(`\uD83D\uDCCA *CoverScore Summary*`);
+  parts.push(`Overall CoverScore\u2122: ${score}/100`);
+  parts.push(`Risk Level: ${riskEmoji} ${riskLevel.toUpperCase()}`);
+  parts.push('');
+  parts.push(`\uD83D\uDEA8 *Priority Risk Areas*`);
+
+  for (const area of riskAreas) {
+    parts.push(`${area.label === 'Critical' ? '\uD83D\uDD25' : '\u26A0'} ${area.name} (${area.label})`);
+    for (const g of area.gaps) {
+      parts.push(`  ${g}`);
+    }
+    parts.push('');
+  }
+
+  parts.push(`\uD83D\uDCAC *Client Mindset*`);
+  parts.push(...mindsetLines);
+  parts.push('');
+  parts.push(`\uD83C\uDFAF *Recommended Advisory Strategy*`);
+  parts.push(buildStrategy());
+  parts.push('');
+  parts.push(`\uD83D\uDDE3 *Suggested Opening*`);
+  parts.push(buildOpening());
+  parts.push('');
+  parts.push(`\uD83D\uDCE6 *Priority Protection Solutions*`);
+  parts.push(buildProducts());
+  parts.push('');
+  parts.push(`\uD83D\uDCDE *Immediate Next Action*`);
+  parts.push(`Priority: ${priority}`);
+  parts.push(`Contact within 24 hours`);
+  parts.push(`Arrange a 30\u201345 minute ${entityLabel} Risk Review`);
+  parts.push(`Walk the client through the CoverScore Report\u2122`);
+  parts.push(`Prioritise quick-win improvements before discussing insurance placement`);
+  parts.push('');
+
+  // Advisor Conversation Priority section
+  const primaryConcern = answers['SCH_028'] || answers['primary_concern'] || 'Not explicitly stated';
+  const pastIncidents = !!answers['SCH_012'] || !!answers['MFG_012'] || !!answers['HOS_012'] || !!answers['CON_012'] || !!answers['TRN_012'];
+  const hasUrgency = assessmentData._urgencySent || pastIncidents;
+  const weakestCat = Object.entries(cats).sort(([, a], [, b]) => a - b)[0];
+  const weakestName = weakestCat ? weakestCat[0] : 'General';
+  const weakestScore = weakestCat ? Math.round(weakestCat[1]) : 0;
+  parts.push(`\uD83C\uDFAF *Advisor Conversation Priority*`);
+  parts.push(`Client\u2019s stated concern: ${primaryConcern}`);
+  parts.push(`Deepest pillar gap: ${weakestName} (${weakestScore}%)`);
+  parts.push(`Emotional trigger: ${hasUrgency ? 'Past incidents reported \u2014 client may be more receptive to action' : 'No past incidents \u2014 focus on prevention and peace of mind'}`);
+  parts.push(`Urgency level: ${score < 45 ? '\uD83D\uDD34 High \u2014 significant gaps need addressing' : score < 65 ? '\uD83D\uDFE0 Moderate \u2014 targeted improvements recommended' : '\uD83D\uDFE2 Low \u2014 client in good position, focus on optimisation'}`);
+  parts.push(`Suggested opening angle: ${primaryConcern !== 'Not explicitly stated' ? `"You mentioned ${primaryConcern.toLowerCase()} as a concern. Let\u2019s start there."` : `"Your CoverScore shows your biggest opportunity is in ${weakestName.toLowerCase()}. Shall we explore that first?"`}`);
+  parts.push('');
+  parts.push(`\uD83D\uDD17 Open Client Record: ${url}`);
+
+  return parts.filter(l => l !== '' || true).join('\n');
 };
 
 router.post('/evolution', async (req, res) => {
@@ -314,6 +711,42 @@ router.post('/evolution', async (req, res) => {
     const postMessages = needsScoring
       ? allMessages.filter(m => m.type !== 'auto_advance' && m.type !== 'reply')
       : allMessages;
+
+    // Subtle urgency: acknowledge past incidents to prime psychological readiness (ONCE per assessment)
+    if (updatedData && updatedData.answers && !assessmentData._scored && !needsScoring && !assessmentData._urgencySent && messages.length <= 1) {
+      // Get the answer keys that are NEW in this interaction (not in the previously saved assessmentData)
+      const prevAnswers = assessmentData.answers || {};
+      const newKeys = Object.keys(updatedData.answers).filter(k => prevAnswers[k] === undefined);
+      const incidentQIds = ['SCH_012', 'MFG_012', 'HOS_012', 'CON_012', 'TRN_012'];
+      const latestAnswerKey = newKeys.find(k => incidentQIds.includes(k));
+      if (latestAnswerKey) {
+        const answerVal = updatedData.answers[latestAnswerKey];
+        const urgencyTriggers = {
+          'SCH_012': { values: ['Yes'], phrase: 'schools that have experienced previous student incidents' },
+          'MFG_012': { values: ['Yes'], phrase: 'facilities that have had past workplace accidents' },
+          'HOS_012': { values: ['Yes'], phrase: 'healthcare facilities that have had past patient incidents' },
+          'CON_012': { values: ['Yes'], phrase: 'construction sites with a history of accidents' },
+          'TRN_012': { values: ['Yes'], phrase: 'transport operations that have had past fleet incidents' }
+        };
+        const trigger = urgencyTriggers[latestAnswerKey];
+        if (trigger && trigger.values.includes(answerVal)) {
+          const domainPhrase = trigger.phrase;
+          const urgencyReply = `Thank you for being candid. That helps me understand your risk profile better.\n\n${domainPhrase.charAt(0).toUpperCase() + domainPhrase.slice(1)} usually benefit from a closer review of their current protections and arrangements.\n\nLet me continue with a few more questions to complete your assessment.`;
+          assessmentData._urgencySent = true;
+          const nextQ = questionBank.find(q => q.id === nextState);
+          if (nextQ) {
+            const qNum = parseInt((nextQ.id || '').match(/_(\d+)$/)?.[1] || '0', 10);
+            if (qNum > 0 && qNum < 25) {
+              await sendWhatsApp(phoneNumber, null, { _message: urgencyReply });
+              chatHistory.push({
+                role: 'assistant', content: urgencyReply,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              });
+            }
+          }
+        }
+      }
+    }
 
     for (const msg of preMessages) {
       if (!msg.text) continue;
@@ -559,21 +992,12 @@ router.post('/evolution', async (req, res) => {
       const sortedDesc = scoredEntries.sort(([, a], [, b]) => b - a);
       const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
 
-      // ===== Message 1: Completion + Summary + Score + Resilience Level + Highest Priority =====
-      const snapshotTitles = {
-        SME: 'Business Resilience Snapshot\u2122',
-        HOS: 'Healthcare Resilience Snapshot\u2122',
-        MFG: 'Manufacturing Resilience Snapshot\u2122',
-        SCH: 'School Resilience Snapshot\u2122',
-        CHR: 'Church Resilience Snapshot\u2122',
-        CON: 'Construction Resilience Snapshot\u2122',
-        TRN: 'Transport Resilience Snapshot\u2122'
-      };
-      const snapshotTitle = snapshotTitles[prefix] || 'Risk Snapshot\u2122';
+      // ===== Message 1: Concise CoverScore + Risk Level + Biggest Vulnerability =====
+      const riskEmojis = { 'Critical': '\uD83D\uDD34', 'High Risk': '\uD83D\uDD34', 'Needs Attention': '\uD83D\uDFE0', 'Stable': '\uD83D\uDFE1', 'Strong': '\uD83D\uDFE2' };
+      const riskEmoji = riskEmojis[displayLabel] || '\uD83D\uDD34';
       const msg1Parts = [
-        `\uD83C\uDF89 Your ${dom.assessmentTitle} is complete.\n\nHere\u2019s your ${snapshotTitle}`,
-        `CoverScore\u2122\n${assessmentData.score} / 100`,
-        `Resilience Level\n${displayLabel}`
+        `\uD83C\uDFAF Your CoverScore\u2122 is ${assessmentData.score} / 100`,
+        `Risk Level\n${riskEmoji} ${displayLabel}`
       ];
       if (weakestPillar) {
         const weakKey = weakestPillar.toLowerCase();
@@ -595,7 +1019,7 @@ router.post('/evolution', async (req, res) => {
               ? dom.recommendationTexts[weakKey].replace(/^(ensuring|securing|getting|reviewing|developing|building|strengthening|creating|implementing) /i, '')
               : `this area presents the greatest opportunity to strengthen your overall ${dom.improvementTerm}`;
         }
-        msg1Parts.push(`Highest Priority\n\n${weakestPillar}\n\nWhy?\n\n${whyText.charAt(0).toUpperCase() + whyText.slice(1)}`);
+        msg1Parts.push(`Your highest-priority resilience gap\n${weakestPillar}\n\nBecause ${whyText.charAt(0).toLowerCase() + whyText.slice(1)}`);
       }
       postMessages.push({ type: 'report', text: msg1Parts.join('\n\n'), _delay: 12000 });
 
@@ -788,7 +1212,7 @@ router.post('/evolution', async (req, res) => {
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
 
-          story += `Without action, an unexpected event could affect not just your finances but the daily lives of the people who depend on you. The people who depend on you deserve peace of mind.`;
+          story += `Without action, an unexpected event could affect not just your finances but the daily lives of the people who depend on you. Your family deserves to know that whatever happens, they\u2019ll be taken care of. That peace of mind is priceless.`;
           return story;
         }
         if (prefix === 'ENT') {
@@ -826,7 +1250,7 @@ router.post('/evolution', async (req, res) => {
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
 
-          story += `Without addressing these gaps, a single unexpected event could put both your business and your personal finances at risk. Protect both your company and your personal future.`;
+          story += `Without addressing these gaps, a single unexpected event could put both your business and your personal finances at risk\u2014and everything you\u2019ve sacrificed to build your company could be lost in an instant. Protect both your company and your personal future.`;
           return story;
         }
         if (prefix === 'RET') {
@@ -912,13 +1336,13 @@ router.post('/evolution', async (req, res) => {
             const lastPos = positives.pop();
             story = `You've put important safeguards in place for your business\u2014${positives.length > 0 ? positives.join(', ') + ', and ' + lastPos : lastPos}. `;
           } else {
-            story = `Your business is the result of hard work, and every day you're building something worth protecting. `;
+            story = `Your business is the result of hard work, late nights, and personal sacrifice. Every day you're building something worth protecting. `;
           }
           if (gaps.length > 0) {
             const lastGap = gaps.pop();
             story += `However, ${gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap}. `;
           }
-          story += `A fire, burglary, or prolonged closure could undo years of effort. A disruption shouldn't undo everything you've built.`;
+          story += `A fire, burglary, or prolonged closure could undo years of effort\u2014and your customers, suppliers, and employees depend on you to keep going. A single disruption shouldn\u2019t be able to undo everything you\u2019ve built.`;
           return story;
         }
         if (prefix === 'MFG') {
@@ -935,15 +1359,15 @@ router.post('/evolution', async (req, res) => {
           if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated health and safety lead");
           if (facilityIns === 'No') gapItems.push("your facility and equipment are not protected against fire and special perils");
           if (fireExtinguishers === 'No') gapItems.push("fire protection measures are incomplete");
-          let story = "Every day, your manufacturing operation depends on equipment, people, and processes working together to keep production running.\n\n";
+          let story = "Every day, your manufacturing operation depends on equipment, people, and processes working together to keep production running\u2014and your customers rely on you to deliver.\n\n";
           if (workplaceAccidents === 'Yes') {
-            story += "Because workplace accidents have occurred in the past 3 years, your facility is already operating in a higher-risk environment. ";
+            story += "Your facility has already experienced workplace accidents. Each past incident is a signal to review and strengthen current safety measures before more serious events occur. ";
           }
           if (gapItems.length > 0) {
             const lastGap = gapItems.pop();
             const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
             story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
-            story += `\n\nAlthough these issues may not affect daily production today, a single major incident\u2014such as equipment failure, fire, or a workplace accident\u2014could halt production, disrupt customer commitments, create legal exposure, and put significant financial pressure on your business.`;
+            story += `\n\nThese may not affect daily production today, but imagine explaining to your biggest customer that you can\u2019t fulfil their order because a fire or equipment failure shut down your line. A single major incident could halt production, disrupt customer commitments, create legal exposure, and put the business\u2014and the jobs of your team\u2014at risk.`;
           } else {
             story += `Your facility has important safeguards in place, but manufacturing risk management requires continuous attention.`;
           }
@@ -966,15 +1390,15 @@ router.post('/evolution', async (req, res) => {
           if (medicalLiability === 'No') gapItems.push("professional indemnity protection is not in place");
           if (fireExtinguishers === 'No') gapItems.push("fire protection measures are incomplete");
           if (buildingMaintenance === 'Never' || buildingMaintenance === 'Rarely') gapItems.push("routine facility maintenance is limited");
-          let story = "Every day, your hospital depends on people, equipment, and processes working together to deliver safe patient care.\n\n";
+          let story = "Every day, your hospital depends on people, equipment, and processes working together to deliver safe patient care. Your patients and their families trust you with their lives.\n\n";
           if (patientIncidents === 'Yes') {
-            story += "Because you have experienced patient safety incidents in the past, your facility is already operating in a higher-risk clinical environment. ";
+            story += "Your facility has already experienced patient safety incidents. Each past event is a signal\u2014not just a statistic. The most critical question isn\u2019t whether another incident will happen, but whether your facility will be prepared when it does. ";
           }
           if (gapItems.length > 0) {
             const lastGap = gapItems.pop();
             const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
             story += `Based on your assessment, several important safeguards are currently missing. There is ${gapStr}.`;
-            story += `\n\nAlthough these issues may not affect daily operations today, a single major incident\u2014such as equipment failure, fire, or a patient safety event\u2014could interrupt clinical services, increase legal exposure, damage public confidence, and create significant financial pressure for the facility.`;
+            story += `\n\nThese gaps may not affect daily operations today, but imagine the consequence of a fire in a ward, a critical equipment failure during surgery, or a patient safety incident that could have been prevented. Any of these could interrupt clinical services, increase legal exposure, damage public confidence, and create financial pressure that threatens your ability to serve your community.`;
           } else {
             story += `Your facility has important safeguards in place, but clinical risk management requires continuous attention.`;
           }
@@ -1000,11 +1424,11 @@ router.post('/evolution', async (req, res) => {
           if (fireAlarm === 'No') gaps.push('a working fire alarm');
           let story;
           if (studentAccidents === 'Yes') {
-            story = "Because you've told us that student accidents have already occurred on your premises, your school is already operating in a higher-risk environment. ";
+            story = "Your school has already experienced student incidents on the premises. Past incidents often indicate areas where existing safeguards may need strengthening. ";
           } else {
-            story = "Even if your school hasn't experienced a serious incident, the risks are real and the consequences can be significant. ";
+            story = "Even if your school hasn\u2019t experienced a serious incident, the risk is real. A single fire or student accident could force your school to suspend classes for months, causing parents to withdraw their children and putting years of hard work and reputation at risk. ";
           }
-          story += "Based on your responses, several important safeguards are missing, including ";
+          story += "Based on your responses, several important safeguards are currently missing, including ";
           if (gaps.length > 0) {
             const lastGap = gaps.pop();
             story += (gaps.length > 0 ? gaps.join(', ') + ', and ' + lastGap : lastGap) + '. ';
@@ -1012,9 +1436,9 @@ router.post('/evolution', async (req, res) => {
             story += 'some core protections. ';
           }
           if (closureResilience === 'No') {
-            story += "Your responses also indicate that an unexpected one-month closure could place immediate financial pressure on the school's ability to meet operating expenses. ";
+            story += "Your responses also indicate that an unexpected one-month closure could create immediate financial pressure\u2014making it difficult to pay staff salaries and maintain the facilities parents trust you to provide. ";
           }
-          story += 'Together, these gaps increase the likelihood that a future incident could disrupt school operations, damage your reputation, and create significant financial and legal consequences.';
+          story += 'Together, these gaps mean that a future incident could not only disrupt operations but damage the trust you\u2019ve built with parents and the community over years. Your school deserves the same level of protection you provide your students every day.';
           return story;
         }
         if (prefix === 'CHR') {
@@ -1029,15 +1453,15 @@ router.post('/evolution', async (req, res) => {
           if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated health and safety lead");
           if (eventLiability === 'No') gapItems.push("your church does not have liability protection if a congregant is injured on your premises");
           if (buildingIns === 'No') gapItems.push("your church building and contents are not protected against fire");
-          let story = "Every week, your church brings people together for worship, community, and support. Protecting that gathering space is part of protecting your mission.\n\n";
+          let story = "Every week, your church brings people together for worship, community, and support. Your congregation trusts you to provide a safe space for them to gather and grow in faith. Protecting that space is part of protecting your mission.\n\n";
           if (premisesIncidents === 'Yes') {
-            story += "Because incidents or injuries have occurred on your premises in the past, your church is already operating in a higher-risk environment. ";
+            story += "Your church has already experienced incidents on its premises. Each past event is a reminder that the people who walk through your doors depend on you for their safety\u2014and that responsibility requires constant attention. ";
           }
           if (gapItems.length > 0) {
             const lastGap = gapItems.pop();
             const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
             story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
-            story += `\n\nAlthough these issues may not affect your weekly services today, a single major incident\u2014such as a fire, congregant injury, or theft of valuable equipment\u2014could disrupt your operations, create legal exposure, and put financial pressure on your church.`;
+            story += `\n\nThese gaps may not affect your weekly services today, but imagine a fire damaging your sanctuary, a congregant being injured during an event, or valuable equipment being stolen. Any of these could disrupt your operations, create legal exposure, and put financial pressure on your church\u2014making it harder to serve the community that depends on you.`;
           } else {
             story += `Your church has important safeguards in place, but protecting your congregation requires continuous attention.`;
           }
@@ -1057,15 +1481,15 @@ router.post('/evolution', async (req, res) => {
           if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated health and safety lead on site");
           if (contractorIns === 'No') gapItems.push("your projects are not protected by contractor's all-risk insurance");
           if (accidentCover === 'No') gapItems.push("your on-site workers do not have group personal accident cover");
-          let story = "Every day on a construction site, people, equipment, and processes must work together to deliver projects safely and on time.\n\n";
+          let story = "Every day on a construction site, people, equipment, and processes must work together to deliver projects safely and on time. Your reputation\u2014built project by project over years\u2014depends on getting this right every single day.\n\n";
           if (siteAccidents === 'Yes') {
-            story += "Because on-site accidents have occurred in the past 3 years, your sites are already operating in a higher-risk environment. ";
+            story += "Your sites have already experienced on-site accidents. In construction, past incidents are the strongest predictor of future risk. Each gap in your safety framework increases the chance that a worker goes home injured\u2014or doesn\u2019t. ";
           }
           if (gapItems.length > 0) {
             const lastGap = gapItems.pop();
             const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
             story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
-            story += `\n\nAlthough these issues may not affect your day-to-day operations today, a single major incident\u2014such as an accident, equipment failure, or fire\u2014could halt work across your projects, create legal and financial exposure, delay timelines, and put significant pressure on your business.`;
+            story += `\n\nThese gaps may not affect your day-to-day operations today, but a single major incident\u2014an accident, equipment failure, or fire\u2014could halt work across your projects, trigger contract penalties, create legal exposure, and put the future of your business at risk. One uninsured incident could undo years of hard-won reputation.`;
           } else {
             story += `Your sites have important safeguards in place, but construction risk management requires continuous attention.`;
           }
@@ -1086,15 +1510,15 @@ router.post('/evolution', async (req, res) => {
           if (compliance === 'No') gapItems.push("your fleet vehicles are not comprehensively insured");
           if (compliance === 'Some of them') gapItems.push("only some of your fleet vehicles have comprehensive motor insurance");
           if (safetyOwner === 'No one specifically assigned') gapItems.push("there is no designated safety and compliance lead");
-          let story = "Every day, your fleet depends on drivers, vehicles, and processes working together to keep goods moving safely.\n\n";
+          let story = "Every day, your fleet depends on drivers, vehicles, and processes working together to keep goods moving safely. Your clients trust you with their cargo and their deadlines\u2014and that trust is your business\u2019s most valuable asset.\n\n";
           if (fleetAccidents === 'Yes') {
-            story += "Because fleet accidents have occurred in the past 3 years, your operation is already operating in a higher-risk environment. ";
+            story += "Your fleet has already experienced accidents. In transport operations, past incidents signal deeper systemic risks. Each gap in your safety and compliance framework increases the likelihood of a more serious event\u2014one that could cost lives, cargo, and client relationships built over years. ";
           }
           if (gapItems.length > 0) {
             const lastGap = gapItems.pop();
             const gapStr = gapItems.length > 0 ? gapItems.join(', ') + ', and ' + lastGap : lastGap;
             story += `Based on your assessment, several important safeguards are currently missing: ${gapStr}.`;
-            story += `\n\nAlthough these issues may not affect your daily operations today, a single major incident\u2014such as an accident, cargo theft, or compliance issue\u2014could ground your fleet, disrupt deliveries, create legal exposure, and put significant financial pressure on your business.`;
+            story += `\n\nThese gaps may not affect your daily operations today, but a single major incident\u2014a serious accident, cargo theft, or compliance failure\u2014could ground your fleet, disrupt critical deliveries, create legal exposure, and put significant financial pressure on your business. One phone call could undo years of reliable service.`;
           } else {
             story += `Your fleet has important safeguards in place, but transport risk management requires continuous attention.`;
           }
@@ -1102,7 +1526,7 @@ router.post('/evolution', async (req, res) => {
           return story;
         }
         // Generic fallback
-        return `Your overall ${dom.closingTerm} profile shows areas of strength and opportunities to build greater resilience for the future.`;
+        return `Your overall ${dom.closingTerm} profile shows areas of strength and opportunities to build greater resilience for the future. The question isn\u2019t whether a challenge will come\u2014it\u2019s whether you\u2019ll be ready when it does.`;
       };
 
       // ---- resilience forecast (illustrative, based on improvement gains) ----
@@ -1192,10 +1616,8 @@ router.post('/evolution', async (req, res) => {
         .map(([n, s]) => `${n.padEnd(maxNameLen)} ${makePillarBar(s)} ${s}%`)
         .join('\n');
 
-      // ===== Message 2: Risk Pillars + CoverScore Insight\u2122 =====
-      let msg2 = `Your Risk Pillars\n\n${pillarChart}`;
-      const insightText = generateCoverScoreInsight(scoredCats, answers, name, prefix);
-      if (insightText) msg2 += `\n\n${insightText}`;
+      // ===== Message 2: Risk Pillars (bars only) =====
+      let msg2 = `\uD83D\uDCCA Your Risk Pillars\n\n${pillarChart}`;
       postMessages.push({ type: 'pillars', text: msg2, _delay: 3000 });
 
       // ---- What You're Doing Well\u2122 (strengths-based section) ----
@@ -1265,72 +1687,156 @@ router.post('/evolution', async (req, res) => {
         return found;
       };
       const strengths = buildStrengths(answers, prefix);
+      const strengthsForReport = [...strengths];
 
-      // ===== Message 3a: What You're Doing Well + Risk Story\u2122 + If Nothing Changes =====
-      let msg3a = '';
-      const riskStoryText = `Your Risk Story\u2122\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
+      // ===== Message 3: Biggest Insight (one paragraph) =====
+      const insightText = generateCoverScoreInsight(scoredCats, answers, name, prefix);
+      let msg3 = '';
+      if (insightText) {
+        msg3 = `\uD83D\uDCA1 Biggest Insight\n\n${insightText.replace(/^CoverScore Insight\u2122 \u2B50\n\n/, '')}`;
+      }
+      postMessages.push({ type: 'insight', text: msg3, _delay: 3000 });
+
+      // ===== Message 4: How to Improve (3 bullets) + What You're Doing Well =====
+      let msg4 = `\uD83D\uDCC8 How to Improve\n`;
+      const forecast = buildResilienceForecast(scoredCats, assessmentData.score, answers, prefix, dom, reportName);
+      if (forecast && forecast.text) {
+        const forecastLines = forecast.text.split('\n');
+        const actionLines = forecastLines.filter(l => l.startsWith('\u2713'));
+        if (actionLines.length > 0) {
+          msg4 += '\n' + actionLines.slice(0, 3).join('\n');
+        } else {
+          const recommendation = buildRecommendation(scoredCats, dom);
+          if (recommendation) {
+            const recLines = recommendation.split('\n');
+            const actionPart = recLines.filter(l => !l.startsWith('Recommended') && !l.startsWith('Improving'));
+            if (actionPart.length > 0) msg4 += '\n\u2713 ' + actionPart.join('\n\u2713 ');
+          }
+        }
+      } else {
+        const recommendation = buildRecommendation(scoredCats, dom);
+        if (recommendation) {
+          const recLines = recommendation.split('\n');
+          const actionPart = recLines.filter(l => !l.startsWith('Recommended') && !l.startsWith('Improving'));
+          if (actionPart.length > 0) msg4 += '\n\u2713 ' + actionPart.join('\n\u2713 ');
+        }
+      }
+      if (forecast && forecast.projectedScore > assessmentData.score) {
+        msg4 += `\n\nYour score could improve from ${assessmentData.score} to approximately ${forecast.projectedScore}`;
+      }
+      // Add strengths if found
       if (strengths.length > 0) {
         const lastS = strengths.pop();
         const sStr = strengths.length > 0 ? strengths.join(', ') + ', and ' + lastS : lastS;
-        const count = strengths.length + 1;
+        const entityMap = { MFG: 'facility', HOS: 'hospital' };
+        const entity = entityMap[prefix] || dom.domain.replace('healthcare', 'hospital');
+        msg4 += `\n\n\u2705 One positive finding\nYour ${entity} ${sStr}.`;
+      }
+      postMessages.push({ type: 'report_link', text: msg4, _delay: 3000 });
+
+      // ===== Message 5: Would you like the full report? =====
+      postMessages.push({
+        type: 'advisor',
+        text: `\uD83D\uDCC4 Would you like to see your complete report?\n\nIt includes:\n\u2713 What you're doing well\n\u2713 Your personalised risk story\n\u2713 Practical next steps\n\u2713 Detailed recommendations\n\u2713 Your report link\n\nA. Yes, show me\nB. Not now`,
+        _delay: 3000
+      });
+
+      // Build full detailed report bundle and store for later delivery
+      const fullReportMessages = [];
+
+      // Full Report M1: What You're Doing Well + Risk Story
+      let fullM1 = '';
+      const riskStoryText = `\uD83D\uDD0D Your Risk Story\n\n${buildRiskStory(scoredCats, answers, prefix, dom)}`;
+      if (strengthsForReport.length > 0) {
+        const lastS = strengthsForReport.pop();
+        const sStr = strengthsForReport.length > 0 ? strengthsForReport.join(', ') + ', and ' + lastS : lastS;
+        const count = strengthsForReport.length + 1;
         const intro = count === 1 ? 'Your assessment identified an important strength.' : 'Your assessment identified several important strengths.';
         const bridge = count === 1 ? 'This provides' : 'Together, these provide';
         const entityMap = { MFG: 'facility', HOS: 'hospital' };
         const entity = entityMap[prefix] || dom.domain.replace('healthcare', 'hospital');
-        msg3a = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${entity} has ${sStr}. ${bridge} a solid operational foundation on which stronger ${dom.resilienceTerm.toLowerCase()} can be built.`;
+        fullM1 = `What You\u2019re Doing Well\u2122\n\n${intro} Your ${entity} has ${sStr}. ${bridge} a solid operational foundation on which stronger ${dom.resilienceTerm.toLowerCase()} can be built.`;
       }
-      if (msg3a) msg3a += '\n\n';
-      msg3a += riskStoryText;
+      if (fullM1) fullM1 += '\n\n';
+      fullM1 += riskStoryText;
+
+      // Full Report M2: If Nothing Changes (emotional version)
       const ifNothingChangeTexts = {
-        HOS: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your facility could face higher recovery costs, longer service interruptions, increased legal exposure, and greater difficulty maintaining patient confidence following a major incident.`,
-        MFG: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your manufacturing operation could face extended production downtime, higher recovery costs, lost customer commitments, increased legal exposure, and greater difficulty restoring operations following a major incident.`,
-        CHR: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your church could face significant financial pressure, legal exposure, disruption to services, and greater difficulty rebuilding trust with your congregation following a major incident.`,
-        CON: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your construction business could face project delays, contract penalties, increased legal exposure, higher recovery costs, and greater difficulty winning future work following a major incident.`,
-        TRN: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your transport business could face fleet downtime, lost cargo, higher recovery costs, increased legal exposure, and greater difficulty maintaining client confidence following a major incident.`,
-        SCH: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your school could face longer service interruptions, increased legal exposure, damage to your reputation with parents and the community, and greater difficulty restoring normal operations following a major incident.`,
-        SME: `If nothing changes\u2026\n\nIf these gaps remain unaddressed, your business could face prolonged closure, lost revenue, increased legal exposure, damage to your reputation with customers and suppliers, and greater difficulty recovering following a major incident.`
+        HOS: `If nothing changes...\n\nA single serious incident could force your hospital to suspend critical services for months. Patients would be turned away, public confidence would erode, and the financial cost of recovery could threaten your facility\u2019s long-term viability. The hard work your team has put into building your reputation could unravel in days.`,
+        MFG: `If nothing changes...\n\nA fire, equipment failure, or workplace accident could halt your production line for weeks. Customer orders would go unfilled, contracts could be lost, and the financial pressure of downtime could put years of hard work at risk. Your reputation for reliability depends on the safeguards you put in place today.`,
+        CHR: `If nothing changes...\n\nA single incident during a service or event could harm a member of your congregation and create legal exposure that threatens your church\u2019s mission. The trust your community places in you is invaluable\u2014and fragile. Protecting your congregation means protecting your ability to serve.`,
+        CON: `If nothing changes...\n\nAn on-site accident or equipment failure could halt work across your projects, triggering contract penalties and legal exposure. Your reputation for delivering on time\u2014built project by project over years\u2014could be damaged in an instant. One uninsured incident could put your entire business at risk.`,
+        TRN: `If nothing changes...\n\nA major accident, cargo theft, or compliance failure could ground your fleet and disrupt deliveries for weeks. Your clients depend on you to keep their goods moving. A single gap in your protections could cost you contracts you\u2019ve spent years building.`,
+        SCH: `If nothing changes...\n\nA fire or student accident could force your school to close for months. Parents would withdraw their children, staff would look for other positions, and years of community trust would be damaged. The reputation you\u2019ve worked so hard to build could be undone by a single preventable incident.`,
+        SME: `If nothing changes...\n\nA fire, burglary, or prolonged closure could undo everything you\u2019ve built. Your customers would move on, your suppliers would look elsewhere, and recovering from the financial loss could take years\u2014if recovery is even possible. The business you\u2019ve worked so hard to grow deserves better protection.`,
+        HLT: `If nothing changes...\n\nA serious health event could deplete your savings, force you to borrow, or leave you unable to work. Without adequate health coverage, a medical emergency becomes a financial emergency. Your health should never be compromised by cost concerns.`,
+        INC: `If nothing changes...\n\nIf an illness or injury interrupted your income, your emergency savings would last only a short time. Without disability income protection, a prolonged absence from work could put your finances under severe pressure. Your income is your most valuable asset\u2014it deserves to be protected.`,
+        FAM: `If nothing changes...\n\nAn unexpected event affecting the primary breadwinner could leave your family without income, without health coverage, and unable to secure your children\u2019s future. The people who depend on you deserve to know they\u2019ll be taken care of, no matter what happens.`,
+        ENT: `If nothing changes...\n\nYour business depends on your personal involvement. If you were unable to work for even a few months, your business could collapse\u2014taking your income, your employees\u2019 jobs, and years of hard work with it. Your business deserves a future that doesn\u2019t depend on a single person.`,
+        YPR: `If nothing changes...\n\nYou're at the beginning of your financial journey, which is the best time to build strong foundations. Without an emergency fund or personal insurance, a single unexpected event\u2014a health scare, accident, or job loss\u2014could derail your plans and set you back years.`,
+        RET: `If nothing changes...\n\nWithout a dedicated retirement savings plan and long-term care strategy, your later years could be defined by financial pressure rather than freedom. Time is your most powerful asset\u2014the sooner you act, the more options you\u2019ll have.`,
+        HOM: `If nothing changes...\n\nA fire, burglary, or liability incident could result in significant financial loss. Your home is more than a building\u2014it\u2019s your family\u2019s foundation. Without adequate protection, everything you\u2019ve worked for could be at risk. Your home deserves to be protected.`,
+        MOT: `If nothing changes...\n\nAn accident, theft, or third-party claim could leave you with substantial out-of-pocket costs. Being on the road shouldn\u2019t mean being at risk. Without comprehensive motor cover, a single incident could disrupt your mobility and your finances.`
       };
       const ifNothingChanges = ifNothingChangeTexts[prefix] || null;
-      if (ifNothingChanges) msg3a += `\n\n${ifNothingChanges}`;
-      postMessages.push({ type: 'report_link', text: msg3a, _delay: 3000 });
+      if (ifNothingChanges) fullM1 += `\n\n${ifNothingChanges}`;
+      fullReportMessages.push({ type: 'report_link', text: fullM1, _delay: 3000 });
 
-      // ===== Message 3b: Resilience Forecast + Improvement Potential + First Step + Report =====
-      let msg3b = '';
-      const forecast = buildResilienceForecast(scoredCats, assessmentData.score, answers, prefix, dom, reportName);
-      if (forecast) msg3b += `${forecast.text}`;
+      // Full Report M3: Resilience Forecast + Improvement Potential + Report Link
+      let fullM2 = '';
+      if (forecast) fullM2 += `${forecast.text}`;
       if (forecast && forecast.projectedScore > assessmentData.score) {
         const diff = forecast.projectedScore - assessmentData.score;
-        msg3b += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points by implementing the recommendations in your report.`;
+        fullM2 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points.`;
       }
-      const recommendation = buildRecommendation(scoredCats, dom);
-      if (recommendation) msg3b += `\n\n${recommendation}`;
-      msg3b += `\n\nYour complete ${reportName} is ready.\n\nIt includes:\n\n\u2713 Your detailed CoverScore breakdown\n\u2713 Personalised recommendations\n\u2713 Protection options\n\u2713 Practical next steps\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
-      postMessages.push({ type: 'report_link', text: msg3b, _delay: 3000 });
+      fullM2 += `\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
+      fullReportMessages.push({ type: 'report_link', text: fullM2, _delay: 3000 });
 
-      // ===== Message 4: Advisor CTA =====
-      const advisorCTAs = {
-        INC: 'review your income protection report with you and help you build a plan to protect your income when life is interrupted',
-        HLT: 'review your health protection report with you and help you build a plan to stay healthy without financial hardship',
-        YPR: 'review your young professional report with you and help you protect the progress you\u2019re building',
-        FAM: 'review your family protection report with you and help you give your family the peace of mind they deserve',
-        ENT: 'review your business protection report with you and help you protect both your company and your personal future',
-        RET: 'review your retirement readiness report with you and help you build confidence that comes from preparation, not hope',
-        HOM: 'review your home protection report with you and help you protect what matters most',
-        MOT: 'review your motor protection report with you and help you stay safe on the road without being at risk',
-        SME: 'review your business risk report with you and help you make sure a disruption doesn\u2019t undo everything you\u2019ve built',
-        MFG: 'review your manufacturing risk report with you and help you keep production running without costly downtime',
-        HOS: 'review your healthcare risk report with you and help you ensure your facility is prepared for anything',
-        SCH: 'help you prioritise the improvements that will have the biggest impact on your school\u2019s safety, resilience, and long-term sustainability',
-        CHR: 'review your church risk report with you and help you protect your congregation and your mission',
-        CON: 'review your construction risk report with you and help you make sure every project is protected',
-        TRN: 'review your transport risk report with you and help you keep your fleet moving'
+      // Full Report M3: Risk Reduction vs Risk Transfer
+      const buildRiskManagementPlan = (cats, answers, prefix) => {
+        const ops = [];
+        const ins = [];
+        const scoringConfig = require('../config/scoring/index');
+        const prefixConfig = scoringConfig[prefix];
+        if (prefixConfig && prefixConfig.improvements) {
+          for (const [qId, qImprovements] of Object.entries(prefixConfig.improvements)) {
+            const answer = answers[qId];
+            if (!answer || !qImprovements[answer]) continue;
+            const action = qImprovements[answer].action;
+            const isInsurance = /insurance|cover|indemnity|policy|protection\s+for/i.test(action);
+            const verb = action.match(/^(Conduct|Develop|Establish|Install|Implement|Train|Review|Appoint|Designate|Schedule|Strengthen|Build|Create|Document|Set|Begin|Start)/i);
+            const item = verb ? `${verb[1]} ${action.replace(/^(Conduct|Develop|Establish|Install|Implement|Train|Review|Appoint|Designate|Schedule|Strengthen|Build|Create|Document|Set|Begin|Start)\s+/i, '').charAt(0).toLowerCase() + action.replace(/^(Conduct|Develop|Establish|Install|Implement|Train|Review|Appoint|Designate|Schedule|Strengthen|Build|Create|Document|Set|Begin|Start)\s+/i, '').slice(1)}` : action;
+            if (isInsurance) {
+              ins.push('\u2713 ' + item);
+            } else {
+              ops.push('\u2713 ' + item);
+            }
+          }
+        }
+        let text = '\uD83D\uDEE1\uFE0F Your Risk Management Plan\n\n';
+        if (ops.length > 0) {
+          text += 'Risk Reduction \u2014 Operational Improvements\n(actions you can take to reduce the likelihood or impact of an incident)\n' + ops.slice(0, 3).join('\n') + '\n\n';
+        }
+        if (ins.length > 0) {
+          text += 'Risk Transfer \u2014 Protection Solutions\n(insurance cover to protect against financial loss when incidents occur)\n' + ins.slice(0, 3).join('\n');
+        }
+        if (ops.length === 0 && ins.length === 0) return null;
+        return text;
       };
-      const ctaPhrase = advisorCTAs[prefix] || 'show you practical ways to strengthen your financial resilience';
-      postMessages.push({
+      const riskMgmtPlan = buildRiskManagementPlan(scoredCats, answers, prefix);
+      if (riskMgmtPlan) {
+        fullReportMessages.push({ type: 'report_link', text: riskMgmtPlan, _delay: 3000 });
+      }
+
+      // Full Report M4: Advisor CTA
+      fullReportMessages.push({
         type: 'advisor',
-        text: `Would you like a Certified Risk Advisor to ${ctaPhrase}?\n\nA. Yes\nB. Not now`,
+        text: `Would you like a Certified CoverScore Risk Advisor to conduct a Risk Review?\n\nThey\u2019ll help you:\n\u2713 Understand your specific risk profile\n\u2713 Prioritise the most impactful improvements\n\u2713 Distinguish operational changes from protection solutions\n\nA. Yes\nB. Not now`,
         _delay: 3000
       });
+
+      // Store full report bundle for later delivery
+      assessmentData._fullReportMessages = fullReportMessages;
       console.log(`   [Phase 3] Ending sequence built (${postMessages.length} total post-messages)`);
     }
 
@@ -1369,6 +1875,33 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
+    // ===== If user requested full report, send the stored bundle =====
+    if (updatedData && updatedData._showFullReport && assessmentData._fullReportMessages) {
+      console.log(`   [Full Report] User requested full report — sending bundle...`);
+      const fullBundle = assessmentData._fullReportMessages;
+      delete assessmentData._fullReportMessages;
+      delete assessmentData._scored;
+      for (let fi = 0; fi < fullBundle.length; fi++) {
+        const fm = fullBundle[fi];
+        if (!fm.text) continue;
+        const fDelay = fm._delay || 3000;
+        const fSendResult = await sendWhatsApp(phoneNumber, null, { _message: fm.text, delay: fDelay });
+        if (!fSendResult.success) {
+          console.error(`   ❌ Failed to send full report message ${fi}: ${fSendResult.error}.`);
+          break;
+        }
+        chatHistory.push({
+          role: 'assistant',
+          content: fm.text,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+      }
+      // After full report bundle (which includes advisor CTA), set state for advisor reply
+      assessmentData._scored = true;
+      // Don't set isFinished yet — user still needs to respond to advisor CTA
+      if (isFinished) isFinished = false;
+    }
+
     // ===== Risk Intelligence Engine (RIE) — run after scoring completes =====
     if (assessmentData._scored && prefix) {
       try {
@@ -1395,8 +1928,9 @@ router.post('/evolution', async (req, res) => {
       }
     }
 
-    console.log(`   [State Save] Saving lead state (finalState: ${assessmentData._scored ? 'awaiting_consultation' : nextState})...`);
-    const finalState = assessmentData._scored ? 'awaiting_consultation' : nextState;
+    const finalState = (isFinished || nextState === 'finished') ? nextState
+      : (assessmentData._scored ? (assessmentData._fullReportMessages ? 'full_report_offer' : 'awaiting_consultation') : nextState);
+    console.log(`   [State Save] Saving lead state (finalState: ${finalState})...`);
     const oppScore = assessmentData.rie?.opportunityScore;
     if (oppScore != null) {
       await run('UPDATE leads SET wa_state = ?, assessment_data = ?, chat_history = ?, ccie_context = ?, sales_score = ? WHERE id = ?',
@@ -1454,15 +1988,14 @@ router.post('/evolution', async (req, res) => {
       });
       await run('UPDATE leads SET lead_score = ?, lead_priority = ? WHERE id = ?', [lsAfterQual.score, lsAfterQual.priority, lead.id]);
 
-      if (process.env.ADMIN_PHONE && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || assessmentData.is_qualified)) {
-        const qualDetails = [];
-        if (assessmentData.primary_concern) qualDetails.push(`Primary Concern: ${assessmentData.primary_concern}`);
-        if (assessmentData.consultation_preference) qualDetails.push(`Preferred Contact: ${assessmentData.consultation_preference}`);
-        if (qualifierOutput.next_best_action) qualDetails.push(`Suggested Action: ${qualifierOutput.next_best_action}`);
-        const displayName = (assessmentData.entity_type === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || lead.name);
-        const notifMsg = `🔥 *NEW QUALIFIED LEAD* 🔥\n\n👤 *Name:* ${displayName}\n📞 *Phone:* ${phoneNumber}\n🛡️ *CoverScore:* ${lead.score || 'N/A'}\n📊 *Risk Level:* ${(lead.risk_level || 'N/A').toUpperCase()}\n\n📝 *CRM Insight:*\n${qualifierOutput.lead_status} - ${qualifierOutput.qualification_reasoning}\n\n🔍 *Qualification Details:*\n${qualDetails.join('\n')}\n\n🔗 View in CRM: ${process.env.APP_URL || 'https://coverscore.site'}/admin/dashboard`;
-        await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
-        publishEvent(CCIE_EVENTS.ADVISOR_REQUESTED, ccieContext, { adminPhone: process.env.ADMIN_PHONE, leadId: lead.id });
+      if ((process.env.ADMIN_WHATSAPP_GROUP || process.env.ADMIN_PHONE) && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || assessmentData.is_qualified)) {
+        const notifMsg = buildAdvisorBrief(assessmentData, lead, phoneNumber, prefix, dom, qualifierOutput, process.env.APP_URL);
+        if (process.env.ADMIN_WHATSAPP_GROUP) {
+          await sendWhatsAppToGroup(process.env.ADMIN_WHATSAPP_GROUP, { _message: notifMsg });
+        } else if (process.env.ADMIN_PHONE) {
+          await sendWhatsApp(process.env.ADMIN_PHONE, null, { _message: notifMsg });
+        }
+        publishEvent(CCIE_EVENTS.ADVISOR_REQUESTED, ccieContext, { phone: process.env.ADMIN_PHONE, group: process.env.ADMIN_WHATSAPP_GROUP, leadId: lead.id });
       }
 
       if (!assessmentData.is_qualified) {

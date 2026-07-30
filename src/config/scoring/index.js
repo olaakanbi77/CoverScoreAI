@@ -700,7 +700,7 @@
       { id: 'student_safety', name: 'Student Safety', weight: 0.25 },
       { id: 'business_continuity', name: 'Business Continuity', weight: 0.20 },
       { id: 'transport_safety', name: 'Transport Safety', weight: 0.15 },
-      { id: 'regulatory_readiness', name: 'Regulatory Readiness', weight: 0.20 },
+      { id: 'regulatory_readiness', name: 'Safety & Compliance Readiness', weight: 0.20 },
       { id: 'property_protection', name: 'Property Protection', weight: 0.20 }
     ],
     categories: {

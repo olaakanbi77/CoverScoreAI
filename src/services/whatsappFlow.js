@@ -62,6 +62,31 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
 
   const currentQ = questionBank.find(q => q.id === currentState);
 
+  // Handle full report offer state (new Apple-style progressive flow)
+  if (currentState === 'full_report_offer') {
+    const knownDays = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+    if (input === 'A' || input === 'YES') {
+      // User wants the full report — send bundle, then route to advisor CTA
+      updatedData._showFullReport = true;
+      replyText = `\uD83D\uDCD7 Here's your detailed report...`;
+      nextState = 'awaiting_consultation';
+      updatedData.is_qualified = false;
+    } else {
+      // B / Not now / anything else
+      updatedData.is_qualified = false;
+      updatedData._showFullReport = false;
+      replyText = `No problem.\n\nYour report will remain available whenever you need it.\n\n${dom.followUpMsg}\n\nIf you ever decide you'd like a personal review, simply reply:\n\nADVISOR\n\nWe'll arrange it for you.\n\nThank you for choosing CoverScore\u2122.`;
+      nextState = 'finished';
+      try {
+        const { enrollLead } = require('./nurtureEngine');
+        if (currentData.leadId) {
+          enrollLead(currentData.leadId, 'not_now').catch(err => console.error('Nurture enrollment failed:', err.message));
+        }
+      } catch (e) {}
+    }
+    return { nextState, replyText, updatedData, isComplete: nextState === 'finished' };
+  }
+
   // Simplified ending: Yes routes to advisor, No closes gracefully, any day name closes
   const isAwaitingConsultation = currentState === 'awaiting_consultation' || 
     (currentQ && currentQ.branching && currentQ.branching.DEFAULT === 'awaiting_consultation');
@@ -72,14 +97,14 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
-      replyText = `${greeting}\n\nYour assessment has been securely shared with one of our Certified Risk Advisors.\n\nBefore contacting you, they\u2019ll review your report so the conversation can focus on your specific situation\u2014not generic advice.\n\nThey\u2019ll contact you using this WhatsApp number to arrange a convenient time to review your report.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `${greeting}\n\nExcellent decision. Your Certified CoverScore Risk Advisor will review your full Risk Assessment before contacting you.\n\nThat means your Risk Review conversation will focus entirely on your unique risks\u2014not a generic insurance presentation.\n\nDuring the review, you'll receive practical recommendations that can improve your resilience, even before discussing any protection solutions.\n\nThey\u2019ll contact you on this number to arrange a time.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
     } else if (knownDays.includes(input)) {
       // User typed a day directly — route to advisor with day preference
       updatedData.next_action = 'Speak with a Risk Advisor';
       updatedData.consultation_day = incomingText.trim().charAt(0).toUpperCase() + incomingText.trim().slice(1).toLowerCase();
-      replyText = `Noted.\n\nOne of our Certified Risk Advisors will contact you on ${updatedData.consultation_day} to walk through your report and help you implement your recommendation.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `Noted.\n\nOne of our Certified CoverScore Risk Advisors will contact you on ${updatedData.consultation_day} to conduct a Risk Review and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
     } else {
@@ -104,7 +129,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
-      replyText = `${greeting}\n\nYour assessment has been securely shared with one of our Certified Risk Advisors.\n\nBefore contacting you, they\u2019ll review your report so the conversation can focus on your specific situation\u2014not generic advice.\n\nThey\u2019ll contact you using this WhatsApp number to arrange a convenient time to review your report.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `${greeting}\n\nExcellent decision. Your Certified CoverScore Risk Advisor will review your full Risk Assessment before contacting you.\n\nThat means your Risk Review conversation will focus entirely on your unique risks\u2014not a generic insurance presentation.\n\nDuring the review, you'll receive practical recommendations that can improve your resilience, even before discussing any protection solutions.\n\nThey\u2019ll contact you on this number to arrange a time.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };
@@ -112,7 +137,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
     if (knownDays.includes(input)) {
       updatedData.next_action = 'Speak with a Risk Advisor';
       updatedData.consultation_day = incomingText.trim().charAt(0).toUpperCase() + incomingText.trim().slice(1).toLowerCase();
-      replyText = `Noted.\n\nOne of our Certified Risk Advisors will contact you on ${updatedData.consultation_day} to walk through your report and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
+      replyText = `Noted.\n\nOne of our Certified CoverScore Risk Advisors will contact you on ${updatedData.consultation_day} to conduct a Risk Review and discuss practical ways to strengthen your ${dom.closingTerm}.\n\nThank you for taking the time to understand your ${dom.domain} risks today.\n\nEvery step you take toward better preparation helps protect both you and the people who depend on you.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };
