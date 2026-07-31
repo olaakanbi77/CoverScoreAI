@@ -1786,12 +1786,12 @@ router.post('/evolution', async (req, res) => {
       if (ifNothingChanges) fullM1 += `\n\n${ifNothingChanges}`;
       fullReportMessages.push({ type: 'report_link', text: fullM1, _delay: 3000 });
 
-      // Full Report M3: Resilience Forecast + Improvement Potential + Report Link
+      // Full Report M3: Resilience Forecast + Report Link
       let fullM2 = '';
-      if (forecast) fullM2 += `${forecast.text}`;
-      if (forecast && forecast.projectedScore > assessmentData.score) {
-        const diff = forecast.projectedScore - assessmentData.score;
-        fullM2 += `\n\nYour Improvement Potential\u2122\n\nCurrent CoverScore\u2122\n${assessmentData.score}\n\n\u2B07\n\nPotential CoverScore\u2122\n${forecast.projectedScore}\n\nYou could improve your resilience by approximately ${diff} points.`;
+      if (forecast && forecast.text) {
+        const fLines = forecast.text.split('\n');
+        const fActions = fLines.filter(l => l.startsWith('\u2713'));
+        fullM2 += `Resilience Forecast\u2122\n\nHere\u2019s how your resilience could improve\n${fActions.slice(0, 3).join('\n')}`;
       }
       fullM2 += `\n\n\uD83D\uDCC4 View My Report: ${reportUrl}`;
       fullReportMessages.push({ type: 'report_link', text: fullM2, _delay: 3000 });
