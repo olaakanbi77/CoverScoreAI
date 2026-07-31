@@ -1973,10 +1973,12 @@ router.post('/evolution', async (req, res) => {
     // ===== Risk Intelligence Engine (RIE) — run after scoring completes =====
     if (assessmentData._scored && prefix) {
       try {
+        const rieRiskCats = assessmentData.risk_categories || {};
+        const rieCats = Object.fromEntries(Object.entries(rieRiskCats).filter(([, v]) => v !== null && v !== undefined));
         const rieResult = runRiskIntelligence(
           prefix,
           assessmentData.answers || {},
-          scoredCats || {},
+          rieCats,
           {
             score: assessmentData.score,
             advisorRequested: assessmentData.advisor_requested || false,
@@ -2057,7 +2059,8 @@ router.post('/evolution', async (req, res) => {
       await run('UPDATE leads SET lead_score = ?, lead_priority = ? WHERE id = ?', [lsAfterQual.score, lsAfterQual.priority, lead.id]);
 
       if ((process.env.ADMIN_WHATSAPP_GROUP || process.env.ADMIN_PHONE) && ((qualifierOutput.lead_status || '').toLowerCase().includes('hot') || assessmentData.is_qualified)) {
-        const notifMsg = buildAdvisorBrief(assessmentData, lead, phoneNumber, prefix, dom, qualifierOutput, process.env.APP_URL);
+        const briefDom = domainConfig[prefix] || defaultDomain;
+        const notifMsg = buildAdvisorBrief(assessmentData, lead, phoneNumber, prefix, briefDom, qualifierOutput, process.env.APP_URL);
         if (process.env.ADMIN_WHATSAPP_GROUP) {
           await sendWhatsAppToGroup(process.env.ADMIN_WHATSAPP_GROUP, { _message: notifMsg });
         } else if (process.env.ADMIN_PHONE) {
