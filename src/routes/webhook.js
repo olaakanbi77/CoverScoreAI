@@ -86,10 +86,10 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
   }
 
   // For all other prefixes, use domain config insight texts (concise single paragraph)
-  const pillarDef = dom.insightTexts?.perPillar?.[weakestName];
-  let body;
-  if (pillarDef) {
-    body = pillarDef.base;
+  const renderPillarText = (name) => {
+    const pillarDef = dom.insightTexts?.perPillar?.[name];
+    if (!pillarDef) return null;
+    let text = pillarDef.base;
     for (const check of (pillarDef.answerChecks || [])) {
       const answer = answers[check.q];
       if (!answer) continue;
@@ -97,14 +97,26 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
         ? check.values.includes(answer)
         : check.condition?.(answer);
       if (matched) {
-        const text = typeof check.append === 'function' ? check.append(answer) : check.append;
-        body += ' ' + text;
+        const append = typeof check.append === 'function' ? check.append(answer) : check.append;
+        text += ' ' + append;
       }
     }
-    if (pillarDef.suffix) body += ' ' + pillarDef.suffix;
-  } else {
-    body = dom.insightTexts?.catchAll ||
-      `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. The cost of acting is far less than the cost of waiting.`;
+    if (pillarDef.suffix) text += ' ' + pillarDef.suffix;
+    return text;
+  };
+
+  const weakestPillarText = renderPillarText(weakestName);
+  let body = weakestPillarText || dom.insightTexts?.catchAll ||
+    `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. The cost of acting is far less than the cost of waiting.`;
+
+  // Surface the second-weakest pillar when it is also notably weak, so the
+  // insight reflects more than just the single weakest area
+  const second = entries[1];
+  if (second && second[1] < 30) {
+    const secondPillarText = renderPillarText(second[0]);
+    if (secondPillarText && secondPillarText !== weakestPillarText) {
+      body += `\n\n${secondPillarText}`;
+    }
   }
 
   // Reflect the client's stated biggest concern so the insight feels personal
@@ -1576,14 +1588,18 @@ router.post('/evolution', async (req, res) => {
           for (const [qId, qImprovements] of Object.entries(prefixConfig.improvements)) {
             const answer = answers[qId];
             if (answer && qImprovements[answer]) {
-              matched.push({ qId, qImprovements, answer, pillarName: qPillar[qId] });
+              const action = qImprovements[answer].action;
+              const isInsurance = /insurance|cover|indemnity|policy|protection\s+for/i.test(action);
+              matched.push({ qId, qImprovements, answer, pillarName: qPillar[qId], isInsurance });
             }
           }
-          // Weakest pillar first; ties keep config order
+          // Weakest pillar first; within a pillar, insurance / risk-transfer
+          // actions come before operational ones so key protections surface
           matched.sort((a, b) => {
             const sa = a.pillarName != null ? (cats[a.pillarName] ?? 999) : 999;
             const sb = b.pillarName != null ? (cats[b.pillarName] ?? 999) : 999;
-            return sa - sb;
+            if (sa !== sb) return sa - sb;
+            return (b.isInsurance ? 1 : 0) - (a.isInsurance ? 1 : 0);
           });
           for (const { qId, qImprovements, answer } of matched) {
             if (actionLines.length >= 3) break;
@@ -1819,7 +1835,7 @@ router.post('/evolution', async (req, res) => {
         CHR: `If nothing changes...\n\nA single incident during a service or event could harm a member of your congregation and create legal exposure that threatens your church\u2019s mission. The trust your community places in you is invaluable\u2014and fragile. Protecting your congregation means protecting your ability to serve.`,
         CON: `If nothing changes...\n\nAn on-site accident or equipment failure could halt work across your projects, triggering contract penalties and legal exposure. Your reputation for delivering on time\u2014built project by project over years\u2014could be damaged in an instant. One uninsured incident could put your entire business at risk.`,
         TRN: `If nothing changes...\n\nA major accident, cargo theft, or compliance failure could ground your fleet and disrupt deliveries for weeks. Your clients depend on you to keep their goods moving. A single gap in your protections could cost you contracts you\u2019ve spent years building.`,
-        SCH: `If nothing changes...\n\nA fire or student accident could force your school to close for months. Parents would withdraw their children, staff would look for other positions, and years of community trust would be damaged. The reputation you\u2019ve worked so hard to build could be undone by a single preventable incident.`,
+        SCH: `If nothing changes...\n\nA fire or student accident could significantly disrupt school operations, damage community confidence, and place financial pressure on the school. Parents may reconsider their choice of school, staff confidence may waver, and years of community trust could be damaged. The reputation you\u2019ve worked so hard to build could be undone by a single preventable incident.`,
         SME: `If nothing changes...\n\nA fire, burglary, or prolonged closure could undo everything you\u2019ve built. Your customers would move on, your suppliers would look elsewhere, and recovering from the financial loss could take years\u2014if recovery is even possible. The business you\u2019ve worked so hard to grow deserves better protection.`,
         HLT: `If nothing changes...\n\nA serious health event could deplete your savings, force you to borrow, or leave you unable to work. Without adequate health coverage, a medical emergency becomes a financial emergency. Your health should never be compromised by cost concerns.`,
         INC: `If nothing changes...\n\nIf an illness or injury interrupted your income, your emergency savings would last only a short time. Without disability income protection, a prolonged absence from work could put your finances under severe pressure. Your income is your most valuable asset\u2014it deserves to be protected.`,
