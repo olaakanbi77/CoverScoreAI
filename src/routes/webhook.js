@@ -655,8 +655,9 @@ router.post('/evolution', async (req, res) => {
     console.log(`   CCIE transition: ${currentState} -> ${nextState}, complete: ${isComplete}, messages: ${messages.length}`);
 
     let newAssessmentData = updatedData ? { ...assessmentData, ...updatedData } : { ...assessmentData };
+    const answersBeforeMerge = assessmentData.answers || {};
     if (updatedData && updatedData.answers) {
-      newAssessmentData.answers = { ...(assessmentData.answers || {}), ...updatedData.answers };
+      newAssessmentData.answers = { ...answersBeforeMerge, ...updatedData.answers };
     }
 
     assessmentData = newAssessmentData;
@@ -715,7 +716,7 @@ router.post('/evolution', async (req, res) => {
     // Subtle urgency: acknowledge past incidents to prime psychological readiness (ONCE per assessment)
     if (updatedData && updatedData.answers && !assessmentData._scored && !needsScoring && !assessmentData._urgencySent && messages.length <= 1) {
       // Get the answer keys that are NEW in this interaction (not in the previously saved assessmentData)
-      const prevAnswers = assessmentData.answers || {};
+      const prevAnswers = answersBeforeMerge;
       const newKeys = Object.keys(updatedData.answers).filter(k => prevAnswers[k] === undefined);
       const incidentQIds = ['SCH_012', 'MFG_012', 'HOS_012', 'CON_012', 'TRN_012'];
       const latestAnswerKey = newKeys.find(k => incidentQIds.includes(k));
