@@ -731,7 +731,7 @@ router.post('/evolution', async (req, res) => {
         const trigger = urgencyTriggers[latestAnswerKey];
         if (trigger && trigger.values.includes(answerVal)) {
           const domainPhrase = trigger.phrase;
-          const urgencyReply = `Thank you for being candid. That helps me understand your risk profile better.\n\n${domainPhrase.charAt(0).toUpperCase() + domainPhrase.slice(1)} usually benefit from a closer review of their current protections and arrangements.\n\nLet me continue with a few more questions to complete your assessment.`;
+          const urgencyReply = `Thank you. That helps me understand your risk profile.\n\n${domainPhrase.charAt(0).toUpperCase() + domainPhrase.slice(1)} usually benefit from a closer review of their current protections and arrangements.\n\nLet me continue with a few more questions to complete your assessment.`;
           assessmentData._urgencySent = true;
           const nextQ = questionBank.find(q => q.id === nextState);
           if (nextQ) {
