@@ -107,6 +107,21 @@ const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
       `Your assessment shows that your biggest opportunity to strengthen your ${dom.improvementTerm} is your ${weakestName.toLowerCase()}. The cost of acting is far less than the cost of waiting.`;
   }
 
+  // Reflect the client's stated biggest concern so the insight feels personal
+  if (prefix === 'SCH' && answers['SCH_028']) {
+    const concernMap = {
+      'Student safety and accident prevention': 'student safety',
+      'Financial stability and revenue': 'financial stability',
+      'Property / facility condition': 'the condition of your facilities',
+      'Regulatory and compliance readiness': 'regulatory and compliance readiness',
+      'Transport safety': 'transport safety'
+    };
+    const concern = concernMap[answers['SCH_028']];
+    if (concern) {
+      body += ` Your stated priority is ${concern}, so the actions below focus on the areas that matter most to you.`;
+    }
+  }
+
   return `CoverScore Insight\u2122 \u2B50\n\n${body}`;
 };
 
@@ -1430,7 +1445,7 @@ router.post('/evolution', async (req, res) => {
           if (studentAccidents === 'Yes') {
             story = "Your school has already experienced student incidents on the premises. Past incidents often indicate areas where existing safeguards may need strengthening. ";
           } else {
-            story = "Even if your school hasn\u2019t experienced a serious incident, the risk is real. A single fire or student accident could force your school to suspend classes for months, causing parents to withdraw their children and putting years of hard work and reputation at risk. ";
+            story = "Even if your school hasn\u2019t experienced a serious incident, the risk is real. A single fire or student accident could significantly disrupt school operations, damage community confidence, and place financial pressure on the school. "; 
           }
           story += "Based on your responses, several important safeguards are currently missing, including ";
           if (gaps.length > 0) {
@@ -1544,21 +1559,42 @@ router.post('/evolution', async (req, res) => {
         let actionLines = [];
         let totalGain = 0;
         if (prefixConfig && prefixConfig.improvements) {
-          let used = 0;
+          // Build qId -> pillarName map so actions can be ordered weakest-pillar-first
+          const qPillar = {};
+          if (prefixConfig.questions && prefixConfig.categories) {
+            const catPillar = {};
+            for (const [catId, cat] of Object.entries(prefixConfig.categories)) catPillar[catId] = cat.pillar;
+            const idName = {};
+            for (const p of prefixConfig.pillars || []) idName[p.id] = p.name || p.id;
+            for (const [qId, qConf] of Object.entries(prefixConfig.questions)) {
+              const catId = qConf.category;
+              const pillarId = catPillar[catId];
+              if (pillarId) qPillar[qId] = idName[pillarId] || pillarId;
+            }
+          }
+          const matched = [];
           for (const [qId, qImprovements] of Object.entries(prefixConfig.improvements)) {
-            if (used >= 3) break;
             const answer = answers[qId];
             if (answer && qImprovements[answer]) {
-              const imp = qImprovements[answer];
-              totalGain += imp.gain;
-              const prefixVerbs = 'Add|Assess|Audit|Begin|Bring|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Increase|Install|Make|Obtain|Open|Protect|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Train|Upgrade|Verify';
-              const prefixRegex = new RegExp('^(' + prefixVerbs + ')', 'i');
-              const verbMatch = imp.action.match(prefixRegex);
-              const prefixWord = verbMatch ? verbMatch[1] : 'Build';
-              const rest = imp.action.replace(new RegExp('^(' + prefixVerbs + ')\\s+', 'i'), '');
-              actionLines.push(`\u2713 ${prefixWord} ${rest.charAt(0).toLowerCase() + rest.slice(1)}`);
-              used++;
+              matched.push({ qId, qImprovements, answer, pillarName: qPillar[qId] });
             }
+          }
+          // Weakest pillar first; ties keep config order
+          matched.sort((a, b) => {
+            const sa = a.pillarName != null ? (cats[a.pillarName] ?? 999) : 999;
+            const sb = b.pillarName != null ? (cats[b.pillarName] ?? 999) : 999;
+            return sa - sb;
+          });
+          for (const { qId, qImprovements, answer } of matched) {
+            if (actionLines.length >= 3) break;
+            const imp = qImprovements[answer];
+            totalGain += imp.gain;
+            const prefixVerbs = 'Add|Assess|Audit|Begin|Bring|Build|Complete|Conduct|Confirm|Consider|Create|Delegate|Designate|Develop|Diversify|Document|Educate|Ensure|Establish|Expand|Explore|Extend|Get|Implement|Improve|Increase|Install|Make|Obtain|Open|Protect|Reduce|Replace|Research|Resolve|Review|Schedule|Secure|Separate|Set|Start|Strengthen|Supplement|Train|Upgrade|Verify';
+            const prefixRegex = new RegExp('^(' + prefixVerbs + ')', 'i');
+            const verbMatch = imp.action.match(prefixRegex);
+            const prefixWord = verbMatch ? verbMatch[1] : 'Build';
+            const rest = imp.action.replace(new RegExp('^(' + prefixVerbs + ')\\s+', 'i'), '');
+            actionLines.push(`\u2713 ${prefixWord} ${rest.charAt(0).toLowerCase() + rest.slice(1)}`);
           }
         }
         let projectedScore = Math.min(Math.round(currentScore + totalGain), 95);
@@ -1673,6 +1709,18 @@ router.post('/evolution', async (req, res) => {
             { q: 'TRN_024', values: ['Yes'], text: 'drivers trained in defensive driving and first aid' },
             { q: 'TRN_025', values: ['Yes'], text: 'regular vehicle safety inspections across your fleet' },
             { q: 'TRN_026', values: ['Yes'], text: 'working fire alarm system in your depot that is regularly tested' }
+          ],
+          SCH: [
+            { q: 'SCH_013', values: ['Under 100'], text: 'manageable student population that keeps safety exposure contained' },
+            { q: 'SCH_020', values: ['Yes'], text: 'documented emergency procedures for student accidents and fire' },
+            { q: 'SCH_021', values: ['Yes'], text: 'fire extinguishers regularly inspected and available across your school' },
+            { q: 'SCH_023', values: ['Head Teacher / Principal', 'Designated Safety Officer'], text: 'designated health and safety leadership' },
+            { q: 'SCH_024', values: ['Yes'], text: 'drivers trained in first aid and defensive driving' },
+            { q: 'SCH_025', values: ['Yes'], text: 'regular vehicle safety inspections for your school transport' },
+            { q: 'SCH_026', values: ['Yes'], text: 'a working fire alarm system that is regularly tested' },
+            { q: 'SCH_027', values: ['Monthly', 'Quarterly', 'Annually'], text: 'regular building maintenance inspection programme' },
+            { q: 'SCH_022', values: ['Yes'], text: 'financial resilience to sustain operations through a three-month closure' },
+            { q: 'SCH_016', values: ['Yes'], text: 'public liability protection against student injury claims' }
           ],
           SME: [
             { q: 'SME_011', values: ['Yes'], text: 'consistent monthly revenue that supports business stability' },

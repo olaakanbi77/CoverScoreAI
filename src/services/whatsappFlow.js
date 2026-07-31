@@ -97,7 +97,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
-      replyText = `${greeting}\n\nExcellent decision. Your Certified CoverScore Risk Advisor will review your full Risk Assessment before contacting you.\n\nThat means your Risk Review conversation will focus entirely on your unique risks\u2014not a generic insurance presentation.\n\nDuring the review, you'll receive practical recommendations that can improve your resilience, even before discussing any protection solutions.\n\nThey\u2019ll contact you on this number to arrange a time.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `${greeting}\n\nExcellent decision. Your Certified CoverScore Risk Advisor will review your full Risk Assessment before contacting you.\n\nThat means your Risk Review conversation will focus entirely on your unique risks\u2014not a generic insurance presentation.\n\nDuring the review, you'll receive practical recommendations that can improve your resilience, even before discussing any protection solutions.\n\nYou don't need to prepare anything. Your advisor will already have reviewed your assessment before your meeting.\n\nThey\u2019ll contact you on this number to arrange a time.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
     } else if (knownDays.includes(input)) {
@@ -129,7 +129,7 @@ const getNextStateAndReply = async (currentState, incomingText, currentData, pre
       updatedData.next_action = 'Speak with a Risk Advisor';
       const name = currentData.name || '';
       const greeting = name ? `Thank you, ${name}.` : 'Thank you.';
-      replyText = `${greeting}\n\nExcellent decision. Your Certified CoverScore Risk Advisor will review your full Risk Assessment before contacting you.\n\nThat means your Risk Review conversation will focus entirely on your unique risks\u2014not a generic insurance presentation.\n\nDuring the review, you'll receive practical recommendations that can improve your resilience, even before discussing any protection solutions.\n\nThey\u2019ll contact you on this number to arrange a time.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
+      replyText = `${greeting}\n\nExcellent decision. Your Certified CoverScore Risk Advisor will review your full Risk Assessment before contacting you.\n\nThat means your Risk Review conversation will focus entirely on your unique risks\u2014not a generic insurance presentation.\n\nDuring the review, you'll receive practical recommendations that can improve your resilience, even before discussing any protection solutions.\n\nYou don't need to prepare anything. Your advisor will already have reviewed your assessment before your meeting.\n\nThey\u2019ll contact you on this number to arrange a time.\n\nWe look forward to helping you strengthen your ${dom.closingTerm}.\n\nThank you for choosing CoverScore\u2122.`;
       nextState = 'finished';
       updatedData.is_qualified = true;
       return { nextState, replyText, updatedData, isComplete };

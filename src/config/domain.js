@@ -756,11 +756,11 @@ const domainConfig = {
             { q: 'SCH_026', values: ['No'], append: "Your school does not have a working fire alarm system that is regularly tested, meaning a fire could go undetected until it's too late." },
             { q: 'SCH_027', values: ['Never'], append: "You never conduct building maintenance inspections, allowing structural issues, electrical faults, and other hazards to go unnoticed." },
             { q: 'SCH_027', values: ['Rarely'], append: "Building maintenance inspections are rarely conducted, increasing the likelihood of undetected facility issues." },
-            { q: 'SCH_017', values: ['No'], append: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months." }
+            { q: 'SCH_017', values: ['No'], append: "Without fire insurance for your school buildings, a fire could result in significant financial loss and disrupt school operations for an extended period." }
           ],
           suffix: "Your school buildings are the foundation of your operations\u2014protecting them ensures your school can continue serving your community.",
           whyChecks: [
-            { q: 'SCH_017', values: ['No'], text: "Without fire insurance for your school buildings, a fire could result in catastrophic financial loss and disrupt learning for months, affecting students, staff, and the wider community." }
+            { q: 'SCH_017', values: ['No'], text: "Without fire insurance for your school buildings, a fire could result in significant financial loss and disrupt school operations for an extended period, affecting students, staff, and the wider community." }
           ]
         }
       },

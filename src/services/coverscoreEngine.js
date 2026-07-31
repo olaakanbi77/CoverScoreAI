@@ -70,9 +70,13 @@ class CoverScoreEngine {
       resilience_score: 100 - overall.score,
       risk_level: level,
       riskLevel: level,
-      risk_categories: Object.fromEntries(
-        Object.entries(pillarScores).map(([k, v]) => [k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), v])
-      ),
+      risk_categories: (() => {
+        const nameMap = {};
+        for (const p of config.pillars || []) nameMap[p.id] = p.name || p.id;
+        return Object.fromEntries(
+          Object.entries(pillarScores).map(([k, v]) => [nameMap[k] || k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()), v])
+        );
+      })(),
       question_scores: questionScores,
       category_scores: categoryScores,
       pillar_scores: pillarScores,
