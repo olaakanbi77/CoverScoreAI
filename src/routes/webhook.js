@@ -648,6 +648,10 @@ router.post('/evolution', async (req, res) => {
     ccieContext.currentPhase = ccieEngine.determinePhase(currentState);
     ccieContext.answers = assessmentData;
 
+    // Deep snapshot of the answers BEFORE processReply (it mutates the shared
+    // answers object via shallow copies internally) so we can detect truly new keys.
+    const answersBeforeMerge = JSON.parse(JSON.stringify(assessmentData.answers || {}));
+
     const { messages, nextState, updatedData, isComplete, context: updatedCcieContext } = await ccieEngine.processReply(
       ccieContext, incomingTextRaw.trim()
     );
@@ -655,7 +659,6 @@ router.post('/evolution', async (req, res) => {
     console.log(`   CCIE transition: ${currentState} -> ${nextState}, complete: ${isComplete}, messages: ${messages.length}`);
 
     let newAssessmentData = updatedData ? { ...assessmentData, ...updatedData } : { ...assessmentData };
-    const answersBeforeMerge = assessmentData.answers || {};
     if (updatedData && updatedData.answers) {
       newAssessmentData.answers = { ...answersBeforeMerge, ...updatedData.answers };
     }
