@@ -570,13 +570,13 @@ const domainConfig = {
           answerChecks: [
             { q: 'MFG_017', values: ['No, we would close'], append: "Your business would not survive a major disaster closure, highlighting a critical continuity gap." },
             { q: 'MFG_017', values: ['With difficulty'], append: "Your business would struggle to recover from a major disaster, indicating the need for a stronger continuity plan." },
-            { q: 'MFG_022', values: ["No"], append: "Your factory could not meet payroll and operating expenses during a one-month closure, indicating a critical financial resilience gap." },
-            { q: 'MFG_022', values: ["Not sure"], append: "You're unsure if your factory could survive a one-month closure, which itself signals a need for better financial contingency planning." }
+            { q: 'MFG_022', values: ["No"], append: "Your factory could not meet payroll and operating expenses during a three-month closure, indicating a critical financial resilience gap." },
+            { q: 'MFG_022', values: ["Not sure"], append: "You're unsure if your factory could survive a three-month closure, which itself signals a need for better financial contingency planning." }
           ],
           suffix: "Creating a comprehensive business continuity and disaster recovery plan is the most impactful step you can take.",
           whyChecks: [
             { q: 'MFG_017', values: ['No, we would close'], text: "Your manufacturing business would not survive a major disaster closure, and without financial reserves to sustain operations, a single disruption could permanently close your doors." },
-            { q: 'MFG_022', values: ['No'], text: "Your factory could not meet payroll and operating expenses during a one-month closure, meaning a relatively short disruption could have severe financial consequences." }
+            { q: 'MFG_022', values: ['No'], text: "Your factory could not meet payroll and operating expenses during a three-month closure, meaning a relatively short disruption could have severe financial consequences." }
           ]
         }
       },
@@ -619,8 +619,8 @@ const domainConfig = {
             { q: 'HOS_013', values: ['Over 100'], append: "With over 100 patients, your patient volume creates significant clinical liability exposure that requires comprehensive risk management." },
             { q: 'HOS_012', values: ["Yes"], append: "Your facility has already experienced patient safety incidents, making strengthened governance and incident learning an immediate priority." },
             { q: 'HOS_020', values: ["No"], append: "Without written emergency procedures for patient incidents or fire, your staff may not know how to respond effectively in a crisis." },
-            { q: 'HOS_022', values: ["No"], append: "Your facility could not meet payroll and operating expenses during a one-month closure, indicating a critical financial resilience gap." },
-            { q: 'HOS_022', values: ["Not sure"], append: "You're unsure if your facility could survive a one-month closure, which signals a need for better financial contingency planning." },
+            { q: 'HOS_022', values: ["No"], append: "Your facility could not meet payroll and operating expenses during a three-month closure, indicating a critical financial resilience gap." },
+            { q: 'HOS_022', values: ["Not sure"], append: "You're unsure if your facility could survive a three-month closure, which signals a need for better financial contingency planning." },
             { q: 'HOS_024', values: ["Yes"], append: "Operating ambulances and patient transport vehicles introduces additional liability exposure for your facility." },
             { q: 'HOS_025', values: ["No"], append: "Your ambulance and patient transport drivers lack defensive driving and emergency protocol training, increasing accident risk." },
             { q: 'HOS_025', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and emergency protocols, indicating a training gap." },
@@ -717,12 +717,12 @@ const domainConfig = {
           base: "Your assessment reveals potential gaps in your school's ability to withstand and recover from unexpected disruptions.",
           answerChecks: [
             { q: 'SCH_014', values: ['Under \u20A6100,000'], append: "With lower tuition revenue per student, your school has less financial cushion to absorb unexpected disruptions or closures." },
-            { q: 'SCH_022', values: ['No'], append: "You've indicated your school could not meet salary and operational expenses during a one-month closure, which is a significant financial resilience gap." },
-            { q: 'SCH_022', values: ['Not sure'], append: "You're unsure if your school could survive a one-month closure, which itself signals a need for better financial contingency planning." }
+            { q: 'SCH_022', values: ['No'], append: "You've indicated your school could not meet salary and operational expenses during a three-month closure, which is a significant financial resilience gap." },
+            { q: 'SCH_022', values: ['Not sure'], append: "You're unsure if your school could survive a three-month closure, which itself signals a need for better financial contingency planning." }
           ],
           suffix: "Building business continuity ensures your school can keep its doors open and staff paid, even when the unexpected happens.",
           whyChecks: [
-            { q: 'SCH_022', values: ['No'], text: "Your school could not meet salary and operational expenses during a one-month closure, meaning a single disruption could have severe financial consequences for your school's ability to continue operating." }
+            { q: 'SCH_022', values: ['No'], text: "Your school could not meet salary and operational expenses during a three-month closure, meaning a single disruption could have severe financial consequences for your school's ability to continue operating." }
           ]
         },
         'Transport Safety': {
@@ -775,7 +775,7 @@ const domainConfig = {
     },
     firstStepTexts: {
       'student safety': 'Conduct a full student safety audit, document emergency procedures for accidents and fire, and ensure appropriate accident and injury protection is in place.',
-      'business continuity': 'Develop a business continuity plan covering temporary closure scenarios and build financial reserves to sustain operations through a one-month disruption.',
+      'business continuity': 'Develop a business continuity plan covering temporary closure scenarios and build financial reserves to sustain operations through a three-month disruption.',
       'transport safety': 'Review and update insurance coverage for all school transport, implement driver training in first aid and defensive driving, and establish regular vehicle safety inspections.',
       'safety & compliance readiness': 'Appoint a designated health and safety lead, secure public liability insurance, and establish formal health and safety governance with clear responsibilities.',
       'property protection': 'Secure comprehensive fire and building insurance for all school facilities, install fire extinguishers and alarms across all buildings, and establish regular maintenance inspections.'
@@ -804,8 +804,8 @@ const domainConfig = {
           answerChecks: [
             { q: 'CHR_013', values: ['Over 1000'], append: "With over 1,000 congregants, your church has significant liability exposure during large gatherings." },
             { q: 'CHR_020', values: ["No"], append: "Without written emergency procedures for incidents during services or events, your team may not know how to respond effectively." },
-            { q: 'CHR_022', values: ["No"], append: "Your church could not continue meeting operating expenses if closed for one month, indicating a critical financial resilience gap." },
-            { q: 'CHR_022', values: ["Not sure"], append: "You're unsure if your church could survive a one-month closure, which signals a need for better financial contingency planning." },
+            { q: 'CHR_022', values: ["No"], append: "Your church could not continue meeting operating expenses if closed for three months, indicating a critical financial resilience gap." },
+            { q: 'CHR_022', values: ["Not sure"], append: "You're unsure if your church could survive a three-month closure, which signals a need for better financial contingency planning." },
             { q: 'CHR_024', values: ["Yes"], append: "Operating church vans or buses for transporting congregants introduces additional liability and requires appropriate motor insurance." },
             { q: 'CHR_025', values: ["No"], append: "Your church van and bus drivers lack defensive driving and first aid training, increasing accident risk." },
             { q: 'CHR_025', values: ["Not sure"], append: "You are uncertain whether your drivers are trained in defensive driving and first aid, which indicates a training gap." },

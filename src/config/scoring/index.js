@@ -766,7 +766,7 @@
         category: 'financial_continuity',
         weight: 3,
         scores: { 'Yes': 100, 'No': 0, 'Not sure': 30 },
-        gaps: { 'No': 'School cannot sustain staff salaries and expenses for a one-month closure.', 'Not sure': 'Uncertainty about the school\u2019s ability to survive a one-month closure.' },
+        gaps: { 'No': 'School cannot sustain staff salaries and expenses for a three-month closure.', 'Not sure': 'Uncertainty about the school\u2019s ability to survive a three-month closure.' },
         recommendations: { 'No': 'Develop a financial contingency plan to cover operating expenses during unexpected closures.', 'Not sure': 'Assess your school\u2019s financial reserves and develop a contingency plan for unexpected closures.' }
       },
       SCH_023: {
@@ -1014,7 +1014,7 @@
         'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all areas and establish regular inspections to protect your facility and people' },
       },
       MFG_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a three-month closure' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       MFG_023: {
@@ -1202,7 +1202,7 @@
         'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all facility areas and establish regular inspection schedule' },
       },
       HOS_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain patient care operations during a one-month closure' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain patient care operations during a three-month closure' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a contingency plan for service continuity' },
       },
       HOS_023: {
@@ -1390,7 +1390,7 @@
         'No': { target: 'Yes', gain: 10, action: 'Install fire extinguishers across all premises and establish regular inspections to protect your congregation and property' },
       },
       CHR_022: {
-        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a one-month closure' },
+        'No': { target: 'Yes', gain: 10, action: 'Build financial reserves to sustain operations during a three-month closure' },
         'Not sure': { target: 'Yes', gain: 7, action: 'Review financial resilience and develop a closure contingency plan' },
       },
       CHR_023: {

@@ -1436,7 +1436,7 @@ router.post('/evolution', async (req, res) => {
             story += 'some core protections. ';
           }
           if (closureResilience === 'No') {
-            story += "Your responses also indicate that an unexpected one-month closure could create immediate financial pressure\u2014making it difficult to pay staff salaries and maintain the facilities parents trust you to provide. ";
+            story += "Your responses also indicate that an unexpected three-month closure could create immediate financial pressure\u2014making it difficult to pay staff salaries and maintain the facilities parents trust you to provide. ";
           }
           story += 'Together, these gaps mean that a future incident could not only disrupt operations but damage the trust you\u2019ve built with parents and the community over years. Your school deserves the same level of protection you provide your students every day.';
           return story;
@@ -1633,7 +1633,7 @@ router.post('/evolution', async (req, res) => {
             { q: 'HOS_025', values: ['Yes'], text: 'drivers trained in defensive driving and emergency protocols' },
             { q: 'HOS_026', values: ['Yes'], text: 'regular vehicle safety inspections for your medical transport fleet' },
             { q: 'HOS_027', values: ['Monthly', 'Quarterly', 'Annually'], text: 'regular building maintenance inspection programme' },
-            { q: 'HOS_022', values: ['Yes'], text: 'financial resilience to sustain operations through a one-month closure' }
+            { q: 'HOS_022', values: ['Yes'], text: 'financial resilience to sustain operations through a three-month closure' }
           ],
           MFG: [
             { q: 'MFG_013', values: ['Under 50', '50\u2013200'], text: 'manageable workforce size that keeps liability exposure contained' },
@@ -1642,7 +1642,7 @@ router.post('/evolution', async (req, res) => {
             { q: 'MFG_023', values: ['Operations Manager', 'Designated Safety Officer'], text: 'dedicated health and safety leadership' },
             { q: 'MFG_025', values: ['Yes'], text: 'operators trained in safe operating procedures' },
             { q: 'MFG_026', values: ['Yes'], text: 'regular vehicle safety inspections for your logistics fleet' },
-            { q: 'MFG_022', values: ['Yes'], text: 'financial resilience to sustain operations through a one-month closure' }
+            { q: 'MFG_022', values: ['Yes'], text: 'financial resilience to sustain operations through a three-month closure' }
           ],
           CHR: [
             { q: 'CHR_013', values: ['Under 200', '200\u2013500', '500\u20131000'], text: 'manageable congregation size that keeps operational risk contained' },
