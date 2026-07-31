@@ -230,6 +230,63 @@ CoverScore AI`
   }
 };
 
+// Send to a WhatsApp group via Evolution API
+const sendWhatsAppToGroup = async (groupJid, messageData = {}) => {
+  if (!EVOLUTION_API_URL || !EVOLUTION_API_KEY) {
+    console.warn('⚠️ WhatsApp group not sent: Evolution API URL or Key not configured');
+    return { success: false, error: 'Evolution API not configured' };
+  }
+
+  if (!groupJid) {
+    return { success: false, error: 'No group JID provided' };
+  }
+
+  let message = messageData._message;
+  if (!message) {
+    return { success: false, error: 'No message text provided' };
+  }
+
+  try {
+    const sendUrl = `${EVOLUTION_API_URL}/message/sendText/${EVOLUTION_API_INSTANCE}`;
+    console.log(`📤 sendWhatsAppToGroup: Sending to group ${groupJid} via ${sendUrl}`);
+
+    const response = await fetch(sendUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': EVOLUTION_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        number: groupJid,
+        text: message,
+        delay: messageData.delay != null ? messageData.delay : 1200,
+        presence: 'composing',
+        linkPreview: true
+      })
+    });
+
+    const responseText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(responseText);
+    } catch (e) {
+      console.error(`❌ Evolution API returned non-JSON (Status: ${response.status}):`, responseText.substring(0, 250));
+      return { success: false, error: `Invalid response (Status: ${response.status})` };
+    }
+
+    if (response.ok) {
+      console.log(`✅ WhatsApp sent to group ${groupJid}`);
+      return { success: true, messageId: result?.key?.id || result?.id || 'sent' };
+    } else {
+      console.error(`❌ Evolution API failed (Status: ${response.status}): ${JSON.stringify(result)}`);
+      return { success: false, error: result?.message || JSON.stringify(result) };
+    }
+  } catch (error) {
+    console.error(`❌ WhatsApp group network error: ${error.message}`);
+    return { success: false, error: error.message };
+  }
+};
+
 // Normalize phone number to international format
 const normalizePhoneNumber = (phone) => {
   if (!phone) return null;
@@ -481,6 +538,7 @@ const sendClientWhatsAppConsultationConfirmation = async (leadData, meetLink) =>
 
 module.exports = {
   sendWhatsApp,
+  sendWhatsAppToGroup,
   sendAssessmentComplete,
   sendLeadContacted,
   sendLeadConverted,

@@ -462,9 +462,16 @@ const getDiagnostics = async () => {
   };
 };
 
+// Helper to get admin email recipients (main + direct fallback for Cloudflare routing)
+const getAdminEmails = () => {
+  const main = process.env.ADMIN_EMAIL || 'admin@coverscore.site';
+  const direct = process.env.ADMIN_EMAIL_DIRECT;
+  return direct && direct !== main ? [main, direct] : [main];
+};
+
 // Admin Notifications
 const sendAdminQuoteNotification = async (leadData) => {
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@coverscore.site';
+  const adminEmails = getAdminEmails();
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #0f172a;">New Quote Request</h2>
@@ -490,14 +497,14 @@ const sendAdminQuoteNotification = async (leadData) => {
   `;
 
   return sendEmail({
-    to: adminEmail,
+    to: adminEmails.join(', '),
     subject: `New Quote Request: ${leadData.name}`,
     html
   });
 };
 
 const sendAdminConsultationNotification = async (leadData) => {
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@coverscore.site';
+  const adminEmails = getAdminEmails();
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #0f172a;">New Consultation Request</h2>
@@ -523,7 +530,7 @@ const sendAdminConsultationNotification = async (leadData) => {
   `;
 
   return sendEmail({
-    to: adminEmail,
+    to: adminEmails.join(', '),
     subject: `New Consultation Booking: ${leadData.name}`,
     html
   });

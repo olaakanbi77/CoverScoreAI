@@ -941,6 +941,11 @@ const initDatabase = () => {
 (1,'CCA-108','Capstone: Integrated Advisory Simulation & Assessment','Apply all CCA knowledge in an integrated simulation covering real-world client scenarios from assessment to recommendation.',8)`, (err) => {
         if (err) { console.error('Failed to seed academy:', err.message); return; }
 
+        // Check if CCA-101 already has content; skip seeding course 1 if so
+        db.get("SELECT COUNT(*) as cnt FROM academy_modules WHERE course_id=1 AND level_id=1 AND content IS NOT NULL AND length(content)>0", [], (e2, row) => {
+          const skipCourse1 = row && row.cnt >= 8;
+          if (skipCourse1) console.log('CCA-101 already has content, skipping course-1 lesson seed');
+
         // Seed 60 lessons across 8 courses
         const m1Content = '<div class="lesson-content"><section class="lesson-section"><h2>Learning Objectives</h2><ul><li>Define risk and distinguish it from uncertainty</li><li>Understand why risk awareness is the foundation of protection planning</li><li>Recognise how CoverScore approach transforms risk advisory</li></ul></section><section class="lesson-section"><h2>What Is Risk?</h2><p>Risk is the possibility that an event will occur and cause a negative outcome. In the insurance context, risk is the <strong>uncertainty of financial loss</strong>. Every individual, family, and business faces risk every day.</p><p>What matters is how we <strong>identify, measure, and manage</strong> it.</p><div class="callout-box" style="background:#f5f3ff;border-left:3px solid #7c3aed;padding:12px;border-radius:6px;margin:12px 0;"><p style="margin:0;font-size:12px;color:#1e293b;font-weight:600;"><strong>Key Insight:</strong> Risk is not about fear — it is about readiness. The goal is not to eliminate risk but to understand it well enough to make informed decisions.</p></div></section><section class="lesson-section"><h2>Risk vs Uncertainty</h2><table class="lesson-table"><tr><th>Risk</th><th>Uncertainty</th></tr><tr><td>Probabilities can be estimated based on past data</td><td>Probabilities cannot be estimated</td></tr><tr><td>Insurance companies use risk to set premiums</td><td>Uncertain events are generally not insurable</td></tr><tr><td>Example: The probability of a house fire in a given year</td><td>Example: Whether a new technology will succeed in the market</td></tr></table></section><section class="lesson-section"><h2>Why Risk Awareness Matters</h2><p>Most people do not think about risk until something happens. As a CoverScore advisor, your role is to help clients <strong>recognise their risks before they materialise</strong>.</p><ul><li>Over 70% of Nigerian small businesses have no insurance coverage</li><li>Fewer than 5% of Nigerian adults have any form of life assurance</li><li>Most families are one medical emergency away from financial distress</li></ul></section><section class="lesson-section"><h2>The CoverScore Difference</h2><ol><li><strong>Assess</strong> — Use AI-powered tools to evaluate a client risk profile</li><li><strong>Score</strong> — Generate an objective risk score (0–100)</li><li><strong>Analyze</strong> — Identify protection gaps with the Risk Fingerprint™</li><li><strong>Recommend</strong> — Present tailored solutions that address real needs</li><li><strong>Protect</strong> — Implement the plan and track improvement</li><li><strong>Reflect</strong> — Review outcomes and adjust as circumstances change</li><li><strong>Improve</strong> — Continuously enhance the client risk posture</li></ol></section><section class="lesson-section"><h2>Key Takeaways</h2><ul><li>Risk is the possibility of financial loss — it can be measured and managed</li><li>Risk differs from uncertainty; insurance works where probabilities can be estimated</li><li>Nigeria has massive protection gaps that advisors can help close</li><li>CoverScore replaces reactive selling with proactive, data-driven advisory</li></ul></section></div>';
 
@@ -1034,6 +1039,7 @@ const initDatabase = () => {
           modIdx = i + 1;
           const td = titleDesc[modIdx];
           if (!td) return '';
+          if (skipCourse1 && l[0] === 1) return '';
           const escT = td.t.replace(/'/g,"''");
           const escD = td.d.replace(/'/g,"''");
           const content = l[2] ? `'${l[2].replace(/'/g,"''")}'` : 'NULL';
@@ -1046,7 +1052,8 @@ const initDatabase = () => {
           if (err) console.error('Failed to seed lessons:', err.message);
           else console.log('Seeded 8 CCA courses with 60 lessons');
         });
-      });
+        });   // close db.get callback
+      });     // close outer db.exec callback
 
     // Academy support tables
     db.run(`CREATE TABLE IF NOT EXISTS academy_quiz_results (

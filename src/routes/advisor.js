@@ -779,7 +779,7 @@ router.get('/leaderboard', authenticatePage, requireSalesOrAdmin, async (req, re
 router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     const levels = await all("SELECT * FROM academy_levels ORDER BY order_index ASC");
-    const modules = await all("SELECT * FROM academy_modules ORDER BY order_index ASC");
+    const modules = await all("SELECT * FROM academy_modules WHERE status IS NULL OR status != 'archived' ORDER BY order_index ASC");
     const courses = await all("SELECT * FROM academy_courses ORDER BY order_index ASC");
     const progress = await all("SELECT * FROM academy_progress WHERE user_id = ?", [req.user.id]);
     
@@ -966,7 +966,7 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
     }
 
     // Get all modules in this level for progress calculation
-    const levelModules = await all("SELECT id FROM academy_modules WHERE level_id = ? ORDER BY order_index", [mod.level_id]);
+    const levelModules = await all("SELECT id FROM academy_modules WHERE level_id = ? AND (status IS NULL OR status != 'archived') ORDER BY order_index", [mod.level_id]);
     const levelProgress = await all("SELECT module_id, status FROM academy_progress WHERE user_id = ? AND module_id IN (" + levelModules.map(m => m.id).join(',') + ")", [req.user.id]);
     const levelCompleted = levelProgress.filter(p => p.status === 'completed').length;
     const levelTotal = levelModules.length;
@@ -985,7 +985,7 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       prevModule = curIdx > 0 ? courseMods[curIdx - 1] : null;
       nextModule = curIdx < courseMods.length - 1 ? courseMods[curIdx + 1] : null;
     } else {
-      const allMods = await all("SELECT id, title, order_index FROM academy_modules WHERE level_id = ? ORDER BY order_index", [mod.level_id]);
+      const allMods = await all("SELECT id, title, order_index FROM academy_modules WHERE level_id = ? AND (status IS NULL OR status != 'archived') ORDER BY order_index", [mod.level_id]);
       const curIdx = allMods.findIndex(m => m.id === moduleId);
       prevModule = curIdx > 0 ? allMods[curIdx - 1] : null;
       nextModule = curIdx < allMods.length - 1 ? allMods[curIdx + 1] : null;
