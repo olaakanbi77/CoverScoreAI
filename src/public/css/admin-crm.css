@@ -799,7 +799,7 @@ body.admin-layout {
   .admin-sidebar.show { transform: translateX(0); }
   .mobile-menu-btn { display: block; }
   .kpi-grid { grid-template-columns: repeat(3, 1fr); }
-  .charts-row { grid-template-columns: 1fr; }
+  .charts-row { grid-template-columns: 1fr 1fr; }
   .admin-content-wrapper { padding: 16px; }
   .form-row { grid-template-columns: 1fr; }
 }
@@ -1177,7 +1177,7 @@ body.admin-layout {
 
 @media (max-width: 768px) {
   .health-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     row-gap: 20px;
   }
 }
@@ -1259,6 +1259,29 @@ body.admin-layout {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.leads-table {
+  min-width: 0;
+  width: 100%;
+}
+.leads-table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.leads-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+}
+.leads-table .lead-name {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.leads-table .lead-risk-badge,
+.leads-table .lead-time {
+  display: inline-flex;
 }
 
 /* Quick Actions New Layout */

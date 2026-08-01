@@ -255,67 +255,61 @@
         <a href="/admin/leads" class="view-all-link">View all</a>
       </div>
 
-      <div class="lead-list">
-        <!-- Lead 1 -->
-        <div class="lead-list-item">
-          <div class="lead-avatar" style="background:#FEF2F2; color:#EF4444;">DS</div>
-          <div class="lead-info">
-            <div class="lead-name">Darman Schools <span class="lead-tag blue">School</span></div>
-            <div class="lead-meta">
-              <span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Lagos</span>
-              <span class="lead-score">Score <strong style="color:#EF4444">27</strong>/100</span>
-            </div>
-          </div>
-          <div class="lead-actions">
-            <div class="lead-risk-badge critical">High Risk</div>
-            <div class="lead-time">2m ago <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          </div>
-        </div>
-        <!-- Lead 2 -->
-        <div class="lead-list-item">
-          <div class="lead-avatar" style="background:#FFF7ED; color:#F97316;">FC</div>
-          <div class="lead-info">
-            <div class="lead-name">Flourish College <span class="lead-tag blue">School</span></div>
-            <div class="lead-meta">
-              <span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Jos</span>
-              <span class="lead-score">Score <strong style="color:#F97316">18</strong>/100</span>
-            </div>
-          </div>
-          <div class="lead-actions">
-            <div class="lead-risk-badge extreme">Critical Risk</div>
-            <div class="lead-time">15m ago <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          </div>
-        </div>
-        <!-- Lead 3 -->
-        <div class="lead-list-item">
-          <div class="lead-avatar" style="background:#F0FDF4; color:#22C55E;">FS</div>
-          <div class="lead-info">
-            <div class="lead-name">Funsho Schools <span class="lead-tag blue">School</span></div>
-            <div class="lead-meta">
-              <span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Gombe</span>
-              <span class="lead-score">Score <strong style="color:#F97316">22</strong>/100</span>
-            </div>
-          </div>
-          <div class="lead-actions">
-            <div class="lead-risk-badge critical">High Risk</div>
-            <div class="lead-time">1h ago <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          </div>
-        </div>
-        <!-- Lead 4 -->
-        <div class="lead-list-item" style="border-bottom:none;">
-          <div class="lead-avatar" style="background:#EFF6FF; color:#3B82F6;">BR</div>
-          <div class="lead-info">
-            <div class="lead-name">Bright Future Academy <span class="lead-tag blue">School</span></div>
-            <div class="lead-meta">
-              <span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Kano</span>
-              <span class="lead-score">Score <strong style="color:#EAB308">45</strong>/100</span>
-            </div>
-          </div>
-          <div class="lead-actions">
-            <div class="lead-risk-badge warning">Medium Risk</div>
-            <div class="lead-time">2h ago <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          </div>
-        </div>
+      <div class="table-responsive">
+        <table class="crm-table leads-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Funnel Type</th>
+              <th>Location</th>
+              <th>Risk Score</th>
+              <th>Severity</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="lead-name">Darman Schools <span class="lead-tag blue">School</span></div>
+              </td>
+              <td>School</td>
+              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Lagos</span></td>
+              <td class="lead-score"><strong style="color:#EF4444">27</strong>/100</td>
+              <td><div class="lead-risk-badge critical">High Risk</div></td>
+              <td><span class="lead-time">2m ago</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="lead-name">Flourish College <span class="lead-tag blue">School</span></div>
+              </td>
+              <td>School</td>
+              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Jos</span></td>
+              <td class="lead-score"><strong style="color:#F97316">18</strong>/100</td>
+              <td><div class="lead-risk-badge extreme">Critical Risk</div></td>
+              <td><span class="lead-time">15m ago</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="lead-name">Funsho Schools <span class="lead-tag blue">School</span></div>
+              </td>
+              <td>School</td>
+              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Gombe</span></td>
+              <td class="lead-score"><strong style="color:#F97316">22</strong>/100</td>
+              <td><div class="lead-risk-badge critical">High Risk</div></td>
+              <td><span class="lead-time">1h ago</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="lead-name">Bright Future Academy <span class="lead-tag blue">School</span></div>
+              </td>
+              <td>School</td>
+              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Kano</span></td>
+              <td class="lead-score"><strong style="color:#EAB308">45</strong>/100</td>
+              <td><div class="lead-risk-badge warning">Medium Risk</div></td>
+              <td><span class="lead-time">2h ago</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
