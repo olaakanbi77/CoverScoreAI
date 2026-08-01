@@ -351,7 +351,7 @@
     const email = document.getElementById('editUserEmail').value.trim();
 
     if (!name || !email) {
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Please fill in all fields', type: 'error' });
+      if (typeof showToast === 'function') showToast('Please fill in all fields', 'error');
       else alert('Please fill in all fields');
       return;
     }
@@ -366,17 +366,17 @@
       });
 
       if (res.ok) {
-        if (typeof showToast === 'function') showToast({ title: 'Success', message: 'User updated successfully' });
+        if (typeof showToast === 'function') showToast('User updated successfully');
         closeEditUserModal();
         loadUsers();
       } else {
         const data = await res.json();
-        if (typeof showToast === 'function') showToast({ title: 'Error', message: data.message || 'Failed to update user', type: 'error' });
+        if (typeof showToast === 'function') showToast(data.message || 'Failed to update user', 'error');
         else alert('Error: ' + (data.message || 'Failed to update user'));
       }
     } catch(err) {
       console.error(err);
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Network error', type: 'error' });
+      if (typeof showToast === 'function') showToast('Network error', 'error');
       else alert('Network error');
     }
   }
@@ -402,7 +402,7 @@
     const password = document.getElementById('editUserPassword').value.trim();
 
     if (!password || password.length < 8) {
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Password must be at least 8 characters', type: 'error' });
+      if (typeof showToast === 'function') showToast('Password must be at least 8 characters', 'error');
       else alert('Password must be at least 8 characters');
       return;
     }
@@ -416,17 +416,17 @@
       });
 
       if (res.ok) {
-        if (typeof showToast === 'function') showToast({ title: 'Success', message: 'Password reset successfully' });
+        if (typeof showToast === 'function') showToast('Password reset successfully');
         toggleResetPassword();
         document.getElementById('editUserPassword').value = '';
       } else {
         const data = await res.json();
-        if (typeof showToast === 'function') showToast({ title: 'Error', message: data.message || 'Failed to reset password', type: 'error' });
+        if (typeof showToast === 'function') showToast(data.message || 'Failed to reset password', 'error');
         else alert('Error: ' + (data.message || 'Failed to reset password'));
       }
     } catch (err) {
       console.error(err);
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Network error', type: 'error' });
+      if (typeof showToast === 'function') showToast('Network error', 'error');
       else alert('Network error');
     }
   }
@@ -443,16 +443,16 @@
       });
 
       if (res.ok) {
-        if (typeof showToast === 'function') showToast({ title: 'Success', message: 'User deleted successfully' });
+        if (typeof showToast === 'function') showToast('User deleted successfully');
         loadUsers();
       } else {
         const data = await res.json();
-        if (typeof showToast === 'function') showToast({ title: 'Error', message: data.message || 'Failed to delete user', type: 'error' });
+        if (typeof showToast === 'function') showToast(data.message || 'Failed to delete user', 'error');
         else alert('Error: ' + (data.message || 'Failed to delete user'));
       }
     } catch(err) {
       console.error(err);
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Network error', type: 'error' });
+      if (typeof showToast === 'function') showToast('Network error', 'error');
       else alert('Network error');
     }
   }
@@ -531,16 +531,16 @@
         body: JSON.stringify({ role: newRole })
       });
       if (res.ok) {
-        if (typeof showToast === 'function') showToast({ title: 'Success', message: 'User role updated successfully' });
+        if (typeof showToast === 'function') showToast('User role updated successfully');
         loadUsers();
       } else {
         const data = await res.json();
-        if (typeof showToast === 'function') showToast({ title: 'Error', message: data.message || 'Failed to update role', type: 'error' });
+        if (typeof showToast === 'function') showToast(data.message || 'Failed to update role', 'error');
         else alert('Error: ' + (data.message || 'Failed to update role'));
       }
     } catch(err) {
       console.error(err);
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Network error', type: 'error' });
+      if (typeof showToast === 'function') showToast('Network error', 'error');
       else alert('Network error');
     }
   }
@@ -552,7 +552,7 @@
     const password = document.getElementById('newUserPassword').value;
 
     if (!name || !email || !password) {
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Please fill in all fields', type: 'error' });
+      if (typeof showToast === 'function') showToast('Please fill in all fields', 'error');
       else alert('Please fill in all fields');
       return;
     }
@@ -568,17 +568,17 @@
 
       const data = await res.json();
       if (res.ok) {
-        if (typeof showToast === 'function') showToast({ title: 'Success', message: 'User account created successfully' });
+        if (typeof showToast === 'function') showToast('User account created successfully');
         else alert('User account created successfully');
         closeCreateUserModal();
         loadUsers();
       } else {
-        if (typeof showToast === 'function') showToast({ title: 'Error', message: data.message || 'Failed to create user', type: 'error' });
+        if (typeof showToast === 'function') showToast(data.message || 'Failed to create user', 'error');
         else alert('Error: ' + (data.message || 'Failed to create user'));
       }
     } catch(err) {
       console.error(err);
-      if (typeof showToast === 'function') showToast({ title: 'Error', message: 'Network error', type: 'error' });
+      if (typeof showToast === 'function') showToast('Network error', 'error');
       else alert('Network error');
     }
   }

@@ -236,7 +236,34 @@ router.delete('/users/:id',
         return res.status(400).json({ error: 'Bad Request', message: 'You cannot delete your own account' });
       }
 
-      await run('DELETE FROM users WHERE id = ?', [req.params.id]);
+      const userId = req.params.id;
+
+      await run('BEGIN TRANSACTION');
+
+      try {
+        await run('DELETE FROM refresh_tokens WHERE user_id = ?', [userId]);
+        await run('DELETE FROM notifications WHERE user_id = ?', [userId]);
+        await run('DELETE FROM academy_progress WHERE user_id = ?', [userId]);
+        await run('DELETE FROM academy_quiz_results WHERE user_id = ?', [userId]);
+        await run('DELETE FROM academy_coach_history WHERE user_id = ?', [userId]);
+        await run('DELETE FROM academy_certificates WHERE user_id = ?', [userId]);
+        await run('UPDATE leads SET passport_id = NULL WHERE passport_id IN (SELECT passport_id FROM customers WHERE user_id = ?)', [userId]);
+        await run('DELETE FROM customers WHERE user_id = ?', [userId]);
+
+        await run('UPDATE leads SET advisor_id = NULL WHERE advisor_id = ?', [userId]);
+        await run('UPDATE proposals SET advisor_id = NULL WHERE advisor_id = ?', [userId]);
+        await run('UPDATE opportunities SET advisor_id = NULL WHERE advisor_id = ?', [userId]);
+        await run('UPDATE documents SET uploaded_by = NULL WHERE uploaded_by = ?', [userId]);
+        await run('UPDATE risk_surveys SET surveyor_id = NULL WHERE surveyor_id = ?', [userId]);
+        await run('UPDATE assessments SET user_id = NULL WHERE user_id = ?', [userId]);
+
+        await run('DELETE FROM users WHERE id = ?', [userId]);
+        await run('COMMIT');
+      } catch (txError) {
+        await run('ROLLBACK');
+        throw txError;
+      }
+
       res.json({ message: 'User deleted successfully' });
     } catch (error) {
       next(error);
