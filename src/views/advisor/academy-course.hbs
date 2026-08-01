@@ -43,6 +43,15 @@
   .cc-label { font-size: 9px; font-weight: 700; color: var(--c-green-dark); text-transform: uppercase; }
   .cc-title { font-size: 12px; font-weight: 800; color: var(--c-dark); margin: 2px 0 0 0; }
 
+  .enroll-card { margin: 12px 16px; padding: 20px 16px; background: var(--c-purple-light); border: 1px solid #ede9fe; border-radius: 12px; text-align: center; }
+  .enroll-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--c-purple); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+  .enroll-icon svg { width: 20px; height: 20px; }
+  .enroll-title { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0 0 4px 0; }
+  .enroll-desc { font-size: 10px; color: var(--c-gray); margin: 0 0 14px 0; line-height: 1.4; }
+  .enroll-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--c-purple); color: white; border: none; border-radius: 8px; padding: 10px 24px; font-size: 12px; font-weight: 800; cursor: pointer; }
+  .enroll-btn:hover { background: #6d28d9; }
+  .enroll-btn:disabled { opacity: 0.6; cursor: default; }
+
   .section-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 8px; }
   .sec-title { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 0; }
 
@@ -96,6 +105,7 @@
     </div>
   </div>
 
+  {{#if enrolled}}
   <div class="progress-section">
     <div class="progress-row">
       <span style="font-size:10px; font-weight:700; color:var(--c-dark);">Course Progress</span>
@@ -142,6 +152,19 @@
     </a>
     {{/each}}
   </div>
+  {{else}}
+  <div class="enroll-card">
+    <div class="enroll-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    </div>
+    <h3 class="enroll-title">Enrol to start learning</h3>
+    <p class="enroll-desc">{{total}} lessons · {{totalMin}} min · {{course.level_name}}</p>
+    <button class="enroll-btn" onclick="enroll({{course.id}})">
+      Enrol Now
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+    </button>
+  </div>
+  {{/if}}
 
   <div style="padding: 16px; text-align: center;">
     <a href="/advisor/academy" class="back-btn" style="display:inline-flex; gap:4px; font-size:11px; font-weight:700; color:var(--c-gray); padding:8px 16px; border:1px solid #e2e8f0; border-radius:8px; text-decoration:none;">
@@ -174,4 +197,33 @@
     Academy
   </a>
 </div>
+
+<div id="toast" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#0f172a; color:white; padding:10px 18px; border-radius:8px; font-size:11px; font-weight:600; opacity:0; transition:opacity .3s; pointer-events:none; z-index:200;"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 2500);
+}
+async function enroll(courseId) {
+  const btn = document.querySelector('.enroll-btn');
+  btn.disabled = true; btn.textContent = 'Enrolling...';
+  try {
+    const res = await fetch('/advisor/api/academy/enroll/' + courseId, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      showToast(data.message || 'Enrolled!');
+      setTimeout(() => location.reload(), 800);
+    } else {
+      showToast(data.error || 'Failed to enroll');
+      btn.disabled = false; btn.textContent = 'Enrol Now';
+    }
+  } catch (e) {
+    showToast('Network error');
+    btn.disabled = false; btn.textContent = 'Enrol Now';
+  }
+}
+</script>
 

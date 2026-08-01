@@ -301,6 +301,7 @@
             <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
               <span style="font-size:8px; font-weight:800; color:var(--c-purple); background:var(--c-purple-light); padding:2px 6px; border-radius:4px;">{{this.code}}</span>
               {{#if this.inProgress}}<span style="font-size:8px; font-weight:700; color:var(--c-blue); background:var(--c-blue-light); padding:2px 6px; border-radius:4px;">In Progress</span>{{/if}}
+              {{#unless this.enrolled}}<span style="font-size:8px; font-weight:700; color:var(--c-orange); background:var(--c-orange-light); padding:2px 6px; border-radius:4px;">Not Enrolled</span>{{/unless}}
             </div>
             <h4 style="font-size:12px; font-weight:800; color:var(--c-dark); margin:0 0 2px 0;">{{this.title}}</h4>
             <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
@@ -336,7 +337,7 @@
             <p class="fc-desc" style="font-size:8px; color:var(--c-gray);">{{this.description}}</p>
           </div>
           <div class="fc-action">
-            <a href="/advisor/academy/course/{{this.id}}" class="fc-btn start">View</a>
+            <a href="/advisor/academy/course/{{this.id}}" class="fc-btn start">{{#if this.enrolled}}Enrolled{{else}}Enrol{{/if}}</a>
           </div>
         </div>
         {{/each}}

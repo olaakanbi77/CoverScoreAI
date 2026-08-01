@@ -299,6 +299,17 @@ const initDatabase = () => {
       UNIQUE(user_id, module_id)
     );
 
+    CREATE TABLE IF NOT EXISTS academy_enrollments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      course_id INTEGER NOT NULL,
+      status TEXT DEFAULT 'enrolled',
+      enrolled_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (course_id) REFERENCES academy_courses(id),
+      UNIQUE(user_id, course_id)
+    );
+
     CREATE TABLE IF NOT EXISTS assessment_templates (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,

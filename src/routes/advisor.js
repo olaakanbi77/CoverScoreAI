@@ -782,6 +782,8 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
     const modules = await all("SELECT * FROM academy_modules WHERE status IS NULL OR status != 'archived' ORDER BY order_index ASC");
     const courses = await all("SELECT * FROM academy_courses ORDER BY order_index ASC");
     const progress = await all("SELECT * FROM academy_progress WHERE user_id = ?", [req.user.id]);
+    const enrollments = await all("SELECT course_id FROM academy_enrollments WHERE user_id = ?", [req.user.id]);
+    const enrolledCourseIds = new Set(enrollments.map(e => e.course_id));
     
     // Process levels and attach modules and progress
     let totalModules = 0;
@@ -865,6 +867,7 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
         completedLessons: completed,
         progressPct: courseMods.length > 0 ? Math.round((completed / courseMods.length) * 100) : 0,
         inProgress,
+        enrolled: enrolledCourseIds.has(course.id),
         firstLessonId: firstPending ? firstPending.id : (courseMods[0] ? courseMods[0].id : null)
       };
     });
@@ -874,7 +877,7 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
     for (const level of levels) {
       const levelCourses = courses.filter(c => c.level_id === level.id);
       if (levelCourses.length > 0) {
-        featuredCourses.push({ ...levelCourses[0], levelName: level.name });
+        featuredCourses.push({ ...levelCourses[0], levelName: level.name, enrolled: enrolledCourseIds.has(levelCourses[0].id) });
       }
       if (featuredCourses.length >= 4) break;
     }
@@ -916,7 +919,7 @@ router.get('/academy/course/:id', authenticatePage, requireSalesOrAdmin, async (
 
     const lessons = await all("SELECT * FROM academy_modules WHERE course_id = ? ORDER BY lesson_number ASC, order_index ASC", [courseId]);
     const progress = await all("SELECT module_id, status FROM academy_progress WHERE user_id = ? AND module_id IN (" + (lessons.length ? lessons.map(m => m.id).join(',') : '0') + ")", [req.user.id]);
-
+    const enrollment = await get("SELECT id, enrolled_at FROM academy_enrollments WHERE user_id = ? AND course_id = ?", [req.user.id, courseId]);
     let completed = 0;
     let totalMin = 0;
     let inProgressLesson = null;
@@ -931,6 +934,7 @@ router.get('/academy/course/:id', authenticatePage, requireSalesOrAdmin, async (
 
     const pct = lessons.length > 0 ? Math.round((completed / lessons.length) * 100) : 0;
     const continueLesson = inProgressLesson || (enrichedLessons.find(m => m.status === 'pending') || enrichedLessons[0]);
+    const hasProgress = completed > 0 || enrichedLessons.some(m => m.status === 'in_progress');
 
     res.render('advisor/academy-course', {
       layout: 'admin',
@@ -942,7 +946,8 @@ router.get('/academy/course/:id', authenticatePage, requireSalesOrAdmin, async (
       total: lessons.length,
       pct,
       totalMin,
-      continueLesson
+      continueLesson,
+      enrolled: !!(enrollment || hasProgress)
     });
   } catch (err) {
     console.error('Error loading course:', err);
@@ -963,6 +968,13 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
     let course = null;
     if (mod.course_id) {
       course = await get("SELECT * FROM academy_courses WHERE id = ?", [mod.course_id]);
+    }
+
+    // Enforce enrollment gate
+    if (mod.course_id) {
+      const enrollment = await get("SELECT id FROM academy_enrollments WHERE user_id = ? AND course_id = ?", [req.user.id, mod.course_id]);
+      const hadProgress = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id IN (SELECT id FROM academy_modules WHERE course_id = ?) LIMIT 1", [req.user.id, mod.course_id]);
+      if (!enrollment && !hadProgress) return res.redirect('/advisor/academy/course/' + mod.course_id);
     }
 
     // Get all modules in this level for progress calculation
@@ -1064,6 +1076,25 @@ router.post('/api/academy/progress', authenticatePage, requireSalesOrAdmin, asyn
   } catch (err) {
     console.error('Error updating progress:', err);
     res.status(500).json({ success: false, error: 'Failed to update progress' });
+  }
+});
+
+// ── Academy Enrollment ──────────────────────────────────────────────────
+router.post('/api/academy/enroll/:courseId', authenticatePage, requireSalesOrAdmin, async (req, res) => {
+  try {
+    const courseId = parseInt(req.params.courseId);
+    const course = await get("SELECT id FROM academy_courses WHERE id = ?", [courseId]);
+    if (!course) return res.status(404).json({ success: false, error: 'Course not found' });
+
+    await run(
+      "INSERT OR IGNORE INTO academy_enrollments (user_id, course_id, status) VALUES (?, ?, 'enrolled')",
+      [req.user.id, courseId]
+    );
+
+    res.json({ success: true, message: '🎓 Enrolled in course!' });
+  } catch (err) {
+    console.error('Error enrolling:', err);
+    res.status(500).json({ success: false, error: 'Failed to enroll' });
   }
 });
 
