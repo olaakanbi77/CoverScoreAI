@@ -450,7 +450,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 async function updateProgress(status) {
   const moduleId = {{module.id}};
   try {
-    const res = await fetch('/api/academy/progress', {
+    const res = await fetch('/advisor/api/academy/progress', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ moduleId, status })
@@ -501,7 +501,7 @@ async function submitQuiz() {
   btn.textContent = 'Submitting...';
 
   try {
-    const res = await fetch('/api/academy/quiz/submit', {
+    const res = await fetch('/advisor/api/academy/quiz/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ moduleId, answers: userAnswers })
@@ -581,7 +581,7 @@ async function askCoach() {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('/api/academy/coach/ask', {
+    const res = await fetch('/advisor/api/academy/coach/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ moduleId, message: msg })
