@@ -282,6 +282,7 @@ const initDatabase = () => {
       video_url TEXT,
       content TEXT,
       track TEXT DEFAULT 'CORE',
+      status TEXT DEFAULT 'active',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (level_id) REFERENCES academy_levels(id)
     );
@@ -1241,6 +1242,11 @@ const initDatabase = () => {
   db.run("ALTER TABLE leads ADD COLUMN wa_state TEXT DEFAULT 'initial'", (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Migration error (wa_state):', err.message);
+    }
+  });
+  ensureSqliteColumn('academy_modules', 'status', "TEXT DEFAULT 'active'", (err) => {
+    if (err) {
+      console.error('Migration error (academy_modules status):', err.message);
     }
   });
   ensureSqliteColumn('assessments', 'user_id', 'INTEGER REFERENCES users(id)', (err) => {
