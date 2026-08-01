@@ -85,11 +85,15 @@
     };
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       const result = await res.json();
 
@@ -102,7 +106,8 @@
 
       window.location.href = '/assessment/start';
     } catch (err) {
-      errorDiv.textContent = err.message;
+      const msg = err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message;
+      errorDiv.textContent = msg;
       errorDiv.style.display = 'block';
       submitBtn.disabled = false;
       submitBtn.textContent = 'Create Account';

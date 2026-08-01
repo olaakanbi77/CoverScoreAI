@@ -402,6 +402,7 @@ h3 { font-size: 1.25rem; }
 .gap-6 { gap: 24px; }
 .gap-8 { gap: 32px; }
 
+.text-danger { color: var(--color-danger); }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 

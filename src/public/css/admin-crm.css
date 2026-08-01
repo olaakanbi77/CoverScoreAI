@@ -1086,3 +1086,218 @@ body.admin-layout {
   justify-content: center;
   border: 2px solid #fff;
 }
+
+/* Mobile First Adjustments */
+@media (max-width: 768px) {
+  .admin-sidebar { display: none; }
+  .admin-topbar { padding: 12px 16px; border-bottom: none; background: white; }
+  .mobile-brand-logo { display: flex !important; align-items: center; gap: 8px; font-weight: 700; font-size: 20px; color: #1E293B; }
+  .hide-on-mobile { display: none !important; }
+  .admin-content-wrapper { padding: 16px; padding-bottom: 80px; } /* Leave space for bottom nav */
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .kpi-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  
+  .bottom-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    padding-bottom: env(safe-area-inset-bottom, 10px);
+    z-index: 100;
+  }
+  .bottom-nav-bar .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #64748B;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .bottom-nav-bar .nav-item.active {
+    color: #6366F1;
+  }
+  .bottom-nav-bar .nav-item svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-on-desktop { display: none !important; }
+}
+
+/* System Health Section */
+.system-health-section {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.health-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.health-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.health-details {
+  display: flex;
+  flex-direction: column;
+}
+.health-label {
+  font-size: 11px;
+  color: #64748B;
+}
+.health-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+@media (max-width: 768px) {
+  .health-grid {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+  }
+}
+
+/* Leads List for Mobile */
+.lead-list {
+  display: flex;
+  flex-direction: column;
+}
+.lead-list-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #F1F5F9;
+  gap: 12px;
+}
+.lead-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.lead-info {
+  flex: 1;
+  min-width: 0;
+}
+.lead-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lead-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #EFF6FF;
+  color: #3B82F6;
+  font-weight: 500;
+}
+.lead-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #64748B;
+}
+.lead-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.lead-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.lead-risk-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+.lead-risk-badge.critical { background: #FEF2F2; color: #EF4444; }
+.lead-risk-badge.extreme { background: #EF4444; color: white; }
+.lead-risk-badge.warning { background: #FFF7ED; color: #F97316; }
+.lead-time {
+  font-size: 11px;
+  color: #94A3B8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Quick Actions New Layout */
+.new-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.new-quick-actions .quick-action-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  box-shadow: none;
+}
+.new-quick-actions .quick-action-btn:hover {
+  transform: none;
+}
+.new-quick-actions .icon-bg {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.new-quick-actions span {
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.2;
+  color: #475569;
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .new-quick-actions {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 20px;
+  }
+}
