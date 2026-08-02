@@ -1173,7 +1173,7 @@ router.post('/api/academy/quiz/submit', authenticatePage, requireSalesOrAdmin, a
       if (existing) {
         await run("UPDATE academy_progress SET status = 'completed', completed_at = datetime('now') WHERE id = ?", [existing.id]);
       } else {
-        await run("INSERT INTO academy_progress (user_id, module_id, status, started_at, completed_at) VALUES (?, ?, 'completed', datetime('now'), datetime('now'))",
+        await run("INSERT INTO academy_progress (user_id, module_id, status, completed_at) VALUES (?, ?, 'completed', datetime('now'))",
           [req.user.id, moduleId]);
       }
     }
