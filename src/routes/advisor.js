@@ -996,6 +996,14 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       const curIdx = courseMods.findIndex(m => m.id === moduleId);
       prevModule = curIdx > 0 ? courseMods[curIdx - 1] : null;
       nextModule = curIdx < courseMods.length - 1 ? courseMods[curIdx + 1] : null;
+
+      // Sequential gate: the previous lesson must be completed before accessing the next one
+      if (prevModule) {
+        const prevProgress = await get("SELECT status FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, prevModule.id]);
+        if (!prevProgress || prevProgress.status !== 'completed') {
+          return res.redirect('/advisor/academy/module/' + prevModule.id + '?locked=1');
+        }
+      }
     } else {
       const allMods = await all("SELECT id, title, order_index FROM academy_modules WHERE level_id = ? AND (status IS NULL OR status != 'archived') ORDER BY order_index", [mod.level_id]);
       const curIdx = allMods.findIndex(m => m.id === moduleId);
@@ -1009,7 +1017,22 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       try { quizData = JSON.parse(mod.quiz_data); } catch(e) { quizData = null; }
     }
 
+    // Whether the user has passed this lesson's quiz (required to complete the lesson)
+    let quizPassed = false;
+    if (mod.quiz_data) {
+      const passedResult = await get("SELECT id FROM academy_quiz_results WHERE user_id = ? AND module_id = ? AND passed = 1 LIMIT 1", [req.user.id, moduleId]);
+      quizPassed = !!passedResult;
+    }
+
+    // Convert workbook "Write your notes here" placeholder boxes into editable textareas
     let workbookContent = mod.workbook_content || null;
+    if (workbookContent) {
+      let noteIndex = 0;
+      workbookContent = workbookContent.replace(
+        /<div[^>]*dashed[^>]*>[\s\S]*?Write your notes here[\s\S]*?<\/div>/gi,
+        () => `<textarea class="wb-note" data-note-index="${noteIndex++}" rows="4" placeholder="Write your notes here"></textarea>`
+      );
+    }
     let caseStudy = mod.case_study || null;
     let resources = null;
     if (mod.resources) {
@@ -1037,6 +1060,8 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       prevModule,
       nextModule,
       quizData,
+      quizPassed,
+      locked: !!req.query.locked,
       workbookContent,
       caseStudy,
       resources,
@@ -1059,6 +1084,17 @@ router.post('/api/academy/progress', authenticatePage, requireSalesOrAdmin, asyn
     const { moduleId, status } = req.body;
     if (!moduleId || !['pending', 'in_progress', 'completed'].includes(status)) {
       return res.status(400).json({ success: false, error: 'Invalid request' });
+    }
+
+    // A lesson with a quiz cannot be marked completed until the quiz is passed
+    if (status === 'completed') {
+      const mod = await get("SELECT quiz_data FROM academy_modules WHERE id = ?", [moduleId]);
+      if (mod && mod.quiz_data) {
+        const passedResult = await get("SELECT id FROM academy_quiz_results WHERE user_id = ? AND module_id = ? AND passed = 1 LIMIT 1", [req.user.id, moduleId]);
+        if (!passedResult) {
+          return res.status(400).json({ success: false, error: 'Pass the lesson quiz before completing this lesson' });
+        }
+      }
     }
 
     const existing = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, moduleId]);

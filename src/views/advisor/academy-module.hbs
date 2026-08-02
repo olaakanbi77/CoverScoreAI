@@ -137,6 +137,13 @@
   /* Workbook */
   .workbook-content { font-size: 11px; line-height: 1.6; color: var(--c-gray); font-weight: 500; }
   .workbook-content h3 { font-size: 13px; font-weight: 800; color: var(--c-dark); margin: 16px 0 8px 0; }
+  .wb-note { width: 100%; box-sizing: border-box; margin-top: 8px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; line-height: 1.5; color: var(--c-dark); font-family: inherit; background: white; resize: vertical; }
+  .wb-note:focus { outline: none; border-color: var(--c-purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+  .wb-note::placeholder { color: #94a3b8; font-size: 11px; }
+  .wb-saved { display: inline-block; margin-top: 10px; font-size: 10px; font-weight: 700; color: var(--c-green-dark); opacity: 0; transition: opacity 0.3s; }
+  .wb-saved.show { opacity: 1; }
+  .quiz-lock-banner { margin: 0 16px 12px; padding: 10px 12px; background: var(--c-orange-light); border: 1px solid #fed7aa; border-radius: 8px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #9a3412; }
+  .quiz-lock-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
 
   /* Resources */
   .resource-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #f1f5f9; border-radius: 8px; margin-bottom: 6px; text-decoration: none; }
@@ -218,10 +225,17 @@
       Completed
     </button>
     {{else}}
-    <button class="btn primary" id="completeBtn" onclick="updateProgress('completed')">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-      Mark Complete
-    </button>
+      {{#if (and hasQuiz (not quizPassed))}}
+      <button class="btn primary" id="completeBtn" onclick="goToQuiz()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Take Quiz to Complete
+      </button>
+      {{else}}
+      <button class="btn primary" id="completeBtn" onclick="updateProgress('completed')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        Mark Complete
+      </button>
+      {{/if}}
     {{/if}}
     {{#if (eq status 'in_progress')}}
     <button class="btn outline" onclick="updateProgress('pending')">Reset</button>
@@ -229,6 +243,20 @@
     <button class="btn outline" id="saveBtn" onclick="updateProgress('in_progress')">Save Progress</button>
     {{/if}}
   </div>
+
+  {{#if (and hasQuiz (not quizPassed))}}
+  <div class="quiz-lock-banner">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    Pass the lesson quiz to complete this lesson and unlock the next one.
+  </div>
+  {{/if}}
+
+  {{#if locked}}
+  <div class="quiz-lock-banner">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    Complete the previous lesson to unlock this lesson.
+  </div>
+  {{/if}}
 
   <!-- Tabs -->
   <div class="tabs" id="tabs">
@@ -303,6 +331,9 @@
     <div class="tab-pane" id="tab-workbook">
       <div class="workbook-content">
         {{{workbookContent}}}
+      </div>
+      <div style="padding: 4px 0 0 0;">
+        <span class="wb-saved" id="wbSaved">Notes saved</span>
       </div>
     </div>
     {{/if}}
@@ -392,18 +423,32 @@
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{prevModule.title}}</span>
     </a>
     {{#if nextModule}}
-    <a href="/advisor/academy/module/{{nextModule.id}}" class="btn outline" style="flex:1; justify-content:flex-end; padding:10px 12px; font-size:10px; text-decoration:none;">
-      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{nextModule.title}}</span>
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-    </a>
+      {{#if (eq status 'completed')}}
+      <a href="/advisor/academy/module/{{nextModule.id}}" class="btn outline" style="flex:1; justify-content:flex-end; padding:10px 12px; font-size:10px; text-decoration:none;">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{nextModule.title}}</span>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </a>
+      {{else}}
+      <button class="btn outline" onclick="showToast('Complete this lesson to unlock the next one')" style="flex:1; justify-content:flex-end; padding:10px 12px; font-size:10px; border-color:#e2e8f0; color:var(--c-gray); cursor:pointer;">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{nextModule.title}}</span>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      </button>
+      {{/if}}
     {{/if}}
   </div>
   {{else if nextModule}}
   <div style="display:flex; gap:8px; padding: 0 16px 80px;">
+    {{#if (eq status 'completed')}}
     <a href="/advisor/academy/module/{{nextModule.id}}" class="btn outline" style="flex:1; justify-content:center; padding:10px 12px; font-size:10px; text-decoration:none;">
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Next: {{nextModule.title}}</span>
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
     </a>
+    {{else}}
+    <button class="btn outline" onclick="showToast('Complete this lesson to unlock the next one')" style="flex:1; justify-content:center; padding:10px 12px; font-size:10px; border-color:#e2e8f0; color:var(--c-gray); cursor:pointer;">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Next: {{nextModule.title}}</span>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    </button>
+    {{/if}}
   </div>
   {{/if}}
 
@@ -445,6 +490,57 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
   });
 });
+
+function goToQuiz() {
+  const tab = document.querySelector('.tab[data-tab="quiz"]');
+  if (tab) tab.click();
+  const quizPane = document.getElementById('tab-quiz');
+  if (quizPane) quizPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Workbook Notes (autosave) ────────────────────────────────────────
+{{#if hasWorkbook}}
+(function() {
+  const moduleId = {{module.id}};
+  const key = 'academy_workbook_' + moduleId;
+  const saved = {};
+  try { Object.assign(saved, JSON.parse(localStorage.getItem(key) || '{}')); } catch (e) {}
+
+  document.querySelectorAll('.wb-note').forEach(note => {
+    const idx = note.dataset.noteIndex;
+    if (saved[idx]) note.value = saved[idx];
+    let t;
+    note.addEventListener('input', () => {
+      saved[idx] = note.value;
+      clearTimeout(t);
+      t = setTimeout(() => {
+        try {
+          localStorage.setItem(key, JSON.stringify(saved));
+          const el = document.getElementById('wbSaved');
+          if (el) {
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 1500);
+          }
+        } catch (e) {}
+      }, 400);
+    });
+  });
+})();
+{{/if}}
+
+// ── Locked banner (flash on load) ────────────────────────────────────
+{{#if locked}}
+(function() {
+  setTimeout(() => {
+    const el = document.querySelector('.quiz-lock-banner');
+    if (el) {
+      el.style.transition = 'background 0.4s';
+      el.style.background = '#ffedd5';
+      setTimeout(() => { el.style.background = ''; }, 1200);
+    }
+  }, 400);
+})();
+{{/if}}
 
 // ── Progress ─────────────────────────────────────────────────────────
 async function updateProgress(status) {
@@ -535,7 +631,10 @@ async function submitQuiz() {
 
       btn.textContent = data.passed ? '✓ Completed' : 'Retry Quiz';
       btn.disabled = data.passed;
-      if (!data.passed) {
+      if (data.passed) {
+        showToast('🎉 Quiz passed! Lesson completed');
+        setTimeout(() => location.reload(), 1200);
+      } else {
         btn.onclick = () => location.reload();
       }
     } else {
