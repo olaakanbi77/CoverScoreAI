@@ -522,50 +522,43 @@ function goToQuiz() {
   if (!video || !toggle) return;
 
   let lastTime = 0;
-  let wasPlaying = false;
-  let restoring = false;
 
-  const rememberState = () => {
-    lastTime = video.currentTime;
-    wasPlaying = !video.paused && !video.ended;
-  };
+  const rememberState = () => { lastTime = video.currentTime; };
 
   video.addEventListener('timeupdate', rememberState);
-  video.addEventListener('play', rememberState);
-  video.addEventListener('pause', rememberState);
 
   function enterPip() {
+    if (!toggle.checked) return;
     if (document.pictureInPictureElement) return;
-    if (document.pictureInPictureEnabled && !restoring) {
-      video.requestPictureInPicture().catch(() => {});
-    }
+    if (!document.pictureInPictureEnabled) return;
+    // Request PiP in a user-gesture context (on play) so it works reliably,
+    // then the video keeps playing in its floating window when minimized.
+    video.requestPictureInPicture().catch(() => {});
   }
 
   function exitPip() {
     if (document.pictureInPictureElement) {
-      restoring = true;
       document.exitPictureInPicture().catch(() => {});
     }
   }
 
+  // Enter PiP as soon as playback begins — this call happens right when the
+  // user clicks play (a trusted user gesture), making it dependable.
+  video.addEventListener('play', enterPip);
+
+  // Optional, per preference: pull it back when the user starts interacting
+  // with the page again after it had gone to background.
   document.addEventListener('visibilitychange', () => {
-    if (!toggle.checked) return;
     if (document.hidden) {
-      rememberState();
-      if (wasPlaying) enterPip();
-    } else {
-      exitPip();
+      // If still playing after being hidden, make sure it is in PiP.
+      if (!video.paused && !video.ended) enterPip();
     }
   });
 
-  // Resume playback at the same position after returning from background.
+  // Resume at the same spot after returning from PiP.
   video.addEventListener('leavepictureinpicture', () => {
-    if (document.hidden || !wasPlaying) { restoring = false; return; }
-    try {
-      if (lastTime > 0) video.currentTime = lastTime;
-      video.play().catch(() => {});
-    } catch (e) {}
-    restoring = false;
+    if (document.hidden) return;
+    try { if (lastTime > 0) video.currentTime = lastTime; video.play().catch(() => {}); } catch (e) {}
   });
 })();
 
