@@ -155,6 +155,13 @@ router.post('/refresh', async (req, res, next) => {
 
     const newAccessToken = generateAccessToken(user.id, user.role);
 
+    res.cookie('accessToken', newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000
+    });
+
     res.json({
       message: 'Token refreshed',
       user,

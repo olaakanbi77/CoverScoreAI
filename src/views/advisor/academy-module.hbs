@@ -487,6 +487,17 @@
 </div>
 
 <script>
+// ── API fetch with silent token refresh & retry ──────────────────────
+async function apiFetch(url, options = {}) {
+  let res = await fetch(url, options);
+  if (res.status === 401) {
+    // Try to refresh the expired access token, then retry once.
+    await fetch('/api/auth/refresh', { method: 'POST', credentials: 'same-origin' });
+    res = await fetch(url, options);
+  }
+  return res;
+}
+
 // ── Tab Switching ────────────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -606,7 +617,7 @@ function goToQuiz() {
 async function updateProgress(status) {
   const moduleId = {{module.id}};
   try {
-    const res = await fetch('/advisor/api/academy/progress', {
+    const res = await apiFetch('/advisor/api/academy/progress', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ moduleId, status })
@@ -657,7 +668,7 @@ async function submitQuiz() {
   btn.textContent = 'Submitting...';
 
   try {
-    const res = await fetch('/advisor/api/academy/quiz/submit', {
+    const res = await apiFetch('/advisor/api/academy/quiz/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ moduleId, answers: userAnswers })
@@ -710,14 +721,19 @@ async function submitQuiz() {
 }
 
 // ── AI Coach ─────────────────────────────────────────────────────────
+let coachBusy = false;
+
 async function askCoach() {
   const input = document.getElementById('coachInput');
   const msg = input.value.trim();
-  if (!msg) return;
+  if (!msg || coachBusy) return;
 
   const moduleId = {{module.id}};
   const messages = document.getElementById('coachMessages');
   const sendBtn = document.getElementById('coachSendBtn');
+
+  // Lock the input while a request is in flight (prevents queue flooding).
+  coachBusy = true;
 
   // Add user message
   messages.innerHTML += `
@@ -740,20 +756,37 @@ async function askCoach() {
   sendBtn.disabled = true;
 
   try {
-    const res = await fetch('/advisor/api/academy/coach/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ moduleId, message: msg })
-    });
-    const data = await res.json();
+    let data;
+    // Retry with exponential backoff when the AI request queue is full (503).
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const res = await apiFetch('/advisor/api/academy/coach/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moduleId, message: msg })
+      });
+      if (res.status === 503 && attempt < 2) {
+        const delay = 1000 * Math.pow(2, attempt) + Math.floor(Math.random() * 300);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      data = await res.json().catch(() => null);
+      break;
+    }
 
     typingEl.remove();
 
-    if (data.success) {
+    if (data && data.success) {
       messages.innerHTML += `
         <div class="coach-msg coach">
           <div class="cm-avatar coach">💡</div>
           <div class="cm-bubble">${escapeHtml(data.message)}</div>
+        </div>
+      `;
+    } else if (data && data.retryable) {
+      messages.innerHTML += `
+        <div class="coach-msg coach">
+          <div class="cm-avatar coach">💡</div>
+          <div class="cm-bubble">The request queue is busy right now. Please try again in a moment.</div>
         </div>
       `;
     } else {
@@ -775,6 +808,7 @@ async function askCoach() {
     `;
   }
 
+  coachBusy = false;
   input.disabled = false;
   sendBtn.disabled = false;
   input.focus();

@@ -75,11 +75,20 @@ const generateRefreshToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET || 'coverscore-refresh-secret-change-in-production', { expiresIn: '7d' });
 };
 
+const isApiRequest = (req) => req.originalUrl.includes('/api/');
+
+const redirectToLogin = (req, res) => {
+  if (isApiRequest(req)) {
+    return res.status(401).json({ error: 'Unauthorized', message: 'Session expired. Please sign in again.' });
+  }
+  return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+};
+
 const authenticatePage = async (req, res, next) => {
   const token = req.cookies?.accessToken || (req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
 
   if (!token) {
-    return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+    return redirectToLogin(req, res);
   }
 
   let decoded;
@@ -87,7 +96,7 @@ const authenticatePage = async (req, res, next) => {
     decoded = jwt.verify(token, JWT_SECRET);
   } catch (error) {
     res.clearCookie('accessToken');
-    return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+    return redirectToLogin(req, res);
   }
 
   const timeout = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('DB_TIMEOUT')), ms));
@@ -111,7 +120,7 @@ const authenticatePage = async (req, res, next) => {
 
     if (!user) {
       res.clearCookie('accessToken');
-      return res.redirect('/auth/login');
+      return redirectToLogin(req, res);
     }
 
     req.user = user;
@@ -122,7 +131,7 @@ const authenticatePage = async (req, res, next) => {
       console.error(`[auth] DB TIMEOUT after 5s for userId=${decoded.userId}, url=${req.originalUrl}, ip=${req.ip}`, new Error().stack);
     }
     res.clearCookie('accessToken');
-    return res.redirect(`/auth/login?redirect=${encodeURIComponent(req.originalUrl)}`);
+    return redirectToLogin(req, res);
   }
 };
 

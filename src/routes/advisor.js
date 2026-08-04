@@ -1238,6 +1238,12 @@ Coach:`;
     if (response.ok) {
       const data = await response.json();
       coachReply = data.choices?.[0]?.message?.content || coachReply;
+    } else if (response.status === 503) {
+      // Provider request queue is full — signal the client to retry shortly.
+      return res.status(503).json({ success: false, retryable: true, error: 'The request queue is full. Please try again.' });
+    } else {
+      const errText = await response.text().catch(() => '');
+      console.error('AI Coach upstream error:', response.status, errText.slice(0, 300));
     }
 
     // Save coach response
