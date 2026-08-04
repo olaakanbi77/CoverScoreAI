@@ -133,6 +133,8 @@
   .video-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--c-navy); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; gap: 8px; }
   .video-placeholder svg { width: 40px; height: 40px; opacity: 0.5; }
   .video-placeholder span { font-size: 10px; font-weight: 600; opacity: 0.7; }
+  .bg-play-label { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 10px; font-weight: 600; color: var(--c-gray); cursor: pointer; user-select: none; }
+  .bg-play-label input { accent-color: var(--c-orange); cursor: pointer; }
 
   /* Workbook */
   .workbook-content { font-size: 11px; line-height: 1.6; color: var(--c-gray); font-weight: 500; }
@@ -305,9 +307,13 @@
     {{#if videoUrl}}
     <div class="tab-pane active" id="tab-video">
       <div style="width:100%;max-width:480px;margin:0 auto;">
-        <video controls style="width:100%;border-radius:8px;">
+        <video id="lessonVideo" controls style="width:100%;border-radius:8px;">
           <source src="{{videoUrl}}" type="video/mp4">
         </video>
+        <label class="bg-play-label">
+          <input type="checkbox" id="bgPlayToggle" checked>
+          Keep playing when I leave the page
+        </label>
       </div>
     </div>
     {{else if videoScript}}
@@ -497,6 +503,60 @@ function goToQuiz() {
   const quizPane = document.getElementById('tab-quiz');
   if (quizPane) quizPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// ── Background playback (keep playing when tab minimized) ────────────
+(function() {
+  const video = document.getElementById('lessonVideo');
+  const toggle = document.getElementById('bgPlayToggle');
+  if (!video || !toggle) return;
+
+  let lastTime = 0;
+  let wasPlaying = false;
+  let restoring = false;
+
+  const rememberState = () => {
+    lastTime = video.currentTime;
+    wasPlaying = !video.paused && !video.ended;
+  };
+
+  video.addEventListener('timeupdate', rememberState);
+  video.addEventListener('play', rememberState);
+  video.addEventListener('pause', rememberState);
+
+  function enterPip() {
+    if (document.pictureInPictureElement) return;
+    if (document.pictureInPictureEnabled && !restoring) {
+      video.requestPictureInPicture().catch(() => {});
+    }
+  }
+
+  function exitPip() {
+    if (document.pictureInPictureElement) {
+      restoring = true;
+      document.exitPictureInPicture().catch(() => {});
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!toggle.checked) return;
+    if (document.hidden) {
+      rememberState();
+      if (wasPlaying) enterPip();
+    } else {
+      exitPip();
+    }
+  });
+
+  // Resume playback at the same position after returning from background.
+  video.addEventListener('leavepictureinpicture', () => {
+    if (document.hidden || !wasPlaying) { restoring = false; return; }
+    try {
+      if (lastTime > 0) video.currentTime = lastTime;
+      video.play().catch(() => {});
+    } catch (e) {}
+    restoring = false;
+  });
+})();
 
 // ── Workbook Notes (autosave) ────────────────────────────────────────
 {{#if hasWorkbook}}
