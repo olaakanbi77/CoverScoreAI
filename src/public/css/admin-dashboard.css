@@ -61,25 +61,45 @@
 }
 
 /* ── Header / greeting ── */
-.md-header { margin-bottom: 20px; }
+.md-header {
+  position: relative;
+  overflow: hidden;
+  background: var(--md-primary);
+  border-radius: var(--md-radius-xl);
+  box-shadow: var(--md-shadow-hero);
+  padding: 24px 22px;
+  margin-bottom: 20px;
+}
+.md-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(140px 100px at 90% -14%, rgba(255, 255, 255, 0.18), transparent 70%),
+    radial-gradient(180px 130px at -8% 120%, rgba(255, 255, 255, 0.08), transparent 70%);
+  pointer-events: none;
+}
 .md-eyebrow {
+  position: relative;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--md-primary);
+  color: rgba(255, 255, 255, 0.72);
   margin-bottom: 6px;
 }
 .md-title {
+  position: relative;
   font-size: 32px;
   line-height: 1.15;
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: var(--md-ink);
+  color: #FFFFFF;
 }
 .md-date {
+  position: relative;
   font-size: 14px;
-  color: var(--md-muted);
+  color: rgba(255, 255, 255, 0.82);
   margin-top: 6px;
   font-variant-numeric: tabular-nums;
 }
@@ -96,19 +116,20 @@
 .md-hero {
   position: relative;
   overflow: hidden;
-  background: var(--md-primary);
+  background: var(--md-card);
   border-radius: var(--md-radius-xl);
-  box-shadow: var(--md-shadow-hero);
+  box-shadow: var(--md-shadow-card);
   padding: 24px 22px;
   margin-bottom: 16px;
+  border: 1px solid var(--md-line);
 }
 .md-hero::before {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(140px 100px at 90% -14%, rgba(255, 255, 255, 0.18), transparent 70%),
-    radial-gradient(180px 130px at -8% 120%, rgba(255, 255, 255, 0.08), transparent 70%);
+    radial-gradient(120px 90px at 88% -12%, rgba(37, 99, 235, 0.16), transparent 70%),
+    radial-gradient(160px 120px at -8% 120%, rgba(37, 99, 235, 0.08), transparent 70%);
   pointer-events: none;
 }
 .md-hero-top {
@@ -121,7 +142,7 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.03em;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--md-faint);
   text-transform: uppercase;
 }
 .md-hero-status {
@@ -131,7 +152,7 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #FFFFFF;
+  color: var(--md-ink);
   margin-bottom: 4px;
 }
 .md-dot {
@@ -142,20 +163,20 @@
   background: var(--md-green);
   box-shadow: 0 0 0 6px var(--md-green-tint);
 }
-.md-hero .md-dot.warn { background: var(--md-amber); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.25); }
-.md-hero .md-dot.crit { background: #FECACA; box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.25); }
-.md-hero .md-dot.healthy { animation: md-pulse-hero 2.4s ease-out infinite; }
-@keyframes md-pulse-hero {
-  0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35); }
-  70%  { box-shadow: 0 0 0 12px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+.md-dot.warn { background: var(--md-amber); box-shadow: 0 0 0 6px var(--md-amber-tint); }
+.md-dot.crit { background: var(--md-red); box-shadow: 0 0 0 6px var(--md-red-tint); }
+.md-dot.healthy { animation: md-pulse 2.4s ease-out infinite; }
+@keyframes md-pulse {
+  0%   { box-shadow: 0 0 0 0 var(--md-green-tint); }
+  70%  { box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
 }
 .md-hero-msg {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--md-muted);
   line-height: 1.45;
 }
-.md-hero-msg strong { color: #FFFFFF; font-weight: 600; }
+.md-hero-msg strong { color: var(--md-ink-soft); font-weight: 600; }
 
 /* ── Section headers ── */
 .md-section-head {
