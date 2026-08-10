@@ -80,7 +80,11 @@
 
       // Handle redirection: use 'redirect' param if it exists, else default to role-based dashboard
       const urlParams = new URLSearchParams(window.location.search);
-      const redirectPath = urlParams.get('redirect');
+      let redirectPath = urlParams.get('redirect');
+      // Only honor internal absolute paths (no open redirect / external URLs)
+      if (!redirectPath || !redirectPath.startsWith('/') || redirectPath.startsWith('//')) {
+        redirectPath = null;
+      }
 
       if (redirectPath) {
         window.location.href = redirectPath;

@@ -98,6 +98,9 @@
   .quiz-submit { width: 100%; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 700; background: var(--c-purple); color: white; border: none; cursor: pointer; margin-top: 8px; }
   .quiz-submit:disabled { opacity: 0.5; cursor: not-allowed; }
   .quiz-submit:hover:not(:disabled) { background: #6d28d9; }
+  .flash-unanswered { animation: flashUnanswered 1.5s ease; }
+  .flash-unanswered .q-text { color: #b91c1c; font-weight: 700; }
+  @keyframes flashUnanswered { 0% { background: #fef2f2; } 50% { background: #ffedd5; } 100% { background: transparent; } }
   .quiz-result { padding: 16px; text-align: center; background: var(--c-green-light); border-radius: 10px; margin-bottom: 16px; }
   .qr-score { font-size: 32px; font-weight: 800; color: var(--c-green-dark); }
   .qr-label { font-size: 11px; font-weight: 600; color: var(--c-green-dark); }
@@ -364,7 +367,8 @@
           </div>
           {{/each}}
         </div>
-        <button class="quiz-submit" id="quizSubmitBtn" onclick="submitQuiz()">Submit Answers</button>
+        <button type="button" class="quiz-submit" id="quizSubmitBtn" onclick="submitQuiz()">Submit Answers</button>
+        <div class="quiz-hint" id="quizHint" style="display:none;font-size:11px;color:var(--c-gray);margin-top:8px;text-align:center;"></div>
       </div>
     </div>
     {{/if}}
@@ -649,10 +653,23 @@ async function submitQuiz() {
   const moduleId = {{module.id}};
   const allQ = document.querySelectorAll('.quiz-question');
   let answered = 0;
-  allQ.forEach(q => { if (userAnswers[parseInt(q.dataset.qid)] !== undefined) answered++; });
-  
+  const firstUnanswered = [];
+  allQ.forEach(q => {
+    const qid = parseInt(q.dataset.qid);
+    if (userAnswers[qid] !== undefined) answered++;
+    else firstUnanswered.push(q);
+  });
+
   if (answered < allQ.length) {
     showToast(`Answer all ${allQ.length} questions first`);
+    // Visibly scroll to and highlight the first unanswered question so the
+    // user always sees why the button did not submit.
+    const target = firstUnanswered[0];
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('flash-unanswered');
+      setTimeout(() => target.classList.remove('flash-unanswered'), 2000);
+    }
     return;
   }
 

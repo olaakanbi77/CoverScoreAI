@@ -56,7 +56,7 @@ function generateProposal(assessmentData, products, advisorInfo) {
   html = html.replace(new RegExp('{{totalPremiumMin}}', 'g'), totalMin.toLocaleString());
   html = html.replace(new RegExp('{{totalPremiumMax}}', 'g'), totalMax.toLocaleString());
 
-  const outputDir = path.join(__dirname, '..', '..', 'public', 'proposals');
+  const outputDir = path.join(__dirname, '..', 'public', 'proposals');
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }

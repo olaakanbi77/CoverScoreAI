@@ -1,13 +1,7 @@
-const { Client } = require('ssh2');
-const c = new Client();
-c.on('ready', () => {
-  c.exec('docker exec coverscore-ai sh -c "wget -qO- http://localhost:3016/videos/lesson_50_What_Is_Risk_The_Foundation_of_Protection.mp4 -o /dev/null -w \"%{http_code}\"" 2>&1; echo ""; echo "==="; docker exec coverscore-ai sh -c "wget -qO- http://localhost:3016/health" 2>&1; echo "==="; docker logs coverscore-ai --tail 10 2>&1', (e, s) => {
-    if (e) { console.error(e.message); c.end(); return; }
-    let o = '';
-    s.on('data', d => o += d.toString());
-    s.stderr.on('data', d => process.stderr.write(d.toString()));
-    s.on('close', () => { console.log(o); c.end(); });
+var s=require("sqlite3"),d=new s.Database("./data/coverscore.db");
+d.all("SELECT id,lesson_number,SUBSTR(video_script,1,60) as snippet,video_url FROM academy_modules WHERE course_id=8 ORDER BY lesson_number",[],function(e,r){
+  r.forEach(function(m){
+    console.log(m.id+" L"+m.lesson_number+" "+(m.video_url||"no-video")+" {"+(m.snippet||"").substring(0,40)+"}");
   });
+  d.close();
 });
-c.on('error', e => console.error(e.message));
-c.connect({ host: '163.245.210.111', username: 'root', password: 'RUlTzXC1Onrmw' });

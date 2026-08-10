@@ -960,7 +960,12 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
   try {
     const moduleId = parseInt(req.params.id);
     const mod = await get("SELECT * FROM academy_modules WHERE id = ?", [moduleId]);
-    if (!mod) return res.status(404).send('Module not found');
+    if (!mod || (mod.status === 'archived')) {
+      // Module was removed/archived (e.g. during curriculum rebuild). Send the user
+      // somewhere useful instead of a dead "Module not found" page.
+      if (mod && mod.course_id) return res.redirect('/advisor/academy/course/' + mod.course_id);
+      return res.redirect('/advisor/academy');
+    }
 
     const level = await get("SELECT * FROM academy_levels WHERE id = ?", [mod.level_id]);
 
@@ -1046,6 +1051,7 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
         [req.user.id, moduleId]);
     } catch(e) { /* table may not exist yet */ }
 
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.render('advisor/academy-module', {
       layout: 'admin',
       user: req.user,

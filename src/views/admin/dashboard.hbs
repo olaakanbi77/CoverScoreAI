@@ -1,1447 +1,271 @@
-<style>
-  @media (max-width: 768px) {
-    .dashboard-header { flex-direction: column; gap: 12px; align-items: stretch; }
-    .dashboard-header .greeting-title { font-size: 20px; }
-    .dashboard-header .greeting-sub { font-size: 13px; }
-    .date-picker { align-self: flex-start; }
-    .kpi-card { padding: 14px; }
-    .kpi-value { font-size: 22px; }
-    .pipeline-section { padding: 16px; }
-    .section-title { font-size: 16px; }
-    .table-card { padding: 16px; border-radius: var(--crm-radius); overflow: hidden; }
-    .table-card .table-filters { flex-direction: column; gap: 8px; }
-    .table-card .filter-group { min-width: 100% !important; }
-    .table-card .filter-group input,
-    .table-card .filter-group select { width: 100%; }
-    .crm-table thead { display: none; }
-    .crm-table tbody tr { display: block; padding: 12px; margin-bottom: 8px; background: white; border: 1px solid var(--crm-border); border-radius: 8px; }
-    .crm-table tbody tr td { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border: none; gap: 8px; }
-    .crm-table tbody tr td::before { content: attr(data-label); font-weight: 600; font-size: 11px; color: var(--crm-text-secondary); text-transform: uppercase; flex-shrink: 0; }
-    .crm-table tbody tr td .td-main { font-size: 13px; }
-    .crm-table tbody tr td .td-sub { font-size: 11px; }
-    .crm-table tbody tr td .btn-action-outline { width: auto; padding: 4px 10px; font-size: 11px; }
-    .table-pagination { flex-direction: column; gap: 8px; align-items: flex-start; }
-    .charts-row { gap: 16px; }
-    .chart-card { padding: 16px; }
-    .grid-right { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .widget-card { padding: 16px; }
-    .quick-actions-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .quick-action-btn { padding: 10px; }
-    .quick-action-btn svg { width: 20px; height: 20px; }
-    .quick-action-btn span { font-size: 11px; }
-    .task-item { padding: 10px 0; }
-    .feed-item { padding: 10px 0; }
-    .modal-container { max-width: 95%; margin: 20px auto; border-radius: 12px; }
-    .modal-header { padding: 16px 20px; }
-    .modal-body { padding: 16px 20px; }
-    .modal-footer { padding: 12px 20px; flex-direction: column; }
-    .modal-footer .btn-secondary,
-    .modal-footer .btn-primary { width: 100%; text-align: center; }
-  }
+<link rel="stylesheet" href="/css/admin-dashboard.css">
 
-  @media (max-width: 480px) {
-    .dashboard-header .greeting-title { font-size: 18px; }
-    .kpi-card { padding: 10px; }
-    .kpi-value { font-size: 20px; }
-    .kpi-icon-wrap { width: 32px; height: 32px; }
-    .kpi-icon-wrap svg { width: 16px; height: 16px; }
-    .pipeline-section { padding: 12px; }
-    .pipeline-stage { padding: 8px 12px; font-size: 12px; }
-    .table-card { padding: 12px; border-radius: 0; margin: 0 -16px; }
-    .date-picker { font-size: 12px; padding: 6px 10px; }
-    .quick-actions-grid { grid-template-columns: 1fr; }
-    .modal-overlay { align-items: flex-end; }
-    .modal-container { width: 100%; margin: 0; border-radius: 16px 16px 0 0; max-height: 90vh; overflow-y: auto; }
-  }
-</style>
-<div class="dashboard-header">
-  <div>
-    {{#if (eq activePage 'leads')}}
-      <h1 class="greeting-title">Lead Management</h1>
-      <p class="greeting-sub">Track risk intelligence scores, customize insurance categories, and process quotes.</p>
-    {{else}}
-      <h1 class="greeting-title">Good morning, Admin 👋<br><span style="font-size: 24px; font-weight: 700; display: block; margin-top: 4px; color: var(--crm-text);">Admin Dashboard</span></h1>
-      <p class="greeting-sub">Platform overview at a glance.</p>
-    {{/if}}
-  </div>
-  {{#unless (eq activePage 'leads')}}
-  <div class="date-picker-badge" style="background: white; border-radius: 8px; border: 1px solid var(--crm-border); padding: 8px 12px; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; margin-top: 12px;">
-    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-    <span id="currentDateRange">Today, 30 Jul 2026</span>
-    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-  </div>
-  {{/unless}}
-</div>
+<div class="md-dashboard">
+  <div class="md-shell">
 
-{{#unless (eq activePage 'leads')}}
-<div class="kpi-grid">
-  <!-- Total Assessments -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-icon-wrap" style="background: #8B5CF6; color: white;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-      </div>
-      <span class="kpi-label">Total Assessments</span>
+    <div id="mdError" class="md-error">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <span>Unable to refresh dashboard data.</span>
     </div>
-    <div class="kpi-value">248</div>
-    <div class="kpi-trend positive">↑ 18% <span class="muted">from yesterday</span></div>
-  </div>
-  
-  <!-- Qualified Leads -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-icon-wrap" style="background: #22C55E; color: white;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-      </div>
-      <span class="kpi-label">Qualified Leads</span>
-    </div>
-    <div class="kpi-value">48</div>
-    <div class="kpi-trend positive">↑ 20% <span class="muted">from yesterday</span></div>
-  </div>
 
-  <!-- Risk Reviews -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-icon-wrap" style="background: #3B82F6; color: white;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-      </div>
-      <span class="kpi-label">Risk Reviews</span>
-    </div>
-    <div class="kpi-value">27</div>
-    <div class="kpi-trend positive">↑ 12% <span class="muted">from yesterday</span></div>
-  </div>
+    <!-- 1 · Top Navigation / Greeting -->
+    <header class="md-header md-reveal md-d1">
+      <div class="md-eyebrow">Admin Dashboard</div>
+      <h1 class="md-title" id="mdGreeting">Good Morning, <span id="mdUserName">{{#if user.name}}{{user.name}}{{else}}Admin{{/if}}</span></h1>
+      <p class="md-date" id="mdDate"></p>
+    </header>
 
-  <!-- Policies Issued -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-icon-wrap" style="background: #F97316; color: white;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    <!-- 2 · Hero Card · Platform Status -->
+    <section class="md-hero md-reveal md-d2" aria-label="Platform status">
+      <div class="md-hero-top">
+        <span class="md-hero-label">Platform Status</span>
+        <span class="md-dot" id="mdStatusDot"></span>
       </div>
-      <span class="kpi-label">Policies Issued</span>
-    </div>
-    <div class="kpi-value">16</div>
-    <div class="kpi-trend positive">↑ 14% <span class="muted">from yesterday</span></div>
-  </div>
+      <div class="md-hero-status" id="mdStatusTitle">Checking…</div>
+      <p class="md-hero-msg" id="mdStatusMsg">Loading platform health.</p>
+    </section>
 
-  <!-- Premium Value -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-icon-wrap" style="background: #EC4899; color: white;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <!-- 3 · Needs Attention -->
+    <section>
+      <div class="md-section-head">
+        <h2 class="md-section-title">Needs Your Attention</h2>
       </div>
-      <span class="kpi-label">Premium Value</span>
-    </div>
-    <div class="kpi-value">₦18.4M</div>
-    <div class="kpi-trend positive">↑ 22% <span class="muted">from yesterday</span></div>
-  </div>
+      <div class="md-card md-attention md-reveal md-d3">
+        <div id="mdAttentionList">
+          <div class="md-empty">Checking priorities…</div>
+        </div>
+        <a href="/admin/leads" class="md-btn-primary">
+          Review Now
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+    </section>
 
-  <!-- Conversion Rate -->
-  <div class="kpi-card">
-    <div class="kpi-header">
-      <div class="kpi-icon-wrap" style="background: #06B6D4; color: white;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+    <!-- 4 · Today's Activity · KPIs -->
+    <section>
+      <div class="md-section-head">
+        <h2 class="md-section-title">Today's Activity</h2>
       </div>
-      <span class="kpi-label">Conversion Rate</span>
-    </div>
-    <div class="kpi-value">38%</div>
-    <div class="kpi-trend positive">↑ 8% <span class="muted">from last week</span></div>
-  </div>
-</div>
+      <div class="md-kpis" id="mdKpis">
+        <div class="md-kpi md-reveal md-d3"><span class="md-kpi-ic blue" style="background:#EEF2F7;color:#94A3B8"></span><span class="md-skeleton" style="height:28px;width:70px"></span></div>
+        <div class="md-kpi md-reveal md-d4"><span class="md-kpi-ic blue" style="background:#EEF2F7;color:#94A3B8"></span><span class="md-skeleton" style="height:28px;width:70px"></span></div>
+        <div class="md-kpi md-reveal md-d5"><span class="md-kpi-ic blue" style="background:#EEF2F7;color:#94A3B8"></span><span class="md-skeleton" style="height:28px;width:70px"></span></div>
+        <div class="md-kpi md-reveal md-d6"><span class="md-kpi-ic blue" style="background:#EEF2F7;color:#94A3B8"></span><span class="md-skeleton" style="height:28px;width:70px"></span></div>
+      </div>
+    </section>
 
-<div class="system-health-section">
-  <div class="health-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--crm-text-secondary); font-weight: 600; font-size: 13px;">
-    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-    System Health
-  </div>
-  <div class="health-grid">
-    <div class="health-item">
-      <div class="health-icon"><svg width="16" height="16" fill="none" stroke="#22C55E" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <div class="health-details">
-        <span class="health-label">Platform Status</span>
-        <span class="health-value" style="color: #22C55E;">Operational</span>
+    <!-- 5 · Priority Leads -->
+    <section>
+      <div class="md-section-head">
+        <h2 class="md-section-title">Priority Leads</h2>
+        <a href="/admin/leads" class="md-section-link">View All →</a>
       </div>
-    </div>
-    <div class="health-item">
-      <div class="health-icon"><svg width="16" height="16" fill="none" stroke="#6366F1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <div class="health-details">
-        <span class="health-label">Uptime</span>
-        <span class="health-value">99.9%</span>
-      </div>
-    </div>
-    <div class="health-item">
-      <div class="health-icon"><svg width="16" height="16" fill="none" stroke="#8B5CF6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
-      <div class="health-details">
-        <span class="health-label">Active Users</span>
-        <span class="health-value">86 <span style="color:#22C55E;font-size:11px;">Online</span></span>
-      </div>
-    </div>
-    <div class="health-item">
-      <div class="health-icon"><svg width="16" height="16" fill="none" stroke="#6366F1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg></div>
-      <div class="health-details">
-        <span class="health-label">Data Storage</span>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <span class="health-value">67% <span style="font-size:11px;color:var(--crm-text-muted);">Used</span></span>
-          <div style="height:3px;width:100%;background:#E2E8F0;border-radius:2px;"><div style="height:100%;width:67%;background:#6366F1;border-radius:2px;"></div></div>
+      <div class="md-card md-leads md-reveal md-d4">
+        <div id="mdPriorityLeads">
+          <div class="md-empty">Loading leads…</div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-{{/unless}}
+    </section>
 
-<div class="dashboard-grid">
-  <div class="grid-left">
-    {{#unless (eq activePage 'leads')}}
-    <div class="charts-row">
-      <!-- Assessments Trend -->
-      <div class="chart-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <h2 class="section-title" style="margin:0;">Assessments Trend</h2>
-          <span style="font-size:11px; color:var(--crm-text-muted);">7 Days <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:inline-block;"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </div>
-        <div class="chart-content" style="height:120px; position:relative; background: linear-gradient(180deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0) 100%); border-radius: 8px;">
-          <!-- SVG Line Chart Mockup -->
-          <svg viewBox="0 0 400 120" style="width: 100%; height: 100%;">
-            <path d="M0 80 L60 60 L120 70 L180 80 L240 50 L300 30 L360 40 L400 50" fill="none" stroke="#8B5CF6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="60" cy="60" r="4" fill="white" stroke="#8B5CF6" stroke-width="2"/>
-            <circle cx="120" cy="70" r="4" fill="white" stroke="#8B5CF6" stroke-width="2"/>
-            <circle cx="180" cy="80" r="4" fill="white" stroke="#8B5CF6" stroke-width="2"/>
-            <circle cx="240" cy="50" r="4" fill="white" stroke="#8B5CF6" stroke-width="2"/>
-            <circle cx="300" cy="30" r="4" fill="white" stroke="#8B5CF6" stroke-width="2"/>
-            <circle cx="360" cy="40" r="4" fill="white" stroke="#8B5CF6" stroke-width="2"/>
-          </svg>
-          <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:10px; color:var(--crm-text-muted); padding:0 10px;">
-            <span>24 Jul</span><span>25 Jul</span><span>26 Jul</span><span>27 Jul</span><span>28 Jul</span><span>29 Jul</span><span>30 Jul</span>
-          </div>
-        </div>
-        <a href="#" class="view-all-link" style="display:block; text-align:center; margin-top:16px;">View full analytics &rarr;</a>
+    <!-- 6 · Quick Actions -->
+    <section>
+      <div class="md-section-head">
+        <h2 class="md-section-title">Quick Actions</h2>
       </div>
+      <div class="md-quick md-reveal md-d5">
+        <a href="/admin/team" class="md-quick-btn">
+          <span class="md-quick-ic blue">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+          </span>
+          <span class="md-quick-label">Add Advisor</span>
+        </a>
+        <a href="/admin/analytics" class="md-quick-btn">
+          <span class="md-quick-ic violet">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </span>
+          <span class="md-quick-label">Generate Report</span>
+        </a>
+        <a href="/admin/settings" class="md-quick-btn">
+          <span class="md-quick-ic green">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </span>
+          <span class="md-quick-label">Automation</span>
+        </a>
+        <a href="/admin/consultations" class="md-quick-btn">
+          <span class="md-quick-ic amber">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+          </span>
+          <span class="md-quick-label">Broadcast</span>
+        </a>
+      </div>
+    </section>
 
-      <!-- Risk Level Distribution -->
-      <div class="chart-card">
-        <h2 class="section-title">Risk Level Distribution</h2>
-        <div class="donut-wrapper" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
-          <div class="donut-svg-wrap" style="width:110px; height:110px; flex-shrink:0;">
-            <svg viewBox="0 0 36 36">
-              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="4"/>
-              <path class="circle" stroke-dasharray="31, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#EF4444" stroke-width="4" />
-              <path class="circle" stroke-dasharray="37, 100" stroke-dashoffset="-31" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#F97316" stroke-width="4" />
-              <path class="circle" stroke-dasharray="23, 100" stroke-dashoffset="-68" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#EAB308" stroke-width="4" />
-              <path class="circle" stroke-dasharray="6, 100" stroke-dashoffset="-91" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#06B6D4" stroke-width="4" />
-              <path class="circle" stroke-dasharray="3, 100" stroke-dashoffset="-97" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#22C55E" stroke-width="4" />
-            </svg>
-            <div class="donut-center-text">
-              <span class="donut-val">248</span>
-              <span class="donut-lbl">Total</span>
-            </div>
-          </div>
-          <div class="donut-legend" style="flex:1;">
-            <div class="legend-item"><span class="dot" style="background:#EF4444"></span>Critical (0-24) <strong style="margin-left:auto">31%</strong></div>
-            <div class="legend-item"><span class="dot" style="background:#F97316"></span>High (25-44) <strong style="margin-left:auto">37%</strong></div>
-            <div class="legend-item"><span class="dot" style="background:#EAB308"></span>Medium (45-64) <strong style="margin-left:auto">23%</strong></div>
-            <div class="legend-item"><span class="dot" style="background:#06B6D4"></span>Low (65-79) <strong style="margin-left:auto">6%</strong></div>
-            <div class="legend-item"><span class="dot" style="background:#22C55E"></span>Strong (80-100) <strong style="margin-left:auto">3%</strong></div>
-          </div>
-        </div>
-        <a href="#" class="view-all-link" style="display:block; text-align:center; margin-top:16px;">View full report &rarr;</a>
-      </div>
-    </div>
-    {{/unless}}
-
-    <!-- Recent Qualified Leads -->
-    <div class="widget-card">
-      <div class="table-header" style="margin-bottom:16px;">
-        <h2 class="section-title">Recent Qualified Leads</h2>
-        <a href="/admin/leads" class="view-all-link">View all</a>
-      </div>
-
-      <div class="table-responsive">
-        <table class="crm-table leads-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Funnel Type</th>
-              <th>Location</th>
-              <th>Risk Score</th>
-              <th>Severity</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="lead-name">Darman Schools <span class="lead-tag blue">School</span></div>
-              </td>
-              <td>School</td>
-              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Lagos</span></td>
-              <td class="lead-score"><strong style="color:#EF4444">27</strong>/100</td>
-              <td><div class="lead-risk-badge critical">High Risk</div></td>
-              <td><span class="lead-time">2m ago</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="lead-name">Flourish College <span class="lead-tag blue">School</span></div>
-              </td>
-              <td>School</td>
-              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Jos</span></td>
-              <td class="lead-score"><strong style="color:#F97316">18</strong>/100</td>
-              <td><div class="lead-risk-badge extreme">Critical Risk</div></td>
-              <td><span class="lead-time">15m ago</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="lead-name">Funsho Schools <span class="lead-tag blue">School</span></div>
-              </td>
-              <td>School</td>
-              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Gombe</span></td>
-              <td class="lead-score"><strong style="color:#F97316">22</strong>/100</td>
-              <td><div class="lead-risk-badge critical">High Risk</div></td>
-              <td><span class="lead-time">1h ago</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="lead-name">Bright Future Academy <span class="lead-tag blue">School</span></div>
-              </td>
-              <td>School</td>
-              <td><span class="lead-location"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11a8 8 0 1116 0c0 6.5-8 11-8 11z"/><circle cx="12" cy="10" r="3"/></svg> Kano</span></td>
-              <td class="lead-score"><strong style="color:#EAB308">45</strong>/100</td>
-              <td><div class="lead-risk-badge warning">Medium Risk</div></td>
-              <td><span class="lead-time">2h ago</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  {{#unless (eq activePage 'leads')}}
-  <div class="grid-right">
-    <div class="widget-card" style="margin-bottom: 24px;">
-      <div class="quick-actions-grid new-quick-actions">
-        <button class="quick-action-btn">
-          <div class="icon-bg" style="background:#F3E8FF; color:#A855F7;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
-          <span>Manage<br>Advisors</span>
-        </button>
-        <button class="quick-action-btn">
-          <div class="icon-bg" style="background:#DBEAFE; color:#3B82F6;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
-          <span>View<br>Assessments</span>
-        </button>
-        <button class="quick-action-btn">
-          <div class="icon-bg" style="background:#DCFCE7; color:#22C55E;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-          <span>Manage<br>Policies</span>
-        </button>
-        <button class="quick-action-btn">
-          <div class="icon-bg" style="background:#FEF3C7; color:#F59E0B;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
-          <span>Reports &<br>Analytics</span>
-        </button>
-        <button class="quick-action-btn">
-          <div class="icon-bg" style="background:#F1F5F9; color:#64748B;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-          <span>System<br>Settings</span>
-        </button>
-      </div>
-    </div>
-  </div>
-  {{/unless}}
-</div>
-
-<!-- Add Lead Modal -->
-<div id="addLeadModal" class="modal-overlay">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3 class="modal-title">Add New Lead</h3>
-      <button class="modal-close" onclick="closeAddLeadModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="addLeadName" class="form-control" placeholder="e.g. John Doe">
-        </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" id="addLeadEmail" class="form-control" placeholder="e.g. john@example.com">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input type="text" id="addLeadPhone" class="form-control" placeholder="e.g. 2349000000000">
-        </div>
-        <div class="form-group">
-          <label>Company / Business Name</label>
-          <input type="text" id="addLeadBusiness" class="form-control" placeholder="e.g. Acme Corp">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Industry</label>
-          <select id="addLeadIndustry" class="form-control">
-            <option value="manufacturing">Manufacturing</option>
-            <option value="logistics">Logistics & Maritime</option>
-            <option value="education">Education</option>
-            <option value="retail">Retail & SME</option>
-            <option value="technology">Technology</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Initial Status</label>
-          <select id="addLeadStatus" class="form-control">
-            <option value="New Lead">New Lead</option>
-            <option value="WhatsApp Engaged">WhatsApp Engaged</option>
-            <option value="Report Sent">Report Sent</option>
-            <option value="Qualified">Qualified</option>
-            <option value="Consultation Scheduled">Consultation Scheduled</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Estimated Premium (₦)</label>
-          <input type="number" id="addLeadPremium" class="form-control" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label>Assigned Agent</label>
-          <input type="text" id="addLeadAgent" class="form-control" placeholder="Agent Name">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Notes</label>
-        <textarea id="addLeadNotes" class="form-control" rows="3" placeholder="Enter notes..."></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeAddLeadModal()">Cancel</button>
-      <button class="btn-primary" onclick="submitAddLead()">Create Lead</button>
-    </div>
-  </div>
-</div>
-
-<!-- Lead Details Modal -->
-<div id="leadDetailModal" class="modal-overlay">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3 class="modal-title" id="detailModalTitle">Lead Details</h3>
-      <button class="modal-close" onclick="closeLeadDetailModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="detailLeadId">
-      
-      <!-- Tabs -->
-      <div style="display: flex; gap: 24px; border-bottom: 1px solid var(--crm-border); padding-bottom: 12px; margin-bottom: 16px;">
-        <span id="tabInfo" onclick="switchDetailTab('info')" style="font-weight: 600; color: var(--crm-primary); cursor: pointer;">Information</span>
-        <span id="tabChat" onclick="switchDetailTab('chat')" style="color: var(--crm-text-secondary); cursor: pointer;">WhatsApp Chat History</span>
-      </div>
-
-      <div id="infoSection">
-        <div class="form-row" style="margin-bottom: 12px;">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="detailName" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="detailEmail" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-row" style="margin-bottom: 12px;">
-          <div class="form-group">
-            <label>Phone</label>
-            <input type="text" id="detailPhone" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>Business Name</label>
-            <input type="text" id="detailBusiness" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-row" style="margin-bottom: 12px;">
-          <div class="form-group">
-            <label>Risk Score / Level</label>
-            <div style="display: flex; gap: 8px; align-items: center; height: 38px;">
-              <span id="detailScore" style="font-weight: 700; font-family: var(--font-mono); font-size: 16px;">0/100</span>
-              <span id="detailRiskBadge" class="crm-badge">Low</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Lead Source / Entity Type</label>
-            <div style="display: flex; gap: 8px; align-items: center; height: 38px; color: var(--crm-text-secondary); font-size: 13px;">
-              <span id="detailSource" style="text-transform: capitalize;">CoverScore AI</span>
-              •
-              <span id="detailEntityType" style="text-transform: capitalize;">Business</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row" style="margin-bottom: 12px;">
-          <div class="form-group">
-            <label>Status</label>
-            <select id="detailStatus" class="form-control">
-              <option value="New Lead">New Lead</option>
-              <option value="WhatsApp Engaged">WhatsApp Engaged</option>
-              <option value="Report Sent">Report Sent</option>
-              <option value="Qualified">Qualified</option>
-              <option value="Consultation Scheduled">Consultation Scheduled</option>
-              <option value="Proposal Sent">Proposal Sent</option>
-              <option value="Negotiation">Negotiation</option>
-              <option value="Won">Won</option>
-              <option value="Lost">Lost</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Estimated Premium (₦)</label>
-            <input type="number" id="detailPremium" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-row" style="margin-bottom: 12px;">
-          <div class="form-group">
-            <label>Assigned Agent</label>
-            <input type="text" id="detailAgent" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>Industry</label>
-            <input type="text" id="detailIndustry" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea id="detailNotes" class="form-control" rows="3"></textarea>
-        </div>
-      </div>
-
-      <div id="chatSection" style="display: none;">
-        <label style="font-size: 12px; font-weight: 600; color: var(--crm-text-secondary); margin-bottom: 6px; display: block;">WhatsApp Conversation Flow</label>
-        <div id="detailChatLog" class="chat-log">
-          <div style="color: var(--crm-text-muted); font-size: 12px; text-align: center; padding: 12px;">No chat history recorded.</div>
-        </div>
-      </div>
-
-    </div>
-    <div class="modal-footer" style="justify-content: space-between;">
-      <button class="btn-danger" id="btnDeleteLead" onclick="deleteLead()">Delete Lead</button>
-      <div style="display: flex; gap: 12px;">
-        <button class="btn-secondary" onclick="closeLeadDetailModal()">Cancel</button>
-        <button class="btn-primary" onclick="saveLeadDetails()">Save Changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Schedule Task Modal -->
-<div id="addTaskModal" class="modal-overlay">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3 class="modal-title">Schedule Follow-up / Task</h3>
-      <button class="modal-close" onclick="closeAddTaskModal()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Associate with Lead</label>
-        <select id="taskLeadId" class="form-control">
-          <!-- Populated dynamically -->
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Task Title</label>
-        <input type="text" id="taskTitle" class="form-control" placeholder="e.g. Call client to discuss health insurance gaps">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Type</label>
-          <select id="taskType" class="form-control">
-            <option value="call">Phone Call</option>
-            <option value="meeting">Meeting</option>
-            <option value="email">Email</option>
-            <option value="proposal">Create/Send Proposal</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Due Date & Time</label>
-          <input type="datetime-local" id="taskDueDate" class="form-control">
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
-      <button class="btn-primary" onclick="submitAddTask()">Schedule Task</button>
-    </div>
-  </div>
-</div>
-
-<!-- Policy Modal -->
-<div class="modal-overlay" id="policyModal">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h2 class="modal-title">Record Policy for Won Lead</h2>
-      <button class="modal-close" onclick="closePolicyModal()">&times;</button>
-    </div>
-    <form id="policyForm" onsubmit="submitPolicy(event)" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
-      <input type="hidden" name="lead_id" id="policyLeadId">
-      <div class="form-group">
-        <label>Client Name</label>
-        <input type="text" id="policyClientName" class="form-control" readonly style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
-      </div>
-      <div class="form-group">
-        <label>Policy Number</label>
-        <input type="text" name="policy_number" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>Product</label>
-        <select name="product" class="form-control" required>
-          <option value="Motor Comprehensive">Motor Comprehensive</option>
-          <option value="Fire & Special Perils">Fire & Special Perils</option>
-          <option value="Health Insurance">Health Insurance</option>
-          <option value="All Risks Insurance">All Risks Insurance</option>
-          <option value="Property All Risk">Property All Risk</option>
-          <option value="General Liability">General Liability</option>
-          <option value="Product Liability">Product Liability</option>
-          <option value="Workers Compensation">Workers Compensation</option>
-          <option value="Business Interruption">Business Interruption</option>
-          <option value="Cyber Insurance">Cyber Insurance</option>
-          <option value="Goods in Transit">Goods in Transit</option>
-          <option value="Marine Cargo">Marine Cargo</option>
-          <option value="Motor Fleet">Motor Fleet</option>
-          <option value="Public Liability">Public Liability</option>
-          <option value="Employers Liability">Employers Liability</option>
-          <option value="Shop Comprehensive">Shop Comprehensive</option>
-          <option value="Fidelity Guarantee">Fidelity Guarantee</option>
-          <option value="Cash in Transit">Cash in Transit</option>
-          <option value="Professional Indemnity">Professional Indemnity</option>
-          <option value="Directors & Officers">Directors & Officers</option>
-          <option value="Equipment All Risk">Equipment All Risk</option>
-          <option value="Medical Malpractice">Medical Malpractice</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Premium (₦)</label>
-        <input type="number" name="premium" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>Expiry Date</label>
-        <input type="date" name="expiry_date" class="form-control" required>
-      </div>
-      <div class="modal-footer" style="margin-top: 8px; padding: 0;">
-        <button type="button" class="btn-secondary" onclick="closePolicyModal()">Cancel</button>
-        <button type="submit" class="btn-primary">Save Policy</button>
-      </div>
-    </form>
   </div>
 </div>
 
 <script>
-  let allRecentLeads = [];
-  let currentPage = 1;
-  const limitPerPage = 15;
+(function() {
+  'use strict';
 
-  function updateDateRange() {
-    const now = new Date();
-    const day = now.getDay();
-    const diff = now.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
-    const monday = new Date(now.setDate(diff));
-    const sunday = new Date(now.setDate(diff + 6));
-    
-    const options = { month: 'short', day: 'numeric' };
-    const yearOption = { year: 'numeric' };
-    
-    const rangeText = `${monday.toLocaleDateString('en-US', options)} - ${sunday.toLocaleDateString('en-US', options)}, ${sunday.toLocaleDateString('en-US', yearOption)}`;
-    document.getElementById('currentDateRange').innerText = rangeText;
+  // Time-of-day greeting (name is server-rendered, only the period updates)
+  var now = new Date();
+  var hr = now.getHours();
+  var period = hr < 12 ? 'Good Morning' : (hr < 17 ? 'Good Afternoon' : 'Good Evening');
+  var g = document.getElementById('mdGreeting');
+  var n = document.getElementById('mdUserName');
+  if (g && n) {
+    var first = String(n.textContent).trim().split(/\s+/)[0];
+    g.textContent = period + (first ? ', ' + first : '') + ' 👋';
+  }
+  var d = document.getElementById('mdDate');
+  if (d) {
+    d.textContent = now.toLocaleDateString('en-NG', { weekday: 'long', day: 'numeric', month: 'long' }) +
+      ' · ' + now.toLocaleTimeString('en-NG', { hour: 'numeric', minute: '2-digit' });
   }
 
-  async function loadLeadsData() {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const headers = {};
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const searchInput = document.getElementById('leadSearchInput');
-      const statusSelect = document.getElementById('filterStatus');
-      const riskSelect = document.getElementById('filterRisk');
-      
-      const search = searchInput ? searchInput.value : '';
-      const status = statusSelect ? statusSelect.value : '';
-      const risk = riskSelect ? riskSelect.value : '';
-
-      // Parse current query parameters for pre-filters
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlStatus = urlParams.get('status');
-      const urlRisk = urlParams.get('risk_level');
-
-      let filterStatus = status || urlStatus || '';
-      let filterRisk = risk || urlRisk || '';
-
-      if (statusSelect && urlStatus && !statusSelect.dataset.initialized) {
-        statusSelect.value = urlStatus;
-        statusSelect.dataset.initialized = 'true';
-        filterStatus = urlStatus;
-      }
-      if (riskSelect && urlRisk && !riskSelect.dataset.initialized) {
-        riskSelect.value = urlRisk;
-        riskSelect.dataset.initialized = 'true';
-        filterRisk = urlRisk;
-      }
-
-      let url = `/api/leads?page=${currentPage}&limit=${limitPerPage}`;
-      if (search) url += `&search=${encodeURIComponent(search)}`;
-      if (filterStatus) url += `&status=${encodeURIComponent(filterStatus)}`;
-      if (filterRisk) url += `&risk_level=${encodeURIComponent(filterRisk)}`;
-
-      const res = await fetch(url, { headers });
-      if (res.status === 401) {
-        window.location.href = '/auth/login';
-        return;
-      }
-
-      if (res.ok) {
-        const data = await res.json();
-        allRecentLeads = data.leads || [];
-        renderTable(allRecentLeads);
-        populateTaskLeads(allRecentLeads);
-
-        // Update pagination UI
-        const total = data.pagination?.total || 0;
-        const totalPages = data.pagination?.totalPages || 1;
-        const start = (currentPage - 1) * limitPerPage + 1;
-        const end = Math.min(currentPage * limitPerPage, total);
-
-        const pagInfo = document.getElementById('paginationInfo');
-        if (pagInfo) {
-          pagInfo.innerText = total > 0 ? `Showing ${start}-${end} of ${total} leads` : 'Showing 0 of 0 leads';
-        }
-
-        const prevBtn = document.getElementById('btnPrevPage');
-        const nextBtn = document.getElementById('btnNextPage');
-        if (prevBtn) prevBtn.disabled = currentPage <= 1;
-        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
-      }
-    } catch(err) {
-      console.error('Failed to load leads data:', err);
-    }
+  function api(path, fallback) {
+    return fetch(path)
+      .then(function(r) { if (!r.ok) throw new Error(path + ' ' + r.status); return r.json(); })
+      .catch(function(err) { console.warn('dashboard fetch failed:', path, err); return fallback; });
   }
 
-  function changePage(direction) {
-    currentPage += direction;
-    loadLeadsData();
+  function initials(name) {
+    return String(name || '?').split(/\s+/).filter(Boolean).slice(0, 2)
+      .map(function(w) { return w[0].toUpperCase(); }).join('') || '?';
   }
 
-  let filterTimeout;
-  function filterLeads() {
-    clearTimeout(filterTimeout);
-    filterTimeout = setTimeout(() => {
-      currentPage = 1;
-      loadLeadsData();
-    }, 250);
+  function riskBadge(level) {
+    var l = String(level || '').toLowerCase();
+    if (l === 'high' || l === 'critical') return 'high';
+    if (l === 'moderate' || l === 'medium') return 'moderate';
+    return 'low';
   }
 
-  async function loadDashboardData() {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const headers = {};
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      // Load Analytics Overview
-      const resOverview = await fetch('/api/analytics/overview', { headers });
-      if (resOverview.status === 401) {
-        window.location.href = '/auth/login';
-        return;
-      }
-      if (resOverview.ok) {
-        const data = await resOverview.json();
-        document.getElementById('kpiLeads').innerText = data.totalLeads.toLocaleString();
-        document.getElementById('kpiAssessments').innerText = data.totalAssessments.toLocaleString();
-        document.getElementById('kpiPremium').innerText = (data.totalPremium / 1000000).toFixed(1) + 'M';
-        
-        // Renders actual trends dynamically
-        const formatTrend = (val) => {
-          if (val > 0) return `↑ ${val}%`;
-          if (val < 0) return `↓ ${Math.abs(val)}%`;
-          return `→ 0%`;
-        };
-        const setTrendClass = (el, val) => {
-          if (!el) return;
-          if (val > 0) el.parentElement.className = 'kpi-trend positive';
-          else if (val < 0) el.parentElement.className = 'kpi-trend negative';
-          else el.parentElement.className = 'kpi-trend';
-        };
-
-        const tLeads = document.getElementById('kpiLeadsTrend');
-        tLeads.innerText = formatTrend(data.trends?.leads || 0);
-        setTrendClass(tLeads, data.trends?.leads || 0);
-
-        const tAssess = document.getElementById('kpiAssessTrend');
-        tAssess.innerText = formatTrend(data.trends?.assessments || 0);
-        setTrendClass(tAssess, data.trends?.assessments || 0);
-
-        const tPrem = document.getElementById('kpiPremTrend');
-        tPrem.innerText = formatTrend(data.trends?.premium || 0);
-        setTrendClass(tPrem, data.trends?.premium || 0);
-
-        const tCons = document.getElementById('kpiConsTrend');
-        tCons.innerText = formatTrend(data.trends?.consultations || 0);
-        setTrendClass(tCons, data.trends?.consultations || 0);
-
-        const tPol = document.getElementById('kpiPolTrend');
-        tPol.innerText = formatTrend(data.trends?.policies || 0);
-        setTrendClass(tPol, data.trends?.policies || 0);
-      }
-
-      // Load Pipeline
-      const resPipeline = await fetch('/api/analytics/pipeline', { headers });
-      if (resPipeline.ok) {
-        const p = await resPipeline.json();
-        document.getElementById('pl_new').innerText = p[1] || 0;
-        document.getElementById('pl_assess').innerText = p[2] || 0;
-        document.getElementById('pl_report').innerText = p[3] || 0;
-        document.getElementById('pl_cons').innerText = p[4] || 0;
-        document.getElementById('pl_prop').innerText = p[5] || 0;
-        document.getElementById('pl_sold').innerText = p[6] || 0;
-
-        document.getElementById('kpiConsultations').innerText = p[4] || 0;
-        document.getElementById('kpiPolicies').innerText = p[6] || 0;
-
-        renderPipelineRates(p);
-      }
-
-      // Load Risk Distribution
-      const resRisk = await fetch('/api/analytics/risk-distribution', { headers });
-      if (resRisk.ok) {
-        const risk = await resRisk.json();
-        renderRiskDonut(risk);
-      }
-
-      // Load Sources
-      const resSources = await fetch('/api/analytics/sources', { headers });
-      if (resSources.ok) {
-        const sources = await resSources.json();
-        renderSourceDonut(sources);
-      }
-
-      // Load Recent Leads
-      const resLeads = await fetch('/api/admin/dashboard', { headers });
-      if (resLeads.ok) {
-        const d = await resLeads.json();
-        allRecentLeads = d.recentSubmissions || [];
-        renderTable(allRecentLeads);
-        populateTaskLeads(allRecentLeads);
-      }
-
-      // Load Tasks
-      const resTasks = await fetch('/api/crm/tasks', { headers });
-      if (resTasks.ok) {
-        const tasks = await resTasks.json();
-        renderTasks(tasks);
-      }
-
-      // Load Activities
-      const resActivities = await fetch('/api/crm/activities', { headers });
-      if (resActivities.ok) {
-        const activities = await resActivities.json();
-        renderActivities(activities);
-      }
-
-    } catch (err) {
-      console.error('Failed to load dashboard', err);
-    }
+  function riskLabel(level) {
+    var l = String(level || '').toLowerCase();
+    if (l === 'critical') return 'Critical';
+    if (l === 'high') return 'High Risk';
+    if (l === 'moderate' || l === 'medium') return 'Medium Risk';
+    if (l === 'low') return 'Low Risk';
+    return 'Assessed';
   }
 
-  function renderPipelineRates(p) {
-    const s1 = p[1] || 0;
-    const s2 = p[2] || 0;
-    const s3 = p[3] || 0;
-    const s4 = p[4] || 0;
-    const s5 = p[5] || 0;
-    const s6 = p[6] || 0;
-
-    const total = s1 + s2 + s3 + s4 + s5 + s6;
-    const reached2 = s2 + s3 + s4 + s5 + s6;
-    const reached3 = s3 + s4 + s5 + s6;
-    const reached4 = s4 + s5 + s6;
-    const reached5 = s5 + s6;
-    const reached6 = s6;
-
-    const rate1to2 = total > 0 ? Math.round((reached2 / total) * 100) : 0;
-    const rate2to3 = reached2 > 0 ? Math.round((reached3 / reached2) * 100) : 0;
-    const rate3to4 = reached3 > 0 ? Math.round((reached4 / reached3) * 100) : 0;
-    const rate4to5 = reached4 > 0 ? Math.round((reached5 / reached4) * 100) : 0;
-    const rate5to6 = reached5 > 0 ? Math.round((reached6 / reached5) * 100) : 0;
-
-    const ratesContainer = document.getElementById('pipelineRates');
-    ratesContainer.innerHTML = `
-      <div class="rate-item">${rate1to2}% <span class="rate-label">Conv.</span></div>
-      <div class="rate-item">${rate2to3}% <span class="rate-label">Conv.</span></div>
-      <div class="rate-item">${rate3to4}% <span class="rate-label">Conv.</span></div>
-      <div class="rate-item">${rate4to5}% <span class="rate-label">Conv.</span></div>
-      <div class="rate-item">${rate5to6}% <span class="rate-label">Conv.</span></div>
-    `;
+  function leadName(l) {
+    return l.business_name || l.name || l.contact_person || 'Unknown';
   }
 
-  function renderRiskDonut(data) {
-    const colors = { high: '#EF4444', moderate: '#F59E0B', low: '#10B981', critical: '#991B1B' };
-    const total = (data.low || 0) + (data.moderate || 0) + (data.high || 0) + (data.critical || 0);
-    document.getElementById('riskDonutTotal').innerText = total;
+  // ── Load everything in parallel ──
+  Promise.all([
+    api('/api/admin/dashboard', null),
+    api('/api/analytics/overview', null),
+    api('/api/analytics/risk-distribution', null)
+  ]).then(function(res) {
+    var admin = res[0] || {};
+    var overview = res[1] || {};
+    var risk = res[2] || {};
 
-    if (total === 0) return;
+    var metrics = admin.metrics || {};
+    var submissions = admin.recentSubmissions || [];
+    var highRiskLeads = metrics.highRiskLeads != null ? metrics.highRiskLeads
+      : ((risk.high || 0) + (risk.critical || 0));
 
-    let svg = '';
-    let legend = '';
-    let cumulative = 0;
+    var attention = [];
+    if (highRiskLeads > 0) attention.push({ level: 'crit', icon: 'alert', title: 'High-Risk Leads', count: highRiskLeads, sub: 'Need review soon', href: '/admin/leads?risk_level=high' });
+    var conversions = overview.conversionRate != null ? overview.conversionRate : (metrics.conversionRate || 0);
+    if (conversions < 30 && conversions > 0) attention.push({ level: 'warn', icon: 'trend', title: 'Conversion Below Target', count: conversions + '%', sub: 'Target is 30%', href: '/admin/analytics' });
+    var assessments = overview.totalAssessments != null ? overview.totalAssessments : metrics.totalAssessments;
+    if ((assessments || 0) > 100 && highRiskLeads === 0) attention.push({ level: 'info', icon: 'doc', title: 'Assessments in Motion', count: assessments, sub: 'Strong intake this cycle', href: '/admin/assessments' });
+    if (attention.length === 0) attention.push({ level: 'info', icon: 'check', title: 'All Clear', count: 0, sub: 'No items need your attention', href: '/admin/leads' });
 
-    const items = [
-      { key: 'high', label: 'High Risk' },
-      { key: 'moderate', label: 'Moderate' },
-      { key: 'low', label: 'Low Risk' }
-    ];
+    renderAttention(attention.slice(0, 3));
+    renderHero(highRiskLeads, assessments, conversions);
+    renderKpis(overview, risk, metrics, highRiskLeads);
+    renderLeads(submissions);
+  });
 
-    items.forEach(item => {
-      const count = data[item.key] || 0;
-      if (count > 0) {
-        const percent = count / total;
-        const dashArray = `${percent * 100} 100`;
-        const offset = -cumulative * 100;
-        svg += `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="${colors[item.key]}" stroke-width="4" stroke-dasharray="${dashArray}" stroke-dashoffset="${offset}"></circle>`;
-        cumulative += percent;
+  function renderHero(highRisk, assessments, conversion) {
+    var dot = document.getElementById('mdStatusDot');
+    var title = document.getElementById('mdStatusTitle');
+    var msg = document.getElementById('mdStatusMsg');
+    var healthy = highRisk === 0;
 
-        legend += `
-          <div class="legend-row">
-            <div class="legend-left"><div class="legend-dot" style="background: ${colors[item.key]}"></div>${item.label}</div>
-            <div class="legend-right">${count} <span>(${Math.round(percent * 100)}%)</span></div>
-          </div>
-        `;
-      }
-    });
-    
-    if (cumulative === 0) {
-        svg = `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#E2E8F0" stroke-width="4"></circle>`;
-    }
-    
-    document.getElementById('riskDonut').innerHTML = svg;
-    document.getElementById('riskLegend').innerHTML = legend;
-  }
+    dot.classList.add(healthy ? 'healthy' : 'warn');
+    dot.classList.remove(healthy ? 'warn' : 'healthy');
+    title.textContent = healthy ? 'Healthy' : 'Attention Required';
 
-  function renderSourceDonut(sources) {
-    const palette = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
-    let total = sources.reduce((a, b) => a + b.count, 0);
-    document.getElementById('sourceDonutTotal').innerText = total;
-
-    let svg = '';
-    let legend = '';
-    let cumulative = 0;
-
-    if (total === 0) {
-       document.getElementById('sourceDonut').innerHTML = `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#E2E8F0" stroke-width="4"></circle>`;
-       return;
-    }
-
-    sources.slice(0, 5).forEach((s, idx) => {
-      const count = s.count;
-      const color = palette[idx % palette.length];
-      const percent = count / total;
-      const dashArray = `${percent * 100} 100`;
-      const offset = -cumulative * 100;
-      
-      svg += `<circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="${color}" stroke-width="4" stroke-dasharray="${dashArray}" stroke-dashoffset="${offset}"></circle>`;
-      cumulative += percent;
-
-      legend += `
-        <div class="legend-row">
-          <div class="legend-left"><div class="legend-dot" style="background: ${color}"></div>${s.source}</div>
-          <div class="legend-right">${count} <span>(${Math.round(percent * 100)}%)</span></div>
-        </div>
-      `;
-    });
-
-    document.getElementById('sourceDonut').innerHTML = svg;
-    document.getElementById('sourceLegend').innerHTML = legend;
-  }
-
-  function renderTable(leads) {
-    const tbody = document.getElementById('recentAssessmentsTable');
-    if (!leads || !leads.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 24px; color: #64748B;">No recent assessments</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = leads.map(lead => {
-      const date = new Date(lead.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      
-      let badgeClass = 'badge-mod';
-      if (lead.riskLevel === 'high' || lead.riskLevel === 'critical') badgeClass = 'badge-high';
-      if (lead.riskLevel === 'low') badgeClass = 'badge-low-mod';
-
-      let statusBadge = 'badge-mod';
-      if (lead.status === 'New Lead') statusBadge = 'badge-low-mod';
-      if (lead.status === 'Report Delivered' || lead.status === 'Report Sent') statusBadge = 'badge-report';
-
-      let action = 'Book Consultation';
-      if (lead.status === 'New Lead') action = 'Start Assessment';
-      if (lead.status === 'Consultation Booked' || lead.status === 'Consultation Scheduled') action = 'Send Proposal';
-
-      return `
-        <tr onclick="window.location.href='/admin/leads/${lead.id}'" style="cursor: pointer;">
-          <td data-label="Name">
-            <div class="td-main">${lead.name}</div>
-            <div class="td-sub">${lead.email}</div>
-          </td>
-          <td data-label="Type"><div class="td-main">${lead.industry || 'Business'}</div></td>
-          <td data-label="Score"><div class="td-main">${lead.score || 0}/100</div></td>
-          <td data-label="Risk"><span class="crm-badge ${badgeClass}">${lead.riskLevel || 'Unknown'}</span></td>
-          <td data-label="Date"><div class="td-main">${date}</div></td>
-          <td data-label="Status"><span class="crm-badge ${statusBadge}">${lead.status || 'New Lead'}</span></td>
-          <td data-label=""><button class="btn-action-outline" onclick="event.stopPropagation(); handleAction(${lead.id}, '${lead.status}')">${action}</button></td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  function handleAction(leadId, status) {
-    if (status === 'New Lead') {
-      window.open('/start-whatsapp', '_blank');
-    } else if (status === 'Consultation Scheduled' || status === 'Consultation Booked') {
-      openAddTaskModal('proposal', leadId);
+    if (healthy) {
+      msg.innerHTML = 'Everything operating normally. <strong>' + (assessments || 0) + ' assessments</strong> this cycle, conversion at <strong>' + (conversion || 0) + '%</strong>.';
     } else {
-      openAddTaskModal('meeting', leadId);
+      msg.innerHTML = '<strong>' + highRisk + ' critical ' + (highRisk === 1 ? 'issue' : 'issues') + '</strong> need your review.';
     }
   }
 
-  function renderTasks(tasks) {
-    const container = document.getElementById('taskList');
-    if (!tasks || !tasks.length) {
-      container.innerHTML = '<div style="color: #64748B; font-size: 13px;">No upcoming tasks</div>';
-      return;
-    }
-    container.innerHTML = tasks.slice(0, 4).map(t => {
-      const date = new Date(t.due_date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      return `
-        <div class="task-item">
-          <div class="task-radio" onclick="completeTask(${t.id})" style="cursor: pointer;"></div>
-          <div class="task-content">
-            <div class="task-title">${t.title}</div>
-            <div class="task-meta">
-              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              ${t.lead_name}
-            </div>
-          </div>
-          <div class="task-time">${date}</div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  async function completeTask(taskId) {
-    // We can simulate completing task or just display a message
-    showToast('Task completed!', 'success');
-    loadDashboardData();
-  }
-
-  function renderActivities(activities) {
-    const container = document.getElementById('activityFeed');
-    if (!activities || !activities.length) {
-      container.innerHTML = '<div style="color: #64748B; font-size: 13px;">No recent activities</div>';
-      return;
-    }
-    
-    const icons = {
-      assessment: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>',
-      message: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>',
-      system: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+  function renderAttention(items) {
+    var list = document.getElementById('mdAttentionList');
+    var icons = {
+      alert: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>',
+      trend: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>',
+      doc: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+      check: '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
     };
-
-    container.innerHTML = activities.slice(0, 5).map(a => {
-      const diff = Math.floor((new Date() - new Date(a.created_at)) / 60000); // mins
-      const timeAgo = diff < 60 ? `${diff}m ago` : diff < 1440 ? `${Math.floor(diff/60)}h ago` : `${Math.floor(diff/1440)}d ago`;
-
-      return `
-        <div class="feed-item">
-          <div class="feed-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${icons[a.type] || icons.system}</svg></div>
-          <div class="feed-content">
-            <div class="feed-title">${a.title}</div>
-            <div class="feed-desc">${a.description || ''}</div>
-          </div>
-          <div class="feed-time">${timeAgo}</div>
-        </div>
-      `;
+    list.innerHTML = items.map(function(it) {
+      return '<a class="md-att-item" href="' + it.href + '">' +
+        '<span class="md-att-ic ' + it.level + '">' + (icons[it.icon] || icons.alert) + '</span>' +
+        '<span class="md-att-body">' +
+          '<span class="md-att-text">' + it.title + (it.count > 0 ? ' <span class="md-att-badge">' + it.count + '</span>' : '') + '</span>' +
+          '<span class="md-att-sub">' + it.sub + '</span>' +
+        '</span>' +
+        '<span class="md-att-chev"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>' +
+      '</a>';
     }).join('');
   }
 
-  // --- Modals Logic ---
-
-  function openAddLeadModal() {
-    document.getElementById('addLeadModal').classList.add('show');
-  }
-  function closeAddLeadModal() {
-    document.getElementById('addLeadModal').classList.remove('show');
-  }
-  async function submitAddLead() {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const body = {
-        name: document.getElementById('addLeadName').value,
-        email: document.getElementById('addLeadEmail').value,
-        phone: document.getElementById('addLeadPhone').value,
-        businessName: document.getElementById('addLeadBusiness').value,
-        status: document.getElementById('addLeadStatus').value,
-        estimatedPremium: parseInt(document.getElementById('addLeadPremium').value) || 0,
-        assignedAgent: document.getElementById('addLeadAgent').value,
-        industry: document.getElementById('addLeadIndustry').value,
-        notes: document.getElementById('addLeadNotes').value
-      };
-
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-
-      if (res.status === 401) {
-        window.location.href = '/auth/login';
-        return;
+  function renderKpis(overview, risk, metrics, highRisk) {
+    var kpis = [
+      { ic: 'blue',   label: 'Assessments',   val: overview.totalAssessments != null ? overview.totalAssessments : metrics.totalAssessments, trend: overview.trends ? overview.trends.assessments : null },
+      { ic: 'green',  label: 'Qualified Leads', val: overview.convertedLeads != null ? overview.convertedLeads : 0, trend: overview.trends ? overview.trends.leads : null },
+      { ic: 'amber',  label: 'Risk Reviews',  val: (risk.high || 0) + (risk.critical || 0), trend: null },
+      { ic: 'red',    label: 'Conversion',    val: (overview.conversionRate != null ? overview.conversionRate : metrics.conversionRate || 0) + '%', trend: overview.trends ? overview.trends.consultations : null }
+    ];
+    var icons = {
+      blue: '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>',
+      green: '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>',
+      amber: '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>',
+      red: '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>'
+    };
+    var grid = document.getElementById('mdKpis');
+    grid.innerHTML = kpis.map(function(k, i) {
+      var t = '';
+      if (k.trend != null) {
+        if (k.trend > 0) t = '<span class="md-kpi-trend up">↑ ' + k.trend + '%</span>';
+        else if (k.trend < 0) t = '<span class="md-kpi-trend down">↓ ' + Math.abs(k.trend) + '%</span>';
+        else t = '<span class="md-kpi-trend flat">→ 0%</span>';
       }
-      if (!res.ok) throw new Error('Failed to create lead');
+      return '<div class="md-kpi md-reveal md-d' + (i + 3) + '">' +
+        '<span class="md-kpi-ic ' + k.ic + '">' + icons[k.ic] + '</span>' +
+        '<span class="md-kpi-val">' + (k.val != null ? k.val.toLocaleString() : '0') + '</span>' +
+        '<span class="md-kpi-meta"><span class="md-kpi-label">' + k.label + '</span>' + t + '</span>' +
+      '</div>';
+    }).join('');
+  }
 
-      showToast('Lead created successfully', 'success');
-      closeAddLeadModal();
-      
-      const isLeadsPage = '{{activePage}}' === 'leads';
-      if (isLeadsPage) {
-        loadLeadsData();
-      } else {
-        loadDashboardData();
-      }
-    } catch(err) {
-      console.error(err);
-      showToast('Error creating lead: ' + err.message, 'error');
+  function renderLeads(submissions) {
+    var box = document.getElementById('mdPriorityLeads');
+    if (!submissions || !submissions.length) {
+      box.innerHTML = '<div class="md-empty">No leads yet.</div>';
+      return;
     }
+    var sorted = submissions.slice().sort(function(a, b) { return (a.score || 0) - (b.score || 0); }).slice(0, 3);
+    box.innerHTML = sorted.map(function(l) {
+      return '<a class="md-lead" href="/admin/leads/' + l.id + '">' +
+        '<span class="md-lead-av">' + initials(leadName(l)) + '</span>' +
+        '<span class="md-lead-body">' +
+          '<span class="md-lead-name">' + leadName(l) + '</span>' +
+          '<span class="md-lead-sub"><span class="md-badge ' + riskBadge(l.riskLevel) + '">' + riskLabel(l.riskLevel) + '</span>' + (l.assigned_agent ? l.assigned_agent : '') + '</span>' +
+        '</span>' +
+        '<span class="md-lead-score"><b>' + (l.score != null ? l.score : '—') + '</b><span>CoverScore</span></span>' +
+      '</a>';
+    }).join('');
   }
-
-  function openAddTaskModal(type = 'call', defaultLeadId = null) {
-    document.getElementById('taskType').value = type;
-    if (defaultLeadId) {
-      document.getElementById('taskLeadId').value = defaultLeadId;
-    }
-    
-    const modalTitleEl = document.querySelector('#addTaskModal .modal-title');
-    const taskTitleInput = document.getElementById('taskTitle');
-    
-    if (type === 'meeting') {
-      if (modalTitleEl) modalTitleEl.innerText = 'Schedule Meeting';
-      if (taskTitleInput) taskTitleInput.value = 'Discuss CoverScore Risk Report & Insurance Options';
-    } else if (type === 'proposal') {
-      if (modalTitleEl) modalTitleEl.innerText = 'Create & Send Proposal';
-      if (taskTitleInput) taskTitleInput.value = 'Draft Commercial Liability & Property Quote Proposal';
-    } else if (type === 'email') {
-      if (modalTitleEl) modalTitleEl.innerText = 'Send Email';
-      if (taskTitleInput) taskTitleInput.value = 'Follow-up on WhatsApp Risk Assessment';
-    } else {
-      if (modalTitleEl) modalTitleEl.innerText = 'Schedule Phone Call';
-      if (taskTitleInput) taskTitleInput.value = 'Follow-up Call';
-    }
-    
-    // Set default due date to tomorrow
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(9, 0, 0, 0);
-    const offset = tomorrow.getTimezoneOffset();
-    const localTomorrow = new Date(tomorrow.getTime() - (offset*60*1000));
-    document.getElementById('taskDueDate').value = localTomorrow.toISOString().slice(0, 16);
-
-    document.getElementById('addTaskModal').classList.add('show');
-  }
-  function closeAddTaskModal() {
-    document.getElementById('addTaskModal').classList.remove('show');
-  }
-  async function submitAddTask() {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const body = {
-        lead_id: document.getElementById('taskLeadId').value,
-        title: document.getElementById('taskTitle').value,
-        type: document.getElementById('taskType').value,
-        due_date: document.getElementById('taskDueDate').value
-      };
-
-      const res = await fetch('/api/crm/tasks', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-
-      if (res.status === 401) {
-        window.location.href = '/auth/login';
-        return;
-      }
-      if (!res.ok) throw new Error('Failed to schedule task');
-
-      showToast('Task scheduled successfully', 'success');
-      closeAddTaskModal();
-      
-      const isLeadsPage = '{{activePage}}' === 'leads';
-      if (isLeadsPage) {
-        loadLeadsData();
-      } else {
-        loadDashboardData();
-      }
-    } catch(err) {
-      console.error(err);
-      showToast('Error scheduling task: ' + err.message, 'error');
-    }
-  }
-
-  function populateTaskLeads(leads) {
-    const select = document.getElementById('taskLeadId');
-    if (!select) return;
-    select.innerHTML = leads.map(l => `<option value="${l.id}">${l.name} (${l.businessName || 'Individual'})</option>`).join('');
-  }
-
-  function switchDetailTab(tab) {
-    const tabInfo = document.getElementById('tabInfo');
-    const tabChat = document.getElementById('tabChat');
-    const infoSec = document.getElementById('infoSection');
-    const chatSec = document.getElementById('chatSection');
-    
-    if (tab === 'info') {
-      infoSec.style.display = 'block';
-      chatSec.style.display = 'none';
-      tabInfo.style.color = 'var(--crm-primary)';
-      tabInfo.style.fontWeight = '600';
-      tabChat.style.color = 'var(--crm-text-secondary)';
-      tabChat.style.fontWeight = '400';
-    } else {
-      infoSec.style.display = 'none';
-      chatSec.style.display = 'block';
-      tabInfo.style.color = 'var(--crm-text-secondary)';
-      tabInfo.style.fontWeight = '400';
-      tabChat.style.color = 'var(--crm-primary)';
-      tabChat.style.fontWeight = '600';
-    }
-  }
-
-  async function openLeadModal(leadId) {
-    try {
-      switchDetailTab('info');
-      const token = localStorage.getItem('accessToken');
-      const headers = {};
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-      
-      const res = await fetch('/api/leads/' + leadId, { headers });
-      if (res.status === 401) {
-        window.location.href = '/auth/login';
-        return;
-      }
-      if (!res.ok) throw new Error('Failed to load lead details');
-      
-      const lead = await res.json();
-      
-      document.getElementById('detailLeadId').value = lead.id;
-      document.getElementById('detailModalTitle').innerText = 'Lead Details: ' + lead.name;
-      document.getElementById('detailName').value = lead.name || '';
-      document.getElementById('detailEmail').value = lead.email || '';
-      document.getElementById('detailPhone').value = lead.phone || '';
-      document.getElementById('detailBusiness').value = lead.businessName || '';
-      document.getElementById('detailScore').innerText = (lead.score || 0) + '/100';
-      document.getElementById('detailNotes').value = lead.notes || '';
-      document.getElementById('detailPremium').value = lead.estimatedPremium || 0;
-      document.getElementById('detailAgent').value = lead.assignedAgent || '';
-      document.getElementById('detailIndustry').value = lead.industry || '';
-      document.getElementById('detailStatus').value = lead.status || 'New Lead';
-      
-      document.getElementById('detailSource').innerText = lead.lead_source || 'CoverScore AI';
-      document.getElementById('detailEntityType').innerText = lead.entity_type || 'business';
-
-      const risk = lead.riskLevel || 'low';
-      const badge = document.getElementById('detailRiskBadge');
-      badge.className = 'crm-badge';
-      badge.innerText = risk.toUpperCase();
-      if (risk === 'high' || risk === 'critical') badge.className = 'crm-badge badge-high';
-      else if (risk === 'low') badge.className = 'crm-badge badge-low-mod';
-      else badge.className = 'crm-badge badge-mod';
-
-      const chatLog = document.getElementById('detailChatLog');
-      let chatHistory = [];
-      if (lead.assessment?.answers?.chat_history) {
-        chatHistory = lead.assessment.answers.chat_history;
-      } else if (lead.chat_history) {
-        try {
-          chatHistory = JSON.parse(lead.chat_history);
-        } catch(e) {}
-      }
-      
-      if (chatHistory && typeof chatHistory === 'object' && Object.keys(chatHistory).length > 0) {
-        let html = '';
-        if (Array.isArray(chatHistory)) {
-          html = chatHistory.map(m => {
-            const isSent = m.sender === 'bot';
-            return `<div class="chat-msg ${isSent ? 'sent' : 'received'}"><strong>${isSent ? 'Bot' : 'Lead'}:</strong> ${m.message || m.text || ''}</div>`;
-          }).join('');
-        } else {
-          html = Object.entries(chatHistory).map(([key, val]) => {
-            return `<div class="chat-msg received"><strong>${key}:</strong> ${val}</div>`;
-          }).join('');
-        }
-        chatLog.innerHTML = html;
-      } else {
-        chatLog.innerHTML = '<div style="color: var(--crm-text-muted); font-size: 12px; text-align: center; padding: 12px;">No chat history recorded.</div>';
-      }
-
-      document.getElementById('leadDetailModal').classList.add('show');
-    } catch(err) {
-      console.error(err);
-      showToast('Error loading lead: ' + err.message, 'error');
-    }
-  }
-
-  function closeLeadDetailModal() {
-    document.getElementById('leadDetailModal').classList.remove('show');
-  }
-
-  async function saveLeadDetails() {
-    try {
-      const leadId = document.getElementById('detailLeadId').value;
-      const token = localStorage.getItem('accessToken');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const body = {
-        name: document.getElementById('detailName').value,
-        email: document.getElementById('detailEmail').value,
-        phone: document.getElementById('detailPhone').value,
-        businessName: document.getElementById('detailBusiness').value,
-        status: document.getElementById('detailStatus').value,
-        estimatedPremium: parseInt(document.getElementById('detailPremium').value) || 0,
-        assignedAgent: document.getElementById('detailAgent').value,
-        industry: document.getElementById('detailIndustry').value,
-        notes: document.getElementById('detailNotes').value
-      };
-
-      if (body.status === 'Won') {
-        document.getElementById('policyLeadId').value = leadId;
-        document.getElementById('policyClientName').value = document.getElementById('detailName').value;
-        closeLeadDetailModal();
-        document.getElementById('policyModal').classList.add('show');
-        return;
-      }
-
-      const res = await fetch('/api/leads/' + leadId, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify(body)
-      });
-
-      if (res.status === 401) {
-        window.location.href = '/auth/login';
-        return;
-      }
-      if (!res.ok) throw new Error('Failed to update lead');
-
-      showToast('Lead updated successfully', 'success');
-      closeLeadDetailModal();
-      
-      const isLeadsPage = '{{activePage}}' === 'leads';
-      if (isLeadsPage) {
-        loadLeadsData();
-      } else {
-        loadDashboardData();
-      }
-    } catch(err) {
-      console.error(err);
-      showToast('Error updating lead: ' + err.message, 'error');
-    }
-  }
-
-  function closePolicyModal() {
-    document.getElementById('policyModal').classList.remove('show');
-  }
-
-  async function submitPolicy(e) {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    
-    try {
-      const btn = form.querySelector('button[type="submit"]');
-      btn.disabled = true;
-      btn.textContent = 'Saving...';
-      const headers = { 'Content-Type': 'application/json' };
-      const token = localStorage.getItem('accessToken');
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const res = await fetch('/api/crm/policies', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(data)
-      });
-      
-      if (res.ok) {
-        closePolicyModal();
-        showToast('Policy recorded and lead marked as Won', 'success');
-        const isLeadsPage = '{{activePage}}' === 'leads';
-        if (isLeadsPage) {
-          loadLeadsData();
-        } else {
-          loadDashboardData();
-        }
-      } else {
-        const err = await res.json();
-        alert(err.error || 'Failed to record policy');
-        btn.disabled = false;
-        btn.textContent = 'Save Policy';
-      }
-    } catch (error) {
-      alert('Error connecting to server');
-      const btn = form.querySelector('button[type="submit"]');
-      btn.disabled = false;
-      btn.textContent = 'Save Policy';
-    }
-  }
-
-  async function deleteLead() {
-    if (!confirm('Are you sure you want to delete this lead? This cannot be undone.')) return;
-    try {
-      const leadId = document.getElementById('detailLeadId').value;
-      const token = localStorage.getItem('accessToken');
-      const headers = {};
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const res = await fetch('/api/leads/' + leadId, {
-        method: 'DELETE',
-        headers
-      });
-
-      if (res.status === 401) {
-        window.location.href = '/auth/login';
-        return;
-      }
-      if (!res.ok) throw new Error('Failed to delete lead');
-
-      showToast('Lead deleted successfully', 'success');
-      closeLeadDetailModal();
-      
-      const isLeadsPage = '{{activePage}}' === 'leads';
-      if (isLeadsPage) {
-        loadLeadsData();
-      } else {
-        loadDashboardData();
-      }
-    } catch(err) {
-      console.error(err);
-      showToast('Error deleting lead: ' + err.message, 'error');
-    }
-  }
-
-  // --- Init ---
-  const isLeadsPage = '{{activePage}}' === 'leads';
-  if (isLeadsPage) {
-    loadLeadsData();
-  } else {
-    updateDateRange();
-    loadDashboardData();
-  }
+})();
 </script>

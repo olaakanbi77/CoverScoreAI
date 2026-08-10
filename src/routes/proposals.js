@@ -132,11 +132,12 @@ router.get('/view/:token', async (req, res) => {
     }
 
     let proposalHtml = null;
+    let parsedContent = null;
     if (proposal.content) {
       try {
-        const parsed = JSON.parse(proposal.content);
-        if (parsed.proposalNumber) {
-          const htmlPath = path.join(__dirname, '..', '..', 'public', 'proposals', parsed.proposalNumber + '.html');
+        parsedContent = JSON.parse(proposal.content);
+        if (parsedContent.proposalNumber) {
+          const htmlPath = path.join(__dirname, '..', 'public', 'proposals', parsedContent.proposalNumber + '.html');
           if (fs.existsSync(htmlPath)) {
             const raw = fs.readFileSync(htmlPath, 'utf8');
             const styleMatch = raw.match(/<style>[\s\S]*?<\/style>/i);
@@ -145,6 +146,34 @@ router.get('/view/:token', async (req, res) => {
           }
         }
       } catch (e) {}
+    }
+
+    // Fallback: never show raw JSON to the client. If the standalone HTML file is
+    // missing (e.g. generated before a path fix), render a clean summary instead.
+    if (!proposalHtml && parsedContent && Array.isArray(parsedContent.ratingProducts)) {
+      const fmt = n => '₦' + Number(n || 0).toLocaleString();
+      const rows = parsedContent.ratingProducts.map(p => {
+        const details = (p.breakdown && p.breakdown.length)
+          ? p.breakdown.map(b => `${b.label}: ${fmt(b.value)} × ${b.rate} = ${fmt(b.premium)}`).join('<br>')
+          : '';
+        const inputs = (p.inputs && Object.keys(p.inputs).length)
+          ? Object.entries(p.inputs).map(([k, v]) => `<li><strong>${k}</strong>: ${isNaN(v) ? v : Number(v).toLocaleString()}</li>`).join('')
+          : '';
+        return `
+          <div style="border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:12px;">
+            <h3 style="margin:0 0 4px 0; font-size:1.1rem;">${p.product}</h3>
+            ${p.className ? `<p style="margin:0 0 8px 0; color:#64748b; font-size:0.9rem;">Class: ${p.className}</p>` : ''}
+            <p style="margin:0 0 8px 0;"><strong>Estimated Annual Premium:</strong> ${fmt(p.premium)}</p>
+            ${details ? `<div style="font-size:0.9rem; color:#334155;">${details}</div>` : ''}
+            ${inputs ? `<ul style="margin:8px 0 0 0; font-size:0.9rem; color:#334155;">${inputs}</ul>` : ''}
+          </div>`;
+      }).join('');
+      proposalHtml = `
+        <div style="font-family: Arial, sans-serif; color: #334155;">
+          <p>We have prepared the following personalised insurance recommendation for you:</p>
+          ${rows}
+          <p style="color:#64748b; font-size:0.9rem; margin-top:12px;">These are indicative estimates. Final premiums may vary based on underwriting assessment.</p>
+        </div>`;
     }
 
     res.render('public/proposal-view', { layout: 'main', proposal, proposalHtml });

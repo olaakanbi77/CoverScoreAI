@@ -30,7 +30,9 @@ const main = async () => {
       console.log('✅ SSH Connected to VPS');
       try {
         await runCommand(conn, 'cd /root/coverscore-ai && git pull origin main');
-        await runCommand(conn, 'pm2 restart coverscore');
+        await runCommand(conn, 'cd /opt/coverscore-ai && git pull origin main || true');
+        await runCommand(conn, 'pm2 restart coverscore || pm2 start ecosystem.config.js --update-env || true');
+        await runCommand(conn, 'docker restart coverscore-ai || true');
       } catch (e) {
         console.error(e);
       }

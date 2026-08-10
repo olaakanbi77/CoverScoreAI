@@ -25,7 +25,7 @@ function createProposalRouter() {
       const { id } = req.params;
       const fs = require('fs');
       const path = require('path');
-      const proposalDir = path.join(__dirname, '..', '..', 'public', 'proposals');
+      const proposalDir = path.join(__dirname, '..', 'public', 'proposals');
       const htmlPath = path.join(proposalDir, `${id}.html`);
       const pdfPath = path.join(proposalDir, `${id}.pdf`);
 

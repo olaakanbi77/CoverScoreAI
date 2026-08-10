@@ -14,7 +14,7 @@ if (!fs.existsSync(VIDEOS_DIR)) fs.mkdirSync(VIDEOS_DIR, { recursive: true });
 const db = new sqlite3.Database(DB_PATH);
 db.run('PRAGMA busy_timeout = 30000');
 
-const SCENE_NAMES = ['Welcome', 'Learning Objectives', 'Main Concept', 'Deep Dive', 'Practical Application', 'CoverScore Insight', 'Lesson Summary'];
+// Scene names now come from scene_data (scene.name)
 
 function checkTool(cmd) {
   try { execSync(`which ${cmd}`, { stdio: 'pipe' }); return true; }
@@ -25,27 +25,26 @@ function esc(t) {
   return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
-function generateSceneSlide(sceneNum, sceneName, slideTitle, lessonNumber, courseCode, moduleLabel, lessonTitle, outputPath) {
-  const isInsight = sceneNum === 6;
-  const isSummary = sceneNum === 7;
-  const bgFrom = isInsight ? '#7c3aed' : '#0b1120';
-  const bgTo = isInsight ? '#4c1d95' : '#1e293b';
-  const accent = isInsight ? '#fbbf24' : (isSummary ? '#10b981' : '#7c3aed');
+function generateSceneSlide(sceneNum, sceneName, slideTitle, lessonNumber, courseCode, moduleLabel, lessonTitle, outputPath, totalScenes) {
+  totalScenes = totalScenes || 7;
+  const isSummary = sceneNum === totalScenes;
+  const bgFrom = '#1e40af';
+  const bgTo = '#3b82f6';
+  const accent = isSummary ? '#10b981' : '#3b82f6';
   const svg = `<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
     <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="${bgFrom}"/>
       <stop offset="100%" stop-color="${bgTo}"/>
     </linearGradient></defs>
     <rect width="1920" height="1080" fill="url(#bg)"/>
-    <circle cx="1600" cy="200" r="400" fill="rgba(124,58,237,0.05)"/>
-    <circle cx="300" cy="900" r="300" fill="rgba(16,185,129,0.04)"/>
-    <text x="960" y="200" font-family="DejaVu Sans" font-size="22" font-weight="bold" fill="#64748b" text-anchor="middle" letter-spacing="3">${esc(sceneName.toUpperCase())}</text>
-    ${isInsight ? '' : `<text x="960" y="280" font-family="DejaVu Sans" font-size="18" fill="#94a3b8" text-anchor="middle">${esc(courseCode)} • Module ${moduleLabel} • ${esc(lessonTitle)}</text>`}
-    <text x="960" y="${isInsight ? 480 : 440}" font-family="DejaVu Sans" font-size="${isInsight ? 56 : 52}" font-weight="bold" fill="white" text-anchor="middle">${esc(slideTitle)}</text>
-    ${isInsight ? `<text x="960" y="560" font-family="DejaVu Sans" font-size="24" fill="#fbbf24" text-anchor="middle" font-style="italic">"Risk is about readiness, not fear."</text>
-    <text x="960" y="700" font-family="DejaVu Sans" font-size="18" fill="#cbd5e1" text-anchor="middle">CoverScore Academy — Professional Risk Advisory</text>` : ''}
-    <rect x="860" y="${isInsight ? 620 : 510}" width="200" height="4" rx="2" fill="${accent}"/>
-    <text x="960" y="950" font-family="DejaVu Sans" font-size="16" fill="#475569" text-anchor="middle">Scene ${sceneNum} of 7 — ${esc(sceneName)}</text>
+    <circle cx="1600" cy="200" r="400" fill="rgba(59,130,246,0.05)"/>
+    <circle cx="300" cy="900" r="300" fill="rgba(59,130,246,0.04)"/>
+    <text x="960" y="200" font-family="DejaVu Sans" font-size="22" font-weight="bold" fill="#93c5fd" text-anchor="middle" letter-spacing="3">${esc(sceneName.toUpperCase())}</text>
+    <text x="960" y="280" font-family="DejaVu Sans" font-size="18" fill="#94a3b8" text-anchor="middle">${esc(courseCode)} • Module ${moduleLabel} • ${esc(lessonTitle)}</text>
+    <text x="960" y="440" font-family="DejaVu Sans" font-size="52" font-weight="bold" fill="white" text-anchor="middle">${esc(slideTitle)}</text>
+    <rect x="860" y="510" width="200" height="4" rx="2" fill="${accent}"/>
+    <text x="960" y="700" font-family="DejaVu Sans" font-size="18" fill="#cbd5e1" text-anchor="middle">CoverScore Academy — Professional Risk Advisory</text>
+    <text x="960" y="950" font-family="DejaVu Sans" font-size="16" fill="#475569" text-anchor="middle">Scene ${sceneNum} of ${totalScenes} — ${esc(sceneName)}</text>
   </svg>`;
 
   const svgFile = outputPath.replace('.png', '.svg');
@@ -54,14 +53,15 @@ function generateSceneSlide(sceneNum, sceneName, slideTitle, lessonNumber, cours
   fs.unlinkSync(svgFile);
 }
 
-async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseCode, moduleLabel) {
+async function generateSceneClip(lessonId, scene, sceneNum, lessonTitle, courseCode, moduleLabel, totalScenes) {
   const slideFile = path.join(VIDEOS_DIR, `slide_${lessonId}_s${sceneNum}.png`);
   const audioFile = path.join(VIDEOS_DIR, `audio_${lessonId}_s${sceneNum}.mp3`);
   const clipFile = path.join(VIDEOS_DIR, `clip_${lessonId}_s${sceneNum}.mp4`);
 
   // 1. Generate slide
   const slideTitle = scene.slideTitle || scene.name;
-  generateSceneSlide(sceneNum, SCENE_NAMES[sceneNum - 1], slideTitle, sceneNum, courseCode, moduleLabel, lessonTitle, slideFile);
+  const sceneName = scene.name || `Scene ${sceneNum}`;
+  generateSceneSlide(sceneNum, sceneName, slideTitle, sceneNum, courseCode, moduleLabel, lessonTitle, slideFile, totalScenes);
 
   // 2. Generate audio via edge-tts
   const audioResult = spawnSync('edge-tts', [
@@ -151,8 +151,8 @@ async function generateVideo(lesson) {
   for (let i = 0; i < scenes.length; i++) {
     const scene = scenes[i];
     const sceneNum = scene.id || (i + 1);
-    process.stdout.write(`    Scene ${sceneNum}/7 (${SCENE_NAMES[sceneNum - 1] || scene.name})...`);
-    const result = await generateSceneClip(id, scene, sceneNum, title, courseCode, moduleLabel);
+    process.stdout.write(`    Scene ${sceneNum}/${scenes.length} (${scene.name})...`);
+    const result = await generateSceneClip(id, scene, sceneNum, title, courseCode, moduleLabel, scenes.length);
     if (result) {
       clipResults.push(result);
       console.log(` ${Math.round(result.duration)}s ✓`);
@@ -204,7 +204,7 @@ async function generateVideo(lesson) {
 }
 
 async function main() {
-  console.log('=== CoverScore Academy — 7-Scene Production Generator ===\n');
+  console.log('=== CoverScore Academy — Video Production Generator ===\n');
 
   if (!checkTool('ffmpeg')) { console.log('FFmpeg not found.'); process.exit(1); }
   if (!checkTool('convert')) { console.log('ImageMagick not found.'); process.exit(1); }
