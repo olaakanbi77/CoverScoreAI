@@ -64,7 +64,7 @@
 .md-header {
   position: relative;
   overflow: hidden;
-  background: var(--md-primary);
+  background: var(--crm-header-grad);
   border-radius: var(--md-radius-xl);
   box-shadow: var(--md-shadow-hero);
   padding: 24px 22px;
