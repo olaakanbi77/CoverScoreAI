@@ -946,11 +946,11 @@ const initDatabase = () => {
 (1,'CCA-101','Foundations of Risk & Insurance','Build a solid understanding of risk, insurance principles, and the Nigerian risk landscape.',1),
 (1,'CCA-102','The Nigerian Insurance Market & Regulatory Environment','Explore the Nigerian insurance industry structure, key players, and the regulatory framework overseen by NAICOM.',2),
 (1,'CCA-103','CoverScore Risk Assessment Methodology','Master the CoverScore assessment framework, risk scoring, and protection gap analysis.',3),
-(1,'CCA-104','Advisory & Client Engagement','Develop client discovery skills, risk conversation techniques, and relationship management abilities.',4),
-(1,'CCA-105','CoverScore Product Suite & Solutions Design','Learn the full CoverScore product range and how to design tailored protection solutions for clients.',5),
-(1,'CCA-106','Ethics, Compliance & Professional Standards','Understand ethical advisory, regulatory compliance, data protection, and the CoverScore Code of Ethics.',6),
-(1,'CCA-107','Digital Tools & Technology in Advisory','Leverage digital tools, the CoverScore platform, and virtual engagement to enhance your advisory practice.',7),
-(1,'CCA-108','Capstone: Integrated Advisory Simulation & Assessment','Apply all CCA knowledge in an integrated simulation covering real-world client scenarios from assessment to recommendation.',8)`, (err) => {
+(1,'CCA-104','The Risk Advisor Mindset','Develop the professional advisor mindset: client discovery skills, risk conversation techniques, and relationship management abilities.',4),
+(1,'CCA-105','Practical Risk Advisory & Client Assessment','Interpret AI-generated CoverScore Assessments, read Advisor Briefs, explain CoverScore Reports, and conduct professional Risk Reviews.',5),
+(1,'CCA-106','Risk Advisory Practice, Business Development & Client Growth','Turn CoverScore intelligence into trusted advisory conversations, risk-led business development, and long-term client growth.',6),
+(1,'CCA-107','Professional Risk Advisory Practice & Client Portfolio Management','Build and manage client risk portfolios: continuous risk intelligence, annual reassessments, professional Risk Reviews, and client value.',7),
+(1,'CCA-108','Capstone: Integrated Advisory Simulation & Professional Assessment','Demonstrate complete professional competence in an integrated simulated advisory engagement, from discovery to portfolio management.',8)`, (err) => {
         if (err) { console.error('Failed to seed academy:', err.message); return; }
 
         // Check if CCA-101 already has content; skip seeding course 1 if so
@@ -1044,7 +1044,7 @@ const initDatabase = () => {
         };
 
         let modIdx = 0;
-        const courseTitles = [null,'Foundations of Risk & Insurance','Nigerian Insurance Market & Regulatory Environment','CoverScore Risk Assessment Methodology','Advisory & Client Engagement','CoverScore Product Suite & Solutions Design','Ethics, Compliance & Professional Standards','Digital Tools & Technology in Advisory','Capstone: Integrated Advisory Simulation & Assessment'];
+        const courseTitles = [null,'Foundations of Risk & Insurance','Nigerian Insurance Market & Regulatory Environment','CoverScore Risk Assessment Methodology','The Risk Advisor Mindset','Practical Risk Advisory & Client Assessment','Risk Advisory Practice, Business Development & Client Growth','Professional Risk Advisory Practice & Client Portfolio Management','Capstone: Integrated Advisory Simulation & Professional Assessment'];
 
         let modId = 50;
         const insertStatements = lessons.map((l, i) => {

@@ -3442,9 +3442,9 @@ C8[1] = L(
       ['CCA 103','How do we systematically assess risk?','CoverScore Risk Assessment Methodology'],
       ['CCA 104','How should a risk advisor think and behave?','The Risk Advisor Mindset'],
       ['CCA 105','How do we apply the methodology with a client?','Practical Risk Advisory & Client Assessment'],
-      ['CCA 106','How do we build a sustainable advisory practice?','Business Development & Client Growth'],
-      ['CCA 107','How do we remain valuable throughout the client journey?','Professional Practice & Portfolio Management'],
-      ['CCA 108','Can we integrate everything and perform independently?','Capstone: Integrated Advisory Simulation & Assessment']
+      ['CCA 106','How do we build a sustainable advisory practice?','Risk Advisory Practice, Business Development & Client Growth'],
+      ['CCA 107','How do we remain valuable throughout the client journey?','Professional Risk Advisory Practice & Client Portfolio Management'],
+      ['CCA 108','Can we integrate everything and perform independently?','Capstone: Integrated Advisory Simulation & Professional Assessment']
     ]),
     SE('The Complete CoverScore Advisory Cycle','The central framework for CCA 108: a 12-stage cycle describing the professional advisor\'s responsibility from the first engagement through ongoing risk management.'),
     T('The 12-Stage Cycle',['Stage','Core Question'],[
@@ -4482,7 +4482,7 @@ C8[8] = L(
 function genContent(courseId, lessonNum, title, desc) {
   const cn = {
     3:'CoverScore Risk Assessment Methodology',
-    4:'Advisory & Client Engagement',
+    4:'The Risk Advisor Mindset',
     5:'Practical Risk Advisory & Client Assessment',
     6:'Risk Advisory Practice, Business Development & Client Growth',
      7:'Professional Risk Advisory Practice & Client Portfolio Management',
