@@ -14,7 +14,7 @@ client.
 
 ## Lesson 1 — The Modern CoverScore Advisory Process
 
-1. Draw the 8-step process and label each step as System (S), Advisor (A), or Both (B).
+1. Draw the 10-step workflow and label each step as System (S), Advisor (A), or Both (B).
 2. Write a 60-second explanation using "AI computes, advisor advises."
 3. List 3 things in your current routine that AI could automate, and 3 that must stay human.
 
@@ -22,7 +22,7 @@ client.
 
 1. In your own words: "Score = 100 × (safe weight / total weight)". Why do skipped
    questions distort the score upward?
-2. Write the six bands from memory. Self-check against Lesson 2.
+2. Write the five bands from memory. Self-check against Lesson 2.
 3. For a record completed in under 3 minutes, write the warning signs and the
    verification questions you would ask.
 
@@ -40,8 +40,8 @@ client.
 
 ## Lesson 5 — Preparing for a Risk Review
 
-1. Build a complete 6-step prep pack for the GreenField client (Lesson 8 case) or a
-   client you know.
+1. Build a complete 6-step prep pack for the SR-001 Flourish College client (Lesson 8
+   case) or a client you know.
 2. Record your personalised opening; write what you changed after listening back.
 3. Define your "one decision" for the meeting — and 3 winning outcomes that are not sales.
 
@@ -60,10 +60,11 @@ client.
 ## Lesson 8 — Assessment Review & Client Handoff Simulation
 
 1. Complete all four phases for the assigned client.
-2. Self-assess against the seven certification competencies (score / /5 each).
+2. Self-assess against the eight assessment parts (score / /each).
 3. Write your single biggest improvement goal for the module assessment.
 
 ## Optional extension (module assessment prep)
 
-Re-run Lesson 8's GreenField simulation against the official scoring rubric in
-`04-assessment/assessment-pack.md` under exam conditions the day before your assessment.
+Re-run Lesson 8's SR-001 Flourish College simulation against the official scoring
+rubric in `04-assessment/assessment-pack.md` under exam conditions the day before your
+assessment.

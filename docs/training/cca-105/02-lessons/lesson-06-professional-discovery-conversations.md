@@ -25,20 +25,110 @@ By the end of this lesson, learners will be able to:
 
 ## 3. Avatar Script and Scene Directions
 
-> **Studio note:** Script body supplied by the production team. Scene directions define
-> visuals; insert the provided script into each [SCRIPT BODY] slot.
+> **Studio note:** The narration below is the approved production script for this lesson
+> (CCA 105 — Complete Lesson Production Scripts, Lesson 6). Scene directions define the
+> visuals; use the narration exactly as written.
 
-| Scene | Time | Scene direction | Script slot |
-|-------|------|-----------------|--------------|
-| 1 | 0:00–0:25 | Meeting-room wide shot; advisor and client sit, tea in hand, no laptop between them. Overlay: "First, a conversation — not a pitch." | [SCRIPT BODY — Scene 1] |
-| 2 | 0:25–1:15 | Animated 6-stage arc: Open → Discovery → Confirm → Impact → Options → Close. Icons per stage. | [SCRIPT BODY — Scene 2] |
-| 3 | 1:15–2:05 | The question funnel graphic: broad warm-up questions funnel down to specific, impact-focused questions. | [SCRIPT BODY — Scene 3] |
-| 4 | 2:05–2:55 | Risk chain animation: event → consequence → financial impact, shown as pushing dominoes on a bar chart. | [SCRIPT BODY — Scene 4] |
-| 5 | 2:55–3:45 | Side-by-side listening demo: bad (interrupting, closed questions, laptop) vs good (Listen–Reflect–Probe, paraphrase, no phone). | [SCRIPT BODY — Scene 5] |
-| 6 | 3:45–4:15 | The transition card: three bridge sentences from discovery into recommendations. | [SCRIPT BODY — Scene 6] |
+### Scene 1 — Why Discovery Matters (0:00–1:00)
 
-**B-roll / assets required:** meeting shot, arc animation, funnel graphic, risk-chain
-domino animation, paired listening demos.
+> "AI can ask questions at scale.
+>
+> But human discovery is different.
+>
+> A professional Advisor listens for meaning, contradiction, uncertainty and context."
+
+**Visual:** Meeting-room wide shot; advisor and client sit, tea in hand, no laptop between
+them. Overlay: "First, a conversation — not a pitch."
+
+### Scene 2 — The Discovery Pyramid (1:00–2:10)
+
+**Visual:** The Discovery Pyramid, level by level:
+
+## Level 1 — FACT
+"What happened?"
+
+## Level 2 — CONTEXT
+"Why does it happen?"
+
+## Level 3 — IMPACT
+"What happens if it continues?"
+
+## Level 4 — PRIORITY
+"How important is it to solve?"
+
+## Level 5 — ACTION
+"What would improvement look like?"
+
+### Scene 3 — Florence Example (2:10–3:10)
+
+**Visual:** Each pyramid level filled for Florence:
+- **FACT:** "A student was injured."
+- **CONTEXT:** "It happened on the playground."
+- **IMPACT:** "Parents became concerned."
+- **PRIORITY:** "We want to avoid something more serious."
+- **ACTION:** "We need better safety procedures."
+
+### Scene 4 — Open vs Closed Questions (3:10–4:00)
+
+**Visual:**
+> Closed: "Do you have emergency procedures?"
+> Open: "What happens when a serious student accident occurs?"
+
+> "Closed questions confirm.
+>
+> Open questions discover."
+
+### Scene 5 — Active Listening (4:00–4:50)
+
+**Visual (client):**
+> "We have fire extinguishers."
+
+**Weak response:**
+> "Okay. Do you have Fire Insurance?"
+
+**Strong response:**
+> "That's good. How do you make sure they remain serviceable and ready for use?"
+
+### Scene 6 — Reflective Listening (4:50–5:30)
+
+**Visual:**
+> **Client:** "We don't really have a formal maintenance programme."
+> **Advisor:** "So maintenance is mainly triggered when something goes wrong?"
+> **Client:** "Yes."
+
+> "This confirms the Advisor's understanding before moving forward."
+
+### Scene 7 — Discovery Simulation (5:30–6:30)
+
+> The trainee enters the conversation with Florence. The AI releases hidden information
+> progressively.
+
+**Required discoveries** — the trainee should uncover at least:
+1. Fire extinguisher servicing weakness.
+2. Fire alarm testing weakness.
+3. Reactive maintenance.
+4. Lack of formal emergency procedures.
+5. Student accident context.
+6. Driver-training gap.
+7. Business continuity uncertainty.
+8. Budget constraint.
+
+### Scene 8 — Discovery Error (6:30–7:10)
+
+**If the learner asks:** "Tell me everything that is wrong with the school."
+
+**AI response:** "I'm not sure. What specifically would you like to understand?"
+
+> "A professional Advisor does not outsource discovery back to the client.
+>
+> Ask purposeful questions."
+
+### Lesson Close (7:10–7:30)
+
+> "The quality of your advice cannot exceed the quality of your understanding."
+
+**B-roll / assets required:** meeting shot, Discovery Pyramid animation, Florence example
+fill, open/closed question cards, listening pair demos.
 **Delivery notes:** role-model pace; speak like the conversation should be — unhurried,
 attentive, human.
 

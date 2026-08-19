@@ -25,22 +25,117 @@ By the end of this lesson, learners will be able to:
 
 ## 3. Avatar Script and Scene Directions
 
-> **Studio note:** Script body supplied by the production team. Scene directions define
-> visuals; insert the provided script into each [SCRIPT BODY] slot.
+> **Studio note:** The narration below is the approved production script for this lesson
+> (CCA 105 — Complete Lesson Production Scripts, Lesson 2). Scene directions define the
+> visuals; use the narration exactly as written.
 
-| Scene | Time | Scene direction | Script slot |
-|-------|------|-----------------|--------------|
-| 1 | 0:00–0:30 | Animated WhatsApp phone showing a client tapping through assessment questions. Overlay: "7 minutes, on the client's phone." | [SCRIPT BODY — Scene 1] |
-| 2 | 0:30–1:10 | Diagram of the CCIE: initial → Q1 → Q2 → … → complete → awaiting consultation. | [SCRIPT BODY — Scene 2] |
-| 3 | 1:10–2:00 | "How the score is built" animation: safe answers vs risky answers stacked as weights; the 0–100 formula appears with the six score bands. | [SCRIPT BODY — Scene 3] |
-| 4 | 2:00–2:50 | Grid of the 15+ assessment domains (SME, HOS, MFG, SCH, CHR, CON, TRN, INC, HLT, FAM, YPR, RET, ENT, HOM, MOT). | [SCRIPT BODY — Scene 4] |
-| 5 | 2:50–3:30 | Side-by-side: a confident assessment vs a weak one (skipped, rushed, guessed answers). Colours turn from green to amber to red. | [SCRIPT BODY — Scene 5] |
-| 6 | 3:30–4:15 | Recap card: "Know what the machine computed before you trust the number." | [SCRIPT BODY — Scene 6] |
+### Scene 1 — What Is a CoverScore Assessment? (0:00–1:00)
 
-**B-roll / assets required:** mock WhatsApp chatbot animation, CCIE state-machine diagram,
-score-formula graphic, domain grid, quality-comparison graphic.
-**Delivery notes:** teaching tone; slow down on the scoring formula; keep the formula
-conceptual (learners don't compute manually in practice).
+> "A CoverScore assessment is a structured risk-discovery instrument.
+>
+> It collects information about the client's environment, operations, vulnerabilities and
+> existing controls.
+>
+> It then translates those responses into structured risk intelligence."
+
+**Visual:** Animated WhatsApp phone showing a client tapping through assessment
+questions; overlay: "7 minutes, on the client's phone."
+
+**On-screen:**
+> **Assessment = Evidence** — not — **Assessment = Final Truth**
+
+### Scene 2 — The Five Layers (1:00–2:20)
+
+**Visual:** A CoverScore assessment contains five important layers:
+
+1. **Client Context**
+2. **Risk Evidence**
+3. **Risk Pillars**
+4. **Overall CoverScore**
+5. **Recommended Improvement Areas**
+
+**Client Context** — industry; location; size; stage; operating model; exposure profile.
+
+**Risk Evidence** — accidents; absence of procedures; weak controls; existing insurance;
+operational practices.
+
+**Risk Pillars** — these group evidence into meaningful risk categories.
+
+**CoverScore** — the overall resilience indicator.
+
+**Improvement Areas** — actions that could improve resilience.
+
+### Scene 3 — Reading Flourish College (2:20–3:20)
+
+**Visual:** Show the Flourish College assessment.
+
+> "Let's examine Florence's assessment."
+
+**On-screen:**
+- Property Protection — **5%**
+- Transport Safety — **43%**
+- Business Continuity — **35%**
+- Student Safety — **32%**
+- Regulatory Readiness — **30%**
+- Overall CoverScore — **18**
+
+### Scene 4 — The Lowest Score Trap (3:20–4:00)
+
+**Question (on screen):**
+
+> Does the 5% Property Protection score automatically mean: "Sell Fire Insurance"?
+> A. Yes
+> B. No
+
+**Answer: B**
+
+> "The score tells you where the vulnerability appears strongest.
+>
+> It does not tell you everything about the exposure.
+>
+> You must investigate."
+
+### Scene 5 — Evidence vs Assumption (4:00–4:40)
+
+**Visual:**
+
+> **EVIDENCE:** "No comprehensive Fire Insurance."
+> **ASSUMPTION:** "The school has no property protection whatsoever."
+
+> "The second statement may or may not be true.
+>
+> A professional Advisor does not fill information gaps with assumptions."
+
+### Scene 6 — Assessment Limitations (4:40–5:40)
+
+> "An assessment is powerful, but it has boundaries."
+
+**Visual:** It may not fully know: actual building values; construction details; exact
+asset values; hidden controls; staff behaviour; informal procedures; recent changes;
+management priorities; financial constraints.
+
+> "This is why the Advisor exists."
+
+**Knowledge check (on screen):**
+
+> A CoverScore of 18 means:
+> A. The client is a bad business owner.
+> B. The client has an 18% chance of suffering a loss.
+> C. The assessment indicates significant resilience gaps based on available information.
+> D. The client must buy insurance.
+
+**Answer: C**
+
+### Lesson Close (5:40–6:00)
+
+> "The assessment tells you where to look.
+>
+> It does not remove the need to look."
+
+**B-roll / assets required:** mock WhatsApp chatbot animation, five-layer graphic,
+Flourish College pillar card, evidence-vs-assumption card, assessment limitations list.
+**Delivery notes:** teaching tone; slow down on the "lowest score trap" and the
+evidence-vs-assumption distinction; never suggest the score is a final verdict.
 
 ## 4. Slide Deck Storyboard
 
@@ -81,12 +176,11 @@ artificially high. The overall CoverScore™ is then labelled with a band:
 
 | Band | Range | Meaning |
 |------|-------|---------|
-| Excellent | 85+ | Strong protection across dimensions |
-| Strong | 70–84 | Good protection, minor gaps |
-| Developing | 55–69 | Meaningful gaps remain |
-| Needs Attention | 40–54 | Significant exposure |
-| Priority Improvement | 25–39 | Major gaps and urgent work |
-| Critical Improvement | <25 | Severe, systemic exposure |
+| Highly Resilient | 80–100 | Strong protection; opportunities to refine |
+| Moderately Resilient | 60–79 | Solid foundations; meaningful improvement available |
+| Needs Improvement | 40–59 | Important gaps; prioritised action needed |
+| High Risk | 20–39 | Significant exposure; urgent prioritised attention |
+| Critical Risk | 0–19 | Severe exposure; immediate focused action required |
 
 The engine also computes exposure estimates, current resilience, per-pillar scores, and a
 risk fingerprint.
@@ -145,7 +239,7 @@ not misunderstanding.
 **Scenario:** A manufacturing client (MFG prefix) completed the assessment during a
 power outage on a mobile phone with a slow connection. The record shows 9 questions
 skipped, 5 "not sure" answers, and completion in 3 minutes. The system assigned a
-Developing band (62) and generated an Advisor Brief that says "client is making progress
+Moderately Resilient band (62) and generated an Advisor Brief that says "client is making progress
 on protection." You know from the industry that this plant runs three shifts on imported
 machinery and has no maintenance contract and a single supplier for spare parts.
 
@@ -166,10 +260,10 @@ machinery and has no maintenance contract and a single supplier for spare parts.
    d. Randomised scoring *(incorrect)*
 
 2. Which score band applies to a cover score of 48?
-   a. Excellent
-   b. Developing
-   c. Needs Attention *(correct)*
-   d. Critical Improvement
+   a. Highly Resilient
+   b. Moderately Resilient
+   c. Needs Improvement *(correct)*
+   d. Critical Risk
 
 3. Unanswered questions are:
    a. Charged double weight
@@ -198,8 +292,8 @@ machinery and has no maintenance contract and a single supplier for spare parts.
   system: SME, HOS, MFG, SCH, CHR, CON, TRN, INC, HLT, FAM, YPR, RET, ENT, HOM, MOT.
 - **KB-2.2 Scoring formula:** Score = 100 × (safeWeight / totalWeight of answered
   questions). Unanswered questions are excluded, so completeness matters for accuracy.
-- **KB-2.3 Bands:** Excellent (85+), Strong (70–84), Developing (55–69), Needs Attention
-  (40–54), Priority Improvement (25–39), Critical Improvement (<25).
+- **KB-2.3 Bands (canonical):** Highly Resilient (80–100), Moderately Resilient
+  (60–79), Needs Improvement (40–59), High Risk (20–39), Critical Risk (0–19).
 - **KB-2.4 What scores are produced:** overall CoverScore™, per-pillar scores, risk
   level, exposure estimate, resilience score, risk fingerprint, priority risks,
   improvement potential, estimated loss.
@@ -223,9 +317,10 @@ machinery and has no maintenance contract and a single supplier for spare parts.
 
 This lesson is complete when learners can:
 - Explain the scoring formula conceptually and why skipped questions distort it.
-- Name all six score bands with their ranges and meanings.
+- Name all five score bands with their ranges and meanings.
 - Assign a confidence level to a sample assessment and justify it.
 - List at least four things an assessment does not capture.
+- Explain the difference between assessment evidence and advisor assumption.
 
 ## 12. Final Takeaway
 

@@ -42,14 +42,16 @@ format, timing, and asset requirements.
 - Background: white/light; professional and calm (healthcare-adjacent trust colours).
 - Accent: deep indigo #4F46E5 primary; amber #F59E0B for "attention" calls; emerald
   #10B981 for strengths/positive.
-- Score-band colour lock: Excellent/Strong = green; Developing = amber; Needs Attention/
-  Priority/Critical = red scale as used in the platform UI.
+- Score-band colour lock (canonical bands): Highly Resilient = green; Moderately
+  Resilient = light green/teal; Needs Improvement = amber; High Risk = deep red;
+  Critical Risk = darkest red as used in the platform UI.
 - Type: one strong sans (e.g., Inter) for headings, one readable sans for body; 6+ point
   contrast; no text under 18pt on any slide.
 - Every slide: one idea, max 6 bullets, visual-first.
 
-**Reuse rule:** diagrams for the 8-step process, 9-section Brief anatomy, report anatomy,
-6-stage arc, funnel, and matrix are reused verbatim across lessons to build recognition.
+**Reuse rule:** diagrams for the 10-step workflow, 9-section Brief anatomy, report
+anatomy, 6-stage arc, funnel, and matrix are reused verbatim across lessons to build
+recognition.
 
 ---
 
@@ -57,7 +59,7 @@ format, timing, and asset requirements.
 
 | # | Graphic | Used in | Format |
 |---|---------|---------|--------|
-| G1 | 8-step Modern Advisory Process wheel/flow | L1, L8 | animated + static |
+| G1 | 10-step Modern Advisory Process wheel/flow | L1, L8 | animated + static |
 | G2 | AI vs Advisor division-of-labour table | L1 | static |
 | G3 | CCIE question-flow state diagram | L2 | animated |
 | G4 | Score formula visual (safe vs total weight) | L2 | animated |

@@ -26,22 +26,94 @@ By the end of this lesson, learners will be able to:
 
 ## 3. Avatar Script and Scene Directions
 
-> **Studio note:** Script body supplied by the production team. Scene directions define
-> visuals; insert the provided script into each [SCRIPT BODY] slot.
+> **Studio note:** The narration below is the approved production script for this lesson
+> (CCA 105 — Complete Lesson Production Scripts, Lesson 7). This lesson is a **workshop,
+> not a lecture** — each segment invites the learner to try the skill before moving on.
 
-| Scene | Time | Scene direction | Script slot |
-|-------|------|-----------------|--------------|
-| 1 | 0:00–0:20 | Workshop-style opening: three report cards fan onto the table. Overlay: "Same framework. Different worlds." | [SCRIPT BODY — Scene 1] |
-| 2 | 0:20–1:00 | Split-screen: hospital vs school pillar bars animate differently. Prompt: "Spot the industry fingerprint." | [SCRIPT BODY — Scene 2] |
-| 3 | 1:00–1:50 | The priority-matrix tool animates: likelihood vs impact grid, risks dropping into quadrants. | [SCRIPT BODY — Scene 3] |
-| 4 | 1:50–2:40 | Cross-industry comparison table builds row by row; the narrator flags the shared "top gap" patterns. | [SCRIPT BODY — Scene 4] |
-| 5 | 2:40–3:30 | "From matrix to message" animation: matrix cells become presentation talking points. | [SCRIPT BODY — Scene 5] |
-| 6 | 3:30–4:00 | Close: "Interpret like a doctor, present like a teacher." | [SCRIPT BODY — Scene 6] |
+### Workshop 1 — Identify the Risk (0:00–1:30)
 
-**B-roll / assets required:** multi-report fan, pillar-bar animations, matrix tool demo,
-comparison table build, talking-point transformation animation.
+**Case:** A school has: no Public Liability; student accidents; no emergency procedure;
+no Fire Insurance; weak fire controls.
+
+**Task:** Identify the three most important risk themes.
+
+**Model:** 1. Student Safety · 2. Property / Fire · 3. Liability / Business Continuity
+
+### Workshop 2 — Connect the Risks (1:30–3:00)
+
+**Task:** Create the risk chain.
+
+**Model:**
+- Weak Controls → Incident → Injury / Property Damage → Claim / Repair Cost →
+  Operational Disruption → Financial / Reputation Impact
+
+### Workshop 3 — Reduction or Transfer? (3:00–4:30)
+
+The learner classifies:
+
+| Item | Classification |
+|------|----------------|
+| Fire alarm testing | **Reduction** |
+| Public Liability | **Transfer** |
+| Driver training | **Reduction** |
+| Property Insurance | **Transfer** |
+| Business Continuity Planning | **Reduction** |
+| Business Interruption Insurance | **Transfer** |
+
+### Workshop 4 — Prioritisation (4:30–6:00)
+
+**Question:** The client has ₦X available for immediate improvements. Which should
+happen first?
+
+The learner must rank: Fire alarm; Public Liability; Maintenance; Driver training;
+Property Insurance; Emergency procedures.
+
+> "There is no universal ranking independent of context.
+>
+> Your responsibility is to explain your reasoning."
+
+### Workshop 5 — AI vs Human Judgment (6:00–7:00)
+
+**Case:** CoverScore identifies Property Protection as the highest gap. The client tells
+you: "We recently installed a new alarm system that wasn't included in the assessment."
+
+**Question:** What should you do?
+
+**Model:** Update your understanding. The assessment is based on available information
+and may not reflect recent changes.
+
+### Workshop 6 — The Client's Real Priority (7:00–8:00)
+
+The assessment says **Property Protection**. The client says: "My biggest concern is
+student safety."
+
+**Question:** Whose priority should shape the conversation?
+
+**Answer: Both.**
+
+> "The Advisor must respect the intelligence while understanding the client's priorities."
+
+### Workshop 7 — Write the Recommendation (8:00–9:30)
+
+The learner writes a three-part recommendation.
+
+**Required:** 1. What should change? 2. Why? 3. What should happen next?
+
+**Model:**
+> "The school should first review and strengthen its fire protection controls, including
+> alarm testing and extinguisher servicing. This is important because the assessment
+> indicates a significant property vulnerability and a potential business-continuity
+> consequence. I recommend a property/fire-risk review as the immediate next step,
+> followed by confirmation of appropriate financial protection."
+
+### Lesson Close (9:30–10:00)
+
+> "Analysis becomes advisory value when it leads to a decision."
+
+**B-roll / assets required:** workshop cards, risk-chain animation, classification table,
+prioritisation exercise graphic.
 **Delivery notes:** workshop energy; invite pause-and-practice moments; reassure learners
-that fluency comes with reps across industries.
+that fluency comes with reps.
 
 ## 4. Slide Deck Storyboard
 
@@ -93,15 +165,15 @@ that fluency comes with reps across industries.
 
 ### 5.4 Examples for practice (fresh records)
 
-**School (SCH):** CoverScore 58 (Developing). Pillars: Students' Safety 30, Staff 60,
+**School (SCH):** CoverScore 58 (Needs Improvement). Pillars: Students' Safety 30, Staff 60,
 Premises 75, Vehicles 68, Activities 45, Liability 40, Records 70, Policies 65.
 Note: 2 "not sure" answers on liability; confidence medium.
 
-**Church (CHR):** CoverScore 66 (Strong). Pillars: Congregation & Visitors 55, Assets 80,
+**Church (CHR):** CoverScore 66 (Moderately Resilient). Pillars: Congregation & Visitors 55, Assets 80,
 Events 35, Compliance 50, Vehicles 72. Note: strong asset pillar; events pillar low —
 conference season upcoming.
 
-**Transport (TRN):** CoverScore 51 (Needs Attention). Pillars: Fleet 40, Drivers 60,
+**Transport (TRN):** CoverScore 51 (Needs Improvement). Pillars: Fleet 40, Drivers 60,
 Cargo 25, Route 70, Liability 55, Maintenance 45. Note: cargo pillar 25 — goods in
 transit not insured; 3 drivers without detailed records.
 

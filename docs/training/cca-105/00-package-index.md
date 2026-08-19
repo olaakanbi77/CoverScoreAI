@@ -62,7 +62,7 @@ Each lesson file contains these twelve sections in order:
 
 1. Lesson overview
 2. Learning objectives
-3. Avatar script and scene directions *(script body supplied separately by studio; scene directions included)*
+3. Avatar script and scene directions *(approved production narration inline per scene + scene directions)*
 4. Slide deck storyboard
 5. Learner handbook
 6. Practical exercises
@@ -92,9 +92,13 @@ Each lesson file contains these twelve sections in order:
 | AI Coach | Guides practice and skill-building through prompts |
 | CCIE | CoverScore Conversational Intelligence Engine (question flow & scoring) |
 
-Score bands used in the platform: **Excellent** (85+), **Strong** (70–84),
-**Developing** (55–69), **Needs Attention** (40–54), **Priority Improvement** (25–39),
-**Critical Improvement** (<25).
+Score bands used in the platform (canonical, per the Intelligence Standards™):
+**Highly Resilient** (80–100), **Moderately Resilient** (60–79), **Needs Improvement**
+(40–59), **High Risk** (20–39), **Critical Risk** (0–19).
+
+Advisory workflow (canonical): the **10-step workflow** — Receive, Review, Prepare,
+Discover, Interpret, Prioritise, Advise, Agree, Document, Follow Through. Risk
+Reduction™ is always presented before Risk Transfer™, and the two are never mixed.
 
 ---
 

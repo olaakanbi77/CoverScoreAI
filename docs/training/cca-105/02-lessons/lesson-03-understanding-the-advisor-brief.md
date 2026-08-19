@@ -24,20 +24,106 @@ By the end of this lesson, learners will be able to:
 
 ## 3. Avatar Script and Scene Directions
 
-> **Studio note:** Script body supplied by the production team. Scene directions define
-> visuals; insert the provided script into each [SCRIPT BODY] slot.
+> **Studio note:** The narration below is the approved production script for this lesson
+> (CCA 105 — Complete Lesson Production Scripts, Lesson 3). Scene directions define the
+> visuals; use the narration exactly as written.
 
-| Scene | Time | Scene direction | Script slot |
-|-------|------|-----------------|--------------|
-| 1 | 0:00–0:25 | Advisor dashboard animates: a new assessment completes, an email notification pings, and the Advisor Brief card slides in. | [SCRIPT BODY — Scene 1] |
-| 2 | 0:25–1:20 | Full-screen still of a real one-page Brief, with each of the nine sections highlighted and labelled in sequence. | [SCRIPT BODY — Scene 2] |
-| 3 | 1:20–2:05 | "Facts vs suggestions" graphic: facts tagged blue, suggestions tagged amber. Interactive hover reveals "why". | [SCRIPT BODY — Scene 3] |
-| 4 | 2:05–3:00 | Before/after: advisor uses the generic Copilot opening line vs a personalised opening that references the client's own language and situation. | [SCRIPT BODY — Scene 4] |
-| 5 | 3:00–3:40 | Checklist animation: the 5-point review before first contact (verify facts, check confidence, personalise, prepare questions, log decision). | [SCRIPT BODY — Scene 5] |
-| 6 | 3:40–4:10 | Closing tip: "One page in, one client prepared." | [SCRIPT BODY — Scene 6] |
+### Scene 1 — Why the Advisor Brief Exists (0:00–1:00)
+
+> "Imagine receiving a 30-page assessment five minutes before calling a client.
+>
+> You would have information.
+>
+> But information is not preparation.
+>
+> The Advisor Brief™ converts assessment intelligence into an actionable starting point
+> for the Advisor."
+
+**Visual:** Advisor dashboard animates: a new assessment completes, an email notification
+pings, and the Advisor Brief card slides in.
+
+### Scene 2 — The Advisor Brief Structure (1:00–2:20)
+
+**Visual:** Full-screen still of a real one-page Brief with each section highlighted and
+labelled in sequence:
+
+- **Client** — Who are we meeting?
+- **Current State** — What do we know?
+- **Primary Risk** — What stands out?
+- **Supporting Evidence** — Why does it matter?
+- **Unknowns** — What do we still need to discover?
+- **Client Motivation** — What matters to them?
+- **Constraints** — What may prevent implementation?
+- **Suggested Focus** — Where should the conversation begin?
+
+### Scene 3 — Flourish College Advisor Brief (2:20–3:20)
+
+**Visual (on screen):**
+
+> **Client:** Florence James
+> **School:** Flourish College
+> **Location:** Jos
+> **CoverScore:** 18
+> **Risk Level:** Critical
+> **Primary Gap:** Property Protection
+
+**Evidence:**
+- No Fire Insurance.
+- Fire alarm weakness.
+- Fire extinguisher servicing weakness.
+- Rare building maintenance.
+- Student incident.
+- No written emergency procedures.
+- No Public Liability.
+- Driver training gap.
+
+### Scene 4 — What the Brief Does Not Do (3:20–4:00)
+
+> "The Advisor Brief is not a script.
+>
+> It is not a quotation.
+>
+> It is not a final recommendation.
+>
+> It is a preparation tool."
+
+**Interaction (on screen):**
+
+> Which is the best Advisor preparation?
+> A. Memorise the assessment.
+> B. Prepare a list of products.
+> C. Identify evidence, unknowns, priorities and discovery questions.
+> D. Prepare a quotation immediately.
+
+**Answer: C**
+
+### Scene 5 — Preparing Discovery Questions (4:00–5:00)
+
+**Visual:**
+
+> Weak: "Do you need Fire Insurance?"
+> Strong: "How are your school buildings currently protected against fire, and when were the systems last inspected?"
+
+> "One question asks for a product decision.
+>
+> The other investigates the exposure."
+
+**Practice (on screen):** The learner receives:
+**Finding:** No formal emergency procedure.
+**Task:** Write three discovery questions.
+**Model:**
+1. "What happens today when a serious student accident occurs?"
+2. "Who is responsible for coordinating the response?"
+3. "Do staff work from a written emergency procedure?"
+
+### Lesson Close (5:00–5:30)
+
+> "A prepared Advisor does not enter the Risk Review with answers.
+>
+> They enter with intelligent questions."
 
 **B-roll / assets required:** Advisor OS screen recording, Brief annotation graphics,
-facts-vs-suggestions visual, personalisation before/after cards.
+Facts-vs-suggestions visual, weak-vs-strong question cards.
 **Delivery notes:** practical, tool-focused; read sections slowly from the screen;
 emphasise that the Brief is a starting scaffold, not a script to read aloud.
 
@@ -125,7 +211,7 @@ each label.
 
 ```
 Customer Overview: Ayo Bakery, 5 outlets, 90 staff, revenue NGN 300M (F)
-Assessment Summary: CoverScore 46, band Needs Attention, low-moderate confidence (F)
+Assessment Summary: CoverScore 46, band Needs Improvement, low-moderate confidence (F)
 Priority Risks: No business interruption cover; no fire cover on outlet interiors (F, ranked)
 Strengths: Documented hygiene procedures; 2 of 5 outlets at shopping malls (F)
 Conversation Goals: Confirm priority of BI over other gap areas (S)
@@ -146,7 +232,7 @@ before making the call.
 
 **Scenario:** You receive an Advisor Brief for a construction company (CON prefix): 60
 staff, two active sites, one site with scaffolding nearing handover. Brief says: Customer
-Overview — correct; Assessment Summary — score 38 (Priority Improvement); Priority Risks —
+Overview — correct; Assessment Summary — score 38 (High Risk); Priority Risks —
 no contractor's all risks, no public liability, no key-person cover on the site manager;
 Strengths — documented safety induction; Recommended Questions include "how many workers
 are on site daily?" and "who else depends on the site manager?"; Suggested Products —

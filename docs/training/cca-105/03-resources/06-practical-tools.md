@@ -55,7 +55,7 @@ Month 12 Reassessment + annual review
 ## Tool 6 — Everyday Professional Language
 
 Replace jargon with plain phrases (from Lesson 4):
-- "CoverScore 46 — Needs Attention" → "46 out of 100 — partially protected today."
+- "CoverScore 46 — Needs Improvement" → "46 out of 100 — partially protected today."
 - "Protection gap" → "The cover you don't yet have."
 - "Exposure index" → "What a major event could cost if unprotected."
 - "Risk DNA / fingerprint" → "Your risk picture at a glance."

@@ -24,20 +24,98 @@ By the end of this lesson, learners will be able to:
 
 ## 3. Avatar Script and Scene Directions
 
-> **Studio note:** Script body supplied by the production team. Scene directions define
-> visuals; insert the provided script into each [SCRIPT BODY] slot.
+> **Studio note:** The narration below is the approved production script for this lesson
+> (CCA 105 — Complete Lesson Production Scripts, Lesson 5). Scene directions define the
+> visuals; use the narration exactly as written.
 
-| Scene | Time | Scene direction | Script slot |
-|-------|------|-----------------|--------------|
-| 1 | 0:00–0:25 | Macros: advisor filters CRM leads, opens the lead card, and the report loads. Overlay: "The review starts before the meeting." | [SCRIPT BODY — Scene 1] |
-| 2 | 0:25–1:15 | Animated 6-step preparation wheel (Gather, Verify, Hypothesise, Agenda, Open, Rehearse). Each spoke illuminates in turn. | [SCRIPT BODY — Scene 2] |
-| 3 | 1:15–2:05 | Fact-finding table animates: as each fact is verified, a checkmark lands; unverified items get a "verify in conversation" tag. | [SCRIPT BODY — Scene 3] |
-| 4 | 2:05–2:55 | "Hypothesis vs conclusion" card: hypotheses framed as questions; the review converts them into answers. | [SCRIPT BODY — Scene 4] |
-| 5 | 2:55–3:45 | The agenda builds live on screen: three priorities, time blocks, and one decision to leave the meeting with. | [SCRIPT BODY — Scene 5] |
-| 6 | 3:45–4:20 | Rehearsal shot: advisor sits in a quiet room, speaks the opening aloud. Overlay: "Never wing the opening." | [SCRIPT BODY — Scene 6] |
+### Scene 1 — The Five-Minute Preparation (0:00–1:00)
 
-**B-roll / assets required:** CRM screen capture, 6-step wheel animation, fact-check
-table animation, agenda builder demo.
+> "Professional advisory begins before the conversation."
+
+**Visual:** Macros: advisor filters CRM leads, opens the lead card, and the report loads.
+Overlay: "The review starts before the meeting."
+
+**On-screen (before the call):**
+1. Review the client.
+2. Review the assessment.
+3. Identify the primary risk.
+4. Identify interconnected risks.
+5. Identify unknowns.
+6. Prepare discovery questions.
+7. Anticipate objections.
+8. Define the purpose of the meeting.
+
+### Scene 2 — What Do You Know? (1:00–2:00)
+
+**Interaction:** Select information that is confirmed.
+
+**Confirmed ✓**
+- School operates buses
+- Student accident occurred
+- No written emergency procedures
+- No Public Liability
+- No Fire Insurance
+- Fire alarm weakness
+- Rare maintenance
+
+### Scene 3 — What Don't You Know? (2:00–2:50)
+
+**Interaction:** Select unknowns.
+
+- ✓ Building values
+- ✓ Construction type
+- ✓ Asset values
+- ✓ Exact fire-control condition
+- ✓ Current maintenance contracts
+- ✓ Business interruption exposure
+- ✓ Existing policy details
+
+### Scene 4 — Client Priority (2:50–3:50)
+
+> "Do not assume the client's priority from the assessment."
+
+**Question (on screen):**
+
+> What is Florence's likely concern?
+> A. Buying the cheapest insurance.
+> B. Protecting students and keeping the school operating.
+> C. Increasing the CoverScore.
+> D. Getting a certificate.
+
+**Answer: B**
+
+### Scene 5 — Prepare for Objections (3:50–4:40)
+
+**Visual:** Possible objections:
+- "The score seems too low."
+- "We've never had a major fire."
+- "We already have extinguishers."
+- "Insurance is expensive."
+- "We can't do everything at once."
+
+### Scene 6 — The Advisor's Mindset (4:40–5:30)
+
+> "Do not prepare answers to defeat objections.
+>
+> Prepare to understand them."
+
+**Preparation exercise (on screen):**
+
+> The learner chooses the best response to: "Insurance is too expensive."
+> A. "Insurance is expensive because your risk is high."
+> B. "You can't afford not to insure."
+> C. "Let's first understand which exposures matter most and what level of protection is appropriate. We can then discuss options that fit your priorities."
+
+**Answer: C**
+
+### Lesson Close (5:30–6:00)
+
+> "Preparation does not mean preparing a sales pitch.
+>
+> It means preparing to think."
+
+**B-roll / assets required:** CRM screen capture, confirmed-vs-unknown list animation,
+objection cards, preparation exercise graphic.
 **Delivery notes:** disciplined, planning-focused; give the impression of a professional
 pre-flight checklist before every take-off.
 
@@ -136,7 +214,7 @@ review succeeds even without an immediate sale.
 
 **Scenario:** You are preparing a Risk Review for Mr. Bello, 52, founder of a food
 distribution company (85 staff, 40 vehicles, revenue NGN 1.1B, cold-chain warehouse).
-Assessment: CoverScore 41 (Needs Attention). Pillars: Property 50, Fleet 45, **Business
+Assessment: CoverScore 41 (Needs Improvement). Pillars: Property 50, Fleet 45, **Business
 Income 22**, **Refrigeration/Equipment 25**, Liability 60, People 55, Cyber 70, Future 40.
 Advisor Brief notes strength: documented maintenance schedule for the cold-chain.
 Suggested products: Business Interruption, Refrigeration & Machinery Breakdown, Fleet

@@ -25,17 +25,83 @@ By the end of this lesson, learners will be able to:
 
 ## 3. Avatar Script and Scene Directions
 
-> **Studio note:** Script body supplied by the production team. Scene directions define
-> visuals; insert the provided script into each [SCRIPT BODY] slot.
+> **Studio note:** The narration below is the approved production script for this lesson
+> (CCA 105 — Complete Lesson Production Scripts, Lesson 4). Scene directions define the
+> visuals; use the narration exactly as written.
 
-| Scene | Time | Scene direction | Script slot |
-|-------|------|-----------------|--------------|
-| 1 | 0:00–0:25 | A client's phone shows a WhatsApp message receiving their report. Overlay: "This is what they see. This is what they feel." | [SCRIPT BODY — Scene 1] |
-| 2 | 0:25–1:15 | Animated report template; each section highlights in turn with a plain-language caption over it. | [SCRIPT BODY — Scene 2] |
-| 3 | 1:15–2:00 | "Translating the engine" graphic: bands and jargon become plain sentences with on-screen conversions. | [SCRIPT BODY — Scene 3] |
-| 4 | 2:00–2:50 | The low-score moment: advisor walks a worried client through a Needs Attention report, calmly. Split-screen of wrong (scary) vs right (reassuring) framings. | [SCRIPT BODY — Scene 4] |
-| 5 | 2:50–3:30 | Graphic: how the report feeds the Risk Review agenda (map from report sections to review questions). | [SCRIPT BODY — Scene 5] |
-| 6 | 3:30–4:05 | Recap card: "Explain, don't intimidate." | [SCRIPT BODY — Scene 6] |
+### Scene 1 — Report vs Advisory Interpretation (0:00–1:00)
+
+> "The client can read the report themselves.
+>
+> Your value comes from helping them understand what the findings mean in their real-world
+> environment."
+
+**Visual:** A client's phone shows a WhatsApp message receiving their report. Overlay:
+"This is what they see. This is what they feel."
+
+### Scene 2 — The Report Structure (1:00–2:00)
+
+**Visual:** Animated report template; each section highlights in turn:
+
+- **CoverScore** → **Risk Level** → **Risk Pillars** → **Biggest Insight** →
+  **Risk Story™** → **Resilience Forecast™** → **Risk Management Plan™**
+
+### Scene 3 — The Risk Story (2:00–3:00)
+
+> "The Risk Story connects individual findings into a meaningful narrative."
+
+**Visual (Flourish College):**
+- Student incident *
+- Weak emergency procedures *
+- Fire protection weaknesses *
+- No liability protection *
+- Limited closure resilience
+= **Interconnected Resilience Exposure**
+
+### Scene 4 — Avoiding Fear Selling (3:00–4:00)
+
+**Visual — Bad language:**
+> "If your school catches fire, you could lose everything."
+
+**Better:**
+> "Your current fire controls and property protection arrangements may leave the school
+> financially exposed if a major fire occurs."
+
+**Best:**
+> "The assessment suggests that fire could create both a property-loss exposure and a
+> business-continuity problem. I'd like to understand your current controls before we
+> determine what needs to change."
+
+### Scene 5 — Risk Story Exercise (4:00–4:40)
+
+> **Trainee task:** Explain the Flourish College risk in 60 seconds.
+> The system evaluates whether the trainee: uses evidence; connects risks; avoids
+> exaggeration; avoids unsupported claims; communicates clearly.
+
+### Scene 6 — Resilience Forecast (4:40–5:40)
+
+> "A forecast is an improvement pathway, not a promise."
+
+**Visual:** 18 → Potential improvement → 41
+
+> "Never tell a client:
+> 'If you buy these policies, your score will become 41.'
+>
+> The improvement is an estimate based on the recommended changes."
+
+**Knowledge check (on screen):**
+
+> Which statement is appropriate?
+> A. "Your score will definitely increase to 41."
+> B. "The report estimates that addressing these areas could materially improve your resilience."
+
+**Answer: B**
+
+### Lesson Close (5:40–6:00)
+
+> "A report gives the client information.
+>
+> An Advisor turns information into understanding."
 
 **B-roll / assets required:** animated report mock-up, jargon-translation cards,
 low-score role-play footage, report-to-agenda mapping graphic.
@@ -80,7 +146,7 @@ low-score role-play footage, report-to-agenda mapping graphic.
 
 | Engine term | Say this |
 |-------------|----------|
-| "CoverScore 46 — Needs Attention" | "Your report gives you 46 out of 100 right now. It means preparation is partially in place, and a few gaps could hurt you if something happened." |
+| "CoverScore 46 — Needs Improvement" | "Your report gives you 46 out of 100 right now. It means preparation is partially in place, and a few gaps could hurt you if something happened." |
 | "Pillar score 22 — Property" | "Your property protection scores lowest — this is the area most at risk." |
 | "Exposure index high" | "If a major incident happened, the uninsured cost could be significant." |
 | "Protection gap NGN 40M" | "That's the value of cover you don't yet have in place." |
@@ -118,8 +184,8 @@ Each top risk becomes a review agenda item:
 ## 6. Practical Exercises
 
 **Exercise 4.1 — Translate a report (15 min)**
-Convert these into client language: "CoverScore 52, Needs Attention"; "Protection Gap
-NGN 25M"; "Cyber pillar 31"; "Resilience: Developing". Write one sentence for each.
+Convert these into client language: "CoverScore 52, Needs Improvement"; "Protection Gap
+NGN 25M"; "Cyber pillar 31"; "Resilience: Needs Improvement". Write one sentence for each.
 
 **Exercise 4.2 — Hard-message role-play (15 min)**
 Practise the empathy ladder with a partner on a low-score scenario. The partner plays a
@@ -132,7 +198,7 @@ write the agenda with one reinforcing question per item.
 
 ## 7. Case Study
 
-**Scenario:** A hospital (HOS prefix) report arrives: CoverScore 44 (Needs Attention).
+**Scenario:** A hospital (HOS prefix) report arrives: CoverScore 44 (Needs Improvement).
 Pillars: Governance 70, Staff & Safety 55, Property 60, **Medical Equipment 22**,
 **Infrastructure & Utilities 30**, **Patient Care Support 35**, Data & Records 65,
 Emergency Preparedness 50. Top risks listed: no medical equipment breakdown cover;
@@ -203,7 +269,7 @@ medium-high (the COO completed it carefully).
   Ask the learner to translate each into client-safe, plain language. Mark any use of fear
   or jargon with a coach note."
 - **Prompt 4.2 (Hard-message simulation):** "Run a role-play where the learner delivers a
-  Needs Attention score to a worried client. Score their use of the empathy ladder and
+  Needs Improvement score to a worried client. Score their use of the empathy ladder and
   stop the scene if they cross into pressure tactics, then redo it."
 - **Prompt 4.3 (Agenda builder):** "Provide a report with five gaps. Ask the learner to
   build a 3-item review agenda and justify the prioritisation. Challenge a weak
