@@ -155,16 +155,16 @@ CARE is the conversational framework every advisor uses in every client conversa
 
 | Letter | Stage | Purpose |
 |--------|-------|---------|
-| **C** | **Connect** | Build trust, set context, confirm purpose |
-| **A** | **Analyse** | Explore facts, understand the client's world, ask — don't assume |
-| **R** | **Recommend** | Present Risk Reduction first, then Risk Transfer, never mixed |
-| **E** | **Execute** | Agree the Protection Strategy and next steps |
+| **C** | **Connect** | Establish rapport and context — build trust, confirm purpose |
+| **A** | **Ask** | Explore the client's concerns, priorities and experiences — ask, don't assume |
+| **R** | **Reframe** | Connect the client's concerns to the risk intelligence |
+| **E** | **Enable** | Help the client understand practical next steps and move toward action |
 
 ### CARE rules
 - C before A. A before R. R before E. Never skip a stage.
-- Analyse is driven by genuine curiosity, not script.
-- Recommend is always reduction-first.
-- Execute ends with agreed next steps, dates, and ownership.
+- Ask is driven by genuine curiosity, not script.
+- Reframe connects the client's concerns to the risk intelligence; responses are always reduction-first.
+- Enable ends with agreed next steps, dates, and ownership.
 
 ---
 

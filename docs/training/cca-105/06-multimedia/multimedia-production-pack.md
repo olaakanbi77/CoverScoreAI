@@ -74,7 +74,7 @@ recognition.
 | G13 | Question funnel | L6, L8 | animated |
 | G14 | Risk chain domino animation | L6 | motion |
 | G15 | Cross-industry comparison table | L7 | static + build |
-| G16 | Four-phase simulation (Analyse→Prepare→Review→Handoff) | L8 | animated |
+| G16 | Five-phase simulation (Review→Prepare→Conversation→Prioritise & Separate→Agree & Handoff) | L8 | animated |
 | G17 | Handoff baton graphic | L8 | static |
 
 **File specs:** SVG masters + PNG fallback; brand-consistent; all text in source files

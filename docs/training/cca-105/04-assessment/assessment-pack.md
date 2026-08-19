@@ -75,7 +75,7 @@ Topics drawn from: the 10-step advisory workflow; the assessment and its five la
 score bands (80–100 Highly Resilient, 60–79 Moderately Resilient, 40–59 Needs
 Improvement, 20–39 High Risk, 0–19 Critical Risk); the Advisor Brief's purpose and
 structure; the CoverScore Report structure; Risk Reduction vs Risk Transfer; the CARE™
-framework (Connect, Analyse, Recommend, Execute); discovery questioning; the SR-001
+framework (Connect, Ask, Reframe, Enable); discovery questioning; the SR-001
 case facts.
 
 ---

@@ -16,16 +16,16 @@ Every client conversation follows CARE:
 
 | Letter | Stage | Purpose |
 |--------|-------|---------|
-| **C** | **Connect** | Build trust, set context, confirm purpose |
-| **A** | **Analyse** | Explore facts, understand the client's world, ask — don't assume |
-| **R** | **Recommend** | Present Risk Reduction first, then Risk Transfer, never mixed |
-| **E** | **Execute** | Agree the Protection Strategy and next steps |
+| **C** | **Connect** | Establish rapport and context — build trust, confirm purpose |
+| **A** | **Ask** | Explore the client's concerns, priorities and experiences — ask, don't assume |
+| **R** | **Reframe** | Connect the client's concerns to the risk intelligence |
+| **E** | **Enable** | Help the client understand practical next steps and move toward action |
 
 **Rules**
 - Never skip a stage.
-- Analyse is driven by genuine curiosity, not script.
-- Recommend is always reduction-first.
-- Execute ends with agreed next steps, dates, and ownership.
+- Ask is driven by genuine curiosity, not script.
+- Reframe connects the client's concerns to the risk intelligence; responses are always reduction-first.
+- Enable ends with agreed next steps, dates, and ownership.
 
 ---
 
@@ -85,13 +85,13 @@ Every client conversation follows CARE:
 ### 6.3 The Risk Review — Connect
 > "Thank you for making time. My role is to help you understand your resilience and agree what to prioritise. We'll go through the CoverScore, the strongest areas, and then the areas where improvement has the most value. There's no pressure — my job is to make the picture clear for you."
 
-### 6.4 The Risk Review — Analyse
+### 6.4 The Risk Review — Ask
 > "Help me understand — what does [topic] look like for you at the moment? What's working well? What worries you, if anything?"
 
-### 6.5 The Risk Review — Recommend
-> "Based on what we've discussed, the highest priority is [X]. The first thing I recommend is [Risk Reduction action]. Once that's in place, we can look at [Risk Transfer option] as a way to protect against the financial impact. I'll present these as two separate things so the picture stays clear."
+### 6.5 The Risk Review — Reframe
+> "Based on what you've told me, the highest priority is [X]. That connects directly to what the assessment shows — [gap]. The first response is [Risk Reduction action]. Once that's in place, we can look at [Risk Transfer option] as a way to protect against the financial impact. I'll present these as two separate things so the picture stays clear."
 
-### 6.6 The Risk Review — Execute
+### 6.6 The Risk Review — Enable
 > "So the plan is: [Reduction action] by [date], [Transfer option] reviewed by [date], and I'll follow up on [date]. Does that work for you?"
 
 ---

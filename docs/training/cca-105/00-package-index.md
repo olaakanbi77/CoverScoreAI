@@ -125,4 +125,4 @@ This package conforms to the platform's canonical standards:
 - **Score bands (canonical):** 80–100 Highly Resilient · 60–79 Moderately Resilient ·
   40–59 Needs Improvement · 20–39 High Risk · 0–19 Critical Risk.
 - **Recommendation rule:** Risk Reduction™ first, Risk Transfer™ second, never mixed.
-- **CARE™ framework:** Connect → Analyse → Recommend → Execute.
+- **CARE™ framework:** Connect → Ask → Reframe → Enable.

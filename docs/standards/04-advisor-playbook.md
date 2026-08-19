@@ -45,9 +45,9 @@ The advisor does **not** manually prospect, qualify, or assess.
 
 1. **Prepare** — study the Advisor Brief, the Report, the client context.
 2. **Connect** — open the conversation with trust and purpose.
-3. **Analyse** — explore facts with genuine curiosity; ask, don't assume.
-4. **Recommend** — Risk Reduction first, Risk Transfer second, never mixed.
-5. **Execute** — agree the Protection Strategy, next steps, dates, ownership.
+3. **Ask** — explore the client's concerns, priorities and experiences; ask, don't assume.
+4. **Reframe** — connect the client's concerns to the risk intelligence.
+5. **Enable** — help the client understand practical next steps and move toward action.
 
 ---
 
@@ -75,10 +75,10 @@ Follow the CARE framework:
 
 | Stage | Action |
 |-------|--------|
-| **Connect** | Welcome, purpose, agenda, time check |
-| **Analyse** | Explore facts, listen deeply, confirm the client's world |
-| **Recommend** | Present Risk Reduction first; then Risk Transfer; never mixed |
-| **Execute** | Agree the Protection Strategy, next steps, and ownership |
+| **Connect** | Welcome, purpose, agenda, time check — establish rapport and context |
+| **Ask** | Explore the client's concerns, priorities and experiences — listen deeply |
+| **Reframe** | Connect the client's concerns to the risk intelligence; reduction-first |
+| **Enable** | Help the client understand next steps, agree the Protection Strategy and ownership |
 
 ### 6.3 The structure
 1. Open with the client's strength: acknowledge the good.

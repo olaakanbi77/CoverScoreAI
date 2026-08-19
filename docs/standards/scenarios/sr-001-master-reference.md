@@ -252,7 +252,7 @@ Pause triggers and correct ("full credit") responses:
 | Pause | Question: "What should you do next?" | Full-credit response |
 |-------|--------------------------------------|----------------------|
 | After brief read | What's the first action? | Prepare: note priority (Property Protection), plan questions, do NOT call to sell insurance |
-| After opening | How to proceed? | Move to Analyse: ask about the school's operations |
+| After opening | How to proceed? | Move to Ask: explore the school's operations |
 | After score explained | Next? | Explore the pillars and confirm understanding, ask open questions |
 | After discovery | Next? | Confirm the Highest Priority with the client |
 | Before recommending | Next? | Present Risk Reduction first, then clearly separated transfer option |

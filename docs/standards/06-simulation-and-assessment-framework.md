@@ -37,7 +37,7 @@ Trainees must **not** manually prospect, qualify, or assess.
 
 1. **Preparation** — reading the Advisor Brief and Report; planning the conversation.
 2. **Assessment Interpretation** — explaining the CoverScore, bands, pillars, priority.
-3. **Discovery & Listening** — CARE Analyse: exploring facts; asking; listening; building the picture.
+3. **Discovery & Listening** — CARE Ask: exploring facts; asking; listening; building the picture.
 4. **Professional Judgement** — prioritising risks with the client's own evidence.
 5. **Recommendations** — Risk Reduction first, Risk Transfer second, never mixed.
 6. **Agreement & Next Steps** — the Protection Strategy, dates, ownership.
