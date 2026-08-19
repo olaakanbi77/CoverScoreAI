@@ -942,7 +942,7 @@ const initDatabase = () => {
         (46,6,'Coaching & Mentorship™','Mentoring others',6,'CORE'),
         (47,6,'Academy Facilitation™','Teaching the academy',7,'CORE');
 
-      INSERT OR IGNORE INTO academy_courses (level_id, code, title, description, order_index) VALUES
+      INSERT INTO academy_courses (level_id, code, title, description, order_index) VALUES
 (1,'CCA-101','Foundations of Risk & Insurance','Build a solid understanding of risk, insurance principles, and the Nigerian risk landscape.',1),
 (1,'CCA-102','The Nigerian Insurance Market & Regulatory Environment','Explore the Nigerian insurance industry structure, key players, and the regulatory framework overseen by NAICOM.',2),
 (1,'CCA-103','CoverScore Risk Assessment Methodology','Master the CoverScore assessment framework, risk scoring, and protection gap analysis.',3),
@@ -950,7 +950,8 @@ const initDatabase = () => {
 (1,'CCA-105','Practical Risk Advisory & Client Assessment','Interpret AI-generated CoverScore Assessments, read Advisor Briefs, explain CoverScore Reports, and conduct professional Risk Reviews.',5),
 (1,'CCA-106','Risk Advisory Practice, Business Development & Client Growth','Turn CoverScore intelligence into trusted advisory conversations, risk-led business development, and long-term client growth.',6),
 (1,'CCA-107','Professional Risk Advisory Practice & Client Portfolio Management','Build and manage client risk portfolios: continuous risk intelligence, annual reassessments, professional Risk Reviews, and client value.',7),
-(1,'CCA-108','Capstone: Integrated Advisory Simulation & Professional Assessment','Demonstrate complete professional competence in an integrated simulated advisory engagement, from discovery to portfolio management.',8)`, (err) => {
+(1,'CCA-108','Capstone: Integrated Advisory Simulation & Professional Assessment','Demonstrate complete professional competence in an integrated simulated advisory engagement, from discovery to portfolio management.',8)
+      ON CONFLICT(code) DO UPDATE SET title = excluded.title, description = excluded.description, level_id = excluded.level_id, order_index = excluded.order_index`, (err) => {
         if (err) { console.error('Failed to seed academy:', err.message); return; }
 
         // Check if CCA-101 already has content; skip seeding course 1 if so
