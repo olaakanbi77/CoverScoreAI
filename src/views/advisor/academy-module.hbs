@@ -223,8 +223,17 @@
   </div>
 
   <!-- Actions -->
+  {{#if isAdmin}}
+  <div class="quiz-lock-banner" style="background:var(--c-purple-light); border-color:#ddd6fe; color:var(--c-purple);">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+    Preview mode — browsing without enrolment. Lesson access and navigation are unlocked, and progress is not tracked.
+  </div>
+  {{/if}}
+
   <div class="actions">
-    {{#if (eq status 'completed')}}
+    {{#if (and isAdmin (eq status 'pending'))}}
+    <button class="btn outline" style="cursor:default;" disabled>Previewing lesson (no enrolment needed)</button>
+    {{else if (eq status 'completed')}}
     <button class="btn outline completed" disabled>
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
       Completed
@@ -433,7 +442,7 @@
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{prevModule.title}}</span>
     </a>
     {{#if nextModule}}
-      {{#if (eq status 'completed')}}
+      {{#if (or (eq status 'completed') isAdmin)}}
       <a href="/advisor/academy/module/{{nextModule.id}}" class="btn outline" style="flex:1; justify-content:flex-end; padding:10px 12px; font-size:10px; text-decoration:none;">
         <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{nextModule.title}}</span>
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
@@ -448,7 +457,7 @@
   </div>
   {{else if nextModule}}
   <div style="display:flex; gap:8px; padding: 0 16px 80px;">
-    {{#if (eq status 'completed')}}
+    {{#if (or (eq status 'completed') isAdmin)}}
     <a href="/advisor/academy/module/{{nextModule.id}}" class="btn outline" style="flex:1; justify-content:center; padding:10px 12px; font-size:10px; text-decoration:none;">
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Next: {{nextModule.title}}</span>
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>

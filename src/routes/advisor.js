@@ -13,6 +13,18 @@ const requireSalesOrAdmin = (req, res, next) => {
   return res.status(403).send('Forbidden: Sales or Admin role required');
 };
 
+// Admins may preview any lesson without enrolling. Detect that state so API
+// writes (progress, quiz results, coach history) are not persisted during a
+// pure preview browse.
+const isAdminPreview = async (userId, moduleId) => {
+  const mod = await get("SELECT course_id FROM academy_modules WHERE id = ?", [moduleId]);
+  if (!mod || !mod.course_id) return false;
+  const enrollment = await get("SELECT id FROM academy_enrollments WHERE user_id = ? AND course_id = ?", [userId, mod.course_id]);
+  if (enrollment) return false;
+  const hadProgress = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id IN (SELECT id FROM academy_modules WHERE course_id = ?) LIMIT 1", [userId, mod.course_id]);
+  return !hadProgress;
+};
+
 router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res) => {
   try {
     let rawLeads = [];
@@ -848,6 +860,8 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
     const pointsEarned = completedModules * 50 + inProgressCount * 10;
     const currentStreak = inProgressCount > 0 ? Math.min(inProgressCount * 2, 30) : 0;
 
+    const isAdmin = req.user && req.user.role === 'admin';
+
     // Process courses for Level 1 (CCA) with progress
     const ccaCourses = courses.filter(c => c.level_id === 1).map(course => {
       const courseMods = modules.filter(m => m.course_id === course.id);
@@ -867,7 +881,7 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
         completedLessons: completed,
         progressPct: courseMods.length > 0 ? Math.round((completed / courseMods.length) * 100) : 0,
         inProgress,
-        enrolled: enrolledCourseIds.has(course.id),
+        enrolled: enrolledCourseIds.has(course.id) || isAdmin,
         firstLessonId: firstPending ? firstPending.id : (courseMods[0] ? courseMods[0].id : null)
       };
     });
@@ -877,7 +891,7 @@ router.get('/academy', authenticatePage, requireSalesOrAdmin, async (req, res) =
     for (const level of levels) {
       const levelCourses = courses.filter(c => c.level_id === level.id);
       if (levelCourses.length > 0) {
-        featuredCourses.push({ ...levelCourses[0], levelName: level.name, enrolled: enrolledCourseIds.has(levelCourses[0].id) });
+        featuredCourses.push({ ...levelCourses[0], levelName: level.name, enrolled: enrolledCourseIds.has(levelCourses[0].id) || isAdmin });
       }
       if (featuredCourses.length >= 4) break;
     }
@@ -917,6 +931,8 @@ router.get('/academy/course/:id', authenticatePage, requireSalesOrAdmin, async (
     const course = await get("SELECT c.*, l.name as level_name FROM academy_courses c JOIN academy_levels l ON l.id = c.level_id WHERE c.id = ?", [courseId]);
     if (!course) return res.status(404).send('Course not found');
 
+    const isAdmin = req.user && req.user.role === 'admin';
+
     const lessons = await all("SELECT * FROM academy_modules WHERE course_id = ? ORDER BY lesson_number ASC, order_index ASC", [courseId]);
     const progress = await all("SELECT module_id, status FROM academy_progress WHERE user_id = ? AND module_id IN (" + (lessons.length ? lessons.map(m => m.id).join(',') : '0') + ")", [req.user.id]);
     const enrollment = await get("SELECT id, enrolled_at FROM academy_enrollments WHERE user_id = ? AND course_id = ?", [req.user.id, courseId]);
@@ -947,7 +963,8 @@ router.get('/academy/course/:id', authenticatePage, requireSalesOrAdmin, async (
       pct,
       totalMin,
       continueLesson,
-      enrolled: !!(enrollment || hasProgress)
+      enrolled: !!(enrollment || hasProgress || isAdmin),
+      isAdmin
     });
   } catch (err) {
     console.error('Error loading course:', err);
@@ -967,6 +984,8 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       return res.redirect('/advisor/academy');
     }
 
+    const isAdmin = req.user && req.user.role === 'admin';
+
     const level = await get("SELECT * FROM academy_levels WHERE id = ?", [mod.level_id]);
 
     // Get course info if assigned
@@ -976,7 +995,7 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
     }
 
     // Enforce enrollment gate
-    if (mod.course_id) {
+    if (mod.course_id && !isAdmin) {
       const enrollment = await get("SELECT id FROM academy_enrollments WHERE user_id = ? AND course_id = ?", [req.user.id, mod.course_id]);
       const hadProgress = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id IN (SELECT id FROM academy_modules WHERE course_id = ?) LIMIT 1", [req.user.id, mod.course_id]);
       if (!enrollment && !hadProgress) return res.redirect('/advisor/academy/course/' + mod.course_id);
@@ -1003,7 +1022,7 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       nextModule = curIdx < courseMods.length - 1 ? courseMods[curIdx + 1] : null;
 
       // Sequential gate: the previous lesson must be completed before accessing the next one
-      if (prevModule) {
+      if (prevModule && !isAdmin) {
         const prevProgress = await get("SELECT status FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, prevModule.id]);
         if (!prevProgress || prevProgress.status !== 'completed') {
           return res.redirect('/advisor/academy/module/' + prevModule.id + '?locked=1');
@@ -1077,7 +1096,8 @@ router.get('/academy/module/:id', authenticatePage, requireSalesOrAdmin, async (
       hasCaseStudy: !!caseStudy,
       hasResources: !!resources,
       videoUrl: mod.video_url,
-      videoScript: mod.video_script
+      videoScript: mod.video_script,
+      isAdmin
     });
   } catch (err) {
     console.error('Error loading module:', err);
@@ -1101,6 +1121,11 @@ router.post('/api/academy/progress', authenticatePage, requireSalesOrAdmin, asyn
           return res.status(400).json({ success: false, error: 'Pass the lesson quiz before completing this lesson' });
         }
       }
+    }
+
+    // Admins browsing without enrolment do not persist progress.
+    if (await isAdminPreview(req.user.id, moduleId)) {
+      return res.json({ success: true, message: 'Preview mode: progress not tracked' });
     }
 
     const existing = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, moduleId]);
@@ -1169,18 +1194,22 @@ router.post('/api/academy/quiz/submit', authenticatePage, requireSalesOrAdmin, a
     const percentage = Math.round((score / total) * 100);
     const passed = percentage >= 70;
 
-    // Store quiz result
-    await run(`INSERT INTO academy_quiz_results (user_id, module_id, score, total, percentage, passed, answers, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
-      [req.user.id, moduleId, score, total, percentage, passed ? 1 : 0, JSON.stringify(answers)]);
+    // Admins browsing without enrolment get read-only feedback: grade the quiz
+    // but do not persist the result or touch progress.
+    if (!(await isAdminPreview(req.user.id, moduleId))) {
+      // Store quiz result
+      await run(`INSERT INTO academy_quiz_results (user_id, module_id, score, total, percentage, passed, answers, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
+        [req.user.id, moduleId, score, total, percentage, passed ? 1 : 0, JSON.stringify(answers)]);
 
-    // Auto-mark as completed if passed
-    if (passed) {
-      const existing = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, moduleId]);
-      if (existing) {
-        await run("UPDATE academy_progress SET status = 'completed', completed_at = datetime('now') WHERE id = ?", [existing.id]);
-      } else {
-        await run("INSERT INTO academy_progress (user_id, module_id, status, completed_at) VALUES (?, ?, 'completed', datetime('now'))",
-          [req.user.id, moduleId]);
+      // Auto-mark as completed if passed
+      if (passed) {
+        const existing = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id = ?", [req.user.id, moduleId]);
+        if (existing) {
+          await run("UPDATE academy_progress SET status = 'completed', completed_at = datetime('now') WHERE id = ?", [existing.id]);
+        } else {
+          await run("INSERT INTO academy_progress (user_id, module_id, status, completed_at) VALUES (?, ?, 'completed', datetime('now'))",
+            [req.user.id, moduleId]);
+        }
       }
     }
 
@@ -1200,9 +1229,13 @@ router.post('/api/academy/coach/ask', authenticatePage, requireSalesOrAdmin, asy
     const mod = await get("SELECT title, content FROM academy_modules WHERE id = ?", [moduleId]);
     if (!mod) return res.status(404).json({ success: false, error: 'Module not found' });
 
-    // Save user message
-    await run(`INSERT INTO academy_coach_history (user_id, module_id, role, message, created_at) VALUES (?, ?, 'user', ?, datetime('now'))`,
-      [req.user.id, moduleId, message]);
+    const preview = await isAdminPreview(req.user.id, moduleId);
+
+    // Save user message (not persisted during admin preview browsing)
+    if (!preview) {
+      await run(`INSERT INTO academy_coach_history (user_id, module_id, role, message, created_at) VALUES (?, ?, 'user', ?, datetime('now'))`,
+        [req.user.id, moduleId, message]);
+    }
 
     // Get conversation history
     const history = await all("SELECT role, message FROM academy_coach_history WHERE user_id = ? AND module_id = ? ORDER BY created_at ASC",
@@ -1252,9 +1285,11 @@ Coach:`;
       console.error('AI Coach upstream error:', response.status, errText.slice(0, 300));
     }
 
-    // Save coach response
-    await run(`INSERT INTO academy_coach_history (user_id, module_id, role, message, created_at) VALUES (?, ?, 'coach', ?, datetime('now'))`,
-      [req.user.id, moduleId, coachReply]);
+    // Save coach response (not persisted during admin preview browsing)
+    if (!preview) {
+      await run(`INSERT INTO academy_coach_history (user_id, module_id, role, message, created_at) VALUES (?, ?, 'coach', ?, datetime('now'))`,
+        [req.user.id, moduleId, coachReply]);
+    }
 
     res.json({ success: true, message: coachReply });
   } catch (err) {
