@@ -22,7 +22,10 @@ const isAdminPreview = async (userId, moduleId) => {
   const enrollment = await get("SELECT id FROM academy_enrollments WHERE user_id = ? AND course_id = ?", [userId, mod.course_id]);
   if (enrollment) return false;
   const hadProgress = await get("SELECT id FROM academy_progress WHERE user_id = ? AND module_id IN (SELECT id FROM academy_modules WHERE course_id = ?) LIMIT 1", [userId, mod.course_id]);
-  return !hadProgress;
+  // Only treat as preview when the user is actually an admin;
+  // regular users with no enrollment/progress should have their writes persisted.
+  const user = await get("SELECT role FROM users WHERE id = ?", [userId]);
+  return user && user.role === 'admin' && !hadProgress;
 };
 
 router.get('/dashboard', authenticatePage, requireSalesOrAdmin, async (req, res) => {
