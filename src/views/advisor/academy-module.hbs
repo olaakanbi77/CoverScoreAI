@@ -239,15 +239,15 @@
       Completed
     </button>
     {{else}}
-      {{#if (and hasQuiz (not quizPassed))}}
+      {{#if hasQuiz}}
       <button class="btn primary" id="completeBtn" onclick="goToQuiz()">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        Take Quiz to Complete
+        Mark as Complete
       </button>
       {{else}}
       <button class="btn primary" id="completeBtn" onclick="updateProgress('completed')">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        Mark Complete
+        Mark as Complete
       </button>
       {{/if}}
     {{/if}}
@@ -631,7 +631,17 @@ async function updateProgress(status) {
     const data = await res.json();
     if (data.success) {
       showToast(data.message || 'Progress updated');
-      setTimeout(() => location.reload(), 800);
+      if (status === 'completed') {
+        {{#if nextModule}}
+        setTimeout(function() { window.location.href = '/advisor/academy/module/{{nextModule.id}}'; }, 1200);
+        {{else if course}}
+        setTimeout(function() { window.location.href = '/advisor/academy/course/{{course.id}}'; }, 1200);
+        {{else}}
+        setTimeout(function() { window.location.href = '/advisor/academy'; }, 1200);
+        {{/if}}
+      } else {
+        setTimeout(() => location.reload(), 800);
+      }
     } else {
       showToast(data.error || 'Failed to update');
     }
@@ -723,7 +733,13 @@ async function submitQuiz() {
       btn.disabled = data.passed;
       if (data.passed) {
         showToast('🎉 Quiz passed! Lesson completed');
-        setTimeout(() => location.reload(), 1200);
+        {{#if nextModule}}
+        setTimeout(function() { window.location.href = '/advisor/academy/module/{{nextModule.id}}'; }, 1200);
+        {{else if course}}
+        setTimeout(function() { window.location.href = '/advisor/academy/course/{{course.id}}'; }, 1200);
+        {{else}}
+        setTimeout(function() { window.location.href = '/advisor/academy'; }, 1200);
+        {{/if}}
       } else {
         btn.onclick = () => location.reload();
       }
