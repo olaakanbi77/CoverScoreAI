@@ -1338,5 +1338,935 @@
         "badgeText": "REDUCE RISK.<br>PROTECT MORE."
       }
     ]
+  },
+  "hotel": {
+    "title": "Hotel Risk Assessment | CoverScore",
+    "trigger": "START HOTEL ASSESSMENT",
+    "trustBarExpertise": "Hospitality Expertise",
+    "calculator": {
+      "title": "INSTANT HOTEL RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of fire, liability and business interruption on your hotel."
+    },
+    "whyChooseTitle": "Why Hotels Choose CoverScore",
+    "trustedByTitle": "Trusted by Hospitality Leaders",
+    "hero": {
+      "headline": "Protect Your Guests.<br>Protect Your <span style=\"color: var(--color-gold);\">Hotel.</span>",
+      "subheadline": "Discover how resilient your hotel is against the risks that can disrupt guests, property, people, revenue and operations — in under 5 minutes.",
+      "mobileHeadline": "See Your Hotel's<br><span class=\"hero-highlight\">Resilience Score</span><br>In Less Than 5 Minutes.",
+      "mobileSubheadline": "Most hotels discover critical exposures they never knew existed.",
+      "mobileCta": "Get My Hotel Resilience Score",
+      "mobileCtaSub": "Takes Less Than 5 Minutes",
+      "trustBadgeTitle": "Hotels & Hospitality Resilience™",
+      "trustBadgeDesc": "The 7-pillar assessment for Hotels & Hospitality.",
+      "image": "/images/hero-hotel.jpg",
+      "benefits": [
+        "AI-Powered 7-Pillar Assessment",
+        "Critical Exposure Alerts",
+        "Hospitality Risk Advisor Support"
+      ],
+      "overlayStatement": "Your Guests' Safety.<br>Your Hotel's Resilience.",
+      "metrics": [
+        {
+          "value": "7",
+          "label": "<b>Risk pillars</b>",
+          "icon": "<img src=\"/images/icon-shield-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "56",
+          "label": "<b>Risk objects</b>",
+          "icon": "<img src=\"/images/icon-check-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "5 min",
+          "label": "<b>Assessment time</b>",
+          "icon": "<img src=\"/images/icon-speedometer.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "24/7",
+          "label": "<b>Advisor Support</b>",
+          "icon": "<img src=\"/images/icon-person-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        }
+      ]
+    },
+    "whyChoose": [
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/></svg>",
+        "number": "01",
+        "title": "Guest Safety & Liability",
+        "desc": "Uncover slip, pool, food and public liability exposures before they become claims.",
+        "pill": "Protect guests. Protect reputation.",
+        "colorTheme": "green"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/></svg>",
+        "number": "02",
+        "title": "Fire & Property Protection",
+        "desc": "Highest-severity pillar — a single fire can be catastrophic for guests and property.",
+        "pill": "Prevent catastrophe. Ensure survival.",
+        "colorTheme": "red"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M3 3v18h18\"/><path d=\"m19 9-5 5-4-4-3 3\"/></svg>",
+        "number": "03",
+        "title": "Business Continuity",
+        "desc": "Revenue, supplier and utility resilience so closure doesn't mean collapse.",
+        "pill": "Stay open. Stay profitable.",
+        "colorTheme": "blue"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>",
+        "number": "04",
+        "title": "People & Operations",
+        "desc": "Employee, security, equipment and facility controls that keep service continuous.",
+        "pill": "Empower people. Sustain operations.",
+        "colorTheme": "purple"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\"/><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"/><path d=\"m9 14 2 2 4-4\"/></svg>",
+        "number": "05",
+        "title": "Financial & Regulatory Resilience",
+        "desc": "Valuation, controls and protection aligned to actual exposure — not guesswork.",
+        "pill": "Compliant. Covered. Confident.",
+        "colorTheme": "orange"
+      }
+    ],
+    "stories": [
+      {
+        "pill": "FIRE INCIDENT",
+        "pillTheme": "red",
+        "pillIcon": "🔥",
+        "image": "/images/story-fire.jpg",
+        "date": "Jan 2024",
+        "title": "Kitchen Fire Shuts Hotel for 3 Months",
+        "location": "Lagos, Nigeria",
+        "desc": "Grease build-up and weak suppression turned a small kitchen fire into a full evacuation, closing rooms and restaurant.",
+        "lossLabel": "TOTAL FINANCIAL IMPACT",
+        "lossAmount": "₦185,000,000",
+        "lossWords": "One hundred and eighty five million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Exhaust cleaning, suppression servicing and fire detection testing prevent catastrophic loss.",
+        "lessonTheme": "red",
+        "trustLine1": "A single fire can erase years of profit.",
+        "trustLine2": "Know your exposure before it ignites."
+      },
+      {
+        "pill": "GUEST LIABILITY",
+        "pillTheme": "orange",
+        "pillIcon": "⚠️",
+        "image": "/images/risk-hotel-pool.jpg",
+        "title": "Pool Incident & Guest Claim",
+        "location": "Abuja, Nigeria",
+        "desc": "A guest injury at an unsupervised pool led to a liability claim and reputational damage.",
+        "lossLabel": "SETTLEMENT & REPUTATION COST",
+        "lossAmount": "₦42,000,000",
+        "lossWords": "Forty two million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Barriers, signage, supervision and documented checks are non-negotiable around water.",
+        "lessonTheme": "orange",
+        "trustLine1": "Guest safety is your licence to operate.",
+        "trustLine2": "Don't learn it from a lawsuit."
+      },
+      {
+        "pill": "BUSINESS INTERRUPTION",
+        "pillTheme": "blue",
+        "pillIcon": "🏨",
+        "image": "/images/hero-hotel.jpg",
+        "title": "Generator Failure During Peak Season",
+        "location": "Port Harcourt, Nigeria",
+        "desc": "Generator breakdown with no backup left guests without power, HVAC or water — refunds and negative reviews followed.",
+        "lossLabel": "TOTAL FINANCIAL IMPACT",
+        "lossAmount": "₦28,000,000",
+        "lossWords": "Twenty eight million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Preventive maintenance, load-testing and backup power protect revenue and reputation.",
+        "lessonTheme": "blue",
+        "trustLine1": "Operations stop when equipment stops.",
+        "trustLine2": "Resilience is a system, not luck."
+      }
+    ],
+    "testimonial": {
+      "quote": "The 7-pillar breakdown showed us our fire and valuation gaps instantly. We fixed the critical alerts before peak season.",
+      "author": "General Manager",
+      "role": "Boutique Hotel, Lagos"
+    },
+    "preview": {
+      "scoreTitle": "HOTEL COVERSCORE",
+      "scoreSubTitle": "RESILIENCE SCORE",
+      "score": 42,
+      "riskText": "HIGH RISK",
+      "gapScore": 58,
+      "exposure": "320,000,000",
+      "warning": "Your hotel's greatest exposure is concentrated in Fire & Property Protection.",
+      "lockText": "Your full report includes 7 pillars, Critical Exposure Alerts and a 25-point improvement forecast.",
+      "topRisks": [
+        {
+          "name": "Fire & Property",
+          "level": "Critical",
+          "percent": "80%",
+          "color": "var(--color-high)",
+          "icon": "🔥"
+        },
+        {
+          "name": "Guest Liability",
+          "level": "High",
+          "percent": "65%",
+          "color": "var(--color-high)",
+          "icon": "🛡️"
+        },
+        {
+          "name": "Business Continuity",
+          "level": "High",
+          "percent": "60%",
+          "color": "#f97316",
+          "icon": "📉"
+        },
+        {
+          "name": "Security",
+          "level": "Medium",
+          "percent": "45%",
+          "color": "var(--color-medium)",
+          "icon": "🔒"
+        },
+        {
+          "name": "Operations",
+          "level": "Medium",
+          "percent": "40%",
+          "color": "var(--color-medium)",
+          "icon": "⚙️"
+        }
+      ]
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually<br>Higher Than The Cost Of <span style=\"color: #F5A623; border-bottom: 2px solid #F5A623;\">Preparing</span> For It.",
+      "exposure": "₦320M+",
+      "icons": [
+        {
+          "icon": "🔥",
+          "label": "Fire & Property"
+        },
+        {
+          "icon": "🏊",
+          "label": "Guest Liability"
+        },
+        {
+          "icon": "💰",
+          "label": "Business Interruption"
+        },
+        {
+          "icon": "🔒",
+          "label": "Theft & Security"
+        },
+        {
+          "icon": "⚙️",
+          "label": "Equipment Failure"
+        }
+      ]
+    },
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "📝",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hotel across 12 screens. Takes <strong>less than 5 minutes.</strong>",
+        "badgeIcon": "⏱️",
+        "badgeText": "~5<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "🔒",
+        "title": "Secure Data Analysis",
+        "desc": "We analyze your answers against <strong>56 risk objects</strong> across <strong>7 pillars</strong>.",
+        "badgeIcon": "🔒",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "🔍",
+        "title": "Risk Intelligence",
+        "desc": "Our engine identifies <strong>critical exposures</strong> and your <strong>biggest insight</strong>.",
+        "badgeIcon": "✅",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "📊",
+        "title": "Generate Your Score",
+        "desc": "We calculate your <strong>Hotel CoverScore™</strong> with severity override for catastrophic gaps.",
+        "badgeIcon": "📊",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "📄",
+        "title": "Get Your Full Report",
+        "desc": "Receive your <strong>Hotel Resilience Report™</strong> and <strong>Advisor Brief™</strong>.",
+        "badgeIcon": "📄",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "🎯",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your <strong>Resilience Forecast</strong> to improve by up to <strong>25 points</strong>.",
+        "badgeIcon": "🎯",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ],
+    "faq": [
+      {
+        "icon": "🏨",
+        "q": "What is the Hotels & Hospitality Assessment?",
+        "a": "A 7-pillar resilience assessment that scores your hotel across guest safety, fire & property, business continuity, employee safety, security, operations and financial resilience — with Critical Exposure Alerts."
+      },
+      {
+        "icon": "⏱️",
+        "q": "How long does it take?",
+        "a": "Less than <span style=\"color: #10B981; font-weight:700;\">5 minutes</span> across 12 screens. Conditional branching skips irrelevant modules (e.g., no pool → no pool questions)."
+      },
+      {
+        "icon": "🔒",
+        "q": "Is my data secure?",
+        "a": "Yes. <span style=\"color: #10B981; font-weight:700;\">100% secure</span> — encryption in transit and at rest, never shared without consent."
+      },
+      {
+        "icon": "📄",
+        "q": "What do I get?",
+        "a": "Hotel Resilience Snapshot™, 7-pillar breakdown, Biggest Insight™, Risk Story™, Resilience Forecast™ and prioritized Risk Reduction + Risk Transfer recommendations."
+      },
+      {
+        "icon": "💰",
+        "q": "How much does it cost?",
+        "a": "Completely free. No hidden fees. No card required."
+      },
+      {
+        "icon": "💬",
+        "q": "Can I speak with an Advisor?",
+        "a": "Yes — request a complimentary 15-minute Hotel Risk Review™ at the end of the assessment. Your Advisor receives a separate Hotel Advisor Brief™."
+      }
+    ],
+    "shortName": "Hotel",
+    "shortNameLower": "hotel",
+    "shortNamePlural": "hotels",
+    "facilityType": "Hotels & Hospitality"
+  },
+  "hotels": {
+    "title": "Hotel Risk Assessment | CoverScore",
+    "trigger": "START HOTEL ASSESSMENT",
+    "trustBarExpertise": "Hospitality Expertise",
+    "calculator": {
+      "title": "INSTANT HOTEL RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of fire, liability and business interruption on your hotel."
+    },
+    "whyChooseTitle": "Why Hotels Choose CoverScore",
+    "trustedByTitle": "Trusted by Hospitality Leaders",
+    "hero": {
+      "headline": "Protect Your Guests.<br>Protect Your <span style=\"color: var(--color-gold);\">Hotel.</span>",
+      "subheadline": "Discover how resilient your hotel is against the risks that can disrupt guests, property, people, revenue and operations — in under 5 minutes.",
+      "mobileHeadline": "See Your Hotel's<br><span class=\"hero-highlight\">Resilience Score</span><br>In Less Than 5 Minutes.",
+      "mobileSubheadline": "Most hotels discover critical exposures they never knew existed.",
+      "mobileCta": "Get My Hotel Resilience Score",
+      "mobileCtaSub": "Takes Less Than 5 Minutes",
+      "trustBadgeTitle": "Hotels & Hospitality Resilience™",
+      "trustBadgeDesc": "The 7-pillar assessment for Hotels & Hospitality.",
+      "image": "/images/hero-hotel.jpg",
+      "benefits": [
+        "AI-Powered 7-Pillar Assessment",
+        "Critical Exposure Alerts",
+        "Hospitality Risk Advisor Support"
+      ],
+      "overlayStatement": "Your Guests' Safety.<br>Your Hotel's Resilience.",
+      "metrics": [
+        {
+          "value": "7",
+          "label": "<b>Risk pillars</b>",
+          "icon": "<img src=\"/images/icon-shield-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "56",
+          "label": "<b>Risk objects</b>",
+          "icon": "<img src=\"/images/icon-check-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "5 min",
+          "label": "<b>Assessment time</b>",
+          "icon": "<img src=\"/images/icon-speedometer.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "24/7",
+          "label": "<b>Advisor Support</b>",
+          "icon": "<img src=\"/images/icon-person-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        }
+      ]
+    },
+    "whyChoose": [
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/></svg>",
+        "number": "01",
+        "title": "Guest Safety & Liability",
+        "desc": "Uncover slip, pool, food and public liability exposures before they become claims.",
+        "pill": "Protect guests. Protect reputation.",
+        "colorTheme": "green"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/></svg>",
+        "number": "02",
+        "title": "Fire & Property Protection",
+        "desc": "Highest-severity pillar — a single fire can be catastrophic for guests and property.",
+        "pill": "Prevent catastrophe. Ensure survival.",
+        "colorTheme": "red"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M3 3v18h18\"/><path d=\"m19 9-5 5-4-4-3 3\"/></svg>",
+        "number": "03",
+        "title": "Business Continuity",
+        "desc": "Revenue, supplier and utility resilience so closure doesn't mean collapse.",
+        "pill": "Stay open. Stay profitable.",
+        "colorTheme": "blue"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>",
+        "number": "04",
+        "title": "People & Operations",
+        "desc": "Employee, security, equipment and facility controls that keep service continuous.",
+        "pill": "Empower people. Sustain operations.",
+        "colorTheme": "purple"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\"/><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"/><path d=\"m9 14 2 2 4-4\"/></svg>",
+        "number": "05",
+        "title": "Financial & Regulatory Resilience",
+        "desc": "Valuation, controls and protection aligned to actual exposure — not guesswork.",
+        "pill": "Compliant. Covered. Confident.",
+        "colorTheme": "orange"
+      }
+    ],
+    "stories": [
+      {
+        "pill": "FIRE INCIDENT",
+        "pillTheme": "red",
+        "pillIcon": "🔥",
+        "image": "/images/story-fire.jpg",
+        "date": "Jan 2024",
+        "title": "Kitchen Fire Shuts Hotel for 3 Months",
+        "location": "Lagos, Nigeria",
+        "desc": "Grease build-up and weak suppression turned a small kitchen fire into a full evacuation, closing rooms and restaurant.",
+        "lossLabel": "TOTAL FINANCIAL IMPACT",
+        "lossAmount": "₦185,000,000",
+        "lossWords": "One hundred and eighty five million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Exhaust cleaning, suppression servicing and fire detection testing prevent catastrophic loss.",
+        "lessonTheme": "red",
+        "trustLine1": "A single fire can erase years of profit.",
+        "trustLine2": "Know your exposure before it ignites."
+      },
+      {
+        "pill": "GUEST LIABILITY",
+        "pillTheme": "orange",
+        "pillIcon": "⚠️",
+        "image": "/images/risk-hotel-pool.jpg",
+        "title": "Pool Incident & Guest Claim",
+        "location": "Abuja, Nigeria",
+        "desc": "A guest injury at an unsupervised pool led to a liability claim and reputational damage.",
+        "lossLabel": "SETTLEMENT & REPUTATION COST",
+        "lossAmount": "₦42,000,000",
+        "lossWords": "Forty two million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Barriers, signage, supervision and documented checks are non-negotiable around water.",
+        "lessonTheme": "orange",
+        "trustLine1": "Guest safety is your licence to operate.",
+        "trustLine2": "Don't learn it from a lawsuit."
+      },
+      {
+        "pill": "BUSINESS INTERRUPTION",
+        "pillTheme": "blue",
+        "pillIcon": "🏨",
+        "image": "/images/hero-hotel.jpg",
+        "title": "Generator Failure During Peak Season",
+        "location": "Port Harcourt, Nigeria",
+        "desc": "Generator breakdown with no backup left guests without power, HVAC or water — refunds and negative reviews followed.",
+        "lossLabel": "TOTAL FINANCIAL IMPACT",
+        "lossAmount": "₦28,000,000",
+        "lossWords": "Twenty eight million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Preventive maintenance, load-testing and backup power protect revenue and reputation.",
+        "lessonTheme": "blue",
+        "trustLine1": "Operations stop when equipment stops.",
+        "trustLine2": "Resilience is a system, not luck."
+      }
+    ],
+    "testimonial": {
+      "quote": "The 7-pillar breakdown showed us our fire and valuation gaps instantly. We fixed the critical alerts before peak season.",
+      "author": "General Manager",
+      "role": "Boutique Hotel, Lagos"
+    },
+    "preview": {
+      "scoreTitle": "HOTEL COVERSCORE",
+      "scoreSubTitle": "RESILIENCE SCORE",
+      "score": 42,
+      "riskText": "HIGH RISK",
+      "gapScore": 58,
+      "exposure": "320,000,000",
+      "warning": "Your hotel's greatest exposure is concentrated in Fire & Property Protection.",
+      "lockText": "Your full report includes 7 pillars, Critical Exposure Alerts and a 25-point improvement forecast.",
+      "topRisks": [
+        {
+          "name": "Fire & Property",
+          "level": "Critical",
+          "percent": "80%",
+          "color": "var(--color-high)",
+          "icon": "🔥"
+        },
+        {
+          "name": "Guest Liability",
+          "level": "High",
+          "percent": "65%",
+          "color": "var(--color-high)",
+          "icon": "🛡️"
+        },
+        {
+          "name": "Business Continuity",
+          "level": "High",
+          "percent": "60%",
+          "color": "#f97316",
+          "icon": "📉"
+        },
+        {
+          "name": "Security",
+          "level": "Medium",
+          "percent": "45%",
+          "color": "var(--color-medium)",
+          "icon": "🔒"
+        },
+        {
+          "name": "Operations",
+          "level": "Medium",
+          "percent": "40%",
+          "color": "var(--color-medium)",
+          "icon": "⚙️"
+        }
+      ]
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually<br>Higher Than The Cost Of <span style=\"color: #F5A623; border-bottom: 2px solid #F5A623;\">Preparing</span> For It.",
+      "exposure": "₦320M+",
+      "icons": [
+        {
+          "icon": "🔥",
+          "label": "Fire & Property"
+        },
+        {
+          "icon": "🏊",
+          "label": "Guest Liability"
+        },
+        {
+          "icon": "💰",
+          "label": "Business Interruption"
+        },
+        {
+          "icon": "🔒",
+          "label": "Theft & Security"
+        },
+        {
+          "icon": "⚙️",
+          "label": "Equipment Failure"
+        }
+      ]
+    },
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "📝",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hotel across 12 screens. Takes <strong>less than 5 minutes.</strong>",
+        "badgeIcon": "⏱️",
+        "badgeText": "~5<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "🔒",
+        "title": "Secure Data Analysis",
+        "desc": "We analyze your answers against <strong>56 risk objects</strong> across <strong>7 pillars</strong>.",
+        "badgeIcon": "🔒",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "🔍",
+        "title": "Risk Intelligence",
+        "desc": "Our engine identifies <strong>critical exposures</strong> and your <strong>biggest insight</strong>.",
+        "badgeIcon": "✅",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "📊",
+        "title": "Generate Your Score",
+        "desc": "We calculate your <strong>Hotel CoverScore™</strong> with severity override for catastrophic gaps.",
+        "badgeIcon": "📊",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "📄",
+        "title": "Get Your Full Report",
+        "desc": "Receive your <strong>Hotel Resilience Report™</strong> and <strong>Advisor Brief™</strong>.",
+        "badgeIcon": "📄",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "🎯",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your <strong>Resilience Forecast</strong> to improve by up to <strong>25 points</strong>.",
+        "badgeIcon": "🎯",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ],
+    "faq": [
+      {
+        "icon": "🏨",
+        "q": "What is the Hotels & Hospitality Assessment?",
+        "a": "A 7-pillar resilience assessment that scores your hotel across guest safety, fire & property, business continuity, employee safety, security, operations and financial resilience — with Critical Exposure Alerts."
+      },
+      {
+        "icon": "⏱️",
+        "q": "How long does it take?",
+        "a": "Less than <span style=\"color: #10B981; font-weight:700;\">5 minutes</span> across 12 screens. Conditional branching skips irrelevant modules (e.g., no pool → no pool questions)."
+      },
+      {
+        "icon": "🔒",
+        "q": "Is my data secure?",
+        "a": "Yes. <span style=\"color: #10B981; font-weight:700;\">100% secure</span> — encryption in transit and at rest, never shared without consent."
+      },
+      {
+        "icon": "📄",
+        "q": "What do I get?",
+        "a": "Hotel Resilience Snapshot™, 7-pillar breakdown, Biggest Insight™, Risk Story™, Resilience Forecast™ and prioritized Risk Reduction + Risk Transfer recommendations."
+      },
+      {
+        "icon": "💰",
+        "q": "How much does it cost?",
+        "a": "Completely free. No hidden fees. No card required."
+      },
+      {
+        "icon": "💬",
+        "q": "Can I speak with an Advisor?",
+        "a": "Yes — request a complimentary 15-minute Hotel Risk Review™ at the end of the assessment. Your Advisor receives a separate Hotel Advisor Brief™."
+      }
+    ],
+    "shortName": "Hotel",
+    "shortNameLower": "hotel",
+    "shortNamePlural": "hotels",
+    "facilityType": "Hotels & Hospitality"
+  },
+  "hospitality": {
+    "title": "Hotel Risk Assessment | CoverScore",
+    "trigger": "START HOTEL ASSESSMENT",
+    "trustBarExpertise": "Hospitality Expertise",
+    "calculator": {
+      "title": "INSTANT HOTEL RISK EXPOSURE CALCULATOR™",
+      "subtitle": "Estimate the potential financial impact of fire, liability and business interruption on your hotel."
+    },
+    "whyChooseTitle": "Why Hotels Choose CoverScore",
+    "trustedByTitle": "Trusted by Hospitality Leaders",
+    "hero": {
+      "headline": "Protect Your Guests.<br>Protect Your <span style=\"color: var(--color-gold);\">Hotel.</span>",
+      "subheadline": "Discover how resilient your hotel is against the risks that can disrupt guests, property, people, revenue and operations — in under 5 minutes.",
+      "mobileHeadline": "See Your Hotel's<br><span class=\"hero-highlight\">Resilience Score</span><br>In Less Than 5 Minutes.",
+      "mobileSubheadline": "Most hotels discover critical exposures they never knew existed.",
+      "mobileCta": "Get My Hotel Resilience Score",
+      "mobileCtaSub": "Takes Less Than 5 Minutes",
+      "trustBadgeTitle": "Hotels & Hospitality Resilience™",
+      "trustBadgeDesc": "The 7-pillar assessment for Hotels & Hospitality.",
+      "image": "/images/hero-hotel.jpg",
+      "benefits": [
+        "AI-Powered 7-Pillar Assessment",
+        "Critical Exposure Alerts",
+        "Hospitality Risk Advisor Support"
+      ],
+      "overlayStatement": "Your Guests' Safety.<br>Your Hotel's Resilience.",
+      "metrics": [
+        {
+          "value": "7",
+          "label": "<b>Risk pillars</b>",
+          "icon": "<img src=\"/images/icon-shield-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "56",
+          "label": "<b>Risk objects</b>",
+          "icon": "<img src=\"/images/icon-check-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "5 min",
+          "label": "<b>Assessment time</b>",
+          "icon": "<img src=\"/images/icon-speedometer.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        },
+        {
+          "value": "24/7",
+          "label": "<b>Advisor Support</b>",
+          "icon": "<img src=\"/images/icon-person-metric.jpg\" style=\"width:48px;height:48px;object-fit:contain;\">"
+        }
+      ]
+    },
+    "whyChoose": [
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><path d=\"m9 12 2 2 4-4\"/></svg>",
+        "number": "01",
+        "title": "Guest Safety & Liability",
+        "desc": "Uncover slip, pool, food and public liability exposures before they become claims.",
+        "pill": "Protect guests. Protect reputation.",
+        "colorTheme": "green"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/></svg>",
+        "number": "02",
+        "title": "Fire & Property Protection",
+        "desc": "Highest-severity pillar — a single fire can be catastrophic for guests and property.",
+        "pill": "Prevent catastrophe. Ensure survival.",
+        "colorTheme": "red"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M3 3v18h18\"/><path d=\"m19 9-5 5-4-4-3 3\"/></svg>",
+        "number": "03",
+        "title": "Business Continuity",
+        "desc": "Revenue, supplier and utility resilience so closure doesn't mean collapse.",
+        "pill": "Stay open. Stay profitable.",
+        "colorTheme": "blue"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>",
+        "number": "04",
+        "title": "People & Operations",
+        "desc": "Employee, security, equipment and facility controls that keep service continuous.",
+        "pill": "Empower people. Sustain operations.",
+        "colorTheme": "purple"
+      },
+      {
+        "icon": "<svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\"/><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"/><path d=\"m9 14 2 2 4-4\"/></svg>",
+        "number": "05",
+        "title": "Financial & Regulatory Resilience",
+        "desc": "Valuation, controls and protection aligned to actual exposure — not guesswork.",
+        "pill": "Compliant. Covered. Confident.",
+        "colorTheme": "orange"
+      }
+    ],
+    "stories": [
+      {
+        "pill": "FIRE INCIDENT",
+        "pillTheme": "red",
+        "pillIcon": "🔥",
+        "image": "/images/story-fire.jpg",
+        "date": "Jan 2024",
+        "title": "Kitchen Fire Shuts Hotel for 3 Months",
+        "location": "Lagos, Nigeria",
+        "desc": "Grease build-up and weak suppression turned a small kitchen fire into a full evacuation, closing rooms and restaurant.",
+        "lossLabel": "TOTAL FINANCIAL IMPACT",
+        "lossAmount": "₦185,000,000",
+        "lossWords": "One hundred and eighty five million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Exhaust cleaning, suppression servicing and fire detection testing prevent catastrophic loss.",
+        "lessonTheme": "red",
+        "trustLine1": "A single fire can erase years of profit.",
+        "trustLine2": "Know your exposure before it ignites."
+      },
+      {
+        "pill": "GUEST LIABILITY",
+        "pillTheme": "orange",
+        "pillIcon": "⚠️",
+        "image": "/images/risk-hotel-pool.jpg",
+        "title": "Pool Incident & Guest Claim",
+        "location": "Abuja, Nigeria",
+        "desc": "A guest injury at an unsupervised pool led to a liability claim and reputational damage.",
+        "lossLabel": "SETTLEMENT & REPUTATION COST",
+        "lossAmount": "₦42,000,000",
+        "lossWords": "Forty two million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Barriers, signage, supervision and documented checks are non-negotiable around water.",
+        "lessonTheme": "orange",
+        "trustLine1": "Guest safety is your licence to operate.",
+        "trustLine2": "Don't learn it from a lawsuit."
+      },
+      {
+        "pill": "BUSINESS INTERRUPTION",
+        "pillTheme": "blue",
+        "pillIcon": "🏨",
+        "image": "/images/hero-hotel.jpg",
+        "title": "Generator Failure During Peak Season",
+        "location": "Port Harcourt, Nigeria",
+        "desc": "Generator breakdown with no backup left guests without power, HVAC or water — refunds and negative reviews followed.",
+        "lossLabel": "TOTAL FINANCIAL IMPACT",
+        "lossAmount": "₦28,000,000",
+        "lossWords": "Twenty eight million naira",
+        "lessonTitle": "KEY LESSON",
+        "lessonDesc": "Preventive maintenance, load-testing and backup power protect revenue and reputation.",
+        "lessonTheme": "blue",
+        "trustLine1": "Operations stop when equipment stops.",
+        "trustLine2": "Resilience is a system, not luck."
+      }
+    ],
+    "testimonial": {
+      "quote": "The 7-pillar breakdown showed us our fire and valuation gaps instantly. We fixed the critical alerts before peak season.",
+      "author": "General Manager",
+      "role": "Boutique Hotel, Lagos"
+    },
+    "preview": {
+      "scoreTitle": "HOTEL COVERSCORE",
+      "scoreSubTitle": "RESILIENCE SCORE",
+      "score": 42,
+      "riskText": "HIGH RISK",
+      "gapScore": 58,
+      "exposure": "320,000,000",
+      "warning": "Your hotel's greatest exposure is concentrated in Fire & Property Protection.",
+      "lockText": "Your full report includes 7 pillars, Critical Exposure Alerts and a 25-point improvement forecast.",
+      "topRisks": [
+        {
+          "name": "Fire & Property",
+          "level": "Critical",
+          "percent": "80%",
+          "color": "var(--color-high)",
+          "icon": "🔥"
+        },
+        {
+          "name": "Guest Liability",
+          "level": "High",
+          "percent": "65%",
+          "color": "var(--color-high)",
+          "icon": "🛡️"
+        },
+        {
+          "name": "Business Continuity",
+          "level": "High",
+          "percent": "60%",
+          "color": "#f97316",
+          "icon": "📉"
+        },
+        {
+          "name": "Security",
+          "level": "Medium",
+          "percent": "45%",
+          "color": "var(--color-medium)",
+          "icon": "🔒"
+        },
+        {
+          "name": "Operations",
+          "level": "Medium",
+          "percent": "40%",
+          "color": "var(--color-medium)",
+          "icon": "⚙️"
+        }
+      ]
+    },
+    "finalBanner": {
+      "headline": "The Cost Of Ignoring Risk Is Usually<br>Higher Than The Cost Of <span style=\"color: #F5A623; border-bottom: 2px solid #F5A623;\">Preparing</span> For It.",
+      "exposure": "₦320M+",
+      "icons": [
+        {
+          "icon": "🔥",
+          "label": "Fire & Property"
+        },
+        {
+          "icon": "🏊",
+          "label": "Guest Liability"
+        },
+        {
+          "icon": "💰",
+          "label": "Business Interruption"
+        },
+        {
+          "icon": "🔒",
+          "label": "Theft & Security"
+        },
+        {
+          "icon": "⚙️",
+          "label": "Equipment Failure"
+        }
+      ]
+    },
+    "howItWorks": [
+      {
+        "number": "1",
+        "icon": "📝",
+        "title": "Answer Simple Questions",
+        "desc": "Tell us about your hotel across 12 screens. Takes <strong>less than 5 minutes.</strong>",
+        "badgeIcon": "⏱️",
+        "badgeText": "~5<br>MIN"
+      },
+      {
+        "number": "2",
+        "icon": "🔒",
+        "title": "Secure Data Analysis",
+        "desc": "We analyze your answers against <strong>56 risk objects</strong> across <strong>7 pillars</strong>.",
+        "badgeIcon": "🔒",
+        "badgeText": "100%<br>SECURE"
+      },
+      {
+        "number": "3",
+        "icon": "🔍",
+        "title": "Risk Intelligence",
+        "desc": "Our engine identifies <strong>critical exposures</strong> and your <strong>biggest insight</strong>.",
+        "badgeIcon": "✅",
+        "badgeText": "AI-POWERED<br>ANALYSIS"
+      },
+      {
+        "number": "4",
+        "icon": "📊",
+        "title": "Generate Your Score",
+        "desc": "We calculate your <strong>Hotel CoverScore™</strong> with severity override for catastrophic gaps.",
+        "badgeIcon": "📊",
+        "badgeText": "CLEAR &<br>ACTIONABLE"
+      },
+      {
+        "number": "5",
+        "icon": "📄",
+        "title": "Get Your Full Report",
+        "desc": "Receive your <strong>Hotel Resilience Report™</strong> and <strong>Advisor Brief™</strong>.",
+        "badgeIcon": "📄",
+        "badgeText": "DETAILED<br>REPORT"
+      },
+      {
+        "number": "6",
+        "icon": "🎯",
+        "title": "Take Action & Reduce Risk",
+        "desc": "Use your <strong>Resilience Forecast</strong> to improve by up to <strong>25 points</strong>.",
+        "badgeIcon": "🎯",
+        "badgeText": "REDUCE RISK.<br>PROTECT MORE."
+      }
+    ],
+    "faq": [
+      {
+        "icon": "🏨",
+        "q": "What is the Hotels & Hospitality Assessment?",
+        "a": "A 7-pillar resilience assessment that scores your hotel across guest safety, fire & property, business continuity, employee safety, security, operations and financial resilience — with Critical Exposure Alerts."
+      },
+      {
+        "icon": "⏱️",
+        "q": "How long does it take?",
+        "a": "Less than <span style=\"color: #10B981; font-weight:700;\">5 minutes</span> across 12 screens. Conditional branching skips irrelevant modules (e.g., no pool → no pool questions)."
+      },
+      {
+        "icon": "🔒",
+        "q": "Is my data secure?",
+        "a": "Yes. <span style=\"color: #10B981; font-weight:700;\">100% secure</span> — encryption in transit and at rest, never shared without consent."
+      },
+      {
+        "icon": "📄",
+        "q": "What do I get?",
+        "a": "Hotel Resilience Snapshot™, 7-pillar breakdown, Biggest Insight™, Risk Story™, Resilience Forecast™ and prioritized Risk Reduction + Risk Transfer recommendations."
+      },
+      {
+        "icon": "💰",
+        "q": "How much does it cost?",
+        "a": "Completely free. No hidden fees. No card required."
+      },
+      {
+        "icon": "💬",
+        "q": "Can I speak with an Advisor?",
+        "a": "Yes — request a complimentary 15-minute Hotel Risk Review™ at the end of the assessment. Your Advisor receives a separate Hotel Advisor Brief™."
+      }
+    ],
+    "shortName": "Hotel",
+    "shortNameLower": "hotel",
+    "shortNamePlural": "hotels",
+    "facilityType": "Hotels & Hospitality"
   }
 }
