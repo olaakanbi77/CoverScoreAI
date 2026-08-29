@@ -168,12 +168,15 @@ app.get('/:industry', (req, res, next) => {
   const reserved = ['login', 'api', 'webhook', 'whatsapp', 'admin', 'advisor', 'dashboard', 'wipe-db-xyz123', 'quote-request', 'consultation-request', 'personal'];
   if (reserved.includes(industryKey)) return next();
 
-  if (industryContent[industryKey]) {
+  // Alias hotels -> hotel
+  const lookupKey = industryKey === 'hotels' ? 'hotel' : industryKey;
+
+  if (industryContent[lookupKey]) {
     res.render('landing', { 
-      title: industryContent[industryKey].title, 
+      title: industryContent[lookupKey].title, 
       layout: false,
-      trigger: industryContent[industryKey].trigger,
-      data: industryContent[industryKey]
+      trigger: industryContent[lookupKey].trigger,
+      data: industryContent[lookupKey]
     });
   } else {
     next(); // 404 or fall through
@@ -317,6 +320,17 @@ app.get('/assessment/result/:id', optionalAuth, (req, res) => {
 
 app.get('/assessment/report/:id', (req, res) => {
   res.redirect(`/assessment/result/${req.params.id}`);
+});
+
+// Hotels & Hospitality — dedicated report & advisor brief views (per architecture §20 / §13-17)
+app.get('/reports/hotel/:id', optionalAuth, (req, res) => {
+  res.render('assessment/hotel-resilience-report', { title: 'Hotel Resilience Report™', layout: false });
+});
+app.get('/advisor/hotel-brief/:id', authenticatePage, (req, res) => {
+  res.render('advisor/hotel-brief', { title: 'Hotel Advisor Brief™', layout: false });
+});
+app.get('/reports/hotel-brief/:id', authenticatePage, (req, res) => {
+  res.redirect(`/advisor/hotel-brief/${req.params.id}`);
 });
 
 app.get('/assessment/email-capture', optionalAuth, (req, res) => {
