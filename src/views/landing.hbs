@@ -1094,14 +1094,14 @@
                 </g>
                 <line x1="148" y1="22" x2="158" y2="46" stroke="#1e293b" stroke-width="5" stroke-linecap="round" />
               </svg>
-              <div style="font-size: 5rem; font-weight: 900; color: #d97706; line-height: 0.8; z-index: 2; margin-bottom: -4px;">68</div>
+              <div style="font-size: 5rem; font-weight: 900; color: #d97706; line-height: 0.8; z-index: 2; margin-bottom: -4px;">{{data.preview.score}}</div>
             </div>
             
-            <div style="font-size: 1rem; font-weight: 800; color: #d97706; margin-bottom: 24px;">MODERATE RISK</div>
+            <div style="font-size: 1rem; font-weight: 800; color: #d97706; margin-bottom: 24px;">{{data.preview.riskText}}</div>
             
             <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 12px; display: flex; gap: 8px; align-items: flex-start; text-align: left; width: 100%;">
               <div style="width: 20px; height: 20px; border-radius: 50%; background: #fbbf24; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 0.8rem;">!</div>
-              <div style="font-size: 0.75rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your {{data.shortNameLower}} is more exposed than 68% of similar facilities.</div>
+              <div style="font-size: 0.75rem; color: #78350f; font-weight: 500; line-height: 1.4;">Your {{data.shortNameLower}} is more exposed than {{data.preview.gapScore}}% of similar facilities.</div>
             </div>
           </div>
           
@@ -1116,71 +1116,20 @@
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 20px;">
-              <!-- Item 1: Fire Safety -->
+              {{#each data.preview.topRisks}}
               <div style="display: flex; gap: 16px; align-items: center;">
-                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fee2e2; color: {{this.color}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <span style="font-size: 20px;">{{{this.icon}}}</span>
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Fire Safety</span>
-                    <span style="font-size: 0.75rem; font-weight: 800; color: #ef4444;">HIGH</span>
+                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">{{this.name}}</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: {{this.color}};">{{this.level}}</span>
                   </div>
-                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 85%; background: #ef4444; border-radius: 2px;"></div></div>
+                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: {{this.percent}}; background: {{this.color}}; border-radius: 2px;"></div></div>
                 </div>
               </div>
-              <!-- Item 2: Medical Equipment -->
-              <div style="display: flex; gap: 16px; align-items: center;">
-                <div style="width: 40px; height: 40px; border-radius: 12px; background: #ffedd5; color: #f97316; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                </div>
-                <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Medical Equipment</span>
-                    <span style="font-size: 0.75rem; font-weight: 800; color: #f97316;">HIGH</span>
-                  </div>
-                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 75%; background: #f97316; border-radius: 2px;"></div></div>
-                </div>
-              </div>
-              <!-- Item 3: Patient Safety -->
-              <div style="display: flex; gap: 16px; align-items: center;">
-                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fef9c3; color: #eab308; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="3"></circle></svg>
-                </div>
-                <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Patient Safety</span>
-                    <span style="font-size: 0.75rem; font-weight: 800; color: #eab308;">MEDIUM</span>
-                  </div>
-                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 50%; background: #eab308; border-radius: 2px;"></div></div>
-                </div>
-              </div>
-              <!-- Item 4: Cyber Security -->
-              <div style="display: flex; gap: 16px; align-items: center;">
-                <div style="width: 40px; height: 40px; border-radius: 12px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                </div>
-                <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Cyber Security</span>
-                    <span style="font-size: 0.75rem; font-weight: 800; color: #22c55e;">LOW</span>
-                  </div>
-                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 25%; background: #22c55e; border-radius: 2px;"></div></div>
-                </div>
-              </div>
-              <!-- Item 5: Operational Continuity -->
-              <div style="display: flex; gap: 16px; align-items: center;">
-                <div style="width: 40px; height: 40px; border-radius: 12px; background: #dcfce7; color: #22c55e; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                </div>
-                <div style="flex: 1;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Operational Continuity</span>
-                    <span style="font-size: 0.75rem; font-weight: 800; color: #22c55e;">LOW</span>
-                  </div>
-                  <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;"><div style="height: 100%; width: 15%; background: #22c55e; border-radius: 2px;"></div></div>
-                </div>
-              </div>
+              {{/each}}
             </div>
           </div>
         </div>
@@ -1207,7 +1156,7 @@
         </div>
         <div style="flex: 1; text-align: left;">
           <div style="font-size: 1rem; font-weight: 800; color: #1e3a8a; margin-bottom: 4px;">What This Means</div>
-          <div style="font-size: 0.8rem; color: #1e3a8a; font-weight: 500; line-height: 1.4; margin-bottom: 6px;">You have critical exposures that could result in significant financial losses and operational disruption.</div>
+          <div style="font-size: 0.8rem; color: #1e3a8a; font-weight: 500; line-height: 1.4; margin-bottom: 6px;">{{data.preview.warning}}</div>
           <a href="/start-whatsapp?text={{trigger}}" style="font-size: 0.75rem; font-weight: 700; color: #2563eb; text-decoration: none;">Get your exact risk score and fix the gaps.</a>
         </div>
         <div class="wtm-arrow" style="color: #1e3a8a; flex-shrink: 0; align-self: center;">
