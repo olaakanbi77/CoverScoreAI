@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hotel Resilience Report — CoverScore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=2">
+<style>
+:root{--bg:#0f172a;--card:rgba(255,255,255,.95);--muted:#64748b;--red:#ef4444;--amber:#f59e0b;--green:#10b981;--blue:#3b82f6}
+body{font-family:Inter,sans-serif;background:linear-gradient(180deg,#0f172a,#1e293b);margin:0;color:#fff}
+.wrap{max-width:920px;margin:0 auto;padding:28px 16px}
+.card{background:var(--card);color:#0f172a;border-radius:18px;padding:22px;border:1px solid #e2e8f0;margin-bottom:18px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.5px}
+.badge.critical{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.badge.high{background:#fff7ed;color:#ea580c;border:1px solid #fed7aa}
+.badge.moderate{background:#fefce8;color:#a16207;border:1px solid #fde68a}
+.badge.resilient{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.badge.highly{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.pillar-row{display:flex;align-items:center;gap:12px;margin:10px 0}
+.bar{flex:1;height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+.fill{height:100%;border-radius:999px}
+.grid7{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.grid7{grid-template-columns:1fr}}
+.kpi{display:flex;gap:10px;align-items:center;padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0}
+.alert{border-left:4px solid var(--red);background:#fef2f2;padding:14px 16px;border-radius:10px;color:#7f1d1d;font-size:13px;font-weight:600}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.split{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;font-weight:700;text-decoration:none}
+.btn-primary{background:var(--green);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.18)}
+.mono{font-family:JetBrains Mono,monospace}
+</style></head><body>
+<nav style="max-width:920px;margin:0 auto;padding:14px 16px;display:flex;justify-content:space-between;align-items:center"><a href="/" style="color:#fff;font-weight:800;text-decoration:none">Cover<span style="color:#10b981">Score</span> AI</a><span style="font-size:12px;opacity:.8">Hotels & Hospitality Resilience™</span></nav>
+<div class="wrap">
+<div id="loading" style="text-align:center;padding:60px 0;color:rgba(255,255,255,.7)">Generating your Hotel Resilience Report™…</div>
+<div id="report" style="display:none">
+  <div class="card" style="text-align:center">
+    <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#64748b">HOTEL RESILIENCE SNAPSHOT™</div>
+    <div style="font-size:52px;font-weight:800;line-height:1" class="mono" id="score">--</div>
+    <div><span class="badge" id="levelBadge">--</span></div>
+    <div id="criticalAlert" style="margin-top:14px;display:none"></div>
+    <div style="margin-top:10px;color:#475569;font-size:13px" id="hotelMeta">--</div>
+  </div>
+
+  <div class="grid7">
+    <div class="card"><div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.6px">HIGHEST-PRIORITY EXPOSURE</div><div id="priority" style="font-weight:800;margin-top:6px">--</div><div id="priorityWhy" style="font-size:12px;color:#64748b;margin-top:4px">--</div></div>
+    <div class="card"><div style="font-size:11px;font-weight:800;color:#64748b;letter-spacing:.6px">RESILIENCE FORECAST™</div><div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span class="mono" id="currScore" style="font-size:22px;font-weight:800">--</span><span>→</span><span class="mono" id="potScore" style="font-size:22px;font-weight:800;color:var(--green)">--</span><span id="delta" class="badge resilient" style="margin-left:auto">--</span></div><div style="font-size:11px;color:#64748b;margin-top:6px">Estimated improvement potential — not guaranteed</div></div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:800;margin-bottom:8px">Risk Pillars — 7 domains</div>
+    <div id="pillars"></div>
+    <div style="font-size:11px;color:#64748b;margin-top:8px">Weights: Guest 20% · Fire 20% · Business Continuity 15% · Employee 12% · Security 12% · Operations 11% · Financial 10%</div>
+  </div>
+
+  <div class="card" id="insightCard" style="display:none">
+    <div style="font-size:11px;font-weight:800;letter-spacing:.6px;color:#0ea5e9">BIGGEST INSIGHT™</div>
+    <p id="insightText" style="line-height:1.7;color:#334155"></p>
+  </div>
+
+  <div class="card" id="storyCard" style="display:none">
+    <div style="font-size:11px;font-weight:800;letter-spacing:.6px;color:#0ea5e9">RISK STORY™</div>
+    <div class="split" style="margin-top:10px">
+      <div><div style="font-size:11px;font-weight:800;color:#64748b">EVIDENCE</div><p id="evidence" style="font-size:13px;color:#334155"></p></div>
+      <div><div style="font-size:11px;font-weight:800;color:#64748b">CONSEQUENCE</div><p id="consequence" style="font-size:13px;color:#334155"></p></div>
+    </div>
+    <div style="margin-top:10px"><div style="font-size:11px;font-weight:800;color:#64748b">PRIORITY</div><p id="priorityStory" style="font-size:13px;color:#334155"></p></div>
+  </div>
+
+  <div class="split">
+    <div class="card" id="reduceCard"><div style="font-weight:800">Risk Reduction — Operational Actions</div><ul id="reduceList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul></div>
+    <div class="card" id="transferCard"><div style="font-weight:800">Risk Transfer — Protection Opportunities</div><ul id="transferList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul><div style="font-size:11px;color:#64748b;margin-top:8px">Subject to discovery & underwriting. Not all products apply.</div></div>
+  </div>
+
+  <div class="card" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <a href="/consultation" class="btn btn-primary">Book Hotel Risk Review™</a>
+    <a href="/" class="btn btn-ghost" style="background:#0f172a">Back to Home</a>
+    <a href="javascript:window.print()" class="btn btn-ghost" style="background:#334155">Print / Save PDF</a>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,.7);text-align:center;margin-top:8px">NAICOM compliant · Hotel CoverScore™ is an intelligence score, not an insurance quote. Critical exposures override the average — always display Overall Resilience + Critical Exposure Alerts.</div>
+</div>
+</div>
+<script>
+const id = location.pathname.split('/').pop();
+const levelMap = {critical:['CRITICAL','critical'], high:['HIGH RISK','high'], moderate:['MODERATE RISK','moderate'], resilient:['RESILIENT','resilient'], highly:['HIGHLY RESILIENT','highly']};
+function levelBadge(score){
+  if(score<=24) return ['CRITICAL','critical'];
+  if(score<=44) return ['HIGH RISK','high'];
+  if(score<=64) return ['MODERATE RISK','moderate'];
+  if(score<=79) return ['RESILIENT','resilient'];
+  return ['HIGHLY RESILIENT','highly'];
+}
+async function load(){
+  const r = await fetch('/api/assessment/'+id);
+  if(!r.ok){ document.getElementById('loading').textContent='Failed to load report.'; return;}
+  const d = await r.json();
+  const score = d.score ?? 0;
+  const cats = d.riskCategories || {};
+  const pillars = Object.entries(cats);
+  document.getElementById('score').textContent = score + ' / 100';
+  const [lbl,cls]=levelBadge(score);
+  const badge=document.getElementById('levelBadge'); badge.textContent=lbl; badge.className='badge '+cls;
+  // meta
+  const ans=d.answers||{};
+  document.getElementById('hotelMeta').textContent=(ans.HOT_004||ans.business_name||'Your Hotel')+' · '+(ans.HOT_007||ans.city||'')+' · '+(ans.HOT_006||ans.role||'') ;
+  // pillars
+  const order=['Guest Safety & Liability','Fire & Property Protection','Business Continuity','Employee Safety & Welfare','Security & Guest Protection','Operational & Facility Resilience','Financial & Regulatory Resilience'];
+  const pillarEl=document.getElementById('pillars');
+  let lowest=null, highest=null;
+  pillars.forEach(([k,v])=>{ if(lowest===null||v<lowest[1]) lowest=[k,v]; if(highest===null||v>highest[1]) highest=[k,v];});
+  const sorted = pillars.sort((a,b)=>a[1]-b[1]);
+  const priorityName = (d.executiveSummary&&d.executiveSummary.biggestVulnerability)||(sorted[0]&&sorted[0][0])||'--';
+  document.getElementById('priority').textContent = priorityName;
+  document.getElementById('priorityWhy').textContent = 'Lowest pillar score — prioritize this first.';
+  order.forEach(name=>{
+    const v = cats[name];
+    if(v==null) return;
+    const pct=Math.max(0,Math.min(100,v));
+    const color = pct<45? 'var(--red)' : pct<65? 'var(--amber)': 'var(--green)';
+    const row=document.createElement('div'); row.className='pillar-row';
+    row.innerHTML='<div style="width:160px;font-size:12px;font-weight:600">'+name+'</div><div class="bar"><div class="fill" style="width:'+pct+'%;background:'+color+'"></div></div><div class="mono" style="width:44px;text-align:right;font-weight:700">'+pct+'%</div>';
+    pillarEl.appendChild(row);
+  });
+  // critical alert - severity override: any pillar <30 or fire <40
+  const fireScore = cats['Fire & Property Protection'];
+  if((lowest && lowest[1] < 30) || (fireScore!=null && fireScore < 35)){
+    const c=document.getElementById('criticalAlert');
+    c.style.display='block';
+    c.innerHTML='<div class="alert">🔴 Critical Exposure Alert — Do not allow the overall score to obscure this: <b>'+(lowest?lowest[0]:'Fire & Property')+'</b> is critically exposed. Advisor must investigate before recommending protection.</div>';
+  }
+  // forecast
+  const pot = d.improvementPotential ? d.improvementPotential.potential_score : null;
+  document.getElementById('currScore').textContent=score;
+  document.getElementById('potScore').textContent= pot!=null? pot : Math.min(100, score+25);
+  const delta = (pot!=null? pot-score : 25);
+  document.getElementById('delta').textContent='+'+delta+' points';
+  // insight & story from aiReport or fallback
+  const rep=d.aiReport||{};
+  if(rep.executiveSummary || d.executiveSummary){
+    document.getElementById('insightCard').style.display='block';
+    document.getElementById('insightText').textContent = rep.executiveSummary || ('Your hotel scores '+score+' ('+lbl+'). Strongest: '+(highest?highest[0]:'--')+' ('+(highest?highest[1]:'--')+'%). Weakest: '+priorityName+'. Because the hotel depends on continuous room & food-service revenue, strengthening property controls and financial protection is the highest-leverage priority.');
+  }
+  document.getElementById('storyCard').style.display='block';
+  document.getElementById('evidence').textContent = (d.identified_gaps&&d.identified_gaps.slice(0,2).join(' · ')) || 'Assessment indicates weaknesses in fire detection, equipment inspection and building maintenance.';
+  document.getElementById('consequence').textContent = 'A major incident could create both physical damage and prolonged revenue interruption, affecting guest confidence.';
+  document.getElementById('priorityStory').textContent = 'Strengthening property controls, testing emergency procedures, and reviewing Business Interruption sums insured should be treated as priority.';
+  // recommendations split
+  const allRecs = d.recommendations || [];
+  const reduce = allRecs.slice(0,4);
+  const transferMap = { 'Fire':'Fire & Special Perils + BI', 'Business':'Business Interruption', 'Public Liability':'Public Liability', 'Employers':'Employers Liability / GPA', 'Equipment':'Equipment Breakdown / Electronic Equipment', 'Burglary':'Burglary / Money / Fidelity', 'Money':'Money', 'Fidelity':'Fidelity Guarantee', 'Cyber':'Cyber protection' };
+  const transfer = [];
+  allRecs.forEach(r=>{ for(const k in transferMap) if(r.toLowerCase().includes(k.toLowerCase())) transfer.push(transferMap[k]); });
+  const ulR=document.getElementById('reduceList'); reduce.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ulR.appendChild(li);});
+  const ulT=document.getElementById('transferList');
+  const uniq=[...new Set(transfer.length? transfer : ['Fire & Special Perils','Business Interruption','Public Liability','Employers Liability / GPA','Equipment Breakdown','Burglary','Money','Fidelity Guarantee'])].slice(0,6);
+  uniq.forEach(t=>{ const li=document.createElement('li'); li.textContent=t+ ' — subject to underwriting'; ulT.appendChild(li);});
+  if(!reduce.length) ulR.innerHTML='<li>Inspect fire systems & improve emergency procedures</li><li>Implement preventive maintenance</li><li>Strengthen pool safety & CCTV</li>';
+  document.getElementById('loading').style.display='none';
+  document.getElementById('report').style.display='block';
+}
+load();
+</script>
+</body></html>

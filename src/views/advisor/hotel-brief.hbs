@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hotel Advisor Brief — CoverScore</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f172a;--green:#10b981;--greenDark:#047857;--red:#ef4444;--amber:#f59e0b;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--muted:#64748b}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--navy)}
+.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.wrap{max-width:520px;margin:0 auto;padding:14px 16px 90px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.label{font-size:10px;font-weight:800;letter-spacing:.6px;color:var(--muted);text-transform:uppercase}
+.badge{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;border:1px solid var(--border)}
+.badge.hot{background:#fef2f2;color:#dc2626;border-color:#fecaca}
+.badge.qualified{background:#fff7ed;color:#ea580c}
+.badge.strategic{background:#f5f3ff;color:#7c3aed}
+.badge.engaged{background:#ecfdf5;color:#047857}
+.badge.low{background:#f1f5f9;color:#64748b}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kv div{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px}
+.kv b{font-size:13px}
+.alert{background:#fef2f2;border:1px solid #fecaca;border-left:4px solid var(--red);padding:12px;border-radius:10px;color:#7f1d1d;font-size:12px;font-weight:600}
+.btn{width:100%;padding:12px;border-radius:10px;font-weight:700;border:none;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-green{background:var(--greenDark);color:#fff}
+.btn-ghost{background:#fff;border:1px solid var(--border);color:var(--navy)}
+.quote{border-left:3px solid var(--green);background:#f0fdf4;padding:10px 12px;border-radius:0 10px 10px 0;font-size:13px;color:#14532d}
+ul{margin:8px 0 0 18px;color:#334155;font-size:13px;line-height:1.6}
+.mono{font-family:JetBrains Mono,monospace}
+</style></head><body>
+<div class="top"><a href="javascript:history.back()" style="text-decoration:none;color:var(--navy)">← Back</a><b>Hotel Advisor Brief™</b><span style="font-size:11px;color:var(--muted)">CONFIDENTIAL</span></div>
+<div class="wrap">
+<div id="loading" style="text-align:center;padding:40px;color:var(--muted)">Loading Hotel Advisor Brief™…</div>
+<div id="brief" style="display:none">
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+    <div><div class="label">Client</div><div id="hotelName" style="font-weight:800">--</div><div id="contact" style="font-size:12px;color:var(--muted)">--</div><div id="location" style="font-size:12px;color:var(--muted)">--</div></div>
+    <div style="text-align:center"><div class="mono" id="score" style="font-size:28px;font-weight:800">--</div><div id="riskLevel" class="badge" style="margin-top:4px">--</div><div id="qualTier" class="badge" style="margin-top:6px">--</div></div>
+  </div>
+
+  <div class="card">
+    <div class="label">Primary Client Concern</div>
+    <div class="quote" id="primaryConcern">--</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px" id="motivation">--</div>
+  </div>
+
+  <div class="card" id="exposuresCard">
+    <div class="label">Top Three Risk Exposures</div>
+    <ol id="topExposures" style="margin:8px 0 0 18px;font-size:13px;line-height:1.6"></ol>
+    <div class="alert" id="criticalExposure" style="margin-top:10px;display:none"></div>
+  </div>
+
+  <div class="kv">
+    <div><div class="label">Hotel Type</div><b id="hotelType">--</b><div id="complexity" style="font-size:11px;color:var(--muted)">--</div></div>
+    <div><div class="label">Exposure</div><b id="exposure" class="mono">--</b><div style="font-size:11px;color:var(--muted)">Potential financial exposure</div></div>
+  </div>
+
+  <div class="card">
+    <div class="label">Discovery Opportunities — Advisor should explore</div>
+    <ul id="discovery"></ul>
+  </div>
+
+  <div class="card">
+    <div class="label">Recommended Conversation Opener</div>
+    <div class="quote" id="opener">--</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px" id="duration">--</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Potential Protection Areas — subject to discovery & underwriting</div>
+    <ul id="protection"></ul>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">Do not recommend all products. Prioritize by severity + client concern.</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Hotel Risk Review™ Framework</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6">PEOPLE → Who could be harmed? · PROPERTY → What could be damaged? · OPERATIONS → What could stop? · FINANCE → What could the hotel lose? · LIABILITY → Who could claim? · REPUTATION → What could damage guest trust? · PROTECTION → Which residual risks to transfer?</div>
+  </div>
+
+  <a id="viewReportBtn" href="#" class="btn btn-green">View Client Resilience Report™</a>
+  <a id="quoteBtn" href="#" class="btn btn-ghost">Generate Quote — Multi-line Hotel Review</a>
+  <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px">AI collects + scores · Advisor interprets, questions, builds trust. Reassessment on: new rooms, restaurant/pool, vehicles, expansion, major equipment, ownership change.</div>
+</div>
+</div>
+<script>
+const id = location.pathname.split('/').pop();
+async function load(){
+  const r = await fetch('/api/assessment/'+id+'/advisor-brief');
+  if(!r.ok){ document.getElementById('loading').textContent='Failed to load brief.'; return; }
+  const d = await r.json();
+  // also fetch full assessment for hotel name/location
+  let assessment=null; try{ const r2=await fetch('/api/assessment/'+id); if(r2.ok) assessment=await r2.json(); }catch{}
+  const ans = assessment? assessment.answers : {};
+  document.getElementById('hotelName').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.hotelName) || (ans.HOT_004||'Hotel');
+  document.getElementById('contact').textContent = (d.customerName? d.customerName+' · ' : '') + ((d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.respondentRole)|| ans.HOT_006 || '');
+  document.getElementById('location').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.location) || ans.HOT_007 || '';
+  document.getElementById('score').textContent = d.score + ' / 100';
+  const rl=document.getElementById('riskLevel'); rl.textContent=d.riskLevel; rl.className='badge '+(d.score<=44?'hot': d.score<=64?'qualified':'engaged');
+  const tier = d.leadQualification? d.leadQualification.tier : 'LOW INTENT';
+  const tierEl=document.getElementById('qualTier'); tierEl.textContent=tier; tierEl.className='badge '+tier.toLowerCase().replace(' ','');
+  tierEl.title = d.leadQualification? d.leadQualification.reason : '';
+  document.getElementById('primaryConcern').textContent = d.hotelAdvisorSpecific? (d.hotelAdvisorSpecific.primaryConcern||'Guest safety') : (d.highestPriority||'--');
+  document.getElementById('motivation').textContent = d.hotelAdvisorSpecific? d.hotelAdvisorSpecific.clientMotivation : '';
+  const ol=document.getElementById('topExposures'); d.topRisks.slice(0,3).forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ol.appendChild(li); });
+  const fire = d.suggestedProducts? d.suggestedProducts.join(' · ') : '';
+  if(d.score < 45 || (d.topRisks[0] && d.topRisks[0].toLowerCase().includes('fire'))){
+    const al=document.getElementById('criticalExposure'); al.style.display='block'; al.textContent='🔴 Advisor Alert — Do not allow overall score ('+d.score+') to obscure critical exposure: '+d.topRisks[0]+' . Prioritize discovery on this before protection mapping.';
+  }
+  document.getElementById('hotelType').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.businessType) || ans.HOT_011 || '--';
+  document.getElementById('complexity').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.roomCount) || ans.HOT_010 || '';
+  document.getElementById('exposure').textContent = '₦'+Number(d.estimatedExposure.min).toLocaleString('en-NG')+' – ₦'+Number(d.estimatedExposure.max).toLocaleString('en-NG');
+  const ulD=document.getElementById('discovery'); (d.hotelAdvisorSpecific? d.hotelAdvisorSpecific.discoveryOpportunities : []).forEach(x=>{ const li=document.createElement('li'); li.textContent=x; ulD.appendChild(li); });
+  if(!ulD.children.length) document.getElementById('discovery').parentElement.style.display='none';
+  document.getElementById('opener').textContent = d.recommendedConversation;
+  document.getElementById('duration').textContent = 'Suggested: '+d.expectedMeetingDuration+' Hotel Risk Review™';
+  const ulP=document.getElementById('protection'); (d.suggestedProducts||[]).forEach(p=>{ const li=document.createElement('li'); li.textContent=p + ' — subject to further discovery & underwriting'; ulP.appendChild(li); });
+  document.getElementById('viewReportBtn').href='/reports/hotel/'+id;
+  document.getElementById('quoteBtn').href='/advisor/quote-builder/'+ (assessment? assessment.id : id);
+  document.getElementById('loading').style.display='none';
+  document.getElementById('brief').style.display='block';
+}
+load();
+</script>
+</body></html>
