@@ -74,6 +74,7 @@ const buildWelcomeIntro = (prefix) => {
     CHR: 'I\'ll help you evaluate your church\'s protection needs.',
     CON: 'I\'ll help you assess your construction business\'s risk exposure.',
     TRN: 'I\'ll help you evaluate your transport operation\'s resilience.',
+    HOT: 'I\'ll help you discover how resilient your hotel really is — from guest safety and fire protection to property, staff, business continuity and operational risks.',
     SME: 'I\'ll help you assess your business\'s protection gaps.'
   };
   return intros[prefix] || intros.SME;
