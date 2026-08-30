@@ -17,7 +17,8 @@ const flowMap = {
   'church': 'CHR', 'construction': 'CON', 'transport': 'TRN', 'logistics': 'TRN',
   'family': 'FAM', 'personal': 'FAM', 'individual': 'FAM',
   'young': 'YPR', 'retirement': 'RET', 'income': 'INC', 'health': 'HLT',
-  'entrepreneur': 'ENT', 'sme': 'SME', 'business': 'SME'
+  'entrepreneur': 'ENT', 'sme': 'SME', 'business': 'SME',
+  'hotel': 'HOT', 'hotels': 'HOT', 'hospitality': 'HOT', 'lodging': 'HOT'
 };
 const { runRiskIntelligence } = require('../rie/index');
 const { renewalEngine } = require('../renewals/index');
@@ -35,7 +36,7 @@ const assessmentTypeMap = {
   FAM: 'family', RET: 'retirement', HLT: 'health', INC: 'income',
   YPR: 'young_professional', ENT: 'entrepreneur',
   SME: 'sme', SCH: 'school', HOS: 'hospital', MFG: 'manufacturing',
-  CHR: 'church', CON: 'construction', TRN: 'transport'
+  CHR: 'church', CON: 'construction', TRN: 'transport', HOT: 'hotel'
 };
 
 const generateCoverScoreInsight = (pillarScores, answers, name, prefix) => {
