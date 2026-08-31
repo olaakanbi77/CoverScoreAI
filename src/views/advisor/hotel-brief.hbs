@@ -30,7 +30,7 @@ ul{margin:8px 0 0 18px;color:#334155;font-size:13px;line-height:1.6}
 <div id="loading" style="text-align:center;padding:40px;color:var(--muted)">Loading Hotel Advisor Brief™…</div>
 <div id="brief" style="display:none">
   <div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div><div class="label">Client</div><div id="hotelName" style="font-weight:800">--</div><div id="contact" style="font-size:12px;color:var(--muted)">--</div><div id="location" style="font-size:12px;color:var(--muted)">--</div></div>
+    <div><div class="label">Client</div><div id="hotelName" style="font-weight:800">--</div><div id="contact" style="font-size:12px;color:var(--muted)">--</div><div id="role" style="font-size:12px;color:var(--muted)">--</div><div id="location" style="font-size:12px;color:var(--muted)">--</div></div>
     <div style="text-align:center"><div class="mono" id="score" style="font-size:28px;font-weight:800">--</div><div id="riskLevel" class="badge" style="margin-top:4px">--</div><div id="qualTier" class="badge" style="margin-top:6px">--</div></div>
   </div>
 
@@ -56,10 +56,20 @@ ul{margin:8px 0 0 18px;color:#334155;font-size:13px;line-height:1.6}
     <ul id="discovery"></ul>
   </div>
 
+  <div class="card" id="evidenceCard">
+    <div class="label">Key Evidence — What the assessment revealed</div>
+    <ul id="keyEvidence" style="margin:8px 0 0 18px;font-size:13px;line-height:1.6"></ul>
+  </div>
+
   <div class="card">
     <div class="label">Recommended Conversation Opener</div>
     <div class="quote" id="opener">--</div>
     <div style="font-size:11px;color:var(--muted);margin-top:6px" id="duration">--</div>
+  </div>
+
+  <div class="card" id="preparednessCard">
+    <div class="label">Risk Preparedness — Recovery & Continuity Actions</div>
+    <ul id="preparednessList" style="margin:8px 0 0 18px;font-size:13px;line-height:1.6"></ul>
   </div>
 
   <div class="card">
@@ -88,28 +98,38 @@ async function load(){
   let assessment=null; try{ const r2=await fetch('/api/assessment/'+id); if(r2.ok) assessment=await r2.json(); }catch{}
   const ans = assessment? assessment.answers : {};
   document.getElementById('hotelName').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.hotelName) || (ans.HOT_004||'Hotel');
-  document.getElementById('contact').textContent = (d.customerName? d.customerName+' · ' : '') + ((d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.respondentRole)|| ans.HOT_006 || '');
+  document.getElementById('contact').textContent = (d.customerName? d.customerName : 'WhatsApp User');
+  document.getElementById('role').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.respondentRole)|| ans.HOT_006 || '';
   document.getElementById('location').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.location) || ans.HOT_007 || '';
   document.getElementById('score').textContent = d.score + ' / 100';
   const rl=document.getElementById('riskLevel'); rl.textContent=d.riskLevel; rl.className='badge '+(d.score<=44?'hot': d.score<=64?'qualified':'engaged');
   const tier = d.leadQualification? d.leadQualification.tier : 'LOW INTENT';
   const tierEl=document.getElementById('qualTier'); tierEl.textContent=tier; tierEl.className='badge '+tier.toLowerCase().replace(' ','');
   tierEl.title = d.leadQualification? d.leadQualification.reason : '';
-  document.getElementById('primaryConcern').textContent = d.hotelAdvisorSpecific? (d.hotelAdvisorSpecific.primaryConcern||'Guest safety') : (d.highestPriority||'--');
+  document.getElementById('primaryConcern').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.primaryConcern) || (ans.HOT_051||d.highestPriority||'Guest safety and liability');
   document.getElementById('motivation').textContent = d.hotelAdvisorSpecific? d.hotelAdvisorSpecific.clientMotivation : '';
   const ol=document.getElementById('topExposures'); d.topRisks.slice(0,3).forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ol.appendChild(li); });
   const fire = d.suggestedProducts? d.suggestedProducts.join(' · ') : '';
   if(d.score < 45 || (d.topRisks[0] && d.topRisks[0].toLowerCase().includes('fire'))){
     const al=document.getElementById('criticalExposure'); al.style.display='block'; al.textContent='🔴 Advisor Alert — Do not allow overall score ('+d.score+') to obscure critical exposure: '+d.topRisks[0]+' . Prioritize discovery on this before protection mapping.';
   }
-  document.getElementById('hotelType').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.businessType) || ans.HOT_011 || '--';
-  document.getElementById('complexity').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.roomCount) || ans.HOT_010 || '';
+  document.getElementById('hotelType').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.businessType) || ans.HOT_010 || '--';
+  document.getElementById('complexity').textContent = (d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.roomCount) || ans.HOT_011 || '';
   document.getElementById('exposure').textContent = '₦'+Number(d.estimatedExposure.min).toLocaleString('en-NG')+' – ₦'+Number(d.estimatedExposure.max).toLocaleString('en-NG');
   const ulD=document.getElementById('discovery'); (d.hotelAdvisorSpecific? d.hotelAdvisorSpecific.discoveryOpportunities : []).forEach(x=>{ const li=document.createElement('li'); li.textContent=x; ulD.appendChild(li); });
   if(!ulD.children.length) document.getElementById('discovery').parentElement.style.display='none';
-  document.getElementById('opener').textContent = d.recommendedConversation;
+  const evUl=document.getElementById('keyEvidence');
+  const gaps=(d.identifiedGaps||d.identified_gaps||[]).slice(0,4);
+  const strengths=(d.strengths||[]).slice(0,2);
+  gaps.forEach(g=>{ const li=document.createElement('li'); li.textContent='⚠ '+g; evUl.appendChild(li); });
+  strengths.forEach(s=>{ const li=document.createElement('li'); li.textContent='✓ '+s; evUl.appendChild(li); });
+  if(!evUl.children.length) document.getElementById('evidenceCard').style.display='none';
+  document.getElementById('opener').textContent = d.recommendedConversation || ('I noticed from your assessment that '+(d.hotelAdvisorSpecific&&d.hotelAdvisorSpecific.hotelName||'your hotel')+' has several areas we should explore. Let me understand your current risk management approach before we discuss protection options.');
   document.getElementById('duration').textContent = 'Suggested: '+d.expectedMeetingDuration+' Hotel Risk Review™';
   const ulP=document.getElementById('protection'); (d.suggestedProducts||[]).forEach(p=>{ const li=document.createElement('li'); li.textContent=p + ' — subject to further discovery & underwriting'; ulP.appendChild(li); });
+  const prepUl=document.getElementById('preparednessList');
+  const prepItems=['Document and test emergency evacuation procedures','Develop business continuity plan with recovery timelines','Establish incident tracking and review system','Schedule regular generator and equipment servicing'];
+  prepItems.forEach(p=>{ const li=document.createElement('li'); li.textContent=p; prepUl.appendChild(li); });
   document.getElementById('viewReportBtn').href='/reports/hotel/'+id;
   document.getElementById('quoteBtn').href='/advisor/quote-builder/'+ (assessment? assessment.id : id);
   document.getElementById('loading').style.display='none';

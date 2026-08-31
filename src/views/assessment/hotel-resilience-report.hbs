@@ -23,6 +23,8 @@ body{font-family:Inter,sans-serif;background:linear-gradient(180deg,#0f172a,#1e2
 .alert{border-left:4px solid var(--red);background:#fef2f2;padding:14px 16px;border-radius:10px;color:#7f1d1d;font-size:13px;font-weight:600}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:700px){.split{grid-template-columns:1fr}}
+.split3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:700px){.split3{grid-template-columns:1fr}}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;font-weight:700;text-decoration:none}
 .btn-primary{background:var(--green);color:#fff}
 .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.18)}
@@ -65,9 +67,10 @@ body{font-family:Inter,sans-serif;background:linear-gradient(180deg,#0f172a,#1e2
     <div style="margin-top:10px"><div style="font-size:11px;font-weight:800;color:#64748b">PRIORITY</div><p id="priorityStory" style="font-size:13px;color:#334155"></p></div>
   </div>
 
-  <div class="split">
-    <div class="card" id="reduceCard"><div style="font-weight:800">Risk Reduction — Operational Actions</div><ul id="reduceList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul></div>
-    <div class="card" id="transferCard"><div style="font-weight:800">Risk Transfer — Protection Opportunities</div><ul id="transferList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul><div style="font-size:11px;color:#64748b;margin-top:8px">Subject to discovery & underwriting. Not all products apply.</div></div>
+  <div class="split3">
+    <div class="card" id="reduceCard"><div style="font-weight:800">🟢 Risk Reduction</div><ul id="reduceList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul></div>
+    <div class="card" id="preparednessCard"><div style="font-weight:800">🟡 Risk Preparedness</div><ul id="preparednessList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul></div>
+    <div class="card" id="transferCard"><div style="font-weight:800">🔵 Risk Transfer</div><ul id="transferList" style="margin:10px 0 0 18px;color:#334155;font-size:13px;line-height:1.6"></ul><div style="font-size:11px;color:#64748b;margin-top:8px">Subject to discovery & underwriting. Not all products apply.</div></div>
   </div>
 
   <div class="card" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
@@ -136,23 +139,34 @@ async function load(){
   const rep=d.aiReport||{};
   if(rep.executiveSummary || d.executiveSummary){
     document.getElementById('insightCard').style.display='block';
-    document.getElementById('insightText').textContent = rep.executiveSummary || ('Your hotel scores '+score+' ('+lbl+'). Strongest: '+(highest?highest[0]:'--')+' ('+(highest?highest[1]:'--')+'%). Weakest: '+priorityName+'. Because the hotel depends on continuous room & food-service revenue, strengthening property controls and financial protection is the highest-leverage priority.');
+    document.getElementById('insightText').textContent = rep.executiveSummary || ((ans.HOT_004||'Your hotel')+' has been assessed across 7 resilience domains. Your strongest area is '+(highest?highest[0]:'--')+' ('+(highest?highest[1]:'--')+'%). Your most important opportunity is '+priorityName+'. Addressing this gap will have the greatest impact on overall resilience.');
   }
   document.getElementById('storyCard').style.display='block';
-  document.getElementById('evidence').textContent = (d.identified_gaps&&d.identified_gaps.slice(0,2).join(' · ')) || 'Assessment indicates weaknesses in fire detection, equipment inspection and building maintenance.';
-  document.getElementById('consequence').textContent = 'A major incident could create both physical damage and prolonged revenue interruption, affecting guest confidence.';
-  document.getElementById('priorityStory').textContent = 'Strengthening property controls, testing emergency procedures, and reviewing Business Interruption sums insured should be treated as priority.';
+  document.getElementById('evidence').textContent = ((ans.HOT_004||'The hotel')+' assessment reveals '+((d.identified_gaps&&d.identified_gaps.length)?d.identified_gaps.length+' areas requiring attention':'opportunities to strengthen resilience')+'. Key areas: '+((d.identified_gaps&&d.identified_gaps.slice(0,2).join(', '))||'fire detection, emergency procedures, property protection'))+'.';
+  document.getElementById('consequence').textContent = 'A major incident could cause physical damage, guest injury, revenue interruption and regulatory consequences — affecting guest confidence and hotel operations.';
+  document.getElementById('priorityStory').textContent = 'Strengthening fire detection, testing emergency procedures, and reviewing property and liability protection should be treated as the highest priority.';
   // recommendations split
   const allRecs = d.recommendations || [];
-  const reduce = allRecs.slice(0,4);
-  const transferMap = { 'Fire':'Fire & Special Perils + BI', 'Business':'Business Interruption', 'Public Liability':'Public Liability', 'Employers':'Employers Liability / GPA', 'Equipment':'Equipment Breakdown / Electronic Equipment', 'Burglary':'Burglary / Money / Fidelity', 'Money':'Money', 'Fidelity':'Fidelity Guarantee', 'Cyber':'Cyber protection' };
-  const transfer = [];
-  allRecs.forEach(r=>{ for(const k in transferMap) if(r.toLowerCase().includes(k.toLowerCase())) transfer.push(transferMap[k]); });
-  const ulR=document.getElementById('reduceList'); reduce.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ulR.appendChild(li);});
+  const reduceWords = ['inspect','establish','implement','strengthen','review procedures','document','maintain','check','test drills','install'];
+  const preparednessWords = ['plan','continuity','emergency','recover','backup','contingency','drill','procedure'];
+  const transferWords = ['insurance','protection','cover','liability','special perks','interruption'];
+  const reduce=[], preparedness=[], transfer=[];
+  allRecs.forEach(r=>{
+    const lower=r.toLowerCase();
+    if(transferWords.some(w=>lower.includes(w))) transfer.push(r);
+    else if(preparednessWords.some(w=>lower.includes(w))) preparedness.push(r);
+    else reduce.push(r);
+  });
+  const ulR=document.getElementById('reduceList');
+  const ulP=document.getElementById('preparednessList');
   const ulT=document.getElementById('transferList');
+  reduce.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ulR.appendChild(li);});
+  preparedness.forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ulP.appendChild(li);});
+  const transferMap = { 'Fire':'Fire & Special Perils + BI', 'Business':'Business Interruption', 'Public Liability':'Public Liability', 'Employers':'Employers Liability / GPA', 'Equipment':'Equipment Breakdown / Electronic Equipment', 'Burglary':'Burglary / Money / Fidelity', 'Money':'Money', 'Fidelity':'Fidelity Guarantee', 'Cyber':'Cyber protection' };
   const uniq=[...new Set(transfer.length? transfer : ['Fire & Special Perils','Business Interruption','Public Liability','Employers Liability / GPA','Equipment Breakdown','Burglary','Money','Fidelity Guarantee'])].slice(0,6);
   uniq.forEach(t=>{ const li=document.createElement('li'); li.textContent=t+ ' — subject to underwriting'; ulT.appendChild(li);});
   if(!reduce.length) ulR.innerHTML='<li>Inspect fire systems & improve emergency procedures</li><li>Implement preventive maintenance</li><li>Strengthen pool safety & CCTV</li>';
+  if(!preparedness.length) ulP.innerHTML='<li>Document and test emergency evacuation procedures quarterly</li><li>Develop business continuity plan with recovery timelines</li><li>Establish incident tracking and review system</li>';
   document.getElementById('loading').style.display='none';
   document.getElementById('report').style.display='block';
 }

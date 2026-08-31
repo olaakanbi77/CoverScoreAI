@@ -1816,6 +1816,25 @@
 
   HOT: {
     name: 'Hotels & Hospitality Resilience',
+    evidenceValidation: {
+      minCoreAnswers: 12,
+      minPillarsCovered: 5,
+      coreQuestions: ['HOT_012','HOT_013','HOT_014','HOT_015','HOT_016','HOT_017','HOT_019','HOT_020','HOT_021','HOT_022','HOT_023','HOT_024','HOT_025','HOT_026','HOT_027','HOT_028','HOT_029','HOT_030','HOT_031','HOT_032'],
+      pillarMap: {
+        HOT_010: 'guest_safety', HOT_011: 'guest_safety',
+        HOT_012: 'fire_property', HOT_013: 'fire_property', HOT_014: 'fire_property',
+        HOT_015: 'fire_property', HOT_016: 'fire_property',
+        HOT_017: 'guest_safety', HOT_019: 'guest_safety',
+        HOT_020: 'operational_resilience', HOT_021: 'operational_resilience', HOT_022: 'operational_resilience', HOT_023: 'operational_resilience',
+        HOT_024: 'business_continuity', HOT_025: 'business_continuity', HOT_026: 'business_continuity',
+        HOT_027: 'employee_safety', HOT_028: 'employee_safety',
+        HOT_029: 'security', HOT_030: 'security',
+        HOT_031: 'financial_regulatory', HOT_032: 'financial_regulatory',
+        HOT_035: 'guest_safety', HOT_036: 'fire_property',
+        HOT_038: 'guest_safety', HOT_040: 'guest_safety', HOT_042: 'guest_safety',
+        HOT_044: 'guest_safety', HOT_046: 'guest_safety', HOT_048: 'fire_property'
+      }
+    },
     pillars: [
       { id: 'guest_safety', name: 'Guest Safety & Liability', weight: 0.20 },
       { id: 'fire_property', name: 'Fire & Property Protection', weight: 0.20 },
@@ -1836,7 +1855,6 @@
       closure_resilience: { name: 'Closure & Revenue Resilience', pillar: 'business_continuity' },
       staff_safety: { name: 'Staff Safety & Training', pillar: 'employee_safety' },
       access_security: { name: 'Access & Security Systems', pillar: 'security' },
-      theft_protection: { name: 'Theft & Burglary Protection', pillar: 'security' },
       generator_hvac: { name: 'Generator & Power Resilience', pillar: 'operational_resilience' },
       equipment_facility: { name: 'Equipment & Facility Maintenance', pillar: 'operational_resilience' },
       cyber_protection: { name: 'Cyber & Data Protection', pillar: 'financial_regulatory' },
@@ -1857,274 +1875,288 @@
         gaps: { '151-300 rooms': 'Large hotel with significant guest liability exposure across many rooms.', 'Over 300 rooms': 'Very large hotel with high occupancy creates complex safety and liability challenges.' },
         recommendations: { '151-300 rooms': 'Ensure comprehensive public liability and guest safety programmes for high occupancy.', 'Over 300 rooms': 'Implement enterprise-level risk management with dedicated safety teams.' }
       },
-      HOT_013: {
-        category: 'food_safety',
-        weight: 3,
-        scores: { 'Daily': 100, 'Weekly': 80, 'Monthly': 60, 'Rarely': 20, 'Never': 0 },
-        gaps: { 'Rarely': 'Kitchen fire risks not regularly inspected — potential fire and safety hazard.', 'Never': 'No kitchen fire risk inspection — critical safety gap.' },
-        recommendations: { 'Rarely': 'Establish daily kitchen fire risk checks and weekly formal inspections.', 'Never': 'Implement immediate daily kitchen fire risk inspections with documentation.' }
-      },
-      HOT_015: {
-        category: 'facility_safety',
-        weight: 3,
-        scores: { 'Yes — documented and maintained': 100, 'Partially — some procedures exist': 50, 'No': 0 },
-        gaps: { 'Partially — some procedures exist': 'Pool safety procedures incomplete — drowning and injury risk.', 'No': 'No documented pool safety procedures — critical liability gap.' },
-        recommendations: { 'Partially — some procedures exist': 'Complete pool safety documentation and establish supervision protocols.', 'No': 'Implement comprehensive pool safety procedures with barriers, signage and trained supervision.' }
-      },
-      HOT_017: {
-        category: 'facility_safety',
-        weight: 2,
-        scores: { 'Yes — regular inspection schedule': 100, 'Partially — occasional checks': 50, 'No': 0 },
-        gaps: { 'Partially — occasional checks': 'Gym equipment inspection is inconsistent — injury risk.', 'No': 'No gym equipment inspection — liability exposure.' },
-        recommendations: { 'Partially — occasional checks': 'Establish regular gym equipment inspection schedule.', 'No': 'Implement daily gym equipment checks with documented maintenance.' }
-      },
-      HOT_019: {
-        category: 'facility_safety',
-        weight: 2,
-        scores: { 'Yes — documented and inspected': 100, 'Partially — some procedures': 50, 'No': 0 },
-        gaps: { 'Partially — some procedures': 'Spa safety procedures incomplete.', 'No': 'No spa safety procedures — liability exposure.' },
-        recommendations: { 'Partially — some procedures': 'Complete spa safety documentation and inspection schedule.', 'No': 'Implement comprehensive spa safety procedures with trained staff.' }
-      },
-      HOT_021: {
-        category: 'facility_safety',
-        weight: 2,
-        scores: { 'Yes — documented and tested': 100, 'Documented but not tested': 50, 'No': 0 },
-        gaps: { 'Documented but not tested': 'Event procedures not tested — may fail during emergency.', 'No': 'No event crowd management procedures — safety risk.' },
-        recommendations: { 'Documented but not tested': 'Test event procedures with drills and assign crowd management roles.', 'No': 'Develop event crowd management and evacuation procedures.' }
-      },
-      HOT_023: {
-        category: 'facility_safety',
-        weight: 2,
-        scores: { 'Yes — documented schedule': 100, 'Partially — occasional checks': 50, 'No': 0 },
-        gaps: { 'Partially — occasional checks': 'Vehicle inspection is inconsistent — accident risk.', 'No': 'No vehicle inspection — significant liability exposure.' },
-        recommendations: { 'Partially — occasional checks': 'Establish documented vehicle inspection schedule.', 'No': 'Implement immediate vehicle inspection programme with maintenance records.' }
-      },
-      HOT_024: {
+      HOT_012: {
         category: 'fire_detection',
         weight: 5,
         scores: { 'Yes — regularly tested': 100, 'Yes — but testing is irregular': 40, 'No': 0, 'Not sure': 20 },
         gaps: { 'No': 'No fire detection system — catastrophic life-safety gap.', 'Not sure': 'Uncertainty about fire detection indicates a critical safety gap.', 'Yes — but testing is irregular': 'Fire detection exists but is not regularly tested.' },
         recommendations: { 'No': 'Install and commission a compliant fire detection system immediately.', 'Not sure': 'Audit fire detection systems and establish testing schedule.', 'Yes — but testing is irregular': 'Establish monthly fire alarm testing with documentation.' }
       },
-      HOT_025: {
-        category: 'fire_detection',
-        weight: 3,
-        scores: { 'Yes — inspected and maintained': 100, 'No': 0, 'Not sure': 20 },
-        gaps: { 'No': 'Fire extinguishers not serviced or accessible.', 'Not sure': 'Uncertainty about firefighting equipment readiness.' },
-        recommendations: { 'No': 'Service all extinguishers and ensure accessibility.', 'Not sure': 'Audit firefighting equipment and schedule professional servicing.' }
-      },
-      HOT_026: {
+      HOT_013: {
         category: 'emergency_governance',
         weight: 4,
         scores: { 'Yes — documented and regularly practiced': 100, 'Documented but rarely practiced': 50, 'No': 0, 'Not sure': 20 },
         gaps: { 'No': 'No emergency procedures for fire and guest evacuation.', 'Not sure': 'Uncertainty about emergency procedures indicates a governance gap.', 'Documented but rarely practiced': 'Emergency plan exists but has never been drilled.' },
         recommendations: { 'No': 'Develop written emergency procedures and run quarterly drills.', 'Not sure': 'Audit emergency procedures and establish drill schedule.', 'Documented but rarely practiced': 'Test crisis management with simulations and assign crisis roles.' }
       },
-      HOT_027: {
+      HOT_014: {
+        category: 'fire_detection',
+        weight: 3,
+        scores: { 'Yes — inspected and maintained': 100, 'No': 0, 'Not sure': 20 },
+        gaps: { 'No': 'Fire extinguishers not serviced or accessible.', 'Not sure': 'Uncertainty about firefighting equipment readiness.' },
+        recommendations: { 'No': 'Service all extinguishers and ensure accessibility.', 'Not sure': 'Audit firefighting equipment and schedule professional servicing.' }
+      },
+      HOT_015: {
         category: 'property_protection',
         weight: 4,
         scores: { 'Comprehensive insurance protection': 100, 'Some insurance protection': 50, 'No insurance protection': 0, 'Not sure': 20 },
         gaps: { 'No insurance protection': 'No property insurance — unprotected against fire, storm, flood and burglary.', 'Some insurance protection': 'Partial property insurance with material gaps.', 'Not sure': 'Uncertainty about property insurance coverage.' },
         recommendations: { 'No insurance protection': 'Arrange comprehensive Fire & Special Perils protection.', 'Some insurance protection': 'Review and close gaps in property insurance coverage.', 'Not sure': 'Audit current insurance arrangements and close identified gaps.' }
       },
-      HOT_028: {
+      HOT_016: {
         category: 'property_protection',
         weight: 3,
         scores: { 'Yes — valued within 12 months': 100, 'Valued but over 12 months ago': 55, 'Never valued / Not sure': 0 },
         gaps: { 'Never valued / Not sure': 'Building and assets not professionally valued — high risk of underinsurance.', 'Valued but over 12 months ago': 'Valuation is becoming outdated as reinstatement costs rise.' },
         recommendations: { 'Never valued / Not sure': 'Commission a professional reinstatement valuation and review sum insured.', 'Valued but over 12 months ago': 'Update your property valuation and asset register.' }
       },
-      HOT_029: {
+      HOT_017: {
         category: 'guest_liability',
         weight: 4,
         scores: { 'Yes': 30, 'No': 100, 'Not sure': 50 },
         gaps: { 'Yes': 'Previous guest incident significantly increases liability exposure.', 'Not sure': 'Uncertainty about guest incidents indicates a monitoring gap.' },
         recommendations: { 'Yes': 'Review liability protection immediately and implement incident prevention measures.', 'Not sure': 'Establish guest incident tracking and review system.' }
       },
-      HOT_031: {
+      HOT_019: {
         category: 'guest_liability',
         weight: 4,
         scores: { 'Yes': 100, 'No': 0, 'Not sure': 30 },
         gaps: { 'No': 'No public or occupiers liability protection — critical exposure.', 'Not sure': 'Uncertainty about liability protection indicates a coverage gap.' },
         recommendations: { 'No': 'Arrange Public/Occupiers Liability protection immediately.', 'Not sure': 'Audit current liability coverage and close identified gaps.' }
       },
-      HOT_032: {
+      HOT_020: {
         category: 'generator_hvac',
         weight: 3,
         scores: { 'Low — grid power is reliable': 100, 'Moderate — backup for outages': 70, 'High — frequent outages': 30, 'Almost completely dependent': 10 },
         gaps: { 'High — frequent outages': 'Heavy generator dependency with frequent outages — operational risk.', 'Almost completely dependent': 'Near-total generator dependency — critical operational vulnerability.' },
         recommendations: { 'High — frequent outages': 'Review backup power strategy and consider additional generators.', 'Almost completely dependent': 'Install additional backup power capacity and review maintenance schedule.' }
       },
-      HOT_033: {
+      HOT_021: {
         category: 'generator_hvac',
         weight: 3,
         scores: { 'Monthly': 100, 'Quarterly': 75, 'Annually': 50, 'Irregularly': 20, 'Never': 0 },
         gaps: { 'Irregularly': 'Generator servicing is inconsistent — reliability risk.', 'Never': 'No generator servicing — critical failure risk.' },
         recommendations: { 'Irregularly': 'Establish monthly generator servicing schedule.', 'Never': 'Implement immediate monthly generator servicing with documentation.' }
       },
-      HOT_034: {
+      HOT_022: {
         category: 'generator_hvac',
         weight: 4,
-        scores: { 'Backup systems would maintain operations': 100, 'Operations would continue with some disruption': 60, 'Major services would be affected': 30, 'Hotel operations could effectively stop': 0, 'Not sure': 20 },
-        gaps: { 'Hotel operations could effectively stop': 'Generator failure during peak season would halt operations.', 'Major services would be affected': 'Generator failure would significantly disrupt hotel services.', 'Not sure': 'Uncertainty about generator failure impact indicates a planning gap.' },
-        recommendations: { 'Hotel operations could effectively stop': 'Review backup power strategy and establish emergency power protocols.', 'Major services would be affected': 'Develop generator failure contingency plan and review maintenance.', 'Not sure': 'Assess generator failure impact and develop mitigation strategies.' }
+        scores: { 'More than 24 hours': 100, '12–24 hours': 70, '4–12 hours': 40, 'Less than 4 hours': 15, 'We would struggle to operate': 0 },
+        gaps: { 'We would struggle to operate': 'Generator failure during peak season would halt operations.', 'Less than 4 hours': 'Very limited operational resilience without generator power.' },
+        recommendations: { 'We would struggle to operate': 'Review backup power strategy and establish emergency power protocols.', 'Less than 4 hours': 'Develop generator failure contingency plan and review maintenance.' }
       },
-      HOT_035: {
+      HOT_023: {
         category: 'equipment_facility',
         weight: 3,
         scores: { 'Monthly preventive schedule': 100, 'Quarterly checks': 70, 'Only when broken': 25, 'No formal schedule': 0 },
         gaps: { 'Only when broken': 'Reactive maintenance allows equipment failure to disrupt guests.', 'No formal schedule': 'No preventive maintenance for critical equipment.' },
         recommendations: { 'Only when broken': 'Move from reactive to preventive maintenance with service contracts.', 'No formal schedule': 'Implement a preventive maintenance register with scheduled servicing.' }
       },
-      HOT_036: {
+      HOT_024: {
         category: 'closure_resilience',
         weight: 4,
-        scores: { 'We could comfortably continue': 100, 'We could continue with difficulty': 55, 'We would struggle significantly': 25, 'We may not survive the closure': 0, 'Not sure': 20 },
-        gaps: { 'We may not survive the closure': 'Hotel cannot fund fixed costs during a prolonged closure — survival risk.', 'We would struggle significantly': 'Limited reserves to survive a 3-month closure.', 'Not sure': 'Uncertainty about closure resilience indicates a planning gap.' },
-        recommendations: { 'We may not survive the closure': 'Build emergency reserves and secure business interruption insurance.', 'We would struggle significantly': 'Strengthen business interruption cover and alternative operating arrangements.', 'Not sure': 'Assess closure resilience and develop contingency plans.' }
+        scores: { 'More than 6 months': 100, '3–6 months': 75, '1–3 months': 45, 'Less than 1 month': 0, 'Not sure': 20 },
+        gaps: { 'Less than 1 month': 'Hotel cannot survive without room revenue — critical vulnerability.', '1–3 months': 'Limited revenue resilience — survival risk.', 'Not sure': 'Uncertainty about closure resilience indicates a planning gap.' },
+        recommendations: { 'Less than 1 month': 'Build emergency reserves and secure business interruption insurance.', '1–3 months': 'Strengthen business interruption cover and alternative operating arrangements.', 'Not sure': 'Assess closure resilience and develop contingency plans.' }
       },
-      HOT_037: {
+      HOT_025: {
         category: 'closure_resilience',
         weight: 3,
-        scores: { 'Less than 1 month': 0, '1-3 months': 40, '3-6 months': 70, 'More than 6 months': 100, 'Not sure': 30 },
-        gaps: { 'Less than 1 month': 'Hotel cannot survive without room revenue — critical vulnerability.', '1-3 months': 'Limited revenue resilience — survival risk.', 'Not sure': 'Uncertainty about revenue resilience indicates a planning gap.' },
-        recommendations: { 'Less than 1 month': 'Build revenue reserves and diversify income streams.', '1-3 months': 'Extend revenue reserves and review business interruption coverage.', 'Not sure': 'Assess revenue resilience and develop alternative income strategies.' }
+        scores: { 'Yes — regularly tested': 100, 'Yes — but rarely tested': 60, 'No': 0, 'Not sure': 15 },
+        gaps: { 'No': 'No business continuity plan — recovery from major incident will be ad hoc.', 'Not sure': 'Uncertainty about BC plan indicates a governance gap.', 'Yes — but rarely tested': 'Plan exists but has never been tested — may fail when needed.' },
+        recommendations: { 'No': 'Develop a documented business continuity plan with quarterly testing.', 'Not sure': 'Audit business continuity preparedness and establish a plan.', 'Yes — but rarely tested': 'Schedule regular BC drills and update procedures based on findings.' }
       },
-      HOT_039: {
-        category: 'cyber_protection',
+      HOT_026: {
+        category: 'closure_resilience',
         weight: 3,
-        scores: { 'Yes — comprehensive controls': 100, 'Partially — basic measures only': 50, 'No': 0, 'Not sure': 20 },
-        gaps: { 'No': 'No cybersecurity controls for guest and payment data.', 'Partially — basic measures only': 'Cybersecurity controls are incomplete — data breach risk.', 'Not sure': 'Uncertainty about cybersecurity indicates a protection gap.' },
-        recommendations: { 'No': 'Implement comprehensive cybersecurity controls for guest data.', 'Partially — basic measures only': 'Enhance cybersecurity with encryption, access controls and monitoring.', 'Not sure': 'Audit cybersecurity controls and implement missing protections.' }
+        scores: { 'More than 6 months': 100, '3–6 months': 70, '1–3 months': 40, 'Less than 1 month': 0, 'Not sure': 20 },
+        gaps: { 'Less than 1 month': 'Hotel cannot survive without room revenue — critical vulnerability.', '1–3 months': 'Limited revenue resilience — survival risk.', 'Not sure': 'Uncertainty about revenue resilience indicates a planning gap.' },
+        recommendations: { 'Less than 1 month': 'Build revenue reserves and diversify income streams.', '1–3 months': 'Extend revenue reserves and review business interruption coverage.', 'Not sure': 'Assess revenue resilience and develop alternative income strategies.' }
       },
-      HOT_040: {
-        category: 'food_safety',
-        weight: 3,
-        scores: { 'Formal procedures and regular inspections': 100, 'Procedures exist but monitoring is inconsistent': 55, 'Informal controls': 25, 'No formal controls': 0, 'Not sure / N/A': 40 },
-        gaps: { 'Informal controls': 'Food safety controls are informal — contamination risk.', 'No formal controls': 'No formal food safety controls — critical health risk.', 'Procedures exist but monitoring is inconsistent': 'Food safety monitoring is inconsistent.' },
-        recommendations: { 'Informal controls': 'Implement formal food safety procedures with documentation.', 'No formal controls': 'Establish comprehensive food safety programme immediately.', 'Procedures exist but monitoring is inconsistent': 'Strengthen food safety monitoring and documentation.' }
-      },
-      HOT_041: {
-        category: 'food_safety',
-        weight: 2,
-        scores: { 'Yes': 20, 'No': 100, 'Not sure': 50 },
-        gaps: { 'Yes': 'Previous food incident increases liability exposure.', 'Not sure': 'Uncertainty about food incidents indicates a monitoring gap.' },
-        recommendations: { 'Yes': 'Review food safety procedures and implement additional controls.', 'Not sure': 'Establish food incident tracking and review system.' }
-      },
-      HOT_042: {
+      HOT_027: {
         category: 'staff_safety',
         weight: 3,
-        scores: { 'Comprehensive safety programme': 100, 'Basic protective equipment provided': 60, 'Minimal controls': 25, 'No formal controls': 0 },
-        gaps: { 'Minimal controls': 'Staff safety controls are minimal — injury risk.', 'No formal controls': 'No staff safety controls — critical liability gap.' },
-        recommendations: { 'Minimal controls': 'Implement comprehensive staff safety programme with PPE and training.', 'No formal controls': 'Establish staff safety programme immediately with PPE and incident reporting.' }
+        scores: { 'Yes — documented and regularly reviewed': 100, 'Partially': 50, 'No': 0, 'Not sure': 20 },
+        gaps: { 'No': 'No staff safety procedures — injury and liability risk.', 'Partially': 'Staff safety procedures incomplete.', 'Not sure': 'Uncertainty about staff safety indicates a governance gap.' },
+        recommendations: { 'No': 'Establish documented staff safety procedures with incident reporting.', 'Partially': 'Complete and formalize staff safety procedures.', 'Not sure': 'Audit staff safety procedures and establish documentation.' }
       },
-      HOT_043: {
+      HOT_028: {
+        category: 'staff_safety',
+        weight: 2,
+        scores: { 'Yes': 100, 'Some employees': 55, 'No': 0, 'Not sure': 20 },
+        gaps: { 'No': 'No formal employee protection — staff welfare and retention risk.', 'Some employees': 'Partial employee protection — inequality and compliance risk.', 'Not sure': 'Uncertainty about employee benefits indicates a gap.' },
+        recommendations: { 'No': 'Review Group Life, Personal Accident and employee benefit options.', 'Some employees': 'Extend employee protection to all eligible staff.', 'Not sure': 'Audit current employee benefit arrangements.' }
+      },
+      HOT_029: {
         category: 'access_security',
         weight: 3,
-        scores: { 'Electronic access + CCTV tested regularly': 100, 'Basic locks / CCTV not tested': 45, 'No formal controls': 0 },
-        gaps: { 'No formal controls': 'No access control or CCTV — guests, property and staff are unprotected.', 'Basic locks / CCTV not tested': 'Security systems exist but are not tested or maintained.' },
-        recommendations: { 'No formal controls': 'Install electronic access control, CCTV and visitor management.', 'Basic locks / CCTV not tested': 'Test CCTV and access systems monthly and assign security responsibility.' }
+        scores: { 'Formal security procedures with trained personnel and monitoring': 100, 'Basic security procedures': 60, 'Informal security arrangements': 25, 'Significant gaps': 0, 'Not sure': 20 },
+        gaps: { 'Significant gaps': 'Major security gaps — guests, property and staff are unprotected.', 'Informal security arrangements': 'Security is informal — inconsistent protection.', 'Not sure': 'Uncertainty about security management.' },
+        recommendations: { 'Significant gaps': 'Implement formal security procedures with trained personnel.', 'Informal security arrangements': 'Formalize security procedures and assign trained personnel.', 'Not sure': 'Audit security arrangements and establish formal procedures.' }
       },
-      HOT_044: {
-        category: 'theft_protection',
+      HOT_030: {
+        category: 'access_security',
         weight: 2,
-        scores: { 'Very confident': 100, 'Somewhat confident': 60, 'Not confident': 0 },
-        gaps: { 'Not confident': 'Low confidence in theft and burglary prevention — security vulnerability.' },
-        recommendations: { 'Not confident': 'Review and strengthen theft prevention measures including CCTV and access controls.' }
+        scores: { 'Yes — actively monitored': 100, 'Yes — but monitoring is limited': 55, 'No': 0, 'Not sure': 15 },
+        gaps: { 'No': 'No CCTV — no visual deterrence or incident evidence.', 'Yes — but monitoring is limited': 'CCTV exists but monitoring is limited — reduced effectiveness.' },
+        recommendations: { 'No': 'Install CCTV coverage for key areas with active monitoring.', 'Yes — but monitoring is limited': 'Enhance CCTV monitoring and ensure adequate coverage.' }
       },
-      HOT_045: {
+      HOT_031: {
         category: 'financial_controls',
         weight: 2,
         scores: { 'POS system with audit trail': 100, 'Basic controls, some manual processes': 55, 'Minimal controls': 20, 'Not sure': 30 },
         gaps: { 'Minimal controls': 'Minimal financial controls — fraud and cash loss risk.', 'Not sure': 'Uncertainty about financial controls indicates governance gap.', 'Basic controls, some manual processes': 'Financial controls have manual processes creating vulnerability.' },
         recommendations: { 'Minimal controls': 'Implement POS system with audit trail and segregation of duties.', 'Not sure': 'Review financial controls and establish audit procedures.', 'Basic controls, some manual processes': 'Reduce manual processes and implement automated controls.' }
       },
-      HOT_046: {
+      HOT_032: {
         category: 'financial_controls',
         weight: 3,
         scores: { 'Comprehensive (Fire + BI + Liability)': 100, 'Partial coverage': 50, 'None / Not sure': 0 },
         gaps: { 'None / Not sure': 'No comprehensive insurance programme — property, liability and interruption unprotected.', 'Partial coverage': 'Insurance programme has material gaps.' },
         recommendations: { 'None / Not sure': 'Arrange Fire & Special Perils, Business Interruption and Public Liability review.', 'Partial coverage': 'Review sums insured and close gaps in business interruption and liability.' }
+      },
+      HOT_035: {
+        category: 'food_safety',
+        weight: 3,
+        scores: { 'Daily': 100, 'Weekly': 80, 'Monthly': 60, 'Rarely': 20, 'Never': 0 },
+        gaps: { 'Rarely': 'Kitchen fire risks not regularly inspected — potential fire and safety hazard.', 'Never': 'No kitchen fire risk inspection — critical safety gap.' },
+        recommendations: { 'Rarely': 'Establish daily kitchen fire risk checks and weekly formal inspections.', 'Never': 'Implement immediate daily kitchen fire risk inspections with documentation.' }
+      },
+      HOT_036: {
+        category: 'food_safety',
+        weight: 3,
+        scores: { 'Formal procedures and regular inspections': 100, 'Procedures exist but monitoring is inconsistent': 55, 'Informal controls': 25, 'No formal controls': 0, 'Not sure / N/A': 40 },
+        gaps: { 'Informal controls': 'Food safety controls are informal — contamination risk.', 'No formal controls': 'No formal food safety controls — critical health risk.', 'Procedures exist but monitoring is inconsistent': 'Food safety monitoring is inconsistent.' },
+        recommendations: { 'Informal controls': 'Implement formal food safety procedures with documentation.', 'No formal controls': 'Establish comprehensive food safety programme immediately.', 'Procedures exist but monitoring is inconsistent': 'Strengthen food safety monitoring and documentation.' }
+      },
+      HOT_038: {
+        category: 'facility_safety',
+        weight: 3,
+        scores: { 'Yes — documented and maintained': 100, 'Partially — some procedures exist': 50, 'No': 0 },
+        gaps: { 'Partially — some procedures exist': 'Pool safety procedures incomplete — drowning and injury risk.', 'No': 'No documented pool safety procedures — critical liability gap.' },
+        recommendations: { 'Partially — some procedures exist': 'Complete pool safety documentation and establish supervision protocols.', 'No': 'Implement comprehensive pool safety procedures with barriers, signage and trained supervision.' }
+      },
+      HOT_040: {
+        category: 'facility_safety',
+        weight: 2,
+        scores: { 'Yes — regular inspection schedule': 100, 'Partially — occasional checks': 50, 'No': 0 },
+        gaps: { 'Partially — occasional checks': 'Gym equipment inspection is inconsistent — injury risk.', 'No': 'No gym equipment inspection — liability exposure.' },
+        recommendations: { 'Partially — occasional checks': 'Establish regular gym equipment inspection schedule.', 'No': 'Implement daily gym equipment checks with documented maintenance.' }
+      },
+      HOT_042: {
+        category: 'facility_safety',
+        weight: 2,
+        scores: { 'Yes — documented and inspected': 100, 'Partially — some procedures': 50, 'No': 0 },
+        gaps: { 'Partially — some procedures': 'Spa safety procedures incomplete.', 'No': 'No spa safety procedures — liability exposure.' },
+        recommendations: { 'Partially — some procedures': 'Complete spa safety documentation and inspection schedule.', 'No': 'Implement comprehensive spa safety procedures with trained staff.' }
+      },
+      HOT_044: {
+        category: 'facility_safety',
+        weight: 2,
+        scores: { 'Yes — documented and tested': 100, 'Documented but not tested': 50, 'No': 0 },
+        gaps: { 'Documented but not tested': 'Event procedures not tested — may fail during emergency.', 'No': 'No event crowd management procedures — safety risk.' },
+        recommendations: { 'Documented but not tested': 'Test event procedures with drills and assign crowd management roles.', 'No': 'Develop event crowd management and evacuation procedures.' }
+      },
+      HOT_046: {
+        category: 'facility_safety',
+        weight: 2,
+        scores: { 'Yes — documented schedule': 100, 'Partially — occasional checks': 50, 'No': 0 },
+        gaps: { 'Partially — occasional checks': 'Vehicle inspection is inconsistent — accident risk.', 'No': 'No vehicle inspection — significant liability exposure.' },
+        recommendations: { 'Partially — occasional checks': 'Establish documented vehicle inspection schedule.', 'No': 'Implement immediate vehicle inspection programme with maintenance records.' }
+      },
+      HOT_048: {
+        category: 'facility_safety',
+        weight: 2,
+        scores: { 'Formal procedures with regular checks': 100, 'Basic controls': 55, 'Informal controls': 20, 'No formal controls': 0 },
+        gaps: { 'Informal controls': 'Laundry safety controls are informal — fire and chemical risk.', 'No formal controls': 'No laundry safety controls — critical operational risk.' },
+        recommendations: { 'Informal controls': 'Implement formal laundry safety procedures with fire prevention and chemical handling.', 'No formal controls': 'Establish comprehensive laundry safety programme immediately.' }
       }
     },
     modifiers: [
       {
         id: 'pool_no_safety',
         name: 'Pool + No Safety Procedures',
-        conditions: [['HOT_014', 'Yes'], ['HOT_015', 'No']],
+        conditions: [['HOT_037', 'Yes'], ['HOT_038', 'No']],
         penalty: 12,
         description: 'Swimming pool without documented safety procedures and supervision'
       },
       {
         id: 'kitchen_no_fire_inspection',
         name: 'Kitchen + No Fire Risk Inspection',
-        conditions: [['HOT_012', 'Yes'], ['HOT_013', ['Rarely', 'Never']]],
+        conditions: [['HOT_034', 'Yes'], ['HOT_035', ['Rarely', 'Never']]],
         penalty: 10,
         description: 'Commercial kitchen with inadequate fire risk inspection'
       },
       {
         id: 'no_fire_detection',
         name: 'No Fire Detection System',
-        conditions: [['HOT_024', ['No', 'Not sure']]],
+        conditions: [['HOT_012', ['No', 'Not sure']]],
         penalty: 15,
         description: 'No functional fire detection system — catastrophic life-safety gap'
       },
       {
         id: 'large_hotel_no_closures',
         name: 'Large Hotel + Cannot Survive Closure',
-        conditions: [['HOT_011', ['151-300 rooms', 'Over 300 rooms']], ['HOT_036', ['We may not survive the closure', 'We would struggle significantly']]],
+        conditions: [['HOT_011', ['151-300 rooms', 'Over 300 rooms']], ['HOT_024', ['Less than 1 month', '1–3 months']]],
         penalty: 12,
         description: 'Large hotel cannot survive prolonged closure'
       },
       {
         id: 'generator_failure_critical',
         name: 'Generator Failure Stops Operations',
-        conditions: [['HOT_034', 'Hotel operations could effectively stop'], ['HOT_033', ['Irregularly', 'Never']]],
+        conditions: [['HOT_022', ['Less than 4 hours', 'We would struggle to operate']], ['HOT_021', ['Irregularly', 'Never']]],
         penalty: 12,
         description: 'Generator failure during peak season would halt operations'
       },
       {
-        id: 'no_cyber_controls',
-        name: 'No Cybersecurity Controls',
-        conditions: [['HOT_038', 'Yes'], ['HOT_039', 'No']],
-        penalty: 10,
-        description: 'Digital systems without cybersecurity controls — data breach risk'
-      },
-      {
         id: 'no_liability_protection',
         name: 'No Liability Protection + Previous Incident',
-        conditions: [['HOT_029', 'Yes'], ['HOT_031', 'No']],
+        conditions: [['HOT_017', 'Yes'], ['HOT_019', 'No']],
         penalty: 14,
         description: 'Previous guest incident without liability protection — critical exposure'
       },
       {
+        id: 'no_bc_plan',
+        name: 'No Business Continuity Plan',
+        conditions: [['HOT_025', 'No'], ['HOT_024', ['Less than 1 month', '1–3 months']]],
+        penalty: 10,
+        description: 'No BC plan with limited financial resilience'
+      },
+      {
         id: 'positive_hotel_resilience',
         name: 'Strong Fire Detection + Emergency Plan + Insurance',
-        conditions: [['HOT_024', 'Yes — regularly tested'], ['HOT_026', 'Yes — documented and regularly practiced'], ['HOT_046', 'Comprehensive (Fire + BI + Liability)']],
+        conditions: [['HOT_012', 'Yes — regularly tested'], ['HOT_013', 'Yes — documented and regularly practiced'], ['HOT_032', 'Comprehensive (Fire + BI + Liability)']],
         bonus: 10,
         description: 'Strong hotel resilience combination'
       }
     ],
     improvements: {
-      HOT_013: { 'Rarely': { target: 'Daily', gain: 8, action: 'Establish daily kitchen fire risk checks and weekly formal inspections' }, 'Never': { target: 'Daily', gain: 12, action: 'Implement immediate daily kitchen fire risk inspections with documentation' } },
-      HOT_015: { 'No': { target: 'Yes — documented and maintained', gain: 10, action: 'Implement comprehensive pool safety procedures with barriers, signage and trained supervision' }, 'Partially — some procedures exist': { target: 'Yes — documented and maintained', gain: 5, action: 'Complete pool safety documentation and establish supervision protocols' } },
-      HOT_024: { 'No': { target: 'Yes — regularly tested', gain: 15, action: 'Install and regularly test your fire detection system — this is a life-safety priority' }, 'Not sure': { target: 'Yes — regularly tested', gain: 10, action: 'Audit fire detection systems and establish testing schedule' }, 'Yes — but testing is irregular': { target: 'Yes — regularly tested', gain: 8, action: 'Set up monthly fire alarm testing with documentation' } },
-      HOT_025: { 'No': { target: 'Yes — inspected and maintained', gain: 8, action: 'Service all fire extinguishers and ensure accessibility' }, 'Not sure': { target: 'Yes — inspected and maintained', gain: 5, action: 'Audit and service your firefighting equipment' } },
-      HOT_026: { 'No': { target: 'Yes — documented and regularly practiced', gain: 12, action: 'Develop written emergency procedures and run quarterly drills' }, 'Not sure': { target: 'Yes — documented and regularly practiced', gain: 8, action: 'Audit emergency procedures and establish drill schedule' }, 'Documented but rarely practiced': { target: 'Yes — documented and regularly practiced', gain: 6, action: 'Test crisis management with simulations and assign crisis roles' } },
-      HOT_027: { 'No insurance protection': { target: 'Comprehensive insurance protection', gain: 12, action: 'Arrange comprehensive Fire & Special Perils protection' }, 'Some insurance protection': { target: 'Comprehensive insurance protection', gain: 6, action: 'Review and close gaps in property insurance coverage' }, 'Not sure': { target: 'Comprehensive insurance protection', gain: 8, action: 'Audit current insurance arrangements and close identified gaps' } },
-      HOT_028: { 'Never valued / Not sure': { target: 'Yes — valued within 12 months', gain: 10, action: 'Commission a professional reinstatement valuation and review sum insured' }, 'Valued but over 12 months ago': { target: 'Yes — valued within 12 months', gain: 5, action: 'Update your property valuation and asset register' } },
-      HOT_029: { 'Yes': { target: 'No', gain: 8, action: 'Review liability protection immediately and implement incident prevention measures' } },
-      HOT_031: { 'No': { target: 'Yes', gain: 10, action: 'Arrange Public/Occupiers Liability protection immediately' }, 'Not sure': { target: 'Yes', gain: 6, action: 'Audit current liability coverage and close identified gaps' } },
-      HOT_033: { 'Irregularly': { target: 'Monthly', gain: 8, action: 'Establish monthly generator servicing schedule' }, 'Never': { target: 'Monthly', gain: 12, action: 'Implement immediate monthly generator servicing with documentation' } },
-      HOT_034: { 'Hotel operations could effectively stop': { target: 'Backup systems would maintain operations', gain: 12, action: 'Review backup power strategy and establish emergency power protocols' }, 'Major services would be affected': { target: 'Backup systems would maintain operations', gain: 6, action: 'Develop generator failure contingency plan and review maintenance' } },
-      HOT_036: { 'We may not survive the closure': { target: 'We could comfortably continue', gain: 15, action: 'Build emergency reserves and secure business interruption insurance' }, 'We would struggle significantly': { target: 'We could comfortably continue', gain: 8, action: 'Strengthen business interruption cover and alternative operating arrangements' } },
-      HOT_037: { 'Less than 1 month': { target: 'More than 6 months', gain: 12, action: 'Build revenue reserves and diversify income streams' }, '1-3 months': { target: 'More than 6 months', gain: 6, action: 'Extend revenue reserves and review business interruption coverage' } },
-      HOT_039: { 'No': { target: 'Yes — comprehensive controls', gain: 10, action: 'Implement comprehensive cybersecurity controls for guest data' }, 'Partially — basic measures only': { target: 'Yes — comprehensive controls', gain: 5, action: 'Enhance cybersecurity with encryption, access controls and monitoring' } },
-      HOT_040: { 'No formal controls': { target: 'Formal procedures and regular inspections', gain: 10, action: 'Establish comprehensive food safety programme immediately' }, 'Informal controls': { target: 'Formal procedures and regular inspections', gain: 6, action: 'Implement formal food safety procedures with documentation' }, 'Procedures exist but monitoring is inconsistent': { target: 'Formal procedures and regular inspections', gain: 4, action: 'Strengthen food safety monitoring and documentation' } },
-      HOT_042: { 'No formal controls': { target: 'Comprehensive safety programme', gain: 10, action: 'Establish staff safety programme immediately with PPE and incident reporting' }, 'Minimal controls': { target: 'Comprehensive safety programme', gain: 6, action: 'Implement comprehensive staff safety programme with PPE and training' } },
-      HOT_043: { 'No formal controls': { target: 'Electronic access + CCTV tested regularly', gain: 10, action: 'Install electronic access control, CCTV and visitor management' }, 'Basic locks / CCTV not tested': { target: 'Electronic access + CCTV tested regularly', gain: 6, action: 'Test CCTV and access systems monthly and assign security responsibility' } },
-      HOT_045: { 'Minimal controls': { target: 'POS system with audit trail', gain: 8, action: 'Implement POS system with audit trail and segregation of duties' }, 'Not sure': { target: 'POS system with audit trail', gain: 5, action: 'Review financial controls and establish audit procedures' } },
-      HOT_046: { 'None / Not sure': { target: 'Comprehensive (Fire + BI + Liability)', gain: 12, action: 'Arrange a comprehensive Fire, Business Interruption and Liability insurance review' }, 'Partial coverage': { target: 'Comprehensive (Fire + BI + Liability)', gain: 6, action: 'Close gaps in your insurance programme' } }
+      HOT_012: { 'No': { target: 'Yes — regularly tested', gain: 15, action: 'Install and regularly test your fire detection system — this is a life-safety priority' }, 'Not sure': { target: 'Yes — regularly tested', gain: 10, action: 'Audit fire detection systems and establish testing schedule' }, 'Yes — but testing is irregular': { target: 'Yes — regularly tested', gain: 8, action: 'Set up monthly fire alarm testing with documentation' } },
+      HOT_013: { 'No': { target: 'Yes — documented and regularly practiced', gain: 12, action: 'Develop written emergency procedures and run quarterly drills' }, 'Not sure': { target: 'Yes — documented and regularly practiced', gain: 8, action: 'Audit emergency procedures and establish drill schedule' }, 'Documented but rarely practiced': { target: 'Yes — documented and regularly practiced', gain: 6, action: 'Test crisis management with simulations and assign crisis roles' } },
+      HOT_014: { 'No': { target: 'Yes — inspected and maintained', gain: 8, action: 'Service all fire extinguishers and ensure accessibility' }, 'Not sure': { target: 'Yes — inspected and maintained', gain: 5, action: 'Audit and service your firefighting equipment' } },
+      HOT_015: { 'No insurance protection': { target: 'Comprehensive insurance protection', gain: 12, action: 'Arrange comprehensive Fire & Special Perils protection' }, 'Some insurance protection': { target: 'Comprehensive insurance protection', gain: 6, action: 'Review and close gaps in property insurance coverage' }, 'Not sure': { target: 'Comprehensive insurance protection', gain: 8, action: 'Audit current insurance arrangements and close identified gaps' } },
+      HOT_016: { 'Never valued / Not sure': { target: 'Yes — valued within 12 months', gain: 10, action: 'Commission a professional reinstatement valuation and review sum insured' }, 'Valued but over 12 months ago': { target: 'Yes — valued within 12 months', gain: 5, action: 'Update your property valuation and asset register' } },
+      HOT_017: { 'Yes': { target: 'No', gain: 8, action: 'Review liability protection immediately and implement incident prevention measures' } },
+      HOT_019: { 'No': { target: 'Yes', gain: 10, action: 'Arrange Public/Occupiers Liability protection immediately' }, 'Not sure': { target: 'Yes', gain: 6, action: 'Audit current liability coverage and close identified gaps' } },
+      HOT_021: { 'Irregularly': { target: 'Monthly', gain: 8, action: 'Establish monthly generator servicing schedule' }, 'Never': { target: 'Monthly', gain: 12, action: 'Implement immediate monthly generator servicing with documentation' } },
+      HOT_022: { 'We would struggle to operate': { target: 'More than 24 hours', gain: 12, action: 'Review backup power strategy and establish emergency power protocols' }, 'Less than 4 hours': { target: 'More than 24 hours', gain: 8, action: 'Develop generator failure contingency plan and review maintenance' } },
+      HOT_024: { 'Less than 1 month': { target: 'More than 6 months', gain: 15, action: 'Build emergency reserves and secure business interruption insurance' }, '1–3 months': { target: 'More than 6 months', gain: 6, action: 'Strengthen business interruption cover and alternative operating arrangements' } },
+      HOT_025: { 'No': { target: 'Yes — regularly tested', gain: 10, action: 'Develop a documented business continuity plan with quarterly testing' }, 'Not sure': { target: 'Yes — regularly tested', gain: 6, action: 'Audit business continuity preparedness and establish a plan' }, 'Yes — but rarely tested': { target: 'Yes — regularly tested', gain: 4, action: 'Schedule regular BC drills and update procedures' } },
+      HOT_026: { 'Less than 1 month': { target: 'More than 6 months', gain: 12, action: 'Build revenue reserves and diversify income streams' }, '1–3 months': { target: 'More than 6 months', gain: 6, action: 'Extend revenue reserves and review business interruption coverage' } },
+      HOT_027: { 'No': { target: 'Yes — documented and regularly reviewed', gain: 10, action: 'Establish documented staff safety procedures with incident reporting' }, 'Partially': { target: 'Yes — documented and regularly reviewed', gain: 5, action: 'Complete and formalize staff safety procedures' } },
+      HOT_028: { 'No': { target: 'Yes', gain: 8, action: 'Review Group Life, Personal Accident and employee benefit options' }, 'Some employees': { target: 'Yes', gain: 4, action: 'Extend employee protection to all eligible staff' } },
+      HOT_029: { 'Significant gaps': { target: 'Formal security procedures with trained personnel and monitoring', gain: 10, action: 'Implement formal security procedures with trained personnel' }, 'Informal security arrangements': { target: 'Formal security procedures with trained personnel and monitoring', gain: 6, action: 'Formalize security procedures and assign trained personnel' } },
+      HOT_030: { 'No': { target: 'Yes — actively monitored', gain: 8, action: 'Install CCTV coverage for key areas with active monitoring' }, 'Yes — but monitoring is limited': { target: 'Yes — actively monitored', gain: 4, action: 'Enhance CCTV monitoring and ensure adequate coverage' } },
+      HOT_031: { 'Minimal controls': { target: 'POS system with audit trail', gain: 8, action: 'Implement POS system with audit trail and segregation of duties' }, 'Not sure': { target: 'POS system with audit trail', gain: 5, action: 'Review financial controls and establish audit procedures' } },
+      HOT_032: { 'None / Not sure': { target: 'Comprehensive (Fire + BI + Liability)', gain: 12, action: 'Arrange a comprehensive Fire, Business Interruption and Liability insurance review' }, 'Partial coverage': { target: 'Comprehensive (Fire + BI + Liability)', gain: 6, action: 'Close gaps in your insurance programme' } },
+      HOT_035: { 'Rarely': { target: 'Daily', gain: 8, action: 'Establish daily kitchen fire risk checks and weekly formal inspections' }, 'Never': { target: 'Daily', gain: 12, action: 'Implement immediate daily kitchen fire risk inspections with documentation' } },
+      HOT_036: { 'No formal controls': { target: 'Formal procedures and regular inspections', gain: 10, action: 'Establish comprehensive food safety programme immediately' }, 'Informal controls': { target: 'Formal procedures and regular inspections', gain: 6, action: 'Implement formal food safety procedures with documentation' }, 'Procedures exist but monitoring is inconsistent': { target: 'Formal procedures and regular inspections', gain: 4, action: 'Strengthen food safety monitoring and documentation' } },
+      HOT_038: { 'No': { target: 'Yes — documented and maintained', gain: 10, action: 'Implement comprehensive pool safety procedures with barriers, signage and trained supervision' }, 'Partially — some procedures exist': { target: 'Yes — documented and maintained', gain: 5, action: 'Complete pool safety documentation and establish supervision protocols' } },
+      HOT_040: { 'No': { target: 'Yes — regular inspection schedule', gain: 8, action: 'Implement daily gym equipment checks with documented maintenance' }, 'Partially — occasional checks': { target: 'Yes — regular inspection schedule', gain: 4, action: 'Establish regular gym equipment inspection schedule' } },
+      HOT_042: { 'No': { target: 'Yes — documented and inspected', gain: 8, action: 'Implement comprehensive spa safety procedures with trained staff' }, 'Partially — some procedures': { target: 'Yes — documented and inspected', gain: 4, action: 'Complete spa safety documentation and inspection schedule' } },
+      HOT_044: { 'No': { target: 'Yes — documented and tested', gain: 8, action: 'Develop event crowd management and evacuation procedures' }, 'Documented but not tested': { target: 'Yes — documented and tested', gain: 4, action: 'Test event procedures with drills and assign crowd management roles' } },
+      HOT_046: { 'No': { target: 'Yes — documented schedule', gain: 8, action: 'Implement immediate vehicle inspection programme with maintenance records' }, 'Partially — occasional checks': { target: 'Yes — documented schedule', gain: 4, action: 'Establish documented vehicle inspection schedule' } },
+      HOT_048: { 'No formal controls': { target: 'Formal procedures with regular checks', gain: 8, action: 'Establish comprehensive laundry safety programme immediately' }, 'Informal controls': { target: 'Formal procedures with regular checks', gain: 5, action: 'Implement formal laundry safety procedures with fire prevention and chemical handling' } }
     }
   },
 

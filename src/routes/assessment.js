@@ -641,38 +641,122 @@ router.get('/:id/advisor-brief', optionalAuth, async (req, res, next) => {
     const sortedCats = Object.entries(cats).sort(([, a], [, b]) => b - a);
     const highestPriority = sortedCats.length > 0 ? sortedCats[sortedCats.length - 1][0] : null;
 
-    // Build top risks list
-    const topRisks = [];
-    if (answers['INC_012'] === 'Less than 1 month') topRisks.push('Less than one month emergency savings');
-    else if (answers['INC_012'] === '1-3 months') topRisks.push('Limited emergency savings (1\u20133 months)');
-    if (answers['INC_014'] === 'No') topRisks.push('No income protection policy');
-    if (answers['INC_015'] === 'Yes') topRisks.push('Significant debt commitments');
-    if (answers['INC_011'] === 'Freelance/Contract') topRisks.push('Freelance/contract income with no guaranteed stability');
-    if (answers['INC_011'] === 'Business owner') topRisks.push('Income tied to business performance');
-    if (answers['INC_013'] === 'No') topRisks.push('No secondary income sources');
-    if (answers['INC_018'] === 'It would stop completely') topRisks.push('Income would stop completely during prolonged inability to work');
-    if (topRisks.length === 0 && identified_gaps) topRisks.push(...identified_gaps.slice(0, 5));
-
-    // Determine recommended conversation focus
-    const convFocus = highestPriority
-      ? `Discuss ${highestPriority.toLowerCase()} strategy before recommending protection products.`
-      : 'Review overall risk profile and identify priority areas.';
-
-    // Suggested products from recommendations
-    const suggestedProducts = (recommendations || []).slice(0, 5);
-    if (suggestedProducts.length === 0 && aiReport?.recommendations) {
-      suggestedProducts.push(...aiReport.recommendations.slice(0, 5));
-    }
-
-    // Estimated meeting duration
-    const meetingDuration = topRisks.length <= 2 ? '15 minutes' : topRisks.length <= 4 ? '20 minutes' : '30 minutes';
-    const prefix = (() => {
+    // Build top risks list - HOT (Hotels & Hospitality) specific
+    const prefixDetected = (() => {
       for (const key of Object.keys(answers)) {
         const m = key.match(/^([A-Z]+)_\d+$/);
         if (m) return m[1];
       }
       return null;
     })();
+    const topRisks = [];
+    if (prefixDetected === 'HOT') {
+      if (answers['HOT_012'] === 'No') topRisks.push('No functional fire detection system — catastrophic life-safety gap');
+      else if (answers['HOT_012'] === 'Yes — but testing is irregular') topRisks.push('Fire detection not regularly tested');
+      if (answers['HOT_014'] === 'No') topRisks.push('Fire extinguishers not serviced or inaccessible');
+      if (answers['HOT_016'] === 'Never valued / Not sure') topRisks.push('Building & assets not professionally valued — underinsurance risk');
+      if (answers['HOT_029'] === 'Significant gaps' || answers['HOT_029'] === 'Informal security arrangements') topRisks.push('Security management has significant gaps');
+      if (answers['HOT_024'] === 'Less than 1 month') topRisks.push('Cannot fund fixed costs during closure — survival risk');
+      if (answers['HOT_013'] === 'No') topRisks.push('No documented fire emergency and evacuation procedures');
+      if (answers['HOT_017'] === 'Yes') topRisks.push('Previous guest incident — increased liability exposure');
+      if (answers['HOT_037'] === 'Yes' && answers['HOT_038'] === 'No') topRisks.push('Swimming pool without documented safety procedures');
+      if (answers['HOT_034'] === 'Yes' && (answers['HOT_036'] === 'No formal controls' || answers['HOT_036'] === 'Informal controls')) topRisks.push('Commercial kitchen without adequate food safety controls');
+      if (answers['HOT_022'] === 'We would struggle to operate' || answers['HOT_022'] === 'Less than 4 hours') topRisks.push('Generator failure would halt hotel operations');
+      if (answers['HOT_023'] === 'No formal schedule') topRisks.push('No preventive maintenance — HVAC/elevator/refrigeration at risk');
+      if (answers['HOT_025'] === 'No') topRisks.push('No business continuity plan');
+      if (answers['HOT_019'] === 'No') topRisks.push('No liability protection — critical exposure');
+      if (topRisks.length === 0 && identified_gaps) topRisks.push(...identified_gaps.slice(0, 5));
+    } else {
+      if (answers['INC_012'] === 'Less than 1 month') topRisks.push('Less than one month emergency savings');
+      else if (answers['INC_012'] === '1-3 months') topRisks.push('Limited emergency savings (1–3 months)');
+      if (answers['INC_014'] === 'No') topRisks.push('No income protection policy');
+      if (answers['INC_015'] === 'Yes') topRisks.push('Significant debt commitments');
+      if (answers['INC_011'] === 'Freelance/Contract') topRisks.push('Freelance/contract income with no guaranteed stability');
+      if (answers['INC_011'] === 'Business owner') topRisks.push('Income tied to business performance');
+      if (answers['INC_013'] === 'No') topRisks.push('No secondary income sources');
+      if (answers['INC_018'] === 'It would stop completely') topRisks.push('Income would stop completely during prolonged inability to work');
+      if (topRisks.length === 0 && identified_gaps) topRisks.push(...identified_gaps.slice(0, 5));
+    }
+
+    // Determine recommended conversation focus + HOT-specific advisor logic
+    let convFocus = highestPriority
+      ? `Discuss ${highestPriority.toLowerCase()} strategy before recommending protection products.`
+      : 'Review overall risk profile and identify priority areas.';
+    let suggestedProducts = (recommendations || []).slice(0, 5);
+    if (suggestedProducts.length === 0 && aiReport?.recommendations) {
+      suggestedProducts.push(...aiReport.recommendations.slice(0, 5));
+    }
+    let hotelAdvisorSpecific = null;
+    let leadQualification = null;
+    if (prefixDetected === 'HOT') {
+      const primaryConcern = answers['HOT_051'] || null;
+      const role = (answers['HOT_006'] || '').toLowerCase();
+      const isDecisionMaker = /owner|director|manager|general manager|proprietor|ceo|md/.test(role) || !role;
+      const wantsConsultation = answers['HOT_052'] === 'Yes, please';
+      const viewedReport = true; // assessment completed
+      const hasMaterialRisk = assessment.score < 65 || topRisks.length >= 3;
+      const isHighComplexity = answers['HOT_011'] === 'Luxury / Resort / Conference' || answers['HOT_010'] === 'Over 100 rooms';
+      const hasMultipleExposures = topRisks.length >= 4;
+      // HOT conversation opener per architecture §20
+      if (primaryConcern) {
+        convFocus = `You identified ${primaryConcern.toLowerCase()} as your biggest concern. I'd like to understand the incidents and safeguards behind that concern before we discuss protection options.`;
+      } else if (highestPriority && highestPriority.toLowerCase().includes('fire')) {
+        convFocus = `I noticed fire & property protection is your highest exposure. Before we discuss solutions, I'd like to understand what has happened previously and what you've already done to address it.`;
+      } else if (highestPriority && highestPriority.toLowerCase().includes('guest')) {
+        convFocus = `I noticed guest safety was your biggest concern. Before we discuss solutions, I'd like to understand what has happened previously and what you've already done to address it.`;
+      }
+      // HOT protection mapping per architecture §18-19
+      const hotelProtectionMap = [];
+      if (topRisks.some(r => r.toLowerCase().includes('fire') || r.toLowerCase().includes('electrical'))) hotelProtectionMap.push('Fire & Special Perils');
+      if (topRisks.some(r => r.toLowerCase().includes('closure') || r.toLowerCase().includes('reserves'))) hotelProtectionMap.push('Business Interruption');
+      if (topRisks.some(r => r.toLowerCase().includes('guest') || r.toLowerCase().includes('pool') || r.toLowerCase().includes('liability'))) hotelProtectionMap.push('Public Liability');
+      if (topRisks.some(r => r.toLowerCase().includes('staff') || r.toLowerCase().includes('workplace'))) hotelProtectionMap.push('Employers Liability / Group Personal Accident');
+      if (topRisks.some(r => r.toLowerCase().includes('generator') || r.toLowerCase().includes('maintenance') || r.toLowerCase().includes('hvac'))) hotelProtectionMap.push('Equipment Breakdown / Electronic Equipment');
+      if (topRisks.some(r => r.toLowerCase().includes('access') || r.toLowerCase().includes('cctv') || r.toLowerCase().includes('theft'))) hotelProtectionMap.push('Burglary / Money / Fidelity Guarantee');
+      if (answers['HOT_012'] === 'Yes' || answers['HOT_013'] === 'Yes') {
+        if (!hotelProtectionMap.includes('Public Liability')) hotelProtectionMap.push('Public Liability');
+      }
+      if (hotelProtectionMap.length) suggestedProducts = hotelProtectionMap.slice(0, 5);
+      // Lead Qualification Engine §21
+      let tier = 'LOW INTENT';
+      let tierReason = 'Completed assessment but no engagement';
+      if (isHighComplexity && hasMultipleExposures && hasMaterialRisk) {
+        tier = 'STRATEGIC';
+        tierReason = 'Large/high-complexity hotel + multiple significant exposures + strong commercial potential';
+      } else if (hasMaterialRisk && isDecisionMaker && wantsConsultation) {
+        tier = 'HOT';
+        tierReason = 'Material risk + decision-maker + explicit request for help';
+      } else if (hasMaterialRisk && isDecisionMaker && viewedReport) {
+        tier = 'QUALIFIED';
+        tierReason = 'Material risk + decision-maker + viewed report';
+      } else if (viewedReport) {
+        tier = 'ENGAGED';
+        tierReason = 'Completed assessment + viewed report';
+      }
+      leadQualification = { tier, reason: tierReason, isDecisionMaker, wantsConsultation, hasMaterialRisk, isHighComplexity };
+      hotelAdvisorSpecific = {
+        primaryConcern,
+        clientMotivation: primaryConcern ? `Protect ${primaryConcern.toLowerCase()} and avoid disruption` : 'Protect guests and avoid disruption',
+        discoveryOpportunities: [
+          'Previous guest incidents and claims history',
+          'Property reinstatement valuation and sum insured',
+          'Emergency procedures and last drill date',
+          'Current insurance programme and gaps',
+          'Revenue dependence and business interruption tolerance',
+          'Supplier and utility contingency arrangements'
+        ],
+        protectionMapping: hotelProtectionMap,
+        businessType: answers['HOT_011'] || null,
+        roomCount: answers['HOT_010'] || null,
+        location: answers['HOT_007'] || answers['city'] || null,
+        hotelName: answers['HOT_004'] || answers['business_name'] || null,
+        respondentRole: answers['HOT_006'] || answers['role'] || null
+      };
+    }
+
+    // Estimated meeting duration
+    const meetingDuration = topRisks.length <= 2 ? '15 minutes' : topRisks.length <= 4 ? '20 minutes' : '30 minutes';
+    const prefix = prefixDetected;
 
     res.json({
       customerName: lead?.name || answers.name || 'Customer',
@@ -686,6 +770,8 @@ router.get('/:id/advisor-brief', optionalAuth, async (req, res, next) => {
       expectedMeetingDuration: meetingDuration,
       estimatedExposure: { min: min_loss, max: max_loss },
       improvementPotential: improvement_potential,
+      leadQualification,
+      hotelAdvisorSpecific,
       aiInsights: aiReport ? {
         executiveSummary: aiReport.executiveSummary,
         professionalRecommendation: aiReport.professionalRecommendation
