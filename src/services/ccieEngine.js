@@ -25,10 +25,8 @@ const determinePhase = (questionId) => {
   if (num <= 2) return 'WELCOME';
   if (num === 3) return 'CONSENT';
   if (num <= 6) return 'PROFILE';
-  if (num === 18) return 'ANALYSIS';
-  if (num === 19) return 'RESULTS';
-  if (num <= 30) return 'DISCOVERY';
-  if (num >= 31) return 'RESULTS';
+  if (num <= 50) return 'DISCOVERY';
+  if (num >= 51) return 'RESULTS';
   return 'DISCOVERY';
 };
 

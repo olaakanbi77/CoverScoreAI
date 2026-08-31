@@ -3,15 +3,15 @@
     "id": "YPR_001",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how well your current financial foundation will support your future goals and protect you from unexpected setbacks.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Young Professional Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how well your current financial foundation will support your future goals and protect you from unexpected setbacks.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Young Professional Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "YPR_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "YPR_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -189,10 +189,10 @@
     "id": "YPR_016",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Young Professional Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Young Professional Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "YPR_017"
@@ -203,7 +203,7 @@
     "id": "YPR_017",
     "industry": "young_professional",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -218,15 +218,15 @@
     "id": "ENT_001",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how resilient your business really isâ€”so you can protect both your company and your personal future.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Entrepreneur Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how resilient your business really is—so you can protect both your company and your personal future.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Entrepreneur Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "ENT_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "ENT_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -421,10 +421,10 @@
     "id": "ENT_016",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Entrepreneur Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Entrepreneur Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "ENT_017"
@@ -435,7 +435,7 @@
     "id": "ENT_017",
     "industry": "entrepreneur",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -450,15 +450,15 @@
     "id": "FAM_001",
     "industry": "family",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how well your family would be protected if something happened to youâ€”because the people who depend on you deserve peace of mind.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Family Protection Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how well your family would be protected if something happened to you—because the people who depend on you deserve peace of mind.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Family Protection Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "FAM_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "FAM_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -657,10 +657,10 @@
     "id": "FAM_016",
     "industry": "family",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Family Protection Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Family Protection Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "FAM_017"
@@ -671,7 +671,7 @@
     "id": "FAM_017",
     "industry": "family",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -686,15 +686,15 @@
     "id": "INC_001",
     "industry": "income",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how vulnerable your income is to unexpected disruptions so you can protect what matters most before life interrupts it.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Income Protection Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how vulnerable your income is to unexpected disruptions so you can protect what matters most before life interrupts it.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Income Protection Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "INC_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "INC_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -893,10 +893,10 @@
     "id": "INC_016",
     "industry": "income",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Income Protection Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Income Protection Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "INC_017"
@@ -907,7 +907,7 @@
     "id": "INC_017",
     "industry": "income",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -922,15 +922,15 @@
     "id": "HLT_001",
     "industry": "health",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how well your health protection would hold up when you need it mostâ€”so you can stay healthy without financial hardship.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Health Protection Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how well your health protection would hold up when you need it most—so you can stay healthy without financial hardship.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Health Protection Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "HLT_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "HLT_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1085,7 +1085,7 @@
     "id": "HLT_013",
     "industry": "health",
     "pillar": "Financial Preparedness",
-    "question": "If you had to pay â‚¦2,000,000 for emergency treatment tomorrow, how would you most likely pay?",
+    "question": "If you had to pay ₦2,000,000 for emergency treatment tomorrow, how would you most likely pay?",
     "question_type": "single_choice",
     "answers": [
       "Savings",
@@ -1233,10 +1233,10 @@
     "industry": "health",
     "pillar": "General",
     "auto_advance": true,
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Health Protection Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Health Protection Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "HLT_019"
@@ -1246,7 +1246,7 @@
     "id": "HLT_019",
     "industry": "health",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1261,15 +1261,15 @@
     "id": "RET_001",
     "industry": "retirement",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand whether your retirement plan will deliver the future youâ€™re working towardâ€”because confidence in retirement comes from preparation, not hope.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Retirement Readiness Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand whether your retirement plan will deliver the future you’re working toward—because confidence in retirement comes from preparation, not hope.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Retirement Readiness Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "RET_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "RET_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1468,10 +1468,10 @@
     "id": "RET_016",
     "industry": "retirement",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Retirement Readiness Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Retirement Readiness Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "RET_017"
@@ -1482,7 +1482,7 @@
     "id": "RET_017",
     "industry": "retirement",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1497,15 +1497,15 @@
     "id": "HOM_001",
     "industry": "home",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how well your home and belongings are protectedâ€”because your home is more than a building, itâ€™s your foundation.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Home Protection Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how well your home and belongings are protected—because your home is more than a building, it’s your foundation.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Home Protection Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "HOM_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "HOM_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1627,10 +1627,10 @@
     "id": "HOM_013",
     "industry": "home",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Home Protection Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Home Protection Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "HOM_014"
@@ -1641,7 +1641,7 @@
     "id": "HOM_014",
     "industry": "home",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1656,15 +1656,15 @@
     "id": "MOT_001",
     "industry": "motor",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you understand how well your vehicle and mobility are protectedâ€”because being on the road shouldnâ€™t mean being at risk.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Motor Protection Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you understand how well your vehicle and mobility are protected—because being on the road shouldn’t mean being at risk.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Motor Protection Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "MOT_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "MOT_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1786,10 +1786,10 @@
     "id": "MOT_013",
     "industry": "motor",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Motor Protection Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Motor Protection Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "MOT_014"
@@ -1800,7 +1800,7 @@
     "id": "MOT_014",
     "industry": "motor",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -1815,15 +1815,15 @@
     "id": "SME_001",
     "industry": "sme",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your small business really isâ€”because a disruption shouldnâ€™t undo everything youâ€™ve built.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Business Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your small business really is—because a disruption shouldn’t undo everything you’ve built.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Business Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "SME_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "SME_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -1864,7 +1864,7 @@
     "id": "SME_007",
     "industry": "sme",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your Business Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your Business Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -1955,18 +1955,18 @@
     "question": "What is your estimated annual revenue?",
     "question_type": "single_choice",
     "answers": [
-      "Under â‚¦50M",
-      "â‚¦50M - â‚¦200M",
-      "Over â‚¦200M"
+      "Under ₦50M",
+      "₦50M - ₦200M",
+      "Over ₦200M"
     ],
     "risk_logic": {
-      "Under â‚¦50M": {
+      "Under ₦50M": {
         "exposure_points": 10
       },
-      "â‚¦50M - â‚¦200M": {
+      "₦50M - ₦200M": {
         "exposure_points": 20
       },
-      "Over â‚¦200M": {
+      "Over ₦200M": {
         "exposure_points": 30
       }
     },
@@ -2036,10 +2036,10 @@
     "id": "SME_018",
     "industry": "sme",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Business Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Business Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "SME_019"
@@ -2050,7 +2050,7 @@
     "id": "SME_019",
     "industry": "sme",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2065,15 +2065,15 @@
     "id": "MFG_001",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your manufacturing operations really areâ€”because downtime is expensive and protection is essential.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Manufacturing Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your manufacturing operations really are—because downtime is expensive and protection is essential.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Manufacturing Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "MFG_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "MFG_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -2114,7 +2114,7 @@
     "id": "MFG_007",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your Manufacturing Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your Manufacturing Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -2287,10 +2287,10 @@
     "id": "MFG_018",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Manufacturing Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Manufacturing Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "MFG_019"
@@ -2301,7 +2301,7 @@
     "id": "MFG_019",
     "industry": "manufacturing",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2316,15 +2316,15 @@
     "id": "HOS_001",
     "industry": "hospital",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your healthcare facility really isâ€”because patient care depends on being prepared for anything.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Hospital Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your healthcare facility really is—because patient care depends on being prepared for anything.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Hospital Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "HOS_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "HOS_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -2365,7 +2365,7 @@
     "id": "HOS_007",
     "industry": "hospital",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your Hospital Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your Hospital Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -2530,10 +2530,10 @@
     "id": "HOS_018",
     "industry": "hospital",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Hospital Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Hospital Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "HOS_019"
@@ -2544,7 +2544,7 @@
     "id": "HOS_019",
     "industry": "hospital",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -2559,15 +2559,15 @@
     "id": "SCH_001",
     "industry": "school",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your school really isâ€”so you can remain safe, trusted, and operational.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized School Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your school really is—so you can remain safe, trusted, and operational.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized School Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "SCH_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "SCH_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -2608,7 +2608,7 @@
     "id": "SCH_007",
     "industry": "school",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your School Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your School Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -2660,10 +2660,10 @@
     "question": "How predictable is your school's income throughout the year?",
     "question_type": "single_choice",
     "answers": [
-      "Very predictable â€” we have stable, consistent revenue",
-      "Moderately predictable â€” slight seasonal variation",
-      "Somewhat unpredictable â€” noticeable fluctuations",
-      "Very unpredictable â€” revenue varies significantly"
+      "Very predictable — we have stable, consistent revenue",
+      "Moderately predictable — slight seasonal variation",
+      "Somewhat unpredictable — noticeable fluctuations",
+      "Very unpredictable — revenue varies significantly"
     ],
     "data_mapping": "income_predictability",
     "branching": {
@@ -2701,9 +2701,9 @@
     "question": "What is the estimated average annual tuition fee per student?",
     "question_type": "single_choice",
     "answers": [
-      "Under â‚¦100,000",
-      "â‚¦100,000 - â‚¦500,000",
-      "Over â‚¦500,000"
+      "Under ₦100,000",
+      "₦100,000 - ₦500,000",
+      "Over ₦500,000"
     ],
     "data_mapping": "tuition_fees",
     "id": "SCH_014",
@@ -2995,10 +2995,10 @@
     "id": "SCH_018",
     "industry": "school",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized School Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized School Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "SCH_019"
@@ -3009,7 +3009,7 @@
     "id": "SCH_019",
     "industry": "school",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3024,15 +3024,15 @@
     "id": "CHR_001",
     "industry": "church",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your church really isâ€”because protecting your congregation protects your mission.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Church Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your church really is—because protecting your congregation protects your mission.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Church Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "CHR_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "CHR_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3073,7 +3073,7 @@
     "id": "CHR_007",
     "industry": "church",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your Church Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your Church Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -3234,10 +3234,10 @@
     "id": "CHR_018",
     "industry": "church",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Church Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Church Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "CHR_019"
@@ -3248,7 +3248,7 @@
     "id": "CHR_019",
     "industry": "church",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3263,15 +3263,15 @@
     "id": "CON_001",
     "industry": "construction",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your construction business really isâ€”because every project deserves to be protected.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Construction Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your construction business really is—because every project deserves to be protected.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Construction Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "CON_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "CON_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3312,7 +3312,7 @@
     "id": "CON_007",
     "industry": "construction",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your Construction Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your Construction Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -3478,10 +3478,10 @@
     "id": "CON_018",
     "industry": "construction",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Construction Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Construction Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "CON_019"
@@ -3492,7 +3492,7 @@
     "id": "CON_019",
     "industry": "construction",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -3507,15 +3507,15 @@
     "id": "TRN_001",
     "industry": "transport",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. Iâ€™ll help you discover how resilient your transport business really isâ€”because your fleet should keep moving, not stop for the unexpected.\n\nBefore we begin â€” do you consent to CoverScore securely processing your responses so I can prepare your personalized Transport Risk Reportâ„¢?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I’ll help you discover how resilient your transport business really is—because your fleet should keep moving, not stop for the unexpected.\n\nBefore we begin — do you consent to CoverScore securely processing your responses so I can prepare your personalized Transport Risk Report™?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I agree â€” let's begin",
-      "âŒ Not now"
+      "✅ I agree — let's begin",
+      "❌ Not now"
     ],
     "branching": {
-      "âœ… I agree â€” let's begin": "TRN_004",
-      "âŒ Not now": "COMPLETE",
+      "✅ I agree — let's begin": "TRN_004",
+      "❌ Not now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -3556,7 +3556,7 @@
     "id": "TRN_007",
     "industry": "transport",
     "pillar": "General",
-    "question": "What's your email address?\n\n(Used to send your Transport Risk Reportâ„¢.)",
+    "question": "What's your email address?\n\n(Used to send your Transport Risk Report™.)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -3723,10 +3723,10 @@
     "id": "TRN_018",
     "industry": "transport",
     "pillar": "General",
-    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Transport Risk Reportâ„¢.",
+    "question": "Excellent. I have everything I need.\n\nGive me a few seconds while I analyse your responses and prepare your personalized Transport Risk Report™.",
     "question_type": "single_choice",
     "answers": [
-      "âœ… View My Results"
+      "✅ View My Results"
     ],
     "branching": {
       "DEFAULT": "TRN_019"
@@ -3737,7 +3737,7 @@
     "id": "TRN_019",
     "industry": "transport",
     "pillar": "General",
-    "question": "ðŸŽ‰ Congratulations, {{name}}!\n\nYour CoverScoreâ„¢ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\nðŸ“„ View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
+    "question": "🎉 Congratulations, {{name}}!\n\nYour CoverScore™ is {{score}} / 100.\n{{riskLevel}}\n\n*Your Risk Pillars*\n{{strengths}}\n\n📄 View My Report: {{reportUrl}}\n\nIf you'd like, one of our Certified Risk Advisors can help you understand the most practical way to improve these areas.\n\nThe conversation is free and based entirely on your assessment.\n\nWould you like me to arrange it?",
     "question_type": "yes_no",
     "answers": [
       "Yes",
@@ -4756,15 +4756,15 @@
     "id": "HOT_001",
     "industry": "hotel",
     "pillar": "General",
-    "question": "ðŸ‘‹ Hello and welcome to CoverScoreâ„¢.\n\nI'm your AI Risk Advisor. I'll help you discover how resilient your hotel really is â€” from guest safety and fire protection to property, staff, business continuity and operational risks.\n\nThis Hotels & Hospitality Resilience Assessmentâ„¢ takes about 5 minutes and you'll receive your personalized Hotel Risk Reportâ„¢ immediately after completion.\n\nThere are no right or wrong answers â€” just answer honestly.\n\nShall we begin?",
+    "question": "👋 Hello and welcome to CoverScore™.\n\nI'm your AI Risk Advisor. I'll help you discover how resilient your hotel really is — from guest safety and fire protection to property, staff, business continuity and operational risks.\n\nThis Hotels & Hospitality Resilience Assessment™ takes about 5 minutes and you'll receive your personalized Hotel Risk Report™ immediately after completion.\n\nThere are no right or wrong answers — just answer honestly.\n\nShall we begin?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… Yes, let's begin",
-      "â“ Tell me more"
+      "✅ Yes, let's begin",
+      "❓ Tell me more"
     ],
     "branching": {
-      "âœ… Yes, let's begin": "HOT_003",
-      "â“ Tell me more": "HOT_002",
+      "✅ Yes, let's begin": "HOT_003",
+      "❓ Tell me more": "HOT_002",
       "DEFAULT": "HOT_002"
     }
   },
@@ -4772,13 +4772,13 @@
     "id": "HOT_002",
     "industry": "hotel",
     "pillar": "General",
-    "question": "CoverScore helps hotels identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\nâ€¢ Your overall Hotel CoverScoreâ„¢ (out of 100)\nâ€¢ Your 7-pillar hotel resilience breakdown\nâ€¢ Critical Exposure Alerts (if any)\nâ€¢ Your Biggest Insight & Risk Story\nâ€¢ Practical risk reduction recommendations\nâ€¢ Protection recommendations (where appropriate)\n\nReady to begin?",
+    "question": "CoverScore helps hotels identify hidden risks before those risks become expensive problems.\n\nAt the end of this assessment, you'll receive:\n• Your overall Hotel CoverScore™ (out of 100)\n• Your 7-pillar hotel resilience breakdown\n• Critical Exposure Alerts (if any)\n• Your Biggest Insight & Risk Story\n• Practical risk reduction recommendations\n• Protection recommendations (where appropriate)\n\nReady to begin?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… Start Assessment"
+      "✅ Start Assessment"
     ],
     "branching": {
-      "âœ… Start Assessment": "HOT_003",
+      "✅ Start Assessment": "HOT_003",
       "DEFAULT": "HOT_003"
     }
   },
@@ -4786,15 +4786,15 @@
     "id": "HOT_003",
     "industry": "hotel",
     "pillar": "General",
-    "question": "Before we begin, I'd like your permission to securely process your responses so I can prepare your personalized Hotel Risk Reportâ„¢.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
+    "question": "Before we begin, I'd like your permission to securely process your responses so I can prepare your personalized Hotel Risk Report™.\n\nYour information will remain private and will never be shared without your consent.\n\nDo you agree?",
     "question_type": "single_choice",
     "answers": [
-      "âœ… I Agree",
-      "âŒ Not Now"
+      "✅ I Agree",
+      "❌ Not Now"
     ],
     "branching": {
-      "âœ… I Agree": "HOT_004",
-      "âŒ Not Now": "COMPLETE",
+      "✅ I Agree": "HOT_004",
+      "❌ Not Now": "COMPLETE",
       "DEFAULT": "COMPLETE"
     }
   },
@@ -4846,7 +4846,7 @@
     "id": "HOT_008",
     "industry": "hotel",
     "pillar": "General",
-    "question": "Finally, what is your email address?\n\n(We'll send your completed Hotel Risk Reportâ„¢ here)",
+    "question": "Finally, what is your email address?\n\n(We'll send your completed Hotel Risk Report™ here)",
     "question_type": "open_text",
     "data_mapping": "email",
     "branching": {
@@ -4915,14 +4915,14 @@
     "question": "Does your hotel have a functioning fire detection and alarm system?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — regularly tested",
-      "Yes — but testing is irregular",
+      "Yes � regularly tested",
+      "Yes � but testing is irregular",
       "No",
       "Not sure"
     ],
     "data_mapping": "fire_detection",
     "risk_logic": {
-      "Yes — but testing is irregular": { "vulnerability_points": 15 },
+      "Yes � but testing is irregular": { "vulnerability_points": 15 },
       "No": { "vulnerability_points": 40 },
       "Not sure": { "vulnerability_points": 30 }
     },
@@ -4942,7 +4942,7 @@
     "question": "Does your hotel have documented fire emergency and guest evacuation procedures?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — documented and regularly practiced",
+      "Yes � documented and regularly practiced",
       "Documented but rarely practiced",
       "No",
       "Not sure"
@@ -4964,7 +4964,7 @@
     "question": "Are fire extinguishers and other fire-fighting equipment regularly inspected and maintained?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — inspected and maintained",
+      "Yes � inspected and maintained",
       "No",
       "Not sure"
     ],
@@ -5011,7 +5011,7 @@
     "question": "Are the building, contents, equipment and other major hotel assets adequately valued for insurance purposes?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — valued within 12 months",
+      "Yes � valued within 12 months",
       "Valued but over 12 months ago",
       "Never valued / Not sure"
     ],
@@ -5102,14 +5102,14 @@
     "question": "How dependent is your hotel on generators or alternative power systems?",
     "question_type": "single_choice",
     "answers": [
-      "Low — grid power is reliable",
-      "Moderate — backup for outages",
-      "High — frequent outages",
+      "Low � grid power is reliable",
+      "Moderate � backup for outages",
+      "High � frequent outages",
       "Almost completely dependent"
     ],
     "data_mapping": "generator_dependency",
     "risk_logic": {
-      "High — frequent outages": { "exposure_points": 20 },
+      "High � frequent outages": { "exposure_points": 20 },
       "Almost completely dependent": { "exposure_points": 35 }
     },
     "branching": {
@@ -5146,8 +5146,8 @@
     "question_type": "single_choice",
     "answers": [
       "More than 24 hours",
-      "12–24 hours",
-      "4–12 hours",
+      "12�24 hours",
+      "4�12 hours",
       "Less than 4 hours",
       "We would struggle to operate"
     ],
@@ -5194,15 +5194,15 @@
     "question_type": "single_choice",
     "answers": [
       "Less than 1 month",
-      "1–3 months",
-      "3–6 months",
+      "1�3 months",
+      "3�6 months",
       "More than 6 months",
       "Not sure"
     ],
     "data_mapping": "closure_resilience",
     "risk_logic": {
       "Less than 1 month": { "impact_points": 30 },
-      "1–3 months": { "impact_points": 15 },
+      "1�3 months": { "impact_points": 15 },
       "Not sure": { "impact_points": 15 }
     },
     "branching": {
@@ -5216,8 +5216,8 @@
     "question": "Does your hotel have a documented business continuity or emergency recovery plan?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — regularly tested",
-      "Yes — but rarely tested",
+      "Yes � regularly tested",
+      "Yes � but rarely tested",
       "No",
       "Not sure"
     ],
@@ -5225,7 +5225,7 @@
     "risk_logic": {
       "No": { "vulnerability_points": 25 },
       "Not sure": { "vulnerability_points": 20 },
-      "Yes — but rarely tested": { "vulnerability_points": 10 }
+      "Yes � but rarely tested": { "vulnerability_points": 10 }
     },
     "recommendation_trigger": {
       "condition": "No",
@@ -5244,15 +5244,15 @@
     "question_type": "single_choice",
     "answers": [
       "Less than 1 month",
-      "1–3 months",
-      "3–6 months",
+      "1�3 months",
+      "3�6 months",
       "More than 6 months",
       "Not sure"
     ],
     "data_mapping": "revenue_resilience",
     "risk_logic": {
       "Less than 1 month": { "impact_points": 30 },
-      "1–3 months": { "impact_points": 15 },
+      "1�3 months": { "impact_points": 15 },
       "Not sure": { "impact_points": 15 }
     },
     "branching": {
@@ -5266,7 +5266,7 @@
     "question": "Does your hotel have formal procedures for staff safety, workplace accidents and emergency response?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — documented and regularly reviewed",
+      "Yes � documented and regularly reviewed",
       "Partially",
       "No",
       "Not sure"
@@ -5338,15 +5338,15 @@
     "question": "Does the hotel use CCTV or other security monitoring systems?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — actively monitored",
-      "Yes — but monitoring is limited",
+      "Yes � actively monitored",
+      "Yes � but monitoring is limited",
       "No",
       "Not sure"
     ],
     "data_mapping": "cctv",
     "risk_logic": {
       "No": { "vulnerability_points": 15 },
-      "Yes — but monitoring is limited": { "vulnerability_points": 8 },
+      "Yes � but monitoring is limited": { "vulnerability_points": 8 },
       "Not sure": { "vulnerability_points": 10 }
     },
     "branching": {
@@ -5498,13 +5498,13 @@
     "question": "Does your swimming pool have documented safety procedures, regular maintenance and appropriate supervision?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — documented and maintained",
-      "Partially — some procedures exist",
+      "Yes � documented and maintained",
+      "Partially � some procedures exist",
       "No"
     ],
     "data_mapping": "pool_safety",
     "risk_logic": {
-      "Partially — some procedures exist": { "vulnerability_points": 15 },
+      "Partially � some procedures exist": { "vulnerability_points": 15 },
       "No": { "vulnerability_points": 30 }
     },
     "recommendation_trigger": {
@@ -5540,13 +5540,13 @@
     "question": "Are gym equipment and fitness facilities regularly inspected and maintained?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — regular inspection schedule",
-      "Partially — occasional checks",
+      "Yes � regular inspection schedule",
+      "Partially � occasional checks",
       "No"
     ],
     "data_mapping": "gym_maintenance",
     "risk_logic": {
-      "Partially — occasional checks": { "vulnerability_points": 10 },
+      "Partially � occasional checks": { "vulnerability_points": 10 },
       "No": { "vulnerability_points": 20 }
     },
     "branching": {
@@ -5577,13 +5577,13 @@
     "question": "Are spa and wellness facilities subject to documented safety procedures and regular inspection?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — documented and inspected",
-      "Partially — some procedures",
+      "Yes � documented and inspected",
+      "Partially � some procedures",
       "No"
     ],
     "data_mapping": "spa_safety",
     "risk_logic": {
-      "Partially — some procedures": { "vulnerability_points": 15 },
+      "Partially � some procedures": { "vulnerability_points": 15 },
       "No": { "vulnerability_points": 25 }
     },
     "branching": {
@@ -5614,7 +5614,7 @@
     "question": "Do you have procedures for managing large crowds and emergency evacuation during events?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — documented and tested",
+      "Yes � documented and tested",
       "Documented but not tested",
       "No"
     ],
@@ -5651,13 +5651,13 @@
     "question": "Are your hotel vehicles regularly inspected and maintained?",
     "question_type": "single_choice",
     "answers": [
-      "Yes — documented schedule",
-      "Partially — occasional checks",
+      "Yes � documented schedule",
+      "Partially � occasional checks",
       "No"
     ],
     "data_mapping": "vehicle_inspection",
     "risk_logic": {
-      "Partially — occasional checks": { "vulnerability_points": 15 },
+      "Partially � occasional checks": { "vulnerability_points": 15 },
       "No": { "vulnerability_points": 25 }
     },
     "branching": {
@@ -5771,7 +5771,7 @@
     "id": "HOT_052",
     "industry": "hotel",
     "pillar": "General",
-    "question": "Thank you for completing the Hotels & Hospitality Resilience Assessment™!\n\nBased on your responses, we've identified potential protection gaps and areas for improvement.\n\nWould you like a complimentary 15-minute consultation with a Certified Risk Advisor?",
+    "question": "Thank you for completing the Hotels & Hospitality Resilience Assessment�!\n\nBased on your responses, we've identified potential protection gaps and areas for improvement.\n\nWould you like a complimentary 15-minute consultation with a Certified Risk Advisor?",
     "question_type": "single_choice",
     "answers": [
       "Yes, please",
