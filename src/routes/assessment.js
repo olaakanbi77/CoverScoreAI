@@ -552,7 +552,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     for (const key of Object.keys(answers)) {
       const m = key.match(/^([A-Z]+)_\d+$/);
       if (m) {
-        const prefixMap = { SCH: 'school', BUS: 'sme', SME: 'sme', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'young_professional', FAM: 'family', INC: 'income', HLT: 'health', ENT: 'entrepreneur', RET: 'retirement' };
+        const prefixMap = { SCH: 'school', BUS: 'sme', SME: 'sme', HOS: 'hospital', MFG: 'manufacturing', CHU: 'church', YPR: 'young_professional', FAM: 'family', INC: 'income', HLT: 'health', ENT: 'entrepreneur', RET: 'retirement', HOT: 'hotel' };
         assessmentType = prefixMap[m[1]] || 'sme';
         break;
       }
@@ -746,8 +746,8 @@ router.get('/:id/advisor-brief', optionalAuth, async (req, res, next) => {
           'Supplier and utility contingency arrangements'
         ],
         protectionMapping: hotelProtectionMap,
-        businessType: answers['HOT_011'] || null,
-        roomCount: answers['HOT_010'] || null,
+        businessType: answers['HOT_010'] || null,
+        roomCount: answers['HOT_011'] || null,
         location: answers['HOT_007'] || answers['city'] || null,
         hotelName: answers['HOT_004'] || answers['business_name'] || null,
         respondentRole: answers['HOT_006'] || answers['role'] || null

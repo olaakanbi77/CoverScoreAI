@@ -466,7 +466,8 @@ const buildAdvisorBrief = (assessmentData, lead, phoneNumber, prefix, dom, quali
   // Build next action
   const nextAction = qualifierOutput?.next_best_action || 'Contact client within 24 hours';
   const priority = qualifierOutput?.lead_status?.toLowerCase().includes('hot') ? '\uD83D\uDD34 High' : '\uD83D\uDFE1 Medium';
-  const url = `${appBase || 'https://coverscore.site'}/admin/dashboard`;
+  const assessmentIdForUrl = assessmentData.assessmentId || lead?.assessment_id || '';
+  const url = assessmentIdForUrl ? `${appBase || 'https://coverscore.site'}/advisor/hotel-brief/${assessmentIdForUrl}` : `${appBase || 'https://coverscore.site'}/admin/dashboard`;
 
   // Role label
   const roleLabel = isPersonal ? '' : (prefix === 'SCH' ? 'Proprietor' : (assessmentData.contact_person || lead.contact_person || 'Contact'));
@@ -876,7 +877,9 @@ router.post('/evolution', async (req, res) => {
         `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel]);
         const assessmentId = assessRes.lastInsertRowid;
         assessmentData.assessmentId = assessmentId;
-        assessmentData.reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
+        assessmentData.reportUrl = prefix === 'HOT'
+          ? `${process.env.APP_URL || 'https://coverscore.site'}/reports/hotel/${assessmentId}`
+          : `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
         publishEvent(CCIE_EVENTS.REPORT_GENERATED, ccieContext, { assessmentId, reportUrl: assessmentData.reportUrl });
         assessmentData._scored = true;
 
@@ -988,7 +991,9 @@ router.post('/evolution', async (req, res) => {
         if (!assessmentData.reportUrl) {
           const fallbackId = assessmentData.assessmentId || (lead ? lead.assessment_id : null);
           assessmentData.reportUrl = fallbackId
-            ? `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${fallbackId}`
+            ? (prefix === 'HOT'
+              ? `${process.env.APP_URL || 'https://coverscore.site'}/reports/hotel/${fallbackId}`
+              : `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${fallbackId}`)
             : `${process.env.APP_URL || 'https://coverscore.site'}`;
         }
       }
@@ -1002,7 +1007,7 @@ router.post('/evolution', async (req, res) => {
       const email = assessmentData.email || (lead ? lead.email : null);
       const appBase = process.env.APP_URL || 'https://coverscore.site';
       const fallbackId = assessmentData.assessmentId || (lead ? lead.assessment_id : null);
-      const reportUrl = assessmentData.reportUrl || (fallbackId ? `${appBase}/assessment/result/${fallbackId}` : appBase);
+      const reportUrl = assessmentData.reportUrl || (fallbackId ? (prefix === 'HOT' ? `${appBase}/reports/hotel/${fallbackId}` : `${appBase}/assessment/result/${fallbackId}`) : appBase);
       const riskCats = assessmentData.risk_categories || {};
       const answers = assessmentData.answers || {};
 
