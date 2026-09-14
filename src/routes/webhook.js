@@ -8,6 +8,7 @@ const { calculateScore } = require('../services/scoringEngine');
 const { generateRecommendations } = require('../services/cre');
 const ccieEngine = require('../services/ccieEngine');
 const { CCIE_EVENTS, publishEvent } = require('../services/ccieEvents');
+const whatsappAdapter = require('../services/whatsappAdapter');
 const questionBank = require('../data/question_bank.json');
 const { domainConfig, defaultDomain } = require('../config/domain');
 const { notify, notifyRole } = require('../services/notify');
@@ -157,7 +158,8 @@ const buildAdvisorBrief = (assessmentData, lead, phoneNumber, prefix, dom, quali
     INC: 'Individual', RET: 'Retiree', HLT: 'Individual',
     HOM: 'Homeowner', MOT: 'Vehicle Owner',
     SCH: 'School', SME: 'Business', MFG: 'Manufacturing',
-    HOS: 'Hospital', CHR: 'Church', CON: 'Construction', TRN: 'Transport'
+    HOS: 'Hospital', CHR: 'Church', CON: 'Construction', TRN: 'Transport',
+    HOT: 'Hotel', CAR: 'Vehicle Owner'
   };
   const entityLabel = entityLabels[prefix] || 'Client';
 
@@ -518,7 +520,15 @@ const buildAdvisorBrief = (assessmentData, lead, phoneNumber, prefix, dom, quali
   parts.push('');
 
   // Advisor Conversation Priority section
-  const primaryConcern = answers['SCH_028'] || answers['primary_concern'] || 'Not explicitly stated';
+  const primaryConcern = answers['SCH_028'] || answers['HOT_051'] || 
+                         answers['HLT_CONCERN_01'] || answers['INC_CONCERN_01'] ||
+                         answers['FAM_CONCERN_01'] || answers['RET_CONCERN_01'] ||
+                         answers['YPR_CONCERN_01'] || answers['ENT_CONCERN_01'] ||
+                         answers['HOM_CONCERN_01'] || answers['MFG_CONCERN_01'] ||
+                         answers['HOS_CONCERN_01'] || answers['CHR_CONCERN_01'] ||
+                         answers['CON_CONCERN_01'] || answers['TRN_CONCERN_01'] ||
+                         answers['SME_CONCERN_01'] || answers['primary_concern'] || 
+                         answers['client_concern'] || 'Not explicitly stated';
   const pastIncidents = !!answers['SCH_012'] || !!answers['MFG_012'] || !!answers['HOS_012'] || !!answers['CON_012'] || !!answers['TRN_012'];
   const hasUrgency = assessmentData._urgencySent || pastIncidents;
   const weakestCat = Object.entries(cats).sort(([, a], [, b]) => a - b)[0];
@@ -532,6 +542,9 @@ const buildAdvisorBrief = (assessmentData, lead, phoneNumber, prefix, dom, quali
   parts.push(`Suggested opening angle: ${primaryConcern !== 'Not explicitly stated' ? `"You mentioned ${primaryConcern.toLowerCase()} as a concern. Let\u2019s start there."` : `"Your CoverScore shows your biggest opportunity is in ${weakestName.toLowerCase()}. Shall we explore that first?"`}`);
   parts.push('');
   parts.push(`\uD83D\uDD17 Open Client Record: ${url}`);
+  if (lead && lead.id) {
+    parts.push(`\u2705 Accept This Lead: ${appBase || 'https://coverscore.site'}/advisor/accept-lead/${lead.id}`);
+  }
 
   return parts.filter(l => l !== '' || true).join('\n');
 };
@@ -544,6 +557,7 @@ router.post('/evolution', async (req, res) => {
     if (!(payload && payload.event === 'messages.upsert')) return;
 
     const messageData = payload.data;
+    console.log(`[WEBHOOK DEBUG] event=${payload.event} keys=${JSON.stringify(Object.keys(messageData))} remoteJid=${messageData.key?.remoteJid} fromMe=${messageData.key?.fromMe} pushName=${messageData.pushName}`);
     if (messageData.key && messageData.key.fromMe) return;
 
     let incomingTextRaw = '';
@@ -630,7 +644,7 @@ router.post('/evolution', async (req, res) => {
       const insertResult = await run(`
         INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, ccie_context, assessment_type)
         VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?, ?, ?)
-      `, ['WhatsApp User', 'whatsapp@coverscore.site', phoneNumber, currentState, 'WhatsApp User', resolvedIndustry, JSON.stringify(ccieContext), assessmentTypeMap[prefix] || 'sme']);
+      `, [phoneNumber, 'whatsapp@coverscore.site', phoneNumber, currentState, phoneNumber, resolvedIndustry, JSON.stringify(ccieContext), assessmentTypeMap[prefix] || 'sme']);
       lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
       console.log(`   Created new lead ID: ${lead.id}`);
 
@@ -653,6 +667,102 @@ router.post('/evolution', async (req, res) => {
       currentPhase: ccieEngine.determinePhase(currentState),
       currentQuestion: currentState, questionCount: 0
     });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HOTEL UNIFIED ASSESSMENT ENGINE — routes through unified engine
+    // ═══════════════════════════════════════════════════════════════
+    if (prefix === 'HOT') {
+      console.log(`   [HOTEL] Routing through unified assessment engine`);
+
+      const hotResult = await whatsappAdapter.processWhatsAppMessage(
+        phoneNumber, incomingTextRaw.trim(), lead.id
+      );
+
+      console.log(`   [HOTEL] Reply: ${hotResult.replyText?.substring(0, 80)}... Complete: ${hotResult.isComplete}`);
+
+      // Send the reply
+      await sendWhatsApp(phoneNumber, null, { _message: hotResult.replyText });
+
+      // Update chat history
+      chatHistory.push({ role: 'user', content: incomingTextRaw.trim(), timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      chatHistory.push({ role: 'assistant', content: hotResult.replyText, timestamp: new Date().toLocaleTimeString([], {hot:'2-digit', minute:'2-digit'}) });
+
+      // Update lead record
+      const updatedData = hotResult.updatedData || {};
+      const newWaState = hotResult.nextState || currentState;
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?',
+        [newWaState, JSON.stringify(chatHistory), JSON.stringify(updatedData), lead.id]);
+
+      // If assessment is complete, trigger scoring
+      if (hotResult.isComplete) {
+        console.log(`   [HOTEL] Assessment complete — triggering scoring`);
+        const finalAnswers = updatedData.hotelAnswers || updatedData.answers || {};
+
+        try {
+          const scoreResult = await calculateScore(finalAnswers, prefix);
+          console.log(`   [HOTEL] Score: ${scoreResult.score}, Risk: ${scoreResult.risk_level}`);
+
+          // Insert assessment record
+          const assessRes = await run(`
+            INSERT INTO assessments (user_id, answers, score, risk_level)
+            VALUES (NULL, ?, ?, ?)
+          `, [JSON.stringify(finalAnswers), scoreResult.score, scoreResult.risk_level === 'High Risk' ? 'high' : scoreResult.risk_level === 'Critical Risk' ? 'critical' : 'moderate']);
+          const assessmentId = assessRes.lastInsertRowid;
+
+          // Link to lead
+          await run('UPDATE leads SET assessment_id = ?, score = ?, risk_level = ?, entity_type = ?, status = ?, pipeline_stage = 2, assessment_type = ? WHERE id = ?',
+            [assessmentId, scoreResult.score, scoreResult.risk_level, 'hotel', 'Report Sent', 'hotel', lead.id]);
+
+          // Insert assessment session
+          const sessionId = 'SESS-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2,6);
+          await run(`
+            INSERT INTO assessment_sessions (id, lead_id, template_code, status, current_step, answers, score_payload, completed_at, created_at, updated_at)
+            VALUES (?, ?, 'HOTEL', 'completed', 'finished', ?, ?, ?, ?, ?)
+          `, [sessionId, lead.id, JSON.stringify(finalAnswers), JSON.stringify({score: scoreResult.score, riskLevel: scoreResult.risk_level}), new Date().toISOString(), new Date().toISOString(), new Date().toISOString()]);
+
+          const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/reports/hotel/${assessmentId}`;
+
+          // Build and send result message
+          const riskEmojis = { 'Critical Risk': '🔴', 'High Risk': '🟠', 'Moderate Risk': '🟡', 'Low Risk': '🟢' };
+          const riskEmoji = riskEmojis[scoreResult.risk_level] || '🟠';
+          const resultMsg = [
+            `🎯 *Your CoverScore™ is ${scoreResult.score} / 100*`,
+            `Risk Level: ${riskEmoji} ${scoreResult.risk_level}`,
+            '',
+            `Your personalised Hotel Risk Report™ is ready:`,
+            reportUrl,
+            '',
+            `A CoverScore advisor will be in touch to discuss your results.`,
+          ].join('\n');
+
+          await sendWhatsApp(phoneNumber, null, { _message: resultMsg });
+
+          // Fire background AI report generation
+          setImmediate(async () => {
+            try {
+              const creIntel = generateRecommendations({
+                answers: finalAnswers, score: scoreResult.score, riskLevel: scoreResult.risk_level,
+                recommendations: scoreResult.recommendations, identified_gaps: scoreResult.identified_gaps,
+                risk_categories: scoreResult.risk_categories, entityType: 'business'
+              });
+              const aiReportFinal = await generateRiskReport({
+                answers: finalAnswers, score: scoreResult.score, riskLevel: scoreResult.risk_level,
+                recommendations: scoreResult.recommendations, identified_gaps: scoreResult.identified_gaps,
+                risk_categories: scoreResult.risk_categories, entityType: 'business'
+              }, creIntel);
+              await run(`UPDATE assessments SET ai_report = ? WHERE id = ?`, [JSON.stringify(aiReportFinal), assessmentId]);
+            } catch (err) {
+              console.error('[HOTEL] Background AI report error:', err);
+            }
+          });
+        } catch (scoreErr) {
+          console.error('[HOTEL] Scoring error:', scoreErr);
+          await sendWhatsApp(phoneNumber, null, { _message: 'Your assessment is complete. Your report is being prepared and will be sent shortly.' });
+        }
+      }
+
+      return;
+    }
 
     if (isStartTrigger && (currentState === 'initial' || currentState === null || assessmentData._scored || currentState === 'qualification')) {
       currentState = `${prefix}_001`;
@@ -799,9 +909,9 @@ router.post('/evolution', async (req, res) => {
     if (needsScoring) {
       delete assessmentData.reportUrl;
       console.log(`   [CCIE SCORING] Calculating CoverScore for ${phoneNumber}`);
-      const finalAnswers = { ...(assessmentData.answers || {}), template_selection: { template_id: prefix } };
+      const finalAnswers = { ...(assessmentData.answers || {}) };
       try {
-        const scoreResult = await calculateScore(finalAnswers);
+        const scoreResult = await calculateScore(finalAnswers, prefix);
         assessmentData.score = scoreResult.score;
         assessmentData.riskLevel = scoreResult.risk_level;
         userRiskLabel = riskLabelMap[assessmentData.riskLevel] || assessmentData.riskLevel || 'Moderate';
@@ -877,6 +987,17 @@ router.post('/evolution', async (req, res) => {
         `, [JSON.stringify(finalAnswers), scoreResult.score, dbRiskLevel]);
         const assessmentId = assessRes.lastInsertRowid;
         assessmentData.assessmentId = assessmentId;
+
+        // Link assessment to lead immediately (before background tasks)
+        await run('UPDATE leads SET assessment_id = ?, updated_at = datetime(\'now\') WHERE id = ?', [assessmentId, lead.id]).catch(() => {});
+
+        // Insert assessment session
+        const sessionId = 'SESS-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2,6);
+        await run(`
+          INSERT INTO assessment_sessions (id, lead_id, template_code, status, current_step, answers, score_payload, completed_at, created_at, updated_at)
+          VALUES (?, ?, ?, 'completed', 'finished', ?, '{"score":?,"riskLevel":?}', ?, ?, ?)
+        `, [sessionId, lead.id, assessmentData.type || lead.entity_type || 'BUSINESS', JSON.stringify(finalAnswers), scoreResult.score, scoreResult.risk_level, new Date().toISOString(), new Date().toISOString(), new Date().toISOString()]);
+
         assessmentData.reportUrl = prefix === 'HOT'
           ? `${process.env.APP_URL || 'https://coverscore.site'}/reports/hotel/${assessmentId}`
           : `${process.env.APP_URL || 'https://coverscore.site'}/assessment/result/${assessmentId}`;
@@ -895,13 +1016,16 @@ router.post('/evolution', async (req, res) => {
               console.error('Background AI error:', err);
             }
 
-            if (assessmentData.email) {
-              emailService.sendAssessmentReport(assessmentData.email, {
+            if (assessmentData.email || lead.email) {
+              const sendToEmail = assessmentData.email || lead.email;
+              emailService.sendAssessmentReport(sendToEmail, {
                 score: scoreResult.score, riskLevel: dbRiskLevel, aiReport: aiReportFinal || null,
-                businessName: assessmentData.business_name || assessmentData.name, assessmentId
+                businessName: assessmentData.business_name || assessmentData.hotel_name || assessmentData.name || lead.name, assessmentId,
+                assessmentType: assessmentData.type || prefix || 'BUSINESS',
+                leadId: lead.id,
               }).then(() => {
-                publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: assessmentData.email, assessmentId });
-                console.log(`✅ Assessment report emailed to ${assessmentData.email}`);
+                publishEvent(CCIE_EVENTS.REPORT_DELIVERED, ccieContext, { email: sendToEmail, assessmentId });
+                console.log(`✅ Assessment report emailed to ${sendToEmail}`);
               }).catch(err => console.error(`❌ Failed to email report:`, err));
             }
 
@@ -952,12 +1076,12 @@ router.post('/evolution', async (req, res) => {
               WHERE id = ?
             `, [
               assessmentId, scoreResult.score, dbRiskLevel, entityType,
-              (entityType === 'business' && assessmentData.business_name) ? assessmentData.business_name : (assessmentData.name || 'WhatsApp User'),
-              assessmentData.email || 'whatsapp@coverscore.site',
+              (entityType === 'business' && (assessmentData.business_name || assessmentData.hotel_name)) ? (assessmentData.business_name || assessmentData.hotel_name) : (assessmentData.name || assessmentData.respondent_name || phoneNumber),
+              assessmentData.email || lead.email || 'whatsapp@coverscore.site',
               phoneToSet,
               estimatedPremium,
               assessmentData.birth_date || null, assessmentData.anniversary_date || null,
-              assessmentData.name || 'WhatsApp User',
+              assessmentData.name || assessmentData.respondent_name || phoneNumber,
               assessmentTypeMap[prefix] || 'sme',
               ls.score, ls.priority, lead.id
             ]);
@@ -2016,9 +2140,15 @@ router.post('/evolution', async (req, res) => {
         [finalState, JSON.stringify(assessmentData), JSON.stringify(chatHistory), JSON.stringify(updatedCcieContext || ccieContext), lead.id]);
     }
 
-    if (assessmentData.name || assessmentData.email || assessmentData.business_name) {
-      await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email), business_name = COALESCE(?, business_name) WHERE id = ?',
-        [assessmentData.name || null, assessmentData.email || null, assessmentData.business_name || null, lead.id]);
+    // Update lead with captured name/email/business info (supports both hotel and standard flows)
+    const leadName = assessmentData.name || assessmentData.respondent_name || assessmentData.hotel_name || null;
+    const leadEmail = assessmentData.email || null;
+    const leadBusiness = assessmentData.business_name || assessmentData.hotel_name || null;
+    const leadIndustry = assessmentData.industry || lead.industry || null;
+    const leadEntityType = (assessmentData.name && !assessmentData.business_name && !assessmentData.hotel_name) ? 'individual' : 'business';
+    if (leadName || leadEmail || leadBusiness || leadIndustry) {
+      await run('UPDATE leads SET name = COALESCE(?, name), email = COALESCE(?, email), business_name = COALESCE(?, business_name), industry = COALESCE(?, industry), entity_type = COALESCE(?, entity_type) WHERE id = ?',
+        [leadName, leadEmail, leadBusiness, leadIndustry, leadEntityType, lead.id]);
     }
 
     if (isFinished) {
@@ -2048,7 +2178,7 @@ router.post('/evolution', async (req, res) => {
         (qualifierOutput.lead_status || '').toLowerCase().includes('hot') ? 4 : 3,
         assessmentData.is_qualified ? 1 : 0,
         assessmentData.consultation_preference || null,
-        assessmentData.primary_concern || null,
+        assessmentData.primary_concern || assessmentData.answers?.client_concern || null,
         qualifierOutput.next_best_action + " - " + qualifierOutput.qualification_reasoning,
         lead.id
       ]);
