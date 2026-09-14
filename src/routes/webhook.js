@@ -607,89 +607,53 @@ router.post('/evolution', async (req, res) => {
 
     let currentState, chatHistory, assessmentData, ccieContext;
 
-    if (lead && (isRestartTrigger || incomingText === 'RESTART')) {
-      currentState = `${prefix}_001`;
-      chatHistory = [];
-      assessmentData = {};
-      ccieContext = ccieEngine.buildContext({
-        questionPack: prefix, channel: 'whatsapp',
-        customer: { phone: phoneNumber, name: lead.name, email: lead.email },
-        currentPhase: 'WELCOME', currentQuestion: `${prefix}_001`, questionCount: 0
-      });
-      await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ?, ccie_context = ? WHERE id = ?',
-        [currentState, JSON.stringify(chatHistory), JSON.stringify(assessmentData), JSON.stringify(ccieContext), lead.id]);
-      console.log(`   Lead ${lead.id} restarting -> ${currentState}`);
-
-      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
-      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
-      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
-      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
-      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
-        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieStart.context), lead.id]);
-      return;
-    }
-
-    if (!lead && !isStartTrigger) {
-      console.log(`   Lead not found and no start trigger.`);
-      return;
-    }
-
-    if (!lead && isStartTrigger) {
-      currentState = `${prefix}_001`;
-      chatHistory = [];
-      assessmentData = {};
-      console.log(`   Creating NEW lead for phone ${phoneNumber}`);
-      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
-      ccieContext = ccieStart.context;
-      const insertResult = await run(`
-        INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, ccie_context, assessment_type)
-        VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?, ?, ?)
-      `, [phoneNumber, 'whatsapp@coverscore.site', phoneNumber, currentState, phoneNumber, resolvedIndustry, JSON.stringify(ccieContext), assessmentTypeMap[prefix] || 'sme']);
-      lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
-      console.log(`   Created new lead ID: ${lead.id}`);
-
-      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
-      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
-      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
-      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
-        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieContext), lead.id]);
-      return;
-    }
-
-    currentState = lead.wa_state || 'initial';
-    try { chatHistory = JSON.parse(lead.chat_history || '[]'); } catch (e) { chatHistory = []; }
-    try { assessmentData = JSON.parse(lead.assessment_data || '{}'); } catch (e) { assessmentData = {}; }
-    ccieContext = (() => {
-      try { return JSON.parse(lead.ccie_context || 'null'); } catch(e) { return null; }
-    })() || ccieEngine.buildContext({
-      questionPack: prefix, channel: 'whatsapp',
-      customer: { phone: phoneNumber, name: lead.name, email: lead.email },
-      currentPhase: ccieEngine.determinePhase(currentState),
-      currentQuestion: currentState, questionCount: 0
-    });
-
     // ═══════════════════════════════════════════════════════════════
-    // HOTEL UNIFIED ASSESSMENT ENGINE — routes through unified engine
+    // HOTEL UNIFIED ASSESSMENT ENGINE — intercepts ALL HOT messages
+    // before the legacy CCIE engine. This ensures hotels always use
+    // the simplified 20-25 interaction flow.
     // ═══════════════════════════════════════════════════════════════
     if (prefix === 'HOT') {
       console.log(`   [HOTEL] Routing through unified assessment engine`);
+
+      // Create lead if needed (for new assessments)
+      if (!lead && isStartTrigger) {
+        console.log(`   [HOTEL] Creating NEW lead for phone ${phoneNumber}`);
+        const insertResult = await run(`
+          INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, assessment_type)
+          VALUES (?, ?, ?, 'New Lead', 'initial', '[]', 'unknown', ?, ?, 'hotel')
+        `, [phoneNumber, 'whatsapp@coverscore.site', phoneNumber, phoneNumber, resolvedIndustry]);
+        lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
+        console.log(`   [HOTEL] Created new lead ID: ${lead.id}`);
+      }
+
+      if (!lead) {
+        console.log(`   [HOTEL] Lead not found and no start trigger.`);
+        return;
+      }
+
+      // Handle restart
+      if (isRestartTrigger) {
+        await run('UPDATE leads SET wa_state = ?, assessment_data = ? WHERE id = ?', ['initial', '{}', lead.id]);
+      }
 
       const hotResult = await whatsappAdapter.processWhatsAppMessage(
         phoneNumber, incomingTextRaw.trim(), lead.id
       );
 
-      console.log(`   [HOTEL] Reply: ${hotResult.replyText?.substring(0, 80)}... Complete: ${hotResult.isComplete}`);
+      console.log(`   [HOTEL] Reply: ${hotResult.replyText?.substring(0, 100)}... Complete: ${hotResult.isComplete}`);
 
       // Send the reply
       await sendWhatsApp(phoneNumber, null, { _message: hotResult.replyText });
 
       // Update chat history
+      chatHistory = [];
+      try { chatHistory = JSON.parse(lead.chat_history || '[]'); } catch (e) { chatHistory = []; }
       chatHistory.push({ role: 'user', content: incomingTextRaw.trim(), timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
-      chatHistory.push({ role: 'assistant', content: hotResult.replyText, timestamp: new Date().toLocaleTimeString([], {hot:'2-digit', minute:'2-digit'}) });
+      chatHistory.push({ role: 'assistant', content: hotResult.replyText, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
 
       // Update lead record
       const updatedData = hotResult.updatedData || {};
-      const newWaState = hotResult.nextState || currentState;
+      const newWaState = hotResult.nextState || 'initial';
       await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ? WHERE id = ?',
         [newWaState, JSON.stringify(chatHistory), JSON.stringify(updatedData), lead.id]);
 
@@ -763,6 +727,71 @@ router.post('/evolution', async (req, res) => {
 
       return;
     }
+
+    // ═══════════════════════════════════════════════════════════════
+    // NON-HOTEL PREFIXES — legacy CCIE engine flow
+    // ═══════════════════════════════════════════════════════════════
+
+    if (lead && (isRestartTrigger || incomingText === 'RESTART')) {
+      currentState = `${prefix}_001`;
+      chatHistory = [];
+      assessmentData = {};
+      ccieContext = ccieEngine.buildContext({
+        questionPack: prefix, channel: 'whatsapp',
+        customer: { phone: phoneNumber, name: lead.name, email: lead.email },
+        currentPhase: 'WELCOME', currentQuestion: `${prefix}_001`, questionCount: 0
+      });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, assessment_data = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(assessmentData), JSON.stringify(ccieContext), lead.id]);
+      console.log(`   Lead ${lead.id} restarting -> ${currentState}`);
+
+      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
+      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
+      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
+      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieStart.context), lead.id]);
+      return;
+    }
+
+    if (!lead && !isStartTrigger) {
+      console.log(`   Lead not found and no start trigger.`);
+      return;
+    }
+
+    if (!lead && isStartTrigger) {
+      currentState = `${prefix}_001`;
+      chatHistory = [];
+      assessmentData = {};
+      console.log(`   Creating NEW lead for phone ${phoneNumber}`);
+      const ccieStart = await ccieEngine.startConversation(prefix, phoneNumber, detectedIndustry);
+      ccieContext = ccieStart.context;
+      const insertResult = await run(`
+        INSERT INTO leads (name, email, phone, status, wa_state, chat_history, entity_type, contact_person, industry, ccie_context, assessment_type)
+        VALUES (?, ?, ?, 'New Lead', ?, '{}', 'unknown', ?, ?, ?, ?)
+      `, [phoneNumber, 'whatsapp@coverscore.site', phoneNumber, currentState, phoneNumber, resolvedIndustry, JSON.stringify(ccieContext), assessmentTypeMap[prefix] || 'sme']);
+      lead = await get('SELECT * FROM leads WHERE id = ?', [insertResult.lastInsertRowid]);
+      console.log(`   Created new lead ID: ${lead.id}`);
+
+      const welcomeMsg = ccieStart.messages[0]?.text || `👋 Welcome to CoverScore AI.\n\nLet's begin.`;
+      await sendWhatsApp(phoneNumber, null, { _message: welcomeMsg });
+      chatHistory.push({ role: 'assistant', content: welcomeMsg, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+      await run('UPDATE leads SET wa_state = ?, chat_history = ?, ccie_context = ? WHERE id = ?',
+        [currentState, JSON.stringify(chatHistory), JSON.stringify(ccieStart.context), lead.id]);
+      return;
+    }
+
+    currentState = lead.wa_state || 'initial';
+    try { chatHistory = JSON.parse(lead.chat_history || '[]'); } catch (e) { chatHistory = []; }
+    try { assessmentData = JSON.parse(lead.assessment_data || '{}'); } catch (e) { assessmentData = {}; }
+    ccieContext = (() => {
+      try { return JSON.parse(lead.ccie_context || 'null'); } catch(e) { return null; }
+    })() || ccieEngine.buildContext({
+      questionPack: prefix, channel: 'whatsapp',
+      customer: { phone: phoneNumber, name: lead.name, email: lead.email },
+      currentPhase: ccieEngine.determinePhase(currentState),
+      currentQuestion: currentState, questionCount: 0
+    });
 
     if (isStartTrigger && (currentState === 'initial' || currentState === null || assessmentData._scored || currentState === 'qualification')) {
       currentState = `${prefix}_001`;
