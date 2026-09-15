@@ -76,9 +76,16 @@ async function processWhatsAppMessage(phoneNumber, messageBody, leadId = null) {
     whatsappSessions.set(phone, assessmentId);
   }
 
-  // Handle START command (resume)
-  if (text.toUpperCase() === 'START' && state.status === 'paused') {
-    state.status = 'in_progress';
+  // Handle START command (resume) or new START — always create fresh session
+  if (text.toUpperCase() === 'START' || text.toUpperCase().includes('START')) {
+    if (state && state.status === 'paused') {
+      state.status = 'in_progress';
+    } else {
+      // START or START HOTEL ASSESSMENT → always create fresh session
+      state = orchestrator.createSession('WHATSAPP', leadId);
+      assessmentId = state.assessmentId;
+      whatsappSessions.set(phone, assessmentId);
+    }
   }
 
   // Process the response through the orchestrator
@@ -86,7 +93,6 @@ async function processWhatsAppMessage(phoneNumber, messageBody, leadId = null) {
   if (state.interactionCount === 0 && text.toUpperCase() !== 'START') {
     const question = orchestrator.getNextBestQuestion(state);
     const replyText = formatForWhatsApp(question, state);
-    // Increment counter so the next message goes through processResponse
     state.interactionCount = 1;
     orchestrator.persistState(state);
     return {
@@ -100,8 +106,6 @@ async function processWhatsAppMessage(phoneNumber, messageBody, leadId = null) {
 
   // Process response
   const result = orchestrator.processResponse(state, text);
-
-  // Get next question
   const nextQuestion = result.nextQuestion;
   const replyText = formatForWhatsApp(nextQuestion, result.state);
 

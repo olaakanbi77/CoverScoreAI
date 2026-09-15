@@ -632,8 +632,10 @@ router.post('/evolution', async (req, res) => {
       }
 
       // Handle restart
-      if (isRestartTrigger) {
+      if (isRestartTrigger || isStartTrigger) {
         await run('UPDATE leads SET wa_state = ?, assessment_data = ? WHERE id = ?', ['initial', '{}', lead.id]);
+        // Clear any old in-progress sessions for this lead so whatsappAdapter creates fresh
+        await run('UPDATE assessment_sessions SET status = ? WHERE lead_id = ? AND status = ?', ['completed', lead.id, 'in_progress']);
       }
 
       const hotResult = await whatsappAdapter.processWhatsAppMessage(
@@ -647,7 +649,7 @@ router.post('/evolution', async (req, res) => {
 
       // Update chat history
       chatHistory = [];
-      try { chatHistory = JSON.parse(lead.chat_history || '[]'); } catch (e) { chatHistory = []; }
+      try { const parsed = JSON.parse(lead.chat_history || '[]'); chatHistory = Array.isArray(parsed) ? parsed : []; } catch (e) { chatHistory = []; }
       chatHistory.push({ role: 'user', content: incomingTextRaw.trim(), timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
       chatHistory.push({ role: 'assistant', content: hotResult.replyText, timestamp: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
 
@@ -684,22 +686,190 @@ router.post('/evolution', async (req, res) => {
             VALUES (?, ?, 'HOTEL', 'completed', 'finished', ?, ?, ?, ?, ?)
           `, [sessionId, lead.id, JSON.stringify(finalAnswers), JSON.stringify({score: scoreResult.score, riskLevel: scoreResult.risk_level}), new Date().toISOString(), new Date().toISOString(), new Date().toISOString()]);
 
-          const reportUrl = `${process.env.APP_URL || 'https://coverscore.site'}/reports/hotel/${assessmentId}`;
+          const appBase = process.env.APP_URL || 'https://coverscore.site';
+          const reportUrl = `${appBase}/reports/hotel/${assessmentId}`;
 
-          // Build and send result message
-          const riskEmojis = { 'Critical Risk': '🔴', 'High Risk': '🟠', 'Moderate Risk': '🟡', 'Low Risk': '🟢' };
-          const riskEmoji = riskEmojis[scoreResult.risk_level] || '🟠';
-          const resultMsg = [
-            `🎯 *Your CoverScore™ is ${scoreResult.score} / 100*`,
-            `Risk Level: ${riskEmoji} ${scoreResult.risk_level}`,
-            '',
-            `Your personalised Hotel Risk Report™ is ready:`,
-            reportUrl,
-            '',
-            `A CoverScore advisor will be in touch to discuss your results.`,
-          ].join('\n');
+          // ═══════════════════════════════════════════════════════════
+          // PHASE 3: Rich report sequence for hotel assessments
+          // ═══════════════════════════════════════════════════════════
+          const riskCats = scoreResult.risk_categories || {};
+          const scoredCats = Object.fromEntries(Object.entries(riskCats).filter(([, v]) => v !== null && v !== undefined));
+          const scoredEntries = Object.entries(scoredCats);
 
-          await sendWhatsApp(phoneNumber, null, { _message: resultMsg });
+          const fixedBand = (score) => {
+            if (score >= 80) return 'Strong';
+            if (score >= 60) return 'Stable';
+            if (score >= 40) return 'Needs Attention';
+            if (score >= 20) return 'High Risk';
+            return 'Critical';
+          };
+          const displayLabel = fixedBand(scoreResult.score);
+
+          const sortedDesc = [...scoredEntries].sort(([, a], [, b]) => b - a);
+          const weakestPillar = sortedDesc.length > 0 ? sortedDesc[sortedDesc.length - 1][0] : null;
+          const strongestPillar = sortedDesc.length > 0 ? sortedDesc[0][0] : null;
+
+          const makeBar = (s) => {
+            const filled = Math.round(Math.min(s, 100) / 10);
+            return '\u2588'.repeat(filled) + '\u2591'.repeat(10 - filled);
+          };
+
+          const riskEmojis = { 'Critical': '\uD83D\uDD34', 'High Risk': '\uD83D\uDD34', 'Needs Attention': '\uD83D\uDFE0', 'Stable': '\uD83D\uDFE1', 'Strong': '\uD83D\uDFE2' };
+          const riskEmoji = riskEmojis[displayLabel] || '\uD83D\uDD34';
+
+          // --- Message 1: CoverScore + Risk Level + Biggest Vulnerability ---
+          const msg1Parts = [
+            `\uD83C\uDFAF *Your CoverScore\u2122 is ${scoreResult.score} / 100*`,
+            `Risk Level\n${riskEmoji} ${displayLabel}`,
+            '',
+            `Your score reflects the overall resilience of your hotel based on the risks and controls identified during the assessment.`
+          ];
+          if (weakestPillar) {
+            msg1Parts.push('', `\uD83D\uDD3B *Biggest Vulnerability*`, weakestPillar);
+          }
+          if (strongestPillar && strongestPillar !== weakestPillar) {
+            msg1Parts.push('', `\u2705 *Strongest Area*`, strongestPillar);
+          }
+          await sendWhatsApp(phoneNumber, null, { _message: msg1Parts.join('\n') });
+
+          // --- Message 2: Risk Pillars (bar chart) ---
+          if (scoredEntries.length > 0) {
+            const maxLen = Math.max(...scoredEntries.map(([n]) => n.length), 20);
+            const pillarChart = scoredEntries
+              .sort(([, a], [, b]) => b - a)
+              .map(([n, s]) => `${n.padEnd(maxLen)} ${makeBar(s)} ${s}%`)
+              .join('\n');
+            await sendWhatsApp(phoneNumber, null, { _message: `\uD83D\uDCCA *Your Risk Pillars*\n\n${pillarChart}` });
+          }
+
+          // --- Message 3: How to Improve (3 actionable steps) ---
+          const buildHotelImprovements = (cats, answers) => {
+            const actions = [];
+            const sorted = [...Object.entries(cats)].sort(([, a], [, b]) => a - b);
+
+            // Map pillar names to actionable improvements based on answers
+            const pillarActions = {
+              'Fire & Property': {
+                weak: answers.fire_safety === 'C' || answers.fire_safety === 'D' || answers.fire_controls === 'C' || answers.fire_controls === 'D',
+                action: 'Establish and regularly test fire detection, alarm and firefighting systems'
+              },
+              'Guest Safety & Liability': {
+                weak: answers.guest_safety_confidence === 'C' || answers.guest_safety_confidence === 'D' || answers.guest_incidents === 'A',
+                action: 'Review guest safety procedures and ensure adequate liability protection'
+              },
+              'Business Continuity': {
+                weak: answers.financial_resilience === 'A' || answers.financial_resilience === 'B',
+                action: 'Develop and test a business continuity plan for major disruptions'
+              },
+              'Employee Safety': {
+                weak: answers.employee_safety === 'C' || answers.employee_safety === 'D' || answers.employee_protection === 'C' || answers.employee_protection === 'D',
+                action: 'Strengthen staff safety procedures and employee protection coverage'
+              },
+              'Security': {
+                weak: answers.security_level === 'C' || answers.security_level === 'D',
+                action: 'Upgrade security arrangements including CCTV monitoring and access control'
+              },
+              'Operational Resilience': {
+                weak: answers.power_dependence === 'C' || answers.power_dependence === 'D' || answers.digital_dependence === 'C' || answers.digital_dependence === 'D',
+                action: 'Reduce operational dependencies and strengthen backup systems'
+              },
+              'Financial': {
+                weak: answers.financial_resilience === 'A' || answers.financial_resilience === 'B',
+                action: 'Build financial reserves and review insurance adequacy'
+              }
+            };
+
+            for (const [pillarName, score] of sorted) {
+              if (actions.length >= 3) break;
+              const mapped = pillarActions[pillarName];
+              if (mapped && mapped.weak) {
+                actions.push(`\u2713 ${mapped.action}`);
+              }
+            }
+
+            // Fill remaining slots from weakest pillars
+            if (actions.length < 3) {
+              for (const [pillarName, score] of sorted) {
+                if (actions.length >= 3) break;
+                if (score < 50 && !actions.some(a => a.includes(pillarName))) {
+                  actions.push(`\u2713 Strengthen your ${pillarName.toLowerCase()} protections`);
+                }
+              }
+            }
+
+            return actions.slice(0, 3);
+          };
+
+          const improvements = buildHotelImprovements(scoredCats, finalAnswers);
+          if (improvements.length > 0) {
+            await sendWhatsApp(phoneNumber, null, { _message: `\uD83D\uDCC8 *How to Improve*\n\n${improvements.join('\n')}` });
+          }
+
+          // --- Message 4: Would you like the full report? ---
+          await sendWhatsApp(phoneNumber, null, {
+            _message: `\uD83D\uDCC4 *Would you like to see your complete report?*\n\nIt includes:\n\u2713 What you\u2019re doing well\n\u2713 Your personalised risk story\n\u2713 Practical next steps\n\u2713 Detailed recommendations\n\u2713 Your report link\n\n*View My Report:* ${reportUrl}\n\nA. Yes, show me\nB. Not now`
+          });
+
+          // --- Message 5: Resilience Forecast ---
+          const buildHotelForecast = (cats, currentScore) => {
+            const sorted = [...Object.entries(cats)].sort(([, a], [, b]) => a - b);
+            const weakAreas = sorted.filter(([, s]) => s < 50).slice(0, 3);
+            if (weakAreas.length === 0) return null;
+
+            const projectedScore = Math.min(Math.round(currentScore + (weakAreas.length * 8)), 95);
+            const actionLines = weakAreas.map(([name]) => `\u2713 Strengthen ${name.toLowerCase()}`);
+
+            return `Resilience Forecast\u2122\n\nHere\u2019s how your resilience could improve\n${actionLines.join('\n')}\n\nYour score could improve from\n${currentScore} \u2192 approximately ${projectedScore}`;
+          };
+
+          const forecast = buildHotelForecast(scoredCats, scoreResult.score);
+          if (forecast) {
+            await sendWhatsApp(phoneNumber, null, { _message: `\uD83D\uDCC8 ${forecast}` });
+          }
+
+          // --- Message 6: Risk Management Plan ---
+          const buildHotelRiskPlan = (cats, answers) => {
+            const ops = [];
+            const ins = [];
+
+            // Operational improvements
+            if (answers.fire_safety === 'C' || answers.fire_safety === 'D') ops.push('\u2713 Establish documented fire testing and maintenance schedule');
+            if (answers.security_level === 'C' || answers.security_level === 'D') ops.push('\u2713 Upgrade security arrangements with CCTV and access control');
+            if (answers.employee_safety === 'C' || answers.employee_safety === 'D') ops.push('\u2713 Strengthen staff safety procedures and training');
+            if (answers.power_dependence === 'C' || answers.power_dependence === 'D') ops.push('\u2713 Reduce generator dependency and test backup systems');
+            if (answers.digital_dependence === 'C' || answers.digital_dependence === 'D') ops.push('\u2713 Implement digital backup and recovery arrangements');
+            if (answers.financial_resilience === 'A' || answers.financial_resilience === 'B') ops.push('\u2713 Build financial reserves for business continuity');
+
+            // Insurance / risk transfer
+            const coverage = answers.insurance_coverage || [];
+            if (coverage.includes('none') || coverage.length === 0) {
+              ins.push('\u2713 Obtain comprehensive property and liability insurance');
+            } else {
+              if (!coverage.includes('fire')) ins.push('\u2713 Add Fire & Special Perils insurance');
+              if (!coverage.includes('liability')) ins.push('\u2713 Add Public / Occupiers Liability insurance');
+              if (!coverage.includes('bi')) ins.push('\u2713 Add Business Interruption insurance');
+              if (!coverage.includes('group_life')) ins.push('\u2713 Add Group Life / Employee Protection');
+            }
+
+            let text = '\uD83D\uDEE1\uFE0F *Your Risk Management Plan*\n\n';
+            if (ops.length > 0) text += 'Risk Reduction \u2014 Operational Improvements\n' + ops.slice(0, 3).join('\n') + '\n\n';
+            if (ins.length > 0) text += 'Risk Transfer \u2014 Protection Solutions\n' + ins.slice(0, 3).join('\n');
+            if (ops.length === 0 && ins.length === 0) return null;
+            return text;
+          };
+
+          const riskPlan = buildHotelRiskPlan(scoredCats, finalAnswers);
+          if (riskPlan) {
+            await sendWhatsApp(phoneNumber, null, { _message: riskPlan });
+          }
+
+          // --- Message 7: Advisor CTA ---
+          await sendWhatsApp(phoneNumber, null, {
+            _message: `Would you like a Certified CoverScore Risk Advisor to conduct a Risk Review?\n\nThey\u2019ll help you:\n\u2713 Understand your specific risk profile\n\u2713 Prioritise the most impactful improvements\n\u2713 Distinguish operational changes from protection solutions\n\nA. Yes\nB. Not now`
+          });
+
+          // --- Message 8: Report Link ---
+          await sendWhatsApp(phoneNumber, null, { _message: `\uD83D\uDCC4 *View Your Full Report:* ${reportUrl}` });
 
           // Fire background AI report generation
           setImmediate(async () => {

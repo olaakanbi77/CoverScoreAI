@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || '';
 const MISTRAL_MODEL = process.env.MISTRAL_MODEL || 'mistral-large-latest';
+const AGNES_API_KEY = process.env.AGNES_API_KEY || '';
+const AGNES_MODEL = process.env.AGNES_MODEL || 'agnes-2.0-flash';
 const aiContext = require('./aiContextProvider');
 
 /**
@@ -46,6 +48,73 @@ async function callMistral(systemPrompt, userPrompt, jsonMode = true) {
   const data = await response.json();
   const content = data.choices[0].message.content;
   return jsonMode ? JSON.parse(content) : content;
+}
+
+/**
+ * Call Agnes AI API helper (OpenAI-compatible)
+ */
+async function callAgnes(systemPrompt, userPrompt, jsonMode = true) {
+  if (!AGNES_API_KEY) {
+    throw new Error('AGNES_API_KEY is not configured.');
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+  let response;
+  try {
+    response = await fetch('https://apihub.agnes-ai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AGNES_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: AGNES_MODEL,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.3,
+        max_tokens: 4096
+      }),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Agnes API Error: ${response.status} ${errText}`);
+  }
+
+  const data = await response.json();
+  const content = data.choices[0].message.content;
+  if (jsonMode) {
+    try {
+      return JSON.parse(content);
+    } catch {
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) return JSON.parse(jsonMatch[0]);
+      throw new Error(`Agnes returned non-JSON: ${content.substring(0, 200)}`);
+    }
+  }
+  return content;
+}
+
+/**
+ * Unified AI call — tries Mistral first, falls back to Agnes
+ */
+async function callAI(systemPrompt, userPrompt, jsonMode = true) {
+  if (MISTRAL_API_KEY && MISTRAL_API_KEY !== 'your-mistral-api-key-here') {
+    try {
+      return await callMistral(systemPrompt, userPrompt, jsonMode);
+    } catch (err) {
+      console.warn(`[AI] Mistral failed (${err.message}), trying Agnes fallback...`);
+    }
+  }
+  return await callAgnes(systemPrompt, userPrompt, jsonMode);
 }
 
 // ----------------------------------------------------------------------------
@@ -127,7 +196,7 @@ Rules:
 ${knowledgeContext ? '- Reference specific risks from the knowledge context where relevant.' : ''}`;
 
   try {
-    return await callMistral(systemPrompt, userPrompt, true);
+    return await callAI(systemPrompt, userPrompt, true);
   } catch (error) {
     console.error('Report Generator Error:', error);
     return getFallbackReport(assessmentData, prefix);
@@ -181,7 +250,7 @@ Rules:
 ${briefContext ? `- ${briefContext.criticalRisks.length} critical risks identified — prioritize these.` : ''}`;
 
   try {
-    return await callMistral(systemPrompt, userPrompt, true);
+    return await callAI(systemPrompt, userPrompt, false);
   } catch (error) {
     console.error('Advisor Copilot Error:', error);
     return {
@@ -225,7 +294,7 @@ Return ONLY a valid HTML string (no markdown, no json wrappers) with this exact 
 </div>`;
 
   try {
-    return await callMistral(systemPrompt, userPrompt, false);
+    return await callAI(systemPrompt, userPrompt, false);
   } catch (error) {
     console.error('Proposal Generator Error:', error);
     return `<div class="proposal-document"><h2>Executive Summary</h2><p>Proposal generation failed.</p></div>`;
@@ -296,7 +365,7 @@ User Message: "${userMessage}"
 Generate the next response to guide the user towards qualification or an appointment.`;
 
   try {
-    return await callMistral(systemPrompt, userPrompt, false);
+    return await callAI(systemPrompt, userPrompt, false);
   } catch (error) {
     console.error('WhatsApp Advisor Error:', error);
     return "I'm sorry, I'm having trouble connecting right now. Let's continue this shortly.";
@@ -325,7 +394,7 @@ Required Output (JSON ONLY):
 }`;
 
   try {
-    return await callMistral(systemPrompt, userPrompt, true);
+    return await callAI(systemPrompt, userPrompt, true);
   } catch (error) {
     console.error('Lead Qualifier Error:', error);
     return {
@@ -353,7 +422,7 @@ If asked about risks, analyze the assessment data and highlight the most critica
 Format your responses using clean Markdown. Be concise but extremely valuable.`;
 
   try {
-    return await callMistral(systemPrompt, message, false);
+    return await callAI(systemPrompt, message, false);
   } catch (error) {
     console.error('Copilot Chat Error:', error);
     return "I'm sorry, I'm having trouble connecting to the AI brain right now. Please try again.";
